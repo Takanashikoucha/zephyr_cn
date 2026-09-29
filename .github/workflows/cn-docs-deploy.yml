@@ -1,0 +1,84 @@
+# 中文文档自动构建与部署
+# 触发：main 分支 push 时自动构建 Sphinx HTML + 指南 HTML，部署到 GitHub Pages
+name: CN Docs Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs_cn/**'
+      - 'guide/**'
+      - 'scripts/build_guide.py'
+      - '.github/workflows/cn-docs-deploy.yml'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r docs_cn/requirements.txt
+          pip install markdown
+
+      - name: Build Sphinx HTML
+        run: |
+          cd docs_cn
+          python -m sphinx -b html . _build/html
+
+      - name: Build guide HTML
+        run: |
+          python scripts/build_guide.py
+
+      - name: Assemble public directory
+        run: |
+          mkdir -p public
+          cp -r docs_cn/_build/html/* public/
+          mkdir -p public/guide
+          cp -r guide_html/* public/guide/
+          cat > public/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta http-equiv="refresh" content="0; url=/introduction/index.html">
+            <title>Zephyr 中文文档</title>
+          </head>
+          <body>
+            <p>正在跳转到 <a href="/introduction/index.html">Zephyr 中文文档</a>...</p>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
