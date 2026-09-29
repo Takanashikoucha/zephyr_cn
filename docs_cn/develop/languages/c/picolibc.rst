@@ -1,0 +1,675 @@
+.. _c_library_picolibc:
+
+Picolibc
+########
+
+`Picolibc`_
+是
+一个
+为
+嵌入式
+系统
+编写
+的
+完整
+C
+库
+实现，
+目标
+是
+`C17
+（ISO/IEC
+9899:2018）`_
+和
+`POSIX
+2018
+（IEEE
+Std
+1003.1-2017）`_
+标准。
+Picolibc
+是
+一个
+外部
+开源
+项目，
+作为
+模块
+提供
+给
+Zephyr，
+并
+以
+预
+编译
+形式
+作为
+:ref:`toolchain_zephyr_sdk`
+的
+部分
+包含
+每个
+受
+支持
+架构
+（:file:`libc.a`）。
+
+.. note::
+   Picolibc
+   也
+   对
+   其他
+   第三方
+   工具链
+   可用，
+   如
+   :ref:`toolchain_gnuarmemb`。
+
+Zephyr
+实现
+"API
+hook"
+函数，
+这些
+函数
+被
+Picolibc
+中
+的
+C
+标准
+库
+函数
+调用。
+这些
+hook
+函数
+在
+:zephyr_file:`lib/libc/picolibc/`
+中
+实现
+并
+将
+库
+内部
+系统
+调用
+转换
+为
+等价
+的
+Zephyr
+API
+调用。
+
+.. _`Picolibc`:
+   https://github.com/picolibc/picolibc
+.. _`C17
+   （ISO/IEC
+   9899:2018）`:
+   https://www.iso.org/standard/74528.html
+.. _`POSIX
+   2018
+   （IEEE
+   Std
+   1003.1-2017）`:
+   https://pubs.opengroup.org/onlinepubs/9699919799/functions/printf.html
+
+.. _c_library_picolibc_module:
+
+Picolibc
+模块
+==============
+
+当
+作为
+Zephyr
+模块
+构建
+时，
+有
+几个
+配置
+旋钮
+可用
+于
+调整
+库
+中
+的
+功能
+集，
+平衡
+库
+支持
+的
+与
+结果
+函数
+的
+代码
+大小
+之间。
+因为
+标准
+C++
+库
+必须
+为
+目标
+C
+库
+编译，
+Picolibc
+模块
+不
+能
+与
+使用
+标准
+C++
+库
+的
+应用
+一起
+使用。
+构建
+Picolibc
+模块
+将
+增加
+编译
+应用
+所需
+的
+时间。
+
+Picolibc
+模块
+可以
+通过
+在
+应用
+配置
+文件
+中
+选择
+:kconfig:option:`CONFIG_PICOLIBC_USE_MODULE`
+启用。
+
+当
+更新
+Picolibc
+模块
+到
+更
+新
+版本
+时，
+:ref:`Zephyr
+SDK
+中
+工具链
+捆绑
+的
+Picolibc
+<c_library_picolibc_toolchain>`
+必须
+也
+更新
+到
+相同
+版本。
+
+.. _c_library_picolibc_toolchain:
+
+工具链
+Picolibc
+==================
+
+从
+版本
+0.16
+开始，
+Zephyr
+SDK
+包括
+每个
+目标
+架构
+的
+Picolibc
+预
+编译
+版本，
+以及
+libstdc++
+的
+预
+编译
+版本。
+
+工具链
+版本
+的
+Picolibc
+可以
+通过
+在
+应用
+配置
+文件
+中
+取消
+选择
+:kconfig:option:`CONFIG_PICOLIBC_USE_MODULE`
+启用。
+
+对于
+Zephyr
+的
+每个
+发布，
+工具链
+捆绑
+的
+Picolibc
+和
+:ref:`Picolibc
+模块
+<c_library_picolibc_module>`
+保证
+在
+使用
+:ref:`推荐
+版本
+的
+Zephyr
+SDK
+<toolchain_zephyr_sdk_compatibility>`
+时
+保持
+同步。
+
+不
+使用
+工具链
+捆绑
+Picolibc
+构建
+-------------------------------------------
+
+对于
+没有
+捆绑
+Picolibc
+的
+工具链，
+仍然
+可以
+通过
+从
+源
+构建
+来
+使用
+Picolibc。
+注意
+:ref:`c_library_picolibc_module`
+中
+提到
+的
+任何
+限制
+仍然
+适用。
+
+要
+不
+使用
+工具链
+捆绑
+Picolibc
+构建，
+工具链
+必须
+启用
+:kconfig:option:`CONFIG_PICOLIBC_SUPPORTED`。
+例如，
+这
+需要
+添加
+到
+工具链
+Kconfig
+文件：
+
+.. code-block:: kconfig
+
+   config
+   TOOLCHAIN_<name>_PICOLIBC_SUPPORTED
+   def_bool
+   y
+   select
+   PICOLIBC_SUPPORTED
+
+通过
+启用
+:kconfig:option:`CONFIG_PICOLIBC_SUPPORTED`，
+构建
+系统
+会
+自动
+在
+没有
+工具链
+捆绑
+Picolibc
+时
+用
+其
+模块
+从
+源
+构建
+Picolibc。
+
+格式化
+输出
+****************
+
+Picolibc
+支持
+所有
+标准
+C
+格式化
+输入
+和
+输出
+函数，
+包括
+:c:func:`printf`、
+:c:func:`fprintf`、
+:c:func:`sprintf`
+和
+:c:func:`sscanf`。
+
+Picolibc
+格式化
+输入
+和
+输出
+函数
+实现
+支持
+C17
+和
+POSIX
+2018
+标准
+定义
+的
+所有
+格式
+说明符，
+以下
+例外：
+
+* 浮点
+  格式
+  说明符
+  （例如
+  ``%f``）
+  需要
+  :kconfig:option:`CONFIG_PICOLIBC_IO_FLOAT`。
+
+* long
+  long
+  格式
+  说明符
+  （例如
+  ``%lld``）
+  需要
+  :kconfig:option:`CONFIG_PICOLIBC_IO_LONG_LONG`。
+  这个
+  选项
+  自动
+  与
+  :kconfig:option:`CONFIG_PICOLIBC_IO_FLOAT`
+  一起
+  启用。
+
+Printk、
+cbprintf
+和
+朋友
+****************************
+
+使用
+Picolibc
+时，
+Zephyr
+格式化
+输出
+函数
+用
+stdio
+调用
+实现。
+这
+包括：
+
+ * printk、
+   snprintk
+   和
+   vsnprintk
+ * cbprintf
+   和
+   cbvprintf
+ * fprintfcb、
+   vfprintfcb、
+   printfcb、
+   vprintfcb、
+   snprintfcb
+   和
+   vsnprintfcb
+
+使用
+带
+标签
+参数
+（:kconfig:option:`CONFIG_CBPRINTF_PACKAGE_SUPPORT_TAGGED_ARGUMENTS`
+和
+:c:macro:`CBPRINTF_PACKAGE_ARGS_ARE_TAGGED`）
+时，
+对
+cbpprintf
+的
+调用
+不
+使用
+Picolibc，
+因此
+用
+那些
+代码
+格式化
+输出
+会
+与
+Picolibc
+结果
+不同，
+因为
+cbprintf
+函数
+不
+完全
+C/POSIX
+兼容。
+
+数学
+函数
+**************
+
+Picolibc
+为
+float、
+double
+和
+long
+double
+数学
+操作
+提供
+完整
+的
+C17/`IEEE
+STD
+754-2019`_
+支持，
+除
+了
+Bessel
+函数
+的
+long
+double
+版本。
+
+.. _`IEEE
+   STD
+   754-2019`:
+   https://ieeexplore.ieee.org/document/8766229
+
+线程
+本地
+存储
+********************
+
+Picolibc
+使用
+线程
+本地
+存储
+（TLS）
+（在
+受
+支持
+时）
+用于
+应该
+保持
+本地
+于
+每个
+线程
+的
+数据，
+如
+:c:macro:`errno`。
+这
+意味着
+使用
+Picolibc
+时
+TLS
+支持
+被
+启用。
+由于
+所有
+TLS
+变量
+从
+线程
+栈
+区域
+分配，
+这
+可能
+影响
+栈
+大小
+要求
+几
+字节。
+
+C
+库
+本地
+变量
+*************************
+
+Picolibc
+用
+几个
+内部
+变量
+用于
+堆
+管理
+等
+东西。
+这些
+收集
+在
+一个
+叫
+:c:var:`z_libc_partition`
+的
+专用
+内存
+分区
+中。
+使用
+:kconfig:option:`CONFIG_USERSPACE`
+和
+内存
+域
+的
+应用
+必须
+确保
+这个
+分区
+被
+包括
+在
+Picolibc
+调用
+期间
+活跃
+的
+任何
+域
+中。
+
+动态
+内存
+管理
+*************************
+
+Picolibc
+使用
+:ref:`通用
+C
+库
+<c_library_common>`
+提供
+的
+malloc
+api
+家族
+实现，
+其
+本身
+构建
+在
+:ref:`内核
+内存
+堆
+API
+<heap_v2>`
+之上。

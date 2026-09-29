@@ -1,0 +1,214 @@
+.. _external_module_lz4:
+
+LZ4
+-
+极
+快
+压缩
+################################
+
+介绍
+************
+
+LZ4
+是
+一个
+无损
+压缩
+算法，
+提供
+每
+核心
+超过
+500
+MB/s
+的
+压缩
+速度，
+可
+随
+多
+核心
+CPU
+扩展。
+它
+有
+一个
+极
+快
+的
+解码器，
+速度
+每
+核心
+多
+GB/s，
+通常
+在
+多
+核心
+系统
+上
+达到
+RAM
+速度
+限制。
+
+速度
+可以
+通过
+选择
+一个
+"acceleration"
+因子
+动态
+调整，
+它
+用
+压缩
+比
+换
+更
+快
+速度。
+在
+另一
+端，
+也
+提供
+一个
+高
+压缩
+衍生
+版本
+LZ4_HC，
+用
+CPU
+时间
+换
+改进
+的
+压缩
+比。
+所有
+版本
+有
+相同
+的
+解压缩
+速度。
+
+LZ4
+也
+兼容
+字典
+压缩，
+在
+API
+和
+CLI
+级别
+都
+兼容。
+它
+可以
+摄取
+任何
+输入
+文件
+作为
+字典，
+尽管
+只
+使用
+最后
+64KB。
+这个
+能力
+可以
+组合
+
+
+用
+Zephyr
+*****************
+
+要
+拉入
+lz4
+作为
+Zephyr
+模块，
+要么
+在
+``west.yaml``
+文件
+中
+添加
+它
+作为
+West
+项目
+或
+通过
+添加
+一个
+submanifest
+（例如
+``zephyr/submanifests/lz4.yaml``）
+文件
+拉入
+它
+带
+以下
+内容
+并
+运行
+``west
+update``：
+
+.. code-block:: yaml
+
+   manifest:
+     projects:
+       -
+       name:
+       lz4
+         url:
+       https://github.com/zephyrproject-rtos/lz4
+         revision:
+       zephyr
+         path:
+       modules/lib/lz4
+       #
+       按
+       需要
+       调整
+       路径
+
+更多
+详细
+说明
+和
+API
+文档，
+参考
+`lz4
+documentation`_
+以及
+提供
+的
+`lz4
+examples`_。
+
+
+参考
+*********
+
+.. _lz4
+   documentation:
+   https://github.com/lz4/lz4/tree/dev/doc
+
+.. _lz4
+   examples:
+   https://github.com/zephyrproject-rtos/lz4/tree/zephyr/zephyr/samples

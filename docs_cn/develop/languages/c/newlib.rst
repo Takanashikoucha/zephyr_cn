@@ -1,0 +1,630 @@
+.. _c_library_newlib:
+
+Newlib
+######
+
+`Newlib`_
+是
+一个
+为
+嵌入式
+系统
+编写
+的
+完整
+C
+库
+实现。
+它
+是
+一个
+独立
+的
+开源
+项目，
+不
+以
+源
+代码
+形式
+包含
+在
+Zephyr
+中。
+相反，
+:ref:`toolchain_zephyr_sdk`
+包括
+每个
+受
+支持
+架构
+的
+预
+编译
+库
+（:file:`libc.a`
+和
+:file:`libm.a`）。
+
+.. note::
+   其他
+   第三方
+   工具链，
+   如
+   :ref:`toolchain_gnuarmemb`，
+   也
+   捆绑
+   Newlib
+   作为
+   预
+   编译
+   库。
+
+Zephyr
+实现
+"API
+hook"
+函数，
+这些
+函数
+被
+Newlib
+中
+的
+C
+标准
+库
+函数
+调用。
+这些
+hook
+函数
+在
+:file:`lib/libc/newlib/libc-hooks.c`
+中
+实现
+并
+将
+库
+内部
+系统
+调用
+转换
+为
+等价
+的
+Zephyr
+API
+调用。
+
+Newlib
+类型
+***************
+
+:ref:`toolchain_zephyr_sdk`
+中
+包含
+的
+Newlib
+有
+两个
+版本：
+'full'
+和
+'nano'
+变体。
+
+Full
+Newlib
+===========
+
+Newlib
+full
+变体
+（:file:`libc.a`
+和
+:file:`libm.a`）
+是
+Zephyr
+SDK
+中
+可用
+的
+最
+强大
+的
+Newlib
+变体，
+支持
+几乎
+所有
+标准
+C
+库
+功能。
+它
+为
+性能
+优化
+（偏好
+性能
+而非
+代码
+大小）
+且
+其
+占用
+空间
+显著
+大于
+nano
+变体。
+
+这个
+变体
+可以
+通过
+在
+应用
+配置
+文件
+中
+选择
+:kconfig:option:`CONFIG_NEWLIB_LIBC`
+并
+取消
+选择
+:kconfig:option:`CONFIG_NEWLIB_LIBC_NANO`
+启用。
+
+Nano
+Newlib
+===========
+
+Newlib
+nano
+变体
+（:file:`libc_nano.a`
+和
+:file:`libm_nano.a`）
+是
+Newlib
+的
+大小
+优化
+版本，
+支持
+full
+变体
+支持
+的
+所有
+功能
+除
+了
+C99
+引入
+的
+新
+格式
+说明符，
+如
+``char``、
+``long
+long``
+类型
+格式
+说明符
+（即
+``%hhX``
+和
+``%llX``）。
+
+这个
+变体
+可以
+通过
+在
+应用
+配置
+文件
+中
+选择
+:kconfig:option:`CONFIG_NEWLIB_LIBC`
+和
+:kconfig:option:`CONFIG_NEWLIB_LIBC_NANO`
+启用。
+
+注意
+Newlib
+nano
+变体
+不
+对
+所有
+架构
+可用。
+nano
+变体
+的
+可用性
+由
+:kconfig:option:`CONFIG_HAS_NEWLIB_LIBC_NANO`
+指定。
+
+.. _`Newlib`:
+   https://sourceware.org/newlib/
+
+格式化
+输出
+****************
+
+Newlib
+支持
+所有
+标准
+C
+格式化
+输入
+和
+输出
+函数，
+包括
+``printf``、
+``fprintf``、
+``sprintf``
+和
+``sscanf``。
+
+Newlib
+格式化
+输入
+和
+输出
+函数
+实现
+支持
+C
+标准
+定义
+的
+所有
+格式
+说明符，
+以下
+例外：
+
+* 浮点
+  格式
+  说明符
+  （例如
+  ``%f``）
+  需要
+  启用
+  :kconfig:option:`CONFIG_NEWLIB_LIBC_FLOAT_PRINTF`
+  和
+  :kconfig:option:`CONFIG_NEWLIB_LIBC_FLOAT_SCANF`。
+* C99
+  格式
+  说明符
+  不
+  被
+  Newlib
+  nano
+  变体
+  支持
+  （即
+  ``char``
+  的
+  ``%hhX``、
+  ``long
+  long``
+  的
+  ``%llX``、
+  ``intmax_t``
+  的
+  ``%jX``、
+  ``size_t``
+  的
+  ``%zX``、
+  ``ptrdiff_t``
+  的
+  ``%tX``）。
+
+动态
+内存
+管理
+*************************
+
+Newlib
+实现
+内部
+堆
+分配器
+来
+管理
+标准
+动态
+内存
+管理
+接口
+函数
+（例如
+:c:func:`malloc`
+和
+:c:func:`free`）
+使用
+的
+内存
+块。
+
+Newlib
+实现
+的
+内部
+堆
+分配器
+可能
+在
+使用
+的
+不同
+类型
+的
+Newlib
+之间
+变化。
+例如，
+Zephyr
+SDK
+的
+Full
+Newlib
+（:file:`libc.a`
+和
+:file:`libm.a`）
+中
+实现
+的
+堆
+分配器
+向
+操作
+系统
+请求
+更大
+的
+内存
+块
+且
+与
+Nano
+Newlib
+（:file:`libc_nano.a`
+和
+:file:`libm_nano.a`）
+相比
+有
+显著
+更
+高
+的
+最小
+内存
+要求。
+
+Newlib
+动态
+内存
+管理
+函数
+和
+Zephyr
+侧
+libc
+hooks
+之间
+唯一
+的
+接口
+是
+:c:func:`sbrk`
+函数，
+Newlib
+用
+它
+管理
+为其
+内部
+堆
+分配器
+保留
+的
+内存
+池
+大小。
+
+在
+:file:`libc-hooks.c`
+中
+实现
+的
+:c:func:`_sbrk`
+hook
+函数
+处理
+来自
+Newlib
+的
+内存
+池
+大小
+更改
+请求
+并
+通过
+在
+系统
+内存
+不足
+时
+返回
+错误
+确保
+Newlib
+内部
+堆
+分配器
+内存
+池
+大小
+不
+超过
+可用
+内存
+空间
+的
+数量。
+
+当
+启用
+用户
+空间
+时，
+Newlib
+内部
+堆
+分配器
+内存
+池
+被
+放
+在
+一个
+叫
+``z_malloc_partition``
+的
+专用
+内存
+分区
+中，
+可以
+从
+用户
+模式
+线程
+访问。
+
+Newlib
+堆
+可用
+的
+内存
+空间
+数量
+取决于
+系统
+配置：
+
+* 当
+  MMU
+  启用
+  （选择
+  :kconfig:option:`CONFIG_MMU`），
+  为
+  Newlib
+  堆
+  保留
+  的
+  内存
+  空间
+  数量
+  由
+  :c:func:`k_mem_free_get`
+  函数
+  返回
+  的
+  空闲
+  内存
+  空间
+  大小
+  或
+  :kconfig:option:`CONFIG_NEWLIB_LIBC_MAX_MAPPED_REGION_SIZE`
+  设置，
+  取
+  最小
+  的
+  那个。
+
+* 当
+  MPU
+  启用
+  且
+  MPU
+  需要
+  2
+  的
+  幂
+  分区
+  大小
+  和
+  地址
+  对齐
+  （:kconfig:option:`CONFIG_NEWLIB_LIBC_ALIGNED_HEAP_SIZE`
+  设置
+  为
+  非
+  零
+  值），
+  为
+  Newlib
+  堆
+  保留
+  的
+  内存
+  空间
+  数量
+  由
+  :kconfig:option:`CONFIG_NEWLIB_LIBC_ALIGNED_HEAP_SIZE`
+  设置。
+
+* 否则，
+  为
+  Newlib
+  堆
+  保留
+  的
+  内存
+  空间
+  数量
+  等于
+  SRAM
+  区域
+  中
+  空闲
+  （未
+  分配）
+  内存
+  的
+  数量。
+
+Newlib
+实现
+的
+标准
+动态
+内存
+管理
+接口
+函数
+是
+线程
+安全
+的
+并
+可以
+被
+多个
+线程
+同时
+调用。

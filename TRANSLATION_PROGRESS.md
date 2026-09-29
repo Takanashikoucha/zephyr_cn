@@ -12,7 +12,21 @@
 - **提交身份**：`KouchaBot <kouchabot@proton.me>` + `Signed-off-by` trailer
 - **远程**：`https://github.com/Takanashikoucha/zephyr_cn.git`
 
-## 当前状态（2026-09-29 会话结束时）
+## 当前状态（2026-09-30 会话）
+
+### 翻译进度（进度脚本 translate_progress.py 确认）
+
+| 批次 | 目录 | 进度 | 状态 |
+|---|---|---|---|
+| 1 | introduction | 1/1 (100%) | ✓ 完成 |
+| 2 | kernel | 65/65 (100%) | ✓ 完成 |
+| 3 | build | 93/94 (98.9%) | 1 个未译：sysbuild/index.rst |
+| 4 | develop | 33/138 (23.9%) | 进行中（已暂停，优先解决样式问题） |
+| 5 | hardware | 1/123 (0.8%) | 待开始 |
+| 6 | services | 0/359 (0%) | 待开始 |
+| 7 | releases | 0/43 (0%) | 待开始 |
+| 8 | security+contribute+project+safety | 0/60 (0%) | 待开始 |
+| **总计** | | **194/889 (21.8%)** | |
 
 ### 已完成
 
@@ -27,30 +41,31 @@
 | 自定义域名解除 | ✓ | 用户已删除 Takanashikoucha.github.io 的 blog.kouchalab.win 绑定 |
 | 批次 1：introduction | ✓ | 1 个文件 |
 | 批次 2：kernel | ✓ | 65 个文件全部翻译完成 |
-| 批次 3：build（部分） | 进行中 | 32 个文件已翻译（subagent 完成），62 个待翻译 |
-| 荧枝 CSS 部署修复 | 进行中 | 发现 luminous.css/fiber.js 在 static/css/ 和 static/js/ 子目录中，Sphinx 不递归复制；已复制到 static/ 根目录并更新 layout.html 路径，本地构建验证通过，但线上仍 404（GitHub Pages 缓存/构建延迟） |
+| 批次 3：build | ✓ | 93/94（1 个未译：sysbuild/index.rst） |
+| 批次 4：develop（部分） | 暂停中 | 33/138（languages 9 文件 + flash_debug 4 文件 + manifest 3 文件 + optimizations 1 + sca 1 + test 1 等） |
+| 荧枝 CSS 部署修复 | 进行中 | 已复制到 static/ 根目录，本地构建验证通过，但线上仍 404 |
+| 进度管理脚本 | ✓ | `tmp/translate_progress.py` 自动扫描进度 |
 
 ### 进行中 / 待解决
 
-1. **荧枝主题线上渲染未确认**
-   - 根因：`luminous.css` 和 `fiber.js` 原在 `static/css/` 和 `static/js/` 子目录，Sphinx 只复制 `static/` 直接子文件到 `_static/`
-   - 已修复：将两个文件复制到 `static/` 根目录，更新 `layout.html` 引用路径（`_static/css/luminous.css` → `_static/luminous.css`）
-   - 本地构建验证：`_build/html/_static/` 中已包含 `luminous.css` 和 `fiber.js` ✓
-   - 已部署到 gh-pages（commit 1efd65e3e）
-   - **待验证**：线上 `https://Takanashikoucha.github.io/zephyr_cn/_static/luminous.css` 是否 200（之前多次 404，可能是 GitHub Pages 构建延迟或缓存）
-   - **验证命令**：`curl -sI "https://Takanashikoucha.github.io/zephyr_cn/_static/luminous.css?cb=$(date +%s)" | grep -E "^HTTP|content-type"`
+1. **荧枝主题线上 404（最高优先级）**
+   - 根因：GitHub Pages 分发层（缓存/CDN）异常
+   - 证据：gh-pages 分支 `_static/` 包含 luminous.css（9540 字节）及全部 20+ 条目；Pages 5 次构建全部 built；但线上 `_static/` 下**所有**文件（basic.css、fiber.js、doctools.js 等）均 404
+   - 已推送空提交（f34ecf483）重新触发 Pages 构建
+   - **待验证**：等 5-30 分钟后 `curl -sI "https://Takanashikoucha.github.io/zephyr_cn/_static/luminous.css?cb=$(date +%s)"`
    - 期望：`HTTP/2 200` + `content-type: text/css`
 
-2. **批次 3：build 剩余 62 个文件待翻译**
-   - 已完成 32 个（cmake/index + cmake-ref/index + cmake-ref/module/ 16 个 + prop_tgt/ 1 个 + variable/ 13 个）
-   - 待翻译 62 个：cmake-ref/variable/ 剩余 19 个 + dts/ 12 个 + flashing/ 2 个 + kconfig/ 7 个 + signing/ 1 个 + snippets/ 4 个 + sysbuild/ 2 个 + version/ 1 个 + zephyr_cmake_package.rst
-   - 文件列表：`/tmp/build_files.txt`（94 行，前 32 个已翻译）
+2. **批次 3 补译 1 个**：`build/sysbuild/index.rst`
 
-3. **docs_cn/index.rst toctree 更新**
+3. **批次 4 develop 剩余 105 个**（已暂停，优先解决样式问题）
+   - 已完成 33 个：getting_started 4 + api 6 + application 1 + debug 1 + languages 9 + flash_debug 4 + manifest 3 + optimizations 1 + sca 1 + test 1 + index 1 + env_vars 1 + beyond-GSG 1
+   - 待翻译 105 个：manifest external 30 个（subagent 进行中）+ modules 1 + optimizations 2 + sca 10 + test 5 + toolchains 14 + tools 8 + twister 15 + west 17
+
+4. **docs_cn/index.rst toctree 更新**
    - 当前只包含 5 个顶层条目（introduction/kernel/develop/build/hardware）
    - 需添加：services/releases/security/contribute/project/safety 等（随后续批次翻译完成逐步添加）
 
-4. **hero 区未渲染**
+5. **hero 区未渲染**
    - `layout.html` 的 `body` 块被 Sphinx basic 主题覆盖（basic 主题的 body 块优先级更高）
    - 导致 hero-section 纤维画布不显示
    - 可选修复：改用 `html_body_scrollable` 或自定义 `body` 块继承方式
@@ -143,9 +158,21 @@ python3 tmp/verify_style.py
 3. **GitHub Pages 缓存**：部署后需等待 5-30 分钟才能生效
 4. **zephyr.domain 扩展**：conf.py 中使用 `zephyr.domain`（非 `zephyr.domains`），通过 try/except importlib 加载
 
+## 排查记录（2026-09-30 会话）
+
+**荧枝主题 404 排查结论**：
+
+- 线上 `index.html` 200，且正确引用 `_static/luminous.css` / `_static/fiber.js`
+- gh-pages 分支 `_static/` 目录包含 luminous.css（9540 字节，sha d9dd0957ccf2）及全部 20 个条目
+- Pages 最近 5 次构建全部 `built` 无错误（最新 2026-09-29 15:45，commit 1efd65e3e）
+- 但线上 `_static/` 下**所有**文件（basic.css、fiber.js、doctools.js、pygments.css 等）均 404
+- **结论**：文件在、引用对、构建成功，唯独 `_static/` 目录整体 404 → GitHub Pages 分发层（缓存/CDN）异常，仓库侧无代码可修
+- **后续手段**：① 等待 GitHub 自动刷新（数小时至数天）；② 在 gh-pages 分支推送一个空提交重新触发 Pages 构建；③ 如仍无效，在 GitHub 设置 → Pages 中重新启用站点
+
+**批次 3 文件列表**：`/tmp/build_files.txt` 已被沙盒清除，需重建（`find doc/build -name "*.rst" | sort` 取第 33-94 行，前 32 个已翻译）
+
 ## 下一步（新会话继续时）
 
-1. **验证荧枝主题线上渲染**：`curl -sI "https://Takanashikoucha.github.io/zephyr_cn/_static/luminous.css"` 确认 200 + text/css
-2. **如仍 404**：检查 gh-pages 分支 `_static/` 目录是否包含 luminous.css（`curl -s "https://api.github.com/repos/Takanashikoucha/zephyr_cn/contents/_static?ref=gh-pages" | python3 -c "import sys,json; [print(i['name']) for i in json.load(sys.stdin)]"`）
-3. **继续批次 3**：翻译 build 剩余 62 个文件（参考 `/tmp/build_files.txt` 第 33-94 行）
-4. **每批完成后**：sphinx-build 验证 → 提交推送 main → 部署 gh-pages → 更新本文件进度
+1. **重新触发 Pages 构建**：在 gh-pages 分支推送空提交（`git commit --allow-empty -m "pages: 重新触发构建"`），等待 5-30 分钟后再验证 `_static/luminous.css`
+2. **继续批次 3**：翻译 build 剩余 62 个文件（文件列表重建：`find doc/build -name "*.rst" | sort`）
+3. **每批完成后**：sphinx-build 验证 → 提交推送 main → 部署 gh-pages → 更新本文件进度
