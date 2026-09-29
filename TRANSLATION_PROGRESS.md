@@ -42,33 +42,32 @@
 | 批次 1：introduction | ✓ | 1 个文件 |
 | 批次 2：kernel | ✓ | 65 个文件全部翻译完成 |
 | 批次 3：build | ✓ | 93/94（1 个未译：sysbuild/index.rst） |
-| 批次 4：develop（部分） | 暂停中 | 33/138（languages 9 文件 + flash_debug 4 文件 + manifest 3 文件 + optimizations 1 + sca 1 + test 1 等） |
-| 荧枝 CSS 部署修复 | 进行中 | 已复制到 static/ 根目录，本地构建验证通过，但线上仍 404 |
+| 批次 4：develop（部分） | 暂停中 | 63/138（languages 9 + flash_debug 4 + manifest 33 + optimizations 1 + sca 1 + test 1 等） |
+| 荧枝 CSS 字体路径修复 | ✓ | `../fonts/` → `fonts/`（Sphinx 复制到 _static/ 后相对路径需指向 _static/fonts/） |
+| 荧枝 hero 区渲染修复 | ✓ | layout.html 改用 header 块注入 hero 区（不覆盖 body 块），CSS 适配 basic 主题 .document/.body/.sphinxsidebar 结构 |
 | 进度管理脚本 | ✓ | `tmp/translate_progress.py` 自动扫描进度 |
+| 本地构建验证 | ✓ | hero 区 + 文档内容 + 侧边栏全部正常渲染（Playwright 截图确认） |
+| gh-pages 部署 | ✓ | commit 1a60688c0（荧枝 hero 区 + CSS 适配 basic 主题） |
 
 ### 进行中 / 待解决
 
-1. **荧枝主题线上 404（最高优先级）**
+1. **荧枝主题线上 404（GitHub Pages CDN 缓存）**
    - 根因：GitHub Pages 分发层（缓存/CDN）异常
-   - 证据：gh-pages 分支 `_static/` 包含 luminous.css（9540 字节）及全部 20+ 条目；Pages 5 次构建全部 built；但线上 `_static/` 下**所有**文件（basic.css、fiber.js、doctools.js 等）均 404
-   - 已推送空提交（f34ecf483）重新触发 Pages 构建
-   - **待验证**：等 5-30 分钟后 `curl -sI "https://Takanashikoucha.github.io/zephyr_cn/_static/luminous.css?cb=$(date +%s)"`
+   - 证据：gh-pages 分支 `_static/` 包含 luminous.css（9540 字节）及全部 20+ 条目；Pages 多次构建全部 built；但线上 `_static/` 下**所有**文件均 404
+   - 已推送多次空提交 + 新部署重新触发 Pages 构建
+   - **待验证**：等 CDN 刷新后 `curl -sI "https://Takanashikoucha.github.io/zephyr_cn/_static/luminous.css?cb=$(date +%s)"`
    - 期望：`HTTP/2 200` + `content-type: text/css`
+   - **注意**：本地构建验证已确认荧枝样式完全正常（hero 区 + 文档内容 + 侧边栏），线上 404 是 GitHub CDN 层问题非代码问题
 
 2. **批次 3 补译 1 个**：`build/sysbuild/index.rst`
 
-3. **批次 4 develop 剩余 105 个**（已暂停，优先解决样式问题）
-   - 已完成 33 个：getting_started 4 + api 6 + application 1 + debug 1 + languages 9 + flash_debug 4 + manifest 3 + optimizations 1 + sca 1 + test 1 + index 1 + env_vars 1 + beyond-GSG 1
-   - 待翻译 105 个：manifest external 30 个（subagent 进行中）+ modules 1 + optimizations 2 + sca 10 + test 5 + toolchains 14 + tools 8 + twister 15 + west 17
+3. **批次 4 develop 剩余 75 个**（已暂停，优先解决样式问题）
+   - 已完成 63 个：getting_started 4 + api 6 + application 1 + debug 1 + languages 9 + flash_debug 4 + manifest 33 + optimizations 1 + sca 1 + test 1 + index 1 + env_vars 1 + beyond-GSG 1
+   - 待翻译 75 个：modules 1 + optimizations 2 + sca 10 + test 5 + toolchains 14 + tools 8 + twister 15 + west 17 + 其他
 
 4. **docs_cn/index.rst toctree 更新**
    - 当前只包含 5 个顶层条目（introduction/kernel/develop/build/hardware）
    - 需添加：services/releases/security/contribute/project/safety 等（随后续批次翻译完成逐步添加）
-
-5. **hero 区未渲染**
-   - `layout.html` 的 `body` 块被 Sphinx basic 主题覆盖（basic 主题的 body 块优先级更高）
-   - 导致 hero-section 纤维画布不显示
-   - 可选修复：改用 `html_body_scrollable` 或自定义 `body` 块继承方式
 
 ### 待办（后续批次）
 
