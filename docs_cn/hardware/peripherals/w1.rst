@@ -1,0 +1,223 @@
+.. _w1_api:
+
+1-Wire
+Bus
+##########
+
+Overview
+********
+
+1-Wire
+是
+一
+个
+low
+speed
+half
+duplex
+serial
+bus
+只
+使用
+单
+个
+wire
+加
+ground
+用于
+data
+transmission
+和
+device
+power
+supply
+两
+者。
+与
+I2C
+类似
+1-Wire
+使用
+bidirectional
+open
+collector
+data
+line
+并
+是
+single
+master
+multidrop
+bus。
+这
+意味着
+一
+个
+master
+发起
+与
+slave
+devices
+的
+所有
+data
+exchanges。
+1-Wire
+bus
+支持
+比
+I2C
+更
+长
+的
+bus
+lines
+同时
+它在
+standard
+mode
+中
+达到
+最多
+15.4
+kbps
+的
+speeds
+在
+overdrive
+mode
+中
+达到
+最多
+125
+kbps。
+在
+standard
+speed
+configuration
+中
+用
+10
+nodes
+在
+100
+meters
+bus
+length
+上
+可靠
+的
+communication
+是
+可能
+的。
+使用
+overdrive
+speed
+预期
+3
+nodes
+在
+10
+meters
+length
+的
+bus
+上
+将
+稳定
+工作。
+优化
+的
+timing
+parameters
+和
+bus
+上
+更
+少
+的
+nodes
+可能
+允许
+达到
+更
+大
+的
+bus
+extents。
+
+Implementation
+details
+在
+`BOOK
+OF
+IBUTTON
+STANDARDS`_
+中
+被
+specified。
+
+.. figure::
+   1-Wire_bus_topology.drawio.svg
+   :align:
+   center
+   :alt:
+   1-Wire
+   bus
+   topology
+
+   典型
+   的
+   1-Wire
+   bus
+   topology
+
+
+.. _w1-master-api:
+
+W1
+Master
+API
+=================
+
+Zephyr
+的
+1-Wire
+Master
+API
+用
+来
+与
+1-Wire
+slave
+devices
+如
+temperature
+sensors
+和
+serial
+memories
+交互。
+
+在
+Zephyr
+中
+这
+个
+API
+被
+拆分
+为
+以下
+layers。
+
+* Link
+  layer
+  处理
+  basic
+  communication
+  functions
+  如
+  bus
+  reset、

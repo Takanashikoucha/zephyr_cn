@@ -1,0 +1,230 @@
+.. _audio_dmic_api:
+
+Digital
+Microphone
+（DMIC）
+#########################
+
+Overview
+********
+
+Audio
+DMIC
+接口
+提供
+对
+digital
+microphones
+的
+访问。
+
+Digital
+microphones
+通常
+输出
+PDM
+（Pulse
+Density
+Modulation）
+bit
+stream
+而
+非
+analog
+audio。
+PDM
+使用
+1-bit、
+高速
+信号
+其中
+audio
+amplitude
+由
+1s
+和
+0s
+随
+时间
+的
+density
+表示。
+
+因为
+应用
+通常
+消费
+PCM
+（Pulse
+Code
+Modulation）
+samples
+而
+非
+raw
+PDM
+data，
+DMIC
+controller
+将
+microphone
+stream
+转换
+为
+PCM
+audio。
+这
+个
+转换
+包括
+filtering
+和
+decimation：
+filtering
+移除
+被
+shaped
+进
+PDM
+stream
+的
+high
+frequency
+噪声，
+decimation
+将
+bit
+stream
+速率
+降低
+到
+期望
+的
+PCM
+sample
+rate。
+
+从
+Zephyr
+的
+角度
+看，
+DMIC
+device
+是
+一
+个
+audio
+capture
+peripheral。
+应用
+配置
+microphone
+和
+controller，
+开始
+capture，
+并
+从
+driver
+读取
+PCM
+buffers。
+
+Key
+concepts
+************
+
+DMIC
+API
+将
+configuration
+分成
+三
+个
+部分
+镜像
+capture
+path：
+
+#. PDM
+   侧
+   如何
+   驱动
+   microphone，
+#. 传入
+   的
+   PDM
+   channels
+   如何
+   排列，
+以及
+#. 转换
+   后
+   的
+   PCM
+   samples
+   如何
+   交付
+   给
+   应用。
+
+这些
+部分
+在
+:c:struct:`dmic_cfg`
+中
+组合
+并
+传递
+给
+:c:func:`dmic_configure`。
+
+**PDM
+I/O
+configuration**
+（:c:member:`dmic_cfg.io`）
+  这
+  描述
+  microphone
+  接口
+  的
+  电气
+  和
+  timing
+  要求，
+  如
+  支持
+  的
+  PDM
+  clock
+  frequency
+  范围、
+  duty
+  cycle、
+  以及
+  任何
+  controller
+  特定
+  的
+  信号
+  polarity
+  设置。
+
+**Channel
+configuration**
+（:c:member:`dmic_cfg.channel`）
+  这
+  告诉
+  driver
+  哪个
+  physical
+  PDM
+  controller
+  和
+  left
+  或
+  right
+  microphone
+  lane
+  应该

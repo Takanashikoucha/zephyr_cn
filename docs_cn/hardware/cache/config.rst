@@ -1,0 +1,255 @@
+.. _cache_config:
+
+Cache
+Control
+Configuration
+###########################
+
+这
+是
+Zephyr
+的
+cache
+接口
+和
+与
+cache
+controllers
+相关
+的
+Kconfig
+选项
+的
+高层
+指南。
+参考
+:ref:`cache_api`
+获取
+API
+reference
+材料。
+
+Zephyr
+有
+不同
+的
+Kconfig
+选项
+控制
+cache
+controller
+如何
+被
+实现
+和
+控制。
+
+* :kconfig:option:`CONFIG_CPU_HAS_DCACHE`
+  /
+  :kconfig:option:`CONFIG_CPU_HAS_ICACHE`：
+  这些
+  hidden
+  选项
+  应该
+  在
+  SoC
+  /
+  platform
+  level
+  被
+  选择
+  当
+  CPU
+  实际
+  支持
+  data
+  或
+  instruction
+  cache
+  时。
+  Cache
+  controller
+  可以
+  在
+  core
+  中
+  或
+  可以
+  是
+  外部
+  cache
+  controller
+  有
+  driver
+  提供
+  的。
+
+  这些
+  选项
+  的
+  目标
+  是
+  文档
+  化
+  可用
+  的
+  hardware
+  功能
+  并
+  应该
+  被
+  设置
+  无论
+  我们
+  计划
+  支持
+  和
+  使用
+  Zephyr
+  中
+  的
+  cache
+  control
+  还
+  是
+  不
+  是。
+
+* :kconfig:option:`CONFIG_DCACHE`
+  /
+  :kconfig:option:`CONFIG_ICACHE`：
+  这些
+  选项
+  必须
+  在
+  data
+  或
+  instruction
+  cache
+  支持
+  存在
+  并
+  在
+  zephyr
+  中
+  工作
+  时
+  被
+  选择。
+  注意
+  如果
+  这些
+  选项
+  被
+  禁用，
+  caching
+  仍
+  可能
+  被
+  启用
+  取决于
+  hardware
+  默认
+  值。
+
+  所有
+  与
+  cache
+  control
+  相关
+  的
+  代码
+  path
+  必须
+  条件
+  启用
+  取决于
+  这些
+  symbols。
+  当
+  symbol
+  被
+  设置
+  cache
+  被
+  考虑
+  为
+  启用
+  并
+  使用。
+
+  这些
+  symbols
+  不
+  说
+  任何
+  关于
+  暴露
+  给
+  用户
+  的
+  实际
+  API
+  接口
+  的
+  事。
+  例如
+  使用
+  data
+  cache
+  的
+  platform
+  可以
+  启用
+  :kconfig:option:`CONFIG_DCACHE`
+  symbol
+  并
+  用
+  某些
+  platform
+  特定
+  代码
+  中
+  的
+  某些
+  HAL
+  导出
+  函数
+  来
+  启用
+  和
+  管理
+  d-cache。
+
+* :kconfig:option:`CONFIG_CACHE_MANAGEMENT`：
+  这
+  个
+  选项
+  必须
+  在
+  cache
+  operations
+  通过
+  标准
+  API
+  暴露
+  给
+  用户
+  时
+  被
+  选择
+  （参考
+  :ref:`cache_api`）。
+
+  当
+  这
+  个
+  选项
+  被
+  启用
+  我们
+  假设
+  所有
+  cache
+  函数
+  是

@@ -1,0 +1,244 @@
+.. _board_porting_guide:
+
+Board
+Porting
+Guide
+###################
+
+要
+为
+新
+的
+:term:`board`
+添加
+Zephyr
+支持
+你
+至少
+需要
+一
+个
+*board
+directory*
+带
+各种
+files。
+Board
+directory
+中
+的
+files
+继承
+至少
+一
+个
+SoC
+和
+其
+所有
+features
+的
+支持。
+因此
+Zephyr
+必须
+也
+支持
+你的
+:term:`SoC`。
+
+.. _hw_model_v2:
+
+Transition
+to
+the
+current
+hardware
+model
+****************************************
+
+在
+Zephyr
+3.6.0
+发布
+后
+不久
+新
+的
+hardware
+model
+被
+引入
+Zephyr。
+这
+个
+新
+model
+overhaul
+了
+SoCs
+和
+boards
+被
+命名
+和
+defined
+的
+方式
+并
+添加
+对
+多年来
+被
+识别
+为
+重要
+的
+features
+的
+支持。
+其中
+包括：
+
+- 支持
+  multi
+  core、
+  multi
+  arch
+  AMP
+  （Asymmetrical
+  Multi
+  Processing）
+  SoCs
+- 支持
+  multi
+  SoC
+  boards
+- 支持
+  在
+  Zephyr
+  build
+  system
+  外
+  复用
+  SoC
+  和
+  board
+  Kconfig
+  trees
+- 支持
+  用
+  :ref:`sysbuild`
+  的
+  advanced
+  use
+  cases
+- 移除
+  所有
+  现有
+  的
+  arbitrary
+  和
+  inconsistent
+  的
+  Kconfig
+  和
+  folder
+  names
+  使用
+
+这
+页
+上
+的
+所有
+documentation
+都
+参考
+当前
+的
+hardware
+model。
+请
+参考
+Zephyr
+v3.6.0
+（或
+更早
+）
+的
+documentation
+获取
+之前
+的
+现在
+已
+obsolete
+的
+hardware
+model
+的
+信息。
+
+关于
+新
+model
+背后
+的
+rationale、
+development
+和
+concepts
+的
+更多
+信息
+可以
+在
+:github:`original
+issue
+<51831>`、
+:github:`original
+Pull
+Request
+<50305>`
+以及
+关于
+引入
+的
+完整
+changes
+set
+的
+`hardware
+model
+v2
+commit`_
+中
+找到。
+
+新
+hardware
+model
+的
+一些
+non
+critical
+的
+features、
+enhancements
+和
+improvements
+仍
+在
+development
+中。
+参考
+:github:`hardware
+model
+v2
+enhancements
+issue
+<69546>`
+获取
+完整
+列表。

@@ -1,0 +1,214 @@
+.. _edac_ibecc:
+
+In
+Band
+Error
+Correction
+Code
+（IBECC）
+#####################################
+
+Overview
+********
+
+最初
+在
+Intel
+Elkhart
+Lake
+SOCs
+和
+later
+boards
+中
+找到
+的
+机制
+是
+带
+IBECC
+的
+integrated
+memory
+controller。
+
+In-Band
+Error
+Correction
+Code
+（IBECC）
+通过
+提供
+error
+detection
+和
+correction
+提高
+reliability。
+IBECC
+可以
+为
+所有
+或
+physical
+memory
+space
+的
+特定
+regions
+工作。
+IBECC
+对
+不
+支持
+out-of-band
+ECC
+的
+memory
+technologies
+有用。
+
+IBECC
+添加
+1/32
+memory
+的
+memory
+overhead。
+这
+memory
+不
+可
+访问
+并
+用
+于
+存储
+ECC
+syndrome
+data。
+IBECC
+将
+read
+/
+write
+transactions
+转换
+为
+两
+个
+分开
+的
+transactions：
+一
+个
+用于
+实际
+data
+另一
+个
+用于
+包含
+ECC
+value
+的
+cache
+line。
+
+有
+一
+个
+debug
+feature
+IBECC
+Error
+Injection
+帮助
+debug
+和
+验证
+IBECC
+functionality。
+ECC
+errors
+在
+write
+path
+上
+被
+injected
+并
+在
+read
+path
+上
+导致
+ECC
+errors。
+
+IBECC
+Configuration
+*******************
+
+有
+三
+个
+IBECC
+operation
+modes
+可以
+由
+Bootloader
+选择。
+它们
+在
+下面
+列出：
+
+* OPERATION_MODE
+  =
+  0x0
+  将
+  functional
+  mode
+  设置
+  为
+  基于
+  address
+  range
+  保护
+  requests
+
+* OPERATION_MODE
+  =
+  0x1
+  将
+  functional
+  mode
+  设置
+  为
+  所有
+  requests
+  不
+  被
+  保护
+  并
+  忽略
+  range
+  checks
+
+* OPERATION_MODE
+  =
+  0x2
+  将
+  functional
+  mode
+  设置
+  为
+  保护
+  所有
+  requests
+  并
+  忽略
+  range
+  checks

@@ -1,0 +1,203 @@
+.. _led_api:
+
+Light-Emitting
+Diode
+（LED）
+##########################
+
+Overview
+********
+
+LED
+API
+提供
+对
+Light
+Emitting
+Diodes
+的
+访问
+两
+种
+形式
+individual
+和
+strip。
+它
+抽象
+了
+简单
+的
+GPIO
+驱动
+的
+LEDs、
+PWM
+可
+调
+dim
+的
+LEDs、
+dedicated
+LED
+controller
+ICs、
+和
+addressable
+LED
+strips
+之间
+的
+差异
+在
+一
+小
+组
+common
+operations
+后面。
+
+暴露
+两
+个
+相关
+subsystems：
+
+* **LED**
+  —
+  控制
+  discrete
+  或
+  controller
+  支持
+  的
+  LEDs
+  的
+  通用
+  API
+  （on/off、
+  brightness、
+  color、
+  blink）
+* **LED
+  Strip**
+  —
+  针对
+  addressable
+  LED
+  strings
+  的
+  API
+  如
+  WS2812
+  和
+  APA102
+  其中
+  每个
+  pixel
+  带
+  自己
+  的
+  color
+  value
+
+LED
+Operations
+****************
+
+一
+个
+driver
+实现
+下面
+operations
+的
+子集。
+对
+optional
+operations
+的
+calls
+在
+底层
+driver
+不
+提供
+它们
+时
+返回
+``-ENOSYS``。
+
+Mandatory
+operations
+（至少
+一
+个）：
+
+* :c:func:`led_on`
+  /
+  :c:func:`led_off`
+  —
+  将
+  LED
+  完全
+  打开
+  或
+  关闭
+* :c:func:`led_set_brightness`
+  —
+  设置
+  brightness
+  在
+  0
+  到
+  :c:macro:`LED_BRIGHTNESS_MAX`
+  （100）
+  范围
+  内；
+  当
+  实现
+  时
+  这
+  也
+  被
+  :c:func:`led_on`
+  和
+  :c:func:`led_off`
+  自动
+  使用
+
+Optional
+operations：
+
+* :c:func:`led_blink`
+  —
+  开始
+  LED
+  用
+  给出
+  的
+  on/off
+  durations
+  blink
+* :c:func:`led_set_color`
+  —
+  设置
+  multi-color
+  LED
+  的
+  per-channel
+  color
+  values
+* :c:func:`led_get_info`
+  —
+  获取
+  描述
+  特定
+  LED
+  （label、
+  index、
+  color
+  mapping）
+  的
+  :c:struct:`led_info`

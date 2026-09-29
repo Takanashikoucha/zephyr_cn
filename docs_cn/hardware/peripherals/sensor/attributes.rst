@@ -1,0 +1,162 @@
+.. _sensor-attribute:
+
+Sensor
+Attributes
+#################
+
+:dfn:`Attributes`
+在
+:c:enum:`sensor_attribute`
+中
+enumerated
+是
+一
+个
+sensor
+和
+其
+channels
+的
+immutable
+和
+mutable
+properties。
+
+Attributes
+允许
+获取
+metadata
+和
+改变
+sensor
+的
+configuration。
+Common
+的
+configuration
+parameters
+如
+channel
+scale、
+sampling
+frequency、
+调整
+channel
+offsets、
+signal
+filtering、
+power
+modes、
+on
+chip
+buffers、
+和
+event
+handling
+options
+非常
+常见。
+Attributes
+提供
+一
+个
+flexible
+API
+检查
+和
+操纵
+这样
+的
+device
+properties。
+
+Attributes
+用
+:c:enum:`sensor_attribute`
+指定
+它
+可以
+与
+:c:func:`sensor_attr_get`
+和
+:c:func:`sensor_attr_set`
+用
+来
+get
+和
+set
+一
+个
+sensor
+的
+attributes。
+
+一
+个
+quick
+example...
+
+.. code-block:: c
+
+   const
+   struct
+   device
+   *accel_dev
+   =
+   DEVICE_DT_GET(DT_ALIAS(accel0));
+   struct
+   sensor_value
+   accel_sample_rate;
+   int
+   rc;
+
+   rc
+   =
+   sensor_attr_get(accel_dev,
+   SENSOR_CHAN_ACCEL_XYZ,
+   SENSOR_ATTR_SAMPLING_FREQUENCY,
+   &accel_sample_rate);
+   if
+   (rc
+   !=
+   0)
+   {
+               printk("Failed
+   to
+   get
+   sampling
+   frequency\n");
+   }
+
+   printk("Sample
+   rate
+   for
+   accel
+   %p
+   is
+   %d.06%d\n",
+   accel_dev,
+   accel_sample_rate.val1,
+   accel_sample_rate.val2*1000000);
+
+   accel_sample_rate.val1
+   =
+   2000;
+
+   rc
+   =
+   sensor_attr_set(accel_dev,
+   SENSOR_CHAN_ACCEL_XYZ,
+   SENSOR_ATTR_SAMPLING_FREQUENCY,
+   accel_sample_rate);
+   if
+   (rc
+   !=
+   0)
+   {
+               printk("Failed
+   to
+   set
+   sampling
+   frequency\n");
+   }

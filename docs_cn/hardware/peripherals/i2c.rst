@@ -1,0 +1,186 @@
+.. _i2c_api:
+
+Inter-Integrated
+Circuit
+（I2C）
+Bus
+##################################
+
+Overview
+********
+
+.. note::
+
+   Zephyr
+   I2C
+   APIs
+   使用
+   的
+   术语
+   遵循
+   `NXP
+   I2C
+   Bus
+   Specification
+   Rev
+   7.0
+   <i2c-specification_>`_。
+   这些
+   从
+   之前
+   的
+   revisions
+   改变
+   自
+   其
+   2021
+   年
+   10
+   月
+   1
+   日
+   发布
+   起。
+
+`I2C`_
+（Inter-Integrated
+Circuit，
+发音
+"eye
+squared
+see"）
+是
+常用
+的
+two-signal
+shared
+peripheral
+interface
+bus。
+许多
+system-on-chip
+solutions
+提供
+在
+I2C
+bus
+上
+通信
+的
+controllers。
+Bus
+上
+的
+devices
+可以
+在
+两
+个
+roles
+中
+工作：
+作为
+"controller"
+发起
+transactions
+并
+控制
+clock
+或
+作为
+"target"
+响应
+transaction
+commands。
+给定
+SoC
+上
+的
+I2C
+controller
+通常
+支持
+controller
+role
+一些
+也
+支持
+target
+mode。
+Zephyr
+有
+两
+个
+roles
+的
+API。
+
+.. _i2c-controller-api:
+
+I2C
+Controller
+API
+=================
+
+Zephyr
+的
+I2C
+controller
+API
+在
+I2C
+peripheral
+控制
+bus
+时
+使用
+特别
+是
+start
+和
+stop
+conditions
+和
+clock。
+这
+是
+最
+常见
+的
+mode
+用
+于
+与
+I2C
+devices
+如
+sensors
+和
+serial
+memory
+交互。
+
+这
+个
+API
+在
+所有
+in-tree
+I2C
+peripheral
+drivers
+中
+被
+支持
+并
+被
+考虑
+为
+stable。
+
+.. _i2c-target-api:
+
+I2C
+Target
+API
+==============

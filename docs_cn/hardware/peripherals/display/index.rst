@@ -1,0 +1,247 @@
+.. _display_api:
+
+Display
+#######
+
+Zephyr
+中
+的
+Display
+subsystem
+提供
+统一
+的
+方式
+与
+广泛
+范围
+的
+display
+devices
+交互。
+Display
+API
+是
+transport-agnostic
+的：
+它
+描述
+你
+想
+让
+display
+做
+什么，
+而
+不
+暴露
+data
+如何
+通过
+wire
+移动。
+
+MIPI
+Display
+Bus
+Interface
+（DBI）
+********************************
+
+**MIPI
+DBI**
+specification
+定义
+多
+个
+parallel
+和
+serial
+buses
+用于
+连接
+host
+到
+display
+controller。
+在
+Zephyr
+中，
+DBI
+支持
+提供
+bus-level
+primitives
+用于
+command
+writes、
+reads、
+pixel
+transfers、
+reset、
+以及
+driver
+内部
+用
+来
+实现
+generic
+API
+的
+相关
+operations。
+
+应用
+不
+直接
+使用
+DBI
+functions。
+相反，
+它们
+调用
+generic
+Display
+API
+（例如
+写
+pixels），
+display
+driver
+在
+底层
+处理
+DBI
+protocol。
+
+MIPI-DBI
+定义
+3
+个
+interface
+types：
+
+* Type
+  A:
+  Motorola
+  6800
+  parallel
+  bus
+* Type
+  B:
+  Intel
+  8080
+  parallel
+  bus
+* Type
+  C:
+  SPI
+  Type
+  serial
+  bit
+  bus
+  有
+  3
+  个
+  options:
+
+  #. 每
+     byte
+     9
+     write
+     clocks，
+     最后
+     bit
+     是
+     command/data
+     selection
+     bit
+  #. 与
+     上面
+     相同，
+     但
+     每
+     byte
+     16
+     write
+     clocks
+  #. 每
+     byte
+     8
+     write
+     clocks。
+     Command/data
+     通过
+     GPIO
+     pin
+     选择
+
+当前，
+API
+不
+支持
+16
+write
+clocks
+（option
+2）
+的
+Type
+C
+controllers。
+
+MIPI
+Display
+Serial
+Interface
+（DSI）
+***********************************
+
+**MIPI
+DSI**
+standard
+是
+为
+现代
+color
+TFT
+panels
+设计
+的
+高速
+differential
+serial
+bus。
+Zephyr
+的
+DSI
+支持
+提供
+drivers
+实现
+generic
+Display
+API
+在
+DSI
+link
+上
+所
+需
+的
+primitives。
+
+与
+DBI
+一样，
+应用
+从不
+直接
+调用
+DSI
+functions。
+它们
+通过
+使用
+保持
+portable

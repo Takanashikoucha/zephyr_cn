@@ -1,0 +1,160 @@
+.. _stepper-integrated-controller-driver:
+
+Integrated
+Stepper
+Motion
+Control
+and
+Driver
+############################################
+
+由
+motion
+controller
+和
+stepper
+driver
+blocks
+两
+者
+组成
+的
+单
+个
+IC
+的
+device
+在
+devicetree
+中
+被
+modeled
+为
+multi
+functional
+device
+并
+有
+两
+个
+software
+drivers
+分别
+实现
+:c:group:`stepper_ctrl`
+和
+:c:group:`stepper_hw_driver`
+APIs。
+这样
+的
+device
+的
+示例
+是
+:dtcompatible:`adi,tmc50xx`。
+
+.. code-block:: dts
+
+   /
+   {
+       aliases
+       {
+           x_axis_stepper_ctrl
+           =
+           &tmc50xx_0_motion_controller;
+           y_axis_stepper_ctrl
+           =
+           &tmc50xx_1_motion_controller;
+           x_axis_stepper_driver
+           =
+           &tmc50xx_0_stepper_driver;
+           y_axis_stepper_driver
+           =
+           &tmc50xx_1_stepper_driver;
+       };
+   };
+
+   &spi0
+   {
+       /*
+       SPI
+       bus
+       options
+       here,
+       not
+       shown
+       */
+
+       /*
+       Dual
+       controller/driver
+       for
+       up
+       to
+       two
+       2-phase
+       bipolar
+       stepper
+       motors
+       */
+       tmc50xx:
+       tmc50xx@0
+       {
+           compatible
+           =
+           "adi,tmc50xx";
+           reg
+           =
+           <0>;
+           spi-max-frequency
+           =
+           <DT_FREQ_M(8)>;
+           /*
+           Maximum
+           SPI
+           bus
+           frequency
+           */
+
+           poscmp-enable;
+           test-mode;
+           lock-gconf;
+           /*
+           ADI
+           TMC
+           Global
+           configuration
+           flags
+           */
+           clock-frequency
+           =
+           <DT_FREQ_M(16)>;
+           /*
+           Internal/External
+           Clock
+           frequency
+           */
+
+           tmc50xx_0_stepper_driver:
+           stepper-driver-0
+           {
+               idx
+               =
+               <0>;
+                compatible
+               =
+               "adi,tmc50xx-stepper-driver";
+                micro-step-res
+               =
+               <256>;
+                /*
+                ADI
+                TMC
+                stallguard
+                settings
+                specific
+                to
+                TMC50XX
+                */
+                stallguard2-threshold=<30>;
+           };

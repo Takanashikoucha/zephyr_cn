@@ -1,0 +1,289 @@
+.. _buzzer_api:
+
+Buzzer
+######
+
+Buzzer
+subsystem
+暴露
+一
+个
+API
+统一
+驱动
+buzzer
+hardware，
+无论
+底层
+part
+是
+由
+PWM
+channel
+驱动
+的
+passive
+piezo
+还是
+由
+单一
+GPIO
+line
+控制
+的
+active
+buzzer。
+
+Basic
+Operation
+***************
+
+应用
+通过
+devicetree
+获取
+一
+个
+buzzer
+device
+并
+通过
+:zephyr_file:`include/zephyr/drivers/buzzer.h`
+中
+的
+函数
+驱动
+它：
+
+Buzzer
+API
+calls
+不
+等待
+请求
+的
+tone
+duration。
+Durations
+描述
+hardware
+应该
+保持
+发出
+tone
+的
+时间
+长度
+而
+非
+调用
+thread
+应该
+sleep
+的
+时间；
+用
+:c:macro:`BUZZER_DURATION_FOREVER`
+播放
+直到
+显式
+stop。
+
+- :c:func:`buzzer_tone`
+  在
+  特定
+  frequency
+  播放
+  特定
+  duration
+  的
+  tone。
+  Hardware
+  保持
+  发出
+  tone
+  请求
+  的
+  duration
+  并
+  driver
+  自动
+  将其
+  静音。
+- :c:func:`buzzer_beep`
+  播放
+  buzzer
+  的
+  natural
+  operating
+  frequency，
+  由
+  board
+  file
+  在
+  ``pwms``
+  DT
+  property
+  的
+  period
+  cell
+  中
+  编码
+  （通常
+  是
+  piezo
+  的
+  mechanical
+  resonance，
+  即
+  part
+  能
+  产生
+  的
+  最
+  响
+  的
+  tone）。
+  在
+  active
+  buzzers
+  上
+  这
+  个
+  调用
+  等价
+  于
+  将
+  GPIO
+  line
+  驱动
+  为
+  on，
+  因为
+  hardware
+  oscillator
+  决定
+  实际
+  pitch。
+- :c:func:`buzzer_set_volume`
+  调整
+  感知
+  的
+  loudness。
+  零
+  立即
+  静音；
+  非
+  零
+  值
+  被
+  存储
+  并
+  在
+  下次
+  tone
+  时
+  应用。
+  Active
+  buzzers
+  缺乏
+  analog
+  volume
+  control，
+  将
+  零
+  映射
+  为
+  silent
+  将
+  任何
+  非
+  零
+  值
+  映射
+  为
+  它们
+  的
+  单一
+  audible
+  level。
+- :c:func:`buzzer_stop`
+  立即
+  取消
+  任何
+  进行
+  中
+  的
+  tone。
+
+Backends
+********
+
+提供
+两
+个
+devicetree
+可
+发现
+的
+backends：
+
+- :dtcompatible:`pwm-buzzer`
+  用于
+  由
+  PWM
+  channel
+  驱动
+  的
+  passive
+  piezo
+  buzzers。
+  PWM
+  channel
+  period
+  设置
+  audio
+  frequency
+  并
+  duty
+  cycle
+  设置
+  感知
+  的
+  volume；
+  driver
+  从
+  应用
+  的
+  tone
+  和
+  volume
+  请求
+  推导
+  两
+  者。
+- :dtcompatible:`gpio-buzzer`
+  用于
+  通过
+  单一
+  GPIO
+  驱动
+  的
+  active
+  buzzers。
+  Driver
+  对
+  任何
+  非
+  零
+  frequency
+  将
+  line
+  切换
+  为
+  on
+  对
+  :c:macro:`BUZZER_FREQ_REST`
+  切换
+  为
+  off。

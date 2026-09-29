@@ -1,0 +1,240 @@
+.. _soc_porting_guide:
+
+SoC
+Porting
+Guide
+###################
+
+这
+页
+描述
+如何
+在
+Zephyr
+中
+为
+新
+的
+:term:`SoC`
+添加
+支持
+无论
+是
+在
+upstream
+Zephyr
+project
+中
+还是
+在
+你
+自己
+的
+repository
+中
+本地。
+
+SoC
+Definitions
+***************
+
+预期
+你
+熟悉
+Zephyr
+中
+的
+board
+concept。
+Hardware
+support
+hierarchy
+和
+Zephyr
+documentation
+中
+使用
+的
+terms
+的
+high
+level
+overview
+可以
+在
+:ref:`hw_support_hierarchy`
+中
+看到。
+
+对
+SoC
+porting
+来说
+最
+重要
+的
+terms
+是：
+
+- SoC：
+  board
+  的
+  CPU
+  是
+  其
+  部分
+  的
+  exact
+  system
+  on
+  a
+  chip。
+- SoC
+  series：
+  一
+  组
+  紧密
+  related
+  的
+  SoCs。
+- SoC
+  family：
+  更
+  广泛
+  的
+  一
+  组
+  有
+  相似
+  characteristics
+  的
+  SoCs。
+- CPU
+  cluster：
+  一
+  个
+  由
+  一
+  个
+  或
+  多
+  个
+  CPU
+  cores
+  组成
+  的
+  cluster。
+- CPU
+  core：
+  给定
+  architecture
+  的
+  特定
+  CPU
+  instance。
+- Architecture：
+  instruction
+  set
+  architecture。
+
+Architecture
+================
+
+参考
+:ref:`architecture_porting_guide`。
+
+
+Create
+your
+SoC
+directory
+*************************
+
+每个
+SoC
+必须
+有
+一
+个
+unique
+的
+name。
+使用
+SoC
+vendor
+给出
+的
+official
+name
+并
+检查
+它
+是否
+已
+被
+使用。
+在
+一些
+情况
+下
+其他
+人
+可能
+已
+贡献
+了
+相同
+name
+的
+SoC。
+如果
+SoC
+name
+已
+被
+使用
+那么
+你
+应该
+改进
+现有
+的
+SoC
+而
+不
+是
+创建
+新
+的
+。
+脚本
+``list_hardware``
+可以
+被
+用
+来
+获取
+Zephyr
+中
+已知
+的
+所有
+SoCs
+的
+列表
+例如
+从
+Zephyr
+base
+directory
+的
+``./scripts/list_hardware.py
+--soc-root=.
+--socs``
+获取
+已
+被
+使用
+的
+names
+列表。

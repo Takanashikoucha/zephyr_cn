@@ -1,0 +1,177 @@
+.. _semihost_guide:
+
+Semihosting
+Guide
+#################
+
+Overview
+********
+
+Semihosting
+是
+一
+个
+机制
+使
+运行
+在
+ARM、
+RISC-V
+和
+Xtensa
+targets
+上
+的
+代码
+可以
+通信
+并
+使用
+运行
+debugger
+或
+emulator
+的
+主机
+电脑
+上
+的
+Input/Output
+设施。
+
+关于
+可用
+功能
+的
+更
+完整
+文档
+可以
+找到
+在
+`ARM
+Github
+documentation`_。
+
+RISC-V
+功能
+借鉴
+自
+ARM
+定义，
+如
+`RISC-V
+Github
+documentation`_
+中
+描述
+的
+那样。
+
+Xtensa
+上
+的
+Semihosting
+实现
+支持
+GDB
+File-I/O
+extension，
+它
+在
+`GDB
+File-I/O
+Remote
+Protocol`_
+中
+解释。
+
+File
+Operations
+***************
+
+Semihosting
+使
+主机
+电脑
+上
+的
+文件
+可以
+被
+应用
+打开、
+读取
+和
+修改。
+这
+在
+尝试
+验证
+代码
+在
+比
+能
+放入
+emulated
+platform
+的
+ROM
+更
+大
+的
+datasets
+上
+的
+行为
+时
+可以
+有用。
+文件
+路径
+可以
+是
+绝对
+的，
+或
+相对
+于
+运行
+的
+process
+的
+目录。
+
+.. code-block:: c
+
+   const
+   char
+   *path
+   =
+   "./data.bin";
+   long
+   file_len,
+   bytes_read,
+   fd;
+   uint8_t
+   buffer[16];
+
+   /*
+   Open
+   the
+   data
+   file
+   for
+   reading
+   */
+   fd
+   =
+   semihost_open(path,
+   SEMIHOST_OPEN_RB);
+   if
+   (fd
+   <
+   0)
+   {
+      return
+   -ENOENT;

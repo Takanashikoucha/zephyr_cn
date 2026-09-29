@@ -1,0 +1,298 @@
+.. _cache_guide:
+
+Caching
+Basics
+##############
+
+本
+节
+讨论
+cache
+coherency
+的
+基础
+以及
+在
+什么
+情况
+下
+用户
+需要
+显式
+处理
+caching。
+对
+Zephyr
+的
+caching
+工具
+的
+更
+详细
+信息，
+参考
+:ref:`cache_config`
+获取
+Zephyr
+Kconfig
+选项
+或
+:ref:`cache_api`
+获取
+API
+reference。
+本
+节
+主要
+聚焦
+于
+data
+cache
+虽然
+有
+cache
+支持
+的
+systems
+通常
+也
+有
+一
+个
+instruction
+cache。
+
+.. note::
+
+   这里
+   的
+   信息
+   假设
+   architecture
+   特定
+   的
+   MPU
+   支持
+   被
+   启用。
+   参考
+   architecture
+   特定
+   文档
+   获取
+   细节。
+
+.. note::
+
+   虽然
+   cache
+   coherence
+   可以
+   是
+   SMP
+   cores
+   之间
+   共享
+   data
+   的
+   关注
+   点，
+   Zephyr
+   通常
+   确保
+   memory
+   从
+   多
+   个
+   cores
+   看
+   到
+   时
+   处于
+   coherent
+   状态。
+   大多数
+   应用
+   只
+   需要
+   使用
+   cache
+   APIs
+   与
+   外部
+   hardware
+   交互
+   如
+   DMA
+   controllers
+   或
+   运行
+   不同
+   OS
+   image
+   的
+   foreign
+   CPUs。
+   对
+   SMP
+   cores
+   之间
+   cache
+   coherence
+   的
+   更多
+   信息，
+   参考
+   :kconfig:option:`CONFIG_KERNEL_COHERENCE`。
+
+当
+处理
+在
+processor
+core
+和
+其他
+bus
+masters
+之间
+共享
+的
+memory
+时，
+需要
+考虑
+cache
+coherency。
+通常
+processor
+caches
+存在
+在
+尽可能
+接近
+每个
+processor
+core
+的
+位置
+以
+最大化
+性能
+增益。
+由
+于
+这，
+DMA
+engines
+移动
+进
+出
+memory
+的
+data
+将
+在
+processor
+的
+cache
+中
+是
+stale
+的，
+导致
+看起来
+是
+corrupt
+的
+data。
+如果
+你
+正在
+用
+DMA
+移动
+data
+且
+processor
+没
+看到
+你
+期望
+的
+data，
+cache
+coherency
+可能
+是
+问题
+所在。
+
+有
+多
+种
+方法
+确保
+processor
+core
+和
+peripherals
+看到
+的
+data
+是
+coherent
+的。
+最
+简单
+的
+是
+只
+是
+禁用
+caching，
+但
+这
+违背
+了
+有
+hardware
+cache
+的
+目的
+并
+导致
+显著
+的
+性能
+损失。
+多
+个
+architectures
+提供
+方法
+只
+为
+memory
+的
+一
+部分
+禁用
+caching。
+这
+在
+cache
+coherence
+比
+性能
+更
+重要
+时
+可以
+有用，
+如
+用
+SPI
+与
+DMA
+一起
+时。

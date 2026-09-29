@@ -1,0 +1,238 @@
+.. _pulse_io_api:
+
+Pulse
+IO
+########
+
+Overview
+********
+
+Pulse
+IO
+subsystem
+为
+在
+单
+个
+GPIO
+line
+上
+生成
+和
+capture
+timed
+digital
+edges
+的
+hardware
+提供
+vendor
+neutral
+的
+API。
+多
+个
+MCU
+families
+以
+不同
+的
+names
+提供
+专门
+的
+peripheral
+用于
+这
+个
+目的。
+Pulse
+IO
+抽象
+那
+个
+hardware
+class
+所以
+client
+drivers
+如
+addressable
+LED
+strips、
+infrared
+transmit
+和
+receive、
+stepper
+pulse
+generation、
+frequency
+和
+duty
+measurement、
+以及
+one-wire
+style
+protocols
+可以
+bind
+一
+次
+并
+在
+任何
+提供
+backend
+的
+SoC
+上
+运行。
+
+相关
+配置
+选项：
+
+* :kconfig:option:`CONFIG_PULSE_IO`
+
+Submission
+modes
+****************
+
+一
+个
+channel
+在
+configure
+time
+被
+lock
+到
+一
+个
+submission
+mode
+从
+backend
+通过
+其
+capabilities
+广告
+的
+那些
+中
+选择。
+
+``PULSE_IO_MODE_SYMBOL``
+   应用
+   提交
+   一
+   个
+   :c:struct:`pulse_symbol`
+   的
+   array
+   每个
+   带
+   显式
+   的
+   level
+   和
+   以
+   configured
+   resolution
+   的
+   ticks
+   为
+   单位
+   的
+   duration。
+   连续
+   的
+   symbols
+   可以
+   有
+   arbitrary、
+   unrelated
+   的
+   durations。
+   在
+   edge
+   lengths
+   在
+   一
+   个
+   stream
+   内
+   变化
+   的
+   protocols
+   中
+   使用
+   它
+   如
+   infrared
+   remotes、
+   one-wire
+   和
+   stepper
+   acceleration
+   ramps。
+
+``PULSE_IO_MODE_CELL``
+   应用
+   提交
+   一
+   个
+   :c:struct:`pulse_cell`
+   的
+   array。
+   每个
+   cell
+   有
+   同一
+   的
+   period
+   在
+   channel
+   configuration
+   中
+   设置
+   一
+   次
+   并
+   每个
+   cell
+   在
+   那
+   period
+   内
+   带
+   level
+   或
+   duty
+   value。
+   在
+   自然
+   periodic
+   的
+   streams
+   中
+   使用
+   它
+   其中
+   只有
+   per-period
+   的
+   level
+   或
+   duty
+   变化
+   如
+   addressable
+   LED
+   bit
+   shaping
+   或
+   varying-duty
+   PWM。
+   Cells

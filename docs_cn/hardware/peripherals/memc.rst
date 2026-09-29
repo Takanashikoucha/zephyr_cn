@@ -1,0 +1,196 @@
+.. _memc_api:
+
+Memory
+Controller
+（MEMC）
+########################
+
+Overview
+********
+
+MEMC
+API
+提供
+访问
+外部
+memory
+devices
+如
+PSRAM
+和
+NOR
+flash
+的
+通用
+interface。
+它
+支持
+两
+个
+access
+modes：
+
+- **Memory-mapped:**
+  Controller
+  通过
+  直接
+  CPU
+  可
+  访问
+  的
+  address
+  window
+  暴露
+  device。
+  Driver
+  可以
+  实现
+  :c:member:`memc_driver_api.get_mem_base`
+  广告
+  mapped
+  base
+  address
+  允许
+  :c:func:`memc_read`
+  和
+  :c:func:`memc_write`
+  自动
+  使用
+  ``memcpy``。
+  或者
+  driver
+  可以
+  完全
+  不
+  提供
+  runtime
+  API
+  如果
+  hardware
+  透明
+  地
+  map
+  memory
+  —
+  在
+  这
+  种
+  情况
+  下
+  upper
+  layers
+  用
+  platform
+  特定
+  的
+  base
+  address
+  直接
+  访问
+  device。
+
+- **Bus
+  transaction:**
+  Controller
+  为
+  每个
+  transfer
+  发出
+  显式
+  bus
+  commands
+  （例如
+  MSPI）。
+  Driver
+  实现
+  :c:member:`memc_driver_api.read`
+  和
+  :c:member:`memc_driver_api.write`。
+  在
+  controller
+  上
+  没有
+  memory-mapped
+  aperture
+  时
+  使用。
+
+:c:func:`memc_read`
+和
+:c:func:`memc_write`
+在
+可用
+时
+自动
+选择
+memory-mapped
+path
+否则
+回退
+到
+bus
+transactions。
+
+额外
+的
+optional
+APIs
+被
+提供
+用于
+device
+introspection：
+:c:func:`memc_get_size`
+返回
+device
+capacity
+并
+:c:func:`memc_read_id`
+返回
+device
+identification
+bytes。
+
+Legacy
+（Init-Only）
+Drivers
+**************************
+
+现有
+的
+memc
+drivers
+将
+``NULL``
+作为
+API
+pointer
+传递
+给
+``DEVICE_DT_INST_DEFINE``
+的
+那些
+不
+被
+这
+个
+API
+影响。
+Callers
+应该
+用
+:c:macro:`DEVICE_API_IS`
+测试
+device
+是否
+实现
+memc
+interface
+在
+调用
+任何
+memc
+function
+之前：
+
+.. code-block:: c

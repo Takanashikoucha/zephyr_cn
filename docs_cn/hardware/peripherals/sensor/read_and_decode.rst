@@ -1,0 +1,238 @@
+.. _sensor-read-and-decode:
+
+Read
+and
+Decode
+###############
+
+快速
+stabilizing
+的
+用于
+read
+sensor
+data
+的
+APIs
+是：
+
+* :c:func:`sensor_read`
+* :c:func:`sensor_read_async_mempool`
+* :c:func:`sensor_get_decoder`
+* :c:func:`sensor_decode`
+
+对
+:ref:`sensor-fetch-and-get`
+的
+benefits
+*********************************************************
+
+这些
+APIs
+允许
+更
+广泛
+的
+sensors、
+sensor
+types、
+和
+data
+flows
+的
+使用。
+这些
+是
+Zephyr
+中
+面向
+未来
+的
+APIs
+并
+解决
+了
+与
+:ref:`sensor-fetch-and-get`
+遇到
+的
+许多
+issues。
+
+:c:func:`sensor_read`
+和
+类似
+的
+functions
+将
+sensor
+encoded
+data
+获取
+到
+caller
+提供
+的
+buffer
+中。
+Decode
+（:c:func:`sensor_decode`）
+然后
+将
+sensor
+特定
+的
+encoded
+data
+decode
+为
+fixed
+point
+:c:type:`q31_t`
+values
+作为
+per
+channel
+的
+vectors。
+这
+允许
+使用
+在
+data
+vectors
+上
+工作
+的
+fixed
+point
+DSP
+functions
+做
+进一步
+处理
+（例如
+low
+pass
+filters、
+FFT、
+fusion、
+等
+等）。
+
+Read
+默认
+是
+asynchronous
+的
+在
+其
+implementation
+中
+并
+利用
+:ref:`rtio`
+启用
+chaining
+asynchronous
+requests
+或
+从
+单
+个
+call
+context
+同时
+对
+多
+个
+sensors
+发起
+requests。
+
+这
+使
+得
+在
+与
+sensors
+工作
+时
+非常
+有用
+的
+code
+flows
+成为
+可能
+如：
+
+* 获取
+  raw
+  sensor
+  data
+  从不
+  decode、
+  稍
+  后
+  decode、
+  或
+  在
+  单独
+  的
+  processor
+  （例如
+  一
+  个
+  phone）
+  上
+  decode。
+* 直接
+  从
+  interrupt
+  handler
+  为
+  sensors
+  发起
+  read。
+  不
+  需要
+  dedicated
+  thread
+  节省
+  precious
+  stack
+  space。
+  不
+  需要
+  work
+  queue
+  引入
+  variable
+  latency。
+  从
+  单
+  个
+  call
+  context
+  （interrupt/thread/work
+  queue）
+  同时
+  为
+  多
+  个
+  sensors
+  发起
+  read。
+* 为
+  Ping-Pong
+  （double
+  buffering）
+  setups
+  对
+  同一
+  device
+  请求
+  多
+  个
+  reads。

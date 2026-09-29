@@ -1,0 +1,212 @@
+.. _smbus_api:
+
+System
+Management
+Bus
+（SMBus）
+#############################
+
+.. contents::
+   :local:
+   :depth:
+   2
+
+Overview
+********
+
+System
+Management
+Bus
+（SMBus）
+从
+I2C
+派生
+用于
+与
+motherboard
+上
+的
+devices
+通信。
+一
+个
+system
+可以
+使用
+SMBus
+与
+motherboard
+上
+的
+peripherals
+通信
+而
+不
+使用
+dedicated
+control
+lines。
+SMBus
+peripherals
+可以
+提供
+各种
+manufacturer
+information、
+report
+errors、
+accept
+control
+parameters、
+等
+等。
+
+Bus
+上
+的
+devices
+可以
+在
+三
+个
+roles
+中
+工作：
+作为
+Controller
+发起
+transactions
+并
+控制
+clock、
+作为
+Peripheral
+响应
+transaction
+commands、
+或
+作为
+Host
+（一
+个
+specialized
+的
+Controller
+提供
+到
+system
+的
+CPU
+的
+main
+interface）。
+Zephyr
+有
+Controller
+role
+的
+API。
+
+SMBus
+peripheral
+devices
+可以
+用
+两
+种
+methods
+发起
+与
+Controller
+的
+communication：
+
+* **Host
+  Notify
+  protocol**：
+  支持
+  Host
+  Notify
+  protocol
+  的
+  Peripheral
+  device
+  行为
+  如
+  Controller
+  以
+  执行
+  notification。
+  它
+  向
+  特殊
+  address
+  "SMBus
+  Host
+  (0x08)"
+  写
+  一
+  个
+  three-bytes
+  message
+  带
+  自己
+  的
+  address
+  和
+  两
+  bytes
+  的
+  relevant
+  data。
+* **SMBALERT#
+  signal**：
+  Peripheral
+  device
+  用
+  特殊
+  signal
+  SMBALERT#
+  请求
+  Controller
+  的
+  attention。
+  Controller
+  需要
+  从
+  特殊
+  的
+  "SMBus
+  Alert
+  Response
+  Address
+  (ARA)
+  (0x0c)"
+  read
+  一
+  byte。
+  Peripheral
+  device
+  响应
+  一
+  个
+  包含
+  自己
+  address
+  的
+  data
+  byte。
+
+当前，
+API
+基于
+`SMBus
+Specification`_
+version
+2.0
+
+.. note::
+   参考
+   :ref:`coding_guideline_inclusive_language`
+   获取
+   关于

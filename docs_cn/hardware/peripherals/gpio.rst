@@ -1,0 +1,182 @@
+.. _gpio_api:
+
+General-Purpose
+Input/Output
+（GPIO）
+###################################
+
+Overview
+********
+
+General-Purpose
+Input/Output
+（GPIO）
+是
+一
+个
+digital
+signal
+pin
+它
+没有
+特定
+function
+但
+可以
+被
+software
+控制
+作为
+input
+或
+output
+工作。
+
+GPIO
+API
+提供
+与
+General
+Purpose
+Input/Output
+（GPIO）
+pins
+交互
+的
+通用
+方法。
+它
+允许
+应用
+将
+pins
+配置
+为
+inputs
+或
+outputs、
+读取
+和
+写入
+它们
+的
+state、
+并
+管理
+interrupts。
+关键
+功能
+包括：
+
+**Pin
+Configuration**
+  将
+  pins
+  配置
+  为
+  input、
+  output、
+  或
+  disconnected。
+  支持
+  内部
+  pull-up/pull-down
+  resistors
+  和
+  drive
+  strength
+  configuration。
+
+**Data
+Access**
+  读取
+  input
+  values
+  并
+  写入
+  output
+  values。
+
+**Interrupts**
+  配置
+  在
+  pin
+  state
+  变化
+  时
+  （rising
+  edge、
+  falling
+  edge、
+  level
+  low、
+  level
+  high）
+  的
+  interrupts
+  并
+  注册
+  callbacks
+  处理
+  这些
+  interrupts。
+
+**Devicetree
+Integration**
+  GPIOs
+  通常
+  在
+  Devicetree
+  中
+  定义，
+  允许
+  drivers
+  和
+  应用
+  用
+  :c:struct:`gpio_dt_spec`
+  以
+  hardware-agnostic
+  的
+  方式
+  引用
+  它们。
+
+Devicetree
+Configuration
+************************
+
+GPIO
+controllers
+在
+Devicetree
+中
+被
+定义
+为
+带
+``gpio-controller``
+property
+的
+nodes。
+``#gpio-cells``
+property
+通常
+指定
+使用
+2
+cells
+描述
+一
+个
+GPIO：
+pin
+number
+和
+flags。
+
+GPIO
+controller
+definition
+的
+示例：

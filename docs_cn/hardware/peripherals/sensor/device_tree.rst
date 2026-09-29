@@ -1,0 +1,169 @@
+Device
+Tree
+###########
+
+在
+sensors
+的
+context
+中
+device
+tree
+为
+sensors
+提供
+per
+device
+level
+的
+初始
+hardware
+configuration。
+每个
+device
+必须
+在
+Zephyr
+中
+指定
+一
+个
+device
+tree
+binding
+并
+理想
+地
+说
+一
+组
+hardware
+configuration
+options
+用于
+channel
+power
+modes、
+data
+rates、
+filters、
+decimation、
+和
+scales
+等
+事情。
+这些
+然后
+可以
+在
+boards
+devicetree
+中
+用
+来
+将
+sensor
+配置
+到
+其
+初始
+state。
+
+.. code-block:: dts
+
+   #include
+   <zephyr/dt-bindings/icm42688.h>
+
+   &spi0
+   {
+       /*
+       SPI
+       bus
+       options
+       here,
+       not
+       shown
+       */
+
+       accel_gyro0:
+       icm42688p@0
+       {
+           compatible
+           =
+           "invensense,icm42688",
+           "invensense,icm4268x";
+           reg
+           =
+           <0>;
+           int-gpios
+           =
+           <&pioc
+           6
+           GPIO_ACTIVE_HIGH>;
+           /*
+           SoC
+           specific
+           pin
+           to
+           select
+           for
+           interrupt
+           line
+           */
+           spi-max-frequency
+           =
+           <DT_FREQ_M(24)>;
+           /*
+           Maximum
+           SPI
+           bus
+           frequency
+           */
+           accel-pwr-mode
+           =
+           <ICM42688_ACCEL_LN>;
+           /*
+           Low
+           noise
+           mode
+           */
+           accel-odr
+           =
+           <ICM42688_ACCEL_ODR_2000>;
+           /*
+           2000
+           Hz
+           sampling
+           */
+           accel-fs
+           =
+           <ICM42688_ACCEL_FS_16>;
+           /*
+           16G
+           scale
+           */
+           gyro-pwr-mode
+           =
+           <ICM42688_GYRO_LN>;
+           /*
+           Low
+           noise
+           mode
+           */
+           gyro-odr
+           =
+           <ICM42688_GYRO_ODR_2000>;
+           /*
+           2000
+           Hz
+           sampling
+           */
+           gyro-fs
+           =
+           <ICM42688_GYRO_FS_16>;
+           /*
+           16G
+           scale
+           */
+       };
+    };

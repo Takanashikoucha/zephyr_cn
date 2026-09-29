@@ -1,0 +1,173 @@
+.. _i3c_api:
+
+Improved
+Inter-Integrated
+Circuit
+（I3C）
+Bus
+###########################################
+
+I3C
+（Improved
+Inter-Integrated
+Circuit）
+是
+two-signal
+shared
+peripheral
+interface
+bus。
+Bus
+上
+的
+devices
+可以
+在
+两
+个
+roles
+中
+工作：
+作为
+"controller"
+发起
+transactions
+并
+控制
+clock
+或
+作为
+"target"
+响应
+transaction
+commands。
+
+当前，
+API
+基于
+`I3C
+Specification`_
+version
+1.1.1。
+
+.. contents::
+   :local:
+   :depth:
+   2
+
+.. _i3c-controller-api:
+
+I3C
+Controller
+API
+******************
+
+Zephyr
+的
+I3C
+controller
+API
+在
+I3C
+controller
+控制
+bus
+时
+使用
+特别
+是
+start
+和
+stop
+conditions
+和
+clock。
+这
+是
+最
+常见
+的
+mode
+用
+于
+与
+I3C
+target
+devices
+如
+sensors
+交互。
+
+由于
+I3C
+的
+性质，
+bus
+上
+有
+devices
+它们
+在
+上电
+时
+可能
+没有
+addresses。
+因此，
+I3C
+controller
+需要
+执行
+额外
+的
+dynamic
+address
+assignment。
+因为
+这
+个
+原因，
+controller
+需要
+维护
+分开
+的
+structures
+跟踪
+device
+status。
+这
+可以
+在
+build
+time
+做
+例如
+通过
+为
+I3C
+和
+I
+:sup:`2`
+C
+devices
+创建
+device
+descriptors
+的
+arrays：
+
+.. code-block:: c
+
+   static
+   struct
+   i3c_device_desc
+   i3c_device_array[]
+   =
+   I3C_DEVICE_ARRAY_DT_INST(inst);
+   static
+   struct
+   i3c_i2c_device_desc
+   i2c_device_array[]
+   =
+   I3C_I2C_DEVICE_ARRAY_DT_INST(inst);

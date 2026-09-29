@@ -1,0 +1,162 @@
+.. _xtensa_developer_guide:
+
+Xtensa
+Developer
+Guide
+######################
+
+Overview
+********
+
+本
+页
+包含
+关于
+为
+基于
+Xtensa
+的
+platforms
+开发
+时
+某些
+方面
+的
+信息。
+
+HiFi
+Audio
+Engine
+DSP
+*********************
+
+kernel
+允许
+threads
+在
+支持
+这些
+registers
+的
+boards
+上
+使用
+HiFi
+Audio
+Engine
+DSP
+registers。
+kernel
+只
+支持
+threads
+使用
+HiFi
+registers
+而
+不
+支持
+ISRs。
+
+.. note::
+   当前，
+   只
+   有
+   Intel
+   ADSP
+   ACE
+   hardware
+   platforms
+   默认
+   配置
+   为
+   HiFi
+   支持。
+
+Concepts
+========
+
+kernel
+可以
+为
+应用
+配置
+以
+利用
+Xtensa
+HiFi
+Audio
+Engine
+DSP
+提供
+的
+服务。
+支持
+三
+种
+operation
+modes，
+它们
+在
+下面
+描述。
+
+No
+HiFi
+registers
+mode
+----------------------
+
+这
+个
+mode
+用
+于
+应用
+没有
+使用
+HiFi
+registers
+的
+threads
+的
+情况。
+它
+是
+kernel
+的
+默认
+HiFi
+services
+mode。
+
+Unshared
+HiFi
+registers
+mode
+----------------------------
+
+这
+个
+mode
+用
+于
+应用
+只有
+单一
+使用
+HiFi
+registers
+的
+thread
+的
+情况。
+HiFi
+registers
+在
+任何
+context
+切换
+时
+保持
+不变

@@ -1,0 +1,230 @@
+.. _usb_bc12_api:
+
+BC1.2
+Devices
+（Experimental）
+#######################################
+
+Battery
+Charging
+specification，
+当前
+在
+revision
+1.2，
+通常
+被
+简
+称为
+BC1.2。
+BC1.2
+定义
+USB
+devices
+汲取
+超过
+USB
+2.0
+specification
+限制
+0.5A、
+2.5W
+电流
+的
+限制
+和
+detection
+mechanisms。
+
+BC1.2
+specification
+用
+Charging
+Port
+术语
+指
+在
+USB
+connection
+上
+提供
+VBUS
+的
+device
+并
+用
+Portable
+Device
+术语
+指
+从
+USB
+connection
+汲取
+电流
+的
+device。
+
+注意
+`BC1.2
+Specification`_
+用
+缩写
+PD
+指
+Portable
+Device。
+这
+不
+应该
+与
+USB-C
+Power
+Delivery
+混淆，
+它
+也
+用
+缩写
+PD。
+
+在
+许多
+devices
+上，
+BC1.2
+是
+fallback
+mechanism
+用
+于
+在
+attached
+type-C
+partner
+不
+支持
+Power
+Delivery
+时
+确定
+连接
+到
+USB
+type
+C
+ports
+的
+charger
+capability。
+
+`BC1.2
+Specification`_
+中
+的
+关键
+参数
+包括：
+
+============================================================
+========
+===========
+Parameter
+                                                     Symbol
+    Range
+============================================================
+========
+===========
+Allowed
+PD
+（portable
+device）
+Current
+Draw
+from
+Charging
+Port
+  IDEV_CHG
+  1.5
+  A
+Charging
+Downstream
+Port
+Rated
+Current
+                        ICDP
+      1.5
+  -
+  5.0
+  A
+Maximum
+Configured
+Current
+when
+connected
+to
+a
+SDP
+            ICFG_MAX
+  500
+  mA
+Dedicated
+Charging
+Port
+Rated
+Current
+                         IDCP
+      1.5
+  -
+  5.0
+  A
+Suspend
+current
+                                               ISUSP
+     2.5
+  mA
+Unit
+load
+current
+                                             IUNIT
+     100
+  mA
+============================================================
+========
+===========
+
+虽然
+ICDP
+和
+IDCP
+rated
+currents
+高达
+5.0
+A，
+BC1.2
+current
+被
+IDEV_CHG
+参数
+限制。
+所以
+在
+Zephyr
+实现
+中
+使用
+portable-device
+mode
+时
+BC1.2
+支持
+被
+cap
+在
+1.5
+A。
+
+.. _BC1.2
+   Specification:
+   https://www.usb.org/document-library/battery-charging-v12-spec-and-adopters-agreement

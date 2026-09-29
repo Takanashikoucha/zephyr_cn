@@ -1,0 +1,192 @@
+.. _clock_monitor_api:
+
+Clock
+Monitor
+#############
+
+Overview
+********
+
+Clock
+monitor
+API
+提供
+对
+hardware
+peripherals
+的
+访问
+它们
+在
+runtime
+观察
+clock
+signal
+并
+报告
+当
+其
+frequency
+漂移
+超出
+期望
+bounds
+或
+完全
+停止
+时。
+它
+旨在
+用于
+functional-safety
+和
+diagnostic
+用例
+—
+检测
+failed
+oscillators、
+lost
+reference
+clocks、
+或
+关键
+clock
+trees
+上
+的
+out-of-spec
+frequency
+drift。
+
+Operating
+Modes
+***************
+
+两
+个
+modes
+共享
+一
+个
+lifecycle：
+用
+:c:func:`clock_monitor_configure`
+配置、
+用
+:c:func:`clock_monitor_start`
+开始
+operation、
+用
+:c:func:`clock_monitor_stop`
+结束
+它。
+
+API
+暴露
+两
+个
+operating
+modes：
+
+``CLOCK_MONITOR_MODE_WINDOW``
+   连续
+   threshold
+   check。
+   Hardware
+   将
+   被
+   监控
+   clock
+   的
+   frequency
+   与
+   从
+   :c:member:`clock_monitor_window_cfg.expected_hz`
+   和
+   :c:member:`clock_monitor_window_cfg.tolerance_ppm`
+   推导
+   的
+   可
+   编程
+   high
+   和
+   low
+   bounds
+   比较。
+   Threshold
+   crossings
+   通过
+   configure
+   时
+   安装
+   的
+   user
+   callback
+   异步
+   交付。
+
+``CLOCK_MONITOR_MODE_MEASURE``
+   每次
+   :c:func:`clock_monitor_start`
+   一
+   次
+   frequency
+   measurement，
+   通过
+   configure
+   时
+   的
+   callback
+   交付
+   （``CLOCK_MONITOR_EVT_MEASURE_DONE``
+   加
+   以
+   Hz
+   为
+   单位
+   的
+   测量
+   值）。
+   Device
+   在
+   callback
+   运行
+   前
+   自动
+   返回
+   到
+   configured
+   （stopped）
+   state，
+   所以
+   happy
+   path
+   不
+   需要
+   :c:func:`clock_monitor_stop`。
+   要
+   重复
+   measurement，
+   从
+   callback
+   再次
+   调用
+   :c:func:`clock_monitor_start`
+   —
+   :c:func:`clock_monitor_start`
+   和
+   :c:func:`clock_monitor_stop`
+   都
+   是
+   ISR-safe
+   （与
+   从
+   其
+   重新
+   arm
+   counter
+   alarm
+   的
+   同一
+   idiom

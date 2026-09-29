@@ -1,0 +1,201 @@
+.. _sensor:
+
+Sensors
+#######
+
+Sensor
+driver
+API
+提供
+functionality
+统一
+read、
+configure、
+和
+setup
+event
+handling
+用于
+以
+meaningful
+units
+取
+real
+world
+measurements
+的
+devices。
+
+Sensors
+从
+非常
+简单
+的
+temperature
+reading
+devices
+（必须
+用
+固定
+scale
+poll）
+到
+复杂
+的
+devices
+（接收
+来自
+大量
+sensors
+的
+readings
+并
+本身
+产生
+新
+的
+inferred
+sensor
+data
+如
+step
+counts、
+presence
+detection、
+orientation、
+等
+等）。
+
+支持
+这
+个
+广泛
+范围
+的
+devices
+是
+一
+个
+demanding
+的
+task
+sensor
+API
+尝试
+为
+它们
+提供
+统一
+的
+interface。
+
+
+.. _sensor-using:
+
+Using
+Sensors
+*************
+
+从
+应用
+使用
+sensors
+有
+一
+些
+APIs
+和
+terms
+是
+有用
+于
+理解
+的。
+Zephyr
+中
+的
+Sensors
+由
+:ref:`sensor-channel`、
+:ref:`sensor-attribute`、
+和
+:ref:`sensor-trigger`
+组成。
+Attributes
+和
+triggers
+可以
+是
+device
+或
+channel
+特定
+的。
+
+.. note::
+   今天
+   使用
+   sensor
+   API
+   从
+   sensors
+   获取
+   samples
+   可以
+   用
+   两
+   种
+   方式
+   做。
+   一
+   个
+   stable
+   和
+   long-lived
+   的
+   API
+   :ref:`sensor-fetch-and-get`
+   或
+   一
+   个
+   更新
+   但
+   快速
+   stabilizing
+   的
+   API
+   :ref:`sensor-read-and-decode`。
+   预期
+   在
+   近
+   期
+   未来
+   :ref:`sensor-fetch-and-get`
+   将
+   被
+   deprecated
+   以
+   支持
+   :ref:`sensor-read-and-decode`。
+   Triggers
+   对
+   :ref:`sensor-fetch-and-get`
+   或
+   :ref:`sensor-read-and-decode`
+   被
+   完全
+   不同
+   地
+   处理
+   差异
+   在
+   每个
+   那些
+   sections
+   中
+   被
+   记录。
+
+.. toctree::
+   :maxdepth:
+   1

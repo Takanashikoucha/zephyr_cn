@@ -1,0 +1,181 @@
+.. _tcpc_api:
+
+USB
+Type-C
+Port
+Controller
+（TCPC）
+#################################
+
+Overview
+********
+
+`TCPC
+<tcpc-specification_>`_
+（USB
+Type-C
+Port
+Controller）
+TCPC
+是
+一
+个
+用
+来
+简化
+USB-C
+system
+implementation
+的
+device
+通过
+提供
+以下
+三
+个
+function：
+
+* VBUS
+  和
+  VCONN
+  control
+  `USB
+  Type-C
+  <usb-type-c-specification_>`_:
+  TCPC
+  可以
+  提供
+  Source
+  device、
+  控制
+  VBUS
+  sourcing
+  的
+  mechanism、
+  和
+  Sink
+  device、
+  控制
+  VBUS
+  sinking
+  的
+  mechanism。
+  类似
+  的
+  mechanism
+  被
+  提供
+  用于
+  VCONN
+  的
+  control。
+
+* CC
+  control
+  和
+  sensing:
+  TCPC
+  实现
+  用于
+  控制
+  CC
+  pin
+  pull-up
+  和
+  pull-down
+  resistors
+  的
+  logic。
+  它
+  也
+  提供
+  一
+  种
+  方式
+  sense
+  并
+  report
+  CC
+  pin
+  上
+  存在
+  哪些
+  resistors。
+
+* Power
+  Delivery
+  message
+  reception
+  和
+  transmission
+  `USB
+  Power
+  Delivery
+  <usb-pd-specification_>`_:
+  TCPC
+  发送
+  和
+  接收
+  在
+  TCPM
+  中
+  构建
+  的
+  messages
+  并
+  将
+  它们
+  放置
+  在
+  CC
+  lines
+  上。
+
+.. _tcpc-api:
+
+TCPC
+API
+========
+
+TCPC
+device
+driver
+function
+作为
+TCPC
+device
+和
+application
+software
+之间
+的
+liaison；
+这
+通过
+Zephyr
+的
+API
+实现
+该
+API
+由
+device
+driver
+提供
+用
+来
+与
+TCPC
+device
+通信
+和
+control
+它。
+
+Configuration
+Options
+*********************
+
+相关
+配置
+选项：

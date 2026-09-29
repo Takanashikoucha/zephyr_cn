@@ -1,0 +1,166 @@
+.. _virtio:
+
+Virtual
+I/O
+（VIRTIO）
+##########################
+
+Overview
+********
+
+Virtual
+I/O
+（VIRTIO）
+是
+一
+个
+用
+来
+与
+各种
+devices
+通信
+的
+protocol
+通常
+在
+virtualized
+environments
+中
+使用。
+其
+main
+goal
+是
+提供
+高效
+和
+standardized
+的
+mechanism
+用于
+从
+virtual
+machine
+内部
+与
+virtual
+devices
+interface。
+Communication
+依赖
+virtqueues
+和
+standard
+transfer
+methods
+如
+PCI
+或
+MMIO。
+
+Concepts
+********
+
+Virtio
+定义
+在
+communication
+和
+initialization
+期间
+使用
+的
+各种
+components。
+它
+指定
+host
+（在
+specification
+中
+命名
+为
+"device"）
+和
+guest
+（在
+specification
+中
+命名
+为
+"driver"）
+两
+侧。
+当前
+Zephyr
+只能
+作为
+guest
+工作。
+在
+Virtio
+driver
+暴露
+的
+facilities
+之上
+可以
+实现
+特定
+device
+（例如
+network
+card）
+的
+driver。
+
+带
+Virtio
+device
+的
+system
+的
+high
+level
+overview
+在
+下面
+显示。
+
+.. graphviz::
+   :caption:
+   Virtual
+   I/O
+   overview
+
+   digraph
+   {
+
+       subgraph
+       cluster_host
+       {
+           style=filled;
+           color=lightgrey;
+           label
+           =
+           "Host";
+           labeljust=r;
+
+           virtio_device
+           [label
+           =
+           "virtio
+           device"];
+       }
+
+       transfer_method
+       [label
+       =
+       "virtio
+       transfer
+       method"];
+
+       subgraph
+       cluster_guest
+       {

@@ -1,0 +1,208 @@
+.. _mux_api:
+
+Multiplexer
+（MUX）
+#################
+
+Overview
+********
+
+MUX
+subsystem
+为
+hardware
+signal
+multiplexers
+提供
+统一
+的
+API
+它
+让
+consumer
+drivers
+通过
+参考
+标准
+devicetree
+``mux-controls``
+或
+``mux-states``
+phandle-array
+properties
+中
+的
+MUX
+controller
+将
+input
+signal
+路由
+到
+output
+而
+不
+依赖
+任何
+vendor
+特定
+的
+HAL。
+
+Subsystem
+区分
+两
+个
+consumer
+side
+patterns：
+
+* ``mux-controls``
+  —
+  consumer
+  参考
+  一
+  个
+  controller
+  并
+  在
+  runtime
+  通过
+  :c:func:`mux_control_set`
+  提供
+  *state*
+  （路由
+  哪个
+  input
+  或
+  写入
+  哪个
+  output
+  pattern）。
+  在
+  正常
+  operation
+  期间
+  routing
+  变化
+  时
+  使用
+  这
+  个。
+
+* ``mux-states``
+  —
+  consumer
+  在
+  devicetree
+  中
+  参考
+  一
+  个
+  controller
+  *和*
+  固定
+  的
+  state
+  （specifier
+  的
+  trailing
+  cell
+  是
+  state
+  value）。
+  Runtime
+  调用
+  :c:func:`mux_state_apply`
+  用
+  一
+  行
+  编程
+  那
+  个
+  固定
+  state。
+  在
+  routing
+  在
+  integration
+  time
+  决定
+  并
+  init
+  后
+  从不
+  变化
+  时
+  使用
+  这
+  个。
+
+Devicetree
+bindings
+*******************
+
+Controller
+side
+=================
+
+每个
+MUX
+controller
+binding
+包括
+``mux-controller.yaml``
+（在
+``dts/bindings/mux/``
+中）
+并
+声明
+两
+个
+cell-count
+properties：
+
+* ``#mux-control-cells``
+  —
+  ``mux-controls``
+  specifier
+  中
+  cells
+  的
+  数量
+  纯粹
+  用
+  于
+  在
+  controller
+  内
+  寻址
+  期望
+  的
+  control
+  line。
+* ``#mux-state-cells``
+  —
+  ``mux-states``
+  specifier
+  中
+  cells
+  的
+  数量；
+  等于
+  ``#mux-control-cells
+  +
+  1``。
+  Trailing
+  cell
+  带
+  state
+  value
+  并
+  被
+  framework
+  提取
+  到
+  ``mux_state::state``
+  中
+  在

@@ -1,0 +1,207 @@
+.. _mspi_api:
+
+Multi-bit
+SPI
+Bus
+#################
+
+MSPI
+（multi-bit
+SPI）
+被
+提供
+作为
+generic
+API
+适应
+advanced
+SPI
+peripherals
+和
+devices
+它们
+通常
+需要
+command、
+address
+和
+data
+phases
+以及
+这些
+phases
+期间
+的
+多
+个
+signal
+lines。
+虽然
+API
+支持
+:term:`XIP`
+和
+scrambling
+等
+advanced
+features
+它
+也
+与
+generic
+SPI
+兼容。
+
+.. contents::
+   :local:
+   :depth:
+   2
+
+.. _mspi-controller-api:
+
+MSPI
+Controller
+API
+*******************
+
+Zephyr
+的
+MSPI
+controller
+API
+在
+存在
+multi-bit
+SPI
+controller
+时
+可以
+使用。
+例如
+Ambiq
+MSPI、
+QSPI、
+OSPI、
+Flexspi
+等。
+API
+支持
+从
+single
+到
+hex
+SDR/DDR
+IO
+带
+variable
+latency
+和
+advanced
+features
+如
+:term:`XIP`
+和
+scrambling。
+适用
+的
+devices
+包括
+但
+不
+限于
+high
+speed、
+high
+density
+flash/psram
+memory
+devices、
+displays
+和
+sensors。
+
+MSPI
+interface
+包含
+SoC
+platform
+特定
+的
+controller
+drivers
+它们
+实现
+MSPI
+APIs
+以及
+引用
+这些
+APIs
+的
+device
+drivers。
+Controller
+和
+device
+drivers
+之间
+的
+关系
+是
+many-to-many
+以
+允许
+在
+platforms
+之间
+轻松
+切换。
+
+这里
+是
+在
+device
+driver
+initialization
+function
+中
+初始化
+MSPI
+controller
+和
+MSPI
+bus
+的
+generic
+steps
+列表：
+
+#. 初始化
+   MSPI
+   controller
+   driver
+   instance
+   的
+   data
+   structure。
+   通常
+   的
+   device
+   定义
+   macros
+   如
+   :c:macro:`DEVICE_DT_INST_DEFINE`
+   可以
+   被
+   使用
+   以及
+   initialization
+   function、
+   config
+   和
+   作为
+   macro
+   参数
+   提供
+   的
+   data。
