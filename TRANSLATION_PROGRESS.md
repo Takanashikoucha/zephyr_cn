@@ -24,9 +24,9 @@
 | 4 | develop | 138/138 (100%) | ✓ 完成（toolchains 14 + tools 6 + twister 14 + west 14 + modules 1 + optimizations 1 + sca 1 + test 1） |
 | 5 | hardware | 123/123 (100%) | ✓ 完成（arch 8 + barriers 1 + cache 2 + emulator 2 + firmware 2 + peripherals 99 + pinctrl 1 + porting 5 + virtualization 2） |
 | 6 | services | 359/359 (100%) | 已完成 |
-| 7 | releases | 0/43 (0%) | 待开始 |
+| 7 | releases | 43/43 (100%) | ✓ 完成 |
 | 8 | security+contribute+project+safety | 0/60 (0%) | 待开始 |
-| **总计** | | **816/889 (91.8%)** | |
+| **总计** | | **859/889 (96.6%)** | |
 
 ### 已完成
 
