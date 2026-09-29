@@ -1,0 +1,56 @@
+{# 荧枝风格 Sphinx 布局模板 #}
+{%- extends "basic/layout.html" %}
+
+{% block extrahead %}
+{{ super() }}
+<link rel="stylesheet" href="{{ pathto('_static/css/luminous.css', 1) }}">
+<script src="{{ pathto('_static/js/fiber.js', 1) }}" defer></script>
+{% endblock %}
+
+{% block body %}
+<div id="luminous-app">
+  {# 纤维画布（hero 区） #}
+  <div class="hero-section">
+    <canvas id="fiber-canvas" class="fiber-bg"></canvas>
+    <div class="hero-content">
+      <div class="eyebrow">ZEPHYR 中文文档</div>
+      <h1 class="title">{{ title if title else "Zephyr 中文文档" }}</h1>
+      <p class="tagline">实时操作系统 · 中文技术文档与源码导读</p>
+    </div>
+  </div>
+
+  {# 主内容区 #}
+  <div class="main-layout">
+    {# 侧边栏 #}
+    <aside class="sidebar">
+      <div class="sidebar-inner">
+        {%- for side in sidebars %}
+          {% include side %}
+        {%- endfor %}
+      </div>
+    </aside>
+
+    {# 文档内容 #}
+    <main class="document">
+      <div class="document-content">
+        {% block message %}{% endblock %}
+        {{ body }}
+      </div>
+      <footer class="doc-footer">
+        <span class="footer-src">theme: zephyr luminous branch</span>
+        <span class="footer-ver">v{{ version }}</span>
+      </footer>
+    </main>
+  </div>
+</div>
+
+{# 初始化纤维画布 #}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var canvas = document.getElementById('fiber-canvas');
+    if (canvas && typeof initFiber === 'function') {
+      initFiber(canvas, { seed: {{ theme_fiber_seed | default(7) }}, redBias: {{ theme_fiber_red_bias | default(0.0) }} });
+    }
+  });
+</script>
+{% endblock %}
