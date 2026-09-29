@@ -1,6 +1,5 @@
-/* 荧枝 · Luminous Branch 主题
+/* 荧枝 · Luminous Branch 主题 — 独立布局版
  * 深夜画布 × 发光纤维 × 电蓝/绯红双色体系
- * 适配 Sphinx HTML 结构
  */
 
 /* -- 字体 ----------------------------------------------------------------- */
@@ -28,24 +27,17 @@
 
 /* -- 色板（唯一权威） ------------------------------------------------------ */
 :root {
-  /* 底色：深夜双层 */
   --night1: #05070b;
   --night2: #081018;
-  /* 主色：电蓝（骨白偏蓝）—— 占 60% 视觉权重 */
   --bone: #7cc4ff;
   --bone2: #a9dcff;
   --bone-dim: rgba(124, 196, 255, .30);
-  /* 辅色：青绿丝线 —— 占 10% */
   --thread: #5eead4;
-  /* 强调：绯红能量 —— 占 20% */
   --red: #ff4d63;
-  /* 第四色：紫 —— 稀有品，≤10% */
   --purple: #c9a3ff;
-  /* 文字三级 */
   --txt: #e6eef6;
   --sub: #93a6bd;
   --dim: #5f7288;
-  /* 线与面板 */
   --line: rgba(124, 196, 255, .20);
   --panel: rgba(4, 9, 16, .82);
 }
@@ -55,40 +47,96 @@ html {
   scroll-behavior: smooth;
 }
 body {
-  font-family: 'JBM', 'Sarasa Mono SC', 'Noto Sans Mono CJK SC', monospace !important;
+  font-family: 'JBM', 'Sarasa Mono SC', 'Noto Sans Mono CJK SC', monospace;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  background: var(--night1) !important;
-  color: var(--sub) !important;
-  font-size: 14px !important;
-  line-height: 1.6 !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  background: var(--night1);
+  color: var(--sub);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
 }
 
-/* -- 覆盖 Sphinx basic 主题样式 ------------------------------------------- */
-/* 移除 basic 主题的默认背景与边距 */
-div.document, div.body, .body-wrapper {
-  background: transparent !important;
-  color: var(--sub) !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: none !important;
-  box-shadow: none !important;
+/* -- 顶部导航栏 ----------------------------------------------------------- */
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(5, 7, 11, .95);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(2px);
+  padding: 0 24px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+}
+.topnav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.topnav-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+.brand-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--bone);
+  box-shadow: 0 0 10px rgba(124, 196, 255, .7);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(124, 196, 255, .7); }
+  50% { box-shadow: 0 0 18px rgba(124, 196, 255, .9); }
+}
+.brand-text {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: var(--txt);
+  text-shadow: 0 0 12px rgba(124, 196, 255, .4);
+}
+.brand-sub {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--dim);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+.topnav-links {
+  display: flex;
+  gap: 6px;
+}
+.topnav-links a {
+  font-size: 13px;
+  color: var(--sub);
+  padding: 6px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  letter-spacing: .5px;
+  transition: all .2s;
+}
+.topnav-links a:hover {
+  color: var(--bone2);
+  background: rgba(124, 196, 255, .06);
 }
 
-/* -- 布局 ----------------------------------------------------------------- */
-#luminous-app {
-  display: block;
-}
-
-/* hero 区 */
+/* -- 首页 hero 区 --------------------------------------------------------- */
 .hero-section {
   position: relative;
   width: 100%;
-  height: 220px;
+  height: 260px;
   overflow: hidden;
-  flex-shrink: 0;
+  margin-top: 0;
 }
 .fiber-bg {
   position: absolute;
@@ -110,57 +158,8 @@ div.document, div.body, .body-wrapper {
   text-align: center;
   padding: 24px;
 }
-
-/* 主布局（适配 basic 主题 .document 结构） */
-.document {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 24px;
-  display: flex;
-  gap: 24px;
-}
-
-/* 侧边栏（适配 basic 主题 .sphinxsidebar） */
-.sphinxsidebar {
-  width: 260px;
-  flex-shrink: 0;
-  position: sticky;
-  top: 24px;
-  align-self: flex-start;
-  max-height: calc(100vh - 48px);
-  overflow-y: auto;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 16px;
-  background: var(--panel);
-}
-
-/* 文档内容（适配 basic 主题 .body） */
-.body {
-  flex: 1;
-  min-width: 0;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 28px 32px;
-  background: var(--panel);
-}
-
-/* 页脚（适配 basic 主题 .footer） */
-.footer {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px dashed var(--line);
-  font-size: 12px;
-  color: var(--dim);
-  letter-spacing: 1.5px;
-}
-
-/* -- 标题 ----------------------------------------------------------------- */
-/* hero 标题（渐变文字） */
-.title {
-  font-size: 42px;
+.hero-title {
+  font-size: 46px;
   font-weight: 800;
   letter-spacing: 1px;
   line-height: 1.1;
@@ -171,7 +170,6 @@ div.document, div.body, .body-wrapper {
   color: transparent;
   filter: drop-shadow(0 2px 10px rgba(8, 16, 28, .95)) drop-shadow(0 0 18px rgba(124, 196, 255, .35));
 }
-/* 眉标 */
 .eyebrow {
   font-size: 12.5px;
   letter-spacing: 5px;
@@ -180,7 +178,6 @@ div.document, div.body, .body-wrapper {
   text-transform: uppercase;
   text-shadow: 0 1px 6px rgba(8, 16, 28, .9), 0 0 10px rgba(124, 196, 255, .4);
 }
-/* tagline */
 .tagline {
   font-size: 14px;
   color: var(--dim);
@@ -188,18 +185,67 @@ div.document, div.body, .body-wrapper {
   margin: 8px 0 0;
 }
 
-/* 文档内标题（覆盖 Sphinx 默认） */
+/* -- 面包屑 --------------------------------------------------------------- */
+.breadcrumb {
+  max-width: 1400px;
+  margin: 16px auto 0;
+  padding: 0 24px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.breadcrumb a {
+  color: var(--dim);
+  text-decoration: none;
+  transition: color .2s;
+}
+.breadcrumb a:hover {
+  color: var(--bone2);
+}
+.bc-sep {
+  color: var(--line);
+  font-size: 11px;
+}
+.bc-current {
+  color: var(--bone);
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-shadow: 0 0 8px rgba(124, 196, 255, .3);
+}
+
+/* -- 主内容区 ------------------------------------------------------------- */
+.main-content {
+  max-width: 1400px;
+  margin: 20px auto;
+  padding: 0 24px;
+}
+.content-panel {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 32px 36px;
+  background: var(--panel);
+  min-height: calc(100vh - 200px);
+}
+
+/* -- 标题 ----------------------------------------------------------------- */
 h1, h2, h3, h4, h5, h6 {
-  color: var(--txt) !important;
-  font-weight: 800 !important;
-  margin-top: 28px !important;
-  margin-bottom: 14px !important;
+  color: var(--txt);
+  font-weight: 800;
+  margin-top: 32px;
+  margin-bottom: 14px;
 }
 h1 {
   font-size: 28px;
   letter-spacing: 1px;
-  padding-bottom: 10px;
+  padding-bottom: 12px;
   border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, #a9dcff 0%, #7cc4ff 60%, #5eead4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 10px rgba(8, 16, 28, .95)) drop-shadow(0 0 18px rgba(124, 196, 255, .35));
 }
 h2 {
   font-size: 21px;
@@ -217,19 +263,29 @@ h4 {
   font-size: 15px;
   color: var(--txt);
 }
+/* Sphinx 标题锚点 */
+a.headerlink {
+  color: var(--dim) !important;
+  opacity: 0;
+  transition: opacity .2s;
+  text-shadow: none !important;
+}
+h1:hover a.headerlink, h2:hover a.headerlink, h3:hover a.headerlink {
+  opacity: 1;
+}
 
 /* -- 正文 ----------------------------------------------------------------- */
 p {
-  margin: 12px 0 !important;
-  color: var(--sub) !important;
+  margin: 12px 0;
+  color: var(--sub);
 }
 strong, b {
-  color: var(--bone2) !important;
-  font-weight: 700 !important;
+  color: var(--bone2);
+  font-weight: 700;
 }
 a {
-  color: var(--bone) !important;
-  text-decoration: none !important;
+  color: var(--bone);
+  text-decoration: none;
   border-bottom: 1px solid transparent;
   transition: all .2s;
 }
@@ -266,13 +322,24 @@ pre code {
   padding: 0;
   color: var(--sub);
 }
-/* 代码高亮（Pygments） */
+/* Pygments 高亮 */
 pre .k { color: var(--red); }
 pre .s { color: var(--thread); }
 pre .c { color: var(--dim); font-style: italic; }
 pre .o { color: var(--bone); }
 pre .n { color: var(--bone2); }
 pre .m { color: #ff9d9d; }
+pre .cp { color: var(--purple); }
+pre .bp { color: var(--thread); }
+pre .cm { color: var(--dim); font-style: italic; }
+pre .c1 { color: var(--dim); font-style: italic; }
+pre .kn { color: var(--red); }
+pre .nf { color: var(--bone2); }
+pre .nv { color: var(--sub); }
+pre .ow { color: var(--bone); }
+pre .se { color: var(--thread); }
+pre .sd { color: var(--thread); }
+pre .si { color: var(--purple); }
 
 /* -- 表格 ----------------------------------------------------------------- */
 table {
@@ -312,7 +379,7 @@ li::marker {
 }
 
 /* -- 提示框（note/tip/warning） ------------------------------------------- */
-div.note, div.tip, div.warning, div.danger, div.caution {
+div.note, div.tip, div.warning, div.danger, div.caution, div.important, div.attention {
   border: 1px solid var(--line);
   border-left: 3px solid var(--bone);
   border-radius: 0 10px 10px 0;
@@ -320,47 +387,164 @@ div.note, div.tip, div.warning, div.danger, div.caution {
   padding: 14px 18px;
   margin: 16px 0;
 }
-div.warning, div.caution, div.danger {
+div.warning, div.caution, div.danger, div.attention {
   border-left-color: var(--red);
   background: rgba(255, 77, 99, .05);
 }
-div.note > .title, div.tip > .title, div.warning > .title {
+div.important {
+  border-left-color: var(--purple);
+  background: rgba(201, 163, 255, .05);
+}
+div.note > .title, div.tip > .title, div.warning > .title,
+div.danger > .title, div.caution > .title, div.important > .title,
+div.attention > .title {
   font-size: 13px;
   font-weight: 700;
   color: var(--bone2);
   letter-spacing: 1px;
   margin-bottom: 8px;
 }
-div.warning > .title, div.caution > .title, div.danger > .title {
+div.warning > .title, div.caution > .title, div.danger > .title, div.attention > .title {
   color: #ff9d9d;
 }
+div.important > .title {
+  color: var(--purple);
+}
 
-/* -- 侧边栏目录 ----------------------------------------------------------- */
-.sidebar a {
-  display: block;
-  font-size: 13px;
-  color: var(--sub);
-  padding: 6px 10px;
-  border-radius: 8px;
-  letter-spacing: .5px;
-  margin: 2px 0;
+/* -- 目录树（toctree） ---------------------------------------------------- */
+.toctree-wrapper {
+  margin: 20px 0;
 }
-.sidebar a:hover {
-  color: var(--bone2);
-  background: rgba(124, 196, 255, .06);
-}
-.sidebar a.current, .sidebar a.active {
-  color: #fff;
-  background: rgba(124, 196, 255, .1);
-  box-shadow: 0 0 16px rgba(124, 196, 255, .2), inset 0 0 10px rgba(124, 196, 255, .08);
-}
-.sidebar .caption {
+.toctree-wrapper .caption {
   font-size: 10.5px;
   letter-spacing: 2px;
   color: var(--dim);
   text-transform: uppercase;
-  padding: 8px 10px;
-  margin-top: 12px;
+  margin-bottom: 10px;
+  padding-left: 4px;
+}
+.toctree-wrapper ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+.toctree-wrapper li {
+  margin: 4px 0;
+}
+.toctree-wrapper a {
+  display: block;
+  font-size: 13px;
+  color: var(--sub);
+  padding: 6px 12px;
+  border-radius: 8px;
+  border-left: 2px solid transparent;
+  transition: all .2s;
+}
+.toctree-wrapper a:hover {
+  color: var(--bone2);
+  background: rgba(124, 196, 255, .06);
+  border-left-color: var(--bone);
+}
+.toctree-wrapper .toctree-l1 > a {
+  font-weight: 700;
+  color: var(--txt);
+}
+.toctree-wrapper .toctree-l2 {
+  margin-left: 16px;
+}
+.toctree-wrapper .toctree-l3 {
+  margin-left: 32px;
+}
+
+/* -- 底部导航 ------------------------------------------------------------- */
+.bottomnav {
+  max-width: 1400px;
+  margin: 20px auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 12px 20px;
+  border-radius: 11px;
+  text-decoration: none;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--sub);
+  transition: all .2s;
+  max-width: 45%;
+}
+.nav-btn:hover {
+  border-color: var(--bone-dim);
+  box-shadow: 0 0 18px rgba(124, 196, 255, .25);
+  color: var(--bone2);
+}
+.nav-arrow {
+  font-size: 15px;
+  color: var(--bone);
+  flex-shrink: 0;
+}
+.nav-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nav-placeholder {
+  visibility: hidden;
+}
+.nav-home {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all .2s;
+}
+.nav-home:hover {
+  border-color: var(--bone-dim);
+  box-shadow: 0 0 18px rgba(124, 196, 255, .25);
+}
+.home-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bone);
+  box-shadow: 0 0 10px rgba(124, 196, 255, .7);
+}
+
+/* -- 页脚 ----------------------------------------------------------------- */
+.site-footer {
+  max-width: 1400px;
+  margin: 24px auto 32px;
+  padding: 16px 24px;
+  border-top: 1px dashed var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 1.5px;
+}
+.footer-brand {
+  color: var(--bone);
+  text-shadow: 0 0 8px rgba(124, 196, 255, .3);
+}
+.footer-ver {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 2px 10px;
+  font-size: 10px;
 }
 
 /* -- 搜索框 --------------------------------------------------------------- */
@@ -383,19 +567,23 @@ input[type="search"]:focus, input.search:focus {
 
 /* -- 响应式 --------------------------------------------------------------- */
 @media (max-width: 900px) {
-  .main-layout {
+  .content-panel {
+    padding: 20px 16px;
+  }
+  .topnav {
+    padding: 0 12px;
+  }
+  .brand-sub {
+    display: none;
+  }
+  .bottomnav {
     flex-direction: column;
-    padding: 16px;
   }
-  .sidebar {
-    width: 100%;
-    position: static;
-    max-height: none;
+  .nav-btn {
+    max-width: 100%;
   }
-  .hero-section {
-    height: 160px;
-  }
-  .title {
-    font-size: 30px;
+  .site-footer {
+    flex-direction: column;
+    gap: 8px;
   }
 }

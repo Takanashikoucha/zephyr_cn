@@ -1,37 +1,113 @@
-{# 荧枝风格 Sphinx 布局模板 #}
-{# 继承 basic/layout.html，通过 header 块注入 hero 区（不覆盖 body 块） #}
-{%- extends "basic/layout.html" %}
+{# 荧枝 · Luminous Branch — 独立布局 #}
+<!DOCTYPE html>
+<html{% if language is not none %} lang="{{ language }}"{% endif %}>
+<head>
+  <meta charset="{{ encoding }}" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  {{- metatags }}
+  <title>{{ title|striptags|e }}{% if docstitle %} — {{ docstitle|e }}{% endif %}</title>
+  {%- for css in css_files %}
+  {{ css_tag(css) if css|attr("filename") else '<link rel="stylesheet" href="' ~ pathto(css, 1) ~ '" type="text/css" />'|safe }}
+  {%- endfor %}
+  <script src="{{ pathto('_static/fiber.js', 1) }}" defer></script>
+  <script src="{{ pathto('_static/fiber.js', 1) }}" defer></script>
+  {%- for js in script_files %}
+  {{ js_tag(js) }}
+  {%- endfor %}
+  {%- if hasdoc('genindex') %}<link rel="index" title="索引" href="{{ pathto('genindex') }}"/>{% endif %}
+  {%- if hasdoc('search') %}<link rel="search" title="搜索" href="{{ pathto('search') }}"/>{% endif %}
+  {%- if next %}<link rel="next" title="{{ next.title|striptags|e }}" href="{{ next.link|e }}"/>{% endif %}
+  {%- if prev %}<link rel="prev" title="{{ prev.title|striptags|e }}" href="{{ prev.link|e }}"/>{% endif %}
+</head>
+<body>
 
-{% block extrahead %}
-{{ super() }}
-<link rel="stylesheet" href="{{ pathto('_static/luminous.css', 1) }}">
-<script src="{{ pathto('_static/fiber.js', 1) }}" defer></script>
-{% endblock %}
-
-{% block header %}
-<div id="luminous-app">
-  {# 纤维画布（hero 区） #}
-  <div class="hero-section">
-    <canvas id="fiber-canvas" class="fiber-bg"></canvas>
-    <div class="hero-content">
-      <div class="eyebrow">ZEPHYR 中文文档</div>
-      <h1 class="title">{{ title if title else "Zephyr 中文文档" }}</h1>
-      <p class="tagline">实时操作系统 · 中文技术文档与源码导读</p>
+{# ── 顶部导航栏 ── #}
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="topnav-brand" href="{{ pathto(root_doc) or '#' }}">
+      <span class="brand-dot"></span>
+      <span class="brand-text">ZEPHYR</span>
+      <span class="brand-sub">中文文档</span>
+    </a>
+    <div class="topnav-links">
+      <a href="{{ pathto(root_doc) or '#' }}">首页</a>
+      <a href="{{ pathto('genindex') }}">索引</a>
+      <a href="{{ pathto('search') }}">搜索</a>
     </div>
   </div>
-</div>
-{{ super() }}
-{% endblock %}
+</nav>
 
-{# 初始化纤维画布 #}
-{% block footer %}
-{{ super() }}
+{# ── 首页 hero 区（带纤维画布） ── #}
+{% if not parents %}
+<div class="hero-section">
+  <canvas id="fiber-canvas" class="fiber-bg"></canvas>
+  <div class="hero-content">
+    <div class="eyebrow">ZEPHYR 中文文档</div>
+    <h1 class="hero-title">Zephyr 中文文档</h1>
+    <p class="tagline">实时操作系统 · 中文技术文档与源码导读</p>
+  </div>
+</div>
+{% endif %}
+
+{# ── 面包屑（非首页） ── #}
+{% if parents %}
+<div class="breadcrumb">
+  <a href="{{ pathto(root_doc) or '#' }}">首页</a>
+  {%- for p in parents %}
+  <span class="bc-sep">/</span>
+  <a href="{{ p.link }}">{{ p.title }}</a>
+  {%- endfor %}
+  <span class="bc-sep">/</span>
+  <span class="bc-current">{{ title }}</span>
+</div>
+{% endif %}
+
+{# ── 主内容区 ── #}
+<main class="main-content">
+  <div class="content-panel">
+    {% block body %}{% endblock %}
+  </div>
+</main>
+
+{# ── 底部导航 ── #}
+<div class="bottomnav">
+  {%- if prev %}
+  <a class="nav-btn nav-prev" href="{{ prev.link }}">
+    <span class="nav-arrow">←</span>
+    <span class="nav-label">{{ prev.title|striptags|e }}</span>
+  </a>
+  {%- else %}
+  <span class="nav-btn nav-placeholder"></span>
+  {%- endif %}
+  <a class="nav-home" href="{{ pathto(root_doc) or '#' }}">
+    <span class="home-dot"></span>
+  </a>
+  {%- if next %}
+  <a class="nav-btn nav-next" href="{{ next.link }}">
+    <span class="nav-label">{{ next.title|striptags|e }}</span>
+    <span class="nav-arrow">→</span>
+  </a>
+  {%- else %}
+  <span class="nav-btn nav-placeholder"></span>
+  {%- endif %}
+</div>
+
+{# ── 页脚 ── #}
+<footer class="site-footer">
+  <span class="footer-brand">⚡ theme: zephyr luminous branch</span>
+  <span class="footer-ver">v{{ release }}</span>
+  <span class="footer-copy">© 2026 Zephyr 中文文档项目</span>
+</footer>
+
+{# ── 纤维画布初始化 ── #}
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var canvas = document.getElementById('fiber-canvas');
-    if (canvas && typeof initFiber === 'function') {
-      initFiber(canvas, { seed: {{ theme_fiber_seed | default(7) }}, redBias: {{ theme_fiber_red_bias | default(0.0) }} });
-    }
-  });
+document.addEventListener('DOMContentLoaded', function() {
+  var canvas = document.getElementById('fiber-canvas');
+  if (canvas && typeof initFiber === 'function') {
+    initFiber(canvas, { seed: {{ theme_fiber_seed | default(7) }}, redBias: {{ theme_fiber_red_bias | default(0.0) }} });
+  }
+});
 </script>
-{% endblock %}
+
+</body>
+</html>
