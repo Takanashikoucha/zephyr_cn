@@ -1,0 +1,163 @@
+.. _twister_script_harness:
+
+Script
+######
+
+``script``
+harness
+将
+shell
+脚本
+作为
+测试
+用例
+执行。
+它
+从
+``tests_scripts``
+harness
+配置
+选项
+解析
+脚本，
+将
+每个
+脚本
+作为
+子
+进程
+运行，
+并
+基于
+脚本
+exit
+code
+报告
+单独
+的
+pass/fail
+结果。
+
+``script``
+harness
+也
+作为
+:ref:`bsim
+<twister_bsim_harness>`、
+:ref:`pytest
+<twister_pytest_harness>`
+和
+:ref:`ctest
+<twister_ctest_harness>`
+harnesses
+的
+基类，
+提供
+共享
+的
+子
+进程
+执行、
+输出
+流
+和
+日志
+处理。
+
+tests_scripts:
+<list
+of
+script
+paths>
+(default
+tests_scripts)
+    指定
+    shell
+    脚本
+    路径
+    列表
+    相对
+    于
+    测试
+    源
+    目录
+    在
+    测试
+    scenario
+    运行
+    时
+    需要
+    执行。
+    每个
+    条目
+    可以
+    是
+    单一
+    文件、
+    目录
+    或
+    glob
+    pattern
+    的
+    路径。
+    当
+    指定
+    目录
+    时，
+    该
+    目录
+    中
+    所有
+    ``.sh``
+    文件
+    包括
+    其
+    子
+    目录
+    被
+    收集
+    （排除
+    以
+    ``_``
+    开头
+    的
+    文件）。
+    默认
+    是
+    ``tests_scripts``
+    目录。
+
+    .. code-block:: yaml
+
+       harness:
+       script
+       harness_config:
+         tests_scripts:
+           -
+           tests_scripts/test_a.sh
+           -
+           ../../test/test_b.sh
+           -
+           $ENV_VAR/tests_scripts
+
+任何
+额外
+的
+命令行
+参数
+传递
+给
+Twister
+在
+``--``
+之后
+被
+转发
+给
+每个
+脚本
+作为
+额外
+的
+位置
+参数。

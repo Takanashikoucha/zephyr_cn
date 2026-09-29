@@ -1,0 +1,180 @@
+.. _west-troubleshooting:
+
+Troubleshooting
+West
+####################
+
+本
+页
+覆盖
+west
+的
+常见
+问题
+和
+如何
+解决
+它们。
+
+``west
+update``
+fetching
+失败
+*********************************
+
+一个
+好
+的
+方式
+troubleshoot
+fetching
+问题
+是
+在
+verbose
+模式
+下
+运行
+``west
+update``，
+像
+这样：
+
+.. code-block:: shell
+
+   west
+   -v
+   update
+
+输出
+包括
+west
+运行
+的
+Git
+命令
+和
+它们
+的
+输出。
+寻找
+像
+这样
+的
+东西：
+
+.. code-block:: none
+
+   ===
+   updating
+   your_project
+   (path/to/your/project):
+   west.manifest:
+   your_project:
+   checking
+   if
+   cloned
+   [...other
+   west.manifest
+   logs...]
+   ---
+   your_project:
+   fetching,
+   need
+   revision
+   SOME_SHA
+   west.manifest:
+   running
+   'git
+   fetch
+   ...
+   https://github.com/your-username/your_project
+   ...'
+   in
+   /some/directory
+
+上面
+最后
+一
+行
+中
+的
+``git
+fetch``
+命令
+示例
+是
+需要
+成功
+的
+那
+个。
+
+一
+个
+策略
+是
+去
+``/path/to/your/project``，
+copy/paste
+并
+运行
+完整
+的
+``git
+fetch``
+命令，
+然后
+从
+那里
+用
+你
+的
+credential
+storage
+helper
+的
+文档
+调试。
+
+如果
+你
+在
+企业
+防火墙
+后面
+且
+可能
+有
+proxy
+或
+其他
+问题，
+``curl
+-v
+FETCH_URL``
+（用于
+HTTPS
+URLs）
+或
+``ssh
+-v
+FETCH_URL``
+（用于
+SSH
+URLs）
+可能
+有帮助。
+
+如果
+你
+能
+让
+``git
+fetch``
+命令
+成功
+运行
+而
+不
+提示

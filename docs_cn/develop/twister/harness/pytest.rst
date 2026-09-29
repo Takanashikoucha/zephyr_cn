@@ -1,0 +1,157 @@
+.. _twister_pytest_harness:
+
+Pytest
+######
+
+:ref:`pytest
+harness
+<integration_with_pytest>`
+用
+来
+在
+Zephyr
+测试
+中
+执行
+pytest
+测试
+套件。
+以下
+选项
+适用
+于
+pytest
+harness：
+
+.. _pytest_root:
+
+pytest_root:
+<list
+of
+pytest
+testpaths>
+(default
+pytest)
+    指定
+    pytest
+    目录、
+    文件
+    或
+    subtests
+    列表
+    在
+    测试
+    scenario
+    开始
+    运行
+    时
+    需要
+    执行。
+    默认
+    pytest
+    目录
+    是
+    ``pytest``。
+    pytest
+    运行
+    完成
+    后，
+    Twister
+    将
+    根据
+    pytest
+    报告
+    检查
+    测试
+    scenario
+    通过
+    或
+    失败。
+    环境
+    变量
+    和
+    Zephyr
+    module
+    目录
+    变量
+    被
+    展开
+    （参考
+    :ref:`twister_module_dir_vars`）。
+    例如，
+    有效
+    pytest
+    roots
+    列表
+    显示
+    在
+    下面：
+
+    .. code-block:: yaml
+
+       harness_config:
+         pytest_root:
+           -
+           "pytest/test_shell_help.py"
+           -
+           "../shell/pytest/test_shell.py"
+           -
+           "/tmp/test_shell.py"
+           -
+           "~/tmp/test_shell.py"
+           -
+           "$ZEPHYR_BASE/samples/subsys/testsuite/pytest/shell/pytest/test_shell.py"
+           -
+           "$ZEPHYR_HAL_NORDIC_MODULE_DIR/tests/pytest/test_hal.py"
+           #
+           path
+           inside
+           a
+           module
+           -
+           "pytest/test_shell_help.py::test_shell2_sample"
+           #
+           select
+           pytest
+           subtest
+           -
+           "pytest/test_shell_help.py::test_shell2_sample[param_a]"
+           #
+           select
+           pytest
+           parametrized
+           subtest
+
+.. _pytest_args:
+
+pytest_args:
+<list
+of
+arguments>
+(default
+empty)
+    指定
+    要
+    传递
+    给
+    ``pytest``
+    的
+    额外
+    参数
+    列表
+    例如：
+    ``pytest_args:
+    ['-k=test_method',
+    '--log-level=DEBUG']``。
+    注意
+    ``--pytest-args``
+    可以
+    传递
+    多
+    次
+    向
+    pytest
+    传递
+    多
+    个
+    参数。

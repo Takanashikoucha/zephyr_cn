@@ -1,0 +1,214 @@
+.. _west-built-in-cmds:
+
+内置
+命令
+#################
+
+本
+页
+更
+详细
+地
+描述
+west
+的
+内置
+命令，
+其中
+一些
+在
+:ref:`west-basics`
+中
+引入。
+
+一些
+命令
+与
+同名
+的
+Git
+命令
+相关，
+但
+操作
+整个
+workspace。
+例如，
+``west
+diff``
+显示
+workspace
+中
+多
+个
+Git
+仓库
+中
+的
+本地
+更改。
+
+一些
+命令
+接受
+projects
+作为
+参数。
+这些
+参数
+可以
+是
+manifest
+文件
+中
+指定
+的
+project
+名称，
+或
+（作为
+回退）
+本地
+文件
+系统
+上
+的
+路径。
+省略
+接受
+它们
+的
+命令
+（如
+``west
+list``、
+``west
+forall``
+等）
+的
+project
+参数
+通常
+默认
+为
+使用
+manifest
+文件
+中
+所有
+projects
+加
+manifest
+仓库
+本身。
+
+对
+额外
+帮助，
+运行
+``west
+<command>
+-h``
+（例如
+``west
+init
+-h``）。
+
+.. _west-init:
+
+west
+init
+*********
+
+这
+个
+命令
+创建
+一
+个
+west
+workspace。
+它
+可以
+用
+两
+种
+方式
+使用：
+
+1. 从
+   远程
+   URL
+   clone
+   新
+   的
+   manifest
+   仓库
+2. 围绕
+   现有
+   本地
+   manifest
+   仓库
+   创建
+   workspace
+
+**Option
+1**：
+要
+从
+远程
+URL
+clone
+新
+的
+manifest
+仓库，
+用：
+
+.. code-block:: none
+
+   west
+   init
+   [-m
+   URL]
+   [--mr
+   REVISION]
+   [--mf
+   FILE]
+   [directory]
+
+新
+的
+workspace
+在
+给出
+的
+:file:`directory`
+中
+创建，
+在
+这
+个
+目录
+内部
+创建
+新
+的
+:file:`.west`。
+你
+可以
+用
+``-m``
+开关
+给出
+manifest
+URL，
+用
+``--mr``
+给出
+要
+检出
+的
+初始
+revision，
+以及

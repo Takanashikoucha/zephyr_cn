@@ -1,0 +1,203 @@
+.. _twister_console_harness:
+
+Console
+#######
+
+``console``
+harness
+告诉
+Twister
+解析
+测试
+的
+文本
+输出
+用于
+测试
+的
+YAML
+文件
+中
+定义
+的
+regex。
+
+以下
+选项
+当前
+支持：
+
+type:
+<one_line|multi_line>
+(required)
+    取决于
+    要
+    匹配
+    的
+    regex
+    字符串
+
+regex:
+<list
+of
+regular
+expressions>
+(required)
+    带
+    正则
+    表达式
+    的
+    字符串
+    与
+    测试
+    的
+    输出
+    匹配
+    以
+    确认
+    测试
+    按
+    预期
+    运行。
+
+ordered:
+<True|False>
+(default
+False)
+    按
+    有序
+    或
+    随机
+    方式
+    检查
+    正则
+    表达式
+    字符串
+
+record:
+<recording
+options>
+(optional)
+  regex:
+  <list
+  of
+  regular
+  expressions>
+  (required)
+  带
+  命名
+  子
+  组
+  的
+  正则
+  表达式
+  匹配
+  测试
+  实例
+  输出
+  行
+  中
+  找到
+  的
+  数据
+  字段
+  提供
+  一些
+  自定义
+  数据
+  用于
+  进一步
+  分析。
+  这些
+  records
+  将
+  写入
+  构建
+  目录
+  ``recording.csv``
+  文件
+  以及
+  ``twister.json``
+  中
+  测试
+  套件
+  对象
+  的
+  ``recording``
+  属性。
+
+  给出
+  多
+  个
+  正则
+  表达式
+  时，
+  每个
+  都
+  将
+  应用
+  到
+  每个
+  输出
+  行
+  产生
+  要么
+  从
+  同一
+  输出
+  行
+  的
+  多
+  个
+  不同
+  records，
+  或
+  从
+  不同
+  行
+  的
+  不同
+  records，
+  或
+  从
+  不同
+  行
+  的
+  类似
+  records。
+
+  .CSV
+  文件
+  将
+  有
+  与
+  所有
+  records
+  中
+  检测
+  到
+  的
+  字段
+  同样
+  多
+  的
+  列；
+  缺失
+  值
+  用
+  空
+  字符串
+  填充。
+
+  例如，
+  要
+  提取
+  三
+  个
+  数据
+  字段
+  ``metric``、
+  ``cycles``、
+  ``nanoseconds``：
+
+  .. code-block:: yaml

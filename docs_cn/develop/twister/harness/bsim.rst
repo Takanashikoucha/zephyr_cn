@@ -1,0 +1,147 @@
+.. _twister_bsim_harness:
+
+Bsim
+####
+
+``bsim``
+harness
+扩展
+:ref:`script
+harness
+<twister_script_harness>`
+支持
+BabbleSim
+测试。
+在
+构建
+阶段
+它
+从
+构建
+目录
+复制
+最终
+可执行
+文件
+（``zephyr.exe``）
+到
+BabbleSim
+的
+``bin``
+目录
+（``${BSIM_OUT_PATH}/bin``）。
+在
+运行
+阶段
+它
+执行
+``tests_scripts``
+中
+列出
+的
+测试
+脚本。
+
+默认
+情况
+下，
+可执行
+文件
+名
+是
+（点
+和
+斜杠
+替换
+为
+下划线）：
+``bs_<platform_name>_<test_path>_<test_scenario_name>``。
+这
+个
+名称
+可以
+用
+``harness_config``
+节
+中
+的
+``bsim_exe_name``
+选项
+覆盖。
+
+额外
+的
+``bsim``
+harness
+keys
+扩展
+:ref:`script
+harness
+<twister_script_harness>`：
+
+bsim_exe_name:
+<string>
+    如果
+    提供，
+    复制
+    到
+    BabbleSim
+    的
+    bin
+    目录
+    时
+    的
+    可执行
+    文件
+    名
+    将
+    是
+    ``bs_<platform_name>_<bsim_exe_name>``
+    而
+    非
+    基于
+    测试
+    路径
+    和
+    scenario
+    名称
+    的
+    默认
+    值。
+
+示例
+配置
+带
+多
+images
+BabbleSim
+测试
+其中
+advertiser
+是
+build-only
+且
+scanner
+通过
+:ref:`required_applications
+<required_applications>`
+引用
+它：
+
+.. code-block:: yaml
+
+   common:
+     platform_allow:
+       -
+       nrf52_bsim/native
+     harness:
+     bsim
+   tests:
+     bluetooth.host.adv.extended.advertiser:
+       build_only:
+       true
+       harness_config:
+         bsim_exe_name:
+         tests_bsim_bluetooth_host_adv_extended_prj_advertiser_conf
+       extra_args:
+         CONF_FILE=prj_advertiser.conf

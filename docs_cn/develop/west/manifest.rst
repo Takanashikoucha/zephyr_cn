@@ -1,0 +1,250 @@
+.. _west-manifests:
+
+West
+Manifests
+##############
+
+本
+页
+包含
+关于
+west
+的
+多
+仓库
+模型、
+manifest
+文件
+和
+``west
+manifest``
+命令
+的
+详细
+信息。
+对
+``west.manifest``
+模块
+的
+API
+文档，
+参考
+:ref:`west-apis-manifest`。
+对
+更
+一般
+的
+介绍
+和
+命令
+概览，
+参考
+:ref:`west-basics`。
+
+.. only::
+   html
+
+   .. contents::
+      :depth:
+      3
+
+.. _west-mr-model:
+
+Multiple
+Repository
+Model
+*************************
+
+West
+对
+:term:`west
+workspace`
+中
+仓库
+的
+视图
+及其
+历史
+看起来
+像
+以下
+图
+（虽然
+这
+个
+示例
+的
+一些
+部分
+特定
+于
+upstream
+Zephyr
+对
+west
+的
+使用）：
+
+.. figure::
+   west-mr-model.png
+   :align:
+   center
+   :alt:
+   West
+   multi-repo
+   history
+   :figclass:
+   align-center
+
+   West
+   multi-repo
+   history
+
+manifest
+仓库
+的
+历史
+是
+"浮动"
+在
+灰色
+平面
+上
+的
+Git
+commits
+线。
+Parent
+commits
+用
+实线
+箭头
+指向
+child
+commits。
+下面
+的
+平面
+包含
+workspace
+中
+仓库
+的
+Git
+commit
+历史，
+每个
+project
+仓库
+被
+矩形
+框
+住。
+每个
+仓库
+中
+的
+Parent/child
+commit
+关系
+也
+用
+实线
+箭头
+显示。
+
+manifest
+仓库
+中
+的
+commits
+（再次，
+对
+upstream
+Zephyr
+这
+是
+zephyr
+仓库
+本身）
+每个
+都
+有
+一
+个
+manifest
+文件。
+每个
+commit
+中
+的
+manifest
+文件
+指定
+它
+期望
+的
+对应
+commits
+在
+每个
+project
+仓库
+中。
+这
+个
+关系
+用
+虚线
+箭头
+在
+图
+中
+显示。
+每个
+虚线
+箭头
+从
+manifest
+仓库
+中
+的
+一
+个
+commit
+指向
+project
+仓库
+中
+的
+对应
+commit。
+
+注意
+以下
+重要
+细节：
+
+- Projects
+  可以
+  被
+  添加
+  （如
+  ``P1``
+  在
+  manifest
+  仓库
+  commits
+  ``D``
+  和
+  ``E``
+  之间）
+  和
+  移除
+  （``P2``
+  在
+  同一
+  manifest
+  仓库
+  commits
+  之间）

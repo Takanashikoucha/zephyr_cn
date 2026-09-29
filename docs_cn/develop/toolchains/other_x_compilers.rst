@@ -1,0 +1,230 @@
+.. _other_x_compilers:
+
+其他
+交叉
+编译器
+######################
+
+这
+个
+工具链
+variant
+借
+自
+Linux
+kernel
+构建
+系统
+的
+机制
+用
+``CROSS_COMPILE``
+环境
+变量
+设置
+基于
+GNU
+的
+交叉
+工具链。
+
+这样
+的
+"其他
+交叉
+编译器"
+示例
+是
+你
+的
+Linux
+发行版
+打包
+的
+交叉
+工具链、
+你
+自己
+编译
+的、
+或
+你
+从
+网络
+下载
+的。
+与
+:ref:`toolchains`
+中
+特别
+列出
+的
+工具链
+不同，
+Zephyr
+构建
+系统
+可能
+没有
+与
+它们
+测试
+过，
+并
+不
+官方
+支持
+它们。
+（不过，
+工具链
+设置
+机制
+本身
+是
+支持
+的。）
+
+遵循
+这些
+步骤
+使用
+这
+些
+工具链
+之一。
+
+#. 安装
+   适合
+   你
+   的
+   主机
+   和
+   目标
+   系统
+   的
+   交叉
+   编译器。
+
+   例如，
+   你
+   可能
+   在
+   Debian
+   基于
+   的
+   Linux
+   系统
+   上
+   安装
+   ``gcc-arm-none-eabi``
+   包，
+   或
+   在
+   Fedora
+   或
+   Red
+   Hat
+   上
+   ``arm-none-eabi-newlib``：
+
+   .. code-block:: console
+
+      #
+      On
+      Debian
+      or
+      Ubuntu
+      sudo
+      apt-get
+      install
+      gcc-arm-none-eabi
+      #
+      On
+      Fedora
+      or
+      Red
+      Hat
+      sudo
+      dnf
+      install
+      arm-none-eabi-newlib
+
+#. :ref:`Set
+   these
+   environment
+   variables
+   <env_vars>`：
+
+   - 设置
+     :envvar:`ZEPHYR_TOOLCHAIN_VARIANT`
+     为
+     ``cross-compile``。
+   - 设置
+     ``CROSS_COMPILE``
+     为
+     你
+     的
+     工具链
+     二进制
+     文件
+     有
+     的
+     共同
+     路径
+     前缀，
+     例如
+     包含
+     编译器
+     二进制
+     文件
+     的
+     目录
+     路径
+     加
+     目标
+     三元组
+     和
+     尾
+     随
+     破折号。
+
+#. 要
+   检查
+   你
+   在
+   当前
+   环境
+   中
+   正确
+   设置
+   了
+   这些
+   变量，
+   遵循
+   这些
+   示例
+   shell
+   会话
+   （``CROSS_COMPILE``
+   值
+   在
+   你
+   的
+   系统
+   上
+   可能
+   不同）：
+
+   .. code-block:: console
+
+      #
+      Linux,
+      macOS:
+      $
+      echo
+      $ZEPHYR_TOOLCHAIN_VARIANT
+      cross-compile
+      $
+      echo
+      $CROSS_COMPILE
+      /usr/bin/arm-none-eabi-

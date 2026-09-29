@@ -1,0 +1,213 @@
+.. _west-extensions:
+
+Extensions
+##########
+
+West
+是
+"可
+插拔
+的"：
+你
+可以
+添加
+你
+自己
+的
+命令
+到
+west
+而
+不
+编辑
+其
+源
+代码。
+这些
+被
+称为
+**west
+extension
+commands**，
+或
+简称
+"extensions"。
+Extensions
+在
+``west
+--help``
+输出
+中
+显示
+在
+定义
+它们
+的
+project
+的
+特殊
+section
+中。
+本
+页
+提供
+west
+extension
+commands
+的
+一般
+信息，
+并
+有
+编写
+你
+自己
+的
+教程。
+
+一些
+你
+可以
+在
+用
+west
+与
+Zephyr
+时
+运行
+的
+命令，
+如
+:ref:`build,
+flash,
+and
+debug
+<west-build-flash-debug>`
+和
+:ref:`ones
+described
+here
+<west-zephyr-ext-cmds>`
+的
+那些，
+是
+extensions。
+这
+就是
+为什么
+它们
+的
+帮助
+在
+``west
+--help``
+中
+显示
+像
+这样：
+
+.. code-block:: none
+
+   extension
+   commands
+   from
+   project
+   manifest
+   (path:
+   zephyr):
+     completion:
+           display
+           shell
+           completion
+           scripts
+     boards:
+               display
+               information
+               about
+               supported
+               boards
+     shields:
+              display
+              list
+              of
+              supported
+              shields
+     build:
+              compile
+              a
+              Zephyr
+              application
+     twister:
+              west
+              twister
+              wrapper
+     sign:
+               sign
+               a
+               Zephyr
+               binary
+               for
+               bootloader
+               chain-loading
+     flash:
+              flash
+              and
+              run
+              a
+              binary
+              on
+              a
+              board
+     debug:
+              flash
+              and
+              interactively
+              debug
+              a
+              Zephyr
+              application
+     debugserver:
+          connect
+          to
+          board
+          and
+          launch
+          a
+          debug
+          server
+     attach:
+               interactively
+               debug
+               a
+               board
+     ...
+
+参考
+:file:`zephyr/scripts/west-commands.yml`
+和
+:file:`zephyr/scripts/west_commands`
+目录
+获取
+实现
+细节。
+
+禁用
+Extension
+Commands
+****************************
+
+要
+禁用
+extension
+commands
+支持，
+设置
+``commands.allow_extensions``
+:ref:`configuration
+<west-config>`
+选项
+为
+``false``。
+要
+设置
+这

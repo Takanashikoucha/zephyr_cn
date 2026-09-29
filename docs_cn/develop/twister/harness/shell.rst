@@ -1,0 +1,148 @@
+.. _twister_shell_harness:
+
+Shell
+#####
+
+shell
+harness
+用
+来
+执行
+shell
+命令
+并
+解析
+输出
+并
+利用
+pytest
+框架
+和
+twister
+的
+pytest
+harness。
+
+以下
+选项
+适用
+于
+shell
+harness：
+
+shell_commands:
+<list
+of
+pairs
+of
+commands
+and
+their
+expected
+output>
+(default
+empty)
+    指定
+    要
+    执行
+    的
+    shell
+    命令
+    和
+    其
+    预期
+    输出
+    的
+    列表。
+    例如：
+
+    .. code-block:: yaml
+
+       harness_config:
+         shell_commands:
+         -
+         command:
+         "kernel
+         cycles"
+         expected:
+         "cycles:
+         .*
+         hw
+         cycles"
+         -
+         command:
+         "kernel
+         version"
+         expected:
+         "Zephyr
+         version
+         .*"
+         -
+         command:
+         "kernel
+         sleep
+         100"
+
+    如果
+    未
+    提供
+    预期
+    输出，
+    命令
+    将
+    被
+    执行
+    并
+    输出
+    将
+    被
+    记录。
+
+shell_commands_file:
+<string>
+(default
+empty)
+    指定
+    包含
+    测试
+    参数
+    的
+    文件
+    用
+    于
+    测试
+    中。
+    文件
+    应该
+    包含
+    命令
+    和
+    其
+    预期
+    输出
+    的
+    列表。
+    例如：
+
+    .. code-block:: yaml
+
+      -
+      command:
+      "mpu
+      mtest
+      1"
+      expected:
+      "The
+      value
+      is:
+      0x.*"
+      -
+      command:
+      "mpu
+      mtest
+      2"
+      expected:
+      "The
+      value
+      is:
+      0x.*"

@@ -1,0 +1,238 @@
+.. _clion_ide:
+
+CLion
+#####
+
+.. note::
+
+   本
+   指南
+   描述
+   如何
+   用
+   CLion
+   的
+   CMake
+   集成
+   设置、
+   构建
+   和
+   调试
+   Zephyr
+   的
+   示例
+   应用。
+   这
+   种
+   方式
+   不再
+   最优。
+
+   CLion
+   现在
+   有
+   `native
+   Zephyr
+   West
+   integration`_
+   提供
+   更
+   简单
+   和
+   更
+   直观
+   的
+   方式
+   打开、
+   构建
+   和
+   运行/
+   调试
+   Zephyr
+   项目。
+   本
+   指南
+   将
+   很快
+   更新，
+   但
+   如果
+   你
+   偏好
+   使用
+   CMake
+   它
+   仍
+   有效。
+
+CLion_
+是
+跨
+平台
+的
+C/C++
+IDE
+支持
+多
+线程
+RTOS
+调试。
+
+本
+指南
+描述
+在
+CLion
+中
+设置、
+构建
+和
+调试
+Zephyr
+的
+:zephyr:code-sample:`multi-thread-blinky`
+示例
+的
+过程。
+
+说明
+已
+在
+Windows
+上
+测试。
+在
+CLion
+工作流
+方面，
+步骤
+对
+macOS
+和
+Linux
+相同，
+但
+确保
+选择
+正确
+的
+环境
+文件
+并
+调整
+路径。
+
+获取
+CLion
+*********
+
+`下载
+CLion`_
+并
+安装
+它。
+
+初始化
+新
+工作区
+**************************
+
+本
+指南
+给出
+如何
+构建
+和
+调试
+:zephyr:code-sample:`multi-thread-blinky`
+示例
+应用
+的
+细节，
+但
+说明
+对
+任何
+Zephyr
+项目
+和
+:ref:`workspace
+layout
+<west-workspaces>`
+类似。
+
+开始
+前，
+确保
+你
+有
+一
+个
+工作
+的
+Zephyr
+开发
+环境，
+按
+:ref:`getting_started`
+中
+的
+说明。
+
+在
+CLion
+中
+打开
+项目
+**************************
+
+#. 在
+   CLion
+   中，
+   在
+   欢迎
+   屏幕
+   上
+   点击
+   :guilabel:`Open`
+   或
+   从
+   主
+   菜单
+   选择
+   :menuselection:`File
+   -->
+   Open`。
+
+#. 导航
+   到
+   你
+   的
+   Zephyr
+   工作区
+   （即
+   如果
+   你
+   遵循
+   了
+   Getting
+   Started
+   说明
+   则
+   HOME
+   目录
+   中
+   的
+   :file:`zephyrproject`
+   文件夹），
+   然后
+   选择
+   :file:`zephyr/samples/basic/threads`
+   或
+   其他
+   示例
+   项目
+   文件夹。
+
+   点击
+   :guilabel:`OK`。

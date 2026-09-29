@@ -1,0 +1,179 @@
+.. _toolchain_hexagon:
+
+Qualcomm
+Hexagon
+LLVM
+Toolchain
+###############################
+
+#. 从
+   `toolchain_for_hexagon
+   releases
+   page
+   <https://github.com/quic/toolchain_for_hexagon/releases>`_
+   下载
+   预
+   构建
+   的
+   Hexagon
+   LLVM
+   交叉
+   工具链
+   并
+   解压
+   它，
+   例如
+   到
+   ``/opt/hexagon-toolchain``。
+   安装
+   目录
+   是
+   持有
+   ``bin/clang``
+   的
+   那
+   个。
+
+   使用
+   从
+   LLVM
+   23
+   或
+   更新
+   版本
+   构建
+   的
+   release。
+   较早
+   的
+   releases
+   错误
+   编译
+   ``~BIT(n)``。
+   修复
+   落地
+   在
+   `#205489
+   <https://github.com/llvm/llvm-project/pull/205489>`_。
+
+#. 设置
+   :envvar:`ZEPHYR_TOOLCHAIN_VARIANT`
+   为
+   ``hexagon``
+   和
+   :envvar:`HEXAGON_TOOLCHAIN_PATH`
+   为
+   那
+   个
+   目录：
+
+   .. code-block:: bash
+
+      export
+      ZEPHYR_TOOLCHAIN_VARIANT=hexagon
+      export
+      HEXAGON_TOOLCHAIN_PATH=/opt/hexagon-toolchain
+
+.. envvar::
+   HEXAGON_TOOLCHAIN_PATH
+
+   Hexagon
+   LLVM
+   交叉
+   工具链
+   的
+   安装
+   目录。
+
+这
+个
+工具链
+是
+普通
+的
+LLVM
+安装，
+所以
+这
+个
+variant
+是
+:ref:`host_toolchains`
+的
+``llvm``
+variant
+驱动
+不同
+的
+编译器。
+它
+有
+自己
+的
+路径
+变量
+因为
+Hexagon
+clang
+只
+注册
+Hexagon
+目标
+所以
+不能
+构建
+主机
+编译
+的
+目标
+如
+:zephyr:board:`native_sim`；
+覆盖
+两
+个
+的
+环境
+必须
+独立
+命名
+两
+个
+LLVM
+安装，
+如
+Zephyr
+的
+CI
+在
+单一
+Twister
+运行
+跨越
+两
+类
+平台
+时
+做
+的
+那样。
+
+用
+``ZEPHYR_TOOLCHAIN_VARIANT=host/llvm``
+和
+:envvar:`LLVM_TOOLCHAIN_PATH`
+构建
+Hexagon
+目标
+等价
+并
+保持
+支持，
+只要
+它
+命名
+的
+安装
+是
+Hexagon
+那
+个。

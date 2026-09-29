@@ -1,0 +1,213 @@
+.. _toolchain_eld:
+
+Embedded
+Linker
+（ELD）
+#####################
+
+`ELD`_
+是
+Qualcomm
+的
+开源、
+基于
+LLVM、
+GNU
+兼容
+的
+链接器。
+它
+可以
+用
+作
+LLD
+或
+GNU
+ld
+的
+替代
+当
+用
+LLVM
+工具链
+构建
+Zephyr
+时
+（例如
+:ref:`Arm
+Toolchain
+for
+Embedded
+<toolchain_atfe>`
+或
+主机
+clang）。
+参考
+`ELD
+user
+guide`_
+获取
+关于
+ELD
+本身
+的
+细节。
+
+ELD
+只
+是
+一
+个
+链接器
+（``ld.eld``）；
+仍
+需要
+单独
+的
+C/C++
+工具链
+来
+编译
+源
+代码。
+
+安装
+************
+
+有
+三
+种
+方式
+获取
+ELD：
+
+#. **Nightly
+   binary
+   release。**
+   预
+   构建
+   的
+   ``ld.eld``
+   二进制
+   文件
+   发布
+   在
+   `ELD
+   releases`_
+   页
+   上。
+
+#. **Build
+   from
+   source。**
+   按
+   `ELD
+   README`_
+   中
+   描述
+   的
+   方式
+   对
+   LLVM
+   树
+   构建
+   ELD；
+   集成
+   的
+   ``llvm-project``
+   构建
+   在
+   构建
+   树
+   的
+   ``bin/``
+   目录
+   下
+   产生
+   ``ld.eld``。
+
+#. **Full
+   toolchain
+   via
+   cpullvm。**
+   `cpullvm`_
+   工具链
+   是
+   完整
+   的
+   LLVM
+   工具链
+   用于
+   Arm、
+   AArch64
+   和
+   RISC-V
+   嵌入式
+   目标，
+   捆绑
+   ``ld.eld``
+   和
+   ``ld.lld``
+   连同
+   clang、
+   运行时
+   库
+   和
+   头
+   文件。
+   预
+   构建
+   的
+   cpullvm
+   归档
+   发布
+   在
+   其
+   `cpullvm
+   releases
+   page`_
+   上
+   用于
+   Linux
+   和
+   Windows，
+   并且
+   cpullvm
+   22.1.1
+   已
+   在
+   ELD
+   CI
+   中
+   与
+   Zephyr
+   测试
+   过。
+
+选项
+1
+和
+2
+只
+提供
+``ld.eld``；
+仍
+需要
+单独
+的
+LLVM
+工具链
+（clang、
+运行时
+库
+和
+头
+文件）
+来
+构建
+Zephyr。
+
+验证
+安装：
+
+.. code-block:: console

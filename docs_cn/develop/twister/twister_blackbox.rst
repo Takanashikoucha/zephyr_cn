@@ -1,0 +1,166 @@
+.. _twister_blackbox:
+
+Twister
+blackbox
+tests
+######################
+
+本
+指南
+旨在
+解释
+测试
+文件
+的
+结构
+所以
+读者
+将
+能
+够
+理解
+现有
+文件
+并
+创建
+自己
+的。
+所有
+developers
+应该
+修复
+他们
+破坏
+的
+任何
+tests
+并
+在
+引入
+新
+功能
+时
+创建
+新
+的，
+所以
+这
+知识
+对
+任何
+Twister
+developer
+重要。
+
+Basics
+******
+
+Twister
+blackbox
+tests
+用
+python
+编写，
+使用
+``pytest``
+库。
+在
+:ref:`here
+<integration_with_pytest>`
+阅读
+它。
+辅助
+test
+数据
+遵循
+其
+原始
+的
+任何
+格式。
+Tests
+和
+数据
+完全
+包含
+在
+:zephyr_file:`scripts/tests/twister_blackbox`
+目录
+中
+并
+以
+``test_``
+前缀。
+
+Blackbox
+tests
+不
+应该
+知道
+内部
+twister
+代码。
+相反，
+它们
+应该
+像
+用户
+一样
+调用
+twister
+并
+检查
+结果。
+
+Sample
+test
+file
+****************
+
+.. literalinclude::
+   ./sample_blackbox_test.py
+   :language:
+   python
+   :linenos:
+
+与
+CLI
+比较
+*******************
+
+上面
+的
+Test
+运行
+命令
+
+.. code-block:: console
+
+   twister
+   -i
+   --outdir
+   $OUTDIR
+   -T
+   $TEST_DATA/tests
+   -y
+   --level
+   $LEVEL
+   --test-config
+   $TEST_DATA/test_config.yaml
+   -p
+   qemu_x86
+   -p
+   frdm_k64f
+
+它
+假设
+一
+个
+CLI
+已
+经
+运行
+了
+``zephyr-env.sh``
+或
+``zephyr-env.cmd``。
