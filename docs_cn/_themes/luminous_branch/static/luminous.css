@@ -1,0 +1,411 @@
+/* 荧枝 · Luminous Branch 主题
+ * 深夜画布 × 发光纤维 × 电蓝/绯红双色体系
+ * 适配 Sphinx HTML 结构
+ */
+
+/* -- 字体 ----------------------------------------------------------------- */
+@font-face {
+  font-family: 'JBM';
+  src: url('../fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JBM';
+  src: url('../fonts/jetbrains-mono-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JBM';
+  src: url('../fonts/jetbrains-mono-latin-800-normal.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* -- 色板（唯一权威） ------------------------------------------------------ */
+:root {
+  /* 底色：深夜双层 */
+  --night1: #05070b;
+  --night2: #081018;
+  /* 主色：电蓝（骨白偏蓝）—— 占 60% 视觉权重 */
+  --bone: #7cc4ff;
+  --bone2: #a9dcff;
+  --bone-dim: rgba(124, 196, 255, .30);
+  /* 辅色：青绿丝线 —— 占 10% */
+  --thread: #5eead4;
+  /* 强调：绯红能量 —— 占 20% */
+  --red: #ff4d63;
+  /* 第四色：紫 —— 稀有品，≤10% */
+  --purple: #c9a3ff;
+  /* 文字三级 */
+  --txt: #e6eef6;
+  --sub: #93a6bd;
+  --dim: #5f7288;
+  /* 线与面板 */
+  --line: rgba(124, 196, 255, .20);
+  --panel: rgba(4, 9, 16, .82);
+}
+
+/* -- 全局 ----------------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+}
+body {
+  font-family: 'JBM', 'Sarasa Mono SC', 'Noto Sans Mono CJK SC', monospace !important;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background: var(--night1) !important;
+  color: var(--sub) !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* -- 覆盖 Sphinx basic 主题样式 ------------------------------------------- */
+/* 移除 basic 主题的默认背景与边距 */
+div.document, div.body, .body-wrapper {
+  background: transparent !important;
+  color: var(--sub) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* -- 布局 ----------------------------------------------------------------- */
+#luminous-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* hero 区 */
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.fiber-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: screen;
+  opacity: .9;
+  filter: saturate(1.12) brightness(1.06);
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  padding: 24px;
+}
+
+/* 主布局 */
+.main-layout {
+  display: flex;
+  flex: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 24px;
+  gap: 24px;
+}
+
+/* 侧边栏 */
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 24px;
+  align-self: flex-start;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+}
+.sidebar-inner {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  background: var(--panel);
+}
+
+/* 文档内容 */
+.document {
+  flex: 1;
+  min-width: 0;
+}
+.document-content {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 28px 32px;
+  background: var(--panel);
+}
+
+/* 页脚 */
+.doc-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--line);
+}
+.footer-src, .footer-ver {
+  font-size: 12px;
+  color: var(--dim);
+  letter-spacing: 1.5px;
+}
+
+/* -- 标题 ----------------------------------------------------------------- */
+/* hero 标题（渐变文字） */
+.title {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  line-height: 1.1;
+  margin: 12px 0;
+  background: linear-gradient(90deg, #a9dcff 0%, #7cc4ff 50%, #5eead4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 10px rgba(8, 16, 28, .95)) drop-shadow(0 0 18px rgba(124, 196, 255, .35));
+}
+/* 眉标 */
+.eyebrow {
+  font-size: 12.5px;
+  letter-spacing: 5px;
+  color: var(--bone);
+  opacity: .85;
+  text-transform: uppercase;
+  text-shadow: 0 1px 6px rgba(8, 16, 28, .9), 0 0 10px rgba(124, 196, 255, .4);
+}
+/* tagline */
+.tagline {
+  font-size: 14px;
+  color: var(--dim);
+  letter-spacing: 2px;
+  margin: 8px 0 0;
+}
+
+/* 文档内标题（覆盖 Sphinx 默认） */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--txt) !important;
+  font-weight: 800 !important;
+  margin-top: 28px !important;
+  margin-bottom: 14px !important;
+}
+h1 {
+  font-size: 28px;
+  letter-spacing: 1px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+h2 {
+  font-size: 21px;
+  letter-spacing: 3px;
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(8, 16, 28, .95), 0 0 22px rgba(124, 196, 255, .6), 0 0 6px rgba(8, 16, 28, .9);
+}
+h3 {
+  font-size: 17px;
+  letter-spacing: 1px;
+  color: var(--bone2);
+  filter: drop-shadow(0 0 8px rgba(124, 196, 255, .3));
+}
+h4 {
+  font-size: 15px;
+  color: var(--txt);
+}
+
+/* -- 正文 ----------------------------------------------------------------- */
+p {
+  margin: 12px 0 !important;
+  color: var(--sub) !important;
+}
+strong, b {
+  color: var(--bone2) !important;
+  font-weight: 700 !important;
+}
+a {
+  color: var(--bone) !important;
+  text-decoration: none !important;
+  border-bottom: 1px solid transparent;
+  transition: all .2s;
+}
+a:hover {
+  color: var(--bone2);
+  border-bottom-color: var(--bone-dim);
+  text-shadow: 0 0 8px rgba(124, 196, 255, .4);
+}
+
+/* -- 代码块 --------------------------------------------------------------- */
+pre, code {
+  font-family: 'JBM', 'Sarasa Mono SC', monospace;
+  font-size: 13px;
+}
+code {
+  background: rgba(124, 196, 255, .08);
+  color: var(--bone2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(124, 196, 255, .13);
+}
+pre {
+  background: rgba(4, 9, 16, .9);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+  overflow-x: auto;
+  margin: 16px 0;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, .4);
+}
+pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--sub);
+}
+/* 代码高亮（Pygments） */
+pre .k { color: var(--red); }
+pre .s { color: var(--thread); }
+pre .c { color: var(--dim); font-style: italic; }
+pre .o { color: var(--bone); }
+pre .n { color: var(--bone2); }
+pre .m { color: #ff9d9d; }
+
+/* -- 表格 ----------------------------------------------------------------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 16px 0;
+}
+th {
+  font-size: 10.5px;
+  letter-spacing: 2px;
+  color: var(--dim);
+  text-transform: uppercase;
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+}
+td {
+  padding: 11px 12px;
+  border-bottom: 1px solid rgba(124, 196, 255, .08);
+  color: var(--sub);
+}
+tr:hover td {
+  background: rgba(124, 196, 255, .04);
+}
+
+/* -- 列表 ----------------------------------------------------------------- */
+ul, ol {
+  margin: 12px 0;
+  padding-left: 24px;
+}
+li {
+  margin: 6px 0;
+}
+li::marker {
+  color: var(--thread);
+}
+
+/* -- 提示框（note/tip/warning） ------------------------------------------- */
+div.note, div.tip, div.warning, div.danger, div.caution {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--bone);
+  border-radius: 0 10px 10px 0;
+  background: rgba(124, 196, 255, .05);
+  padding: 14px 18px;
+  margin: 16px 0;
+}
+div.warning, div.caution, div.danger {
+  border-left-color: var(--red);
+  background: rgba(255, 77, 99, .05);
+}
+div.note > .title, div.tip > .title, div.warning > .title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--bone2);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+div.warning > .title, div.caution > .title, div.danger > .title {
+  color: #ff9d9d;
+}
+
+/* -- 侧边栏目录 ----------------------------------------------------------- */
+.sidebar a {
+  display: block;
+  font-size: 13px;
+  color: var(--sub);
+  padding: 6px 10px;
+  border-radius: 8px;
+  letter-spacing: .5px;
+  margin: 2px 0;
+}
+.sidebar a:hover {
+  color: var(--bone2);
+  background: rgba(124, 196, 255, .06);
+}
+.sidebar a.current, .sidebar a.active {
+  color: #fff;
+  background: rgba(124, 196, 255, .1);
+  box-shadow: 0 0 16px rgba(124, 196, 255, .2), inset 0 0 10px rgba(124, 196, 255, .08);
+}
+.sidebar .caption {
+  font-size: 10.5px;
+  letter-spacing: 2px;
+  color: var(--dim);
+  text-transform: uppercase;
+  padding: 8px 10px;
+  margin-top: 12px;
+}
+
+/* -- 搜索框 --------------------------------------------------------------- */
+input[type="search"], input.search {
+  background: rgba(4, 9, 16, .6);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--txt);
+  font-family: inherit;
+  width: 100%;
+  margin-bottom: 12px;
+}
+input[type="search"]:focus, input.search:focus {
+  outline: none;
+  border-color: var(--bone-dim);
+  box-shadow: 0 0 16px rgba(124, 196, 255, .25);
+}
+
+/* -- 响应式 --------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .main-layout {
+    flex-direction: column;
+    padding: 16px;
+  }
+  .sidebar {
+    width: 100%;
+    position: static;
+    max-height: none;
+  }
+  .hero-section {
+    height: 160px;
+  }
+  .title {
+    font-size: 30px;
+  }
+}
