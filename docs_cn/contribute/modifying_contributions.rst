@@ -1,0 +1,227 @@
+.. _modifying_contributions:
+
+Modifying
+Contributions
+made
+by
+other
+developers
+************************************************
+
+Scenarios
+#########
+
+Zephyr
+contributors
+and
+collaborators
+are
+encouraged
+to
+assist
+as
+reviewers
+in
+pull
+requests
+so
+that
+patches
+may
+be
+approved
+and
+merged
+to
+Zephyr's
+main
+branch
+as
+part
+of
+the
+original
+pull
+requests。
+The
+authors
+of
+the
+pull
+requests
+are
+responsible
+for
+amending
+their
+original
+commits
+following
+the
+review
+process。
+
+There
+are
+occasions
+however
+when
+a
+contributor
+might
+need
+to
+modify
+patches
+included
+in
+pull
+requests
+that
+are
+submitted
+by
+other
+Zephyr
+contributors。
+For
+instance
+this
+is
+the
+case
+when:
+
+*
+a
+developer
+cherry
+picks
+commits
+submitted
+by
+other
+contributors
+into
+their
+own
+pull
+requests
+in
+order
+to:
+
+   *
+   integrate
+   useful
+   content
+   which
+   is
+   part
+   of
+   a
+   stale
+   pull
+   request
+   or
+   *
+   get
+   content
+   merged
+   to
+   the
+   project's
+   main
+   branch
+   as
+   part
+   of
+   a
+   larger
+   patch
+
+*
+a
+developer
+pushes
+to
+a
+branch
+or
+pull
+request
+opened
+by
+another
+contributor
+in
+order
+to:
+
+   *
+   assist
+   in
+   updating
+   pull
+   requests
+   in
+   order
+   to
+   get
+   the
+   patches
+   merged
+   to
+   the
+   project's
+   main
+   branch
+   *
+   drive
+   stale
+   pull
+   requests
+   to
+   completion
+   so
+   they
+   can
+   be
+   merged
+
+
+Accepted
+policies
+#################
+
+A
+developer
+who
+intends
+to
+cherry
+pick
+and
+potentially
+modify
+patches
+sent
+by
+another
+contributor
+shall:
+
+*
+clarify
+in
+their
+pull
+request
+the
+reason
+for
+cherry
+picking
+the
+patches
+，

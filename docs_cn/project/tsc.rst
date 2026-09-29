@@ -1,0 +1,176 @@
+.. _tsc:
+
+Technical
+Steering
+Committee
+（TSC）
+**********************************
+
+TSC
+Member
+Role
+###############
+
+The
+TSC
+role
+and
+its
+responsibilities
+is
+defined
+in
+the
+`Zephyr
+project
+charter`_。
+
+Membership
+++++++++++
+
+A
+TSC
+member
+plays
+a
+pivotal
+role
+in
+shaping
+the
+technical
+direction
+of
+the
+Zephyr
+Project。
+TSC
+members
+work
+collaboratively
+with
+other
+TSC
+members、
+contributors、
+and
+stakeholders
+to
+ensure
+the
+project's
+success
+and
+sustainability。
+
+By
+fulfilling
+the
+rights
+and
+responsibilities
+below
+TSC
+members
+contribute
+to
+the
+overall
+success
+and
+growth
+of
+the
+Zephyr
+Project
+ensuring
+that
+it
+remains
+a
+vibrant
+and
+thriving
+open
+source
+community
+for
+years
+to
+come。
+
+
+Rights
+------
+
+Decision
+Making
+   Participate
+   in
+   key
+   decisions
+   related
+   to
+   the
+   project's
+   technical
+   direction
+   including
+   architectural
+   changes、
+   feature
+   additions、
+   and
+   release
+   planning。
+
+Voting
+   Exercise
+   voting
+   rights
+   on
+   important
+   matters
+   discussed
+   within
+   the
+   TSC
+   including
+   feature
+   proposals、
+   code
+   contributions、
+   and
+   community
+   initiatives。
+
+Access
+   Gain
+   access
+   to
+   relevant
+   project
+   repositories、
+   documentation、
+   and
+   communication
+   channels
+   to
+   stay
+   informed
+   and
+   contribute
+   effectively。
+
+Leadership
+   Take
+   on
+   leadership
+   roles
+   within
+   working
+   groups
+   or
+   subcommittees
+   dedicated
+   to

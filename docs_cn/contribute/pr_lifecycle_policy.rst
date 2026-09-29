@@ -1,0 +1,176 @@
+.. _pr_lifecycle_policy:
+
+Pull
+Request
+Lifecycle
+Policy
+#############################
+
+This
+policy
+keeps
+the
+open
+pull
+request
+list
+focused
+on
+contributions
+that
+are
+actively
+progressing
+and
+have
+a
+realistic
+path
+to
+merge。
+
+Goals
+*****
+
+*
+Keep
+open
+pull
+requests
+manageable
+for
+contributors
+and
+maintainers。
+*
+Prioritize
+review
+bandwidth
+for
+changes
+that
+are
+moving
+forward。
+*
+Provide
+clear
+expectations
+for
+draft
+pull
+requests
+and
+inactive
+pull
+requests。
+
+Scope
+*****
+
+This
+policy
+applies
+to
+all
+pull
+requests
+in
+the
+repository
+including
+draft
+pull
+requests。
+
+Definitions
+***********
+
+Active
+pull
+request
+   A
+   pull
+   request
+   with
+   meaningful
+   progress
+   such
+   as
+   commits、
+   review
+   responses、
+   or
+   updates
+   addressing
+   requested
+   changes。
+
+Draft
+pull
+request
+   A
+   pull
+   request
+   opened
+   for
+   work
+   in
+   progress
+   and
+   early
+   feedback。
+
+Stalled
+pull
+request
+   A
+   pull
+   request
+   without
+   meaningful
+   activity
+   inside
+   the
+   inactivity
+   window。
+
+Closed
+inactive
+pull
+request
+   A
+   pull
+   request
+   closed
+   due
+   to
+   inactivity、
+   supersession、
+   or
+   no
+   clear
+   merge
+   path。
+
+Draft
+Pull
+Request
+Expectations
+*******************************
+
+*
+Draft
+pull
+requests
+should
+include
+a
+clear
+problem
+statement、
+current
+status、
+and
+known
+gaps。

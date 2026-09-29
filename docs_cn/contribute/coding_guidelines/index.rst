@@ -1,0 +1,214 @@
+.. _coding_guidelines:
+
+Coding
+Guidelines
+#################
+
+
+Main
+rules
+**********
+
+The
+coding
+guideline
+rules
+are
+based
+on
+MISRA
+C
+2012
+and
+are
+a
+**subset**
+of
+MISRA
+C。
+The
+subset
+is
+listed
+in
+the
+table
+below
+with
+a
+summary
+of
+the
+rules
+its
+MISRA
+C
+severity
+and
+the
+equivalent
+rules
+from
+other
+standards
+for
+reference。
+
+The
+severity
+and
+other
+references
+in
+the
+table
+below
+are
+for
+informational
+purposes
+only。
+The
+listed
+rules
+are
+all
+required
+for
+Zephyr
+and
+all
+new
+code
+should
+comply
+with
+the
+rules
+listed
+below。
+
+
+.. note::
+
+    For
+    existing
+    Zephyr
+    maintainers
+    and
+    collaborators
+    if
+    you
+    are
+    unable
+    to
+    obtain
+    a
+    copy
+    through
+    your
+    employer
+    a
+    limited
+    number
+    of
+    copies
+    will
+    be
+    made
+    available
+    through
+    the
+    project。
+    If
+    you
+    need
+    a
+    copy
+    of
+    MISRA
+    C
+    2012
+    please
+    send
+    email
+    to
+    safety@lists.zephyrproject.org
+    and
+    provide
+    details
+    on
+    reason
+    why
+    you
+    can't
+    obtain
+    one
+    through
+    other
+    options
+    and
+    expected
+    contributions
+    once
+    you
+    have
+    one。
+    The
+    safety
+    committee
+    will
+    review
+    all
+    requests。
+
+
+.. list-table::
+   Main
+   rules
+   :header-rows:
+   1
+   :widths:
+   12
+   50
+   15
+   15
+
+   *
+   -
+   Zephyr
+   rule
+   -
+   Description
+   -
+   MISRA
+   C
+   2012
+   reference
+   -
+   CERT
+   C
+   reference
+
+      .. _MisraC_Dir_1_1:
+   *
+   -
+   1
+   -
+   Any
+   implementation
+   defined
+   behaviour
+   on
+   which
+   the
+   output
+   of
+   the
+   program
+   depends
+   shall
+   be
+   documented
+   and
+   understood

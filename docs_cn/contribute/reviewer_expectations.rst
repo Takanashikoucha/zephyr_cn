@@ -1,0 +1,283 @@
+.. _reviewer-expectations:
+
+Reviewer
+Expectations
+#####################
+
+-
+Be
+respectful
+when
+commenting
+on
+PRs。
+Refer
+to
+the
+Zephyr
+`Code
+of
+Conduct`_
+for
+more
+details。
+
+-
+The
+Zephyr
+Project
+recognizes
+that
+reviewers
+and
+maintainers
+have
+limited
+bandwidth。
+As
+a
+reviewer
+prioritize
+review
+requests
+in
+the
+following
+order:
+
+    #.
+    PRs
+    related
+    to
+    items
+    in
+    the
+    `Zephyr
+    Release
+    Plan`_
+    or
+    those
+    targeting
+    the
+    next
+    release
+    during
+    the
+    stabilization
+    period
+    （after
+    RC1）。
+    #.
+    PRs
+    where
+    the
+    reviewer
+    has
+    requested
+    blocking
+    changes。
+    #.
+    PRs
+    assigned
+    to
+    the
+    reviewer
+    as
+    the
+    area
+    maintainer。
+    #.
+    All
+    other
+    PRs。
+
+-
+Reviewers
+shall
+strive
+to
+advance
+the
+PR
+to
+a
+mergeable
+state
+with
+their
+feedback
+and
+engagement
+with
+the
+PR
+author。
+
+-
+Try
+to
+provide
+feedback
+on
+the
+entire
+PR
+in
+one
+shot。
+This
+provides
+the
+contributor
+an
+opportunity
+to
+address
+all
+comments
+in
+the
+next
+PR
+update。
+
+-
+Partial
+reviews
+are
+permitted
+but
+the
+reviewer
+must
+add
+a
+comment
+indicating
+what
+portion
+of
+the
+PR
+they
+reviewed。
+Examples
+of
+useful
+partial
+reviews
+include:
+
+   -
+   Domain
+   specific
+   reviews
+   （e.g.
+   Devicetree）。
+   -
+   Code
+   style
+   changes
+   that
+   impact
+   the
+   readability
+   of
+   the
+   PR。
+   -
+   Reviewing
+   commits
+   separately
+   when
+   the
+   requested
+   changes
+   cascade
+   into
+   the
+   later
+   commits。
+
+-
+Avoid
+increasing
+scope
+of
+the
+PR
+by
+requesting
+new
+features
+especially
+when
+there
+is
+a
+corresponding
+:ref:`RFC
+<rfcs>`
+associated
+with
+the
+PR。
+Instead
+reviewers
+should
+add
+suggestions
+as
+a
+comment
+to
+the
+:ref:`RFC
+<rfcs>`。
+This
+also
+encourages
+more
+collaboration
+as
+it
+is
+easier
+for
+multiple
+contributors
+to
+work
+on
+a
+feature
+once
+the
+minimum
+implementation
+has
+merged。
+
+-
+When
+using
+the
+"Request
+Changes"
+option
+mark
+trivial、
+non
+functional、
+requests
+as
+"Non
+blocking"
+in
+the
+comment。
+Reviewers
+should
+approve
+PRs
+once

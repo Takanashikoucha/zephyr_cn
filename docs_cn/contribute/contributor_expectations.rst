@@ -1,0 +1,235 @@
+.. _contributor-expectations:
+
+Contributor
+Expectations
+########################
+
+The
+Zephyr
+project
+encourages
+:ref:`contributors
+<contributor>`
+to
+submit
+changes
+as
+smaller
+pull
+requests。
+Smaller
+pull
+requests
+（PRs）
+have
+the
+following
+benefits:
+
+-
+Reviewed
+more
+quickly
+and
+reviewed
+more
+thoroughly。
+It's
+easier
+for
+reviewers
+to
+set
+aside
+a
+few
+minutes
+to
+review
+smaller
+changes
+several
+times
+than
+it
+is
+to
+allocate
+large
+blocks
+of
+time
+to
+review
+a
+large
+PR。
+
+-
+Less
+wasted
+work
+if
+reviewers
+or
+maintainers
+reject
+the
+direction
+of
+the
+change。
+
+-
+Easier
+to
+rebase
+and
+merge。
+Smaller
+PRs
+are
+less
+likely
+to
+conflict
+with
+other
+changes
+in
+the
+tree。
+
+-
+Easier
+to
+revert
+if
+the
+PR
+breaks
+functionality。
+
+.. note::
+   This
+   page
+   does
+   not
+   apply
+   to
+   draft
+   PRs
+   which
+   can
+   have
+   any
+   size
+   any
+   number
+   of
+   commits
+   and
+   any
+   combination
+   of
+   smaller
+   PRs
+   for
+   testing
+   and
+   preview
+   purposes。
+   Draft
+   PRs
+   have
+   no
+   review
+   expectation
+   and
+   PRs
+   created
+   as
+   drafts
+   from
+   the
+   start
+   do
+   not
+   notify
+   anyone
+   by
+   default。
+
+
+Defining
+Smaller
+PRs
+********************
+
+-
+Smaller
+PRs
+should
+encompass
+one
+self
+contained
+logical
+change。
+
+-
+When
+adding
+a
+new
+large
+feature
+or
+API
+the
+PR
+should
+address
+only
+one
+part
+of
+the
+feature。
+In
+this
+case
+create
+an
+:ref:`RFC
+proposal
+<rfcs>`
+to
+describe
+the
+additional
+parts
+of
+the
+feature
+for
+reviewers。
+
+-
+PRs
+should
+include
+tests
+or
+samples
+under
+the
+following
+conditions:
+
+   -
+   Adding
+   new
+   features
+   or
+   functionality。

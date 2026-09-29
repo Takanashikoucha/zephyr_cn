@@ -1,0 +1,142 @@
+:orphan:
+
+.. _cmake-style:
+
+CMake
+Style
+Guidelines
+######################
+
+A
+subset
+of
+these
+guidelines
+is
+enforced
+in
+CI
+by
+the
+``CMakeStyle``
+compliance
+check。
+You
+can
+run
+the
+same
+checks
+locally
+with
+``scripts/cmake/cmake_style.py``
+（a
+directory
+is
+searched
+recursively
+for
+``CMakeLists.txt``
+and
+``*.cmake``
+files）:
+
+.. code-block::
+   console
+
+   pip
+   install
+   tree
+   sitter
+   tree
+   sitter
+   cmake
+   ./scripts/cmake/cmake_style.py
+   path/to/CMakeLists.txt
+   ./scripts/cmake/cmake_style.py
+   drivers/
+
+General
+Formatting
+******************
+
+-
+**Indentation**:
+Use
+**2
+spaces**
+for
+indentation。
+Avoid
+tabs
+to
+ensure
+consistency
+across
+different
+environments。
+-
+**Line
+Length**:
+Limit
+line
+length
+to
+**100
+columns**
+where
+possible。
+-
+**Empty
+Lines**:
+Use
+empty
+lines
+to
+separate
+logically
+distinct
+sections
+within
+a
+CMake
+file。
+-
+**No
+Space
+Before
+Opening
+Brackets**:
+Do
+not
+add
+a
+space
+between
+a
+command
+and
+the
+opening
+parenthesis。
+Use
+``if(...)``
+instead
+of
+``if
+(...)``。
+
+   .. code-block::
+      cmake
+
+      #
+      Good:
+      if(ENABLE_TESTS)
+        add_subdirectory(tests)
+      endif()
+
+      #
+      Bad:
+      if
+      (ENABLE_TESTS)
+        add_subdirectory(tests)

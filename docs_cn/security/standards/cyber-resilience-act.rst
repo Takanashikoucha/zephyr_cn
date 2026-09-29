@@ -1,0 +1,239 @@
+.. _cra_faq:
+
+EU
+Cyber
+Resilience
+Act
+（CRA）
+#############################
+
+.. warning::
+   This
+   document
+   is
+   for
+   informational
+   purposes
+   only
+   and
+   does
+   not
+   constitute
+   legal
+   advice。
+   Consult
+   with
+   your
+   legal
+   counsel
+   for
+   compliance
+   guidance
+   specific
+   to
+   your
+   situation。
+
+Overview
+********
+
+The
+Cyber
+Resilience
+Act
+（[CRA24]_）
+is
+an
+EU
+regulation
+that
+establishes
+cybersecurity
+requirements
+for
+products
+with
+digital
+elements
+（PDEs）
+placed
+on
+the
+EU
+market。
+It
+entered
+into
+force
+on
+December
+10、
+2024。
+
+.. admonition::
+   Key
+   Dates
+   :class:
+   important
+
+   *
+   **June
+   11、
+   2026**:
+   Assessment
+   bodies
+   operational
+   *
+   **September
+   11、
+   2026**:
+   Manufacturers
+   must
+   report
+   vulnerabilities
+   and
+   incidents
+   *
+   **December
+   11、
+   2027**:
+   Full
+   regulation
+   applies
+
+This
+page
+explains
+how
+the
+CRA
+relates
+both
+to
+manufacturers
+using
+Zephyr
+in
+commercial
+products
+and
+to
+the
+Zephyr
+Project
+itself
+in
+its
+role
+as
+an
+open
+source
+software
+steward。
+
+For
+manufacturers
+the
+CRA
+imposes
+essential
+cybersecurity
+requirements
+（`Annex
+I
+Part
+I`_）
+along
+with
+vulnerability
+handling
+and
+reporting
+obligations
+（`Annex
+I
+Part
+II`_）。
+For
+the
+Zephyr
+Project
+as
+an
+open
+source
+software
+steward
+the
+CRA
+introduces
+a
+tailored
+set
+of
+obligations
+including
+maintaining
+a
+cybersecurity
+policy、
+reporting
+actively
+exploited
+vulnerabilities
+and
+severe
+incidents、
+and
+cooperating
+with
+market
+surveillance
+authorities。
+
+For
+Manufacturers
+Using
+Zephyr
+******************************
+
+Does
+the
+CRA
+apply
+to
+my
+product?
+=================================
+
+The
+CRA
+applies
+if
+you
+place
+a
+product
+with
+digital
+elements
+（PDE）
+on
+the
+EU
+market
+for
+commercial
+purposes。
+This
+includes
+hardware
+devices
+with
+embedded
+software、
+and
+standalone
+software
+products。

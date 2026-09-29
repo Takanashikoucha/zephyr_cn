@@ -1,0 +1,222 @@
+.. _code-flow-and-branches:
+
+Code
+Flow
+and
+Branches
+######################
+
+Introduction
+************
+
+The
+zephyr
+Git
+repository
+has
+three
+types
+of
+branches:
+
+main
+   Which
+   contains
+   the
+   latest
+   state
+   of
+   development
+
+collab
+\*
+   Collaboration
+   branches
+   that
+   are
+   used
+   for
+   shared
+   development
+   of
+   new
+   features
+   to
+   be
+   introduced
+   into
+   the
+   main
+   branch
+   when
+   ready。
+   Creating
+   a
+   new
+   collaboration
+   branch
+   requires
+   a
+   justification
+   and
+   TSC
+   approval。
+   Collaboration
+   branches
+   shall
+   be
+   based
+   off
+   the
+   main
+   branch
+   and
+   any
+   changes
+   developed
+   in
+   the
+   collab
+   branch
+   shall
+   target
+   the
+   main
+   development
+   branch。
+   For
+   released
+   versions
+   of
+   Zephyr
+   the
+   introduction
+   of
+   fixes
+   and
+   new
+   features
+   if
+   approved
+   by
+   the
+   TSC
+   shall
+   be
+   done
+   using
+   backport
+   pull
+   requests。
+
+vx.y
+branch
+   Branches
+   which
+   track
+   maintenance
+   releases
+   based
+   on
+   a
+   major
+   release
+
+Development
+in
+collaboration
+branches
+before
+features
+go
+to
+mainline
+allows
+teams
+to
+work
+independently
+on
+a
+subsystem
+or
+a
+feature
+improves
+efficiency
+and
+turnaround
+time
+and
+encourages
+collaboration
+and
+streamlines
+communication
+between
+developers。
+
+Changes
+submitted
+to
+a
+collaboration
+branch
+can
+evolve
+and
+improve
+incrementally
+in
+a
+branch
+before
+they
+are
+submitted
+to
+the
+mainline
+tree
+for
+final
+integration。
+
+By
+dedicating
+an
+isolated
+branch
+to
+complex
+features
+it's
+possible
+to
+initiate
+in
+depth
+discussions
+around
+new
+additions
+before
+integrating
+them
+into
+the
+official
+project。
+
+Collaboration
+branches
+are
+ephemeral
+and
+shall
+be
+removed
+once
+the
+collaboration
+work

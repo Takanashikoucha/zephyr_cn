@@ -1,0 +1,195 @@
+.. _etsi_303645:
+
+ETSI
+303
+645
+############
+
+
+**ETSI
+EN
+303
+645**
+also
+known
+as
+"Cyber
+Security
+for
+Consumer
+Internet
+of
+Things:
+Baseline
+Requirements"
+is
+a
+standard
+developed
+by
+the
+European
+Telecommunications
+Standards
+Institute
+（ETSI）。
+
+The
+standard
+includes
+provisions
+for
+secure
+software
+updates、
+data
+protection、
+secure
+communication、
+and
+the
+minimization
+of
+exposed
+attack
+surfaces
+among
+other
+things。
+It
+is
+part
+of
+a
+broader
+effort
+to
+address
+the
+challenges
+and
+risks
+associated
+with
+IoT
+devices。
+
+Full
+version
+of
+the
+standard
+can
+be
+found
+`here
+<https://www.etsi.org/deliver/etsi_en/303600_303699/303645/02.01.01_60/en_303645v020101p.pdf>`_。
+
+
+Terminology
+***********
+
+.. list-table::
+   ETSI
+   303645
+   terminology
+   :widths:
+   17
+   43
+
+   *
+   -
+   administrator
+   -
+   user
+   who
+   has
+   the
+   highest
+   privilege
+   level
+   possible
+   for
+   a
+   user
+   of
+   the
+   device、
+   which
+   can
+   mean
+   they
+   are
+   able
+   to
+   change
+   any
+   configuration
+   related
+   to
+   the
+   intended
+   functionality。
+
+   *
+   -
+   associated
+   services
+   -
+   digital
+   services
+   that、
+   together
+   with
+   the
+   device、
+   are
+   part
+   of
+   the
+   overall
+   consumer
+   IoT
+   product
+   and
+   that
+   are
+   typically
+   required
+   to
+   provide
+   the
+   product's
+   intended
+   functionality。
+
+   *
+   -
+   authentication
+   mechanism
+   -
+   method
+   used
+   to
+   prove
+   the
+   authenticity
+   of
+   an
+   entity。
+
+   *
+   -
+   authentication
+   value
+   -
+   individual
+   value
+   of
+   an
+   attribute
+   used
+   by
+   an
+   authentication
+   mechanism。

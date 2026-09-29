@@ -1,0 +1,153 @@
+.. _contribute_to_zephyr:
+
+Contributing
+to
+Zephyr
+######################
+
+Contributions
+from
+the
+community
+are
+the
+backbone
+of
+the
+project。
+Whether
+it
+is
+by
+submitting
+code
+improving
+documentation
+or
+proposing
+new
+features
+your
+efforts
+are
+highly
+appreciated。
+This
+page
+lists
+useful
+resources
+and
+guidelines
+to
+help
+you
+in
+your
+contribution
+journey。
+
+General
+Guidelines
+==================
+
+.. toctree::
+   :maxdepth:
+   1
+   :hidden:
+
+   guidelines.rst
+   contributor_expectations.rst
+   reviewer_expectations.rst
+   coding_guidelines/index.rst
+   style/index.rst
+   proposals_and_rfcs.rst
+   modifying_contributions.rst
+   pr_lifecycle_policy.rst
+
+
+:ref:`contribute_guidelines`
+   Learn
+   about
+   the
+   overall
+   process
+   and
+   guidelines
+   for
+   contributing
+   to
+   the
+   Zephyr
+   project。
+
+   This
+   page
+   is
+   a
+   mandatory
+   read
+   for
+   first
+   time
+   contributors
+   as
+   it
+   contains
+   important
+   information
+   on
+   how
+   to
+   ensure
+   your
+   contribution
+   can
+   be
+   considered
+   for
+   inclusion
+   in
+   the
+   project
+   and
+   potentially
+   merged。
+
+:ref:`contributor-expectations`
+   This
+   document
+   is
+   another
+   mandatory
+   read
+   that
+   describes
+   the
+   expected
+   behavior
+   of
+   *all*
+   contributors
+   to
+   the
+   project。
+
+:ref:`reviewer-expectations`
+   This
+   document
+   is
+   another
+   mandatory
+   read
+   that
+   describes
+   the
+   expected
+   behavior
+   when
+   revieweing
+   contributions
+   to
+   the
+   project。

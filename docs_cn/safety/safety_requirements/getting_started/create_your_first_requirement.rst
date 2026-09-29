@@ -1,0 +1,193 @@
+.. _create_first_safety_requirements:
+
+Create
+your
+first
+Zephyr
+RTOS
+requirement
+#########################################
+
+Repository
+Overview
+*******************
+
+The
+Zephyr
+requirements
+are
+managed
+in
+the
+``reqmgmt``
+repository
+using
+`StrictDoc
+<https://github.com/strictdoc-project/strictdoc>`_。
+The
+repo
+includes:
+
+-
+:file:`docs/`:
+Contains
+requirement
+documents
+in
+StrictDoc
+format
+-
+:file:`tools/`:
+Utility
+scripts
+and
+configuration
+-
+:file:`strictdoc.toml`:
+Project
+configuration
+for
+StrictDoc
+-
+:file:`tasks.py`:
+Task
+automation
+using
+Invoke
+
+
+Step
+1:
+Create
+or
+Edit
+a
+Requirement
+File
+*****************************************
+
+Navigate
+to
+the
+:file:`docs/`
+folder
+in
+the
+repository。
+
+Folder
+Overview
+---------------
+
+The
+:file:`docs/`
+folder
+contains
+all
+requirement
+documents
+written
+in
+StrictDoc
+format。
+
+The
+:file:`docs/`
+folder
+contains
+two
+subfolders。
+These
+are
+organized
+as
+follows:
+
+-
+:file:`system_requirements/`
+   Contains
+   high
+   level
+   system
+   requirements
+   that
+   describe
+   the
+   overall
+   goals、
+   constraints、
+   and
+   expected
+   behavior
+   of
+   the
+   Zephyr
+   RTOS。
+
+   -
+   :file:`system_requirements.sgra`
+   Contains
+   the
+   GRAMMAR
+   that
+   defines
+   the
+   formal
+   structure
+   of
+   a
+   requirement
+   -
+   :file:`index.sdoc`
+   that
+   contains
+   the
+   actual
+   requirements
+   statements
+
+-
+:file:`software_requirements/`
+   Contains
+   component
+   level
+   requirements。
+   Each
+   file
+   in
+   this
+   folder
+   corresponds
+   to
+   a
+   specific
+   subsystem
+   or
+   module。
+
+   -
+   :file:`software_requirements.sgra`
+   contains
+   the
+   GRAMMAR
+   for
+   all
+   software
+   requirements
+   -
+   a
+   list
+   of
+   :file:`.sdoc`
+   snippet
+   files
+   that
+   compile
+   together
+   to
+   a
+   big
+   software
+   requirements
+   document
+   e.g.
