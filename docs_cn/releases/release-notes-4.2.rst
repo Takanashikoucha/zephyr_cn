@@ -1,0 +1,230 @@
+:orphan:
+
+..
+   What
+   goes
+   here:
+   removed/deprecated
+   apis、
+   new
+   boards、
+   new
+   drivers、
+   notable
+   features。
+   如果
+   你
+   feel
+   something
+   new
+   can
+   be
+   useful
+   to
+   a
+   user
+   put
+   it
+   under
+   "Other
+   Enhancements"
+   in
+   the
+   first
+   paragraph
+   如果
+   你
+   feel
+   something
+   is
+   worth
+   mentioning
+   in
+   the
+   project
+   media
+   （release
+   blog
+   post、
+   release
+   livestream）
+   put
+   it
+   under
+   "Major
+   enhancement"。
+..
+   如果
+   你
+   are
+   describing
+   a
+   feature
+   or
+   functionality
+   consider
+   adding
+   it
+   to
+   the
+   actual
+   project
+   documentation
+   rather
+   than
+   the
+   release
+   notes
+   so
+   that
+   the
+   information
+   does
+   not
+   get
+   lost
+   in
+   time。
+..
+   No
+   list
+   of
+   bugfixes、
+   minor
+   changes、
+   those
+   are
+   already
+   in
+   the
+   git
+   log、
+   this
+   is
+   not
+   a
+   changelog。
+..
+   Does
+   the
+   entry
+   have
+   a
+   link
+   that
+   contains
+   the
+   details?
+   Just
+   add
+   the
+   link、
+   如果
+   你
+   think
+   it
+   needs
+   more
+   details、
+   put
+   them
+   in
+   the
+   content
+   that
+   shows
+   up
+   on
+   the
+   link。
+..
+   Are
+   you
+   thinking
+   about
+   generating
+   this?
+   Don't
+   put
+   anything
+   at
+   all。
+..
+   Does
+   the
+   thing
+   require
+   the
+   user
+   to
+   change
+   their
+   application?
+   Put
+   it
+   on
+   the
+   migration
+   guide
+   instead。
+   （TODO:
+   move
+   the
+   removed
+   APIs
+   section
+   in
+   the
+   migration
+   guide）
+
+.. _zephyr_4.2:
+
+Zephyr
+4.2.0
+############
+
+我们
+pleased
+to
+announce
+Zephyr
+version
+4.2.0
+的
+release。
+
+这
+个
+release
+的
+Major
+enhancements
+包括：
+
+**Initial
+Support
+for
+Renesas
+RX**
+   The
+   Renesas
+   RX
+   architecture
+   now
+   被
+   supported
+   including
+   一
+   个
+   QEMU
+   based
+   的
+   :zephyr:board:`board
+   target
+   <qemu_rx>`。
+
+**USB
+Video
+Class
+Driver**

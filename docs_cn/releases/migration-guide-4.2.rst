@@ -1,0 +1,165 @@
+:orphan:
+
+..
+   See
+   https://docs.zephyrproject.org/latest/releases/index.html#migration-guides
+   获取
+   这
+   个
+   document
+   应该
+   contain
+   什么
+   的
+   details。
+
+.. _migration_4.2:
+
+Migration
+guide
+to
+Zephyr
+v4.2.0
+################################
+
+这
+个
+document
+describe
+migrating
+你
+的
+application
+从
+Zephyr
+v4.1.0
+到
+Zephyr
+v4.2.0
+required
+的
+changes。
+
+其他
+changes
+（不
+directly
+related
+to
+migrating
+applications）
+可以
+found
+在
+:ref:`release
+notes<zephyr_4.2>`。
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+Build
+System
+************
+
+*
+HWMv1
+support
+被
+removed
+任何
+out
+of
+tree
+的
+boards
+或
+SoCs
+在
+HWMv1
+format
+中
+必须
+被
+migrated
+到
+:ref:`HWMv2
+<hw_model_v2>`
+用于
+与
+Zephyr
+v4.2
+onwards
+work。
+
+Kernel
+******
+
+Boards
+******
+
+*
+所有
+based
+on
+Nordic
+ICs
+的
+boards
+它们
+之前
+default
+use
+``nrfjprog``
+Nordic
+command
+line
+tool
+用于
+flashing
+被
+modified
+为
+instead
+default
+到
+new
+的
+nRF
+Util
+（``nrfutil``）
+tool。
+这
+means
+你
+可能
+需要
+`install
+nRF
+Util
+<https://www.nordicsemi.com/Products/Development-tools/nrf-util>`_
+或
+如果
+你
+prefer
+继续
+use
+``nrfjprog``
+你
+可以
+通过
+invoking
+west
+时
+specifying
+runner
+做到：
+``west
+flash
+-r
+nrfjprog``。
+Full
+的
+documentation
+for

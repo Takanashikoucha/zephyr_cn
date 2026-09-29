@@ -1,0 +1,247 @@
+:orphan:
+
+..
+   What
+   goes
+   here:
+   removed/deprecated
+   apis、
+   new
+   boards、
+   new
+   drivers、
+   notable
+   features。
+   如果
+   你
+   feel
+   something
+   new
+   can
+   be
+   useful
+   to
+   a
+   user
+   put
+   it
+   under
+   "Other
+   Enhancements"
+   in
+   the
+   first
+   paragraph
+   如果
+   你
+   feel
+   something
+   is
+   worth
+   mentioning
+   in
+   the
+   project
+   media
+   （release
+   blog
+   post、
+   release
+   livestream）
+   put
+   it
+   under
+   "Major
+   enhancement"。
+..
+   如果
+   你
+   are
+   describing
+   a
+   feature
+   or
+   functionality
+   consider
+   adding
+   it
+   to
+   the
+   actual
+   project
+   documentation
+   rather
+   than
+   the
+   release
+   notes
+   so
+   that
+   the
+   information
+   does
+   not
+   get
+   lost
+   in
+   time。
+..
+   No
+   list
+   of
+   bugfixes、
+   minor
+   changes、
+   those
+   are
+   already
+   in
+   the
+   git
+   log、
+   this
+   is
+   not
+   a
+   changelog。
+..
+   Does
+   the
+   entry
+   have
+   a
+   link
+   that
+   contains
+   the
+   details?
+   Just
+   add
+   the
+   link、
+   如果
+   你
+   think
+   it
+   needs
+   more
+   details、
+   put
+   them
+   in
+   the
+   content
+   that
+   shows
+   up
+   on
+   the
+   link。
+..
+   Are
+   you
+   thinking
+   about
+   generating
+   this?
+   Don't
+   put
+   anything
+   at
+   all。
+..
+   Does
+   the
+   thing
+   require
+   the
+   user
+   to
+   change
+   their
+   application?
+   Put
+   it
+   on
+   the
+   migration
+   guide
+   instead。
+   （TODO:
+   move
+   the
+   removed
+   APIs
+   section
+   in
+   the
+   migration
+   guide）
+
+.. _zephyr_4.1:
+
+Zephyr
+4.1.0
+############
+
+我们
+pleased
+to
+announce
+Zephyr
+version
+4.1.0
+的
+release。
+这
+个
+release
+的
+Major
+enhancements
+包括：
+
+**Performance
+improvements**
+   Multiple
+   performance
+   improvements
+   of
+   core
+   Zephyr
+   kernel
+   functions
+   被
+   implemented
+   benefiting
+   all
+   supported
+   的
+   hardware
+   architectures。
+
+   一
+   个
+   official
+   的
+   port
+   of
+   the
+   :zephyr_file:`thread_metric
+   <tests/benchmarks/thread_metric>`
+   RTOS
+   benchmark
+   也
+   被
+   added
+   用于
+   make
+   it
+   easier
+   for
+   developers
+   to
+   measure
+   the
+   performance
+   of

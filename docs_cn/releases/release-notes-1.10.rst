@@ -1,0 +1,213 @@
+:orphan:
+
+.. _zephyr_1.10:
+
+Zephyr
+Kernel
+1.10.0
+#####################
+
+我们
+pleased
+to
+announce
+Zephyr
+kernel
+version
+1.10.0
+的
+release。
+
+这
+个
+release
+的
+Major
+enhancements
+包括：
+
+*
+Initial
+alpha
+quality
+的
+thread
+level
+的
+memory
+protection
+在
+x86
+上
+userspace
+和
+memory
+domains
+*
+Build
+system
+的
+Major
+overhaul
+和
+从
+Kbuild
+到
+CMake
+的
+switch。
+*
+Newtron
+Flash
+Filesystem
+（NFFS）
+Support
+*
+Increased
+的
+testsuite
+coverage
+且
+most
+的
+testcases
+被
+migrated
+用于
+use
+ztest
+*
+Integration
+与
+MCUBOOT
+Bootloader
+*
+Additional
+的
+SoC、
+platform
+和
+driver
+support
+for
+many
+已
+supported
+的
+platforms。
+
+以下
+sections
+provide
+detailed
+的
+lists
+of
+changes
+by
+component。
+
+Kernel
+******
+
+*
+Remove
+deprecated
+的
+k_mem_pool_defrag
+code
+*
+Initial
+alpha
+quality
+的
+thread
+level
+的
+memory
+protection
+在
+x86
+上
+userspace
+和
+memory
+domains:
+
+   *
+   相同
+   的
+   kernel
+   &
+   driver
+   APIs
+   for
+   kernel
+   和
+   user
+   mode
+   threads
+   *
+   System
+   calls
+   for
+   privilege
+   elevation
+   *
+   Stack
+   overflow
+   protection
+   *
+   Kernel
+   object
+   和
+   device
+   driver
+   permission
+   tracking
+   *
+   Simple
+   的
+   app
+   vs.
+   kernel
+   memory
+   separation
+   *
+   Memory
+   domain
+   APIs
+   for
+   fine
+   tuning
+   memory
+   region
+   permissions
+   *
+   Stack
+   memory
+   protection
+   from
+   other
+   threads
+
+*
+Add
+以下
+的
+application
+facing
+的
+memory
+domain
+APIs:
+
+   *
+   k_mem_domain_init()
+   -
+   用于
+   initialize
+   一
+   个
+   memory
+   domain

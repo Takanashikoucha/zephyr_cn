@@ -1,0 +1,210 @@
+.. _eol_releases:
+
+End
+of
+life
+releases
+####################
+
+Release
+notes
+和
+migration
+guides
+for
+end
+of
+life
+的
+releases
+of
+Zephyr
+RTOS
+kept
+这里
+用于
+historical
+purposes。
+
+..
+   在
+   向
+   这
+   个
+   page
+   add
+   new
+   entries
+   时
+   请
+   ensure
+   你
+   update
+   `RELEASE_NOTES_GLOB_PATTERNS`
+   accordingly
+   in
+   doc/conf.py
+   使
+   .rst
+   file(s)
+   actually
+   stop
+   被
+   Sphinx
+   built
+   且
+   向
+   这
+   个
+   page
+   的
+   redirects
+   被
+   added
+   用于
+   它们。
+
+.. _eol_releases_release_notes:
+
+Release
+Notes
+*************
+
+*
+:zephyr_file:`Zephyr
+4.2
+Release
+Notes
+<doc/releases/release-notes-4.2.rst>`
+*
+:zephyr_file:`Zephyr
+4.1
+Release
+Notes
+<doc/releases/release-notes-4.1.rst>`
+*
+:zephyr_file:`Zephyr
+4.0
+Release
+Notes
+<doc/releases/release-notes-4.0.rst>`
+*
+:zephyr_file:`Zephyr
+3.6
+Release
+Notes
+<doc/releases/release-notes-3.6.rst>`
+*
+:zephyr_file:`Zephyr
+3.5
+Release
+Notes
+<doc/releases/release-notes-3.5.rst>`
+*
+:zephyr_file:`Zephyr
+3.4
+Release
+Notes
+<doc/releases/release-notes-3.4.rst>`
+*
+:zephyr_file:`Zephyr
+3.3
+Release
+Notes
+<doc/releases/release-notes-3.3.rst>`
+*
+:zephyr_file:`Zephyr
+3.2
+Release
+Notes
+<doc/releases/release-notes-3.2.rst>`
+*
+:zephyr_file:`Zephyr
+3.1
+Release
+Notes
+<doc/releases/release-notes-3.1.rst>`
+*
+:zephyr_file:`Zephyr
+3.0
+Release
+Notes
+<doc/releases/release-notes-3.0.rst>`
+*
+:zephyr_file:`Zephyr
+2.7
+Release
+Notes
+<doc/releases/release-notes-2.7.rst>`
+*
+:zephyr_file:`Zephyr
+2.6
+Release
+Notes
+<doc/releases/release-notes-2.6.rst>`
+*
+:zephyr_file:`Zephyr
+2.5
+Release
+Notes
+<doc/releases/release-notes-2.5.rst>`
+*
+:zephyr_file:`Zephyr
+2.4
+Release
+Notes
+<doc/releases/release-notes-2.4.rst>`
+*
+:zephyr_file:`Zephyr
+2.3
+Release
+Notes
+<doc/releases/release-notes-2.3.rst>`
+*
+:zephyr_file:`Zephyr
+2.2
+Release
+Notes
+<doc/releases/release-notes-2.2.rst>`
+*
+:zephyr_file:`Zephyr
+2.1
+Release
+Notes
+<doc/releases/release-notes-2.1.rst>`
+*
+:zephyr_file:`Zephyr
+2.0
+Release
+Notes
+<doc/releases/release-notes-2.0.rst>`
+*
+:zephyr_file:`Zephyr
+1.14
+Release
+Notes
+<doc/releases/release-notes-1.14.rst>`
+*
+:zephyr_file:`Zephyr
+1.13
+Release
+Notes
+<doc/releases/release-notes-1.13.rst>`
+*
+:zephyr_file:`Zephyr
+1.12
+Release
+Notes
+<doc/releases/release-notes-1.12.rst>`
+*
+:zephyr_file:`Zephyr
+1.11
+Release
+Notes
+<doc/releases/release-notes-1.11.rst>`
+*
+:zephyr_file:`Zephyr
+1.10
+Release
+Notes
+<doc/releases/release-notes-1.10.rst>`

@@ -1,0 +1,214 @@
+:orphan:
+
+.. _zephyr_1.12:
+
+Zephyr
+Kernel
+1.12.0
+####################
+
+我们
+pleased
+to
+announce
+Zephyr
+kernel
+version
+1.12.0
+的
+release。
+
+这
+个
+release
+的
+Major
+enhancements
+包括：
+
+-
+Asymmetric
+multiprocessing
+（AMP）
+通过
+OpenAMP
+的
+integration
+-
+Persistent
+storage
+support
+for
+Bluetooth
+Low
+Energy
+包括
+Mesh
+-
+802.1Q
+-
+Virtual
+Local
+Area
+Network
+（VLAN）
+traffic
+在
+Ethernet
+network
+上
+-
+Support
+multiple
+concurrent
+的
+filesystem
+devices、
+partitions、
+和
+FS
+types
+-
+Ethernet
+network
+management
+interface
+-
+Networking
+traffic
+prioritization
+在
+per
+connection
+的
+basis
+上
+-
+Support
+for
+Ethernet
+statistical
+counters
+-
+Support
+for
+TAP
+net
+device
+在
+native
+POSIX
+port
+上
+-
+Command
+line
+的
+Zephyr
+meta
+tool
+"west"
+-
+SPI
+slave
+support
+-
+Runtime
+的
+non
+volatile
+的
+configuration
+data
+storage
+system
+（settings）
+
+
+以下
+sections
+provide
+detailed
+的
+lists
+of
+changes
+by
+component。
+
+Security
+Vulnerability
+Related
+******************************
+
+*
+Suitably
+sized
+的
+k_malloc()
+request
+可以
+result
+在
+比
+requested
+的
+buffer
+更
+small
+的
+buffer。
+Use
+该
+buffer
+可以
+result
+在
+writes
+到
+unallocated
+的
+memory。
+Proper
+的
+overflow
+checks
+被
+added
+用于
+fix
+这
+个
+issue
+在
+k_malloc
+和
+k_calloc
+中。
+
+   *
+   kernel:
+   mempool:
+   Check
+   for
+   overflow
+   in
+   k_malloc()
+   *
+   kernel:
+   mempool:
+   Always
+   check
+   for
+   overflow
+   in
+   k_calloc()
+   *
+   tests:
+   mempool:
+   Add
+   overflow
+   checks
+
+Kernel
+******

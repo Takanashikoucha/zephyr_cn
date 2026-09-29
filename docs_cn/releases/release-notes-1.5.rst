@@ -1,0 +1,202 @@
+.. _zephyr_1.5:
+
+Zephyr
+Kernel
+1.5.0
+####################
+
+Zephyr
+Engineering
+team
+glad
+to
+announce
+Zephyr
+Kernel
+1.5.0
+的
+release。
+这
+是
+first
+个
+follow
+3
+month
+的
+release
+cadence
+的
+release。
+这
+个
+release
+include
+numerous
+的
+fixes
+和
+对
+major
+features
+的
+support。
+Additional
+的
+changes
+包括
+对
+new
+的
+drivers、
+sensors、
+和
+boards
+的
+support。
+
+Release
+中
+included
+的
+Major
+enhancements:
+
+-
+TCP
+Support
+-
+Integration
+of
+the
+Paho
+MQTT
+Library
+support
+with
+QoS
+-
+Flash
+Filesystem
+Support
+-
+Integration
+of
+the
+mbedTLS
+library
+for
+encryption
+-
+Improved
+的
+BR/EDR
+support
+（for
+L2CAP
+in
+particular）。
+-
+Support
+for
+the
+Altera
+Nios
+II/f
+soft
+CPU
+architecture
+
+以下
+是
+自
+v1.4.0
+以来
+by
+component
+的
+detailed
+的
+lists
+of
+changes:
+
+Kernel
+******
+
+-
+Added
+nano_fifo_put_list()
+APIs
+它
+allow
+queue
+一
+list
+of
+elements
+在
+nanokernel
+FIFO
+上。
+-
+Removed
+unused
+的
+memory
+pool
+structure
+field。
+-
+Enhanced
+的
+memory
+pool
+code。
+
+Architectures
+*************
+
+-
+ARM:
+Updated
+用于
+include
+floating
+point
+registers。
+-
+Altera
+Nios
+II/f
+soft
+CPU
+architecture
+support
+   -
+   Internal
+   Interrupt
+   Controller
+   -
+   Avalon
+   Timer
+   -
+   Avalon
+   JTAG
+   UART
+   （polling
+   mode）
+   as
+   default
+   for
+   qemu-system-nios2
+   且
+   16550
+   UART
+   as
+   default
+   for
+   Altera
+   MAX10。
+
+Boards

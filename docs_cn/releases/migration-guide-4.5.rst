@@ -1,0 +1,172 @@
+:orphan:
+
+..
+   See
+   https://docs.zephyrproject.org/latest/releases/index.html#migration-guides
+   获取
+   这
+   个
+   document
+   应该
+   contain
+   什么
+   的
+   details。
+
+.. _migration_4.5:
+
+Migration
+guide
+to
+Zephyr
+v4.5.0
+（Working
+Draft）
+################################################
+
+这
+个
+document
+describe
+migrating
+你
+的
+application
+从
+Zephyr
+v4.4.0
+到
+Zephyr
+v4.5.0
+required
+的
+changes。
+
+其他
+changes
+（不
+directly
+related
+to
+migrating
+applications）
+可以
+found
+在
+:ref:`release
+notes<zephyr_4.5>`。
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+Common
+******
+
+*
+Header
+file
+:file:`include/zephyr/sys_clock.h`
+被
+deprecated
+且
+将
+在
+future
+的
+release
+中
+被
+removed。
+一
+个
+应该
+include
+:file:`include/zephyr/sys/clock.h`
+instead。
+
+Build
+System
+************
+
+*
+Minimum
+required
+的
+CMake
+version
+now
+是
+3.28.0。
+CMake
+3.28.3
+被
+shipped
+在
+Ubuntu
+24.04
+LTS
+的
+package
+repositories
+中。
+Use
+提供
+older
+CMake
+的
+distributions
+的
+users
+such
+as
+Ubuntu
+22.04
+LTS
+可以
+从
+`Kitware
+APT
+repository
+<https://apt.kitware.com/>`_
+或
+用
+``pip
+install
+cmake``
+获取
+recent
+的
+version。
+
+*
+Support
+for
+C
+standard
+versions
+older
+than
+C17
+在
+被
+deprecated
+之后
+被
+removed。
+Kconfig
+options
+``CONFIG_STD_C11``、
+``CONFIG_STD_C99``
+和
+``CONFIG_STD_C90``
+被
+removed。
+Compile
+Zephyr
+时
+use
+C17
+或
+higher。

@@ -1,0 +1,216 @@
+:orphan:
+
+.. _zephyr_2.2:
+.. _zephyr_2.2.1:
+
+Zephyr
+2.2.1
+#############
+
+这
+是
+Zephyr
+2.2
+的
+一
+个
+maintenance
+的
+release
+带
+fixes。
+
+See
+:ref:`zephyr_2.2.0`
+获取
+previous
+version
+的
+release
+notes。
+
+Security
+Vulnerability
+Related
+******************************
+
+以下
+的
+security
+vulnerabilities
+（CVE）
+在
+这
+个
+release
+中
+被
+addressed:
+
+   *
+   Fix
+   CVE
+   2020
+   10028
+   *
+   Fix
+   CVE
+   2020
+   10060
+   *
+   Fix
+   CVE
+   2020
+   10063
+   *
+   Fix
+   CVE
+   2020
+   10066
+
+More
+detailed
+的
+information
+可以
+found
+在:
+https://docs.zephyrproject.org/latest/security/vulnerabilities.html
+
+Issues
+Fixed
+************
+
+这些
+GitHub
+issues
+自
+previous
+的
+2.2.0
+tagged
+release
+以来
+被
+addressed:
+
+*
+:github:`23494`
+-
+Bluetooth:
+LL/PAC/SLA/BV
+01
+C
+fails
+if
+Slave
+initiated
+Feature
+Exchange
+is
+disabled
+*
+:github:`23485`
+-
+BT:
+host:
+Service
+Change
+indication
+sent
+regardless
+of
+whether
+it
+is
+needed
+or
+not.
+*
+:github:`23482`
+-
+2M
+PHY
++
+DLE
+and
+timing
+calculations
+on
+an
+encrypted
+link
+are
+wrong
+*
+:github:`23070`
+-
+Bluetooth:
+controller:
+Fix
+ticker
+implementation
+to
+avoid
+catch
+up
+*
+:github:`22967`
+-
+Bluetooth:
+controller:
+ASSERTION
+FAIL
+on
+invalid
+packet
+sequence
+*
+:github:`24183`
+-
+[v2.2]
+Bluetooth:
+controller:
+split:
+Regression
+slave
+latency
+during
+connection
+update
+*
+:github:`23805`
+-
+Bluetooth:
+controller:
+Switching
+to
+non
+conn
+adv
+fails
+for
+Mesh
+LPN
+*
+:github:`24086`
+-
+Bluetooth:
+SMP:
+Existing
+bond
+deleted
+on
+pairing
+failure
+*
+:github:`24211`
+-
+[v2.2.x]
+lib:
+updatehub:
+Not
+working
+on
+Zephyr
+2.x

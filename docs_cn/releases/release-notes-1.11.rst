@@ -1,0 +1,184 @@
+:orphan:
+
+.. _zephyr_1.11:
+
+Zephyr
+Kernel
+1.11.0
+#####################
+
+我们
+pleased
+to
+announce
+Zephyr
+kernel
+version
+1.11.0
+的
+release。
+
+这
+个
+release
+的
+Major
+enhancements
+包括：
+
+*
+Thread
+level
+的
+memory
+protection
+在
+x86、
+ARC
+和
+Arm
+上
+userspace
+和
+memory
+domains
+*
+Symmetric
+Multi
+Processing
+（SMP）
+support
+在
+Xtensa
+architecture
+上。
+*
+Initial
+的
+Armv8
+M
+architecture
+support。
+*
+Native
+的
+development
+environment
+在
+Microsoft
+Windows
+上。
+*
+Native
+的
+build
+target
+在
+POSIX
+platforms
+上。
+*
+POSIX
+PSE52
+partial
+support。
+*
+Thread
+support
+通过
+与
+OpenThread
+的
+integration。
+*
+Firmware
+over
+the
+air
+（FOTA）
+updates
+通过
+BLE
+用
+MCUmgr。
+*
+Lightweight
+的
+flash
+storage
+layer
+for
+constrained
+devices。
+*
+Additional
+的
+SoC、
+platform
+和
+driver
+support
+for
+many
+已
+supported
+的
+platforms。
+
+以下
+sections
+provide
+detailed
+的
+lists
+of
+changes
+by
+component。
+
+Kernel
+******
+
+*
+Initial
+的
+Symmetric
+Multi
+Processing
+（SMP）
+support
+被
+added:
+
+   *
+   SMP
+   aware
+   的
+   scheduler
+   *
+   SMP
+   timer
+   和
+   idling
+   support
+   *
+   Available
+   在
+   Xtensa
+   architecture
+   上
+*
+POSIX
+PSE52
+support:
+
+   *
+   Timer、
+   clock、
+   scheduler
+   和
+   pthread
+   APIs
+
+Architectures
+*************
