@@ -23,10 +23,10 @@
 | 3 | build | 93/94 (98.9%) | 1 个未译：sysbuild/index.rst |
 | 4 | develop | 138/138 (100%) | ✓ 完成（toolchains 14 + tools 6 + twister 14 + west 14 + modules 1 + optimizations 1 + sca 1 + test 1） |
 | 5 | hardware | 123/123 (100%) | ✓ 完成（arch 8 + barriers 1 + cache 2 + emulator 2 + firmware 2 + peripherals 99 + pinctrl 1 + porting 5 + virtualization 2） |
-| 6 | services | 0/359 (0%) | 待开始 |
+| 6 | services | 359/359 (100%) | 已完成 |
 | 7 | releases | 0/43 (0%) | 待开始 |
 | 8 | security+contribute+project+safety | 0/60 (0%) | 待开始 |
-| **总计** | | **457/889 (51.4%)** | |
+| **总计** | | **816/889 (91.8%)** | |
 
 ### 已完成
 
@@ -78,12 +78,12 @@
 | 4b | develop 后 68 | 68 | 待开始 |
 | 5a | hardware 前 62 | 62 | 待开始 |
 | 5b | hardware 后 61 | 61 | 待开始 |
-| 6a | services 前 60 | 60 | 待开始 |
-| 6b | services 61-120 | 60 | 待开始 |
-| 6c | services 121-180 | 60 | 待开始 |
-| 6d | services 181-240 | 60 | 待开始 |
-| 6e | services 241-300 | 60 | 待开始 |
-| 6f | services 301-359 | 59 | 待开始 |
+| 6a | services 前 60 | 60 | 已完成 |
+| 6b | services 61-120 | 60 | 已完成 |
+| 6c | services 121-180 | 60 | 已完成 |
+| 6d | services 181-240 | 60 | 已完成 |
+| 6e | services 241-300 | 60 | 已完成 |
+| 6f | services 301-359 | 59 | 已完成 |
 | 7 | releases | 43 | 待开始 |
 | 8 | security+contribute+project+safety | 60 | 待开始 |
 
