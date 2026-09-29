@@ -1,0 +1,224 @@
+.. _bt_l2cap:
+
+Logical
+Link
+Control
+and
+Adaptation
+Protocol
+（L2CAP）
+####################################################
+
+L2CAP
+layer
+使
+connection
+oriented
+的
+channels
+成为
+可能
+它们
+可以
+用
+configuration
+option
+:kconfig:option:`CONFIG_BT_L2CAP_DYNAMIC_CHANNEL`
+启用。
+这些
+channels
+透明
+地
+支持
+segmentation
+和
+reassembly
+它们
+也
+支持
+credit
+based
+的
+flow
+control
+使
+它们
+适合
+data
+streams。
+
+Channels
+instances
+由
+:c:struct:`bt_l2cap_chan`
+struct
+代表
+它
+包含
+:c:struct:`bt_l2cap_chan_ops`
+struct
+中
+的
+callbacks
+用于
+通知
+当
+channel
+被
+connected、
+disconnected
+或
+当
+encryption
+变化
+时。
+除了
+那
+它
+还
+包含
+``recv``
+callback
+在
+收到
+incoming
+data
+时
+被
+调用。
+用
+这
+个
+方式
+收到
+的
+data
+可以
+通过
+返回
+0
+标记
+为
+processed
+或
+在
+processing
+是
+asynchronous
+时
+用
+:c:func:`bt_l2cap_chan_recv_complete`
+API。
+
+.. note::
+   ``recv``
+   callback
+   直接
+   从
+   RX
+   Thread
+   调用
+   所以
+   不
+   推荐
+   长时间
+   block。
+
+要
+发送
+data
+可以
+使用
+:c:func:`bt_l2cap_chan_send`
+API
+注意
+它
+在
+没有
+credits
+可用
+时
+可能
+block
+并在
+更多
+credits
+可用
+时
+立即
+resume。
+
+Servers
+可以
+用
+:c:func:`bt_l2cap_server_register`
+API
+注册
+传递
+:c:struct:`bt_l2cap_server`
+struct
+它
+通知
+应该
+监听
+什么
+``psm``、
+需要的
+security
+level
+``sec_level``、
+以及
+在
+authorize
+incoming
+connection
+requests
+和
+allocate
+channel
+instances
+时
+被
+调用
+的
+callback
+``accept``。
+Allocated
+的
+objects
+必须
+是
+:c:struct:`bt_l2cap_le_chan`
+类型
+通过
+``accept``
+callback
+返回
+的
+channel
+reference
+指向
+object
+的
+``chan``
+member
+如
+下面
+的
+example
+所示。
+
+.. literalinclude::
+   ../../../../../samples/bluetooth/l2cap_coc_acceptor/src/main.c
+   :language:
+   c
+   :start-after:
+   doc
+   l2cap
+   server
+   start
+   :end-before:
+   doc
+   l2cap
+   server
+   end

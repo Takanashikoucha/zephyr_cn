@@ -1,0 +1,133 @@
+.. _bluetooth_shell_audio:
+
+Bluetooth:
+Basic
+Audio
+Profile
+Shell
+####################################
+
+这
+document
+describe
+如何
+运行
+Basic
+Audio
+Profile
+functionality
+它
+包括：
+
+   -
+   Capabilities
+   and
+   Endpoint
+   discovery
+   -
+   Audio
+   Stream
+   Endpoint
+   procedures
+
+Commands
+********
+
+.. code-block::
+   console
+
+   bap
+   --help
+   Subcommands:
+      init
+                   :
+      [ase_sink_count,
+      ase_source_count]
+      select_broadcast
+       :
+      <stream>
+      create_broadcast
+       :
+      [preset
+      <preset_name>]
+      [enc
+      <broadcast_code>]
+      start_broadcast
+       :
+      stop_broadcast
+       :
+      delete_broadcast
+       :
+      create_broadcast_sink
+      :
+      0x<broadcast_id>
+      create_sink_by_name
+    :
+      <broadcast_name>
+      sync_broadcast
+       :
+      0x<bis_index>
+      [[[0x<bis_index>]
+      0x<bis_index>]
+      ...]
+                          [bcode
+      <broadcast
+      code>
+      ||
+      bcode_str
+      <broadcast
+      code
+      as
+      string>]
+      stop_broadcast_sink
+    :
+      Stops
+      broadcast
+      sink
+      term_broadcast_sink
+    :
+      discover
+               :
+      [dir:
+      sink,
+      source]
+      config
+                 :
+      <direction:
+      sink,
+      source>
+      <index>
+      [loc
+      <loc_bits>]
+                          [preset
+      <preset_name>]
+      stream_qos
+             :
+      interval
+      [framing]
+      [latency]
+      [pd]
+      [sdu]
+      [phy]
+      [rtn]
+      qos
+                    :
+      Send
+      QoS
+      configure
+      for
+      Unicast
+      Group
+      enable
+                 :
+      [context]
+      connect
+              :
+      Connect
+      the
+      CIS
+      of
+      the
+      stream
+      stop
+      list

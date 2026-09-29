@@ -1,0 +1,204 @@
+.. _llext_debug:
+
+Debugging
+extensions
+####################
+
+Debugging
+extensions
+是
+一
+个
+complex
+的
+task。
+因为
+extension
+code
+by
+definition
+不
+与
+Zephyr
+application
+一起
+built
+final
+的
+Zephyr
+ELF
+file
+不
+contain
+extension
+code
+的
+symbols。
+Furthermore
+extension
+在
+runtime
+被
+:c:func:`llext_load`
+dynamically
+relocated
+所以
+即使
+symbols
+available
+debugger
+也
+impossible
+know
+extension
+code
+中
+symbols
+的
+final
+locations。
+
+在
+这
+个
+case
+properly
+set
+up
+debugger
+session
+require
+几
+个
+manual
+的
+steps。
+以下
+sections
+将
+provide
+some
+tips
+关于
+如何
+用
+Zephyr
+SDK
+和
+``west``
+provided
+的
+debug
+features
+做
+这
+个
+但
+instructions
+可以
+be
+adapted
+到
+任何
+GDB
+based
+的
+debugging
+environment。
+
+Extension
+debugging
+process
+===========================
+
+1.
+Ensure
+project
+被
+set
+up
+用于
+display
+verbose
+的
+LLEXT
+debug
+output
+（:kconfig:option:`CONFIG_LOG`
+和
+:kconfig:option:`CONFIG_LLEXT_LOG_LEVEL_DBG`
+被
+set）。
+
+2.
+Build
+Zephyr
+application
+和
+extensions。
+
+    对
+    current
+    build
+    中
+    included
+    的
+    每个
+    target
+    ``name``
+    两
+    个
+    files
+    将
+    被
+    generated
+    到
+    build
+    root
+    的
+    ``llext``
+    subdirectory
+    中：
+
+    ``name_ext_debug.elf``
+
+            一
+            个
+            intermediate
+            的
+            ELF
+            file
+            带
+            full
+            的
+            debugging
+            information。
+
+    ``name.llext``
+
+            Final
+            的
+            extension
+            binary
+            被
+            stripped
+            到
+            load
+            到
+            Zephyr
+            application
+            所需
+            的
+            essential
+            data。
+
+    根据
+    target
+    architecture
+    和
+    build
+    configuration
+    可能
+    有
+    其他
+    files。

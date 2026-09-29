@@ -1,0 +1,157 @@
+.. _pm-power-domain:
+
+Power
+Domain
+############
+
+Introduction
+************
+
+Zephyr
+的
+power
+domain
+abstraction
+被
+designed
+用于
+support
+由
+common
+的
+source
+powered
+的
+devices
+的
+groupings
+它们
+被
+notified
+power
+source
+state
+changes
+以
+generic
+的
+方式。
+Use
+device
+A
+的
+application
+code
+不
+需要
+know
+device
+B
+在
+相同
+的
+power
+domain
+上
+且
+也
+应该
+被
+configured
+到
+low
+power
+state。
+
+Power
+domains
+在
+Zephyr
+上
+是
+optional
+的
+要
+enable
+这
+个
+feature
+option
+:kconfig:option:`CONFIG_PM_DEVICE_POWER_DOMAIN`
+必须
+被
+set。
+
+当
+power
+domain
+将
+自己
+turn
+on
+或
+off
+时
+是
+power
+domain
+的
+responsibility
+notify
+所有
+use
+它
+的
+devices
+通过
+它们
+的
+power
+management
+callback
+它
+被
+called
+带
+:c:enumerator:`PM_DEVICE_ACTION_TURN_ON`
+或
+:c:enumerator:`PM_DEVICE_ACTION_TURN_OFF`
+respectively。
+这
+个
+work
+flow
+在
+下面
+的
+diagram
+中
+illustrated。
+
+.. _pm-domain-work-flow:
+
+.. graphviz::
+   :caption:
+   Power
+   domain
+   work
+   flow
+
+   digraph
+   {
+       rankdir="TB";
+
+       action
+       [style=invis]
+       {
+           rank
+   =
+   same;
+           rankdir="LR"
+           devA
+   [label="gpio0"]
+           devB
+   [label="gpio1"]
+       }
+       domain
+   [label="gpio_domain"]

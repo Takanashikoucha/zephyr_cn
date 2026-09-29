@@ -1,0 +1,181 @@
+.. _network_stack_architecture:
+
+Network
+Stack
+Architecture
+##########################
+
+.. toctree::
+   :maxdepth:
+   1
+   :hidden:
+
+   net_pkt_processing_stats.rst
+
+Zephyr
+network
+stack
+是
+一
+个
+native
+的
+network
+stack
+它
+specifically
+designed
+用于
+Zephyr
+OS。
+它
+consist
+of
+layers
+每个
+intended
+用于
+provide
+特定
+的
+services
+给
+其他
+layers。
+Network
+stack
+的
+functionality
+通过
+Kconfig
+options
+被
+highly
+configurable。
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+Network
+stack
+的
+high
+level
+overview
+****************************************
+
+.. figure::
+   zephyr_netstack_overview.svg
+   :alt:
+   Network
+   stack
+   architecture
+   的
+   Overview
+   :figclass:
+   align-center
+
+   Network
+   stack
+   overview
+
+Network
+stack
+是
+layered
+的
+并
+consist
+of
+以下
+parts：
+
+*
+**Network
+Application**
+Network
+application
+要么
+可以
+use
+provided
+的
+application
+level
+的
+protocol
+libraries
+要么
+直接
+access
+:ref:`BSD
+socket
+API
+<bsd_sockets_interface>`
+用于
+create
+一
+个
+network
+connection、
+send
+或
+receive
+data、
+和
+close
+一
+个
+connection。
+Application
+也
+可以
+use
+:ref:`network
+management
+API
+<net_mgmt_interface>`
+configure
+network
+并
+set
+相关
+的
+parameters
+如
+network
+link
+options、
+start
+一
+个
+scan
+（当
+applicable
+时）、
+listen
+network
+configuration
+events
+等。
+:ref:`network
+interface
+API
+<net_if_interface>`
+可
+被
+used
+用于
+set
+IP
+address
+到
+network
+interface、
+take
+network
+interface
+down
+等。

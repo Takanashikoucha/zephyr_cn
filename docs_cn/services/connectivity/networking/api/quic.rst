@@ -1,0 +1,233 @@
+.. _quic_transport_interface:
+
+QUIC
+Transport
+Interface
+########################
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+Overview
+********
+
+QUIC
+是
+一
+个
+general
+purpose
+的
+multiplexed
+transport
+protocol
+它
+被
+standardised
+在
+:rfc:`9000`
+中。
+它
+operate
+在
+UDP
+上面
+并
+provide
+ordered、
+reliable
+的
+byte
+stream
+delivery
+带
+integrated
+的
+TLS
+1.3
+security
+（:rfc:`9001`）、
+stream
+multiplexing、
+和
+connection
+migration。
+Zephyr
+的
+QUIC
+implementation
+可
+用
+于
+:kconfig:option:`CONFIG_QUIC`
+下。
+
+与
+embedded
+use
+相关
+的
+key
+properties：
+
+*
+**Stream
+multiplexing**：
+Bidirectional
+和
+unidirectional
+的
+streams
+share
+单
+个
+UDP
+socket
+避免
+transport
+layer
+的
+head
+of
+line
+blocking。
+*
+**Integrated
+TLS
+1.3**：
+Handshake
+被
+built
+into
+connection
+establishment
+不
+需要
+separate
+的
+TLS
+layer。
+*
+**Flow
+control**：
+Per
+stream
+和
+per
+connection
+的
+credit
+based
+的
+flow
+control
+prevent
+fast
+的
+senders
+overwhelm
+constrained
+的
+receivers。
+*
+**Loss
+recovery**：
+Probe
+Timeout
+（PTO）
+mechanism
+retransmit
+data
+而
+不
+rely
+on
+ICMP
+或
+TCP
+style
+的
+ACK
+clocks。
+*
+**Path
+MTU
+discovery**：
+Datagram
+Packetization
+Layer
+PMTU
+Discovery
+（DPLPMTUD
+:rfc:`9000`
+Section
+14.3）
+在
+handshake
+后
+probe
+path
+并
+只
+在
+probes
+被
+acknowledged
+后
+raise
+send
+size。
+*
+**Socket
+Integration**：
+Use
+standard
+的
+Zephyr
+socket
+calls
+如
+``zsock_send``、
+``zsock_recv``、
+``zsock_recvmsg``、
+``zsock_sendmsg``、
+``zsock_close``
+用于
+data
+transfer。
+*
+**Dual
+stack**：
+Support
+IPv4
+和
+IPv6
+两
+个
+connections。
+
+.. note::
+
+   QUIC
+   support
+   当前
+   在
+   Zephyr
+   中
+   是
+   **experimental**
+   的。
+   用
+   ``CONFIG_QUIC=y``
+   enable
+   它
+   并
+   aware
+   APIs
+   和
+   Kconfig
+   options
+   可能
+   change

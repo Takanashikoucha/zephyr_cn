@@ -1,0 +1,258 @@
+.. _conn_mgr_overview:
+
+Overview
+########
+
+Connection
+Manager
+是
+一
+组
+optional
+的
+Zephyr
+features
+它们
+aim
+允许
+applications
+monitor
+和
+control
+connectivity
+（access
+到
+IP
+capable
+的
+networks）
+而
+minimal
+concern
+underlying
+network
+technologies
+的
+specifics。
+
+Use
+Connection
+Manager
+applications
+可以
+use
+单
+个
+abstract
+的
+API
+control
+network
+association
+并
+monitor
+Internet
+access
+并
+avoid
+过度
+use
+technology
+specific
+的
+boilerplate。
+
+这
+允许
+一
+个
+application
+可能
+support
+几
+个
+非常
+不同
+的
+connectivity
+technologies
+（例如
+Wi
+Fi
+和
+LTE）
+用
+单
+个
+codebase。
+
+Applications
+也
+可以
+use
+Connection
+Manager
+generically
+manage
+并
+同时
+use
+多
+个
+connectivity
+technologies。
+
+Structure
+=========
+
+Connection
+Manager
+被
+split
+成
+以下
+两
+个
+subsystems：
+
+*
+:ref:`Connectivity
+monitoring
+<conn_mgr_monitoring>`
+（header
+file
+:file:`include/zephyr/net/conn_mgr_monitoring.h`）
+monitor
+所有
+available
+的
+:ref:`Zephyr
+network
+interfaces
+（ifaces）
+<net_if_interface>`
+并
+trigger
+:ref:`network
+management
+<net_mgmt_interface>`
+events
+indicate
+当
+IP
+connectivity
+被
+gained
+或
+lost
+时。
+
+*
+:ref:`Connectivity
+control
+<conn_mgr_control>`
+（header
+file
+:file:`include/zephyr/net/conn_mgr_connectivity.h`）
+provide
+一
+个
+abstract
+的
+API
+用于
+control
+iface
+network
+association。
+
+.. _conn_mgr_integration_diagram_simple:
+
+.. figure::
+   figures/integration_diagram_simplified.svg
+   :alt:
+   Connection
+   Manager
+   如何
+   与
+   Zephyr
+   和
+   application
+   integrate
+   的
+   simplified
+   view
+   :figclass:
+   align-center
+
+   Connection
+   Manager
+   如何
+   与
+   Zephyr
+   和
+   application
+   integrate
+   的
+   simplified
+   view。
+
+   参考
+   :ref:`这里
+   <conn_mgr_integration_diagram_detailed>`
+   获取
+   更
+   detailed
+   的
+   version。
+
+.. _conn_mgr_monitoring:
+
+Connectivity
+monitoring
+#######################
+
+Connectivity
+monitoring
+track
+所有
+available
+的
+ifaces
+（不管
+它们
+是否
+support
+:ref:`Connectivity
+control
+<conn_mgr_control>`）
+当
+它们
+transition
+通过
+各种
+:ref:`operational
+states
+<net_if_interface_state_management>`
+并
+acquire
+或
+lose
+assigned
+的
+IP
+addresses
+时。
+
+每个
+available
+的
+iface
+如果
+meet
+以下
+criteria
+则
+被
+considered
+ready：

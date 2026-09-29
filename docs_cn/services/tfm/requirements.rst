@@ -1,0 +1,129 @@
+TF
+M
+Requirements
+#################
+
+以下
+是
+some
+可以
+与
+TF
+M
+used
+的
+boards：
+
+.. list-table::
+   :header-rows:
+   1
+
+   *
+   -
+   Board
+   -
+   NSPE
+   board
+   name
+   *
+   -
+   :ref:`mps2_an521_board`
+   -
+   ``mps2/an521/cpu0/ns``
+   （qemu
+   supported）
+   *
+   -
+   :zephyr:board:`mps3`
+   -
+   -
+   ``mps3/corstone300/fvp/ns``
+   （armfvp
+   supported）
+   -
+   ``mps3/corstone310/fvp/ns``
+   （armfvp
+   supported）
+   *
+   -
+   :zephyr:board:`mps4`
+   -
+   -
+   ``mps4/corstone315/fvp/ns``
+   （armfvp
+   supported）
+   -
+   ``mps4/corstone320/fvp/ns``
+   （armfvp
+   supported）
+   *
+   -
+   :zephyr:board:`bl5340_dvk`
+   -
+   ``bl5340_dvk/nrf5340/cpuapp/ns``
+   *
+   -
+   :zephyr:board:`lpcxpresso55s69`
+   -
+   ``lpcxpresso55s69_ns``
+   *
+   -
+   :zephyr:board:`nrf9160dk_nrf9160
+   <nrf9160dk>`
+   -
+   ``nrf9160dk/nrf9160/ns``
+   *
+   -
+   :zephyr:board:`nrf5340dk`
+   -
+   ``nrf5340dk/nrf5340/cpuapp/ns``
+   *
+   -
+   :zephyr:board:`b_u585i_iot02a`
+   -
+   ``b_u585i_iot02a/stm32u585xx/ns``
+   *
+   -
+   :zephyr:board:`nucleo_l552ze_q`
+   -
+   ``nucleo_l552ze_q/stm32l552xx/ns``
+   *
+   -
+   :zephyr:board:`stm32l562e_dk`
+   -
+   ``stm32l562e_dk/stm32l562xx/ns``
+   *
+   -
+   :zephyr:board:`v2m_musca_b1`
+   -
+   ``v2m_musca_b1/musca_b1/ns``
+
+要
+make
+sure
+TF
+M
+对
+一
+个
+board
+被
+supported
+在
+它
+的
+output
+中
+check
+:kconfig:option:`CONFIG_TRUSTED_EXECUTION_NONSECURE`
+在
+该
+board
+的
+default
+configuration
+中
+被
+set
+到
+``y``。

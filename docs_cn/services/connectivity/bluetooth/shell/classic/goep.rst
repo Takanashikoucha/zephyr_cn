@@ -1,0 +1,115 @@
+Bluetooth:
+Classic:
+GOEP
+Shell
+################################
+
+这
+document
+describe
+如何
+运行
+Bluetooth
+Classic
+GOEP
+functionality。
+:code:`goep`
+command
+expose
+Bluetooth
+Classic
+GOEP
+Shell
+commands。
+
+Commands
+********
+
+:code:`goep`
+commands：
+
+.. code-block::
+   console
+
+   uart:~$
+   goep
+   goep
+   -
+   Bluetooth
+   GOEP
+   shell
+   commands
+   Subcommands:
+     register-rfcomm
+    :
+      <channel>
+     connect-rfcomm
+     :
+      <channel>
+     disconnect-rfcomm
+  :
+     register-l2cap
+     :
+      <psm>
+     connect-l2cap
+      :
+      <psm>
+     disconnect-l2cap
+   :
+     alloc-buf
+          :
+      Alloc
+      tx
+      buffer
+     release-buf
+        :
+      Free
+      allocated
+      tx
+      buffer
+     add-header
+         :
+      Adding
+      header
+      sets
+     client
+             :
+      Client
+      sets
+     server
+             :
+      Server
+      sets
+
+:code:`goep
+client`
+commands：
+
+.. code-block::
+   console
+
+   uart:~$
+   goep
+   client
+   client
+   -
+   Client
+   sets
+   Subcommands:
+     conn
+     :
+      <mopl>
+     disconn
+  :
+     put
+      :
+      <final:
+      true,
+      false>
+     get
+      :
+      <final:
+      true,
+      false>
+     abort
+    :

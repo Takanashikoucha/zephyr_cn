@@ -1,0 +1,216 @@
+.. _settings_api:
+
+Settings
+########
+
+Settings
+subsystem
+给
+modules
+一
+种
+way
+用于
+store
+persistent
+的
+per
+device
+的
+configuration
+和
+runtime
+state。
+一
+系列
+storage
+implementations
+被
+provided
+在
+common
+的
+API
+后面
+用
+FCB、
+NVS、
+ZMS
+或
+file
+system。
+这些
+不同
+的
+implementations
+给
+application
+developer
+flexibility
+select
+appropriate
+的
+storage
+medium
+甚至
+随着
+needs
+change
+later
+change
+它。
+这
+个
+subsystem
+被
+各种
+Zephyr
+components
+used
+且
+可以
+被
+user
+applications
+simultaneously
+used。
+
+Settings
+items
+被
+stored
+作为
+key
+value
+pair
+的
+strings。
+By
+convention
+keys
+可以
+按
+define
+key
+的
+package
+和
+subtree
+被
+organized
+例如
+key
+``id/serial``
+将
+define
+package
+``id``
+的
+``serial``
+configuration
+element。
+
+Convenience
+的
+routines
+被
+provided
+用于
+将
+key
+value
+convert
+到
+string
+type
+和
+从
+string
+type。
+
+关于
+settings
+subsystem
+的
+example
+参考
+:zephyr:code-sample:`settings`
+sample。
+
+.. note::
+
+   从
+   Zephyr
+   release
+   4.1
+   起
+   对
+   non
+   filesystem
+   storage
+   的
+   recommended
+   backends
+   是
+   :ref:`NVS
+   <nvs_api>`
+   和
+   :ref:`ZMS
+   <zms_api>`。
+
+Handlers
+********
+
+对
+subtree
+的
+Settings
+handlers
+implement
+一
+set
+的
+handler
+functions。
+这些
+用
+对
+:c:func:`settings_register()`
+的
+call
+被
+registered
+用于
+dynamic
+的
+handlers
+或
+用
+对
+:c:macro:`SETTINGS_STATIC_HANDLER_DEFINE()`
+的
+call
+被
+defined
+用于
+static
+的
+handlers。
+
+**h_get**
+    这
+    在
+    用
+    :c:func:`settings_runtime_get()`
+    从
+    runtime
+    backend
+    按
+    name
+    ask
+    settings
+    element
+    value
+    时
+    被
+    called。

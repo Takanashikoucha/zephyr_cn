@@ -1,0 +1,258 @@
+.. _secure_storage:
+
+Secure
+Storage
+##############
+
+|
+Secure
+storage
+subsystem
+provide
+一
+个
+implementation
+of
+:
+`Platform
+Security
+Architecture
+（PSA）
+Secure
+Storage
+API
+<https://arm-software.github.io/psa-api/storage/>`_
+中
+defined
+的
+functions。
+|
+它
+可以
+在
+:term:`board
+targets<board
+target>`
+上
+被
+enabled
+那里
+还
+没有
+该
+API
+的
+implementation。
+
+Overview
+********
+
+Secure
+storage
+subsystem
+make
+PSA
+Secure
+Storage
+API
+在
+所有
+有
+non
+volatile
+memory
+support
+的
+board
+targets
+上
+available。
+As
+such
+它
+provide
+该
+API
+的
+一
+个
+implementation
+在
+那些
+还
+没有
+的
+targets
+上
+ensuring
+该
+API
+的
+functional
+support。
+有
+:ref:`tfm`
+enabled
+的
+board
+targets
+（ending
+in
+``/ns``）
+例如
+不
+能
+enable
+这
+个
+subsystem
+因为
+TF
+M
+already
+provide
+该
+API
+的
+一
+个
+implementation。
+
+|
+在
+provide
+该
+API
+的
+functional
+support
+之外
+根据
+device
+specific
+的
+security
+features
+和
+configuration
+subsystem
+可能
+secure
+通过
+PSA
+Secure
+Storage
+API
+stored
+的
+data
+在
+rest
+时。
+|
+Keep
+in
+mind
+however
+当
+possible
+时
+preferable
+use
+一
+个
+secure
+的
+processing
+environment
+like
+TF
+M
+因为
+它
+able
+provide
+更
+多
+的
+security
+由于
+isolation
+guarantees。
+
+Limitations
+***********
+
+Secure
+storage
+subsystem
+的
+PSA
+Secure
+Storage
+API
+implementation:
+
+*
+不
+aim
+于
+对
+specification
+的
+full
+compliance。
+
+   |
+   它
+   foremost
+   的
+   goal
+   是
+   在
+   所有
+   board
+   targets
+   上
+   该
+   API
+   的
+   functional
+   support。
+   |
+   See
+   below
+   获取
+   implementation
+   与
+   specification
+   deviate
+   的
+   important
+   ways。
+
+*
+不
+guarantee
+它
+stored
+的
+data
+在
+所有
+cases
+中
+在
+rest
+时
+secure。
+
+   这
+   取决于
+   device
+   specific
+   的
+   security
+   features
+   和
+   configuration。

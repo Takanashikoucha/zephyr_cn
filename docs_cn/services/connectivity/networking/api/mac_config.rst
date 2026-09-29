@@ -1,0 +1,184 @@
+.. _mac_address_config:
+
+MAC
+Address
+Configuration
+*************************
+
+Ethernet
+drivers
+可以
+将
+大多数
+MAC
+address
+handling
+在
+initialization
+期间
+delegate
+到
+:c:struct:`net_eth_mac_config`
+和
+:c:func:`net_eth_mac_load`。
+该
+structure
+通常
+stored
+在
+driver
+configuration
+中
+并
+用
+:c:macro:`NET_ETH_MAC_DT_CONFIG_INIT`
+或
+:c:macro:`NET_ETH_MAC_DT_INST_CONFIG_INIT`
+initialized
+它们
+将
+devicetree
+properties
+translate
+到
+以下
+一
+种
+behavior：
+
+*
+:c:enumerator:`NET_ETH_MAC_STATIC`
+–
+use
+完整
+的
+``local-mac-address``
+property。
+*
+:c:enumerator:`NET_ETH_MAC_RANDOM`
+–
+generate
+一
+个
+random
+的
+locally
+administered
+的
+MAC
+address
+optionally
+use
+``zephyr,mac-address-prefix``
+中
+provided
+的
+bytes
+作为
+first
+的
+octets。
+*
+:c:enumerator:`NET_ETH_MAC_NVMEM`
+–
+从
+``"mac-address"``
+:ref:`NVMEM<nvmem>`
+cell
+read
+剩余
+的
+bytes
+同样
+optionally
+prefixed
+by
+``zephyr,mac-address-prefix``。
+*
+:c:enumerator:`NET_ETH_MAC_DEFAULT`
+–
+fall
+back
+到
+driver
+的
+default
+logic
+（例如
+factory
+programmed
+的
+MAC
+address
+stored
+在
+peripheral
+registers
+中
+）。
+
+Driver
+integration
+==================
+
+将
+:c:struct:`net_eth_mac_config`
+structure
+embed
+在
+driver
+的
+configuration
+内
+并
+将
+一
+个
+static
+buffer
+embed
+在
+driver
+的
+data
+内：
+
+.. code-block::
+   c
+
+   struct
+   my_eth_config
+   {
+       struct
+       net_eth_mac_config
+       mac_cfg;
+       /*
+       more
+       config
+       fields
+       */
+   }
+
+   struct
+   my_eth_data
+   {
+       uint8_t
+       mac_addr[NET_ETH_ADDR_LEN];
+       /*
+       more
+       data
+       fields
+       */
+   }
+
+   static
+   const
+   struct
+   my_eth_config
+   my_eth_config_0
+   =
+   {
+       .mac_cfg
+   =
+   NET_ETH_MAC_DT_INST_CONFIG_INIT(0),
+   }

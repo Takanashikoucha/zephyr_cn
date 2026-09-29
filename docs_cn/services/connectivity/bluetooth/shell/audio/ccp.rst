@@ -1,0 +1,196 @@
+Bluetooth:
+Call
+Control
+Profile
+Shell
+#####################################
+
+Call
+Control
+Server
+*******************
+Call
+Control
+Server
+是
+一
+个
+role
+通常
+reside
+在
+能
+make
+calls
+的
+devices
+上
+包括
+从
+Skype
+等
+apps
+的
+calls
+例如
+（smart）phones
+和
+PCs
+它们
+通常
+是
+GAP
+Central
+devices。
+
+Using
+the
+Call
+Control
+Server
+=============================
+Server
+可以
+被
+locally
+control
+或
+被
+remote
+device
+control
+（当
+在
+call
+中
+时
+）。
+例如
+remote
+device
+可能
+initiate
+到
+server
+的
+call
+或
+Server
+可能
+initiate
+到
+remote
+device
+的
+call
+而
+没有
+client。
+
+对
+所有
+接受
+optional
+的
+:code:`index`
+的
+commands
+如果
+index
+没
+被
+supplied
+则
+它
+defaults
+到
+:code:`0`
+这
+是
+GTBS
+bearer。
+
+.. code-block::
+   console
+
+   ccp_call_control_server
+   --help
+   ccp_call_control_server
+   -
+   Bluetooth
+   CCP
+   Call
+   Control
+   Server
+   shell
+   commands
+   Subcommands:
+     init
+                    :
+      Initialize
+      CCP
+      Call
+      Control
+      Server
+     set_bearer_name
+         :
+      Set
+      bearer
+      name
+      [index]
+      <name>
+     get_bearer_name
+         :
+      Get
+      bearer
+      name
+      [index]
+     get_bearer_uci
+          :
+      Get
+      bearer
+      UCI
+      [index]
+     set_bearer_tech
+         :
+      Set
+      bearer
+      technology
+      [index]
+      <technology>
+     get_bearer_tech
+         :
+      Get
+      bearer
+      technology
+      [index]
+     set_bearer_uri_schemes
+  :
+      Set
+      bearer
+      URI
+      schemes
+      supported
+      list
+      [index]
+      <URI
+      schemes>
+                          (e.g.
+      "tel,skype")
+     get_bearer_uri_schemes
+  :
+      Get
+      bearer
+      URI
+      schemes
+      supported
+      list
+      [index]
+
+
+Example
+Usage
+=============
+
+Setup
+-----

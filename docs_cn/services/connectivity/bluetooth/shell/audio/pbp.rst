@@ -1,0 +1,93 @@
+Bluetooth:
+Public
+Broadcast
+Profile
+Shell
+#########################################
+
+这
+document
+describe
+如何
+运行
+Public
+Broadcast
+Profile
+functionality。
+PBP
+没有
+associated
+的
+service。
+它
+的
+purpose
+是
+enable
+更快、
+更
+efficient
+的
+discovery
+Broadcast
+Sources
+它们
+用
+commonly
+used
+的
+codec
+configurations
+transmitting
+audio。
+
+Using
+the
+PBP
+Shell
+*******************
+
+当
+Bluetooth
+stack
+被
+initialized
+（:code:`bt
+init`）
+后
+Public
+Broadcast
+Profile
+ready
+to
+run。
+要
+set
+Public
+Broadcast
+Announcement
+features
+调用
+:code:`pbp
+set_features`。
+
+.. code-block::
+   console
+
+
+   pbp
+   --help
+   pbp
+   -
+   Bluetooth
+   PBP
+   shell
+   commands
+   Subcommands:
+     set_features
+    :Set
+      the
+      Public
+      Broadcast
+      Announcement
+      features

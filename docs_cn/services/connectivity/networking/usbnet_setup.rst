@@ -1,0 +1,190 @@
+.. _usb_device_networking_setup:
+
+USB
+Device
+Networking
+#####################
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+这
+个
+page
+describe
+如何
+set
+up
+networking
+在
+Linux
+host
+和
+run
+在
+USB
+supported
+的
+devices
+上
+的
+Zephyr
+application
+之间。
+
+Board
+通过
+USB
+cable
+connect
+到
+Linux
+host
+并
+provide
+一
+个
+Ethernet
+interface
+给
+host。
+:zephyr:code-sample:`sockets-echo-server`
+application
+来自
+Zephyr
+source
+distribution
+在
+supported
+的
+board
+上
+run。
+Board
+通过
+USB
+cable
+connect
+到
+Linux
+host
+provide
+一
+个
+Ethernet
+interface
+给
+host。
+
+Basic
+Setup
+***********
+
+要
+通过
+newly
+created
+的
+Ethernet
+interface
+与
+Zephyr
+application
+communicate
+我们
+需要
+assign
+IP
+addresses
+并
+set
+up
+routing
+table
+给
+Linux
+host。
+在
+plugging
+一
+个
+USB
+cable
+从
+board
+到
+Linux
+host
+后
+``cdc_ether``
+driver
+register
+一
+个
+新
+的
+Ethernet
+device
+带
+provided
+的
+MAC
+address。
+
+你
+可以
+通过
+从
+Linux
+host
+run
+dmesg
+check
+network
+device
+被
+created
+并
+MAC
+address
+被
+assigned。
+
+.. code-block::
+   console
+
+   cdc_ether
+   1-2.7:1.0
+   eth0:
+   register
+   'cdc_ether'
+   at
+   usb-0000:00:01.2-2.7,
+   CDC
+   Ethernet
+   Device,
+   00:00:5e:00:53:01
+
+我们
+需要
+set
+it
+up
+并
+assign
+IP
+addresses
+如
+下面
+的
+section
+所
+explained
+的。
+
+Choosing
+IP
+addresses
+====================

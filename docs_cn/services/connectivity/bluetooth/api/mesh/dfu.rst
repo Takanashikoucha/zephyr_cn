@@ -1,0 +1,185 @@
+.. _bluetooth_mesh_dfu:
+
+Device
+Firmware
+Update
+（DFU）
+############################
+
+Bluetooth
+Mesh
+支持
+在
+mesh
+network
+中
+distribute
+firmware
+images。
+Bluetooth
+mesh
+DFU
+subsystem
+实现
+Bluetooth
+Mesh
+Device
+Firmware
+Update
+Model
+specification
+version
+1.0。
+
+Bluetooth
+Mesh
+DFU
+实现
+firmware
+images
+的
+distribution
+mechanism
+并
+不
+对
+images
+的
+size、
+format
+或
+usage
+放
+任何
+restrictions。
+Subsystem
+的
+primary
+design
+goal
+是
+提供
+Bluetooth
+Mesh
+DFU
+specification
+的
+qualifiable
+parts
+并
+将
+usage、
+firmware
+validation
+和
+deployment
+留
+给
+application。
+
+DFU
+specification
+在
+Zephyr
+Bluetooth
+Mesh
+DFU
+subsystem
+中
+被
+实现
+为
+三
+个
+separate
+的
+models：
+
+.. toctree::
+   :maxdepth:
+   1
+
+   dfu_srv
+   dfu_cli
+   dfd_srv
+
+Overview
+********
+
+DFU
+roles
+=========
+
+Bluetooth
+Mesh
+DFU
+subsystem
+定义
+三
+个
+不同
+的
+roles
+mesh
+nodes
+在
+firmware
+images
+的
+distribution
+中
+必须
+assume：
+
+Target
+node
+   Target
+   node
+   是
+   transferred
+   firmware
+   images
+   的
+   receiver
+   和
+   user。
+   它
+   所有
+   的
+   functionality
+   由
+   :ref:`bluetooth_mesh_dfu_srv`
+   model
+   实现。
+   一
+   个
+   transfer
+   可能
+   指向
+   任何
+   数量
+   的
+   Target
+   nodes
+   它们
+   都
+   会
+   被
+   concurrently
+   updated。
+
+Distributor
+   Distributor
+   role
+   在
+   DFU
+   process
+   中
+   服务
+   两
+   个
+   purposes。
+   首先
+   它
+   作为
+   Target

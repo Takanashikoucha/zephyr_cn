@@ -1,0 +1,199 @@
+.. _socket_service_interface:
+
+Socket
+Services
+###############
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+Overview
+********
+
+Socket
+service
+API
+可
+被
+used
+用于
+install
+一
+个
+handler
+它
+在
+socket
+上
+有
+data
+received
+时
+被
+called。
+API
+帮助
+避免
+为
+application
+provided
+的
+每个
+TCP
+或
+UDP
+service
+create
+一
+个
+dedicated
+的
+thread。
+相反
+一
+个
+thread
+被
+created
+它
+serve
+data
+到
+多
+个
+listening
+sockets
+这
+save
+memory
+因为
+在
+这
+个
+情况
+下
+只
+需要
+在
+system
+中
+create
+一
+个
+thread。
+
+参考
+:zephyr:code-sample:`sockets-service-echo`
+sample
+application
+学习
+如何
+用
+sockets
+service
+API
+create
+一
+个
+简单
+的
+BSD
+socket
+based
+的
+server
+application。
+这
+个
+sample
+application
+的
+source
+code
+可
+在
+以下
+位置
+找到：
+:zephyr_file:`samples/net/sockets/echo_service`。
+
+API
+Description
+***************
+
+Socket
+service
+API
+用
+:kconfig:option:`CONFIG_NET_SOCKETS_SERVICE`
+config
+option
+enabled
+并
+implement
+以下
+operations：
+
+*
+:c:macro:`NET_SOCKET_SERVICE_SYNC_DEFINE`
+
+   Define
+   一
+   个
+   network
+   socket
+   service。
+   这
+   个
+   socket
+   service
+   被
+   created
+   带
+   extern
+   scope
+   使
+   它
+   可以
+   从
+   多
+   个
+   C
+   source
+   files
+   被
+   used。
+
+*
+:c:macro:`NET_SOCKET_SERVICE_SYNC_DEFINE_STATIC`
+
+   Define
+   一
+   个
+   带
+   static
+   scope
+   的
+   network
+   socket
+   service。
+   这
+   个
+   socket
+   service
+   只
+   可以
+   在
+   一
+   个
+   C
+   source
+   file
+   内
+   被
+   used。
+
+*
+:c:func:`net_socket_service_register`

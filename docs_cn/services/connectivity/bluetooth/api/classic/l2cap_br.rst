@@ -1,0 +1,142 @@
+.. _bt_l2cap_br:
+
+Bluetooth
+Logical
+Link
+Control
+and
+Adaptation
+Protocol
+（L2CAP）
+for
+BR/EDR
+#########################################################################
+
+L2CAP
+BR/EDR
+提供
+Bluetooth
+Classic
+L2CAP
+（Logical
+Link
+Control
+and
+Adaptation
+Protocol）
+features
+的
+支持
+包括
+ECHO
+request/response
+和
+connectionless
+data
+channels。
+
+ECHO
+Request/Response
+*********************
+
+L2CAP
+ECHO
+feature
+允许
+通过
+发送
+ECHO
+requests
+和
+接收
+ECHO
+responses
+测试
+connection。
+应用
+可以
+注册
+callbacks
+监控
+ECHO
+packets
+并
+发送
+ECHO
+data。
+该
+feature
+通过
+configuration
+option
+:kconfig:option:`CONFIG_BT_CLASSIC`
+启用。
+
+Registering
+ECHO
+Callbacks
+==========================
+
+要
+监控
+ECHO
+request/response
+packets
+注册
+一
+个
+:c:struct:`bt_l2cap_br_echo_cb`
+callback
+structure：
+
+.. code-block:: c
+
+   static
+   void
+   echo_req_cb(struct
+   bt_conn
+   *conn,
+   uint8_t
+   identifier,
+   struct
+   net_buf
+   *buf)
+   {
+       /*
+       Handle
+       ECHO
+       request
+       */
+   }
+
+   static
+   void
+   echo_rsp_cb(struct
+   bt_conn
+   *conn,
+   struct
+   net_buf
+   *buf)
+   {
+       /*
+       Handle
+       ECHO
+       response
+       */
+   }
+
+   static
+   struct
+   bt_l2cap_br_echo_cb
+   echo_cb
+   =
+   {
+       .req
+       =
+       echo_req_cb,
+       .rsp
+       =
+       echo_rsp_cb,
+   };
+
+   bt_l2cap_br_echo_cb_register(&echo_cb);

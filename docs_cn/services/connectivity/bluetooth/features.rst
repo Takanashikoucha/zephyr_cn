@@ -1,0 +1,194 @@
+.. _bluetooth-features:
+
+Supported
+features
+##################
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+自
+其
+inception
+以来
+Zephyr
+一直
+对
+Bluetooth
+有
+strong
+的
+focus
+特别是
+Bluetooth
+Low
+Energy
+（LE）。
+通过
+参与
+Bluetooth
+specification
+现有
+open
+source
+implementations
+（Linux
+的
+BlueZ）
+的
+多
+个
+companies
+和
+individuals
+的
+contributions
+以及
+Bluetooth
+LE
+radio
+hardware
+的
+design
+和
+development
+Zephyr
+中
+的
+protocol
+stack
+已
+成长
+为
+mature
+和
+feature
+rich
+的
+如
+下面
+section
+所
+seen。
+
+*
+Bluetooth
+v5.3
+compliant
+
+   *
+   Highly
+   configurable
+
+       *
+       Features
+       buffer
+       sizes/counts
+       stack
+       sizes
+       etc.
+
+   *
+   Portable
+   to
+   all
+   architectures
+   supported
+   by
+   Zephyr
+   (including
+   big
+   and
+   little
+   endian
+   alignment
+   flavors
+   and
+   more)
+
+   *
+   Support
+   for
+   :ref:`all
+   combinations
+   <bluetooth-hw-setup>`
+   of
+   Host
+   and
+   Controller
+   builds:
+
+     *
+     Controller
+     only
+     (HCI)
+     over
+     UART
+     SPI
+     USB
+     and
+     IPC
+     physical
+     transports
+     *
+     Host
+     only
+     over
+     UART
+     SPI
+     and
+     IPC
+     (shared
+     memory)
+     *
+     Combined
+     (Host
+     +
+     Controller)
+
+*
+:ref:`Bluetooth
+SIG
+qualifiable
+<bluetooth-qual>`
+
+   *
+   Conformance
+   tests
+   run
+   regularly
+   on
+   all
+   layers
+   (Controller
+   and
+   Host
+   except
+   BT
+   Classic)
+   on
+   Nordic
+   Semiconductor
+   hardware.
+
+*
+:ref:`Bluetooth
+Low
+Energy
+Controller
+<bluetooth-ctlr-arch>`
+(LE
+Link
+Layer)
+
+   *
+   Unlimited
+   role
+   and
+   connection
+   count
+   all
+   roles
+   supported

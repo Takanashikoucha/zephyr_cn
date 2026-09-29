@@ -1,0 +1,287 @@
+.. _instrumentation:
+
+Instrumentation
+###############
+
+Overview
+********
+
+Instrumentation
+subsystem
+provide
+compiler
+managed
+的
+runtime
+system
+instrumentation
+capabilities
+用于
+Zephyr
+applications。
+它
+enable
+developers
+trace
+function
+calls、
+observe
+context
+switches、
+并
+profile
+application
+performance
+带
+minimal
+的
+manual
+instrumentation
+effort。
+
+与
+:ref:`tracing
+<tracing>`
+subsystem
+不同
+它
+provide
+RTOS
+aware
+的
+tracing
+带
+structured
+的
+event
+APIs
+instrumentation
+subsystem
+在
+lower
+的
+level
+work
+通过
+leverage
+compiler
+instrumentation
+hooks。
+这
+个
+approach
+使
+capture
+almost
+任何
+的
+function
+entry
+和
+exit
+events
+成为
+possible
+而
+不
+require
+code
+中
+manual
+的
+tracing
+calls。
+
+.. admonition::
+   Tracing
+   vs.
+   Instrumentation
+   :class:
+   hint
+
+   **何时
+   use
+   Tracing**：
+   当
+   你
+   需要
+   RTOS
+   aware
+   的
+   event
+   tracing
+   （例如
+   thread
+   switches、
+   semaphore
+   operations
+   等）
+   并
+   想
+   minimize
+   overhead
+   时
+   选择
+   tracing
+   subsystem。
+
+   **何时
+   use
+   Instrumentation**：
+   当
+   你
+   需要
+   function
+   level
+   execution
+   的
+   detailed
+   view
+   用于
+   更
+   好
+   地
+   understand
+   code
+   flow
+   或
+   在
+   不
+   add
+   manual
+   trace
+   points
+   的
+   情况
+   下
+   identify
+   performance
+   bottlenecks
+   时
+   选择
+   instrumentation。
+
+Instrumentation
+subsystem
+rely
+on
+compiler
+support
+用于
+automatic
+的
+function
+instrumentation。
+当
+被
+enabled
+时
+compiler
+automatically
+insert
+calls
+到
+special
+的
+instrumentation
+handler
+functions
+在
+application
+中
+每个
+function
+的
+entry
+和
+exit
+处
+（排除
+那些
+explicitly
+被
+marked
+with
+``__no_instrumentation__``
+的）。
+当前
+只
+support
+GCC
+带
+``-finstrument-functions``
+compiler
+flag。
+
+Subsystem
+在
+RAM
+initialization
+后
+automatically
+initialized
+并
+use
+trigger/stopper
+functions
+control
+何时
+recording
+active。
+Default
+的
+trigger
+和
+stopper
+functions
+both
+被
+set
+到
+``main()``
+（可
+用
+Kconfig
+configurable）
+means
+instrumentation
+capture
+整个
+execution
+从
+``main()``
+start
+到
+它
+return。
+
+Recorded
+的
+data
+被
+stored
+在
+RAM
+中
+并
+可以
+从
+host
+computer
+accessed
+thanks
+to
+一
+个
+UART
+backend
+它
+expose
+一
+组
+simple
+的
+commands。
+:zephyr_file:`scripts/instrumentation/zaru.py`
+script
+allow

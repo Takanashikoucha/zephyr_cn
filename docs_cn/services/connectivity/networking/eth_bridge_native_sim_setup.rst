@@ -1,0 +1,204 @@
+.. _networking_with_native_sim_eth_bridge:
+
+Ethernet
+bridge
+with
+native
+sim
+board
+#####################################
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+这
+个
+document
+describe
+如何
+set
+up
+一
+个
+bridged
+的
+Ethernet
+network
+在
+（Linux）
+host
+和
+run
+在
+:zephyr:board:`native_sim
+<native_sim>`
+board
+中
+的
+Zephyr
+application
+之间。
+
+这
+个
+setup
+在
+testing
+Ethernet
+bridging
+feature
+时
+useful
+该
+feature
+可
+用
+:kconfig:option:`CONFIG_NET_ETHERNET_BRIDGE`
+Kconfig
+option
+enable。
+在
+这
+个
+setup
+中
+net
+tools
+configuration
+create
+两
+个
+host
+network
+interfaces
+``zeth0``
+和
+``zeth1``
+并
+connect
+它们
+到
+Zephyr
+的
+:zephyr:board:`native_sim
+<native_sim>`
+application。
+
+首先
+create
+host
+interfaces。
+在
+这
+个
+example
+中
+两
+个
+interfaces
+被
+created。
+
+.. code-block::
+   console
+
+   cd
+   $ZEPHYR_BASE/../tools/net-tools
+   ./net-setup.sh
+   -c
+   zeth-multiface.conf
+   -i
+   zeth0
+   -t
+   2
+
+``-c``
+告诉
+use
+哪个
+configuration
+file
+其中
+``zeth-multiface.conf``
+被
+tailored
+用于
+generate
+多
+个
+network
+interfaces
+在
+host
+中。
+``-i``
+option
+告诉
+first
+的
+host
+interface
+name
+是什么。
+``-t``
+告诉
+create
+多
+少
+network
+interfaces。
+
+Host
+interfaces
+的
+Example
+output：
+
+.. code-block::
+   console
+
+   zeth0:
+   flags=4099<UP,BROADCAST,MULTICAST>
+   mtu
+   1500
+          inet
+   192.0.2.2
+   netmask
+   255.255.255.255
+   broadcast
+   0.0.0.0
+          inet6
+   2001:db8::2
+   prefixlen
+   128
+   scopeid
+   0x0<global>
+          inet6
+   fe80::200:5eff:fe00:5300
+   prefixlen
+   64
+   scopeid
+   0x20<link>
+          ether
+   00:00:5e:00:53:00
+   txqueuelen
+   1000
+   (Ethernet)
+          RX
+   packets
+   33
+   bytes
+   2408
+   (2.4
+   KB)
+          RX
+   errors
+   0
+   dropped
+   0
+   overruns
+   0
+   frame
+   0

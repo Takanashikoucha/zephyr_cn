@@ -1,0 +1,195 @@
+.. _mcumgr_handlers:
+
+MCUmgr
+handlers
+###############
+
+Overview
+********
+
+MCUmgr
+functions
+by
+having
+group
+handlers
+它们
+identify
+一
+组
+functions
+它们
+relate
+到
+特定
+的
+management
+area
+它
+被
+addressed
+用
+一
+个
+16
+bit
+的
+identification
+value
+:c:enum:`mcumgr_group_t`
+contain
+Zephyr
+中
+available
+的
+management
+groups
+带
+它们
+corresponding
+的
+group
+ID
+values。
+Group
+ID
+被
+included
+在
+SMP
+headers
+中
+identify
+command
+属于
+哪个
+group
+还有
+一
+个
+8
+bit
+的
+command
+ID
+它
+identify
+该
+group
+要
+execute
+的
+function
+-
+参考
+:ref:`mcumgr_smp_protocol_specification`
+获取
+SMP
+protocol
+和
+header
+的
+details。
+每个
+unique
+的
+ID
+只
+能
+有
+一
+个
+registered
+的
+group。
+
+Implementation
+**************
+
+MCUmgr
+handlers
+可以
+由
+application
+code
+或
+module
+code
+externally
+added
+它们
+不
+需要
+reside
+在
+upstream
+Zephyr
+tree
+中
+才能
+被
+used。
+创建
+handler
+的
+first
+step
+是
+创建
+它
+的
+folder
+structure
+典型
+的
+Zephyr
+MCUmgr
+group
+layout
+如下：
+
+.. code-block::
+   none
+
+   <dir>/grp/<grp_name>_mgmt/
+   ├──
+   CMakeLists.txt
+   ├──
+   Kconfig
+   ├──
+   include
+   ├────
+   <grp_name>_mgmt.h
+   ├────
+   <grp_name>_mgmt_callbacks.h
+   ├──
+   src
+   └────
+   <grp_name>_mgmt.c
+
+注意
+upstream
+Zephyr
+MCUmgr
+handlers
+中
+的
+header
+files
+reside
+在
+``zephyr/include/zephyr/mgmt/mcumgr/grp/<grp_name>_mgmt``
+directory
+中
+用于
+allow
+files
+被
+applications
+globally
+included。
+
+Initial
+header
+<grp_name>_mgmt.h
+==============================

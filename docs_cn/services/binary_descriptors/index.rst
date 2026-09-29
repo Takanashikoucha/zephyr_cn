@@ -1,0 +1,206 @@
+.. _binary_descriptors:
+
+Binary
+Descriptors
+##################
+
+Binary
+Descriptors
+是
+存储
+关于
+binary
+executable
+信息
+的
+constant
+data
+objects。
+与
+"regular"
+constants
+不同
+binary
+descriptors
+被
+link
+到
+binary
+中
+的
+已知
+offset
+使
+它们
+可
+被
+其他
+programs
+访问
+如
+在
+同一
+device
+上
+运行
+的
+不同
+image
+或
+host
+tool。
+一些
+会
+使
+用
+的
+constant
+示例
+是：
+kernel
+version、
+app
+version、
+build
+time、
+compiler
+version、
+environment
+variables、
+compiling
+host
+name、
+等
+等。
+
+Binary
+descriptors
+用
+``DEFINE_BINDESC_*``
+macros
+创建。
+例如：
+
+.. code-block:: c
+
+   #include
+   <zephyr/bindesc.h>
+
+   BINDESC_STR_DEFINE(my_string,
+   2,
+   "Hello
+   world!");
+   //
+   Unique
+   ID
+   is
+   2
+
+``my_string``
+然后
+可以
+用
+以下
+方式
+访问：
+
+.. code-block:: c
+
+   printk("my_string:
+   %s\n",
+   BINDESC_GET_STR(my_string));
+
+但
+它
+也
+可以
+被
+``west
+bindesc``
+获取：
+
+.. code-block:: bash
+
+   $
+   west
+   bindesc
+   custom_search
+   STR
+   2
+   build/zephyr/zephyr.bin
+   "Hello
+   world!"
+
+Internals
+*********
+Binary
+descriptors
+用
+TLV
+（tag、
+length、
+value）
+header
+实现
+被
+link
+到
+binary
+image
+中
+的
+已知
+offset。
+这
+个
+offset
+可能
+在
+architectures
+之间
+不同
+但
+通常
+descriptors
+被
+link
+到
+尽可能
+接近
+image
+beginning
+的
+位置。
+在
+image
+必须
+以
+vector
+table
+开始
+的
+architectures
+中
+（如
+ARM）
+descriptors
+被
+link
+到
+vector
+table
+紧
+后。
+Reset
+vector
+指向
+text
+section
+的
+beginning
+它
+在
+descriptors
+之后。
+在
+architectures

@@ -1,0 +1,193 @@
+.. _mem_mgmt_api:
+
+Memory
+Attributes
+#################
+
+在
+devicetree
+中
+可以
+用
+``zephyr,memory-attr``
+property
+mark
+memory
+regions
+带
+attributes。
+这
+个
+property
+和
+related
+的
+memory
+region
+然后
+可以
+在
+run
+time
+被
+retrieved
+通过
+leverage
+一
+个
+provided
+的
+helper
+library。
+
+可以在
+property
+中
+specified
+的
+general
+attributes
+set
+在
+:zephyr_file:`include/zephyr/dt-bindings/memory-attr/memory-attr.h`
+中
+defined
+和
+explained。
+
+例如
+要
+mark
+devicetree
+中
+的
+memory
+region
+作为
+non
+volatile、
+cacheable、
+out
+of
+order：
+
+.. code-block::
+   devicetree
+
+   mem:
+   memory@10000000
+   {
+       compatible
+   =
+   "mmio-sram";
+       reg
+   =
+   <0x10000000
+   0x1000>;
+       zephyr,memory-attr
+   =
+   <(DT_MEM_NON_VOLATILE
+   |
+   DT_MEM_CACHEABLE
+   |
+   DT_MEM_OOO)>;
+   };
+
+.. note::
+
+   ``zephyr,memory-attr``
+   的
+   usage
+   不
+   result
+   在
+   任何
+   memory
+   region
+   实际
+   被
+   created。
+   当
+   需要
+   从
+   devicetree
+   defined
+   的
+   memory
+   region
+   create
+   一
+   个
+   actual
+   的
+   section
+   时
+   可以
+   use
+   compatible
+   :dtcompatible:`zephyr,memory-region`
+   它
+   将
+   result
+   （只
+   在
+   被
+   architecture
+   supported
+   时）
+   在
+   新
+   的
+   linker
+   section
+   和
+   region。
+
+``zephyr,memory-attr``
+property
+也
+可
+被
+used
+用于
+set
+architecture
+specific
+和
+software
+specific
+的
+custom
+attributes
+它们
+可以
+在
+run
+time
+被
+interpreted。
+这
+被
+leveraged
+于
+其他
+事情
+中
+包括
+从
+devicetree
+defined
+的
+memory
+regions
+create
+MPU
+regions
+例如：
+
+.. code-block::
+   devicetree
+
+   mem:
+   memory@10000000
+   {

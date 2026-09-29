@@ -1,0 +1,327 @@
+.. _posix_details:
+
+Implementation
+Details
+######################
+
+在
+many
+ways
+Zephyr
+provide
+support
+像
+任何
+POSIX
+OS
+API
+bindings
+在
+C
+programming
+language
+中
+provided
+POSIX
+headers
+在
+standard
+的
+include
+path
+中
+available
+当
+被
+configured
+时。
+
+与
+其他
+multi
+purpose
+的
+POSIX
+operating
+systems
+不同
+
+-
+Zephyr
+不
+是
+"一
+个
+POSIX
+OS"。
+Zephyr
+kernel
+不
+围绕
+POSIX
+standard
+designed
+且
+POSIX
+support
+是
+一
+个
+opt
+in
+的
+feature
+-
+Zephyr
+apps
+不
+被
+separately
+linked
+也
+不
+作为
+subprocesses
+execute
+-
+Zephyr、
+libraries、
+和
+application
+code
+被
+compiled
+并
+linked
+together
+run
+similarly
+于
+单
+个
+process
+的
+application
+在
+单
+个
+（可能
+virtual
+的）
+address
+space
+中
+-
+Zephyr
+不
+provide
+POSIX
+shell、
+compiler、
+utilities
+且
+不
+是
+self
+hosting
+的。
+
+.. note::
+   与
+   Linux
+   kernel
+   或
+   FreeBSD
+   不同
+   Zephyr
+   不
+   maintain
+   一
+   个
+   static
+   的
+   system
+   call
+   numbers
+   table
+   对
+   每个
+   supported
+   的
+   architecture
+   相反
+   它
+   在
+   build
+   time
+   dynamically
+   generate
+   system
+   calls。
+   参考
+   :ref:`System
+   Calls
+   <syscalls>`
+   获取
+   更多
+   information。
+
+Design
+======
+
+作为
+一
+个
+library
+Zephyr
+的
+POSIX
+API
+implementation
+make
+effort
+成为
+一
+个
+thin
+的
+abstraction
+layer
+在
+application、
+middleware、
+和
+Zephyr
+kernel
+之间。
+
+Some
+general
+的
+design
+considerations：
+
+-
+POSIX
+interface
+和
+implementations
+应该
+是
+Zephyr
+的
+POSIX
+library
+的
+一
+part
+而
+不
+是
+在
+其他地方
+除非
+POSIX
+API
+implementation
+和
+某
+个
+其他
+feature
+both
+require
+它。
+一
+个
+implementation
+应该
+保持
+POSIX
+implementation
+一
+part
+的
+example
+是
+``getopt()``。
+Implementation
+应该
+是
+separate
+libraries
+一
+part
+的
+examples
+是
+multithreading
+和
+networking。
+
+-
+当
+POSIX
+API
+和
+另
+一
+个
+Zephyr
+subsystem
+both
+rely
+on
+一
+个
+feature
+时
+该
+feature
+的
+implementation
+应该
+作为
+一
+个
+separate
+的
+Zephyr
+library
+它
+可以
+被
+POSIX
+API
+和
+另
+一
+个
+library
+或
+subsystem
+used。
+这
+reduced
+code
+中
+dependency
+cycles
+的
+likelihood。
+当
+practical
+时
+该
+rule
+应该
+expand
+到
+include
+macros。
+在
+下面
+的
+example
+中
+``libposix``

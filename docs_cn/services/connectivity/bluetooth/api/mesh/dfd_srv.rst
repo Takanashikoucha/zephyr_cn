@@ -1,0 +1,216 @@
+.. _bluetooth_mesh_dfd_srv:
+
+Firmware
+Distribution
+Server
+############################
+
+Firmware
+Distribution
+Server
+model
+实现
+:ref:`bluetooth_mesh_dfu`
+subsystem
+的
+Distributor
+role。
+它
+扩展
+:ref:`bluetooth_mesh_blob_srv`
+用
+它
+从
+Initiator
+node
+接收
+firmware
+image
+binary。
+它
+也
+实例化
+一
+个
+:ref:`bluetooth_mesh_dfu_cli`
+用
+它
+在
+整个
+mesh
+network
+中
+distribute
+firmware
+updates。
+
+.. note::
+
+   当前
+   Firmware
+   Distribution
+   Server
+   只
+   支持
+   通过
+   SMP
+   service
+   的
+   out
+   of
+   band
+   （OOB）
+   firmware
+   images
+   retrieval。
+
+Firmware
+Distribution
+Server
+没有
+自己
+的
+API
+但
+依赖
+不同
+device
+上
+的
+Firmware
+Distribution
+Client
+model
+给
+它
+information
+并
+触发
+image
+distribution
+和
+upload。
+
+Firmware
+slots
+**************
+
+Firmware
+Distribution
+Server
+能
+存储
+多
+个
+firmware
+images
+用于
+distribution。
+每个
+slot
+包含
+带
+metadata
+的
+单独
+firmware
+image
+并
+可以
+以
+任何
+order
+distribute
+到
+network
+中
+其他
+mesh
+nodes。
+Firmware
+images
+的
+contents、
+format
+和
+size
+是
+vendor
+特定
+的
+可能
+包含
+来自
+其他
+vendors
+的
+data。
+应用
+永远
+不
+应该
+尝试
+执行
+或
+modify
+它们。
+
+Slots
+由
+Firmware
+Distribution
+Client
+远程
+管理
+它
+可以
+既
+upload
+新
+的
+slots
+又
+delete
+旧
+的
+slots。
+Application
+通过
+Firmware
+Distribution
+Server
+的
+callbacks
+（:cpp:type:`bt_mesh_fd_srv_cb`）
+被
+通知
+slots
+的
+changes。
+当
+每个
+firmware
+slot
+的
+metadata
+被
+internally
+存储
+时
+application
+必须
+提供
+:ref:`bluetooth_mesh_blob_stream`
+用于
+read
+和
+write
+firmware
+image。
+
+API
+reference
+*************
+
+.. doxygengroup::
+   bt_mesh_dfd_srv

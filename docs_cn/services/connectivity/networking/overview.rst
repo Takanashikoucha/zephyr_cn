@@ -1,0 +1,240 @@
+.. _ip_stack_overview:
+
+Overview
+########
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+Supported
+Features
+******************
+
+Networking
+IP
+stack
+是
+modular
+的
+并
+通过
+build
+time
+的
+configuration
+options
+被
+highly
+configurable。
+你
+可以
+通过
+只
+enable
+你
+的
+application
+required
+的
+network
+features
+minimize
+system
+memory
+consumption。
+几乎所有
+features
+如果
+不
+被
+needed
+都
+可以
+被
+disabled。
+
+*
+**IPv6**
+（:rfc:`8200`）
+被
+supported。
+各种
+IPv6
+sub
+options
+可以
+根据
+networking
+needs
+被
+enabled
+或
+disabled。
+
+   *
+   Developer
+   可以
+   set
+   同时
+   active
+   的
+   unicast
+   和
+   multicast
+   IPv6
+   addresses
+   的
+   数量。
+   *
+   Device
+   的
+   IPv6
+   address
+   可以
+   被
+   set
+   要么
+   statically
+   要么
+   dynamically
+   通过
+   SLAAC
+   （Stateless
+   Address
+   Auto
+   Configuration
+   :rfc:`4862`）。
+   *
+   System
+   也
+   support
+   多
+   个
+   IPv6
+   prefixes
+   并且
+   maximum
+   的
+   IPv6
+   prefix
+   count
+   可以
+   在
+   build
+   time
+   被
+   configured。
+   *
+   如果
+   不
+   被
+   needed
+   IPv6
+   neighbor
+   cache
+   可以
+   被
+   disabled
+   并且
+   它
+   的
+   size
+   可以
+   在
+   build
+   time
+   被
+   configured。
+   *
+   IPv6
+   neighbor
+   discovery
+   support
+   （:rfc:`4861`）
+   default
+   下
+   被
+   enabled。
+   *
+   Multicast
+   Listener
+   Discovery
+   v2
+   support
+   （:rfc:`3810`）
+   default
+   下
+   被
+   enabled。
+   *
+   IPv6
+   header
+   compression
+   （6lo）
+   对
+   IEEE
+   802.15.4
+   networks
+   （:rfc:`4944`）
+   的
+   IPv6
+   connectivity
+   available。
+   *
+   DHCPv6
+   （Dynamic
+   Host
+   Configuration
+   Protocol
+   for
+   IPv6）
+   （:rfc:`8415`）
+   client
+   functionality
+   被
+   supported。
+   *
+   IPv6
+   privacy
+   extension
+   （:rfc:`8981`）
+   被
+   supported。
+
+*
+**IPv4**
+（:rfc:`791`）
+被
+supported。
+它
+不
+能
+被
+IEEE
+802.15.4
+use
+因为
+这
+个
+network
+technology
+只
+support
+IPv6。
+IPv4
+可以
+例如
+在
+Ethernet、
+Wi
+Fi
+和
+Cellular
+based
+的
+networks
+中
+被
+used。

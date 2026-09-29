@@ -1,0 +1,195 @@
+.. _bluetooth_le_host:
+
+LE
+Host
+#######
+
+Bluetooth
+Host
+实现
+所有
+的
+higher
+level
+的
+protocols
+和
+profiles
+最
+重要
+的
+是
+为
+applications
+提供
+high
+level
+的
+API。
+以下
+diagram
+depict
+host
+的
+main
+protocol
+&
+profile
+layers。
+
+.. figure::
+   img/ble_host_layers.png
+   :align:
+   center
+   :alt:
+   Bluetooth
+   Host
+   protocol
+   &
+   profile
+   layers
+
+   Bluetooth
+   Host
+   protocol
+   &
+   profile
+   layers。
+
+Host
+stack
+最
+底部
+是
+一
+个
+所谓
+的
+HCI
+driver
+它
+负责
+abstract
+away
+HCI
+transport
+的
+details。
+它
+提供
+基本
+的
+API
+用于
+将
+data
+从
+controller
+传递
+到
+host
+反之
+亦然。
+
+可能
+最
+重要
+的
+block
+在
+HCI
+handling
+上面
+是
+Generic
+Access
+Profile
+（GAP）。
+GAP
+通过
+定义
+Bluetooth
+使用
+的
+四
+个
+distinct
+的
+roles
+简化
+Bluetooth
+LE
+access：
+
+*
+Connection
+oriented
+的
+roles
+
+   *
+   Peripheral
+   （e.g.
+   a
+   smart
+   sensor
+   often
+   with
+   a
+   limited
+   user
+   interface）
+
+   *
+   Central
+   （typically
+   a
+   mobile
+   phone
+   or
+   a
+   PC）
+
+*
+Connection
+less
+的
+roles
+
+   *
+   Broadcaster
+   （sending
+   out
+   Bluetooth
+   LE
+   advertisements
+   e.g.
+   a
+   smart
+   beacon）
+
+   *
+   Observer
+   （scanning
+   for
+   Bluetooth
+   LE
+   advertisements）
+
+每个
+role
+带
+它
+自己
+的
+build
+time
+configuration
+option：
+:kconfig:option:`CONFIG_BT_PERIPHERAL`、
+:kconfig:option:`CONFIG_BT_CENTRAL`、
+:kconfig:option:`CONFIG_BT_BROADCASTER`
+&
+:kconfig:option:`CONFIG_BT_OBSERVER`。
+Of
+the

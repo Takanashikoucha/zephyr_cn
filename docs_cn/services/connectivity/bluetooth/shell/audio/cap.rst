@@ -1,0 +1,184 @@
+Bluetooth:
+Common
+Audio
+Profile
+Shell
+#####################################
+
+这
+document
+describe
+如何
+运行
+Common
+Audio
+Profile
+functionality。
+
+CAP
+Acceptor
+************
+
+Acceptor
+通常
+是
+resource
+constrained
+的
+device
+如
+headset、
+earbud
+或
+hearing
+aid。
+Acceptor
+可以
+initialize
+一
+个
+Coordinated
+Set
+Identification
+Service
+instance
+如果
+它
+与
+一
+个
+或
+多
+个
+其他
+CAP
+Acceptors
+在
+一
+对
+中。
+
+Using
+the
+CAP
+Acceptor
+=====================
+
+当
+Bluetooth
+stack
+被
+initialized
+（:code:`bt
+init`）
+后
+Acceptor
+可以
+通过
+调用
+:code:`cap_acceptor
+init`
+被
+registered
+它
+将
+register
+CAS
+和
+CSIS
+services
+同时
+register
+callbacks。
+
+.. code-block::
+   console
+
+
+   cap_acceptor
+   --help
+   cap_acceptor
+   -
+   Bluetooth
+   CAP
+   acceptor
+   shell
+   commands
+   Subcommands:
+     init
+          :Initialize
+      the
+      service
+      and
+      register
+      callbacks
+      [size
+      <int>]
+                    [rank
+      <int>]
+      [not
+      lockable]
+      [sirk
+      <data>]
+     lock
+          :Lock
+      the
+      set
+     release
+       :Release
+      the
+      set
+      [force]
+     sirk
+          :Set
+      the
+      currently
+      used
+      SIRK
+      <sirk>
+     get_info
+      :Get
+      CSIS
+      info
+     sirk_rsp
+      :Set
+      the
+      response
+      used
+      in
+      SIRK
+      requests
+      <accept,
+      accept_enc,
+      reject,
+      oob>
+
+除了
+initialize
+CAS
+和
+CSIS
+还有
+commands
+用于
+lock
+和
+release
+CSIS
+instance
+同时
+print
+和
+modify
+对
+CSIS
+的
+SIRK
+的
+access。
+
+Setting
+a
+new
+SIRK
+------------------

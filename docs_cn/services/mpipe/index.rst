@@ -1,0 +1,220 @@
+.. _mpipe:
+
+Multimedia
+Pipeline
+（mpipe）
+###########################
+
+.. contents::
+   :local:
+   :depth:
+   2
+
+Overview
+********
+
+Multimedia
+Pipeline
+subsystem
+（mpipe）
+从
+self
+contained
+的
+processing
+components
+build
+一
+个
+media
+stream
+它们
+被
+called
+**elements**。
+Application
+declare
+它
+needed
+的
+elements、
+将
+它们
+link
+成
+一
+个
+graph、
+并
+用
+state
+machine
+drive
+该
+graph
+mpipe
+在
+neighboring
+的
+elements
+之间
+negotiate
+data
+format、
+settle
+哪个
+buffer
+pool
+provide
+buffers、
+并
+将
+那些
+buffers
+从
+一
+个
+element
+move
+到
+next
+的。
+
+.. graphviz::
+   :align:
+   center
+   :caption:
+   一
+   个
+   pipeline
+   是
+   一
+   个
+   graph
+   elements
+   在
+   它们
+   的
+   pads
+   处
+   joined。
+
+   digraph
+   pipeline
+   {
+     rankdir=LR;
+     node
+     [shape=record,
+     style=filled,
+     fillcolor="#e8e8e8",
+     fontname="sans"];
+     edge
+     [fontname="sans",
+     fontsize=10];
+
+     src
+     [label="{
+     source
+     |
+     {
+     <o>
+     src
+     pad
+     }
+     }"];
+     trans
+     [label="{
+     {
+     <i>
+     sink
+     pad
+     }
+     |
+     transform
+     |
+     {
+     <o>
+     src
+     pad
+     }
+     }"];
+     sink
+     [label="{
+     {
+     <i>
+     sink
+     pad
+     }
+     |
+     sink
+     }"];
+
+     src:o
+     ->
+     trans:i
+     [label="negotiated
+     format"];
+     trans:o
+     ->
+     sink:i
+     [label="negotiated
+     format"];
+   }
+
+Mpipe
+provide
+pieces
+和
+它们
+fit
+together
+的
+rules
+而
+不
+是
+finished
+的
+solutions
+所以
+pipeline
+被
+assembled
+much
+like
+用
+LEGO
+bricks
+build
+相同
+的
+graph
+在
+不同
+的
+board
+上
+run
+通过
+将
+它
+的
+elements
+bind
+到
+不同
+的
+devices
+而
+新
+的
+requirement
+通常
+是
+多
+一
+个
+element
+而
+不
+是

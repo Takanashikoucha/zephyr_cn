@@ -1,0 +1,199 @@
+.. _file_system_api:
+
+File
+Systems
+############
+
+Zephyr
+RTOS
+Virtual
+Filesystem
+Switch
+（VFS）
+allow
+applications
+mount
+multiple
+file
+systems
+在
+不同
+的
+mount
+points
+（e.g.
+``/fatfs``
+和
+``/lfs``）。
+Mount
+point
+的
+data
+structure
+contain
+instantiate、
+mount、
+和
+operate
+一
+个
+file
+system
+所需
+的
+所有
+necessary
+的
+information。
+File
+system
+Switch
+通过
+introduce
+file
+system
+registration
+mechanisms
+decouple
+applications
+从
+directly
+access
+individual
+file
+system
+的
+specific
+API
+或
+internal
+functions。
+
+在
+Zephyr
+中
+任何
+file
+system
+implementation
+或
+library
+可以
+被
+plugged
+in
+或
+pulled
+out
+通过
+file
+system
+registration
+API。
+每个
+file
+system
+implementation
+必须
+有
+一
+个
+globally
+unique
+的
+integer
+identifier
+use
+:c:enumerator:`FS_TYPE_EXTERNAL_BASE`
+avoid
+与
+in
+tree
+的
+identifiers
+clash。
+
+.. code-block::
+   c
+
+       int
+   fs_register(int
+   type,
+   const
+   struct
+   fs_file_system_t
+   *fs);
+
+       int
+   fs_unregister(int
+   type,
+   const
+   struct
+   fs_file_system_t
+   *fs);
+
+Zephyr
+RTOS
+support
+multiple
+的
+instances
+of
+一
+个
+file
+system
+通过
+make
+use
+of
+mount
+point
+作为
+disk
+volume
+name
+它
+被
+file
+system
+library
+use
+在
+format
+或
+mount
+一
+个
+disk
+时。
+
+一
+个
+file
+system
+被
+declared
+如下：
+
+.. code-block::
+   c
+
+   static
+   struct
+   fs_mount_t
+   mp
+   =
+   {
+   .type
+   =
+   FS_FATFS,
+   .mnt_point
+   =
+   FATFS_MNTP,
+   .fs_data
+   =
+   &fat_fs,
+   };
+
+where

@@ -1,0 +1,255 @@
+.. _net_shell:
+
+Network
+Shell
+#############
+
+Network
+shell
+和
+它
+的
+companion
+shells
+提供
+helpers
+用于
+figure
+out
+network
+status、
+enable/disable
+features、
+和
+issue
+commands
+如
+ping
+或
+DNS
+resolving。
+注意
+``net
+shell``
+可能
+不
+应该
+在
+production
+code
+中
+被
+used
+因为
+它
+将
+require
+extra
+的
+memory。
+也
+参考
+:ref:`generic
+shell
+<shell_api>`
+获取
+detailed
+的
+shell
+information。
+
+注意
+default
+下
+enabled
+或
+disabled
+的
+net
+shell
+commands
+都
+available
+给
+user。
+这
+帮助
+user
+discover
+什么
+commands
+available
+以及
+如何
+enable
+它们。
+这
+个
+extra
+的
+help
+可以
+通过
+disable
+:kconfig:option:`CONFIG_NET_SHELL_SHOW_DISABLED_COMMANDS`
+option
+被
+turned
+off。
+
+以下
+net
+shell
+commands
+被
+implemented：
+
+.. csv-table::
+   net
+   shell
+   commands
+   :header:
+   "Command"
+   "Description"
+   :widths:
+   15
+   85
+
+   "net
+   allocs"
+   "Print
+   network
+   memory
+   allocations。
+   只
+   在
+   :kconfig:option:`CONFIG_NET_DEBUG_NET_PKT_ALLOC`
+   被
+   set
+   时
+   available。"
+   "net
+   arp"
+   "Print
+   关于
+   IPv4
+   ARP
+   cache
+   的
+   information。
+   只
+   在
+   :kconfig:option:`CONFIG_NET_ARP`
+   在
+   IPv4
+   enabled
+   的
+   networks
+   中
+   被
+   set
+   时
+   available。"
+   "net
+   bridge"
+   "Print
+   information
+   并
+   manipulate
+   Ethernet
+   bridges。
+   只
+   在
+   :kconfig:option:`CONFIG_NET_ETHERNET_BRIDGE_SHELL`
+   被
+   set
+   时
+   available。"
+   "net
+   capture"
+   "Monitor
+   network
+   traffic
+   参考
+   :ref:`network_monitoring`
+   获取
+   details。"
+   "net
+   cm"
+   "Connection
+   manager
+   shell。
+   只
+   在
+   :kconfig:option:`CONFIG_NET_CONNECTION_MANAGER`
+   被
+   set
+   时
+   available。"
+   "net
+   conn"
+   "Print
+   关于
+   network
+   connections
+   的
+   information。"
+   "net
+   dhcpv4"
+   "Enable
+   /
+   disable
+   DHCPv4
+   client
+   或
+   server
+   support。
+   只
+   在
+   :kconfig:option:`CONFIG_NET_DHCPV4_SERVER`
+   或
+   :kconfig:option:`CONFIG_NET_DHCPV4`
+   被
+   set
+   时
+   available。"
+   "net
+   dhcpv6"
+   "Enable
+   /
+   disable
+   DHCPv6
+   client
+   support。
+   只
+   在
+   :kconfig:option:`CONFIG_NET_DHCPV6`
+   被
+   set
+   时
+   available。"
+   "net
+   dns"
+   "Show
+   DNS
+   如何
+   被
+   configured。
+   该
+   command
+   也
+   可
+   用
+   来
+   resolve
+   一
+   个
+   DNS
+   name。
+   只
+   在
+   :kconfig:option:`CONFIG_DNS_RESOLVER`
+   被
+   set
+   时
+   available。"

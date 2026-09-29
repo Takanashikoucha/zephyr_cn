@@ -1,0 +1,181 @@
+.. _cmsis_rtos_v2:
+
+CMSIS
+RTOS
+v2
+##########################
+
+Cortex
+M
+Software
+Interface
+Standard
+（CMSIS）
+RTOS
+是
+ARM
+Cortex
+M
+processor
+series
+的
+一
+个
+vendor
+independent
+的
+hardware
+abstraction
+layer
+它
+define
+generic
+的
+tool
+interfaces。
+虽然
+它
+original
+只
+为
+ARM
+Cortex
+M
+microcontrollers
+defined
+它
+可以
+easily
+被
+extended
+到
+其他
+microcontrollers
+使
+它
+generic。
+关于
+CMSIS
+RTOS
+v2
+的
+更多
+information
+请参考
+`CMSIS
+RTOS2
+Documentation
+<https://arm-software.github.io/CMSIS_6/latest/RTOS2/index.html>`_。
+
+Features
+not
+supported
+in
+Zephyr
+implementation
+***********************************************
+
+Kernel
+   ``osKernelGetState``、
+   ``osKernelSuspend``、
+   ``osKernelResume``、
+   ``osKernelInitialize``
+   和
+   ``osKernelStart``
+   不
+   被
+   supported。
+
+Mutex
+   ``osMutexPrioInherit``
+   default
+   下
+   被
+   supported
+   并
+   不
+   可
+   configurable
+   你
+   不
+   可以
+   select/unselect
+   这
+   个
+   attribute。
+
+   ``osMutexRecursive``
+   也
+   default
+   下
+   被
+   supported。
+   如果
+   这
+   个
+   attribute
+   不
+   被
+   set
+   当
+   相同
+   的
+   thread
+   尝试
+   第二次
+   acquire
+   它
+   时
+   一
+   个
+   error
+   被
+   thrown。
+
+   ``osMutexRobust``
+   在
+   Zephyr
+   中
+   不
+   被
+   supported。
+
+Return
+values
+not
+supported
+in
+the
+Zephyr
+implementation
+********************************************************
+
+``osKernelUnlock``、
+``osKernelLock``、
+``osKernelRestoreLock``
+   ``osError``
+   （Unspecified
+   error）
+   不
+   被
+   supported。
+
+``osSemaphoreDelete``
+   ``osErrorResource``
+   （由
+   parameter
+   semaphore_id
+   specified
+   的
+   semaphore
+   在
+   invalid
+   的
+   semaphore
+   state
+   中）
+   不
+   被
+   supported。
+
+``osMutexDelete``

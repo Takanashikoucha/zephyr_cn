@@ -1,0 +1,199 @@
+.. _pm-system:
+
+System
+Power
+Management
+#######################
+
+Introduction
+************
+
+当
+kernel
+没有
+东西
+可以
+schedule
+时
+它
+enter
+idle
+state。
+Enable
+:kconfig:option:`CONFIG_PM`
+allow
+kernel
+call
+power
+management
+subsystem
+将
+idle
+的
+system
+put
+到
+supported
+的
+power
+states
+之一。
+Kernel
+request
+一
+段
+它
+想
+suspend
+的
+time
+然后
+PM
+subsystem
+根据
+configured
+的
+power
+management
+policy
+decide
+appropriate
+的
+power
+state
+用于
+transition
+到
+那里。
+
+是
+application
+的
+responsibility
+set
+up
+一
+个
+wake
+up
+event。
+Wake
+up
+event
+通常
+是
+由
+SoC
+peripheral
+module
+triggered
+的
+interrupt。
+Examples
+包括
+SysTick、
+RTC、
+counter、
+或
+GPIO。
+Keep
+in
+mind
+根据
+SoC
+和
+question
+的
+power
+mode
+不
+是
+所有
+的
+peripherals
+都
+active
+的
+因此
+某些
+wake
+up
+sources
+可能
+不
+能
+在
+所有
+power
+modes
+中
+被
+used。
+
+以下
+diagram
+describe
+system
+power
+management：
+
+.. graphviz::
+   :caption:
+   System
+   power
+   management
+
+   digraph
+   G
+   {
+       compound=true
+       node
+   [height=1.2
+   style=rounded]
+
+       lock
+   [label="Lock
+   interrupts"]
+       config_pm
+   [label="CONFIG_PM"
+   shape=diamond
+   style="rounded,dashed"]
+       forced_state
+   [label="state
+   forced
+   ?"
+   shape=diamond
+   style="rounded,dashed"]
+       config_system_managed_device_pm
+   [label="CONFIG_PM_DEVICE"
+   shape=diamond
+   style="rounded,dashed"]
+       config_system_managed_device_pm2
+   [label="CONFIG_PM_DEVICE"
+   shape=diamond
+   style="rounded,dashed"]
+       pm_policy
+   [label="Check
+   policy
+   manager\nfor
+   a
+   power
+   state
+   "]
+       pm_suspend_devices
+   [label="Suspend\ndevices"]
+       pm_resume_devices
+   [label="Resume\ndevices"]
+       pm_state_set
+   [label="Enter
+   power
+   state\n(SoC
+   API)"
+   style="rounded,bold"]
+       pm_system_resume
+   [label="Resume
+   bookkeeping\n(post
+   ops,
+   notify,
+   clock)"
+   style="rounded,bold"]

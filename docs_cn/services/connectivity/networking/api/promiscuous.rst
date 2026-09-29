@@ -1,0 +1,167 @@
+.. _promiscuous_interface:
+
+Promiscuous
+Mode
+################
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+Overview
+********
+
+Promiscuous
+mode
+是
+network
+interface
+controller
+的
+一
+个
+mode
+它
+使
+它
+将
+它
+received
+的
+所有
+traffic
+pass
+到
+application
+而
+不
+只
+pass
+controller
+被
+specifically
+programmed
+receive
+的
+frames。
+这
+个
+mode
+通常
+被
+used
+用于
+packet
+sniffing
+如
+用于
+diagnose
+network
+connectivity
+issues
+通过
+show
+application
+所有
+通过
+network
+被
+transferred
+的
+data。
+（参考
+`Wikipedia
+article
+on
+promiscuous
+mode
+<https://en.wikipedia.org/wiki/Promiscuous_mode>`_
+获取
+更多
+information。）
+
+Network
+promiscuous
+APIs
+被
+used
+用于
+enable
+和
+disable
+这
+个
+mode
+同时
+wait
+并
+receive
+network
+data
+arrive。
+不
+是
+所有
+的
+network
+technologies
+或
+network
+device
+drivers
+support
+promiscuous
+mode。
+
+Sample
+usage
+************
+
+首先
+promiscuous
+mode
+需要
+被
+application
+turned
+ON
+如
+这
+个：
+
+.. code-block::
+   c
+
+   ret
+   =
+   net_promisc_mode_on(iface);
+   if
+   (ret
+   <
+   0)
+   {
+       if
+   (ret
+   ==
+   -EALREADY)
+   {
+           printf("Promiscuous
+   mode
+   already
+   enabled\n");
+       }
+   else
+   {
+           printf("Cannot
+   enable
+   promiscuous
+   mode
+   for
+   "
+              "interface
+   %p
+   (%d)\n",
+   iface,
+   ret);
+       }

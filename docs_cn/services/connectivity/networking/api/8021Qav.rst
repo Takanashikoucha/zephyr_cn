@@ -1,0 +1,149 @@
+.. _8021Qav:
+
+IEEE
+802.1Qav
+#############
+
+Overview
+********
+
+Credit
+based
+shaping
+是
+一
+个
+alternative
+的
+scheduling
+algorithm
+被
+used
+在
+network
+schedulers
+中
+以
+achieve
+fairness
+当
+sharing
+一
+个
+limited
+的
+network
+resource
+时。
+Zephyr
+有
+support
+配置
+在
+`IEEE
+802.1Qav-2009
+standard`_
+中
+described
+的
+credit
+based
+shaper。
+Zephyr
+不
+implement
+实际
+的
+shaper
+它
+只
+提供
+一
+个
+way
+配置
+由
+Ethernet
+device
+driver
+implemented
+的
+shaper。
+
+Enabling
+802.1Qav
+*****************
+
+要
+enable
+802.1Qav
+shaper
+Ethernet
+device
+driver
+必须
+declare
+它
+support
+credit
+based
+shaping。
+Ethernet
+driver
+的
+capability
+function
+必须
+为
+此
+return
+``ETHERNET_QAV``
+value。
+通常
+也
+需要
+support
+priority
+queues
+``ETHERNET_PRIORITY_QUEUES``。
+
+.. code-block::
+   none
+
+   static
+   enum
+   ethernet_hw_caps
+   eth_get_capabilities(const
+   struct
+   device
+   *dev)
+   {
+       ARG_UNUSED(dev);
+
+       return
+       ETHERNET_QAV
+       |
+       ETHERNET_PRIORITY_QUEUES
+       |
+          ETHERNET_HW_VLAN
+       |
+       ETHERNET_LINK_10BASE
+       |
+          ETHERNET_LINK_100BASE;
+   }
+
+参考
+``sam-e70-xplained``
+board
+的
+Ethernet
+driver
+:zephyr_file:`drivers/ethernet/eth_sam_gmac.c`
+获取
+一
+个
+example。
+
+Configuring
+802.1Qav
+********************

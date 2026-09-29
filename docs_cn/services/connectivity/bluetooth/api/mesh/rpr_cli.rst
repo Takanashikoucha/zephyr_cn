@@ -1,0 +1,161 @@
+.. _bluetooth_mesh_models_rpr_cli:
+
+Remote
+Provisioning
+Client
+##########################
+
+Remote
+Provisioning
+Client
+model
+是
+Bluetooth
+mesh
+specification
+定义
+的
+foundation
+model。
+它
+通过
+:kconfig:option:`CONFIG_BT_MESH_RPR_CLI`
+option
+启用。
+
+Remote
+Provisioning
+Client
+model
+在
+Bluetooth
+Mesh
+Protocol
+Specification
+version
+1.1
+中
+被
+引入。
+这
+个
+model
+提供
+远程
+provision
+devices
+到
+mesh
+network
+的
+functionality
+并
+通过
+与
+支持
+:ref:`bluetooth_mesh_models_rpr_srv`
+model
+的
+mesh
+nodes
+交互
+执行
+Node
+Provisioning
+Protocol
+Interface
+procedures。
+
+Remote
+Provisioning
+Client
+model
+用
+包含
+target
+Remote
+Provisioning
+Server
+model
+instance
+的
+node
+的
+device
+key
+与
+Remote
+Provisioning
+Server
+model
+通信。
+
+如果
+存在
+Remote
+Provisioning
+Client
+model
+必须
+在
+primary
+element
+上
+被
+instantiated。
+
+Scanning
+********
+
+Scanning
+procedure
+用
+来
+scan
+位于
+Remote
+Provisioning
+Server
+附近
+的
+unprovisioned
+devices。
+Remote
+Provisioning
+Client
+用
+:c:func:`bt_mesh_rpr_scan_start`
+call
+开始
+scan
+procedure：
+
+.. code-block:: C
+
+      static
+      void
+      rpr_scan_report(struct
+      bt_mesh_rpr_cli
+      *cli,
+                  const
+      struct
+      bt_mesh_rpr_node
+      *srv,
+                  struct
+      bt_mesh_rpr_unprov
+      *unprov,
+                  struct
+      net_buf_simple
+      *adv_data)
+      {
+
+      }
+
+      struct
+      bt_mesh_rpr_cli
+      rpr_cli
+      =
+      {
+         .scan_report
+         =
+         rpr_scan_report,

@@ -1,0 +1,172 @@
+.. _gpio-kbd:
+
+GPIO
+Keyboard
+Matrix
+####################
+
+:dtcompatible:`gpio-kbd-matrix`
+driver
+support
+广泛
+的
+keyboard
+matrix
+hardware
+configurations
+并
+有
+numerous
+的
+options
+用于
+change
+它
+的
+behavior。
+这
+是
+some
+common
+的
+setups
+和
+它们
+如何
+被
+driver
+supported
+的
+overview。
+
+所有
+这些
+的
+conventional
+configuration
+是
+driver
+在
+row
+GPIOs
+（inputs）
+上
+read
+并
+在
+columns
+GPIOs
+（output）
+上
+select。
+
+Base
+use
+case
+no
+isolation
+diodes
+interrupt
+capable
+的
+GPIOs
+***********************************************************
+
+这
+是
+在
+consumer
+keyboards
+上
+found
+的
+common
+的
+configuration
+带
+membrane
+switches
+和
+flexible
+circuit
+boards
+没有
+isolation
+diodes
+require
+ghosting
+detection
+（它
+default
+下
+被
+enabled）。
+
+.. figure::
+   no-diodes.svg
+   :align:
+   center
+   :width:
+   50%
+
+   一
+   个
+   3x3
+   matrix
+   没有
+   diodes
+
+System
+必须
+support
+GPIO
+interrupts
+且
+interrupt
+可以
+同时
+在
+所有
+row
+GPIOs
+上
+被
+enabled。
+
+.. code-block::
+   devicetree
+
+   kbd-matrix
+   {
+        compatible
+   =
+   "gpio-kbd-matrix";
+        row-gpios
+   =
+   <&gpio0
+   0
+   (GPIO_PULL_UP
+   |
+   GPIO_ACTIVE_LOW)>,
+                <&gpio0
+   1
+   (GPIO_PULL_UP
+   |
+   GPIO_ACTIVE_LOW)>,
+                <&gpio0
+   2
+   (GPIO_PULL_UP
+   |
+   GPIO_ACTIVE_LOW)>;
+        col-gpios
+   =
+   <&gpio0
+   3
+   GPIO_ACTIVE_LOW>,
+                <&gpio0
+   4
+   GPIO_ACTIVE_LOW>,
+                <&gpio0
+   5
+   GPIO_ACTIVE_LOW>;
+   };

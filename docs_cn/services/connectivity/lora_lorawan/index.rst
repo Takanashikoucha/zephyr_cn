@@ -1,0 +1,180 @@
+.. _lora_api:
+.. _lorawan_api:
+
+LoRa
+and
+LoRaWAN
+################
+
+Overview
+********
+
+LoRa
+（abbrev.
+for
+Long
+Range）
+是
+`Semtech
+Corporation`_
+开发
+的
+proprietary
+的
+low
+power
+wireless
+communication
+protocol。
+
+LoRa
+act
+作为
+physical
+layer
+（PHY）
+based
+on
+chirp
+spread
+spectrum
+（CSS）
+modulation
+technique。
+
+LoRaWAN
+（for
+Long
+Range
+Wide
+Area
+Network）
+define
+了
+LoRa
+PHY
+上面
+的
+networking
+layer。
+
+Zephyr
+提供
+LoRa
+的
+APIs
+用于
+直接
+通过
+wireless
+interface
+send
+raw
+data
+packets
+同时
+也
+提供
+LoRaWAN
+的
+APIs
+用于
+connect
+end
+device
+到
+internet
+通过
+一
+个
+gateway。
+
+Zephyr
+提供
+两
+个
+LoRaWAN
+backend
+implementations：
+
+*
+**LoRaMac-node**
+（default）：
+Based
+on
+Semtech
+的
+`LoRaMac-node
+library`_
+作为
+Zephyr
+module
+included。
+Support
+所有
+由
+LoRaWAN
+specification
+defined
+的
+regions。
+通过
+:kconfig:option:`CONFIG_LORA_MODULE_BACKEND_LORAMAC_NODE`
+selected。
+
+*
+**Native**：
+一
+个
+Zephyr
+idiomatic
+的
+LoRaWAN
+1.0.x
+Class
+A
+implementation
+直接
+与
+LoRa
+radio
+driver
+talk
+而
+没有
+external
+dependencies。
+当前
+support
+EU868
+region。
+通过
+:kconfig:option:`CONFIG_LORA_MODULE_BACKEND_NATIVE`
+selected。
+
+.. note::
+
+        ``LoRaMac-node``
+        已
+        被
+        Semtech
+        deprecated
+        以
+        支持
+        `LoRa
+        Basics
+        Modem`_。
+        将
+        Zephyr
+        API's
+        port
+到
+        使用
+        ``LoRa
+        Basics
+        Modem``
+        作为
+        backend
+        正在
+        进行
+        中。

@@ -1,0 +1,159 @@
+.. _blinfo_api:
+
+Bootloader
+Information
+######################
+
+Bootloader
+information
+（abbreviated
+到
+blinfo）
+subsystem
+是
+:ref:`retention_api`
+的
+一
+个
+extension
+它
+allow
+从
+bootloader
+read
+shared
+data
+并
+allow
+applications
+query
+它。
+它
+有
+一
+个
+optional
+的
+feature
+用于
+organise
+从
+bootloader
+retrieved
+的
+information
+并
+store
+它
+在
+:ref:`settings_api`
+中
+带
+``blinfo/``
+prefix。
+
+Devicetree
+setup
+****************
+
+要
+use
+bootloader
+information
+subsystem
+需要
+create
+一
+个
+retention
+area
+它
+有
+一
+个
+retained
+data
+section
+作为
+它
+的
+parent
+generally
+non
+init
+的
+RAM
+被
+used
+用于
+这
+个
+purpose。
+See
+以下
+example
+（这
+个
+guide
+中
+的
+examples
+基于
+:zephyr:board:`nrf52840dk`
+board
+和
+memory
+layout）：
+
+.. code-block::
+   devicetree
+
+   /
+   {
+       sram@2003FC00
+   {
+           compatible
+   =
+   "zephyr,memory-region",
+   "mmio-sram";
+           reg
+   =
+   <0x2003FC00
+   DT_SIZE_K(1)>;
+           zephyr,memory-region
+   =
+   "RetainedMem";
+           status
+   =
+   "okay";
+
+           retainedmem
+   {
+               compatible
+   =
+   "zephyr,retained-ram";
+               status
+   =
+   "okay";
+               #address-cells
+   =
+   <1>;
+               #size-cells
+   =
+   <1>;
+
+               boot_info0:
+   boot_info@0
+   {
+                   compatible
+   =
+   "zephyr,retention";
+                   status
+   =
+   "okay";
+                   reg
+   =
+   <0x0
+   0x100>;
+               };
+           };

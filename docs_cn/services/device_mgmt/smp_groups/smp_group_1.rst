@@ -1,0 +1,163 @@
+.. _mcumgr_smp_group_1:
+
+Application/software
+image
+management
+group
+###########################################
+
+Application/software
+image
+management
+group
+define
+以下
+commands：
+
+.. table::
+    :align:
+    center
+
+    +-------------------+-----------------------------------------------+
+    |
+    ``Command
+    ID``
+    |
+    Command
+    description
+    |
+    +===================+===============================================+
+    |
+    ``0``
+    |
+    State
+    of
+    images
+    |
+    +-------------------+-----------------------------------------------+
+    |
+    ``1``
+    |
+    Image
+    upload
+    |
+    +-------------------+-----------------------------------------------+
+    |
+    ``2``
+    |
+    File
+    |
+    |
+    （reserved
+    but
+    not
+    supported
+    by
+    Zephyr）
+    |
+    +-------------------+-----------------------------------------------+
+    |
+    ``3``
+    |
+    Corelist
+    |
+    |
+    （reserved
+    but
+    not
+    supported
+    by
+    Zephyr）
+    |
+    +-------------------+-----------------------------------------------+
+    |
+    ``4``
+    |
+    Coreload
+    |
+    |
+    （reserved
+    but
+    not
+    supported
+    by
+    Zephyr）
+    |
+    +-------------------+-----------------------------------------------+
+    |
+    ``5``
+    |
+    Image
+    erase
+    |
+    +-------------------+-----------------------------------------------+
+    |
+    ``6``
+    |
+    Slot
+    info
+    |
+    +-------------------+-----------------------------------------------+
+
+Zephyr
+中
+"slots"
+和
+"images"
+的
+Notion
+****************************************
+
+"Slot"
+和
+"image"
+的
+definition
+来自
+mcuboot
+那里
+"image"
+会
+consist
+of
+两
+个
+"slots"
+further
+named
+"primary"
+和
+"secondary"
+application
+supposed
+从
+"primary
+slot"
+run
+而
+update
+supposed
+被
+uploaded
+到
+"secondary
+slot"
+mcuboot
+负责
+在
+boot
+时
+swapping
+slots。
+这
+means
+一
+对
+slots
+dedicated
+给
+单
+个
+upgradable
+的
+application。

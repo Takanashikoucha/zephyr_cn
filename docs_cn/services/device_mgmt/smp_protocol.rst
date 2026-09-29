@@ -1,0 +1,179 @@
+.. _mcumgr_smp_protocol_specification:
+
+SMP
+Protocol
+Specification
+##########################
+
+这
+是
+Simple
+Management
+Protocol
+（SMP）
+的
+description
+它
+被
+MCUmgr
+used
+用于
+pass
+requests
+到
+devices
+并
+从
+它们
+receive
+responses。
+
+SMP
+是
+一
+个
+application
+layer
+protocol。
+Underlying
+的
+transport
+layer
+不
+在
+这
+个
+documentation
+的
+scope
+中。
+
+.. note::
+    这
+    里
+    的
+    SMP
+    refer
+    到
+    MCUmgr
+    的
+    SMP
+    （Simple
+    Management
+    Protocol）
+    它
+    与
+    Bluetooth
+    中
+    的
+    SMP
+    （Security
+    Manager
+    Protocol）
+    unrelated
+    但
+    有
+    一
+    个
+    用于
+    Bluetooth
+    的
+    MCUmgr
+    SMP
+    transport。
+
+Frame:
+The
+envelope
+*******************
+
+每个
+frame
+consist
+of
+一
+个
+header
+和
+data。
+Header
+中
+的
+``Data
+Length``
+field
+可
+被
+used
+用于
+reassembly
+purposes
+如果
+underlying
+的
+transport
+layer
+support
+fragmentation。
+当
+fields
+多
+于
+一
+个
+byte
+长
+时
+frames
+被
+encoded
+in
+"Big
+Endian"
+（Network
+endianness）
+并
+take
+以下
+form：
+
+.. _mcumgr_smp_protocol_frame:
+
+.. table::
+    :align:
+    center
+
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |3
+    |2
+    |1
+    |0
+    |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |7|6|5|4|3|2|1|0|7|6|5|4|3|2|1|0|7|6|5|4|3|2|1|0|7|6|5|4|3|2|1|0|
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |
+    Res
+    |Ver|
+    OP
+    |
+    Flags
+    |
+    Data
+    Length
+    |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |
+    Group
+    ID
+    |
+    Sequence
+    Num
+    |
+    Command
+    ID
+    |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |
+    Data
+    |

@@ -1,0 +1,220 @@
+.. _net_config_interface:
+
+Network
+Configuration
+Library
+#############################
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+Overview
+********
+
+Network
+configuration
+library
+在
+system
+boot
+期间
+用
+semi
+automatic
+的
+方式
+set
+up
+networking
+devices
+based
+on
+user
+supplied
+的
+Kconfig
+options。
+
+以下
+Kconfig
+options
+affect
+configuration
+library
+如何
+set
+up
+system：
+
+.. csv-table::
+   Kconfig
+   options
+   for
+   network
+   configuration
+   library
+   :header:
+   "Option
+   name"
+   "Description"
+   :widths:
+   45
+   55
+
+   ":kconfig:option:`CONFIG_NET_CONFIG_SETTINGS`"
+   "这
+   个
+   option
+   control
+   network
+   system
+   是否
+   被
+   configured
+   或
+   initialized。
+   如果
+   没
+   set
+   那么
+   config
+   library
+   不
+   被
+   used
+   用于
+   initialization
+   application
+   需要
+   自己
+   do
+   所有
+   的
+   network
+   related
+   configuration。
+   如果
+   这
+   个
+   option
+   被
+   set
+   那么
+   user
+   可以
+   optionally
+   configure
+   static
+   IP
+   addresses
+   被
+   set
+   到
+   system
+   中
+   的
+   first
+   network
+   interface。
+   通常
+   set
+   static
+   IP
+   addresses
+   只
+   在
+   testing
+   中
+   usable
+   不
+   应该
+   在
+   production
+   code
+   中
+   被
+   used。
+   参考
+   config
+   library
+   的
+   Kconfig
+   file
+   :zephyr_file:`subsys/net/lib/config/Kconfig`
+   获取
+   set
+   static
+   IP
+   addresses
+   的
+   特定
+   options。"
+   ":kconfig:option:`CONFIG_NET_CONFIG_AUTO_INIT`"
+   "当
+   device
+   被
+   started
+   时
+   networking
+   system
+   被
+   automatically
+   configured。"
+   ":kconfig:option:`CONFIG_NET_CONFIG_INIT_TIMEOUT`"
+   "这
+   个
+   告诉
+   要
+   wait
+   多
+   长
+   时间
+   直到
+   networking
+   被
+   ready
+   and
+   available。
+   如果
+   例如
+   DHCPv4
+   的
+   IPv4
+   address
+   在
+   这
+   个
+   limit
+   内
+   没
+   被
+   received
+   那么
+   对
+   ``net_config_init()``
+   的
+   call
+   将
+   在
+   device
+   startup
+   期间
+   return
+   error。"
+   ":kconfig:option:`CONFIG_NET_CONFIG_NEED_IPV4`"
+   "Network
+   application
+   需要
+   IPv4
+   support
+   才能
+   正确
+   function。
+   这
+   个
+   option
+   确保
+   network
+   application

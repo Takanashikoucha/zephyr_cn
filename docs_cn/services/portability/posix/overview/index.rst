@@ -1,0 +1,230 @@
+.. _posix_overview:
+
+Overview
+########
+
+Portable
+Operating
+System
+Interface
+（POSIX）
+是
+一
+族
+standards
+它
+由
+`IEEE
+Computer
+Society`_
+specified
+用于
+maintain
+operating
+systems
+之间
+的
+compatibility。
+Zephyr
+implement
+POSIX
+API
+的
+一
+个
+subset
+它
+由
+`IEEE
+1003.1
+2017`_
+specified
+（也
+known
+作为
+POSIX
+1.2017）。
+
+..
+   figure::
+   posix.svg
+   :align:
+   center
+   :alt:
+   POSIX
+   Support
+   in
+   Zephyr
+
+   POSIX
+   support
+   in
+   Zephyr
+
+.. note::
+   这
+   个
+   page
+   不
+   document
+   Zephyr
+   的
+   :ref:`POSIX
+   architecture<Posix
+   arch>`
+   它
+   被
+   used
+   用于
+   在
+   host
+   operating
+   system
+   下
+   run
+   Zephyr
+   作为
+   native
+   application
+   用于
+   prototyping、
+   test、
+   和
+   diagnostic
+   purposes。
+
+用
+Zephyr
+中
+available
+的
+POSIX
+support
+existing
+的
+POSIX
+conformant
+的
+application
+可以
+被
+ported
+用于
+在
+Zephyr
+kernel
+上
+run
+因此
+leverage
+Zephyr
+的
+features
+和
+functionality。
+Additionally
+一
+个
+designed
+用于
+POSIX
+conformant
+的
+library
+可以
+被
+ported
+到
+Zephyr
+kernel
+based
+的
+applications
+而
+不
+change。
+
+POSIX
+API
+是
+越来越
+popular
+的
+OSAL
+（operating
+system
+abstraction
+layer）
+用于
+IoT
+和
+embedded
+applications
+如
+Zephyr、
+AWS:FreeRTOS、
+TI
+RTOS、
+和
+NuttX
+中
+所
+seen
+的。
+
+Zephyr
+中
+POSIX
+support
+的
+Benefits
+包括：
+
+-
+为
+non
+embedded
+的
+programmers
+offer
+一
+个
+familiar
+的
+API
+特别是
+来自
+Linux
+的
+-
+Enable
+reuse
+（portability）
+基于
+POSIX
+APIs
+的
+existing
+libraries
+-
+Provide
+一
+个
+efficient
+的
+API
+subset
+它
+suitable
+用于
+small
+的
+（MCU）
+embedded
+systems
+
+.. _posix_subprofiles:
+
+POSIX
+Subprofiles
+=================

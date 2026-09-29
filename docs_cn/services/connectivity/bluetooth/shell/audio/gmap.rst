@@ -1,0 +1,239 @@
+Bluetooth:
+Gaming
+Audio
+Profile
+Shell
+#####################################
+
+这
+document
+describe
+如何
+运行
+Gaming
+Audio
+Profile
+shell
+functionality。
+与
+大多数
+其他
+low
+layer
+的
+profiles
+不同
+GMAP
+是
+一
+个
+在
+所有
+devices
+上
+exist
+并
+有
+service
+（GMAS）
+的
+profile。
+因此
+initiator
+和
+acceptor
+（或
+central
+和
+peripheral）
+都
+应该
+do
+一
+个
+remote
+device
+的
+GMAS
+的
+discovery
+以
+查看
+它们
+支持
+什么
+GMAP
+roles
+和
+features。
+
+Using
+the
+GMAP
+Shell
+********************
+
+当
+Bluetooth
+stack
+被
+initialized
+（:code:`bt
+init`）
+后
+GMAS
+可以
+通过
+调用
+:code:`gmap
+init`
+被
+registered。
+也
+强烈
+建议
+通过
+:code:`bap
+init`
+启用
+BAP。
+
+.. code-block::
+   console
+
+   uart:~$
+   gmap
+   --help
+   gmap
+   -
+   Bluetooth
+   GMAP
+   shell
+   commands
+   Subcommands:
+     init
+      :
+      [none]
+     set_role
+  :
+      [ugt
+      |
+      ugg
+      |
+      bgr
+      |
+      bgs]
+     discover
+  :
+      [none]
+     ac_1
+      :
+      Unicast
+      audio
+      configuration
+      1
+     ac_2
+      :
+      Unicast
+      audio
+      configuration
+      2
+     ac_3
+      :
+      Unicast
+      audio
+      configuration
+      3
+     ac_4
+      :
+      Unicast
+      audio
+      configuration
+      4
+     ac_5
+      :
+      Unicast
+      audio
+      configuration
+      5
+     ac_6_i
+    :
+      Unicast
+      audio
+      configuration
+      6(i)
+     ac_6_ii
+   :
+      Unicast
+      audio
+      configuration
+      6(ii)
+     ac_7_ii
+   :
+      Unicast
+      audio
+      configuration
+      7(ii)
+     ac_8_i
+    :
+      Unicast
+      audio
+      configuration
+      8(i)
+     ac_8_ii
+   :
+      Unicast
+      audio
+      configuration
+      8(ii)
+     ac_11_i
+   :
+      Unicast
+      audio
+      configuration
+      11(i)
+     ac_11_ii
+  :
+      Unicast
+      audio
+      configuration
+      11(ii)
+     ac_12
+     :
+      Broadcast
+      audio
+      configuration
+      12
+     ac_13
+     :
+      Broadcast
+      audio
+      configuration
+      13
+     ac_14
+     :
+      Broadcast
+      audio
+      configuration
+      14
+
+:code:`set_role`
+command
+可以
+用
+来
+在
+runtime
+change
+role
+假设
+device
+支持
+该
+role
+（GMAP
+roles
+依赖
+某些
+BAP
+configurations）。

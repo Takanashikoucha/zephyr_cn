@@ -1,0 +1,185 @@
+Bluetooth:
+Basic
+Audio
+Profile:
+Scan
+Delegator
+Shell
+####################################################
+
+这
+document
+describe
+如何
+运行
+Scan
+Delegator
+functionality
+注意
+在
+下面
+的
+examples
+中
+一些
+debug
+lines
+被
+removed
+以
+使
+这
+更
+short
+并
+提供
+更好
+的
+overview。
+
+Scan
+Delegator
+可能
+optionally
+support
+periodic
+advertisements
+synchronization
+transfer
+（PAST）
+protocol。
+
+Scan
+Delegator
+server
+通常
+reside
+在
+带
+inputs
+或
+outputs
+的
+devices
+上。
+
+必须
+启用
+:kconfig:option:`CONFIG_BT_BAP_SCAN_DELEGATOR_LOG_LEVEL_DBG`
+才能
+interactive
+地
+使用
+Scan
+Delegator。
+
+Scan
+Delegator
+当前
+只
+能
+set
+receive
+state
+的
+sync
+state
+但
+还
+不
+实际
+support
+与
+periodic
+advertisements
+的
+syncing。
+
+.. code-block::
+   console
+
+   bap_scan_delegator
+   --help
+   bap_scan_delegator
+   -
+   Bluetooth
+   BAP
+   Scan
+   Delegator
+   shell
+   commands
+   Subcommands:
+     init
+                :
+      Initialize
+      the
+      service
+      and
+      register
+      callbacks
+     set_past_pref
+       :
+      Set
+      PAST
+      preference
+      <true
+      ||
+      false>
+     sync_pa
+             :
+      Sync
+      to
+      PA
+      <src_id>
+     term_pa
+             :
+      Terminate
+      PA
+      sync
+      <src_id>
+     add_src
+             :
+      Add
+      a
+      PA
+      as
+      source
+      <addr>
+      <sid>
+      <broadcast_id>
+                          <enc_state>
+      [bis_sync
+      [metadata]]
+     add_src_by_pa_sync
+  :
+      Add
+      a
+      PA
+      as
+      source
+      <broadcast_id>
+      <enc_state>
+      [bis_sync
+      [metadata]]
+     mod_src
+             :
+      Modify
+      source
+      <src_id>
+      <broadcast_id>
+      <enc_state>
+                          [bis_sync
+      [metadata]]
+     rem_src
+             :
+      Remove
+      source
+      <src_id>
+     synced
+              :
+      Set
+      server
+      scan
+      state
+      <src_id>
+      <bis_syncs>

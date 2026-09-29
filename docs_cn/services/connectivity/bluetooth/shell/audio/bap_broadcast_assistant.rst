@@ -1,0 +1,205 @@
+Bluetooth:
+Basic
+Audio
+Profile:
+Broadcast
+Assistant
+Shell
+#########################################################
+
+这
+document
+describe
+如何
+运行
+BAP
+Broadcast
+Assistant
+functionality。
+注意
+在
+下面
+的
+examples
+中
+一些
+debug
+lines
+被
+removed
+以
+使
+这
+更
+short
+并
+提供
+更好
+的
+overview。
+
+Broadcast
+Assistant
+负责
+为
+resource
+restricted
+的
+device
+offload
+scan
+使
+scan
+不
+drain
+battery。
+Broadcast
+Assistant
+应该
+support
+scan
+periodic
+advertisements
+并
+可能
+optionally
+support
+periodic
+advertisements
+synchronization
+transfer
+（PAST）
+protocol。
+
+Broadcast
+Assistant
+通常
+是
+phones
+或
+laptops。
+Broadcast
+Assistant
+scan
+periodic
+advertisements
+并
+transfer
+information
+到
+server。
+
+必须
+启用
+:kconfig:option:`CONFIG_BT_BAP_BROADCAST_ASSISTANT_LOG_LEVEL_DBG`
+才能
+interactive
+地
+使用
+Broadcast
+Assistant。
+
+当
+Bluetooth
+stack
+被
+initialized
+（:code:`bt
+init`）
+并
+一
+个
+device
+被
+connected
+后
+Broadcast
+Assistant
+可以
+通过
+调用
+:code:`bap_broadcast_assistant
+discover`
+discover
+connected
+device
+上
+的
+BASS
+它
+将
+开始
+discover
+BASS
+UUIDs
+并
+store
+handles
+并
+subscribe
+到
+所有
+notifications。
+
+.. code-block::
+   console
+
+   uart:~$
+   bap_broadcast_assistant
+   --help
+   bap_broadcast_assistant
+   -
+   Bluetooth
+   BAP
+   broadcast
+   assistant
+   client
+   shell
+   commands
+   Subcommands:
+   discover
+          :
+      Discover
+      BASS
+      on
+      the
+      server
+   scan_start
+        :
+      Start
+      scanning
+      for
+      broadcasters
+   scan_stop
+         :
+      Stop
+      scanning
+      for
+      BISs
+   add_src
+          :
+      Add
+      a
+      source
+      <address:
+      P:XX:XX:XX:XX:XX:XX
+      or
+      R:XX:XX:XX:XX:XX:XX>
+      <adv_sid>
+      <sync_pa>
+      <broadcast_id>
+      [<sync_bis>]
+      [<pa_interval>]
+      [<metadata>]
+   add_broadcast_id
+  :
+      Add
+      a
+      source
+      by
+      broadcast
+      ID
+      <broadcast_id>
+      <sync_pa>
+      [<sync_bis>]
+      [<metadata>]

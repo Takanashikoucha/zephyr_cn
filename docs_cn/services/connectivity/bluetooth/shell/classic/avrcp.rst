@@ -1,0 +1,186 @@
+Bluetooth:
+Classic:
+AVRCP
+Shell
+################################
+
+这
+document
+describe
+如何
+用
+shell
+commands
+使用
+Bluetooth
+Classic
+AVRCP
+（Audio/Video
+Remote
+Control
+Profile）
+functionality。
+:code:`avrcp`
+command
+expose
+Controller
+（CT）
+和
+Target
+（TG）
+两
+个
+roles
+用于
+exercise
+AVRCP
+control
+和
+browsing
+features。
+
+有
+两
+个
+sub
+commands：
+:code:`avrcp
+ct`
+和
+:code:`avrcp
+tg`。
+:code:`avrcp
+ct`
+sub
+command
+提供
+**Controller
+（CT）**
+functionality
+:code:`avrcp
+tg`
+sub
+command
+提供
+**Target
+（TG）**
+functionality。
+
+Prerequisites
+-------------
+
+在
+运行
+:code:`avrcp`
+shell
+之前
+确保
+你
+的
+build
+启用
+了
+Bluetooth
+Classic
+和
+shell。
+在
+AVRCP
+control
+或
+browsing
+connections
+可以
+被
+created
+之前
+必须
+先
+establish
+到
+peer
+device
+的
+ACL
+BR/EDR
+connection
+（通常
+通过
+general
+的
+:code:`bt`
+shell
+commands）。
+
+Commands
+********
+
+所有
+commands
+只
+能
+在
+ACL
+connection
+被
+established
+之后
+使用
+除了
+:code:`avrcp
+ct
+register_cb`
+和
+:code:`avrcp
+tg
+register_cb`。
+
+:code:`avrcp`
+commands：
+
+.. code-block::
+   console
+
+   uart:~$
+   avrcp
+   avrcp
+   -
+   Bluetooth
+   AVRCP
+   shell
+   commands
+   Subcommands:
+     connect
+                :
+      connect
+      AVRCP
+     disconnect
+             :
+      disconnect
+      AVRCP
+     browsing_connect
+       :
+      connect
+      browsing
+      AVRCP
+     browsing_disconnect
+    :
+      disconnect
+      browsing
+      AVRCP
+     ct
+                     :
+      AVRCP
+      CT
+      shell
+      commands
+     tg
+                     :
+      AVRCP
+      TG
+      shell
+      commands
+
+:code:`avrcp
+ct`
+commands：

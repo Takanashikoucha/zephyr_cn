@@ -1,0 +1,179 @@
+.. _mcumgr_smp_group_8:
+
+File
+system
+management
+######################
+
+File
+system
+management
+group
+provide
+commands
+它们
+allow
+upload
+和
+download
+files
+到/从
+device。
+
+File
+management
+group
+define
+以下
+commands：
+
+.. table::
+    :align:
+    center
+
+    +-------------------+-----------------------------------------------+
+    |
+    ``Command
+    ID``
+    |
+    Command
+    description
+    |
+    +===================+===============================================+
+    |
+    ``0``
+    |
+    File
+    download/upload
+    |
+    +-------------------+-----------------------------------------------+
+    |
+    ``1``
+    |
+    File
+    status
+    |
+    +-------------------+-----------------------------------------------+
+    |
+    ``2``
+    |
+    File
+    hash/checksum
+    |
+    +-------------------+-----------------------------------------------+
+    |
+    ``3``
+    |
+    Supported
+    file
+    hash/checksum
+    types
+    |
+    +-------------------+-----------------------------------------------+
+    |
+    ``4``
+    |
+    File
+    close
+    |
+    +-------------------+-----------------------------------------------+
+
+File
+download
+*************
+
+Command
+allow
+从
+target
+device
+的
+specified
+path
+download
+existing
+file
+的
+contents。
+Client
+applications
+必须
+keep
+track
+它们
+已
+downloaded
+的
+data
+和
+它们
+在
+file
+中
+的
+position
+（MCUmgr
+也
+会
+cache
+这些）
+并
+issue
+subsequent
+的
+requests
+带
+modified
+的
+offset
+用于
+gather
+完整
+的
+file。
+Request
+不
+carry
+requested
+chunk
+的
+size
+size
+由
+application
+本身
+specified。
+注意
+file
+handles
+将
+保持
+open
+用于
+consecutive
+的
+requests
+（只要
+idle
+timeout
+不
+被
+reached
+且
+另
+一
+个
+transport
+不
+make
+use
+of
+用
+fs_mgmt
+upload/download
+files）
+但
+files
+不
+被
+exclusively

@@ -1,0 +1,146 @@
+Bluetooth:
+Classic:
+PBAP
+Shell
+###############################
+
+这
+document
+describe
+如何
+运行
+Bluetooth
+Classic
+PBAP
+（Phonebook
+Access
+Profile）
+functionality。
+:code:`pbap`
+command
+expose
+Bluetooth
+Classic
+PBAP
+Shell
+commands。
+
+有
+两
+个
+sub
+commands
+:code:`pbap
+pce`
+和
+:code:`pbap
+pse`。
+
+:code:`pbap
+pce`
+用于
+Phonebook
+Client
+Equipment
+（PCE）
+functionality
+:code:`pbap
+pse`
+用于
+Phonebook
+Server
+Equipment
+（PSE）
+functionality。
+
+Commands
+********
+
+所有
+commands
+只
+能
+在
+ACL
+connection
+被
+established
+之后
+使用
+除了
+:code:`pbap
+pce
+sdp_reg`
+和
+:code:`pbap
+pse
+rfcomm_register`
+和
+:code:`pbap
+pse
+l2cap_register`。
+
+:code:`pbap`
+commands：
+
+.. code-block::
+   console
+
+   uart:~$
+   pbap
+   pbap
+   -
+   Bluetooth
+   pbap
+   shell
+   commands
+   Subcommands:
+     alloc_buf
+                        :
+      Alloc
+      tx
+      buffer
+     release_buf
+                      :
+      Free
+      allocated
+      tx
+      buffer
+     pce
+                              :
+      Client
+      sets
+     pse
+                              :
+      Server
+      sets
+     add_header_auth_challenge
+        :
+      <password>
+     add_header_auth_response
+         :
+      <password>
+     add_ap
+                           :
+      add
+      application
+      param
+
+:code:`pbap
+pce`
+commands：
+
+.. code-block::
+   console
+
+   uart:~$
+   pbap
+   pce
+   pce
+   -
+   Client
+   sets
+   Subcommands:
+     sdp_reg
+                          :
+      [none]

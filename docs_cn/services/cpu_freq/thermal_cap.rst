@@ -1,0 +1,156 @@
+.. _cpu_freq_thermal_cap:
+
+CPU
+Frequency
+Thermal
+Cap
+#########################
+
+CPU
+frequency
+thermal
+cap
+是
+CPU
+Frequency
+Scaling
+subsystem
+的
+一
+个
+optional
+的
+constraint
+layer。
+Active
+的
+policy
+select
+requested
+的
+P-state
+thermal
+cap
+在
+configured
+的
+temperature
+trip
+points
+active
+时
+limit
+被
+allowed
+的
+highest
+performance
+的
+P-state。
+
+这
+使
+performance
+demand
+和
+thermal
+mitigation
+保持
+separate：
+
+*
+CPU
+frequency
+policy
+根据
+它
+自己
+的
+metrics
+和
+thresholds
+select
+requested
+的
+P-state。
+*
+Thermal
+cap
+clamp
+该
+request
+到
+当前
+被
+temperature
+allowed
+的
+highest
+performance
+的
+P-state。
+
+Clamping
+后
+resulting
+的
+P-state
+被
+passed
+到
+SoC
+P-state
+driver。
+
+Devicetree
+**********
+
+通过
+add
+一
+个
+:dtcompatible:`zephyr,cpu-freq-thermal-cap`
+node
+并
+enable
+:kconfig:option:`CONFIG_CPU_FREQ_THERMAL_CAP`
+enable
+thermal
+cap。
+
+Example：
+
+.. code-block::
+   devicetree
+
+   cpu_freq_thermal_cap:
+   cpu_freq_thermal_cap
+   {
+           compatible
+   =
+   "zephyr,cpu-freq-thermal-cap";
+           sensor
+   =
+   <&temp0>;
+           sensor-channel
+   =
+   "die-temp";
+           polling-delay-ms
+   =
+   <1000>;
+           trip-active-polling-delay-ms
+   =
+   <100>;
+
+           trip_0
+   {
+                   temperature-millicelsius
+   =
+   <85000>;
+                   hysteresis-millicelsius
+   =
+   <5000>;
+                   cap-pstate
+   =
+   <&pstate_1>;
+           };

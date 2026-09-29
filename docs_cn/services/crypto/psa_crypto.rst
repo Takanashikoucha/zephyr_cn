@@ -1,0 +1,217 @@
+.. _psa_crypto:
+
+PSA
+Crypto
+##########
+
+Overview
+********
+
+PSA
+（Platform
+Security
+Architecture）
+Crypto
+API
+offer
+一
+个
+portable
+的
+programming
+interface
+用于
+cryptographic
+operations
+和
+key
+storage
+跨
+广泛
+的
+hardware。
+它
+被
+designed
+为
+user
+friendly
+同时
+仍
+provide
+access
+到
+对
+modern
+cryptography
+essential
+的
+low
+level
+primitives。
+
+它
+由
+Arm
+created
+和
+maintained。
+Arm
+develop
+PSA
+作为
+一
+个
+comprehensive
+的
+security
+framework
+用于
+address
+connected
+devices
+不断
+increasing
+的
+security
+needs。
+
+在
+Zephyr
+中
+PSA
+Crypto
+API
+用
+Mbed
+TLS
+implemented
+它
+是
+一
+个
+open
+source
+的
+cryptographic
+library
+它
+provide
+underlying
+的
+cryptographic
+functions。
+
+Design
+Goals
+************
+
+这
+个
+interface
+suitable
+用于
+广泛
+的
+devices：
+从
+用
+built
+in
+的
+key
+process
+data
+的
+special
+purpose
+的
+cryptographic
+processors
+到
+run
+custom
+application
+code
+的
+constrained
+devices
+如
+microcontrollers
+以及
+multi
+application
+的
+devices
+如
+servers。
+它
+follow
+cryptographic
+agility
+的
+principle。
+
+Algorithm
+Flexibility
+   PSA
+   Crypto
+   API
+   support
+   广泛
+   的
+   cryptographic
+   algorithms
+   允许
+   developers
+   根据
+   需要
+   在
+   不同
+   的
+   cryptographic
+   methods
+   之间
+   switch。
+   这
+   个
+   flexibility
+   对
+   于
+   随着
+   新
+   algorithms
+   emerge
+   和
+   现有
+   的
+   变
+   obsolete
+   时
+   维持
+   security
+   是
+   crucial
+   的。
+
+Key
+Management
+   PSA
+   Crypto
+   API
+   包括
+   robust
+   的
+   key
+   management
+   features
+   它们
+   support
+   cryptographic
+   keys
+   的
+   creation、
+   storage、
+   和
+   use
+   在

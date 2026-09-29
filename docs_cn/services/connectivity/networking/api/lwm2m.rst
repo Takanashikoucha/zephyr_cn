@@ -1,0 +1,157 @@
+.. _lwm2m_interface:
+
+Lightweight
+M2M
+（LwM2M）
+#######################
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+Overview
+********
+
+Lightweight
+Machine
+to
+Machine
+（LwM2M）
+是
+一
+个
+application
+layer
+protocol
+它
+被
+designed
+with
+device
+management、
+data
+reporting
+和
+device
+actuation
+in
+mind。
+Based
+on
+CoAP/UDP
+`LwM2M`_
+是
+由
+Open
+Mobile
+Alliance
+defined
+的
+`standard
+<https://openmobilealliance.org/release/LightweightM2M/>`_
+适合
+constrained
+的
+devices
+通过
+它
+use
+CoAP
+packet
+size
+optimization
+和
+简单、
+stateless
+的
+flow
+它
+support
+一
+个
+REST
+API。
+
+LwM2M
+和
+CoAP
+之间
+的
+一
+个
+key
+差异
+是
+LwM2M
+client
+initiate
+到
+LwM2M
+server
+的
+connection。
+Server
+然后
+可以
+use
+REST
+API
+manage
+与
+client
+的
+各种
+interfaces。
+
+LwM2M
+use
+一
+个
+简单
+的
+resource
+model
+core
+set
+的
+objects
+和
+resources
+在
+specification
+中
+defined。
+
+LwM2M
+library
+可
+用
+:kconfig:option:`CONFIG_LWM2M`
+Kconfig
+option
+enable。
+
+Example
+LwM2M
+object
+and
+resources:
+Device
+******************************************
+
+*Object
+definition*
+
+.. list-table::
+   :header-rows:
+   1
+
+   *
+   -
+   Object
+   ID
+   -
+   Name
+   -
+   Instance

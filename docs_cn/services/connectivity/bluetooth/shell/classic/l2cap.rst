@@ -1,0 +1,133 @@
+Bluetooth:
+Classic:
+L2CAP
+Shell
+###############################
+
+这
+document
+describe
+如何
+运行
+Bluetooth
+Classic
+L2CAP
+functionality。
+:code:`br
+l2cap`
+command
+expose
+Bluetooth
+Classic
+L2CAP
+Shell
+commands。
+
+Commands
+********
+
+:code:`br
+l2cap`
+commands：
+
+.. code-block::
+   console
+
+   uart:~$
+   br
+   l2cap
+   l2cap
+   -
+   [none]
+   Subcommands:
+     register
+    :
+      <psm>
+      <mode:
+      none,
+      ret,
+      fc,
+      eret,
+      stream>
+      [hold_credit]
+                    [mode_optional]
+      [extended_control]
+     connect
+     :
+      <psm>
+      <mode:
+      none,
+      ret,
+      fc,
+      eret,
+      stream>
+      [hold_credit]
+                    [mode_optional]
+      [extended_control]
+     disconnect
+  :
+      [none]
+     send
+        :
+      [number
+      of
+      packets]
+      [length
+      of
+      packet(s)]
+     credits
+     :
+      [none]
+     echo
+        :
+      L2CAP
+      BR
+      ECHO
+      commands
+     connless
+    :
+      L2CAP
+      connectionless
+      commands
+
+:code:`br
+l2cap
+echo`
+commands：
+
+.. code-block::
+   console
+
+   uart:~$
+   br
+   l2cap
+   echo
+   echo
+   -
+   L2CAP
+   BR
+   ECHO
+   commands
+   Subcommands:
+     register
+    :
+      [none]
+     unregister
+  :
+      [none]
+     req
+         :
+      <length
+      of
+      data>
+     rsp
+         :
+      <identifier>
+      <length
+      of
+      data>
+
+:code:`br
+l2cap
+connless`
+commands：

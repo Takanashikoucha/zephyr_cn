@@ -1,0 +1,158 @@
+Bluetooth:
+L2CAP
+Shell
+######################
+
+:code:`l2cap`
+command
+expose
+L2CAP
+API
+的
+parts。
+以下
+example
+展示
+如何
+register
+一
+个
+LE
+PSM、
+从
+另
+一
+个
+device
+connect
+到
+它
+并
+发送
+3
+个
+packets
+每个
+14
+octets。
+
+该
+example
+假设
+两
+个
+devices
+已
+被
+connected。
+
+在
+device
+A
+上
+register
+LE
+PSM：
+
+.. code-block::
+   console
+
+        uart:~$
+        l2cap
+        register
+        29
+        L2CAP
+        psm
+        41
+        sec_level
+        1
+        registered
+
+在
+device
+B
+上
+connect
+到
+registered
+的
+LE
+PSM
+并
+发送
+data：
+
+.. code-block::
+   console
+
+        uart:~$
+        l2cap
+        connect
+        29
+        Chan
+        sec:
+        1
+        L2CAP
+        connection
+        pending
+        Channel
+        0x20000210
+        connected
+        Channel
+        0x20000210
+        status
+        1
+        uart:~$
+        l2cap
+        send
+        3
+        14
+        Rem
+        2
+        Rem
+        1
+        Rem
+        0
+        Outgoing
+        data
+        channel
+        0x20000210
+        transmitted
+        Outgoing
+        data
+        channel
+        0x20000210
+        transmitted
+        Outgoing
+        data
+        channel
+        0x20000210
+        transmitted
+
+在
+device
+A
+上
+你
+应该
+已
+收到
+data：
+
+.. code-block::
+   console
+
+        Incoming
+        conn
+        0x20002398
+        Channel
+        0x20000210
+        status
+        1
+        Channel
+        0x20000210
+        connected
+        Channel
+        0x20000210
+        requires
+        buffer

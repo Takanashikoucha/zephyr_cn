@@ -1,0 +1,118 @@
+Bluetooth:
+Telephone
+and
+Media
+Audio
+Profile
+Shell
+##################################################
+
+这
+document
+describe
+如何
+运行
+Telephone
+and
+Media
+Audio
+Profile
+functionality。
+与
+大多数
+其他
+low
+layer
+的
+profiles
+不同
+TMAP
+是
+一
+个
+在
+所有
+devices
+上
+exist
+并
+有
+service
+（TMAS）
+的
+profile。
+因此
+initiator
+和
+acceptor
+（或
+central
+和
+peripheral）
+都
+应该
+do
+一
+个
+remote
+device
+的
+TMAS
+的
+discovery
+以
+查看
+它们
+支持
+什么
+TMAP
+roles。
+
+Using
+the
+TMAP
+Shell
+********************
+
+当
+Bluetooth
+stack
+被
+initialized
+（:code:`bt
+init`）
+后
+TMAS
+可以
+通过
+调用
+:code:`tmap
+init`
+被
+registered。
+
+.. code-block::
+   console
+
+
+   tmap
+   --help
+   tmap
+   -
+   Bluetooth
+   TMAP
+   shell
+   commands
+   Subcommands:
+     init
+          :Initialize
+      and
+      register
+      the
+      TMAS
+     discover
+      :Discover
+      TMAS
+      on
+      remote
+      device

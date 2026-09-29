@@ -1,0 +1,159 @@
+.. _bluetooth_mesh_heartbeat:
+
+Heartbeat
+#########
+
+Heartbeat
+feature
+提供
+monitor
+Bluetooth
+Mesh
+nodes
+和
+determine
+nodes
+之间
+distance
+的
+functionality。
+
+Heartbeat
+feature
+通过
+:ref:`bluetooth_mesh_models_cfg_srv`
+model
+配置。
+
+Heartbeat
+messages
+******************
+
+Heartbeat
+messages
+作为
+transport
+control
+packets
+通过
+network
+发送
+只
+用
+network
+key
+encrypted。
+Heartbeat
+messages
+包含
+发送
+message
+时
+使用
+的
+original
+Time
+To
+Live
+（TTL）
+value
+和
+node
+上
+active
+features
+的
+bitfield。
+通过
+这
+个
+接收
+node
+可以
+determine
+message
+到达
+receiver
+时
+经过
+了
+多少
+relays
+以及
+node
+支持
+什么
+features。
+
+可用
+的
+Heartbeat
+feature
+flags：
+
+-
+:c:macro:`BT_MESH_FEAT_RELAY`
+-
+:c:macro:`BT_MESH_FEAT_PROXY`
+-
+:c:macro:`BT_MESH_FEAT_FRIEND`
+-
+:c:macro:`BT_MESH_FEAT_LOW_POWER`
+
+Heartbeat
+publication
+*********************
+
+Heartbeat
+publication
+通过
+Configuration
+models
+控制
+可以
+通过
+两
+种
+方式
+触发：
+
+Periodic
+publication
+   Node
+   在
+   regular
+   intervals
+   发布
+   新
+   的
+   Heartbeat
+   message。
+   Publication
+   可以
+   被
+   configured
+   在
+   一定
+   数量
+   的
+   messages
+   后
+   stop
+   或
+   无限
+   继续。
+
+Triggered
+publication
+   Node
+   每
+   次
+   feature
+   变化
+   时
+   发布
+   新
+   的
+   Heartbeat
+   message。
+   The

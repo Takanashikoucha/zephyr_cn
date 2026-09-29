@@ -1,0 +1,187 @@
+.. _ptp_interface:
+
+Precision
+Time
+Protocol
+（PTP）
+#############################
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+Overview
+********
+
+PTP
+是
+一
+个
+在
+application
+layer
+implemented
+的
+network
+protocol
+用于
+synchronize
+computer
+network
+中
+的
+clocks。
+它
+准确
+到
+小于
+一
+微秒。
+Stack
+support
+在
+`IEEE
+1588-2019
+standard`_
+（IEEE
+Standard
+for
+a
+Precision
+Clock
+Synchronization
+Protocol
+for
+Networked
+Measurement
+and
+Control
+Systems）
+中
+defined
+的
+protocol
+和
+procedures。
+它
+有
+多
+个
+profiles
+并
+可以
+被
+implemented
+在
+L2
+（Ethernet）
+或
+L3
+（UDP/IPv4
+或
+UDP/IPv6）
+上面。
+它
+的
+accuracy
+通过
+use
+protocol
+packets
+的
+hardware
+timestamping
+achieved。
+
+Zephyr
+的
+PTP
+stack
+implementation
+consist
+以下
+items：
+
+*
+PTP
+stack
+thread
+它
+handles
+incoming
+messages
+和
+events
+*
+与
+ptp_clock
+driver
+的
+integration
+*
+PTP
+stack
+initialization
+它
+在
+system
+init
+期间
+executed
+
+Implementation
+自动
+create
+PTP
+Ports
+（每个
+PTP
+Port
+corresponds
+到
+unique
+的
+interface）。
+
+Supported
+features
+******************
+
+Stack
+的
+implementation
+不
+support
+standard
+中
+specified
+的
+所有
+features。
+下面
+的
+table
+中
+所有
+supported
+的
+features
+被
+listed。
+
+.. csv-table::
+   Supported
+   features
+   :header:
+   Feature
+   Supported
+   :widths:
+   50,10
+
+   Ordinary
+   Clock
+   yes
+   Boundary
+   Clock
+   yes

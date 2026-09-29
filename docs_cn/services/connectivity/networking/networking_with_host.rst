@@ -1,0 +1,178 @@
+.. _networking_with_host:
+
+Networking
+with
+the
+host
+system
+###############################
+
+.. toctree::
+   :maxdepth:
+   1
+   :hidden:
+
+   native_sim_setup.rst
+   qemu_eth_setup.rst
+   qemu_setup.rst
+   usbnet_setup.rst
+   qemu_user_setup.rst
+   networking_with_multiple_instances.rst
+   eth_bridge_native_sim_setup.rst
+   qemu_802154_setup.rst
+   armfvp_user_networking_setup.rst
+
+在
+developing
+networking
+software
+时
+通常
+需要
+connect
+并
+exchange
+data
+与
+host
+system
+如
+一
+个
+Linux
+desktop
+computer。
+根据
+用于
+development
+的
+board
+是什么
+以下
+options
+是
+possible
+的：
+
+*
+QEMU
+use
+SLIP
+（Serial
+Line
+Internet
+Protocol）。
+
+   *
+   这里
+   IP
+   packets
+   在
+   Zephyr
+   和
+   host
+   system
+   之间
+   通过
+   serial
+   port
+   exchanged。
+   这
+   是
+   legacy
+   的
+   data
+   transfer
+   方式。
+   它
+   也
+   相当
+   slow
+   所以
+   只
+   在
+   necessary
+   时
+   use
+   它。
+   参考
+   :ref:`networking_with_qemu`
+   获取
+   details。
+
+*
+QEMU
+use
+built
+in
+的
+Ethernet
+driver。
+
+   *
+   这里
+   IP
+   packets
+   在
+   Zephyr
+   和
+   host
+   system
+   之间
+   通过
+   QEMU
+   的
+   built
+   in
+   Ethernet
+   driver
+   exchanged。
+   不
+   是
+   所有
+   QEMU
+   boards
+   support
+   built
+   in
+   的
+   Ethernet
+   所以
+   在
+   某些
+   情况
+   下
+   你
+   可能
+   需要
+   use
+   SLIP
+   method
+   用于
+   host
+   connectivity。
+   参考
+   :ref:`networking_with_eth_qemu`
+   获取
+   details。
+
+*
+QEMU
+use
+SLIRP
+（Qemu
+User
+Networking）。
+
+   *
+   QEMU
+   User
+   Networking
+   用
+   "slirp"
+   implemented
+   它
+   provide
+   完整
+   的
+   TCP/IP

@@ -1,0 +1,182 @@
+.. _random_api:
+
+Random
+Number
+Generation
+########################
+
+Overview
+********
+
+Random
+API
+subsystem
+provide
+random
+number
+generation
+APIs
+两
+个
+instances
+cryptographically
+secure
+的
+和
+non
+cryptographically
+secure
+的。
+Use
+哪个
+random
+API
+基于
+random
+number
+的
+cryptographic
+requirements。
+如果
+需要
+non
+cryptographic
+的
+values
+non
+cryptographic
+的
+APIs
+将
+much
+faster
+地
+return
+random
+values。
+
+-
+Use
+:c:func:`sys_rand_get`
+和
+related
+的
+functions
+用于
+non
+cryptographic
+的
+purposes
+如
+randomizing
+delays、
+shuffling
+data、
+或
+general
+purpose
+的
+randomization。
+这些
+functions
+faster
+但
+不
+suitable
+用于
+security
+applications。
+
+-
+Use
+:c:func:`sys_csrand_get`
+用于
+cryptographic
+的
+purposes
+如
+generating
+encryption
+keys、
+nonces、
+initialization
+vectors、
+或
+任何
+必须
+对
+attacker
+unpredictable
+的
+data。
+
+.. warning::
+
+   绝不
+   use
+   non
+   cryptographic
+   的
+   random
+   functions
+   （:c:func:`sys_rand_get`、
+   :c:func:`sys_rand8_get`、
+   :c:func:`sys_rand16_get`、
+   :c:func:`sys_rand32_get`、
+   :c:func:`sys_rand64_get`）
+   用于
+   security
+   sensitive
+   的
+   operations。
+   这些
+   functions
+   不
+   provide
+   cryptographically
+   secure
+   的
+   random
+   numbers。
+
+API
+Usage
+*********
+
+Non
+Cryptographic
+Random
+Numbers
+================================
+
+以下
+functions
+provide
+non
+cryptographically
+secure
+的
+random
+numbers：
+
+-
+:c:func:`sys_rand_get`
+-
+Fill
+一
+个
+buffer
+with
+random
+bytes
+-
+:c:func:`sys_rand8_get`
+-
+Get
+一
+个
+random
+的
+8
+bit
+value

@@ -1,0 +1,207 @@
+.. _thread_analyzer:
+
+Thread
+analyzer
+###################
+
+Thread
+analyzer
+module
+enable
+所有
+Zephyr
+options
+用于
+track
+thread
+information
+例如
+thread
+stack
+size
+usage
+和
+其他
+runtime
+的
+thread
+runtime
+statistics。
+
+Analysis
+在
+application
+call
+:c:func:`thread_analyzer_run`
+或
+:c:func:`thread_analyzer_print`
+时
+on
+demand
+被
+performed。
+
+例如
+要
+build
+synchronization
+sample
+带
+Thread
+Analyser
+enabled
+做
+以下
+操作：
+
+   .. zephyr-app-commands::
+      :zephyr-app:
+      samples/synchronization/
+      :board:
+      qemu_x86
+      :goals:
+      build
+      :gen-args:
+      -DCONFIG_QEMU_ICOUNT=n
+      -DCONFIG_THREAD_ANALYZER=y
+      \
+               -DCONFIG_THREAD_ANALYZER_USE_PRINTK=y
+      -DCONFIG_THREAD_ANALYZER_AUTO=y
+      \
+               -DCONFIG_THREAD_ANALYZER_AUTO_INTERVAL=5
+
+
+当
+你
+在
+Qemu
+中
+run
+generated
+的
+application
+你
+将
+get
+来自
+Thread
+Analyzer
+的
+additional
+information::
+
+
+   thread_a:
+   Hello
+   World
+   from
+   cpu
+   0
+   on
+   qemu_x86!
+   Thread
+   analyze:
+    thread_b
+           :
+   STACK:
+   unused
+   740
+   usage
+   284
+   /
+   1024
+   (27
+   %);
+   CPU:
+   0
+   %
+    thread_analyzer
+     :
+   STACK:
+   unused
+   8
+   usage
+   504
+   /
+   512
+   (98
+   %);
+   CPU:
+   0
+   %
+    thread_a
+           :
+   STACK:
+   unused
+   648
+   usage
+   376
+   /
+   1024
+   (36
+   %);
+   CPU:
+   98
+   %
+    idle
+           :
+   STACK:
+   unused
+   204
+   usage
+   116
+   /
+   320
+   (36
+   %);
+   CPU:
+   0
+   %
+   thread_b:
+   Hello
+   World
+   from
+   cpu
+   0
+   on
+   qemu_x86!
+   thread_a:
+   Hello
+   World
+   from
+   cpu
+   0
+   on
+   qemu_x86!
+   thread_b:
+   Hello
+   World
+   from
+   cpu
+   0
+   on
+   qemu_x86!
+   thread_a:
+   Hello
+   World
+   from
+   cpu
+   0
+   on
+   qemu_x86!
+   thread_b:
+   Hello
+   World
+   from
+   cpu
+   0
+   on
+   qemu_x86!
+   thread_a:
+   Hello
+   World
+   from
+   cpu
+   0
+   on
+   qemu_x86!

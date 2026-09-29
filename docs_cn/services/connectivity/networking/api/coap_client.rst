@@ -1,0 +1,175 @@
+.. _coap_client_interface:
+
+CoAP
+client
+###########
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+Overview
+********
+
+CoAP
+client
+library
+允许
+application
+send
+CoAP
+requests
+并
+parse
+CoAP
+responses。
+该
+library
+可
+用
+:kconfig:option:`CONFIG_COAP_CLIENT`
+Kconfig
+option
+enable。
+Application
+通过
+一
+个
+callback
+被
+notified
+关于
+response
+它
+在
+request
+中
+被
+provided
+到
+API。
+CoAP
+client
+handle
+通过
+sockets
+的
+communication。
+因为
+CoAP
+client
+不
+create
+它
+使用
+的
+socket
+application
+负责
+create
+该
+socket。
+Plain
+UDP
+或
+DTLS
+sockets
+被
+supported。
+
+CoAP
+over
+TCP
+=============
+
+CoAP
+over
+reliable
+transports
+（TCP/TLS）
+也
+被
+supported
+如
+:rfc:`8323`
+中
+specified。
+用
+:kconfig:option:`CONFIG_COAP_CLIENT_TCP`
+enable
+它。
+TCP
+client
+internally
+manage
+connection
+setup、
+CSM
+（Capabilities
+and
+Settings
+Message）
+exchange、
+和
+signaling
+（Ping/Pong、
+Release、
+Abort）。
+与
+UDP
+client
+不同
+application
+不
+create
+socket
+相反
+它
+调用
+:c:func:`coap_client_tcp_connect`
+带
+server
+address。
+参考
+:zephyr:code-sample:`coap-client-tcp`
+获取
+一
+个
+usage
+example。
+
+Sample
+Usage
+************
+
+以下
+是
+CoAP
+client
+initialization
+和
+request
+sending
+的
+一
+个
+example：
+
+.. code-block::
+   c
+
+   static
+   struct
+   coap_client
+   client;
+   struct
+   coap_client_request
+   req
+   =
+   {
+   0
+   };
+
+   coap_client_init(&client,
+   NULL);

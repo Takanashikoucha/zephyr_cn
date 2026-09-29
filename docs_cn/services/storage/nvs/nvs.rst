@@ -1,0 +1,334 @@
+.. _nvs_api:
+
+Non
+Volatile
+Storage
+（NVS）
+##########################
+
+Elements
+represented
+as
+id
+data
+pairs
+被
+stored
+在
+flash
+中
+用
+FIFO
+managed
+的
+circular
+buffer。
+Flash
+area
+被
+divided
+成
+sectors。
+Elements
+被
+appended
+到
+一
+个
+sector
+直到
+sector
+中
+的
+storage
+space
+被
+exhausted。
+然后
+flash
+area
+中
+新
+的
+sector
+被
+prepared
+用于
+use
+（erased）。
+在
+erase
+sector
+之前
+它
+被
+checked
+identifier
+data
+pairs
+exist
+在
+sectors
+in
+use
+中
+如果
+不
+exist
+id
+data
+pair
+被
+copied。
+
+Id
+是
+一
+个
+16
+bit
+的
+unsigned
+number。
+NVS
+ensure
+对
+每个
+used
+的
+id
+始终
+有
+至少
+一
+个
+id
+data
+pair
+stored
+在
+flash
+中。
+
+NVS
+allow
+storage
+of
+binary
+blobs、
+strings、
+integers、
+longs、
+和
+any
+combination
+of
+these。
+
+每个
+element
+被
+stored
+在
+flash
+中
+作为
+metadata
+（8
+byte）
+和
+data。
+Metadata
+被
+written
+在
+一
+个
+table
+中
+它
+从
+nvs
+sector
+的
+end
+start
+data
+被
+written
+一
+个
+接
+一
+个
+从
+sector
+的
+start。
+Metadata
+consist
+of:
+id、
+data
+offset
+in
+sector、
+data
+length、
+part
+（unused）
+和
+一
+个
+CRC。
+这
+个
+CRC
+只
+calculated
+在
+metadata
+上
+且
+只
+ensure
+一
+个
+write
+被
+completed。
+Element
+的
+actual
+data
+可以
+被
+不同
+的
+（且
+optional
+的）
+CRC
+32
+protected。
+Use
+:kconfig:option:`CONFIG_NVS_DATA_CRC`
+configuration
+item
+enable
+data
+part
+的
+CRC。
+
+.. note::
+   Data
+   CRC
+   只
+   在
+   element
+   的
+   whole
+   data
+   被
+   read
+   时
+   被
+   checked。
+   Data
+   CRC
+   对
+   partial
+   read
+   不
+   被
+   checked
+   因为
+   它
+   stored
+   在
+   element
+   data
+   area
+   的
+   end。
+
+.. note::
+   在
+   previously
+   existing
+   的
+   NVS
+   content
+   上
+   enable
+   data
+   CRC
+   feature
+   而
+   没有
+   data
+   CRC
+   将
+   make
+   所有
+   existing
+   data
+   invalid。
+
+对
+nvs
+的
+data
+write
+始终
+从
+writing
+data
+start
+followed
+by
+writing
+metadata。
+在
+flash
+中
+被
+written
+而
+没有
+metadata
+的
+data
+在
+initialization
+期间
+被
+ignored。
+
+在
+initialization
+期间
+NVS
+将
+verify
+stored
+在
+flash
+中
+的
+data
+如果
+它
+encounters
+一
+个
+error
+它
+将
+ignore
+任何
+missing/incorrect
+metadata
+的
+data。

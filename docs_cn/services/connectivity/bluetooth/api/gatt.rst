@@ -1,0 +1,142 @@
+.. _bt_gatt:
+
+
+Generic
+Attribute
+Profile
+（GATT）
+################################
+
+GATT
+layer
+管理
+service
+database
+提供
+APIs
+用于
+service
+registration
+和
+attribute
+declaration。
+
+GATT
+Client
+向
+GATT
+Server
+发起
+commands
+和
+requests
+并
+可以
+接收
+server
+发送
+的
+responses、
+indications
+和
+notifications。
+它
+通过
+configuration
+option
+:kconfig:option:`CONFIG_BT_GATT_CLIENT`
+启用。
+
+GATT
+Server
+接受
+来自
+GATT
+Client
+的
+incoming
+commands
+和
+requests
+并
+向
+client
+发送
+responses、
+indications
+和
+notifications。
+
+Services
+可以
+用
+:c:func:`bt_gatt_service_register`
+API
+注册
+它
+接受
+提供
+service
+包含
+的
+attributes
+列表
+的
+:c:struct:`bt_gatt_service`
+struct。
+Helper
+macro
+:c:macro:`BT_GATT_SERVICE()`
+可以
+用
+来
+declare
+一
+个
+service。
+
+Attributes
+可以
+用
+:c:struct:`bt_gatt_attr`
+struct
+或
+以下
+helper
+macros
+之
+一
+declare：
+
+    :c:macro:`BT_GATT_PRIMARY_SERVICE`
+        Declares
+        一
+        个
+        Primary
+        Service。
+
+    :c:macro:`BT_GATT_SECONDARY_SERVICE`
+        Declares
+        一
+        个
+        Secondary
+        Service。
+
+    :c:macro:`BT_GATT_INCLUDE_SERVICE`
+        Declares
+        一
+        个
+        Include
+        Service。
+
+    :c:macro:`BT_GATT_CHARACTERISTIC`
+        Declares
+        一
+        个
+        Characteristic。
+
+    :c:macro:`BT_GATT_DESCRIPTOR`
+        Declares
+        一
+        个
+        Descriptor。

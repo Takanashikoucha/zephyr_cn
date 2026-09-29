@@ -1,0 +1,131 @@
+.. _ttcn3_architecture:
+
+Conformance
+tests
+如何
+被
+put
+together
+##########################################
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+有
+四
+个
+moving
+parts
+spread
+在
+两
+个
+repositories
+上
+它们
+只
+在
+wire
+上
+meet：
+一
+个
+Zephyr
+application、
+一
+个
+Twister
+和
+pytest
+harness、
+一
+个
+Eclipse
+Titan
+的
+shell
+wrapper、
+和
+TTCN-3
+suite
+本身。
+
+The
+pieces
+**********
+
+.. graphviz::
+   :caption:
+   什么
+   build
+   什么
+   两
+   个
+   halves
+   在
+   哪里
+   meet
+   :alt:
+   显示
+   Twister
+   和
+   pytest
+   harness
+   驱动
+   Zephyr
+   application
+   和
+   Titan
+   built
+   的
+   TTCN-3
+   suite
+   它们
+   只
+   在
+   tap
+   interface
+   处
+   meet
+   的
+   diagram
+
+   digraph
+   ttcn3_pieces
+   {
+       rankdir=TB;
+       node
+   [shape=box,
+   style=filled,
+   fillcolor="#e8e8e8",
+   fontname="sans-serif"];
+       edge
+   [arrowsize=0.8];
+
+       twister
+   [label="Twister",
+   fillcolor="#cce5ff"];
+       harness
+   [label="pytest
+   harness\n(ttcn3_runner.py)",
+   fillcolor="#cce5ff"];
+
+       subgraph
+   cluster_zephyr
+   {
+           label="zephyr";
+           style=dashed;
+           fontname="sans-serif";
+           sut
+   [label="System
+   under
+   test\n(native_sim)"];
+       }
+
+       subgraph
+   cluster_nettools
+   {
+           label="net-tools";
+           style=dashed;

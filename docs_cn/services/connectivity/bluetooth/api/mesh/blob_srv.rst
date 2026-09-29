@@ -1,0 +1,190 @@
+.. _bluetooth_mesh_blob_srv:
+
+BLOB
+Transfer
+Server
+####################
+
+Binary
+Large
+Object
+（BLOB）
+Transfer
+Server
+model
+实现
+large
+binary
+objects
+的
+reliable
+receiving。
+它
+作为
+:ref:`bluetooth_mesh_dfu_srv`
+的
+backend
+但
+也
+可以
+用
+于
+接收
+其他
+binary
+images。
+
+BLOBs
+*****
+
+如
+:ref:`bluetooth_mesh_blob`
+中
+描述
+BLOB
+Transfer
+models
+transfer
+的
+binary
+objects
+被
+分成
+blocks
+blocks
+被
+分成
+chunks。
+因为
+transfer
+由
+BLOB
+Transfer
+Client
+model
+控制
+BLOB
+Transfer
+Server
+必须
+允许
+blocks
+以
+任何
+order
+到来。
+Block
+内
+的
+chunks
+也
+可以
+以
+任何
+order
+到来
+但
+一
+个
+block
+中
+的
+所有
+chunks
+必须
+在
+下一
+个
+block
+开始
+之前
+被
+收到。
+
+BLOB
+Transfer
+Server
+跟踪
+收到
+的
+blocks
+和
+chunks
+并
+只
+处理
+每个
+block
+和
+chunk
+一
+次。
+BLOB
+Transfer
+Server
+也
+确保
+任何
+缺失
+的
+chunks
+被
+BLOB
+Transfer
+Client
+重新
+发送。
+
+Usage
+*****
+
+BLOB
+Transfer
+Server
+在
+带
+一
+组
+event
+handler
+callbacks
+的
+element
+上
+被
+instantiated：
+
+.. code-block:: C
+
+   static
+   const
+   struct
+   bt_mesh_blob_srv_cb
+   blob_cb
+   =
+   {
+       /*
+       Callbacks
+       */
+   };
+
+   static
+   struct
+   bt_mesh_blob_srv
+   blob_srv
+   =
+   {
+       .cb
+       =
+       &blob_cb,
+   };
+
+   static
+   const
+   struct
+   bt_mesh_model
+   models[]
+   =
+   {
+       BT_MESH_MODEL_BLOB_SRV(&blob_srv),
+   };

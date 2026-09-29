@@ -1,0 +1,232 @@
+.. _bluetooth_le_audio_arch:
+
+LE
+Audio
+Stack
+##############
+
+.. graphviz::
+   :caption:
+   Bluetooth
+   Audio
+   Architecture
+
+   digraph
+   bluetooth_audio_arch
+   {
+      r
+      [shape=record,
+      width=5,
+      height=3
+         label="{{TMAP
+      |
+      HAP
+      |
+      PBP
+      |
+      GMAP
+      |
+      ...}
+      |
+               GAF
+      |
+               {{{
+      GATT
+      |
+      GAP
+      }
+      |
+      Low
+      level
+      protocols
+      (L2CAP,
+      ATT,
+      etc.)}
+      |
+      GAP
+      |
+      ISO}
+               |
+      HCI
+      Driver
+      (USB,
+      UART,
+      SPI,
+      virtual,
+      etc.)}"
+         ];
+   }
+
+Overall
+design
+**************
+
+LE
+Audio
+stack
+的
+overall
+design
+是
+implementation
+尽可能
+遵循
+specifications
+既
+在
+structure
+方面
+也
+在
+naming
+方面。
+大多数
+API
+functions
+以
+specification
+acronym
+为
+prefix
+（例如
+``bt_bap``
+用于
+Basic
+Audio
+Profile
+（BAP）
+和
+``bt_vcp``
+用于
+Volume
+Control
+Profile
+（VCP））。
+Functions
+然后
+根据
+适用
+情况
+以
+每个
+profile
+的
+特定
+role
+为
+prefix
+（例如
+:c:func:`bt_bap_unicast_client_discover`
+和
+:c:func:`bt_vcp_vol_rend_set_vol`）。
+通常
+每个
+profile
+或
+service
+specifications
+定义
+的
+procedure
+有
+一
+个
+function
+以及
+不
+对应
+procedures
+的
+额外
+helper
+或
+meta
+functions。
+
+Files
+的
+structure
+通常
+也
+遵循
+这
+个
+其中
+BAP
+相关
+的
+files
+以
+``bap``
+为
+prefix
+VCP
+相关
+的
+files
+以
+``vcp``
+为
+prefix。
+如果
+file
+对
+特定
+的
+profile
+role
+特定
+role
+也
+嵌入
+在
+file
+name
+中。
+
+Generic
+Audio
+Framework
+（GAF）
+*****************************
+Generic
+Audio
+Framework
+（GAF）
+被
+考虑
+为
+Bluetooth
+LE
+Audio
+architecture
+的
+middleware。
+GAF
+包含
+profiles
+和
+services
+允许
+higher
+layer
+applications
+和
+profiles
+setup
+streams、
+change
+volume、
+control
+media
+和
+telephony
+以及
+更多。
+GAF
+build
+在
+GATT、
+GAP
+和
+isochronous

@@ -1,0 +1,180 @@
+.. _bluetooth-arch:
+
+Stack
+Architecture
+##################
+
+Overview
+********
+
+这
+页
+描述
+Zephyr
+Bluetooth
+protocol
+stack
+的
+software
+architecture。
+
+.. note::
+   Zephyr
+   主要
+   支持
+   Bluetooth
+   Low
+   Energy
+   （LE）
+   Bluetooth
+   specification
+   的
+   low
+   power
+   version。
+   Zephyr
+   也
+   对
+   BR/EDR
+   Host
+   的
+   部分
+   有
+   limited
+   的
+   support。
+
+.. _bluetooth-layers:
+
+Bluetooth
+LE
+Layers
+==================
+
+有
+3
+个
+main
+的
+layers
+它们
+一起
+构成
+完整
+的
+Bluetooth
+Low
+Energy
+protocol
+stack：
+
+*
+**Host**：
+这
+个
+layer
+紧
+在
+application
+下面
+由
+多
+个
+（non
+real
+time）
+network
+和
+transport
+protocols
+组成
+使
+applications
+能
+以
+standard
+和
+interoperable
+的
+方式
+与
+peer
+devices
+通信。
+*
+**Controller**：
+Controller
+实现
+Link
+Layer
+（LE
+LL）
+low
+level
+的
+real
+time
+protocol
+它
+与
+Radio
+Hardware
+一起
+提供
+standard
+interoperable
+的
+over
+the
+air
+communication。
+LL
+schedule
+packet
+reception
+和
+transmission
+guarantee
+data
+的
+delivery
+并
+处理
+所有
+的
+LL
+control
+procedures。
+*
+**Radio
+Hardware**：
+Hardware
+实现
+所需
+的
+analog
+和
+digital
+baseband
+functional
+blocks
+使
+Link
+Layer
+firmware
+能
+在
+2.4GHz
+band
+的
+spectrum
+中
+发送
+和
+接收。
+
+.. _bluetooth-hci:
+
+Host
+Controller
+Interface

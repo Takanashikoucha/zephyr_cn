@@ -1,0 +1,358 @@
+Bluetooth:
+GAP
+Shell
+####################
+
+GAP
+shell
+是
+Bluetooth
+的
+"main"
+shell
+它
+handle
+connection
+management、
+scanning、
+advertising、
+以及
+更多。
+
+
+Identities
+**********
+
+Identities
+是
+Zephyr
+host
+concept
+允许
+单
+个
+physical
+device
+表现
+像
+多
+个
+logical
+的
+Bluetooth
+devices。
+
+Shell
+允许
+创建
+多
+个
+identities
+到
+由
+Kconfig
+symbol
+:kconfig:option:`CONFIG_BT_ID_MAX`
+设置
+的
+maximum。
+要
+创建
+新
+的
+identity
+用
+:code:`bt
+id-create`
+command。
+你
+然后
+可以
+用
+它
+通过
+用
+它
+的
+ID
+select
+它
+:code:`bt
+id-select
+<id>`。
+最后
+你
+可以
+用
+:code:`id-show`
+list
+所有
+可用
+的
+identities。
+
+Scan
+for
+devices
+****************
+
+用
+:code:`bt
+scan
+on`
+command
+开始
+scanning。
+取决于
+你
+在
+的
+environment
+你
+可能
+在
+shell
+上
+seen
+很
+多
+lines
+被
+printed。
+要
+stop
+scan
+运行
+:code:`bt
+scan
+off`
+scrolling
+应该
+stop。
+
+这
+里
+是
+你
+可以
+expect
+的
+一
+个
+example：
+
+.. code-block::
+   console
+
+        uart:~$
+        bt
+        scan
+        on
+        Bluetooth
+        active
+        scan
+        enabled
+        [DEVICE]:
+        R:CB:01:1A:2D:6E:AE,
+        AD
+        evt
+        type
+        0,
+        RSSI
+        -78
+         C:1
+        S:1
+        D:0
+        SR:0
+        E:0
+        Prim:
+        LE
+        1M,
+        Secn:
+        No
+        packets,
+        Interval:
+        0x0000
+        (0
+        us),
+        SID:
+        0xff
+        [DEVICE]:
+        R:20:C2:EE:59:85:5B,
+        AD
+        evt
+        type
+        3,
+        RSSI
+        -62
+         C:0
+        S:0
+        D:0
+        SR:0
+        E:0
+        Prim:
+        LE
+        1M,
+        Secn:
+        No
+        packets,
+        Interval:
+        0x0000
+        (0
+        us),
+        SID:
+        0xff
+        [DEVICE]:
+        R:E3:72:76:87:2F:E8,
+        AD
+        evt
+        type
+        3,
+        RSSI
+        -74
+         C:0
+        S:0
+        D:0
+        SR:0
+        E:0
+        Prim:
+        LE
+        1M,
+        Secn:
+        No
+        packets,
+        Interval:
+        0x0000
+        (0
+        us),
+        SID:
+        0xff
+        [DEVICE]:
+        R:1E:19:25:8A:CB:84,
+        AD
+        evt
+        type
+        3,
+        RSSI
+        -67
+         C:0
+        S:0
+        D:0
+        SR:0
+        E:0
+        Prim:
+        LE
+        1M,
+        Secn:
+        No
+        packets,
+        Interval:
+        0x0000
+        (0
+        us),
+        SID:
+        0xff
+        [DEVICE]:
+        R:26:42:F3:D5:A0:86,
+        AD
+        evt
+        type
+        3,
+        RSSI
+        -73
+         C:0
+        S:0
+        D:0
+        SR:0
+        E:0
+        Prim:
+        LE
+        1M,
+        Secn:
+        No
+        packets,
+        Interval:
+        0x0000
+        (0
+        us),
+        SID:
+        0xff
+        [DEVICE]:
+        R:0C:61:D1:B9:5D:9E,
+        AD
+        evt
+        type
+        3,
+        RSSI
+        -87
+         C:0
+        S:0
+        D:0
+        SR:0
+        E:0
+        Prim:
+        LE
+        1M,
+        Secn:
+        No
+        packets,
+        Interval:
+        0x0000
+        (0
+        us),
+        SID:
+        0xff
+        [DEVICE]:
+        R:20:C2:EE:59:85:5B,
+        AD
+        evt
+        type
+        3,
+        RSSI
+        -66
+         C:0
+        S:0
+        D:0
+        SR:0
+        E:0
+        Prim:
+        LE
+        1M,
+        Secn:
+        No
+        packets,
+        Interval:
+        0x0000
+        (0
+        us),
+        SID:
+        0xff
+        [DEVICE]:
+        R:25:3F:7A:EE:0F:55,
+        AD
+        evt
+        type
+        3,
+        RSSI
+        -83
+         C:0
+        S:0
+        D:0
+        SR:0
+        E:0
+        Prim:
+        LE
+        1M,
+        Secn:
+        No
+        packets,
+        Interval:
+        0x0000
+        (0
+        us),
+        SID:
+        0xff
+        uart:~$
+        bt
+        scan
+        off

@@ -1,0 +1,183 @@
+.. _networking_with_qemu:
+
+Networking
+with
+QEMU
+####################
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+这
+个
+page
+describe
+如何
+set
+up
+一
+个
+virtual
+network
+在
+（Linux）
+host
+和
+run
+在
+QEMU
+virtual
+machine
+（为
+Zephyr
+targets
+如
+qemu_x86
+和
+qemu_cortex_m3
+built）
+中
+的
+Zephyr
+application
+之间。
+某些
+virtual
+ARM
+boards
+（如
+qemu_cortex_a53）
+只
+support
+单
+个
+UART
+在
+这
+个
+情况
+下
+QEMU
+Ethernet
+被
+preferred
+参考
+:ref:`networking_with_eth_qemu`
+获取
+details。
+
+在
+这
+个
+example
+中
+:zephyr:code-sample:`sockets-echo-server`
+sample
+application
+来自
+Zephyr
+source
+distribution
+在
+QEMU
+中
+run。
+QEMU
+instance
+通过
+一
+个
+serial
+port
+connect
+到
+Linux
+host
+并
+use
+SLIP
+在
+Zephyr
+application
+和
+Linux
+之间
+transfer
+data
+（通过
+一
+条
+virtual
+connections
+的
+chain）。
+
+Prerequisites
+*************
+
+在
+Linux
+Host
+上
+find
+Zephyr
+的
+`net-tools`_
+project
+它
+要么
+可以
+在
+Zephyr
+standard
+installation
+的
+``tools/net-tools``
+directory
+下
+found
+要么
+从
+它
+自己
+的
+git
+repository
+stand
+alone
+install：
+
+.. code-block::
+   console
+
+   sudo
+   apt
+   install
+   -y
+   socat
+   libpcap-dev
+   git
+   clone
+   https://github.com/zephyrproject-rtos/net-tools
+   cd
+   net-tools
+   make
+
+.. note::
+
+   如果
+   你
+   get
+   关于
+   AX_CHECK_COMPILE_FLAG
+   的
+   error
+   在
+   Debian/Ubuntu
+   上
+   install
+   package
+   ``autoconf-archive``
+   package。

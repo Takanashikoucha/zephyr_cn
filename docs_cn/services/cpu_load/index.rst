@@ -1,0 +1,241 @@
+.. _cpu_load:
+
+CPU
+load
+########
+
+CPU
+load
+module
+track
+CPU
+spend
+在
+idle
+state
+之外
+的
+time
+fraction。
+有
+两
+个
+measurement
+backends
+available
+用
+``CPU_LOAD_BACKEND``
+Kconfig
+choice
+selected：
+
+Scheduler
+runtime
+statistics
+   :kconfig:option:`CONFIG_CPU_LOAD_BACKEND_RUNTIME_STATS`
+   从
+   scheduler
+   per
+   CPU
+   的
+   runtime
+   statistics
+   derive
+   load。
+   它
+   在
+   architectures
+   之间
+   portable
+   并
+   support
+   多
+   个
+   CPUs。
+
+Architecture
+idle
+hooks
+   :kconfig:option:`CONFIG_CPU_LOAD_BACKEND_IDLE_HOOK`
+   用
+   architecture
+   idle
+   hooks
+   measure
+   load
+   它们
+   在
+   CPU
+   go
+   to
+   idle
+   前后
+   被
+   called。
+   它
+   的
+   overhead
+   比
+   runtime
+   statistics
+   backend
+   低
+   并
+   可以
+   use
+   :ref:`counter_api`
+   device
+   用于
+   higher
+   precision
+   （counter
+   path
+   是
+   single
+   CPU
+   only
+   的）。
+   它
+   在
+   任何
+   emit
+   idle
+   hooks
+   的
+   architecture
+   上
+   available
+   （:kconfig:option:`CONFIG_ARCH_HAS_CPU_IDLE_HOOKS`）。
+   与
+   :ref:`thread_analyzer`
+   相比
+   它
+   更
+   accurate
+   因为
+   它
+   也
+   take
+   into
+   account
+   spend
+   在
+   interrupt
+   context
+   中
+   的
+   time。
+   这
+   个
+   backend
+   不
+   depend
+   on
+   tracing
+   subsystem。
+
+Load
+用
+:c:func:`cpu_load_get`
+为
+current
+的
+CPU
+或
+:c:func:`cpu_load_get_cpu`
+为
+特定
+的
+CPU
+retrieved。
+两
+个
+都
+return
+load
+在
+per
+mille
+（0...1000）
+中
+并
+可以
+reset
+measurement
+window。
+用
+:c:macro:`CPU_LOAD_PERMILLE_TO_PERCENT`
+将
+value
+convert
+到
+whole
+percent。
+
+Load
+也
+可以
+被
+periodically
+reported
+用
+一
+个
+logging
+message。
+Period
+用
+:kconfig:option:`CONFIG_CPU_LOAD_LOG_PERIODICALLY`
+configured。
+
+参考
+:zephyr:code-sample:`cpu_freq_on_demand`
+sample
+获取
+一
+个
+example。
+
+Use
+一
+个
+counter
+device
+**********************
+
+Idle
+hook
+backend
+default
+下
+use
+:c:func:`k_cycle_get_32`。
+当
+需要
+higher
+precision
+时
+一
+个
+:ref:`counter_api`
+device
+可以
+被
+used
+通过
+enable
+:kconfig:option:`CONFIG_CPU_LOAD_USE_COUNTER`
+并
+在
+devicetree
+中
+set
+chosen
+的
+node。
+
+.. code-block::
+   devicetree
+
+   chosen
+   {

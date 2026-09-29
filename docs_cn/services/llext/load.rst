@@ -1,0 +1,272 @@
+Loading
+extensions
+##################
+
+一
+旦
+extension
+被
+built
+且
+ELF
+file
+available
+它
+可以
+用
+LLEXT
+API
+被
+loaded
+到
+Zephyr
+application
+中
+它
+provide
+一
+种
+way
+用于
+将
+extension
+load
+到
+memory
+中
+access
+它
+的
+symbols
+并
+call
+它
+的
+functions。
+
+Loading
+an
+extension
+==================
+
+一
+个
+extension
+可
+用
+任何
+:c:struct:`llext_loader`
+的
+implementation
+被
+loaded
+它
+有
+一
+组
+function
+pointers
+它们
+provide
+read
+ELF
+data
+所需
+的
+necessary
+functionality。
+Loader
+也
+provide
+:c:func:`llext_load`
+function
+所需
+的
+some
+minimal
+的
+context
+（memory）。
+Several
+loaders
+已
+被
+provided：
+
+*
+一
+个
+implementation
+在
+buffer
+上面
+它
+contain
+一
+个
+在
+addressable
+memory
+中
+的
+ELF
+在
+memory
+中
+available
+作为
+:c:struct:`llext_buf_loader`。
+要
+use
+这
+种
+loader
+use
+以下
+之一
+的
+macros
+告诉
+LLEXT
+appropriate
+的
+memory
+buffer
+type
+是
+useful
+的
+:c:macro:`LLEXT_TEMPORARY_BUF_LOADER`、
+:c:macro:`LLEXT_PERSISTENT_BUF_LOADER`、
+或
+:c:macro:`LLEXT_WRITABLE_BUF_LOADER`。
+
+*
+一
+个
+implementation
+它
+从
+filesystem
+中
+的
+file
+read
+data
+available
+作为
+:c:struct:`llext_fs_loader`。
+File
+的
+path
+必须
+在
+用
+:c:macro:`LLEXT_FS_LOADER`
+macro
+create
+loader
+时
+被
+provided。
+
+*
+一
+个
+implementation
+它
+use
+semihosting
+从
+host
+filesystem
+中
+的
+file
+read
+available
+作为
+:c:struct:`llext_semihost_loader`。
+File
+的
+path
+必须
+在
+用
+:c:macro:`LLEXT_SEMIHOST_LOADER`
+macro
+create
+loader
+时
+被
+provided。
+
+Extensions
+用
+对
+:c:func:`llext_load`
+function
+的
+call
+被
+loaded
+passing
+in
+extension
+name
+和
+configured
+的
+loader。
+一
+旦
+那
+个
+successfully
+completes
+extension
+被
+loaded
+到
+memory
+中
+并
+ready
+被
+used。
+
+.. note::
+   当
+   :ref:`User
+   Mode
+   <usermode_api>`
+   被
+   enabled
+   extension
+   不
+   会
+   被
+   included
+   在
+   任何
+   user
+   memory
+   domain
+   中。
+   要
+   allow
+   从
+   user
+   mode
+   access
+   必须
+   call
+   :c:func:`llext_add_domain`
+   function。
+
+Initializing
+and
+cleaning
+up
+the
+extension

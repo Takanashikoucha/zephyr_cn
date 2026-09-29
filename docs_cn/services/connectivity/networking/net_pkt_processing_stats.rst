@@ -1,0 +1,224 @@
+.. _net_pkt_processing_stats:
+
+Network
+Packet
+Processing
+Statistics
+####################################
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+这
+个
+page
+describe
+如何
+get
+关于
+network
+stack
+内
+network
+packet
+processing
+statistics
+的
+information。
+
+Network
+stack
+contain
+infrastructure
+用于
+figure
+out
+network
+packet
+processing
+在
+sending
+或
+receiving
+path
+中
+take
+多
+长
+time。
+有
+两
+个
+Kconfig
+options
+control
+这
+个。
+对于
+transmit
+（TX）
+path
+option
+被
+called
+:kconfig:option:`CONFIG_NET_PKT_TXTIME_STATS`
+对于
+receive
+（RX）
+path
+option
+被
+called
+:kconfig:option:`CONFIG_NET_PKT_RXTIME_STATS`。
+注意
+对于
+TX
+所有
+type
+的
+network
+packet
+statistics
+被
+collected。
+对于
+RX
+只
+有
+UDP、
+TCP
+或
+raw
+packet
+type
+的
+network
+packet
+statistics
+被
+collected。
+
+Enable
+这些
+options
+后
+:ref:`net
+stats
+<net_shell>`
+network
+shell
+command
+将
+show
+这
+些
+information：
+
+.. code-block::
+   console
+
+   Avg
+   TX
+   net_pkt
+   (11484)
+   time
+   67
+   us
+   Avg
+   RX
+   net_pkt
+   (11474)
+   time
+   43
+   us
+
+.. note::
+
+   上面
+   和
+   下面
+   的
+   values
+   来自
+   emulated
+   的
+   qemu_x86
+   board
+   和
+   UDP
+   traffic
+
+TX
+time
+告诉
+从
+network
+packet
+creation
+到
+它
+被
+sent
+到
+network
+take
+了
+多
+长
+time。
+RX
+time
+告诉
+从
+它
+creation
+到
+它
+被
+passed
+到
+application
+的
+time。
+Values
+是
+以
+microseconds
+为
+unit
+的。
+如果
+system
+中
+定义了
+多
+于
+一
+个
+transmit
+或
+receive
+queues
+则
+statistics
+将
+per
+traffic
+class
+被
+collected。
+这些
+由
+:kconfig:option:`CONFIG_NET_TC_TX_COUNT`
+和
+:kconfig:option:`CONFIG_NET_TC_RX_COUNT`
+options
+controlled。
+
+如果
+你
+enable
+:kconfig:option:`CONFIG_NET_PKT_TXTIME_STATS_DETAIL`
+或

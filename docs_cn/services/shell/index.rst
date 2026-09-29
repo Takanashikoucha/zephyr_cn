@@ -1,0 +1,225 @@
+.. _shell_api:
+
+Shell
+######
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+Overview
+********
+
+这
+个
+module
+allow
+你
+create
+和
+handle
+一
+个
+shell
+带
+user
+defined
+的
+command
+set。
+你
+可以
+use
+它
+在
+examples
+中
+那里
+需要
+多
+于
+simple
+的
+button
+或
+LED
+的
+user
+interaction。
+这
+个
+module
+是
+一
+个
+Unix
+like
+的
+shell
+带
+以下
+features：
+
+*
+Support
+multiple
+的
+instances。
+*
+Advanced
+的
+cooperation
+与
+:ref:`logging_api`。
+*
+Support
+static
+和
+dynamic
+的
+commands。
+*
+Support
+dictionary
+的
+commands。
+*
+Smart
+的
+command
+completion
+用
+:kbd:`Tab`
+key。
+*
+Built
+in
+的
+commands:
+:command:`aliases`、
+:command:`clear`、
+:command:`shell`、
+:command:`colors`、
+:command:`echo`、
+:command:`history`
+和
+:command:`resize`。
+*
+View
+recently
+executed
+的
+commands
+用
+keys:
+:kbd:`↑`
+:kbd:`↓`
+或
+meta
+keys。
+*
+Text
+edition
+用
+keys:
+:kbd:`←`、
+:kbd:`→`、
+:kbd:`Backspace`、
+:kbd:`Delete`、
+:kbd:`End`、
+:kbd:`Home`、
+:kbd:`Insert`。
+*
+Support
+ANSI
+escape
+codes:
+``VT100``
+和
+``ESC[n~``
+用于
+cursor
+control
+和
+color
+printing。
+*
+Support
+editing
+multiline
+的
+commands。
+*
+Built
+in
+的
+handler
+用于
+display
+commands
+的
+help。
+*
+Support
+wildcards:
+``*``
+和
+``?``。
+*
+Support
+meta
+keys。
+*
+Support
+getopt
+和
+getopt_long。
+*
+Kconfig
+configuration
+用于
+optimize
+memory
+usage。
+
+.. note::
+   Some
+   of
+   these
+   features
+   对
+   RAM
+   和
+   flash
+   usage
+   有
+   significant
+   的
+   impact
+   但
+   many
+   在
+   不
+   需要
+   时
+   可以
+   be
+   disabled。
+   要
+   default
+   到
+   options
+   它们
+   favor
+   reduced
+   RAM
+   和
+   flash
+   requirements
+   而
+   不
+   是
+   features
+   你
+   应该

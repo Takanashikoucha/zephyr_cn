@@ -1,0 +1,191 @@
+.. _usb_device_stack:
+
+USB
+device
+support
+（deprecated）
+###############################
+
+.. contents::
+    :local:
+    :depth:
+    3
+
+Overview
+********
+
+USB
+device
+stack
+是
+一
+个
+hardware
+independent
+的
+interface
+在
+USB
+device
+controller
+driver
+和
+USB
+device
+class
+drivers
+或
+customer
+applications
+之间。
+它
+是
+LPCUSB
+device
+stack
+的
+port
+并
+随
+time
+被
+modified
+和
+expanded。
+它
+provide
+以下
+functionalities：
+
+*
+Use
+由
+device
+controller
+drivers
+provided
+的
+:ref:`usb_dc_api`
+与
+USB
+device
+controller
+interact。
+*
+Respond
+到
+standard
+的
+device
+requests
+并
+return
+standard
+的
+descriptors
+essentially
+handling
+'Chapter
+9'
+processing
+specific
+地
+universal
+serial
+bus
+specification
+revision
+2.0
+中
+table
+9-3
+的
+standard
+device
+requests。
+*
+Provide
+一
+个
+programming
+interface
+用于
+USB
+device
+classes
+或
+customer
+applications
+use。
+APIs
+在
+:zephyr_file:`include/zephyr/usb/usb_device.h`
+中
+described
+
+.. note::
+   所有
+   在
+   :ref:`usb_api`
+   中
+   listed
+   的
+   APIs
+   和
+   依赖
+   它们
+   的
+   functions
+   被
+   deprecated
+   并
+   将
+   在
+   v4.5.0
+   中
+   被
+   remove。
+   请
+   use
+   新
+   的
+   USB
+   device
+   support
+   它
+   由
+   :ref:`usb_device_next_api`
+   中
+   的
+   APIs
+   represented。
+
+Supported
+USB
+classes
+*********************
+
+Audio
+=====
+
+有
+一
+个
+experimental
+的
+Audio
+class
+implementation。
+它
+follow
+specification
+version
+1.00
+（``bcdADC
+0x0100``）
+并
+只
+support
+synchronous
+synchronisation
+type。

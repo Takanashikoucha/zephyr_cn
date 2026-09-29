@@ -1,0 +1,244 @@
+.. _zbus:
+
+Zephyr
+bus
+（zbus）
+#################
+
+..
+   Note
+   to
+   documentation
+   authors:
+   这
+   个
+   documentation
+   page
+   中
+   included
+   的
+   diagrams
+   用
+   以下
+   Figma
+   library
+   designed:
+   https://www.figma.com/community/file/1292866458780627559/zbus-diagram-assets
+
+
+:dfn:`Zephyr
+bus
+-
+zbus`
+是
+一
+个
+lightweight
+且
+flexible
+的
+software
+bus
+它
+enable
+一
+种
+simple
+的
+way
+用于
+threads
+以
+many
+to
+many
+的
+way
+talk
+彼此。
+
+.. contents::
+    :local:
+    :depth:
+    2
+
+Concepts
+********
+
+Threads
+可以
+用
+zbus
+send
+messages
+到
+一
+个
+或
+多
+个
+observers。
+这
+make
+many
+to
+many
+的
+communication
+possible。
+Bus
+implement
+message
+passing
+和
+publish/subscribe
+的
+communication
+paradigms
+它们
+enable
+threads
+synchronously
+或
+asynchronously
+通过
+shared
+memory
+communicate。
+
+通过
+zbus
+的
+communication
+是
+channel
+based
+的。
+Threads
+（或
+callbacks）
+use
+channels
+exchange
+messages。
+Additionally
+除了
+其他
+actions
+threads
+可以
+publish
+和
+observe
+channels。
+当
+一
+个
+thread
+在
+一
+个
+channel
+上
+publish
+一
+个
+message
+时
+bus
+将
+make
+该
+message
+available
+到
+published
+的
+channel
+的
+所有
+observers。
+根据
+observer
+的
+type
+它
+可以
+directly
+access
+message、
+receive
+它
+的
+copy、
+或
+甚至
+只
+receive
+published
+的
+channel
+的
+reference。
+
+下面
+的
+figure
+show
+一
+个
+typical
+的
+application
+的
+example
+它
+use
+zbus
+那里
+application
+logic
+（hardware
+independent）
+通过
+software
+bus
+与
+其他
+threads
+talk。
+Note
+threads
+彼此
+decoupled
+因为
+它们
+只
+use
+zbus
+channels
+且
+不
+需要
+know
+彼此
+来
+talk。
+
+
+.. figure::
+   images/zbus_overview.svg
+   :alt:
+   zbus
+   usage
+   overview
+   :width:
+   75%
+
+   一
+   个
+   typical
+   的
+   zbus
+   application
+   architecture。

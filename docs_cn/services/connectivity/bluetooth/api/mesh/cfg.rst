@@ -1,0 +1,118 @@
+.. _bluetooth_mesh_cfg:
+
+Runtime
+Configuration
+#####################
+
+Runtime
+configuration
+API
+允许
+applications
+直接
+change
+它们
+的
+runtime
+configuration
+而
+不
+通过
+Configuration
+models。
+
+Bluetooth
+Mesh
+nodes
+通常
+应该
+由
+带
+:ref:`bluetooth_mesh_models_cfg_cli`
+model
+的
+central
+network
+configurator
+device
+配置。
+每个
+mesh
+node
+实例化
+一
+个
+:ref:`bluetooth_mesh_models_cfg_srv`
+model
+Configuration
+Client
+可以
+与
+它
+通信
+以
+change
+node
+configuration。
+在
+一些
+cases
+中
+mesh
+node
+不
+能
+依赖
+Configuration
+Client
+检测
+或
+determine
+local
+constraints
+如
+low
+battery
+power
+或
+topology
+的
+changes。
+对
+这些
+scenarios
+这
+个
+API
+可以
+用
+来
+locally
+change
+configuration。
+
+.. note::
+   Node
+   被
+   provisioned
+   之前
+   的
+   runtime
+   configuration
+   changes
+   不
+   会
+   被
+   存储
+   在
+   :ref:`persistent
+   storage
+   <bluetooth_mesh_persistent_storage>`
+   中。
+
+API
+reference
+*************
+
+.. doxygengroup::
+   bt_mesh_cfg
