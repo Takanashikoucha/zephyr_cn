@@ -55,15 +55,15 @@ html {
   scroll-behavior: smooth;
 }
 body {
-  font-family: 'JBM', 'Sarasa Mono SC', 'Noto Sans Mono CJK SC', monospace;
+  font-family: 'JBM', 'Sarasa Mono SC', 'Noto Sans Mono CJK SC', monospace !important;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  background: var(--night1);
-  color: var(--sub);
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 0;
-  padding: 0;
+  background: var(--night1) !important;
+  color: var(--sub) !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* -- 覆盖 Sphinx basic 主题样式 ------------------------------------------- */
@@ -200,10 +200,10 @@ div.document, div.body, .body-wrapper {
 
 /* 文档内标题（覆盖 Sphinx 默认） */
 h1, h2, h3, h4, h5, h6 {
-  color: var(--txt);
-  font-weight: 800;
-  margin-top: 28px;
-  margin-bottom: 14px;
+  color: var(--txt) !important;
+  font-weight: 800 !important;
+  margin-top: 28px !important;
+  margin-bottom: 14px !important;
 }
 h1 {
   font-size: 28px;
@@ -230,15 +230,16 @@ h4 {
 
 /* -- 正文 ----------------------------------------------------------------- */
 p {
-  margin: 12px 0;
+  margin: 12px 0 !important;
+  color: var(--sub) !important;
 }
 strong, b {
-  color: var(--bone2);
-  font-weight: 700;
+  color: var(--bone2) !important;
+  font-weight: 700 !important;
 }
 a {
-  color: var(--bone);
-  text-decoration: none;
+  color: var(--bone) !important;
+  text-decoration: none !important;
   border-bottom: 1px solid transparent;
   transition: all .2s;
 }
