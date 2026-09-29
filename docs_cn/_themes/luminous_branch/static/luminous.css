@@ -79,9 +79,7 @@ div.document, div.body, .body-wrapper {
 
 /* -- 布局 ----------------------------------------------------------------- */
 #luminous-app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  display: block;
 }
 
 /* hero 区 */
@@ -113,19 +111,17 @@ div.document, div.body, .body-wrapper {
   padding: 24px;
 }
 
-/* 主布局 */
-.main-layout {
-  display: flex;
-  flex: 1;
+/* 主布局（适配 basic 主题 .document 结构） */
+.document {
   max-width: 1400px;
   margin: 0 auto;
-  width: 100%;
   padding: 24px;
+  display: flex;
   gap: 24px;
 }
 
-/* 侧边栏 */
-.sidebar {
+/* 侧边栏（适配 basic 主题 .sphinxsidebar） */
+.sphinxsidebar {
   width: 260px;
   flex-shrink: 0;
   position: sticky;
@@ -133,35 +129,29 @@ div.document, div.body, .body-wrapper {
   align-self: flex-start;
   max-height: calc(100vh - 48px);
   overflow-y: auto;
-}
-.sidebar-inner {
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 16px;
   background: var(--panel);
 }
 
-/* 文档内容 */
-.document {
+/* 文档内容（适配 basic 主题 .body） */
+.body {
   flex: 1;
   min-width: 0;
-}
-.document-content {
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 28px 32px;
   background: var(--panel);
 }
 
-/* 页脚 */
-.doc-footer {
+/* 页脚（适配 basic 主题 .footer） */
+.footer {
   display: flex;
   justify-content: space-between;
   margin-top: 24px;
   padding-top: 16px;
   border-top: 1px dashed var(--line);
-}
-.footer-src, .footer-ver {
   font-size: 12px;
   color: var(--dim);
   letter-spacing: 1.5px;

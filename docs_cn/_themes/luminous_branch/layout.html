@@ -1,4 +1,5 @@
 {# 荧枝风格 Sphinx 布局模板 #}
+{# 继承 basic/layout.html，通过 header 块注入 hero 区（不覆盖 body 块） #}
 {%- extends "basic/layout.html" %}
 
 {% block extrahead %}
@@ -7,7 +8,7 @@
 <script src="{{ pathto('_static/fiber.js', 1) }}" defer></script>
 {% endblock %}
 
-{% block body %}
+{% block header %}
 <div id="luminous-app">
   {# 纤维画布（hero 区） #}
   <div class="hero-section">
@@ -18,33 +19,13 @@
       <p class="tagline">实时操作系统 · 中文技术文档与源码导读</p>
     </div>
   </div>
-
-  {# 主内容区 #}
-  <div class="main-layout">
-    {# 侧边栏 #}
-    <aside class="sidebar">
-      <div class="sidebar-inner">
-        {%- for side in sidebars %}
-          {% include side %}
-        {%- endfor %}
-      </div>
-    </aside>
-
-    {# 文档内容 #}
-    <main class="document">
-      <div class="document-content">
-        {% block message %}{% endblock %}
-        {{ body }}
-      </div>
-      <footer class="doc-footer">
-        <span class="footer-src">theme: zephyr luminous branch</span>
-        <span class="footer-ver">v{{ version }}</span>
-      </footer>
-    </main>
-  </div>
 </div>
+{{ super() }}
+{% endblock %}
 
 {# 初始化纤维画布 #}
+{% block footer %}
+{{ super() }}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     var canvas = document.getElementById('fiber-canvas');
