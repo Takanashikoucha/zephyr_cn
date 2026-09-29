@@ -22,11 +22,11 @@
 | 2 | kernel | 65/65 (100%) | ✓ 完成 |
 | 3 | build | 93/94 (98.9%) | 1 个未译：sysbuild/index.rst |
 | 4 | develop | 138/138 (100%) | ✓ 完成（toolchains 14 + tools 6 + twister 14 + west 14 + modules 1 + optimizations 1 + sca 1 + test 1） |
-| 5 | hardware | 1/123 (0.8%) | 待开始 |
+| 5 | hardware | 123/123 (100%) | ✓ 完成（arch 8 + barriers 1 + cache 2 + emulator 2 + firmware 2 + peripherals 99 + pinctrl 1 + porting 5 + virtualization 2） |
 | 6 | services | 0/359 (0%) | 待开始 |
 | 7 | releases | 0/43 (0%) | 待开始 |
 | 8 | security+contribute+project+safety | 0/60 (0%) | 待开始 |
-| **总计** | | **224/889 (25.2%)** | |
+| **总计** | | **457/889 (51.4%)** | |
 
 ### 已完成
 
