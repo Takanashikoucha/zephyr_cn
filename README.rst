@@ -14,6 +14,22 @@
    <a href="https://scorecard.dev/viewer/?uri=github.com/zephyrproject-rtos/zephyr"><img src="https://api.securityscorecards.dev/projects/github.com/zephyrproject-rtos/zephyr/badge"></a>
    <a href="https://github.com/zephyrproject-rtos/zephyr/actions/workflows/twister.yaml?query=branch%3Amain"><img src="https://github.com/zephyrproject-rtos/zephyr/actions/workflows/twister.yaml/badge.svg?event=push"></a>
 
+.. raw:: html
+
+   <div style="border:1px solid #7cc4ff33;border-radius:8px;padding:16px;margin:16px 0;background:#081018">
+     <p style="color:#7cc4ff;font-weight:bold;margin:0 0 8px 0">📖 中文文档与源码阅读指南</p>
+     <p style="color:#93a6bd;margin:0 0 8px 0">
+       本仓库在 Zephyr 官方源码基础上，新增了完整的中文技术文档与源码阅读指南，
+       通过 GitHub Pages 直接访问：<br>
+       <a href="http://blog.kouchalab.win/zephyr_cn/" style="color:#5eead4">http://blog.kouchalab.win/zephyr_cn/</a>
+     </p>
+     <p style="color:#93a6bd;margin:0">
+       <strong style="color:#e6eef6">docs_cn/</strong> — 中文 rst 文档（Sphinx 构建）<br>
+       <strong style="color:#e6eef6">guide/</strong> — 7 篇源码阅读指南（快速入门 / 内核架构 / 调度器 / 内存管理 / 驱动模型 / 构建系统 / 子系统）
+     </p>
+   </div>
+
+
 
 The Zephyr Project is a scalable real-time operating system (RTOS) supporting
 multiple hardware architectures, optimized for resource constrained devices,
