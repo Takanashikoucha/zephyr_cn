@@ -25,8 +25,9 @@
 | 5 | hardware | 123/123 (100%) | ✓ 完成（arch 8 + barriers 1 + cache 2 + emulator 2 + firmware 2 + peripherals 99 + pinctrl 1 + porting 5 + virtualization 2） |
 | 6 | services | 359/359 (100%) | 已完成 |
 | 7 | releases | 43/43 (100%) | ✓ 完成 |
-| 8 | security+contribute+project+safety | 0/60 (0%) | 待开始 |
-| **总计** | | **859/889 (96.6%)** | |
+| 8 | security+contribute+project+safety | 60/60 (100%) | ✓ 完成 |
+| 根级 | 404, LICENSING, glossary, index-tex, kconfig | 5/5 (100%) | ✓ 完成 |
+| **总计** | | **889/889 (100%)** | **全部翻译完成** |
 
 ### 已完成
 
