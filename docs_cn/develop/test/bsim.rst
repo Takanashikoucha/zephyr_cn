@@ -1,0 +1,382 @@
+.. _bsim:
+
+BabbleSim
+#########
+
+BabbleSim
+和
+Zephyr
+********************
+
+在
+Zephyr
+项目
+中
+我们
+用
+`Babblesim`_
+模拟器
+测试
+一些
+Zephyr
+无线
+协议，
+包括
+Bluetooth
+LE
+协议栈、
+802.15.4
+和
+一些
+网络
+协议栈。
+
+BabbleSim_
+是
+一
+个
+物理
+层
+模拟器，
+与
+Zephyr
+:ref:`bsim
+boards<bsim
+boards>`
+组合
+可以
+用
+来
+模拟
+Bluetooth
+LE
+和
+15.4
+设备
+的
+网络。
+当
+我们
+目标
+为
+:ref:`bsim
+board<bsim
+boards>`
+构建
+Zephyr
+时
+我们
+产生
+一
+个
+Linux
+可执行
+文件，
+包括
+应用、
+Zephyr
+OS
+和
+HW
+的
+模型。
+
+当
+有
+无线
+活动
+时，
+这
+个
+Linux
+可执行
+文件
+将
+连接
+到
+BabbleSim
+Phy
+模拟
+以
+模拟
+无线
+信道。
+
+在
+BabbleSim
+文档
+中
+你
+可以
+找到
+关于
+如何
+`获取
+<https://babblesim.github.io/fetching.html>`_
+和
+`构建
+<https://babblesim.github.io/building.html>`_
+模拟器
+的
+更多
+信息。
+在
+:ref:`nrf52_bsim<nrf52_bsim>`、
+:ref:`nrf5340bsim<nrf5340bsim>`
+和
+:ref:`nrf54l15bsim<nrf54l15bsim>`
+boards
+文档
+中
+你
+可以
+找到
+关于
+如何
+目标
+为
+这些
+特定
+boards
+构建
+Zephyr
+的
+更多
+信息
+和
+一些
+示例。
+
+测试
+类型
+**************
+
+无
+无线
+活动
+的
+测试：
+用
+twister
+的
+bsim
+测试
+=====================================================
+
+:ref:`bsim
+boards<bsim
+boards>`
+可以
+无
+无线
+活动
+使用，
+在
+那
+种
+情况
+下
+不
+需要
+将
+它们
+连接
+到
+物理
+层
+模拟。
+感谢
+这，
+这些
+目标
+boards
+可以
+像
+:zephyr:board:`native_sim<native_sim>`
+一样
+用
+:ref:`twister
+<twister_script>`
+使用，
+运行
+所有
+标准
+Zephyr
+twister
+测试，
+但
+带
+真实
+SOC
+HW
+的
+模型
+和
+它们
+的
+驱动。
+
+有
+无线
+活动
+的
+测试
+=========================
+
+当
+有
+无线
+活动
+时，
+BabbleSim
+测试
+至少
+需要
+一
+个
+运行
+中
+的
+物理
+层
+模拟，
+大多数
+需要
+多
+于
+1
+个
+模拟
+设备。
+由于
+这，
+这些
+测试
+通过
+运行
+每个
+测试
+的
+专用
+脚本
+执行，
+它
+启动
+所需
+的
+模拟
+设备
+和
+带
+其
+所需
+参数
+的
+物理
+层
+可执行
+文件
+以及
+可能
+需要
+的
+任何
+其他
+工具。
+
+要
+能
+用
+twister
+运行
+它们，
+应该
+使用
+:ref:`bsim
+harness
+<twister_bsim_harness>`。
+
+这些
+测试
+保留
+在
+:zephyr_file:`tests/bsim/`
+文件夹
+中。
+
+检查
+下面
+的
+子
+节
+获取
+关于
+如何
+构建
+和
+运行
+它们
+以及
+它们
+遵循
+的
+约定
+的
+更多
+信息。
+
+有
+两
+个
+主要
+的
+测试
+集：
+
+* 自
+  检查
+  嵌入式
+  应用/
+  测试：
+  其中
+  一些
+  模拟
+  设备
+  应用
+  被
+  构建
+  带
+  一些
+  检查
+  决定
+  测试
+  是
+  通过
+  还是
+  失败。
+  这些
+  嵌入式
+  应用
+  测试
+  用
+  :ref:`bs_tests<bsim_boards_bs_tests>`
+  系统
+  报告
+  通过
+  或
+  失败，
+  在
+  许多
+  情况
+  下
+  将
+  多
+  个
+  测试
+  构建
+  到
+  同一
+  个
+  二进制
+  文件
+  中。

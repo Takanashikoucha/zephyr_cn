@@ -1,0 +1,297 @@
+.. _clang:
+
+Clang
+静态
+分析器
+支持
+#############################
+
+Clang
+Static
+Analyzer
+构建
+在
+Clang
+和
+LLVM
+之上。
+严格
+来说，
+分析器
+是
+Clang
+的
+一部分，
+因为
+Clang
+由
+一
+组
+可
+重用
+的
+C++
+库
+组成
+用于
+构建
+强大
+的
+源
+级
+工具。
+Clang
+Static
+Analyzer
+使用
+的
+静态
+分析
+引擎
+是
+一个
+Clang
+库，
+有
+能力
+在
+不同
+上下文
+和
+由
+不同
+客户
+中
+重用。
+
+LLVM
+提供
+各种
+方法
+在
+代码
+库
+上
+运行
+分析器，
+通过
+专用
+的
+一
+组
+工具
+（scan-build
+和
+analyze-build）
+或
+通过
+运行
+clang
+时
+的
+命令行
+参数
+（'--analyze'）。
+
+- 'scan-build'
+  工具
+  是
+  使用
+  简单
+  $CC
+  makefile
+  变量
+  的
+  项目
+  最
+  方便
+  的
+  方式，
+  因为
+  它
+  会
+  包装
+  和
+  替换
+  编译器
+  调用
+  来
+  执行
+  其
+  分析。
+
+- 'analyze-build'
+  工具
+  是
+  'scan-build'
+  的
+  子
+  工具，
+  它
+  只
+  依赖
+  'compile_commands.json'
+  数据库
+  来
+  执行
+  分析。
+
+- clang
+  选项
+  '--analyze'
+  将
+  在
+  构建
+  同时
+  运行
+  分析器，
+  但
+  对象
+  文件
+  不
+  被
+  生成，
+  使
+  任何
+  链接
+  阶段
+  不可能。
+  在
+  我们
+  的
+  情况
+  下
+  第一
+  个
+  链接
+  阶段
+  将
+  失败
+  并
+  停止
+  分析。
+
+由于
+其
+复杂
+的
+构建
+基础设施，
+用
+'analyze-build'
+调用
+clang
+分析器
+是
+分析
+Zephyr
+项目
+的
+最
+简单
+方式。
+
+`Clang
+static
+analyzer
+documentation
+<https://clang.llvm.org/docs/ClangStaticAnalyzer.html>`__
+
+安装
+clang
+分析器
+*************************
+
+'scan-build'
+和
+其
+子
+工具
+'analyze-build'
+作为
+二进制
+文件
+的
+部分
+原生
+随
+llvm
+提供。
+确保
+二进制
+目录
+在
+你
+的
+PATH
+中
+可
+访问。
+
+'scan-build'
+也
+作为
+独立
+python
+包
+在
+`pypi
+<https://pypi.org/project/scan-build/>`__
+上
+可用。
+
+.. code-block:: shell
+
+   pip
+   install
+   scan-build
+
+运行
+clang
+静态
+分析器
+*************************
+
+.. note::
+
+   分析器
+   要求
+   项目
+   用
+   LLVM
+   工具链
+   构建，
+   并
+   生成
+   'compile_commands.json'
+   数据库。
+
+要
+运行
+clang
+静态
+分析器，
+:ref:`west
+build
+<west-building>`
+应该
+被
+调用
+带
+``-DZEPHYR_SCA_VARIANT=clang``
+参数，
+连同
+llvm
+工具链
+参数，
+例如
+
+.. zephyr-app-commands::
+   :zephyr-app:
+   samples/userspace/hello_world_user
+   :board:
+   qemu_x86
+   :gen-args:
+   -DZEPHYR_TOOLCHAIN_VARIANT=host/llvm
+   -DLLVM_TOOLCHAIN_PATH=...
+   -DZEPHYR_SCA_VARIANT=clang

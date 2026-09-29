@@ -1,0 +1,957 @@
+.. _twister_script:
+
+测试
+运行器
+（Twister）
+#####################
+
+Twister
+扫描
+git
+仓库
+中
+的
+测试
+应用
+集
+并
+尝试
+执行
+它们。
+默认
+情况
+下，
+它
+尝试
+在
+board
+定义
+文件
+中
+标记
+为
+default
+的
+boards
+上
+构建
+每个
+测试
+应用。
+
+默认
+选项
+将
+在
+定义
+的
+board
+集
+上
+构建
+大多数
+测试
+应用
+并
+在
+可
+用
+的
+情况
+下
+在
+模拟
+环境
+中
+运行
+（如果
+为
+被
+测试
+的
+架构
+或
+配置
+可
+用）。
+
+由于
+有限
+的
+测试
+执行
+覆盖
+范围，
+twister
+不能
+保证
+本地
+更改
+在
+完整
+构建
+环境
+中
+会
+成功，
+但
+它
+通过
+为
+不同
+boards
+和
+不同
+配置
+构建
+samples
+和
+tests
+执行
+足够
+的
+测试
+帮助
+保持
+完整
+代码
+树
+可
+构建。
+
+当
+使用
+（至少）
+一个
+``-v``
+选项
+时，
+twister
+的
+控制台
+输出
+显示
+每个
+测试
+应用
+测试
+如何
+运行
+（qemu、native_sim
+等）
+或
+二进制
+文件
+只
+被
+构建。
+测试
+的
+结果
+:ref:`status
+<twister_statuses>`
+同样
+被
+报告
+在
+``twister.json``
+和
+其他
+报告
+文件
+中。
+有
+一些
+原因
+为什么
+twister
+只
+构建
+测试
+而
+不
+运行
+它：
+
+- 测试
+  在
+  其
+  ``.yaml``
+  配置
+  文件
+  中
+  被
+  标记
+  为
+  ``build_only:
+  true``。
+- 测试
+  配置
+  定义
+  了
+  ``harness``
+  但
+  你
+  不
+  有
+  它
+  或
+  没
+  有
+  设置
+  它。
+- 目标
+  设备
+  未
+  连接
+  且
+  不
+  可
+  用
+  于
+  烧录
+- 你
+  或
+  某
+  个
+  更
+  高
+  层
+  自动化
+  用
+  ``--build-only``
+  调用
+  twister。
+
+要
+在
+本地
+树
+中
+运行
+Twister，
+遵循
+以下
+步骤：
+
+.. code-block:: console
+
+   $
+   west
+   twister
+
+.. note::
+
+   本
+   文档
+   中
+   的
+   示例
+   用
+   ``west
+   twister``
+   调用
+   Twister，
+   :ref:`west
+   <west>`
+   扩展
+   命令，
+   在
+   所有
+   主机
+   操作系统
+   上
+   工作
+   方式
+   相同。
+   以下
+   调用
+   等价：
+
+   * ``west
+     twister
+     ...``
+     （推荐）。
+   * ``python
+     .\scripts\twister
+     ...``
+     （Windows）：
+     直接
+     调用
+     脚本。
+     这
+     需要
+     先
+     设置
+     Zephyr
+     环境
+     （``source
+     zephyr-env.sh``
+     或
+     ``zephyr-env.cmd``）。
+
+   所有
+   形式
+   接受
+   相同
+   的
+   命令行
+   选项。
+
+如果
+你
+想
+在
+一
+个
+或多
+个
+特定
+平台
+上
+运行
+测试，
+你
+可以
+用
+``--platform``
+选项，
+它
+是
+测试
+的
+平台
+过滤器，
+带
+这
+个
+选项，
+测试
+套件
+只
+会
+在
+指定
+的
+平台
+上
+构建/
+运行。
+这
+个
+选项
+也
+支持
+同一
+board
+的
+不同
+版本，
+你
+可以
+用
+``--platform
+board@revision``
+在
+特定
+版本
+上
+测试。
+
+twister
+支持
+的
+命令行
+选项
+列表
+可以
+用
+``west
+twister
+--help``
+查看。
+参考
+:ref:`twister_commandline_options`
+获取
+完整
+的
+选项
+集。
+
+以下
+页面
+覆盖
+额外
+的
+Twister
+主题：
+
+.. toctree::
+   :maxdepth:
+   1
+
+   commandline
+   pytest
+   twister_statuses
+   twister_blackbox
+
+.. _twister_board_configuration:
+
+Board
+配置
+*******************
+
+要
+为
+特定
+board
+构建
+测试
+并
+在
+真实
+硬件
+或
+QEMU
+等
+模拟
+环境
+中
+执行
+一些
+测试
+需要
+一
+个
+board
+配置
+文件
+它
+足够
+通用
+可以
+用
+于
+其他
+需要
+board
+清单
+的
+任务
+带
+关于
+board
+和
+其
+配置
+的
+细节
+否则
+只
+在
+构建
+时
+可
+用。
+
+board
+元数据
+文件
+位于
+board
+目录
+中
+并
+用
+YAML
+标记
+语言
+结构化。
+下面
+的
+示例
+显示
+一
+个
+board
+带
+此
+特定
+board
+最佳
+测试
+覆盖
+所需
+的
+数据：
+
+.. code-block:: yaml
+
+   identifier:
+   frdm_k64f
+   name:
+   NXP
+   FRDM-K64F
+   type:
+   mcu
+   arch:
+   arm
+   toolchain:
+     -
+     zephyr
+     -
+     gnuarmemb
+   supported:
+     -
+     arduino_gpio
+     -
+     arduino_i2c
+     -
+     netif:eth
+     -
+     adc
+     -
+     i2c
+     -
+     nvs
+     -
+     spi
+     -
+     gpio
+     -
+     usb_device
+     -
+     watchdog
+     -
+     can
+     -
+     pwm
+   testing:
+     default:
+     true
+
+
+identifier:
+   一
+   个
+   匹配
+   board
+   在
+   构建
+   系统
+   中
+   如何
+   定义
+   的
+   字符串。
+   这
+   同一
+   字符串
+   在
+   构建
+   时
+   使用，
+   例如
+   调用
+   ``west
+   build``
+   或
+   ``cmake``
+   时：
+
+   .. code-block:: console
+
+      #
+      with
+      west
+      west
+      build
+      -b
+      reel_board
+      #
+      with
+      cmake
+      cmake
+      -DBOARD=reel_board
+      ..
+
+name:
+   board
+   在
+   营销
+   材料
+   中
+   出现
+   的
+   实际
+   名称。
+vendor:
+   board
+   供应商。
+   用
+   于
+   ``vendor_allow``
+   和
+   ``vendor_exclude``
+   测试
+   场景
+   过滤器。
+tier:
+   一
+   个
+   可选
+   整数
+   指示
+   board
+   支持
+   层级。
+   用
+   于
+   报告
+   和
+   按
+   支持
+   级别
+   分组
+   平台。
+type:
+   board
+   或
+   配置
+   的
+   类型。
+   ``mcu``、
+   ``qemu``、
+   ``sim``、
+   ``unit``
+   或
+   ``native``
+   之一。
+simulation:
+   用
+   来
+   模拟
+   平台
+   的
+   模拟器
+   （例如
+   qemu）。
+
+   .. code-block:: yaml
+
+      simulation:
+        -
+        name:
+        qemu
+        -
+        name:
+        armfvp
+        exec:
+        FVP_Some_Platform
+        -
+        name:
+        custom
+        exec:
+        AnotherBinary
+
+   默认
+   情况
+   下，
+   测试
+   用
+   simulation
+   数组
+   中
+   的
+   第一
+   个
+   条目
+   执行。
+   另一
+   个
+   simulation
+   可以
+   用
+   ``--simulation
+   <simulation_name>``
+   选择。
+   ``exec``
+   属性
+   是
+   可选
+   的。
+   如果
+   它
+   被
+   设置
+   但
+   所需
+   模拟器
+   不
+   可
+   用，
+   测试
+   只
+   被
+   构建。
+   如果
+   它
+   未
+   设置
+   且
+   所需
+   模拟器
+   不
+   可
+   用
+   测试
+   将
+   运行
+   失败。
+   simulation
+   名称
+   必须
+   匹配
+   ``SUPPORTED_EMU_PLATFORMS``
+   的
+   元素
+   之一。
+arch:
+   board
+   的
+   架构
+toolchain:
+   可以
+   构建
+   这
+   个
+   board
+   的
+   支持
+   工具链
+   列表。
+   这
+   应该
+   匹配
+   命令行
+   构建
+   时
+   用
+   于
+   :envvar:`ZEPHYR_TOOLCHAIN_VARIANT`
+   的
+   值
+   之一。
+   Twister
+   过滤
+   掉
+   工具链
+   不
+   在
+   这
+   个
+   列表
+   中
+   的
+   任何
+   测试
+   实例，
+   除非
+   给出
+   ``--force-toolchain``。
+   这
+   个
+   列表
+   说明
+   哪些
+   工具链
+   *可能*
+   构建
+   board，
+   它
+   不
+   选择
+   一
+   个；
+   参考
+   :ref:`twister_toolchain_selection`。
+preferred_toolchain:
+   Twister
+   应该
+   为
+   这
+   个
+   平台
+   使用
+   的
+   工具链
+   当
+   没有
+   其他
+   选择
+   一
+   个
+   时。
+   这
+   对
+   名义
+   上
+   可以
+   用
+   多
+   个
+   工具链
+   构建
+   但
+   应该
+   用
+   特定
+   一
+   个
+   测试
+   的
+   boards
+   有用。
+   参考
+   :ref:`twister_toolchain_selection`。
+build_toolchains:
+   一
+   个
+   可选
+   的
+   工具链
+   列表
+   分配
+   给
+   这
+   个
+   平台
+   的
+   每个
+   测试
+   应该
+   用
+   它
+   构建。
+   Twister
+   为
+   列表
+   中
+   的
+   每个
+   工具链
+   创建
+   一
+   个
+   测试
+   实例，
+   每个
+   在
+   自己
+   的
+   构建
+   目录
+   中，
+   而
+   非
+   为
+   平台
+   选择
+   单一
+   工具链。
+   例如，
+   要
+   在
+   ``native_sim``
+   上
+   用
+   GCC
+   和
+   Clang
+   构建
+   一切：
+
+   .. code-block:: yaml
+
+      build_toolchains:
+        -
+        host/gnu
+        -
+        host/llvm
+
+   由于
+   这
+   使
+   构建
+   时间
+   倍增，
+   通常
+   最好
+   将
+   它
+   排除
+   在
+   board
+   定义
+   之外
+   并
+   只
+   为
+   CI
+   启用
+   用
+   :ref:`Twister
+   configuration
+   file
+   <twister_test_config>`
+   的
+   ``build_toolchains``
+   选项。
+   参考
+   :ref:`twister_toolchain_selection`。
+ram:
+   board
+   上
+   可用
+   的
+   RAM
+   （以
+   KB
+   指定）。
+   这
+   用
+   于
+   匹配
+   测试
+   场景
+   需求。
+   如果
+   未
+   指定
+   我们
+   默认
+   为
+   128KB。
+flash:
+   board
+   上
+   可用
+   的
+   FLASH
+   （以
+   KB
+   指定）。
+   这
+   用
+   于
+   匹配
+   测试
+   场景
+   需求。
+   如果
+   未
+   指定
+   我们
+   默认
+   为
+   512KB。

@@ -16,6 +16,7 @@
 
 build*/
 !doc/build/
+!docs_cn/build/
 !scripts/build
 !share/sysbuild/build
 !tests/drivers/build_all

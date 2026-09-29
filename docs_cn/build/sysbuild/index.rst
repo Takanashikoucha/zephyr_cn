@@ -1,0 +1,655 @@
+.. _sysbuild:
+
+Sysbuild
+（系统
+构建）
+############################
+
+Sysbuild
+是
+一个
+更
+高
+层
+的
+构建
+系统，
+可以
+用
+来
+组合
+多个
+其他
+构建
+系统。
+它
+是
+一个
+更
+高
+层
+的
+层，
+将
+一个
+或多个
+Zephyr
+构建
+系统
+和
+可选
+的
+额外
+构建
+系统
+组合
+成
+一个
+层次
+化
+构建
+系统。
+
+例如，
+你
+可以
+用
+sysbuild
+构建
+一个
+Zephyr
+应用
+和
+MCUboot
+bootloader，
+把
+它们
+都
+烧录
+到
+你的
+设备
+上，
+并
+调试
+结果。
+
+Sysbuild
+通过
+配置
+和
+构建
+至少
+一个
+Zephyr
+应用
+和
+可选
+的
+任意
+多
+个
+额外
+项目
+工作。
+额外
+项目
+可以
+是
+Zephyr
+应用
+或
+你
+想
+运行
+的
+其他
+类型
+的
+构建。
+
+与
+Zephyr
+的
+:ref:`构建
+系统
+<build_overview>`
+类似，
+sysbuild
+用
+CMake
+编写
+并
+使用
+:ref:`Kconfig
+<kconfig>`。
+
+定义
+***********
+
+以下
+是
+本
+文档
+使用
+的
+一些
+关键
+概念：
+
+单
+镜像
+构建
+    当
+    sysbuild
+    用
+    来
+    创建
+    和
+    管理
+    仅
+    一个
+    Zephyr
+    应用
+    的
+    构建
+    系统
+    时。
+
+多
+镜像
+构建
+    当
+    sysbuild
+    用
+    来
+    管理
+    多个
+    构建
+    系统
+    时。
+    "image"
+    一词
+    的
+    使用
+    是
+    因为
+    你
+    的
+    主要
+    目标
+    通常
+    是
+    从
+    每个
+    构建
+    系统
+    生成
+    固件
+    应用
+    镜像
+    的
+    二进制
+    文件。
+
+域
+    每个
+    由
+    sysbuild
+    管理
+    的
+    Zephyr
+    CMake
+    构建
+    系统。
+
+多
+域
+    当
+    多
+    于
+    一个
+    Zephyr
+    CMake
+    构建
+    系统
+    （域）
+    由
+    sysbuild
+    管理
+    时。
+
+架构
+概览
+**********************
+
+这
+张
+图
+是
+sysbuild
+的
+输入、
+输出
+和
+用户
+接口
+的
+概览：
+
+.. figure:: sysbuild.svg
+   :align:
+   center
+   :alt:
+   Sysbuild
+   架构
+   概览
+   :figclass:
+   align-center
+   :width:
+   80%
+
+以下
+是
+这
+张
+图
+中
+指示
+的
+一些
+关键
+sysbuild
+功能：
+
+- 你
+  可以
+  用
+  :ref:`west
+  build
+  <west-building>`
+  或
+  直接
+  通过
+  ``cmake``
+  运行
+  sysbuild。
+
+- 你
+  可以
+  用
+  sysbuild
+  从
+  每个
+  构建
+  系统
+  生成
+  应用
+  镜像，
+  上面
+  显示
+  为
+  ELF、
+  BIN
+  和
+  HEX
+  文件。
+
+- 你
+  可以
+  用
+  各种
+  配置
+  变量
+  配置
+  sysbuild
+  或
+  它
+  管理
+  的
+  任何
+  构建
+  系统。
+  这些
+  变量
+  是
+  命名
+  空间
+  的，
+  这样
+  sysbuild
+  可以
+  将
+  它们
+  定向
+  到
+  正确
+  的
+  构建
+  系统。
+  在
+  某些
+  情况
+  下，
+  如
+  ``BOARD``
+  变量，
+  这些
+  在
+  多
+  个
+  构建
+  系统
+  之间
+  共享。
+
+- Sysbuild
+  本身
+  也
+  用
+  Kconfig
+  配置。
+  例如，
+  你
+  可以
+  指示
+  sysbuild
+  构建
+  MCUboot
+  bootloader，
+  以及
+  构建
+  和
+  链接
+  你
+  的
+  主
+  Zephyr
+  应用
+  作为
+  MCUboot
+  可
+  启动
+  镜像，
+  用
+  sysbuild
+  的
+  Kconfig
+  文件。
+
+- Sysbuild
+  与
+  west
+  的
+  :ref:`west-build-flash-debug`
+  命令
+  集成。
+  它
+  通过
+  管理
+  :ref:`west-runner`，
+  特别
+  是
+  每个
+  Zephyr
+  构建
+  系统
+  将
+  包含
+  的
+  :file:`runners.yaml`
+  文件
+  做
+  到
+  这。
+  这些
+  被
+  打包
+  成
+  一个
+  全局
+  视图，
+  描述
+  如何
+  烧录
+  和
+  调试
+  每个
+  构建
+  系统，
+  在
+  由
+  sysbuild
+  生成
+  和
+  管理
+  的
+  :file:`domains.yaml`
+  文件
+  中。
+
+- 构建
+  名称
+  用
+  目标
+  名称
+  和
+  下
+  划线
+  作
+  前缀，
+  例如
+  sysbuild
+  目标
+  用
+  ``sysbuild_``
+  作
+  前缀，
+  如果
+  MCUboot
+  作为
+  sysbuild
+  的
+  部分
+  启用，
+  它
+  将
+  用
+  ``mcuboot_``
+  作
+  前缀。
+  这
+  也
+  允许
+  运行
+  如
+  menuconfig
+  的
+  东西
+  带
+  前缀，
+  例如
+  （如果
+  用
+  ninja）
+  ``ninja
+  sysbuild_menuconfig``
+  配置
+  sysbuild
+  或
+  （如果
+  用
+  make）
+  ``make
+  mcuboot_menuconfig``。
+
+用
+sysbuild
+构建
+**********************
+
+如
+上面
+所
+述，
+你
+可以
+通过
+``west
+build``
+或
+``cmake``
+运行
+sysbuild。
+
+.. tabs::
+
+   .. group-tab::
+      ``west
+      build``
+
+      这里
+      是
+      一个
+      示例。
+      细节
+      见
+      :ref:`west-multi-domain-builds`
+      在
+      ``west
+      build
+      文档``
+      中。
+
+      .. zephyr-app-commands::
+
+         west
+         build
+         -b
+         reel_board
+         samples/hello_world
+
+   .. group-tab::
+      ``cmake``
+
+      这里
+      是
+      一个
+      示例。
+      用
+      CMake
+      和
+      Ninja
+      构建
+      一个
+      Zephyr
+      应用
+      和
+      MCUboot
+      bootloader：
+
+      .. code-block:: shell
+
+         APP_DIR=samples/hello_world
+         cmake
+         -Bbuild
+         -GNinja
+         -DBOARD=reel_board
+         --preset=release
+         share/sysbuild
+         ninja
+         -Cbuild
+
+      用
+      CMake
+      presets
+      与
+      sysbuild
+      时，
+      ``APP_DIR``
+      必须
+      在
+      环境
+      中
+      设置，
+      这样
+      Sysbuild
+      CMake
+      可以
+      从
+      主
+      Zephyr
+      应用
+      的
+      源
+      目录
+      包含
+      ``CMakePresets.json``。
+
+.. note::
+
+   由于
+   sysbuild
+   将
+   顶层
+   cmake
+   项目
+   更改
+   为
+   其
+   自己
+   的
+   目录，
+   cmake
+   presets
+   从
+   那里
+   解析，
+   应用
+   的
+   presets
+   从
+   这
+   个
+   文件
+   原样
+   包含。
+   因此
+   相对
+   路径
+   和
+   解析
+   为
+   相对
+   于
+   源
+   目录
+   的
+   宏
+   将
+   不
+   按
+   预期
+   工作，
+   而
+   是
+   相对
+   于
+   share/sysbuild，
+   例如
+   ``${sourceDir}``。
+
+   ``${fileDir}``
+   宏
+   可以
+   用
+   来
+   创建
+   相对
+   于
+   应用
+   目录
+   的
+   可
+   移植
+   路径。

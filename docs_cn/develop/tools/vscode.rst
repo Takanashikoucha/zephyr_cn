@@ -1,0 +1,193 @@
+.. _vscode_ide:
+
+Visual
+Studio
+Code
+##################
+
+`Visual
+Studio
+Code`_
+（简称
+VS
+Code）
+是
+一
+个
+流行
+的
+跨
+平台
+IDE，
+支持
+C
+项目
+并
+有
+丰富
+的
+扩展
+集。
+
+本
+指南
+描述
+在
+VS
+Code
+中
+为
+Zephyr
+的
+:zephyr:code-sample:`blinky`
+示例
+设置
+VS
+Code
+的
+过程。
+
+说明
+已
+在
+Linux
+上
+测试，
+但
+步骤
+应该
+对
+macOS
+和
+Windows
+相同，
+只
+要
+确保
+在
+需要
+时
+调整
+路径。
+
+获取
+VS
+Code
+***********
+
+`下载
+VS
+Code`_
+并
+安装
+它。
+
+通过
+左侧
+面板
+中
+的
+:guilabel:`Extensions`
+市场
+安装
+所需
+的
+扩展。
+搜索
+`C/C++
+Extension
+Pack`_
+并
+安装
+它。
+
+初始化
+新
+工作区
+**************************
+
+本
+指南
+给出
+如何
+配置
+:zephyr:code-sample:`blinky`
+示例
+应用
+的
+细节，
+但
+说明
+对
+任何
+Zephyr
+项目
+和
+:ref:`workspace
+layout
+<west-workspaces>`
+类似。
+
+开始
+前，
+确保
+你
+有
+一
+个
+工作
+的
+Zephyr
+开发
+环境，
+按
+:ref:`getting_started`
+中
+的
+说明。
+
+在
+VS
+Code
+中
+打开
+项目
+***************************
+
+#. 在
+   VS
+   Code
+   中，
+   从
+   主
+   菜单
+   选择
+   :menuselection:`File
+   -->
+   Open
+   Folder`。
+
+#. 导航
+   到
+   你
+   的
+   Zephyr
+   工作区
+   并
+   选择
+   它
+   （即
+   如果
+   你
+   遵循
+   了
+   Getting
+   Started
+   说明
+   则
+   HOME
+   目录
+   中
+   的
+   :file:`zephyrproject`
+   文件夹）。

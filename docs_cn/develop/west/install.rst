@@ -1,0 +1,175 @@
+.. _west-install:
+
+安装
+west
+###############
+
+West
+用
+Python
+3
+编写
+并
+通过
+`PyPI`_
+分发。
+用
+:file:`pip3`
+安装
+或
+升级
+west：
+
+在
+Linux
+上::
+
+   pip3
+   install
+   --user
+   -U
+   west
+
+在
+Windows
+和
+macOS
+上::
+
+   pip3
+   install
+   -U
+   west
+
+.. note::
+   参考
+   :ref:`python-pip`
+   获取
+   关于
+   使用
+   ``--user``
+   开关
+   的
+   额外
+   说明。
+
+之后，
+你
+可以
+运行
+``pip3
+show
+-f
+west``
+获取
+west
+二进制
+文件
+和
+相关
+文件
+安装
+到
+哪里
+的
+信息。
+
+一旦
+west
+安装
+完成，
+你
+可以
+用
+它
+:ref:`clone
+the
+Zephyr
+repositories
+<clone-zephyr>`。
+
+.. _west-struct:
+
+结构
+*********
+
+West
+的
+代码
+通过
+PyPI
+分发
+在
+命名
+为
+``west``
+的
+Python
+包
+中。
+这
+个
+分发
+包括
+一
+个
+启动器
+可执行
+文件，
+也
+命名
+为
+``west``
+（在
+Windows
+上
+``west.exe``）。
+
+当
+west
+安装
+时，
+启动器
+被
+:file:`pip3`
+放置
+在
+用户
+文件
+系统
+的
+某
+处
+（精确
+哪里
+取决于
+操作系统，
+但
+应该
+在
+``PATH``
+:ref:`environment
+variable
+<env_vars>`
+上）。
+这
+个
+启动器
+是
+运行
+内置
+命令
+（如
+``west
+init``、
+``west
+update``）
+和
+发现
+的
+任何
+扩展
+的
+命令行
+入口
+点。

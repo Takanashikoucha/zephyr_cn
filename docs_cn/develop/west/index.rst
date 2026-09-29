@@ -1,0 +1,181 @@
+.. _west:
+
+West
+（Zephyr
+的
+元
+工具）
+#########################
+
+Zephyr
+项目
+包括
+一
+个
+瑞士
+军刀
+命令行
+工具
+命名
+为
+``west``\ [#west-name]_。
+West
+在
+其
+自己
+的
+`repository`_
+中
+开发。
+
+West
+的
+内置
+命令
+提供
+一
+个
+多
+仓库
+管理
+系统
+带
+受
+Google
+的
+Repo
+工具
+和
+Git
+submodules
+启发
+的
+功能。
+West
+也
+是
+"可
+插拔
+的"：
+你
+可以
+写
+你
+自己
+的
+west
+扩展
+命令
+为
+west
+添加
+额外
+功能。
+Zephyr
+用
+这
+提供
+构建
+应用、
+烧录
+和
+调试
+它们
+的
+便利
+以及
+更多。
+
+像
+``git``
+和
+``docker``，
+顶层
+``west``
+命令
+接受
+一些
+常见
+选项、
+一
+个
+要
+运行
+的
+子
+命令、
+然后
+该
+子
+命令
+的
+选项
+和
+参数::
+
+   west
+   [common-opts]
+   <command>
+   [opts]
+   <args>
+
+从
+west
+v0.8
+开始，
+你
+也
+可以
+像
+这样
+运行
+west::
+
+   python3
+   -m
+   west
+   [common-opts]
+   <command>
+   [opts]
+   <args>
+
+你
+可以
+运行
+``west
+--help``
+（或
+``west
+-h``
+简称）
+获取
+可用
+west
+命令
+的
+顶层
+帮助，
+以及
+``west
+<command>
+-h``
+获取
+每个
+命令
+的
+详细
+帮助。
+
+.. toctree::
+   :maxdepth:
+   1
+
+   install.rst
+   release-notes.rst
+   troubleshooting.rst
+   basics.rst
+   built-in.rst
+   workspaces.rst
+   manifest.rst
+   config.rst
+   alias.rst

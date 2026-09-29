@@ -1,0 +1,716 @@
+.. _west-basics:
+
+基础
+######
+
+本
+页
+介绍
+west
+的
+基础
+概念
+并
+提供
+进一步
+阅读
+的
+参考。
+
+West
+的
+内置
+命令
+允许
+你
+在
+共同
+的
+:term:`workspace
+<west
+workspace>`
+目录
+下
+与
+:term:`projects
+<west
+project>`
+（Git
+仓库）
+工作。
+
+West
+按
+以下
+方式
+工作：
+``west
+init``
+命令
+创建
+:term:`west
+workspace`，
+并
+clone
+:term:`manifest
+repo
+<west
+manifest
+repository>`，
+而
+``west
+update``
+命令
+最初
+clone
+并
+随后
+更新
+manifest
+中
+列出
+的
+:term:`projects
+<west
+project>`
+在
+workspace
+中。
+
+示例
+workspace
+*****************
+
+如果
+你
+遵循
+了
+:ref:`getting_started`，
+你
+的
+本地
+:term:`west
+workspace`，
+在
+这
+种
+情况
+下
+是
+命名
+为
+:file:`zephyrproject`
+的
+文件夹
+以及
+它
+所有
+的
+子
+文件夹，
+看起来
+像
+这样：
+
+.. code-block:: none
+
+   zephyrproject/
+                 #
+                 west
+                 topdir
+   ├──
+   .west/
+                     #
+                     marks
+                     the
+                     location
+                     of
+                     the
+                     topdir
+   │
+   └──
+   config
+                 #
+                 per-workspace
+                 local
+                 configuration
+                 file
+   │
+   │
+   #
+   The
+   manifest
+   repository,
+   never
+   modified
+   by
+   west
+   after
+   creation:
+   ├──
+   zephyr/
+                    #
+                    .git/
+                    repo
+   │
+   ├──
+   west.yml
+               #
+               manifest
+               file
+   │
+   └──
+   [...]
+   other
+   files
+   ...
+   │
+   │
+   #
+   Projects
+   managed
+   by
+   west:
+   ├──
+   modules/
+   │
+   └──
+   lib/
+   │
+   └──
+   zcbor/
+             #
+             .git/
+             project
+   ├──
+   tools/
+   │
+   └──
+   net-tools/
+             #
+             .git/
+             project
+   └──
+   [...]
+   other
+   projects
+   ...
+
+.. _west-workspace:
+
+Workspace
+概念
+******************
+
+以下
+是
+你
+应该
+理解
+的
+关于
+这
+个
+结构
+的
+基础
+概念。
+额外
+细节
+在
+:ref:`west-workspaces`
+中。
+
+topdir
+   上面，
+   :file:`zephyrproject`
+   是
+   workspace
+   顶层
+   目录
+   的
+   名称，
+   或
+   *topdir*。
+   （:file:`zephyrproject`
+   名称
+   只
+   是
+   一
+   个
+   示例
+   --
+   它
+   可以
+   是
+   任何
+   东西，
+   如
+   ``z``、
+   ``my-zephyr-workspace``
+   等。）
+
+   你
+   通常
+   用
+   :ref:`west
+   init
+   <west-init-basics>`
+   创建
+   topdir
+   和
+   几
+   个
+   其他
+   文件
+   和
+   目录。
+
+.west
+目录
+   topdir
+   包含
+   :file:`.west`
+   目录。
+   当
+   west
+   需要
+   找到
+   topdir
+   时，
+   它
+   搜索
+   :file:`.west`，
+   并
+   使用
+   其
+   父
+   目录。
+   搜索
+   从
+   当前
+   工作
+   目录
+   开始
+   （如果
+   那
+   失败
+   则
+   从
+   :envvar:`ZEPHYR_BASE`
+   环境
+   变量
+   中
+   的
+   位置
+   重新
+   开始
+   作为
+   回退）。
+
+配置
+文件
+   文件
+   :file:`.west/config`
+   是
+   workspace
+   的
+   :ref:`local
+   configuration
+   file
+   <west-config>`。
+
+manifest
+仓库
+   每个
+   west
+   workspace
+   包含
+   精确
+   一
+   个
+   *manifest
+   仓库*，
+   它
+   是
+   一
+   个
+   包含
+   *manifest
+   文件*
+   的
+   Git
+   仓库。
+   manifest
+   仓库
+   的
+   位置
+   由
+   本地
+   配置
+   文件
+   中
+   的
+   :ref:`manifest.path
+   configuration
+   option
+   <west-config-index>`
+   给出。
+
+   对
+   上游
+   Zephyr，
+   :file:`zephyr`
+   是
+   manifest
+   仓库，
+   但
+   你
+   可以
+   配置
+   west
+   使用
+   workspace
+   中
+   任何
+   Git
+   仓库
+   作为
+   manifest
+   仓库。
+   唯一
+   的
+   要求
+   是
+   它
+   包含
+   一
+   个
+   有效
+   的
+   manifest
+   文件。
+   参考
+   :ref:`west-topologies`
+   获取
+   其他
+   选项
+   的
+   信息，
+   以及
+   :ref:`west-manifests`
+   获取
+   manifest
+   文件
+   格式
+   的
+   细节。
+
+manifest
+文件
+   manifest
+   文件
+   是
+   一
+   个
+   YAML
+   文件
+   定义
+   *projects*，
+   它们
+   是
+   workspace
+   中
+   由
+   west
+   管理
+   的
+   额外
+   Git
+   仓库。
+   manifest
+   文件
+   默认
+   命名
+   为
+   :file:`west.yml`；
+   这
+   可以
+   用
+   ``manifest.file``
+   本地
+   配置
+   选项
+   覆盖。
+
+   你
+   用
+   :ref:`west
+   update
+   <west-update-basics>`
+   命令
+   根据
+   manifest
+   文件
+   的
+   内容
+   更新
+   workspace
+   的
+   projects。
+
+projects
+   Projects
+   是
+   由
+   west
+   管理
+   的
+   Git
+   仓库。
+   Projects
+   在
+   manifest
+   文件
+   中
+   定义
+   并
+   可以
+   位于
+   workspace
+   内部
+   任何
+   地方。
+   在
+   上面
+   的
+   示例
+   workspace
+   中，
+   ``zcbor``
+   和
+   ``net-tools``
+   是
+   projects。
+
+   默认
+   情况
+   下，
+   Zephyr
+   :ref:`build
+   system
+   <build_overview>`
+   用
+   west
+   获取
+   workspace
+   中
+   所有
+   projects
+   的
+   位置，
+   因此
+   它们
+   包含
+   的
+   任何
+   代码
+   可以
+   用
+   作
+   :ref:`modules`。
+   注意
+   然而
+   modules
+   和
+   projects
+   :ref:`are
+   conceptually
+   different
+   <modules-vs-projects>`。
+
+extensions
+   west
+   知道
+   的
+   任何
+   仓库
+   （manifest
+   仓库
+   或
+   任何
+   project
+   仓库）
+   可以
+   定义
+   :ref:`west-extensions`。
+   Extensions
+   是
+   额外
+   的
+   west
+   命令
+   你
+   可以
+   在
+   使用
+   那
+   个
+   workspace
+   时
+   运行。
+
+   zephyr
+   仓库
+   用
+   这
+   个
+   功能
+   提供
+   Zephyr
+   特定
+   的
+   命令
+   如
+   :ref:`west
+   build
+   <west-building>`。
+   将
+   这些
+   定义
+   为
+   extensions
+   保持
+   west
+   核心
+   对
+   任何
+   workspace
+   的
+   Zephyr
+   版本
+   等
+   细节
+   无
+   知。
+
+ignored
+文件
+   workspace
+   可以
+   包含
+   额外
+   的
+   Git
+   仓库
+   或
+   其他
+   不
+   由
+   west
+   管理
+   的
+   文件
+   和
+   目录。
+   West
+   基本
+   忽略
+   workspace
+   中
+   除
+   :file:`.west`、
+   manifest
+   仓库
+   和
+   manifest
+   文件
+   中
+   指定
+   的
+   projects
+   外
+   的
+   任何
+   东西。
+
+west
+init
+和
+west
+update
+*************************
+
+两
+个
+最
+重要
+的
+workspace
+相关
+命令
+是
+``west
+init``
+和
+``west
+update``。
+
+.. _west-init-basics:
+
+``west
+init``
+基础
+--------------------
+
+这
+个
+命令
+创建
+一
+个
+west
+workspace。
+
+.. important::
+
+   West
+   不
+   在
+   ``west
+   init``
+   运行
+   后
+   更改
+   你
+   的
+   manifest
+   仓库
+   内容。
+   用
+   普通
+   Git
+   命令
+   拉取
+   新
+   版本
+   等。
+
+你
+通常
+运行
+它
+一
+次，
+像
+这样：
+
+.. code-block:: shell
+
+   west
+   init
+   -m
+   https://github.com/zephyrproject-rtos/zephyr
+   --mr
+   v2.5.0
+   zephyrproject

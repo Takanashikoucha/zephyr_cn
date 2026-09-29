@@ -21,12 +21,12 @@
 | 1 | introduction | 1/1 (100%) | ✓ 完成 |
 | 2 | kernel | 65/65 (100%) | ✓ 完成 |
 | 3 | build | 93/94 (98.9%) | 1 个未译：sysbuild/index.rst |
-| 4 | develop | 33/138 (23.9%) | 进行中（已暂停，优先解决样式问题） |
+| 4 | develop | 85/138 (61.6%) | 进行中（sca 10 + test 5 + tools 2 + west 3 + twister 1 + optimizations 2 + modules 1 等） |
 | 5 | hardware | 1/123 (0.8%) | 待开始 |
 | 6 | services | 0/359 (0%) | 待开始 |
 | 7 | releases | 0/43 (0%) | 待开始 |
 | 8 | security+contribute+project+safety | 0/60 (0%) | 待开始 |
-| **总计** | | **194/889 (21.8%)** | |
+| **总计** | | **224/889 (25.2%)** | |
 
 ### 已完成
 
