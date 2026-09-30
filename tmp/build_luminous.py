@@ -23,12 +23,12 @@ TEMPLATE = """<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{title} — Zephyr 中文文档</title>
   <link rel="icon" href="{base}favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="{base}_static/pygments.css" />
-  <link rel="stylesheet" href="{base}_static/luminous.css" />
-  <link rel="stylesheet" href="{base}_static/sphinx-design.min.css" />
-  <script src="{base}_static/fiber.js" defer></script>
-  <script src="{base}_static/doctools.js"></script>
-  <script src="{base}_static/sphinx_highlight.js"></script>
+  <link rel="stylesheet" href="{base}assets/pygments.css" />
+  <link rel="stylesheet" href="{base}assets/luminous.css" />
+  <link rel="stylesheet" href="{base}assets/sphinx-design.min.css" />
+  <script src="{base}assets/fiber.js" defer></script>
+  <script src="{base}assets/doctools.js"></script>
+  <script src="{base}assets/sphinx_highlight.js"></script>
 </head>
 <body>
 
@@ -204,9 +204,9 @@ def build():
         shutil.rmtree(OUT_DIR)
     OUT_DIR.mkdir(parents=True)
 
-    # 复制 _static 目录
+    # 复制 _static 目录为 assets，避开 GitHub Pages 对 _static 路径的异常缓存
     static_src = SPHINX_OUT / "_static"
-    static_dst = OUT_DIR / "_static"
+    static_dst = OUT_DIR / "assets"
     if static_src.exists():
         shutil.copytree(static_src, static_dst)
     print(f"✓ 复制 _static/ → {static_dst}")
