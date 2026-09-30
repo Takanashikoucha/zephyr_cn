@@ -221,16 +221,7 @@ data。
 
 .. note::
 
-   以下为原文（待翻译）
-
-      ss             <unavailable>
-      ds             <unavailable>
-      es             <unavailable>
-      fs             <unavailable>
-      gs             <unavailable>
-
-6. Examine the backtrace:
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
    .. code-block:: console
 
       (gdb) bt

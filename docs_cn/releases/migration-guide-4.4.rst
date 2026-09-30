@@ -180,12 +180,7 @@ like
 
 .. note::
 
-   以下为原文（待翻译）
-
-    has been replaced by a Kconfig option. Consequently, the line
-    ``zephyr_compile_definitions(BOOT_HEADER_ENABLE=1)`` has been removed from the RTxxx board
-    CMakeLists.txt files.
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
   * Removed compile flag ``BOOT_HEADER_ENABLE`` definition from :zephyr_file:`boards/nxp/rd_rw612_bga/CMakeLists.txt`,
     as it is not used in the Zephyr tree.
 

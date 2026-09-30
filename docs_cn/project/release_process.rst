@@ -235,12 +235,7 @@ Management>`_。
 
 .. note::
 
-   以下为原文（待翻译）
-
-    coming from one organisation and where reviews from other organisations are
-    not possible, however, merges shall be completed by a person from a different
-    organisation. In such cases, the minimum review period of at least 2 days
-    shall be strictly followed to allow for additional reviews.
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
   * Release engineers shall not merge code changes originating and reviewed
     only by their own organisation. To be able to merge such changes, at least
     one review shall be from a different organisation.

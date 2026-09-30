@@ -171,8 +171,7 @@ board.
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * :github:`17250` - After first GC operation the 1st sector had become scratch and the 2nd sector had became write sector.
 * :github:`17251` - w25q: erase operations must be erase-size aligned
 * :github:`17262` - insufficient code coverage for lib/os/base64.c

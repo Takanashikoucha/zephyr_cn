@@ -161,10 +161,7 @@ prp6
 
 .. note::
 
-   以下为原文（待翻译）
-
-denial of service, and potentially to arbitrary code execution.
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 - `Zephyr project bug tracker GHSA-wgrc-jrf6-24f3
   <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-wgrc-jrf6-24f3>`_
 

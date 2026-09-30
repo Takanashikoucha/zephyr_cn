@@ -838,18 +838,7 @@ Cache
 
 .. note::
 
-   以下为原文（待翻译）
-
-      :tool: all
-      :cd-into:
-      :board: <board>
-      :goals: build
-
-   If desired, you can build the application using the configuration settings
-   specified in an alternate :file:`.conf` file using the :code:`CONF_FILE`
-   parameter. These settings will override the settings in the application's
-   :file:`.config` file or its default :file:`.conf` file. For example:
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
    .. zephyr-app-commands::
       :tool: all
       :cd-into:

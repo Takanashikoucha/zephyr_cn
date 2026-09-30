@@ -179,9 +179,7 @@ SSID）
 
 .. note::
 
-   以下为原文（待翻译）
-
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * Domain suffix match — Allows a certificate whose CN ends with the specified domain suffix.
 
 To initiate a Wi-Fi connection using enterprise security with server certificate validation, use one of the following commands, depending on the desired validation mode:

@@ -179,18 +179,7 @@ scenario
 
 .. note::
 
-   以下为原文（待翻译）
-
-marked ``type: unit``) builds and links only the source files you add to the
-``testbinary`` target together with the Ztest unit-test harness.
-
-Crucially, **the Zephyr kernel and operating system are not built at all**.
-There is no boot sequence, no scheduler, no devicetree-driven device
-initialization, and no driver model. The functions under test are compiled into
-the test binary and called directly. Any kernel API or other dependency that the
-module under test relies on must be supplied by the test itself, usually as a
-stub or a :ref:`mock <mocking-fff>`.
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. _unit_testing_vs_native_sim:
 
 Difference from ``native_sim`` and other boards

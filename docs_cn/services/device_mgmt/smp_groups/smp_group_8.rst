@@ -181,10 +181,7 @@ exclusively
 
 .. note::
 
-   以下为原文（待翻译）
-
-    and total length only.
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. note::
 
     By default, all file upload/download requests are unconditionally allowed.

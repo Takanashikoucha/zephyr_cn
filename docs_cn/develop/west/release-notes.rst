@@ -145,10 +145,7 @@ Changes:
 
 .. note::
 
-   以下为原文（待翻译）
-
-Other changes:
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 - The manifest file format now supports a ``description`` field in each
   ``projects:`` element. See :ref:`west-manifests-projects` for examples.
 

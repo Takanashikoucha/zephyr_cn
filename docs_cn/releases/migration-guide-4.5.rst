@@ -174,9 +174,7 @@ higher。
 
 .. note::
 
-   以下为原文（待翻译）
-
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * On RP2350 (rpi_pico family), the ``hazard3`` and ``m33`` cpucluster qualifiers are deprecated in
   favor of ``hazard3_0`` and ``m33_0``, which explicitly identify the cluster as CPU0 and pave the
   way for dual-core support. All in-tree RP2350 boards have been migrated to the new qualifiers

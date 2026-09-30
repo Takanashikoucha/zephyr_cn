@@ -136,12 +136,7 @@ headers:
 
 .. note::
 
-   以下为原文（待翻译）
-
-
-Device Drivers and Devicetree
-*****************************
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * The :dtcompatible:`nxp,kinetis-pit` pit driver has changed its compatible
   to :dtcompatible:`nxp,pit` and has been updated to support multiple channels.
   To configure the individual channels, you must add a child node with the

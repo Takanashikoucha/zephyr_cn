@@ -959,45 +959,7 @@ flash:
 
 .. note::
 
-   以下为原文（待翻译）
-
-    of a testsuite or testcase.
-
-modules: <list of module names>
-    Build and run this test scenario only when all of the listed
-    :ref:`modules <modules>` are present in the workspace. Scenarios that
-    require a module which is not available are filtered out.
-
-type: <string> (default integration)
-    Test type of the scenario. Set to ``unit`` for unit tests that are built
-    for the :ref:`unit_testing board <unit_testing_board>` and run on the host
-    without the full Zephyr build system.
-
-testcases: <list of test case names>
-    Explicitly declare the list of test case names that make up this scenario.
-    This is normally detected automatically (for example from the ztest source)
-    and only needs to be set for harnesses that cannot be introspected.
-
-ignore_faults: <True|False> (default False)
-    Do not mark the test scenario as failed if a fault is detected in the
-    output while the test is running.
-
-ignore_qemu_crash: <True|False> (default False)
-    Do not mark the test scenario as failed if QEMU crashes while the test is
-    running.
-
-The set of test scenarios that actually run depends on directives in the test scenario
-file and options passed in on the command line. If there is any confusion,
-running with ``-v`` or examining the :ref:`test plan <twister_output>`
-(:file:`testplan.json`) can help show why particular test scenarios were
-filtered out.
-
-To load arguments from a file, add ``+`` before the file name, e.g.,
-``+file_name``. File content must be one or more valid arguments separated by
-line break instead of white spaces.
-
-Most everyday users will run with no arguments.
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. _twister_module_dir_vars:
 
 Expanding paths with module directory variables

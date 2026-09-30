@@ -171,10 +171,7 @@ tests。
 
 .. note::
 
-   以下为原文（待翻译）
-
-  updated to use zcbor as a replacement.
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * Removed deprecated GPIO flags used for setting debounce, drive strength and
   voltage level. All drivers now use vendor-specific flags as needed.
 

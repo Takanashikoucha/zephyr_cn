@@ -232,8 +232,7 @@ Driver**
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
     * Improve the classic hands-free unit, including
       :kconfig:option:`CONFIG_BT_HFP_HF_CODEC_NEG`, :kconfig:option:`CONFIG_BT_HFP_HF_ECNR`,
       :kconfig:option:`CONFIG_BT_HFP_HF_3WAY_CALL`, :kconfig:option:`CONFIG_BT_HFP_HF_ECS`,

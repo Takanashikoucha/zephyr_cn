@@ -224,13 +224,7 @@ tree
 
 .. note::
 
-   以下为原文（待翻译）
-
-if generated, the PDF file is available at ``doc/_build/latex/zephyr.pdf``.
-
-If you want to build the documentation from scratch just delete the contents
-of the build folder and run ``cmake`` and then ``ninja`` again.
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. note::
 
    If you add or remove a file from the documentation, you need to re-run CMake.

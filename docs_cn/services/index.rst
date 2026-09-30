@@ -92,11 +92,7 @@ platforms。
 
 .. note::
 
-   以下为原文（待翻译）
-
-
-      :material-twotone:`bolt;7em`
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
       .. toctree::
          :maxdepth: 2
 

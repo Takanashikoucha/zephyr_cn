@@ -138,10 +138,7 @@ v2.4
 
 .. note::
 
-   以下为原文（待翻译）
-
-  <https://github.com/zephyrproject-rtos/zephyr/pull/33419>`_
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 - `PR 33418 fix for 1.14.2
   <https://github.com/zephyrproject-rtos/zephyr/pull/33418>`_
 

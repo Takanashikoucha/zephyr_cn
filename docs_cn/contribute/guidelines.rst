@@ -268,46 +268,7 @@ system。
 
 .. note::
 
-   以下为原文（待翻译）
-
-To clone the main Zephyr Project repository use the instructions in
-:ref:`get_the_code`.
-
-This section describes the main repository's source tree. In addition to the
-Zephyr kernel itself, you'll also find the sources for technical documentation,
-sample code, supported board configurations, and a collection of subsystem
-tests.  All of these are available for developers to contribute to and enhance.
-
-Understanding the Zephyr source tree can help locate the code
-associated with a particular Zephyr feature.
-
-At the top of the tree, several files are of importance:
-
-:file:`CMakeLists.txt`
-    The top-level file for the CMake build system, containing a lot of the
-    logic required to build Zephyr.
-
-:file:`Kconfig`
-    The top-level Kconfig file, which refers to the file :file:`Kconfig.zephyr`
-    also found in the top-level directory.
-
-    See :ref:`the Kconfig section of the manual <kconfig>` for detailed Kconfig
-    documentation.
-
-:file:`west.yml`
-    The :ref:`west` manifest, listing the external repositories managed by
-    the west command-line tool.
-
-The Zephyr source tree also contains the following top-level
-directories, each of which may have one or more additional levels of
-subdirectories not described here.
-
-:file:`arch`
-    Architecture-specific kernel and system-on-chip (SoC) code.
-    Each supported architecture (for example, x86 and ARM)
-    has its own subdirectory,
-    which contains additional subdirectories for the following areas:
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
     * architecture-specific kernel source files
     * architecture-specific kernel include files for private APIs
 

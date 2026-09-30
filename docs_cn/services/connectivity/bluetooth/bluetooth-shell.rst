@@ -72,17 +72,7 @@ Usage
 
 .. note::
 
-   以下为原文（待翻译）
-
-        [00:02:26.794,799] <inf> bt_hci_core: bt_dev_show_info: LMP: version 5.3 (0x0c) subver 0xffff
-
-
-Logging
-*******
-
-You can configure the logging level per module at runtime. This depends on the maximum logging level
-that is compiled in. To configure, use the :code:`log` command. Here are some examples:
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * List the available modules and their current logging level
 
 .. code-block:: console

@@ -195,10 +195,7 @@ config
 
 .. note::
 
-   以下为原文（待翻译）
-
-
-Verbose Builds
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 --------------
 
 To print the CMake and compiler commands run by ``west build``, use the global

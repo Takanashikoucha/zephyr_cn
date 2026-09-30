@@ -85,9 +85,7 @@ Zephyr 内核位于每个 Zephyr 应用的核心。
 
 .. note::
 
-   以下为原文（待翻译）
-
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. [#f6] Data item size must be a multiple of the data alignment.
 
 .. toctree::

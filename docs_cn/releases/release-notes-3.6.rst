@@ -268,9 +268,7 @@ GHSA
 
 .. note::
 
-   以下为原文（待翻译）
-
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * Deprecated :kconfig:option:`CONFIG_BOOTLOADER_SRAM_SIZE`. Users of this should transition to
   having RAM set up properly in their board devicetree files.
 

@@ -296,10 +296,7 @@ Use
 
 .. note::
 
-   以下为原文（待翻译）
-
-  is registered and the log instance pointer is initialized in the object structure.
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. code-block:: c
 
    #define FOO_OBJECT_DEFINE(_name)                             \

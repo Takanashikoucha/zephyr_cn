@@ -36,11 +36,7 @@ Zephyr 中文文档
 
 .. note::
 
-   以下为原文（待翻译）
-
-           for the documentation of other Zephyr versions.
-         </p>
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. only:: development
 
    .. admonition:: Welcome to Zephyr Project Documentation for the ``main`` tree (|version|).

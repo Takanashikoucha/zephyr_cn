@@ -198,8 +198,7 @@ label
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
     * Added support for memory region generation by the linker based on device tree node information in Cortex-M.
     * Cleaned up definitions of SoC-specific memory regions in the common Cortex-M linker script.
     * Added support for clearing NXP MPU region configuration during Zephyr early boot stage.

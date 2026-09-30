@@ -225,9 +225,7 @@ keys
 
 .. note::
 
-   以下为原文（待翻译）
-
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * During normal PB-ADV/PB-GATT provisioning, nodes are automatically added to the CDB.
 * The :c:func:`bt_mesh_cdb_node_alloc` function creates a CDB entry with the specified parameters.
 * Pass :c:macro:`BT_MESH_ADDR_UNASSIGNED` as the address to let the CDB auto-assign the lowest available address.

@@ -137,12 +137,7 @@ file。
 
 .. note::
 
-   以下为原文（待翻译）
-
-  too broadly defined in access and impossible to implement the syscall parameter verification step
-  in a safe manner.
-
-Ethernet
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 ========
 
 * The :dtcompatible:`microchip,vsc8541` PHY driver now expects the reset-gpios entry to specify

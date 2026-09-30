@@ -134,8 +134,7 @@ fields：
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
     +------------------+-------------------------------------------------------------------------+
     | "rc"             | :c:enum:`mcumgr_err_t` only appears if non-zero (error condition) when  |
     |                  | using SMP version 1 or for SMP errors when using SMP version 2.         |

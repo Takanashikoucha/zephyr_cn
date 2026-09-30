@@ -197,10 +197,7 @@ the
 
 .. note::
 
-   以下为原文（待翻译）
-
-
-Terminology
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 -----------
 
 The definitions are from the Core Specification version 5.4, volume 3, part A

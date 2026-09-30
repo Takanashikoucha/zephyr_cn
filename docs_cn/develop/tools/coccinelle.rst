@@ -145,32 +145,7 @@ homepage
 
 .. note::
 
-   以下为原文（待翻译）
-
-   ./scripts/coccicheck --mode=report --jobs=4
-
-As of Coccinelle 1.0.2 Coccinelle uses Ocaml parmap for parallelization,
-if support for this is detected you will benefit from parmap parallelization.
-
-When parmap is enabled ``coccicheck`` will enable dynamic load balancing by using
-``--chunksize 1`` argument, this ensures we keep feeding threads with work
-one by one, so that we avoid the situation where most work gets done by only
-a few threads. With dynamic load balancing, if a thread finishes early we keep
-feeding it more work.
-
-When parmap is enabled, if an error occurs in Coccinelle, this error
-value is propagated back, the return value of the ``coccicheck``
-command captures this return value.
-
-Using Coccinelle with a single semantic patch
-*********************************************
-
-The option ``--cocci`` can be used to check a single
-semantic patch. In that case, the variable must be initialized with
-the name of the semantic patch to apply.
-
-For instance:
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. code-block:: console
 
    ./scripts/coccicheck --mode=report --cocci=<example.cocci>

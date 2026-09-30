@@ -133,10 +133,7 @@ pieces
 
 .. note::
 
-   以下为原文（待翻译）
-
-the suite.
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. code-block:: python
 
    def test_mdns_conformance(network_lock, dut, suite_binary):

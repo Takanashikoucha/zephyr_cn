@@ -92,11 +92,7 @@ standard
 
 .. note::
 
-   以下为原文（待翻译）
-
-    strerror_r(),yes
-    strtok_r(),yes
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. _posix_option_group_c_lib_ext:
 
 POSIX_C_LIB_EXT

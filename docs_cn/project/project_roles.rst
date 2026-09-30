@@ -220,8 +220,7 @@ etc。
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * Right to close any stale changes after <N> months of no activity
 * Responsibility to take directions from the TSC and follow them.
 * Responsibility to coordinate code merges with maintainers.

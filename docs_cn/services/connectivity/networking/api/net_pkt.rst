@@ -194,12 +194,7 @@ involved
 
 .. note::
 
-   以下为原文（待翻译）
-
-following sections: basic read/write access and data access, the
-latter being the preferred way.
-
-Read and Write access
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 =====================
 
 As said earlier, though net_pkt uses net_buf for its buffer, it

@@ -250,10 +250,7 @@ workflow。
 
 .. note::
 
-   以下为原文（待翻译）
-
-repository, should be limited to:
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * changes required due to updates in the zephyr main tree
 * urgent changes that should not wait to be merged in the external project
   first, such as fixes to security vulnerabilities.

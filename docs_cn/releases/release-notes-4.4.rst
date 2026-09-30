@@ -237,8 +237,7 @@ C17**
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
   * ``CONFIG_MBEDTLS_CIPHER_MODE_CTR_ENABLED``
   * ``CONFIG_MBEDTLS_CIPHER_MODE_XTS_ENABLED``
   * ``CONFIG_MBEDTLS_CMAC``

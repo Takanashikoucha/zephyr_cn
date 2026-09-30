@@ -152,9 +152,7 @@ v4.1.0
 
 .. note::
 
-   以下为原文（待翻译）
-
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 - `PR 94080 fix for main
   <https://github.com/zephyrproject-rtos/zephyr/pull/94080>`_
 

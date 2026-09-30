@@ -228,9 +228,7 @@ determined
 
 .. note::
 
-   以下为原文（待翻译）
-
-Bluetooth HCI
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 =============
 
 * The optional :c:func:`setup()` function in the Bluetooth HCI driver API (enabled through

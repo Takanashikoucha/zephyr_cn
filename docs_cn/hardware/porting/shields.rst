@@ -140,11 +140,7 @@ files
 
 .. note::
 
-   以下为原文（待翻译）
-
-
-These describe connections to cameras and displays (strictly speaking not shields).
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 - :dtcompatible:`arducam,dvp-20pin-connector`
 - :dtcompatible:`nxp,cam-44pins-connector`
 - :dtcompatible:`nxp,parallel-lcd-connector`

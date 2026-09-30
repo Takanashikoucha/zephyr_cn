@@ -106,12 +106,7 @@ validation
 
 .. note::
 
-   以下为原文（待翻译）
-
-
-Unchecked user input length in the Zephyr WiFi shell module can cause
-buffer overflows.
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 - `Zephyr project bug tracker GHSA-853q-q69w-gf5j
   <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-853q-q69w-gf5j>`_
 

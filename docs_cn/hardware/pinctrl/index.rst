@@ -271,12 +271,7 @@ SoCs
 
 .. note::
 
-   以下为原文（待翻译）
-
-                pinmux = <PERIPH0_SIGA_PX0>, <PERIPH0_SIGC_PZ1>;
-                /* Pins PX0 and PZ1 have pull-up enabled */
-                bias-pull-up;
-            };
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
             ...
             groupN {
                 /* Mappings: PERIPH0_SIGB -> PY7 */

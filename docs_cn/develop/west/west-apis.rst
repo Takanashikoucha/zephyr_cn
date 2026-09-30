@@ -99,9 +99,7 @@ WestCommand
 
 .. note::
 
-   以下为原文（待翻译）
-
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
    .. versionadded:: 0.13.0
 
    .. py:attribute:: git_version_info

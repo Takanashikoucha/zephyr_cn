@@ -117,14 +117,7 @@ commands：
 
 .. note::
 
-   以下为原文（待翻译）
-
-
-Disconnect GOEP transport
-*************************
-
-The transport is based on L2CAP Channel:
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. tabs::
 
    .. group-tab:: One Side

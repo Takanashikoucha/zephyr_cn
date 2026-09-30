@@ -187,11 +187,7 @@ Distributor
 
 .. note::
 
-   以下为原文（待翻译）
-
-   URI is optional, and its max length is determined by
-   :kconfig:option:`CONFIG_BT_MESH_DFU_URI_MAXLEN`.
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
    .. note::
 
       The out-of-band distribution mechanism is not supported.

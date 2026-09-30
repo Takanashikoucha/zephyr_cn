@@ -218,8 +218,7 @@ Zephyr
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * Numerous 64-bit fixes, mostly related to data type sizes
 * k_mutex_unlock() is now correctly a rescheduling point
 * Calling k_thread_suspend() on the current thread now correctly invokes

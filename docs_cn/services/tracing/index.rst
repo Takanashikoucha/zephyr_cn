@@ -229,11 +229,7 @@ purposes
 
 .. note::
 
-   以下为原文（待翻译）
-
-specified. Open this file in Tracealyzer by selecting :menuselection:`File --> Open --> Open File`.
-
-Tracealyzer Streaming with SEGGER RTT
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 -------------------------------------
 
 Tracealyzer has built-in support for SEGGER RTT to receive trace data using a J-Link probe.

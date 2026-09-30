@@ -147,8 +147,7 @@ Controller
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * Controller roles (Advertiser, Scanner, Master and Slave) separation in
   source code, conditionally includable
 * Flash access cooperation with BLE radio activity

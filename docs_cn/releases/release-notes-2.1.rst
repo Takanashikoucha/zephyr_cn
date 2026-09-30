@@ -162,9 +162,7 @@ Architectures
 
 .. note::
 
-   以下为原文（待翻译）
-
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
   * Enhanced SSD1306 driver to support build time selection
   * Enhanced SSD16XX driver to use bytestring property for LUT and parameters
 

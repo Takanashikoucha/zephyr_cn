@@ -216,8 +216,7 @@ Kernel
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * Old bt_storage API removed from the codebase
 * Rewrote the HCI SPI driver to comply with the new API
 * Added BLE support for the standard entropy driver via an ISR-friendly call

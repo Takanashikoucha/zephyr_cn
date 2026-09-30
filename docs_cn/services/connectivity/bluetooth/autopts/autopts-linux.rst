@@ -188,10 +188,7 @@ tested。
 
 .. note::
 
-   以下为原文（待翻译）
-
-
-Connect PTS dongle
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 ==================
 
 With VirtualBox there should be no problem. Just find dongle in Devices -> USB and connect.

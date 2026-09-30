@@ -215,8 +215,7 @@ APIs:
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * :github:`1332` - sanitycheck builds too many duplicates in CI, make it smarter
 * :github:`1392` - No module named 'elftools'
 * :github:`1397` - no serialport output

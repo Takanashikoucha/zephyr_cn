@@ -175,45 +175,7 @@ arrays：
 
 .. note::
 
-   以下为原文（待翻译）
-
-
-   i3c0: i3c@10000 {
-           compatible = "vendor,i3c";
-
-           #address-cells = <0x3>;
-           #size-cells = <0x0>;
-
-           reg = <0x10000 0x1000>;
-           interrupts = <0x1F 0x0>;
-
-           pinctrl-0 = <&pinmux-i3c>;
-           pinctrl-names = "default";
-
-           i2c-scl-hz = <400000>;
-
-           i3c-scl-hz = <12000000>;
-
-           status = "okay";
-
-           i3c-dev0: i3c-dev0@420000ABCD12345678 {
-                   compatible = "vendor,i3c-dev";
-
-                   reg = <0x42 0xABCD 0x12345678>;
-
-                   status = "okay";
-           };
-
-           i2c-dev0: i2c-dev0@380000000000000050 {
-                   compatible = "vendor-i2c-dev";
-
-                   reg = <0x38 0x0 0x50>;
-
-                   status = "okay";
-           };
-   };
-
-I3C Devices
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 -----------
 
 For I3C devices, the ``reg`` property has 3 elements:

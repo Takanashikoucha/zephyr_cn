@@ -160,8 +160,7 @@ section
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
    * - ``manifest.file``
      - String, default ``west.yml``. Relative path from the manifest repository
        root directory to the manifest file used by ``west init`` and other

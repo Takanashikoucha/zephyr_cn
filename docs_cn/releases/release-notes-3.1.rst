@@ -238,8 +238,7 @@ provided。
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
   * Added support for a new optional :c:member:`bt_hci_driver.close` API which
     closes HCI transport.
   * Implemented :c:member:`bt_hci_driver.close` on stm32wb HCI driver.

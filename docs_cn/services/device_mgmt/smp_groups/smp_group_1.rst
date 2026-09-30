@@ -165,8 +165,7 @@ application。
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
     | "slot"           | slot number within "image"; each image has two slots : primary (running |
     |                  | one) = 0 and secondary (for DFU dual-bank purposes) = 1.                |
     +------------------+-------------------------------------------------------------------------+

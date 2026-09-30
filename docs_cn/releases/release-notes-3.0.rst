@@ -140,8 +140,7 @@ Changes
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
   * ``CONFIG_CLOCK_STM32_PLL_M_DIVISOR``
   * ``CONFIG_CLOCK_STM32_PLL_N_MULTIPLIER``
   * ``CONFIG_CLOCK_STM32_PLL_P_DIVISOR``

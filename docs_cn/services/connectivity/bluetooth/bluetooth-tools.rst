@@ -128,15 +128,7 @@ Zephyr
 
 .. note::
 
-   以下为原文（待翻译）
-
-   If you see ``Received unknown host packet type 0x00`` when running QEMU, then
-   add :literal:`-z` to the ``btproxy`` command line to ignore any null bytes
-   transmitted at startup.
-
-Once the hardware is connected and ready to use, you can then proceed to
-building and running a sample:
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * Choose one of the Bluetooth sample applications located in
   :literal:`samples/bluetooth`.
 

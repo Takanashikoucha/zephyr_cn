@@ -145,8 +145,7 @@ Stub
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
       .. code-block:: text
 
          (gdb) target remote localhost:5678

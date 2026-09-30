@@ -147,11 +147,7 @@ device。
 
 .. note::
 
-   以下为原文（待翻译）
-
-
-BT: HCI: adv_ext_report Improper discarding in adv_ext_report
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 - `Zephyr project bug tracker GHSA-p5j7-v26w-wmcp
   <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-p5j7-v26w-wmcp>`_
 

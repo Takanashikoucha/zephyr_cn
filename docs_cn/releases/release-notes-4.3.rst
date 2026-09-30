@@ -260,8 +260,7 @@ default**
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
     * :c:func:`instr_tracing_supported`
     * :c:func:`instr_profiling_supported`
     * :c:func:`instr_fundamentals_initialized`

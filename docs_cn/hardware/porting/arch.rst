@@ -215,9 +215,7 @@ optional
 
 .. note::
 
-   以下为原文（待翻译）
-
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * The parameters to the ISR are inserted and tracked via a separate table
   requiring the architecture to discover at runtime which interrupt is
   executing. A common interrupt handler demuxer is installed for all entries of

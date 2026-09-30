@@ -220,9 +220,7 @@ Picolibc
 
 .. note::
 
-   以下为原文（待翻译）
-
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * The LPC55XXX series SOC (except LPC55S06) default main clock has been
   updated to PLL1 source from XTAL32K running at 144MHZ. If the new
   kconfig option :kconfig:option:`CONFIG_INIT_PLL1`

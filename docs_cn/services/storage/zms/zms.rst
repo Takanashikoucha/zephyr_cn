@@ -308,28 +308,7 @@ sectors）：
 
 .. note::
 
-   以下为原文（待翻译）
-
-
-  k_mutex_unlock(&fs.zms_lock);
-
-  if (rc < 0) {
-    /* handle iterator error */
-  }
-
-The optional ``data``/``data_len`` arguments can be set to ``NULL``/``0`` when only the
-``(id, len)`` pairs are needed. When a buffer is provided, only the data that ZMS stores
-directly inside the ATE is copied; larger entries must still be retrieved with
-:c:func:`zms_read`.
-
-Zero-initialize :c:struct:`zms_iter_config` or leave ``use_mask``, ``use_range``, and
-``use_predicate`` disabled to keep the default behavior: accept all IDs and the full
-``zms_id_t`` range.
-
-To determine how many revisions exist for an ID returned by the iterator,
-call :c:func:`zms_read_hist` with increasing ``cnt`` until ``-ENOENT`` is returned.
-
-ZMS free space calculation
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 ==========================
 
 ZMS can also return the free space remaining in the partition.

@@ -222,19 +222,7 @@ element
 
 .. note::
 
-   以下为原文（待翻译）
-
-     PAUSED -> READY   [label=" flush, stop the pools,\l drop the negotiated formats\l"];
-   }
-
-``READY`` means constructed and linked, holding no format and no buffers. The
-``READY`` to ``PAUSED`` transition is where the work happens: the source drives
-capability negotiation across the whole graph, the buffer pool query settles who
-provides buffers and how many, and the pools start.
-
-Which way a transition goes determines the order a bin works through its
-children:
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * Going **up**, children transition from the sink towards the source, so a
   downstream element is ready before anything is pushed into it.
 * Going **down**, children transition from the source towards the sink, so

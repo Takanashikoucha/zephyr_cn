@@ -186,13 +186,7 @@ SIRK
 
 .. note::
 
-   以下为原文（待翻译）
-
-
-To stop all the streams that has been started, the :code:`cap_initiator unicast_stop` command can be
-used.
-
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. code-block:: console
 
    uart:~$ cap_initiator unicast_stop all

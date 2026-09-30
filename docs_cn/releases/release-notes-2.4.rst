@@ -246,9 +246,7 @@ do_write_op_tlv
 
 .. note::
 
-   以下为原文（待翻译）
-
-      architecture.
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
     * Fixed stack randomization for main thread.
     * Fixed exception vector table alignment in Cortex-M architecture
     * Increased test coverage in QEMU for ARMv6-M architecture variant.

@@ -267,8 +267,7 @@ interrupts
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * ZLIs are assigned the highest configurable priority level
 * SVCs are assigned the second highest configurable priority level
 * Regular HW interrupts are assigned priority levels lower than SVC.

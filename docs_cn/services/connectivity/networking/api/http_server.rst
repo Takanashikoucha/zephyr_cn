@@ -213,17 +213,7 @@ provided
 
 .. note::
 
-   以下为原文（待翻译）
-
-            .bitmask_of_supported_http_methods = BIT(HTTP_GET),
-        },
-        .cb = default_handler,
-        .user_data = NULL,
-    };
-
-    /* Register a fallback resource to handle any unknown path */
-    HTTP_SERVICE_DEFINE(my_service, "0.0.0.0", &http_service_port, 1, 10, NULL, &default_detail, NULL);
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. note::
 
     HTTPS services rely on TLS credentials being registered in the system.

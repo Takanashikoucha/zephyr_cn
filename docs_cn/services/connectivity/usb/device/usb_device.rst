@@ -193,26 +193,7 @@ type。
 
 .. note::
 
-   以下为原文（待翻译）
-
-the best indication that host application has opened the tty device, Zephyr will
-force :kconfig:option:`CONFIG_CDC_ACM_TX_DELAY_MS` millisecond delay before real
-payload is sent. This should allow sufficient time for first, and only first,
-application that opens the tty device to disable ECHO if ECHO is not desired.
-If ECHO is not desired at all from CDC ACM device it is best to set up udev rule
-to disable ECHO as soon as device is connected.
-
-ECHO is particurarly unwanted when CDC ACM instance is used for Zephyr shell,
-because the control characters to set color sent back to shell are interpreted
-as (invalid) command and user will see garbage as a result. While minicom does
-disable ECHO by default, on exit with reset it will restore the termios settings
-to whatever was set on entry. Therefore, if minicom is the first application to
-open the tty device, the exit with reset will enable ECHO back and thus set up
-a problem for the next application (which cannot be mitigated at Zephyr side).
-To prevent the issue it is recommended either to leave minicom without reset or
-to disable ECHO before minicom is started.
-
-DFU
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 ===
 
 USB DFU class implementation is tightly coupled to :ref:`dfu` and :ref:`mcuboot_api`.

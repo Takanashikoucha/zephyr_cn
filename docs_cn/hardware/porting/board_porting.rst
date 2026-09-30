@@ -246,13 +246,7 @@ issue
 
 .. note::
 
-   以下为原文（待翻译）
-
-  If the vendor is defined in the list in
-  :zephyr_file:`dts/bindings/vendor-prefixes.txt` then you must use
-  that vendor prefix as ``<VENDOR>``. ``others`` may be used as vendor prefix if
-  the vendor is not defined.
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. note::
 
   The board directory name does not need to match the name of the board.

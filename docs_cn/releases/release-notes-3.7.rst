@@ -353,8 +353,7 @@ development
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
   * Completely redesigned HCI driver interface. See the Bluetooth HCI section in
     :ref:`migration_3.7` for more information.
   * Added support for Ambiq Apollo3 Blue series.

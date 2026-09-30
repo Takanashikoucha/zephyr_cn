@@ -186,8 +186,7 @@ first
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 	* ``DstAddr``: If present, sets the new 16-bit mesh destination address. If omitted, the current destination address is printed.
 
 

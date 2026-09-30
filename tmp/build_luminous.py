@@ -22,6 +22,7 @@ TEMPLATE = """<!DOCTYPE html>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{title} — Zephyr 中文文档</title>
+  <link rel="icon" href="{base}favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="{base}_static/pygments.css" />
   <link rel="stylesheet" href="{base}_static/luminous.css" />
   <link rel="stylesheet" href="{base}_static/sphinx-design.min.css" />

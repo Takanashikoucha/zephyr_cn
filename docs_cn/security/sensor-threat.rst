@@ -280,60 +280,7 @@ assumes
 
 .. note::
 
-   以下为原文（待翻译）
-
-      for information on approved RBGs and NIST SP 800-90B for
-      information on testing a device's entropy source [th-entropy]_.
-
-4. **Communication with the time service**. Ideally, the device shall
-   contain hardware that maintains a secure time. However, most SoCs in
-   use do not have support for this, and it will be necessary to consult
-   an external time service.
-   :rfc:`4330` and referenced RFCs describe the Simple Network Time
-   Protocol that can be used to query the current time from a network time
-   server.
-
-5. **Device lifecycle**. An IoT device will have a lifecycle from
-   production to destruction and disposal of the device. Aspects of this
-   lifecycle that impact security include initial provisioning, normal
-   operation, re-provisioning, and destruction.
-
-   a. **Initial provisioning**. During the initial provisioning stage,
-      it is necessary to program the bootloader, an initial application
-      image, a device secret, and initial configuration data
-      [th-initial-provision]_. In
-      addition, the bootloader flash protection shall be installed. Of
-      this information, only the device secret needs to differ per
-      device. This secret shall be securely maintained, and destroyed in
-      all locations outside of the device once it has been programmed
-      [th-initial-secret]_.
-
-   b. **Normal operation**. Normal operation includes the behavior
-      described by the rest of this document.
-
-   c. **Re-provisioning**. Sometimes it is necessary to re-provision a
-      device, such as for a different application. One way to do this is
-      to keep the same device secret, and replace the configuration
-      data, as well as the cloud service data associated with the
-      device. It is also possible to program a new device secret, but if
-      this is done it shall be done securely, and the new secret
-      destroyed externally once programmed into the device
-      [th-reprovision]_.
-
-   d. **Destruction**. To prevent the device secret from being used to
-      spoof the device, upon decommissioning, the secret for a
-      particular device shall be rendered ineffective
-      [th-destruction]_. Possibilities include:
-
-      i.    Hardware destruction of the device.
-
-      ii.   Securely wiping the flash area containing the
-            secret [3]_.
-
-      iii.  Removing the device identity and certificate from the
-            service.
-
-Other Considerations
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 ====================
 
 In addition to the above, network connected devices generally will need

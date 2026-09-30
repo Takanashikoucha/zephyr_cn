@@ -232,50 +232,7 @@ state。
 
 .. note::
 
-   以下为原文（待翻译）
-
-           struct gpio_callback int_pin_callback;
-           const struct device *dev;
-   };
-
-   struct dummy_driver_config {
-           const struct device *bus;
-           const struct gpio_dt_spec int_gpio;
-           const struct gpio_dt_spec enable_pin;
-   };
-
-   static void dummy_driver_int_pin_handler(const struct device *dev,
-                                            struct gpio_callback *cb,
-                                            uint32_t pins)
-   {
-           struct dummy_driver_data *dev_data =
-                   CONTAINER_OF(cb, struct dummy_driver_data, int_pin_callback);
-           const struct device *dev = dev_data->dev;
-           const struct dummy_driver_config *dev_config = dev->config;
-
-           /* ... */
-   }
-
-   static int dummy_driver_pm_suspend(const struct device *dev)
-   {
-           struct dummy_driver_data *dev_data = dev->data;
-           const struct dummy_driver_config *config = dev->config;
-
-           /* Request devices needed by device */
-           (void)pm_device_runtime_get(config->enable_pin.port);
-
-           /* Disable and remove interrupt pin interrupt */
-           (void)gpio_pin_interrupt_configure_dt(&config->int_gpio, GPIO_INT_DISABLED);
-           (void)gpio_remove_callback(config->int_pin.port, &data->int_pin_callback);
-
-           /* Disable the device. In this case, we use the enable pin */
-           (void)gpio_pin_set_dt(&config->enable_pin, 0);
-
-           /* Release devices currently not needed by device */
-           (void)pm_device_runtime_put(config->enable_pin.port);
-           (void)pm_device_runtime_put(config->int_pin.port);
-
-           /*
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
             * Note that we now have suspended the device and released all the
             * devices this device depends on. We are ready for the power
             * domain being suspended, the device being resumed again, or the

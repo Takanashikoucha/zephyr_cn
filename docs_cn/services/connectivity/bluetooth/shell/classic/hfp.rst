@@ -139,15 +139,7 @@ commands：
 
 .. note::
 
-   以下为原文（待翻译）
-
-   AG received codec id bit map 2
-   AG connected
-   AG received vgm 0
-   AG received vgs 0
-
-4. Disconnect from HFP HF:
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. code-block:: console
 
    uart:~$ hfp ag disconnect

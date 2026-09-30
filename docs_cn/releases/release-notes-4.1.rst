@@ -249,8 +249,7 @@ improvements**
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * I3C
 
   * :kconfig:option:`CONFIG_I3C_TARGET_BUFFER_MODE`

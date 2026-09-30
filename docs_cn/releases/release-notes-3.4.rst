@@ -217,13 +217,7 @@ Related
 
 .. note::
 
-   以下为原文（待翻译）
-
-  only the function prototypes and the new ``hci_types.h`` defining all
-  HCI-related macros and structs. The previous ``hci_err.h`` has been merged
-  into ``hci_types.h``.
-
-Removed APIs in this release
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 ============================
 
 * Pinmux API has been removed. Pin control needs to be used as its replacement,

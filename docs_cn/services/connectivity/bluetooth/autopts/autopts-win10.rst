@@ -143,8 +143,7 @@ limitation。
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. code-block::
 
     git clone https://github.com/auto-pts/auto-pts.git

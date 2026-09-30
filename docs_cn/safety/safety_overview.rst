@@ -201,16 +201,7 @@ scope
 
 .. note::
 
-   以下为原文（待翻译）
-
-purpose, tracing the requirements down to the code level is used. With the requirements management
-and tracing in hand, it can now be verified whether the functionality has been tested and
-implemented correctly, thus minimizing the systematic error rate.
-
-Also the IEC 61508 standard highly recommends (which is like a must-have for the certification)
-requirements and requirements tracing.
-
-Test coverage
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 -------------
 
 A high test coverage, in turn, is evidence of safety that the code conforms precisely to what it

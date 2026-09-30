@@ -136,10 +136,7 @@ shells：
 
 .. note::
 
-   以下为原文（待翻译）
-
-
-Output documents
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 ----------------
 
 The documents are written to :file:`BUILD_DIR/spdx/` (override with ``-s``). The same set of

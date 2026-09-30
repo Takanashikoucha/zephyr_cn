@@ -186,10 +186,7 @@ Architectures
 
 .. note::
 
-   以下为原文（待翻译）
-
-release:
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. comment  List derived from GitHub Issue query: ...
 
 * :github:`1082` - build all tests have issues for devices that don't exist on a given board

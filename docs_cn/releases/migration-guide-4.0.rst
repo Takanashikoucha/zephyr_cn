@@ -159,13 +159,7 @@ M。
 
 .. note::
 
-   以下为原文（待翻译）
-
-  :kconfig:option:`CONFIG_SOC_HFXO_CAP_INTERNAL` and
-  :kconfig:option:`CONFIG_SOC_HFXO_CAP_INT_VALUE_X2` have been deprecated.
-
-  LFXO can now be configured like this:
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
   .. code-block:: devicetree
 
      /* use external capacitors */

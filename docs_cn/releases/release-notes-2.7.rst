@@ -301,10 +301,7 @@ architecture
 
 .. note::
 
-   以下为原文（待翻译）
-
-********************
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * Added support for these SoC series:
 
   * Added STM32U5 basic SoC support

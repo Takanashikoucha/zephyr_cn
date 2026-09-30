@@ -166,38 +166,7 @@ allocations。
 
 .. note::
 
-   以下为原文（待翻译）
-
-   LLEXT will be unable to load extensions if the instruction memory
-   ``.llext_instr_heap`` is placed in is not writable at the time the
-   extensions are loaded and linked.
-
-Placements can also be specified by providing a custom linker script.
-
-:kconfig:option:`CONFIG_CUSTOM_LINKER_SCRIPT`
-
-        Path to the linker script to be used instead of the one defined by the
-        board.
-
-        The linker script must be based on a version provided by Zephyr since
-        the kernel can expect a certain layout/certain regions.
-
-        This is useful when an application needs to add sections into the
-        linker script and avoid having to change the script provided by
-        Zephyr.
-
-While using a custom linker script, you may need to override default
-placements. For example, you may wish to include
-:file:`include/zephyr/linker/common-noinit.ld` in your linker script
-but place the heap section(s) elsewhere. To do this, select the following
-option.
-
-:kconfig:option:`CONFIG_LLEXT_CUSTOM_HEAP_PLACEMENT`
-
-        Remove default placements of LLEXT heap sections in the linker script,
-        allowing the user to place the heap(s) themselves.
-
-Word granular access instruction memory heap
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 --------------------------------------------
 
 Word granular access instruction memory is a type of

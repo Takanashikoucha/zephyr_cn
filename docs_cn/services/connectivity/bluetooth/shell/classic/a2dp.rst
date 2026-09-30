@@ -134,28 +134,7 @@ connection。
 
 .. note::
 
-   以下为原文（待翻译）
-
-                        uart:~$ a2dp send_delay_report
-                        success to send report delay
-                        <input `a2dp start` in initiator side>
-                        receive requesting start and accept
-                        stream started
-                        <input `a2dp send_media` in source side>
-                        received, num of frames: 1, data length: 160
-                        data: 1, 2, 3, 4, 5, 6 ......
-                        <input `a2dp suspend` in initiator side>
-                        receive requesting suspend and accept
-                        stream suspended
-                        <input `a2dp release` in initiator side>
-                        receive requesting release and accept
-                        stream released
-
-Abort Operation
-***************
-
-Demonstrate the abort operation:
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * Establish an A2DP stream based on :ref:`basic a2dp operations <a2dp_basic_operations>`.
 * Initiator aborts the stream using :code:`a2dp abort`.
 

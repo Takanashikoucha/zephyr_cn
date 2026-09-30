@@ -205,8 +205,7 @@ p6c7
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
   * Added support to use both tinycrypt and PSA based crypto
   * Added full virtual addresses support with the collisions resolution. The
     :kconfig:option:`CONFIG_BT_MESH_LABEL_NO_RECOVER` Kconfig option is introduced to restore the

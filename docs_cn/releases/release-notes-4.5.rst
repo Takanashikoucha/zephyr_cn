@@ -223,8 +223,7 @@ classes**
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
     * The NuMaker Ethernet driver with ``CONFIG_ETH_NUMAKER`` is superseded by
       :kconfig:option:`CONFIG_ETH_NUMAKER_DWC_ETHER_1000`. See the migration guide.
 

@@ -178,19 +178,7 @@ segments。
 
 .. note::
 
-   以下为原文（待翻译）
-
-
-Receiving
-*********
-
-Frames are only received when they match a filter.
-The following code snippets show how to receive frames by adding filters.
-
-Here we have an example for a receiving callback as used for
-:c:func:`can_add_rx_filter`. The user data argument is passed when the filter is
-added.
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. code-block:: C
 
   void rx_callback_function(const struct device *dev, struct can_frame *frame, void *user_data)

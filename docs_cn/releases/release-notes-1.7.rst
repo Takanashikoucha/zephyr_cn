@@ -267,8 +267,7 @@ Architectures
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 * ``ZEP-1307`` - Plumbing the DTS configuration
 * ``ZEP-1308`` - zephyr thread function k_sleep doesn't work with nrf51822
 * ``ZEP-1320`` - Update Architecture Porting Guide

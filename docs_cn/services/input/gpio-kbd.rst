@@ -174,16 +174,7 @@ enabled。
 
 .. note::
 
-   以下为原文（待翻译）
-
-If the key matrix is not complete, a map of the keys that are actually
-populated can be specified using the ``actual-key-mask`` property. This allows
-the matrix state to be filtered to remove keys that are not present before
-ghosting detection, potentially allowing key combinations that would otherwise
-be blocked by it.
-
-For example for a 3x3 matrix missing a key:
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. figure:: no-sw4.svg
       :align: center
       :width: 50%

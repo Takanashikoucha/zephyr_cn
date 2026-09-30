@@ -252,14 +252,7 @@ commit。
 
 .. note::
 
-   以下为原文（待翻译）
-
-       remote Git repository.
-
-       If the project has neither, the ``defaults`` section must specify a
-       ``remote``, which will be used as the project's remote. Otherwise,
-       the manifest is invalid.
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
    * - ``repo-path``
      - Optional. If given, this is concatenated on to the remote's
        ``url-base`` instead of the project's ``name`` to form its fetch URL.

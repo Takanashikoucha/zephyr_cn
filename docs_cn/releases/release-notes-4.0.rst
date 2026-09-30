@@ -281,8 +281,7 @@ supported。
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
    * :zephyr:board:`ADI MAX32675EVKIT <max32675evkit>` (``max32675evkit``)
    * :zephyr:board:`ADI MAX32690FTHR <max32690fthr>` (``max32690fthr``)
    * :zephyr:board:`arduino_nicla_vision` (``arduino_nicla_vision``)

@@ -235,15 +235,7 @@ connections。
 
 .. note::
 
-   以下为原文（待翻译）
-
-The Application-Layer Protocol Negotiation (ALPN) is mandatory in QUIC.
-The ALPN is used to negotiate the application protocol that is run on top
-of two QUIC endpoints. You apply ALPN list to the QUIC socket using
-:c:func:`zsock_setsockopt` on the **connection socket** immediately after creation.
-The ALPN list must be set before the stream is created.
-Note that the list items must be constants, and they cannot be variables.
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. code-block:: c
 
    const char * const alpn_list[] = {

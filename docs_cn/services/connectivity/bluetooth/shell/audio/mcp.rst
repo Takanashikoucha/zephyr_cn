@@ -267,15 +267,7 @@ tracks
 
 .. note::
 
-   以下为原文（待翻译）
-
-
-   uart:~$ mcc ots_select 0x107
-   Selecting object succeeded
-
-
-Read the object's metadata:
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. code-block:: console
 
    uart:~$ mcc ots_read_metadata

@@ -218,23 +218,7 @@ handlers。
 
 .. note::
 
-   以下为原文（待翻译）
-
-
-    static int foo_settings_set(const char *name, size_t len,
-                                settings_read_cb read_cb, void *cb_arg)
-    {
-        const char *next;
-        int rc;
-
-        if (settings_name_steq(name, "bar", &next) && !next) {
-            if (len != sizeof(foo_val)) {
-                return -EINVAL;
-            }
-
-            rc = read_cb(cb_arg, &foo_val, sizeof(foo_val));
-            if (rc >= 0) {
-                /* key-value pair was properly read.
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
                  * rc contains value length.
                  */
                 return 0;

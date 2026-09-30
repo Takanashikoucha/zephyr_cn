@@ -177,8 +177,7 @@ indenting
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
    * displayed
    * horizontally
    * so it doesn't

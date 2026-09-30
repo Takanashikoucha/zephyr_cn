@@ -148,11 +148,7 @@ commands：
 
 .. note::
 
-   以下为原文（待翻译）
-
-The :code:`pbap pse` subcommand provides functionality for PBAP PSE (Phonebook Server Equipment)
-in Bluetooth Classic.
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 1. Register PSE RFCOMM server:
 
 .. code-block:: console

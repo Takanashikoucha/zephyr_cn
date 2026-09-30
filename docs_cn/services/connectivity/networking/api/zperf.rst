@@ -174,16 +174,7 @@ executed
 
 .. note::
 
-   以下为原文（待翻译）
-
-
-   "``jobs``", "Show currently active or finished sessions"
-   "``jobs all``", "Show statistics of finished sessions"
-   "``jobs clear``", "Clear finished session statistics"
-   "``jobs start``", "Start all the waiting sessions"
-
-Example:
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. code-block:: console
 
    uart:~$ zperf udp upload -a -t 5 192.0.2.2 5001 10 1K 1M

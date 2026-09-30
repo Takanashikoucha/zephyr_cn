@@ -127,8 +127,7 @@ header：
 
 .. note::
 
-   以下为原文（待翻译）
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
     |                  | appears if an error is returned when using SMP version 2.               |
     +------------------+-------------------------------------------------------------------------+
     | "err" -> "rc"    | contains the index of the group-based error code. Only appears if       |

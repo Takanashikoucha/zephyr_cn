@@ -241,11 +241,7 @@ products。
 
 .. note::
 
-   以下为原文（待翻译）
-
-       impact/severity as known at the time), corrective or mitigating measures already taken, and
-       measures users can take. Indicate, where applicable, how sensitive you consider the notified
-       information to be.
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
    * - Final report
      - Within 1 month after the incident notification
      - Provide a detailed description of the incident, including severity and impact, the type of

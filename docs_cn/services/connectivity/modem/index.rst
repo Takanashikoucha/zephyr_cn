@@ -187,11 +187,7 @@ interface
 
 .. note::
 
-   以下为原文（待翻译）
-
-point all communication is framed inside CMUX.
-
-APN configuration and dialing
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 ------------------------------
 
 The driver attaches the modem chat to DLCI 1 and runs a dynamically

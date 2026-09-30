@@ -147,9 +147,7 @@ option。
 
 .. note::
 
-   以下为原文（待翻译）
-
-Mbed TLS
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 ========
 
 * If a platform has a CSPRNG source available (i.e. :kconfig:option:`CONFIG_CSPRNG_ENABLED`

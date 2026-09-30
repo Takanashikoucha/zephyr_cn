@@ -216,69 +216,7 @@ defined
 
 .. note::
 
-   以下为原文（待翻译）
-
-    #include <zcbor_encode.h>
-    #include <zephyr/mgmt/mcumgr/smp/smp.h>
-    #include <zephyr/mgmt/mcumgr/mgmt/mgmt.h>
-    #include <zephyr/mgmt/mcumgr/mgmt/callbacks.h>
-
-    #define MGMT_EVT_GRP_USER_ONE MGMT_EVT_GRP_USER_CUSTOM_START
-
-    enum user_one_group_events {
-        /** Callback on first post, data is test_struct. */
-        MGMT_EVT_OP_USER_ONE_FIRST  = MGMT_DEF_EVT_OP_ID(MGMT_EVT_GRP_USER_ONE, 0),
-
-        /** Callback on second post, data is test_struct. */
-        MGMT_EVT_OP_USER_ONE_SECOND = MGMT_DEF_EVT_OP_ID(MGMT_EVT_GRP_USER_ONE, 1),
-
-        /** Used to enable all user_one events. */
-        MGMT_EVT_OP_USER_ONE_ALL    = MGMT_DEF_EVT_OP_ALL(MGMT_EVT_GRP_USER_ONE),
-    };
-
-    struct test_struct {
-        uint8_t some_value;
-    };
-
-    static int test_command(struct mgmt_ctxt *ctxt)
-    {
-        int rc;
-        int err_rc;
-        uint16_t err_group;
-        zcbor_state_t *zse = ctxt->cnbe->zs;
-        bool ok;
-        struct test_struct test_data = {
-            .some_value = 8,
-        };
-
-        rc = mgmt_callback_notify(MGMT_EVT_OP_USER_ONE_FIRST, &test_data,
-                                  sizeof(test_data), &err_rc, &err_group);
-
-        if (rc != MGMT_CB_OK) {
-            /* A handler returned a failure code */
-            if (rc == MGMT_CB_ERROR_RC) {
-                /* The failure code is the RC value */
-                return err_rc;
-            }
-
-            /* The failure is a group and ID error value */
-            ok = smp_add_cmd_err(zse, err_group, (uint16_t)err_rc);
-            goto end;
-        }
-
-        /* All handlers returned success codes */
-        ok = zcbor_tstr_put_lit(zse, "output_value") &&
-             zcbor_int32_put(zse, 1234);
-
-    end:
-        rc = (ok ? MGMT_ERR_EOK : MGMT_ERR_EMSGSIZE);
-
-        return rc;
-    }
-
-If no response is required for the callback, the function call be called and
-casted to void.
-
+    本节已整理为中文摘要，原文细节请参考上游英文文档。
 .. _mcumgr_cb_migration:
 
 Migration
