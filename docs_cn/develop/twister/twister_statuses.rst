@@ -131,3 +131,91 @@ Statuses
          Cases
          的
          分组。
+
+
+.. note::
+
+   以下为原文（待翻译）
+
+   * - FILTER
+     - ✓
+     - ✕
+     - ✕
+     - ✕
+     - ✕
+     - ✕
+   * - ERROR
+     - ✕
+     - ✓
+     - ✕
+     - ✕
+     - ✕
+     - ✕
+   * - BLOCK
+     - ✕
+     - ✓
+     - ✓
+     - ✕
+     - ✕
+     - ✕
+   * - FAIL
+     - ✕
+     - ✓
+     - ✓
+     - ✕
+     - ✕
+     - ✕
+   * - PASS
+     - ✕
+     - ✓
+     - ✓
+     - ✓
+     - ✕
+     - ✕
+   * - NOTRUN
+     - ✕
+     - ✕
+     - ✕
+     - ✕
+     - ✓
+     - ✕
+   * - SKIP
+     - ✕
+     - ✓
+     - ✓
+     - ✓
+     - ✕
+     - ✓
+
+✕ indicates that such a combination should not happen in a proper Twister run. In other words,
+no Suite of a status indicated by the table column should contain any Cases of a status indicated
+by the table row.
+
+✓ indicates a proper combination.
+
+Detailed explanation, per Suite Status
+-------------------------------------------
+
+``FILTER``:
+  This status indicates that the whole Suite has been statically filtered
+  out of a given Twister run. Thus, any Case within it should also have such a status.
+
+``ERROR``:
+  Suite encountered a problem when running the test. It requires at least one case with
+  ``ERROR`` or ``BLOCK`` status. As this takes precedence over all other Case statuses, all valid
+  terminal Case statuses can be within such a Suite.
+
+``FAIL``:
+  Suite has at least one Case that did not meet its assertions. This takes precedence over
+  all other Case statuses, given that the conditions for an ERROR status have not been met.
+
+``PASS``:
+  Suite has passed properly. It cannot contain any Cases with ``BLOCK``, ``ERROR``, or ``FAIL``
+  statuses, as those indicate a problem when running the Suite.
+
+``NOTRUN``:
+  Whole suite was not run, but only built. It requires than all Cases within were not run.
+  As runnability is decided on a per-Suite basis, only ``NOTRUN`` is applicable for its Cases.
+
+``SKIP``:
+  Whole Suite has been skipped at runtime. All Cases need to have ``SKIP`` status as well.

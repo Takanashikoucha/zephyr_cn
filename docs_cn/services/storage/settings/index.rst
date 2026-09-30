@@ -214,3 +214,174 @@ handlers。
     时
     被
     called。
+
+
+.. note::
+
+   以下为原文（待翻译）
+
+
+    static int foo_settings_set(const char *name, size_t len,
+                                settings_read_cb read_cb, void *cb_arg)
+    {
+        const char *next;
+        int rc;
+
+        if (settings_name_steq(name, "bar", &next) && !next) {
+            if (len != sizeof(foo_val)) {
+                return -EINVAL;
+            }
+
+            rc = read_cb(cb_arg, &foo_val, sizeof(foo_val));
+            if (rc >= 0) {
+                /* key-value pair was properly read.
+                 * rc contains value length.
+                 */
+                return 0;
+            }
+            /* read-out error */
+            return rc;
+        }
+
+        return -ENOENT;
+    }
+
+    static int foo_settings_export(int (*storage_func)(const char *name,
+                                                       const void *value,
+                                                       size_t val_len))
+    {
+        return storage_func("foo/bar", &foo_val, sizeof(foo_val));
+    }
+
+    struct settings_handler my_conf = {
+        .name = "foo",
+        .h_set = foo_settings_set,
+        .h_export = foo_settings_export
+    };
+
+Example: Persist Runtime State
+******************************
+
+This is a simple example showing how to persist runtime state. In this example,
+only ``h_set`` is defined, which is used when restoring value from
+persistent storage.
+
+In this example, the ``main`` function increments ``foo_val``, and then
+persists the latest number. When the system restarts, the application calls
+:c:func:`settings_load()` while initializing, and ``foo_val`` will continue counting
+up from where it was before restart.
+
+.. code-block:: c
+
+    #include <zephyr/kernel.h>
+    #include <zephyr/sys/reboot.h>
+    #include <zephyr/settings/settings.h>
+    #include <zephyr/sys/printk.h>
+    #include <inttypes.h>
+
+    #define DEFAULT_FOO_VAL_VALUE 0
+
+    static uint8_t foo_val = DEFAULT_FOO_VAL_VALUE;
+
+    static int foo_settings_set(const char *name, size_t len,
+                                settings_read_cb read_cb, void *cb_arg)
+    {
+        const char *next;
+        int rc;
+
+        if (settings_name_steq(name, "bar", &next) && !next) {
+            if (len != sizeof(foo_val)) {
+                return -EINVAL;
+            }
+
+            rc = read_cb(cb_arg, &foo_val, sizeof(foo_val));
+            if (rc >= 0) {
+                return 0;
+            }
+
+            return rc;
+        }
+
+
+        return -ENOENT;
+    }
+
+    struct settings_handler my_conf = {
+        .name = "foo",
+        .h_set = foo_settings_set
+    };
+
+    int main(void)
+    {
+        settings_subsys_init();
+        settings_register(&my_conf);
+        settings_load();
+
+        foo_val++;
+        settings_save_one("foo/bar", &foo_val, sizeof(foo_val));
+
+        printk("foo: %d\n", foo_val);
+
+        k_msleep(1000);
+        sys_reboot(SYS_REBOOT_COLD);
+    }
+
+Example: Custom Backend Implementation
+**************************************
+
+This is a simple example showing how to register a simple custom backend
+handler (:kconfig:option:`CONFIG_SETTINGS_CUSTOM`).
+
+.. code-block:: c
+
+    static int settings_custom_load(struct settings_store *cs,
+                                    const struct settings_load_arg *arg)
+    {
+        //...
+    }
+
+    static int settings_custom_save(struct settings_store *cs, const char *name,
+                                    const char *value, size_t val_len)
+    {
+        //...
+    }
+
+    /* custom backend interface */
+    static struct settings_store_itf settings_custom_itf = {
+        .csi_load = settings_custom_load,
+        .csi_save = settings_custom_save,
+    };
+
+    /* custom backend node */
+    static struct settings_store settings_custom_store = {
+        .cs_itf = &settings_custom_itf
+    };
+
+    int settings_backend_init(void)
+    {
+        /* register custom backend */
+        settings_dst_register(&settings_custom_store);
+        settings_src_register(&settings_custom_store);
+        return 0;
+    }
+
+API Reference
+*************
+
+The Settings subsystem APIs are provided by :zephyr_file:`include/zephyr/settings/settings.h`.
+
+API for general settings usage
+==============================
+.. doxygengroup:: settings
+
+API for key-name processing
+===========================
+.. doxygengroup:: settings_name_proc
+
+API for runtime settings manipulation
+=====================================
+.. doxygengroup:: settings_rt
+
+API of backend interface
+========================
+..  doxygengroup:: settings_backend

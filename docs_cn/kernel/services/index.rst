@@ -81,3 +81,56 @@ Zephyr 内核位于每个 Zephyr 应用的核心。
    :maxdepth: 1
 
    data_passing/index
+
+
+.. note::
+
+   以下为原文（待翻译）
+
+
+.. [#f6] Data item size must be a multiple of the data alignment.
+
+.. toctree::
+   :maxdepth: 1
+
+   data_passing/queues.rst
+   data_passing/fifos.rst
+   data_passing/lifos.rst
+   data_passing/stacks.rst
+   data_passing/message_queues.rst
+   data_passing/mailboxes.rst
+   data_passing/pipes.rst
+
+.. _kernel_memory_management_api:
+
+Memory Management
+*****************
+
+See :ref:`memory_management_api`.
+
+Timing
+******
+
+These pages cover timing related services.
+
+.. toctree::
+   :maxdepth: 1
+
+   timing/clocks.rst
+   timing/timers.rst
+   timing/system_timer_drivers.rst
+
+Other
+*****
+
+These pages cover other kernel services.
+
+.. toctree::
+   :maxdepth: 1
+
+   other/atomic.rst
+   other/float.rst
+   other/version.rst
+   other/assert.rst
+   other/fatal.rst
+   other/thread_local_storage.rst

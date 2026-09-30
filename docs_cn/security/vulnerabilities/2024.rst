@@ -143,3 +143,123 @@ victim
 Bluetooth
 LE
 device。
+
+
+.. note::
+
+   以下为原文（待翻译）
+
+
+BT: HCI: adv_ext_report Improper discarding in adv_ext_report
+
+- `Zephyr project bug tracker GHSA-p5j7-v26w-wmcp
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-p5j7-v26w-wmcp>`_
+
+This has been fixed in main for v3.7.0
+
+- `PR 74639 fix for main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/74639>`_
+
+- `PR 77960 fix for 3.6
+  <https://github.com/zephyrproject-rtos/zephyr/pull/77960>`_
+
+:cve:`2024-6442`
+----------------
+
+Bluetooth: ASCS Unchecked tailroom of the response buffer
+
+- `Zephyr project bug tracker GHSA-m22j-ccg7-4v4h
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-m22j-ccg7-4v4h>`_
+
+This has been fixed in main for v3.7.0
+
+- `PR 74976 fix for main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/74976>`_
+
+- `PR 77958 fix for 3.6
+  <https://github.com/zephyrproject-rtos/zephyr/pull/77958>`_
+
+:cve:`2024-6443`
+----------------
+
+zephyr: out-of-bound read in utf8_trunc
+
+- `Zephyr project bug tracker GHSA-gg46-3rh2-v765
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-gg46-3rh2-v765>`_
+
+This has been fixed in main for v3.7.0
+
+- `PR 74949 fix for main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/74949>`_
+
+- `PR 78286 fix for 3.6
+  <https://github.com/zephyrproject-rtos/zephyr/pull/78286>`_
+
+:cve:`2024-6444`
+----------------
+
+Bluetooth: ots: missing buffer length check
+
+- `Zephyr project bug tracker GHSA-qj4r-chj6-h7qp
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-qj4r-chj6-h7qp>`_
+
+This has been fixed in main for v3.7.0
+
+- `PR 74944 fix for main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/74944>`_
+
+- `PR 77954 fix for 3.6
+  <https://github.com/zephyrproject-rtos/zephyr/pull/77954>`_
+
+:cve:`2024-8798`
+----------------
+
+Bluetooth: classic: avdtp: missing buffer length check
+
+- `Zephyr project bug tracker GHSA-r7pm-f93f-f7fp
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-r7pm-f93f-f7fp>`_
+
+This has been fixed in main for v4.0.0
+
+- `PR 77969 fix for main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/77969>`_
+
+- `PR 78409 fix for 3.7
+  <https://github.com/zephyrproject-rtos/zephyr/pull/78409>`_
+
+:cve:`2024-10395`
+-----------------
+
+net: lib: http_server: Buffer Under-read
+
+No proper validation of the length of user input in
+http_server_get_content_type_from_extension could cause a
+segmentation fault or crash by causing memory to be read
+outside of the bounds of the buffer.
+
+- `Zephyr project bug tracker GHSA-hfww-j92m-x8fv
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-hfww-j92m-x8fv>`_
+
+This has been fixed in main for v4.0.0
+
+- `PR 80396 fix for main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/80396>`_
+
+:cve:`2024-11263`
+-----------------
+
+arch: riscv: userspace: potential security risk when CONFIG_RISCV_GP=y
+
+A rogue thread can corrupt the gp reg and cause the entire system to hard fault at best, at worst,
+it can potentially trick the system to access another set of random global symbols.
+
+- `Zephyr project bug tracker GHSA-jjf3-7x72-pqm9
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-jjf3-7x72-pqm9>`_
+
+This has been fixed in main for v4.0.0
+
+- `PR 81155 fix for main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/81155>`_
+
+- `PR 81370 fix for 3.7
+  <https://github.com/zephyrproject-rtos/zephyr/pull/81370>`_

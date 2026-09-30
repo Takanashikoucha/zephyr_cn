@@ -166,3 +166,100 @@ Architecture
    digraph
    mcp_arch
    {
+
+
+.. note::
+
+   以下为原文（待翻译）
+
+.. code-block:: c
+
+   static int my_tool_cb(enum mcp_tool_event_type event,
+                         const char *arguments,
+                         const char *execution_token)
+   {
+       if (event == MCP_TOOL_CANCEL_REQUEST) {
+           struct mcp_tool_message ack = {
+               .type = MCP_USR_TOOL_CANCEL_ACK,
+           };
+
+           mcp_server_submit_tool_message(server, &ack, execution_token);
+
+           /* Handle cancellation here */
+       }
+
+       struct mcp_tool_message resp = {
+           .type = MCP_USR_TOOL_RESPONSE,
+           .data = "Tool execution result",
+           .length = strlen("Tool execution result"),
+           .is_error = false,
+       };
+       return mcp_server_submit_tool_message(server, &resp, execution_token);
+   }
+
+   static const struct mcp_tool_record my_tool = {
+       .metadata = {
+           .name = "my_tool",
+           .input_schema = "{\"type\":\"object\",\"properties\":{}}",
+       },
+       .callback = my_tool_cb,
+   };
+
+   mcp_server_add_tool(server, &my_tool);
+
+The ``.data`` field accepts a plain text string. The server wraps it into an
+MCP-compliant ``"text"`` content item automatically. Maximum length is
+:kconfig:option:`CONFIG_MCP_TOOL_RESULT_MAX_LEN`.
+
+Tool Callback Patterns
+======================
+
+Blocking
+   Short-running tools execute directly in the worker thread and call
+   :c:func:`mcp_server_submit_tool_message` before returning. The worker
+   stack size is :kconfig:option:`CONFIG_MCP_REQUEST_WORKER_STACK_SIZE`.
+
+Asynchronous
+   Long-running tools should spawn a dedicated thread, return immediately
+   from the callback, and submit the response later using the provided
+   execution token. Periodic pings (``MCP_USR_TOOL_PING``) prevent the
+   health monitor from cancelling idle executions.
+
+Cancellation
+   When the health monitor or a client requests cancellation, the callback
+   is invoked with ``MCP_TOOL_CANCEL_REQUEST``. The tool should stop work
+   and submit ``MCP_USR_TOOL_CANCEL_ACK``.
+
+Tool Removal
+============
+
+Tools can be removed at runtime with :c:func:`mcp_server_remove_tool`. The
+call returns ``-EBUSY`` if the tool is currently executing; retry later.
+
+Limitations
+***********
+
+The following MCP features are not yet implemented:
+
+- Resources, prompts, sampling, roots, and session management
+- Server-initiated notifications and streaming tool output
+- Image and embedded-resource content types (only ``"text"`` is supported)
+- Full SSE transport (only deferred response delivery is supported)
+
+Testing
+*******
+
+Unit tests are available under :zephyr_file:`tests/net/lib/mcp/`. They use
+the mock transport (:kconfig:option:`CONFIG_MCP_TRANSPORT_MOCK`) to exercise
+protocol logic without a network stack.
+
+Sample
+******
+
+See :zephyr:code-sample:`mcp-server-hello-world` for a working example that
+registers multiple tools including GPIO-based LED control.
+
+API Reference
+*************
+
+.. doxygengroup:: mcp_server

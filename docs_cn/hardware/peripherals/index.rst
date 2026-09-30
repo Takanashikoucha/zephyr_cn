@@ -85,3 +85,66 @@ category
       <communication_peripherals>`
       :class-card:
       sd-index-card
+
+
+.. note::
+
+   以下为原文（待翻译）
+
+
+      .. rst-class:: sd-index-watermark
+
+      :material-twotone:`battery_charging_full;7em`
+
+      .. toctree::
+         :maxdepth: 2
+
+         power
+
+   .. grid-item-card:: :ref:`Sensors <sensor_peripherals>`
+      :class-card: sd-index-card
+
+      .. rst-class:: sd-index-watermark
+
+      :material-twotone:`sensors;7em`
+
+      .. toctree::
+         :maxdepth: 2
+
+         sensors
+
+   .. grid-item-card:: :ref:`Motion & Actuation <motion_actuation_peripherals>`
+      :class-card: sd-index-card
+
+      .. rst-class:: sd-index-watermark
+
+      :material-twotone:`precision_manufacturing;7em`
+
+      .. toctree::
+         :maxdepth: 2
+
+         motion_actuation
+
+   .. grid-item-card:: :ref:`System & Diagnostics <system_diagnostics_peripherals>`
+      :class-card: sd-index-card
+
+      .. rst-class:: sd-index-watermark
+
+      :material-twotone:`bug_report;7em`
+
+      .. toctree::
+         :maxdepth: 2
+
+         system_diagnostics
+
+   .. grid-item-card:: :ref:`Timing <timing_peripherals>`
+      :class-card: sd-index-card
+
+      .. rst-class:: sd-index-watermark
+
+      :material-twotone:`schedule;7em`
+
+      .. toctree::
+         :maxdepth: 2
+
+         timing

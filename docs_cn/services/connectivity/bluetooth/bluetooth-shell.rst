@@ -68,3 +68,47 @@ Setup
 and
 Usage
 *******************************
+
+
+.. note::
+
+   以下为原文（待翻译）
+
+        [00:02:26.794,799] <inf> bt_hci_core: bt_dev_show_info: LMP: version 5.3 (0x0c) subver 0xffff
+
+
+Logging
+*******
+
+You can configure the logging level per module at runtime. This depends on the maximum logging level
+that is compiled in. To configure, use the :code:`log` command. Here are some examples:
+
+* List the available modules and their current logging level
+
+.. code-block:: console
+
+        uart:~$ log status
+
+* Disable logging for *bt_hci_core*
+
+.. code-block:: console
+
+        uart:~$ log disable bt_hci_core
+
+* Enable error logs for *bt_att* and *bt_smp*
+
+.. code-block:: console
+
+        uart:~$ log enable err bt_att bt_smp
+
+* Disable logging for all modules
+
+.. code-block:: console
+
+        uart:~$ log disable
+
+* Enable warning logs for all modules
+
+.. code-block:: console
+
+        uart:~$ log enable wrn

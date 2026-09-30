@@ -139,3 +139,118 @@ limitation。
    450
    :align:
    center
+
+
+.. note::
+
+   以下为原文（待翻译）
+
+.. code-block::
+
+    git clone https://github.com/auto-pts/auto-pts.git
+
+Go into the project folder:
+
+.. code-block::
+
+    cd auto-pts
+
+Install required python modules:
+
+.. code-block::
+
+   pip3 install --user wheel
+   pip3 install --user -r autoptsserver_requirements.txt
+   pip3 install --user -r autoptsclient_requirements.txt
+
+Install socat.exe
+==================
+
+Download and extract socat.exe from https://sourceforge.net/projects/unix-utils/files/socat/1.7.3.2/
+into folder ~/socat-1.7.3.2-1-x86_64/.
+
+.. image:: download_socat.png
+   :height: 400
+   :width: 450
+   :align: center
+
+Add path to directory of socat.exe to PATH:
+
+.. image:: add_socat_to_path.png
+   :height: 400
+   :width: 450
+   :align: center
+
+Running AutoPTS
+================
+
+Server and client by default will run on localhost address. Run server:
+
+.. code-block::
+
+    python ./autoptsserver.py -S 65000
+
+.. image:: autoptsserver_run.png
+   :height: 200
+   :width: 800
+   :align: center
+
+.. note::
+
+    If the error "ImportError: No module named pywintypes" appeared after the fresh setup,
+    uninstall and install the pywin32 module:
+
+    .. code-block::
+
+        pip install --upgrade --force-reinstall pywin32
+
+Run client:
+
+.. code-block::
+
+    python ./autoptsclient-zephyr.py zephyr-master ~/zephyrproject/build/zephyr/zephyr.elf -t COM3 -b nrf52 -S 65000 -C 65001
+
+.. image:: autoptsclient_run.png
+   :height: 200
+   :width: 800
+   :align: center
+
+At the first run, when Windows asks, enable connection through firewall:
+
+.. image:: allow_firewall.png
+   :height: 450
+   :width: 600
+   :align: center
+
+Troubleshooting
+================
+
+- "When running actual hardware test mode, I have only BTP TIMEOUTs."
+
+This is a problem with connection between auto-pts client and board. There are many possible causes. Try:
+
+- Clean your auto-pts and zephyr repos with
+
+.. warning::
+
+    This command will force the irreversible removal of all uncommitted files in the repo.
+
+.. code-block::
+
+    git clean -fdx
+
+then build and flash tester elf again.
+
+- If you have set up Windows on virtual machine, check if guest extensions are installed properly or change USB compatibility mode in VM settings to USB 2.0.
+
+- Check, if firewall in not blocking python.exe or socat.exe.
+
+- Check if board sends ready event after restart (hex 00 00 80 ff 00 00). Open serial connection to board with e.g. PuTTy with proper COM and baud rate. After board reset you should see some strings in console.
+
+- Check if socat.exe creates tunnel to board. Run in console
+
+.. code-block::
+
+    socat.exe -x -v tcp-listen:65123 /dev/ttyS2,raw,b115200
+
+where /dev/ttyS2 is the COM3 equivalent. Open PuTTY, set connection type to Raw, IP to 127.0.0.1, port to 65123. After board reset you should see some strings in console.

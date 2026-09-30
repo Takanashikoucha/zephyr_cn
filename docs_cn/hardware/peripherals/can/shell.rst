@@ -175,3 +175,117 @@ shell
 和
 CAN
 statistics：
+
+
+.. note::
+
+   以下为原文（待翻译）
+
+.. code-block:: console
+
+   uart:~$ can filter add can@0 010
+   adding filter with standard (11-bit) CAN ID 0x010, CAN ID mask 0x7ff, data frames 1, RTR frames 0, CAN FD frames 0
+   filter ID: 0
+
+The filter ID (0 in the example above) returned is to be used when removing the CAN RX filter.
+
+Received CAN frames matching the added filter(s) are printed to the shell. A few examples are shown below:
+
+.. code-block:: console
+
+   # Dev Flags    ID   Size  Data bytes
+   can0  --       010   [8]  01 02 03 04 05 06 07 08
+   can0  B-       010  [08]  01 02 03 04 05 06 07 08
+   can0  BP       010  [03]  01 aa bb
+   can0  --  00000010   [0]
+   can0  --       010   [1]  20
+   can0  --       010   [8]  remote transmission request
+
+The columns have the following meaning:
+
+* Dev
+
+  * Name of the device receiving the frame.
+
+* Flags
+
+  * ``B``: The frame has the CAN FD Baud Rate Switch (BRS) flag set.
+  * ``P``: The frame has the CAN FD Error State Indicator (ESI) flag set. The transmitting node is
+    in error-passive state.
+  * ``-``: Unset flag.
+
+* ID
+
+  * ``010``: The standard (11-bit) CAN ID of the frame in hexadecimal format, here 10h.
+  * ``00000010``: The extended (29-bit) CAN ID of the frame in hexadecimal format, here 10h.
+
+* Size
+
+  * ``[8]``: The number of frame data bytes in decimal format, here a classic CAN frame with 8 data
+    bytes.
+  * ``[08]``: The number of frame data bytes in decimal format, here a CAN FD frame with 8 data
+    bytes.
+
+* Data bytes
+
+  * ``01 02 03 04 05 06 07 08``: The frame data bytes in hexadecimal format, here the numbers from 1
+    through 8.
+  * ``remote transmission request``: The frame is a Remote Transmission Request (RTR) frame and thus
+    carries no data bytes.
+
+.. tip::
+   If :kconfig:option:`CONFIG_CAN_RX_TIMESTAMP` is enabled, each line will be prepended with a
+   timestamp from the free-running timestamp counter in the CAN controller.
+
+Configured CAN RX filters can be removed again using the ``can filter remove`` subcommand as shown
+below. The filter ID is the ID returned by the ``can filter add`` subcommand (0 in the example
+below).
+
+.. code-block:: console
+
+   uart:~$ can filter remove can@0 0
+   removing filter with ID 0
+
+Another option is to use the ``can dump`` subcommand, which adds standard (11-bit) and extended
+(29-bit) CAN filters matching any RX frame, starts the CAN controller, and prints all received CAN
+frames to the shell:
+
+.. code-block:: console
+
+   uart:~$ can dump can@0
+   dumping CAN RX frames on device can@0, press Ctrl+C to exit
+
+After exiting the ``can dump`` subcommand by pressing Ctrl+C, the added filters are automatically
+removed and the CAN controller stopped again.
+
+Sending
+*******
+
+CAN frames can be queued for transmission using the ``can send`` subcommand as shown below. The
+subcommand accepts a CAN ID in hexadecimal format and optionally a number of data bytes, also
+specified in hexadecimal. Refer to the interactive help output for this subcommand for further
+details on the supported arguments.
+
+.. code-block:: console
+
+   uart:~$ can send can@0 010 1 2 3 4 5 6 7 8
+   enqueuing CAN frame #2 with standard (11-bit) CAN ID 0x010, RTR 0, CAN FD 0, BRS 0, DLC 8
+   CAN frame #2 successfully sent
+
+Bus Recovery
+************
+
+The ``can recover`` subcommand can be used for initiating manual recovery from a CAN bus-off event
+as shown below:
+
+.. code-block:: console
+
+   uart:~$ can recover can@0
+   recovering, no timeout
+
+The subcommand accepts an optional bus recovery timeout in milliseconds. If no timeout is specified,
+the command will wait indefinitely for the bus recovery to succeed.
+
+.. note::
+   The ``recover`` subcommand is only available if :kconfig:option:`CONFIG_CAN_MANUAL_RECOVERY_MODE`
+   is enabled.

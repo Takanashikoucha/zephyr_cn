@@ -209,3 +209,351 @@ application
 callback
 provided
 （:c:enumerator:`HTTP_RESOURCE_TYPE_DYNAMIC`）。
+
+
+.. note::
+
+   以下为原文（待翻译）
+
+            .bitmask_of_supported_http_methods = BIT(HTTP_GET),
+        },
+        .cb = default_handler,
+        .user_data = NULL,
+    };
+
+    /* Register a fallback resource to handle any unknown path */
+    HTTP_SERVICE_DEFINE(my_service, "0.0.0.0", &http_service_port, 1, 10, NULL, &default_detail, NULL);
+
+.. note::
+
+    HTTPS services rely on TLS credentials being registered in the system.
+    See :ref:`sockets_tls_credentials_subsys` for information on how to
+    configure TLS credentials in the system.
+
+Once HTTP(s) service is defined, resources can be registered for it with
+:c:macro:`HTTP_RESOURCE_DEFINE` macro.
+
+Application can enable resource wildcard support by enabling
+:kconfig:option:`CONFIG_HTTP_SERVER_RESOURCE_WILDCARD` option. When this
+option is set, then it is possible to match several incoming HTTP requests
+with just one resource handler. The `fnmatch()
+<https://pubs.opengroup.org/onlinepubs/9699919799/functions/fnmatch.html>`__
+POSIX API function is used to match the pattern in the URL paths.
+
+Example:
+
+.. code-block:: c
+
+    HTTP_RESOURCE_DEFINE(my_resource, my_service, "/foo*", &resource_detail);
+
+This would match all URLs that start with a string ``foo``. See
+`POSIX.2 chapter 2.13
+<https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_13>`__
+for pattern matching syntax description.
+
+Static resources
+================
+
+Static resource content is defined build-time and is immutable. The following
+example shows how gzip compressed webpage can be defined as a static resource
+in the application:
+
+.. code-block:: c
+
+    static const uint8_t index_html_gz[] = {
+        #include "index.html.gz.inc"
+    };
+
+    struct http_resource_detail_static index_html_gz_resource_detail = {
+        .common = {
+            .type = HTTP_RESOURCE_TYPE_STATIC,
+            .bitmask_of_supported_http_methods = BIT(HTTP_GET),
+            .content_encoding = "gzip",
+        },
+        .static_data = index_html_gz,
+        .static_data_len = sizeof(index_html_gz),
+    };
+
+    HTTP_RESOURCE_DEFINE(index_html_gz_resource, my_service, "/",
+                         &index_html_gz_resource_detail);
+
+The resource content and content encoding is application specific. For the above
+example, a gzip compressed webpage can be generated during build, by adding the
+following code to the application's ``CMakeLists.txt`` file:
+
+.. code-block:: cmake
+    :caption: ``CMakeLists.txt``
+
+    set(gen_dir ${ZEPHYR_BINARY_DIR}/include/generated/)
+    set(source_file_index src/index.html)
+    generate_inc_file_for_target(app ${source_file_index} ${gen_dir}/index.html.gz.inc --gzip)
+
+where ``src/index.html`` is the location of the webpage to be compressed.
+
+Static filesystem resources
+===========================
+
+Static filesystem resource content is defined build-time and is immutable. Note that only
+``GET`` operation is supported, user is not able to upload files to the filesystem. The following
+example shows how the path can be defined as a static resource in the application:
+
+.. code-block:: c
+
+    struct http_resource_detail_static_fs static_fs_resource_detail = {
+        .common = {
+            .type                              = HTTP_RESOURCE_TYPE_STATIC_FS,
+            .bitmask_of_supported_http_methods = BIT(HTTP_GET),
+        },
+        .fs_path = "/lfs1/www",
+    };
+
+    HTTP_RESOURCE_DEFINE(static_fs_resource, my_service, "*", &static_fs_resource_detail);
+
+All files located in /lfs1/www are made available to the client. If a file is
+gzipped, .gz must be appended to the file name (e.g. index.html.gz), then the
+server delivers index.html.gz when the client requests index.html and adds gzip
+content-encoding to the HTTP header.
+
+The content type is evaluated based on the file extension. The server supports
+.html, .js, .css, .jpg, .png and .svg. More content types can be provided with the
+:c:macro:`HTTP_SERVER_CONTENT_TYPE` macro. All other files are provided with the
+content type text/html.
+
+.. code-block:: c
+
+    HTTP_SERVER_CONTENT_TYPE(json, "application/json")
+
+When serving files from a static filesystem, the response chunk size can be configured
+using the :kconfig:option:`CONFIG_HTTP_SERVER_STATIC_FS_RESPONSE_SIZE` Kconfig option.
+This determines the size of individual chunks when transmitting file content to clients.
+
+Dynamic resources
+=================
+
+For dynamic resource, a resource callback is registered to exchange data between
+the server and the application.
+
+The following example code shows how to register a dynamic resource with a simple
+resource handler, which echoes received data back to the client:
+
+.. code-block:: c
+
+    static int dyn_handler(struct http_client_ctx *client, enum http_transaction_status status,
+                           const struct http_request_ctx *request_ctx,
+                           struct http_response_ctx *response_ctx, void *user_data)
+    {
+    #define MAX_TEMP_PRINT_LEN 32
+        static char print_str[MAX_TEMP_PRINT_LEN];
+        enum http_method method = client->method;
+        static size_t processed;
+
+        __ASSERT_NO_MSG(request_ctx->data != NULL);
+
+        if (status == HTTP_SERVER_TRANSACTION_ABORTED ||
+            status == HTTP_SERVER_TRANSACTION_COMPLETE) {
+            if (status == HTTP_SERVER_TRANSACTION_ABORTED) {
+                LOG_DBG("Transaction aborted after %zd bytes.", processed);
+            }
+            processed = 0;
+            return 0;
+        }
+
+        processed += request_ctx->data_len;
+
+        snprintf(print_str, sizeof(print_str), "%s received (%zd bytes)",
+                 http_method_str(method), request_ctx->data_len);
+        LOG_HEXDUMP_DBG(request_ctx->data, request_ctx->data_len, print_str);
+
+        if (status == HTTP_SERVER_REQUEST_DATA_FINAL) {
+            LOG_DBG("All data received (%zd bytes).", processed);
+            processed = 0;
+        }
+
+        /* Echo data back to client */
+        response_ctx->body = request_ctx->data;
+        response_ctx->body_len = request_ctx->data_len;
+        response_ctx->final_chunk = (status == HTTP_SERVER_REQUEST_DATA_FINAL);
+
+        return 0;
+    }
+
+    struct http_resource_detail_dynamic dyn_resource_detail = {
+        .common = {
+            .type = HTTP_RESOURCE_TYPE_DYNAMIC,
+            .bitmask_of_supported_http_methods =
+                BIT(HTTP_GET) | BIT(HTTP_POST),
+        },
+        .cb = dyn_handler,
+        .user_data = NULL,
+    };
+
+    HTTP_RESOURCE_DEFINE(dyn_resource, my_service, "/dynamic",
+                         &dyn_resource_detail);
+
+
+The resource callback may be called multiple times for a single request, hence
+the application should be able to keep track of the received data progress.
+
+The ``status`` field informs the application about the progress in passing
+request payload from the server to the application. As long as the status
+reports :c:enumerator:`HTTP_SERVER_REQUEST_DATA_MORE`, the application should expect
+more data to be provided in a consecutive callback calls.
+Once all request payload has been passed to the application, the server reports
+:c:enumerator:`HTTP_SERVER_REQUEST_DATA_FINAL` status. In case of communication
+errors during request processing (for example client closed the connection before
+complete payload has been received), the server reports
+:c:enumerator:`HTTP_SERVER_TRANSACTION_ABORTED`.
+When the response has been sent completely to the client, the server reports
+:c:enumerator:`HTTP_SERVER_TRANSACTION_COMPLETE` status.
+Either of the two events indicate that the request processing is finished, and
+the application shall reset any progress recorded for the resource, and await
+a new request to come. The server guarantees that the resource can only be
+accessed by single client at a time.
+
+The ``request_ctx`` parameter is used to pass request data to the application:
+
+* The ``data`` and ``data_len`` fields pass request data to the application.
+
+* The ``headers``, ``header_count`` and ``headers_status`` fields pass request
+  headers to the application, if
+  :kconfig:option:`CONFIG_HTTP_SERVER_CAPTURE_HEADERS` is enabled. These fields
+  are only populated in the first callback of a request; see
+  :ref:`http_server_interface_accessing_request_headers` for details.
+
+The ``response_ctx`` field is used by the application to pass response data to
+the HTTP server:
+
+* The ``status`` field allows the application to send an HTTP response code. If
+  not populated, the response code will be 200 by default.
+
+* The ``headers`` and ``header_count`` fields can be used for the application to
+  send any arbitrary HTTP headers. If not populated, only Transfer-Encoding and
+  Content-Type are sent by default. The callback may override the Content-Type
+  if desired.
+
+* The ``body`` and ``body_len`` fields are used to send body data.
+
+* The ``final_chunk`` field is used to indicate that the application has no more
+  response data to send.
+
+Headers and/or response codes may only be sent in the first populated
+``response_ctx``, after which only further body data is allowed in subsequent
+callbacks.
+
+The server will call the resource callback until it provided all request data
+to the application, and the application reports there is no more data to include
+in the reply.
+
+Websocket resources
+===================
+
+Websocket resources register an application callback, which is called when a
+Websocket connection upgrade takes place. The callback is provided with a socket
+descriptor corresponding to the underlying TCP/TLS connection. Once called,
+the application takes full control over the socket, i. e. is responsible to
+release it when done.
+
+.. code-block:: c
+
+    static int ws_socket;
+    static uint8_t ws_recv_buffer[1024];
+
+    int ws_setup(int sock, struct http_request_ctx *request_ctx, void *user_data)
+    {
+        ws_socket = sock;
+        return 0;
+    }
+
+    struct http_resource_detail_websocket ws_resource_detail = {
+        .common = {
+            .type = HTTP_RESOURCE_TYPE_WEBSOCKET,
+            /* We need HTTP/1.1 Get method for upgrading */
+            .bitmask_of_supported_http_methods = BIT(HTTP_GET),
+        },
+        .cb = ws_setup,
+        .data_buffer = ws_recv_buffer,
+        .data_buffer_len = sizeof(ws_recv_buffer),
+        .user_data = NULL, /* Fill this for any user specific data */
+    };
+
+    HTTP_RESOURCE_DEFINE(ws_resource, my_service, "/", &ws_resource_detail);
+
+The above minimalistic example shows how to register a Websocket resource with
+a simple callback, used only to store the socket descriptor provided. Further
+processing of the Websocket connection is application-specific, hence outside
+of scope of this guide. See :zephyr:code-sample:`sockets-http-server` for an
+example Websocket-based echo service implementation.
+
+.. _http_server_interface_accessing_request_headers:
+
+Accessing request headers
+=========================
+
+The application can register an interest in any specific HTTP request headers.
+These headers are then stored for each incoming request, and can be accessed
+from within a dynamic resource callback.
+
+.. important::
+
+   Captured request headers are delivered to the application **only in the first
+   callback** for a given request. In any subsequent callback for the same
+   request the ``headers``, ``header_count`` and ``headers_status`` fields of
+   ``request_ctx`` are cleared (``headers_status`` becomes
+   :c:enumerator:`HTTP_HEADER_STATUS_NONE`). Applications must copy out any
+   header value they need during the first callback rather than reading it later.
+
+   Note that the first callback may or may not also carry request body data
+   (this depends on the HTTP method and on transport framing). Do not condition
+   header handling on the presence of body data: always inspect
+   ``headers_status`` and stash the headers when it is not
+   :c:enumerator:`HTTP_HEADER_STATUS_NONE`.
+
+This feature must first be enabled with
+:kconfig:option:`CONFIG_HTTP_SERVER_CAPTURE_HEADERS` Kconfig option.
+
+Then the application can register headers to be captured, and read the values
+from within the dynamic resource callback. The recommended pattern is to copy
+out the headers of interest in the first callback, then act on them once the
+full request body has been received:
+
+.. code-block:: c
+
+    HTTP_SERVER_REGISTER_HEADER_CAPTURE(capture_user_agent, "User-Agent");
+
+    static char user_agent[64];
+
+    static int dyn_handler(struct http_client_ctx *client, enum http_transaction_status status,
+                           const struct http_request_ctx *request_ctx,
+                           struct http_response_ctx *response_ctx, void *user_data)
+    {
+        /* Request headers are only present in the first callback, so copy out
+         * any values needed later before they are gone.
+         */
+        if (request_ctx->headers_status != HTTP_HEADER_STATUS_NONE) {
+            for (size_t i = 0; i < request_ctx->header_count; i++) {
+                const struct http_header *hdr = &request_ctx->headers[i];
+
+                LOG_INF("Captured header: '%s: %s'", hdr->name, hdr->value);
+
+                if (strcasecmp(hdr->name, "User-Agent") == 0) {
+                    strncpy(user_agent, hdr->value, sizeof(user_agent) - 1);
+                }
+            }
+        }
+
+        /* Process request body data (may be empty in the first callback). */
+
+        if (status == HTTP_SERVER_REQUEST_DATA_FINAL) {
+            /* Full request received: act on the body together with the header
+             * values stashed above (e.g. user_agent).
+             */
+        }
+
+        return 0;
+    }
+
+API Reference
+*************
+
+.. doxygengroup:: http_service
+.. doxygengroup:: http_server

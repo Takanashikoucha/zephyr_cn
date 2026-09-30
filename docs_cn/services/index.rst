@@ -88,3 +88,76 @@ platforms。
    <ipc_services>`
    :class-card:
    sd-index-card
+
+
+.. note::
+
+   以下为原文（待翻译）
+
+
+      :material-twotone:`bolt;7em`
+
+      .. toctree::
+         :maxdepth: 2
+
+         power_management
+
+   .. grid-item-card:: :ref:`Security <security_services>`
+      :class-card: sd-index-card
+
+      .. rst-class:: sd-index-watermark
+
+      :material-twotone:`security;7em`
+
+      .. toctree::
+         :maxdepth: 2
+
+         security
+
+   .. grid-item-card:: :ref:`Device Management <device_mgmt>`
+      :class-card: sd-index-card
+
+      .. rst-class:: sd-index-watermark
+
+      :material-twotone:`devices;7em`
+
+      .. toctree::
+         :maxdepth: 2
+
+         device_mgmt/index
+
+   .. grid-item-card:: :ref:`Algorithms & Data <algorithms_services>`
+      :class-card: sd-index-card
+
+      .. rst-class:: sd-index-watermark
+
+      :material-twotone:`functions;7em`
+
+      .. toctree::
+         :maxdepth: 2
+
+         algorithms
+
+   .. grid-item-card:: :ref:`Frameworks <frameworks>`
+      :class-card: sd-index-card
+
+      .. rst-class:: sd-index-watermark
+
+      :material-twotone:`widgets;7em`
+
+      .. toctree::
+         :maxdepth: 2
+
+         frameworks
+
+   .. grid-item-card:: :ref:`OS Abstraction <osal>`
+      :class-card: sd-index-card
+
+      .. rst-class:: sd-index-watermark
+
+      :material-twotone:`layers;7em`
+
+      .. toctree::
+         :maxdepth: 2
+
+         portability/index

@@ -174,3 +174,155 @@ segments。
   末尾
   被
   采样。
+
+
+.. note::
+
+   以下为原文（待翻译）
+
+
+Receiving
+*********
+
+Frames are only received when they match a filter.
+The following code snippets show how to receive frames by adding filters.
+
+Here we have an example for a receiving callback as used for
+:c:func:`can_add_rx_filter`. The user data argument is passed when the filter is
+added.
+
+.. code-block:: C
+
+  void rx_callback_function(const struct device *dev, struct can_frame *frame, void *user_data)
+  {
+          ... do something with the frame ...
+  }
+
+The following snippet shows how to add a filter with a callback function.
+It is the most efficient but also the most critical way to receive messages.
+The callback function is called from an interrupt context, which means that the
+callback function should be as short as possible and must not block.
+Adding callback functions is not allowed from userspace context.
+
+The filter for this example is configured to match the identifier 0x123 exactly.
+
+.. code-block:: C
+
+  const struct can_filter my_filter = {
+          .flags = 0U,
+          .id = 0x123,
+          .mask = CAN_STD_ID_MASK
+  };
+  int filter_id;
+  const struct device *const can_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_canbus));
+
+  filter_id = can_add_rx_filter(can_dev, rx_callback_function, callback_arg, &my_filter);
+  if (filter_id < 0) {
+    LOG_ERR("Unable to add rx filter [%d]", filter_id);
+  }
+
+Here an example for :c:func:`can_add_rx_filter_msgq` is shown. With this
+function, it is possible to receive frames synchronously. This function can be
+called from userspace context.  The size of the message queue should be as big
+as the expected backlog.
+
+The filter for this example is configured to match the extended identifier
+0x1234567 exactly.
+
+.. code-block:: C
+
+  const struct can_filter my_filter = {
+          .flags = CAN_FILTER_IDE,
+          .id = 0x1234567,
+          .mask = CAN_EXT_ID_MASK
+  };
+  CAN_MSGQ_DEFINE(my_can_msgq, 2);
+  struct can_frame rx_frame;
+  int filter_id;
+  const struct device *const can_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_canbus));
+
+  filter_id = can_add_rx_filter_msgq(can_dev, &my_can_msgq, &my_filter);
+  if (filter_id < 0) {
+    LOG_ERR("Unable to add rx msgq [%d]", filter_id);
+    return;
+  }
+
+  while (true) {
+    k_msgq_get(&my_can_msgq, &rx_frame, K_FOREVER);
+    ... do something with the frame ...
+  }
+
+:c:func:`can_remove_rx_filter` removes the given filter.
+
+.. code-block:: C
+
+  can_remove_rx_filter(can_dev, filter_id);
+
+Setting the bitrate
+*******************
+
+The bitrate and sampling point is initially set at runtime. To change it from
+the application, one can use the :c:func:`can_set_timing` API. The :c:func:`can_calc_timing`
+function can calculate timing from a bitrate and sampling point in permille.
+The following example sets the bitrate to 250k baud with the sampling point at
+87.5%.
+
+.. code-block:: C
+
+  struct can_timing timing;
+  const struct device *const can_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_canbus));
+  int ret;
+
+  ret = can_calc_timing(can_dev, &timing, 250000, 875);
+  if (ret > 0) {
+    LOG_INF("Sample-Point error: %d", ret);
+  }
+
+  if (ret < 0) {
+    LOG_ERR("Failed to calc a valid timing");
+    return;
+  }
+
+  ret = can_stop(can_dev);
+  if (ret != 0) {
+    LOG_ERR("Failed to stop CAN controller");
+  }
+
+  ret = can_set_timing(can_dev, &timing);
+  if (ret != 0) {
+    LOG_ERR("Failed to set timing");
+  }
+
+  ret = can_start(can_dev);
+  if (ret != 0) {
+    LOG_ERR("Failed to start CAN controller");
+  }
+
+A similar API exists for calculating and setting the timing for the data phase for CAN FD capable
+controllers. See :c:func:`can_set_timing_data` and :c:func:`can_calc_timing_data`.
+
+SocketCAN
+*********
+
+Zephyr additionally supports SocketCAN, a BSD socket implementation of the
+Zephyr CAN API.
+SocketCAN brings the convenience of the well-known BSD Socket API to
+Controller Area Networks. It is compatible with the Linux SocketCAN
+implementation, where many other high-level CAN projects build on top.
+Note that frames are routed to the network stack instead of passed directly,
+which adds some computation and memory overhead.
+
+Samples
+*******
+
+We have two ready-to-build samples demonstrating use of the Zephyr CAN API:
+:zephyr:code-sample:`Zephyr CAN counter sample <can-counter>` and
+:zephyr:code-sample:`SocketCAN sample <socket-can>`.
+
+
+CAN Controller API Reference
+****************************
+
+.. doxygengroup:: can_controller
+
+.. doxygengroup:: can_fake

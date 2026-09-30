@@ -212,3 +212,127 @@ defined
 
    #include
    <zephyr/kernel.h>
+
+
+.. note::
+
+   以下为原文（待翻译）
+
+    #include <zcbor_encode.h>
+    #include <zephyr/mgmt/mcumgr/smp/smp.h>
+    #include <zephyr/mgmt/mcumgr/mgmt/mgmt.h>
+    #include <zephyr/mgmt/mcumgr/mgmt/callbacks.h>
+
+    #define MGMT_EVT_GRP_USER_ONE MGMT_EVT_GRP_USER_CUSTOM_START
+
+    enum user_one_group_events {
+        /** Callback on first post, data is test_struct. */
+        MGMT_EVT_OP_USER_ONE_FIRST  = MGMT_DEF_EVT_OP_ID(MGMT_EVT_GRP_USER_ONE, 0),
+
+        /** Callback on second post, data is test_struct. */
+        MGMT_EVT_OP_USER_ONE_SECOND = MGMT_DEF_EVT_OP_ID(MGMT_EVT_GRP_USER_ONE, 1),
+
+        /** Used to enable all user_one events. */
+        MGMT_EVT_OP_USER_ONE_ALL    = MGMT_DEF_EVT_OP_ALL(MGMT_EVT_GRP_USER_ONE),
+    };
+
+    struct test_struct {
+        uint8_t some_value;
+    };
+
+    static int test_command(struct mgmt_ctxt *ctxt)
+    {
+        int rc;
+        int err_rc;
+        uint16_t err_group;
+        zcbor_state_t *zse = ctxt->cnbe->zs;
+        bool ok;
+        struct test_struct test_data = {
+            .some_value = 8,
+        };
+
+        rc = mgmt_callback_notify(MGMT_EVT_OP_USER_ONE_FIRST, &test_data,
+                                  sizeof(test_data), &err_rc, &err_group);
+
+        if (rc != MGMT_CB_OK) {
+            /* A handler returned a failure code */
+            if (rc == MGMT_CB_ERROR_RC) {
+                /* The failure code is the RC value */
+                return err_rc;
+            }
+
+            /* The failure is a group and ID error value */
+            ok = smp_add_cmd_err(zse, err_group, (uint16_t)err_rc);
+            goto end;
+        }
+
+        /* All handlers returned success codes */
+        ok = zcbor_tstr_put_lit(zse, "output_value") &&
+             zcbor_int32_put(zse, 1234);
+
+    end:
+        rc = (ok ? MGMT_ERR_EOK : MGMT_ERR_EMSGSIZE);
+
+        return rc;
+    }
+
+If no response is required for the callback, the function call be called and
+casted to void.
+
+.. _mcumgr_cb_migration:
+
+Migration
+*********
+
+If there is existing code using the previous callback system(s) in Zephyr 3.2
+or earlier, then it will need to be migrated to the new system. To migrate
+code, the following callback registration functions will need to be migrated
+to register for callbacks using :c:func:`mgmt_callback_register` (note that
+:kconfig:option:`CONFIG_MCUMGR_MGMT_NOTIFICATION_HOOKS` will need to be set to
+enable the new notification system in addition to any migrations):
+
+ * mgmt_evt
+    Using :c:enumerator:`MGMT_EVT_OP_CMD_RECV`,
+    :c:enumerator:`MGMT_EVT_OP_CMD_STATUS`, or
+    :c:enumerator:`MGMT_EVT_OP_CMD_DONE` as drop-in replacements for events of
+    the same name, where the provided data is :c:struct:`mgmt_evt_op_cmd_arg`.
+    :kconfig:option:`CONFIG_MCUMGR_SMP_COMMAND_STATUS_HOOKS` needs to be set.
+ * fs_mgmt_register_evt_cb
+    Using :c:enumerator:`MGMT_EVT_OP_FS_MGMT_FILE_ACCESS` where the provided
+    data is :c:struct:`fs_mgmt_file_access`. Instead of returning true to allow
+    the action or false to deny, a MCUmgr result code needs to be returned,
+    :c:enumerator:`MGMT_ERR_EOK` will allow the action, any other return code
+    will disallow it and return that code to the client
+    (:c:enumerator:`MGMT_ERR_EACCESSDENIED` can be used for an access denied
+    error). :kconfig:option:`CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK` needs to be
+    set.
+ * img_mgmt_register_callbacks
+    Using :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_STARTED` if
+    ``dfu_started_cb`` was used,
+    :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_STOPPED` if ``dfu_stopped_cb`` was
+    used, :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_PENDING` if
+    ``dfu_pending_cb`` was used or
+    :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_CONFIRMED` if ``dfu_confirmed_cb``
+    was used. These callbacks do not have any return status.
+    :kconfig:option:`CONFIG_MCUMGR_GRP_IMG_STATUS_HOOKS` needs to be set.
+ * img_mgmt_set_upload_cb
+    Using :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_CHUNK` where the provided
+    data is :c:struct:`img_mgmt_upload_check`. Instead of returning true to
+    allow the action or false to deny, a MCUmgr result code needs to be
+    returned, :c:enumerator:`MGMT_ERR_EOK` will allow the action, any other
+    return code will disallow it and return that code to the client
+    (:c:enumerator:`MGMT_ERR_EACCESSDENIED` can be used for an access denied
+    error). :kconfig:option:`CONFIG_MCUMGR_GRP_IMG_UPLOAD_CHECK_HOOK` needs to
+    be set.
+ * os_mgmt_register_reset_evt_cb
+    Using :c:enumerator:`MGMT_EVT_OP_OS_MGMT_RESET`.  Instead of returning
+    true to allow the action or false to deny, a MCUmgr result code needs to be
+    returned, :c:enumerator:`MGMT_ERR_EOK` will allow the action, any other
+    return code will disallow it and return that code to the client
+    (:c:enumerator:`MGMT_ERR_EACCESSDENIED` can be used for an access denied
+    error). :kconfig:option:`CONFIG_MCUMGR_GRP_OS_RESET_HOOK` needs to be set.
+
+API Reference
+*************
+
+.. doxygengroup:: mcumgr_callback_api

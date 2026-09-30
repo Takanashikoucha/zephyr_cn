@@ -32,3 +32,44 @@ Zephyr 中文文档
    本仓库的文档基于 Zephyr 官方英文文档翻译与改编，
    源代码阅读指南为原创内容。
    上游英文文档请访问 https://docs.zephyrproject.org/
+
+
+.. note::
+
+   以下为原文（待翻译）
+
+           for the documentation of other Zephyr versions.
+         </p>
+
+.. only:: development
+
+   .. admonition:: Welcome to Zephyr Project Documentation for the ``main`` tree (|version|).
+      :class: welcome
+
+      .. raw:: html
+
+         <p>
+           Use the <a href="#" onclick="openVersionSelector(); return false;">version selector</a>
+           for the documentation of previously released versions.
+         </p>
+
+.. raw:: html
+   :file: index.html
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   introduction/index.rst
+   develop/index.rst
+   kernel/index.rst
+   services/index.rst
+   build/index.rst
+   hardware/index.rst
+   contribute/index.rst
+   project/index.rst
+   security/index.rst
+   safety/index.rst
+   samples/index.rst
+   boards/index.rst
+   releases/index.rst
