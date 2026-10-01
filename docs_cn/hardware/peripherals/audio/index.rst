@@ -1,11 +1,10 @@
 .. _audio_reference:
 
-Audio
+音频
 #####
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    codec.rst
    dmic.rst

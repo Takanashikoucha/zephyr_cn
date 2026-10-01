@@ -1,223 +1,89 @@
 .. _w1_api:
 
-1-Wire
-Bus
+1-Wire 总线
 ##########
 
-Overview
+概述
 ********
 
-1-Wire
-是
-一
-个
-low
-speed
-half
-duplex
-serial
-bus
-只
-使用
-单
-个
-wire
-加
-ground
-用于
-data
-transmission
-和
-device
-power
-supply
-两
-者。
-与
-I2C
-类似
-1-Wire
-使用
-bidirectional
-open
-collector
-data
-line
-并
-是
-single
-master
-multidrop
-bus。
-这
-意味着
-一
-个
-master
-发起
-与
-slave
-devices
-的
-所有
-data
-exchanges。
-1-Wire
-bus
-支持
-比
-I2C
-更
-长
-的
-bus
-lines
-同时
-它在
-standard
-mode
-中
-达到
-最多
-15.4
-kbps
-的
-speeds
-在
-overdrive
-mode
-中
-达到
-最多
-125
-kbps。
-在
-standard
-speed
-configuration
-中
-用
-10
-nodes
-在
-100
-meters
-bus
-length
-上
-可靠
-的
-communication
-是
-可能
-的。
-使用
-overdrive
-speed
-预期
-3
-nodes
-在
-10
-meters
-length
-的
-bus
-上
-将
-稳定
-工作。
-优化
-的
-timing
-parameters
-和
-bus
-上
-更
-少
-的
-nodes
-可能
-允许
-达到
-更
-大
-的
-bus
-extents。
+1-Wire 是一种低速半双工串行总线，仅使用一根信号线加地线（GND），同时用于数据传输和设备供电。与 I2C 类似，1-Wire 使用双向开集电极（open-collector）数据线，并且是单主多从（multidrop）总线。这意味着由一个主设备发起与所有从设备的数据交换。1-Wire 总线支持的总线线长度比 I2C 更长，标准模式下速率最高可达 15.4 kbps，过驱（overdrive）模式下最高可达 125 kbps。在标准速率配置下，100 米总线长度上挂接 10 个节点可以可靠通信；使用过驱速率时，10 米总线上挂接 3 个节点预期可稳定工作。优化时序参数并减少总线上的节点数量，可能允许支持更长的总线。
 
-Implementation
-details
-在
-`BOOK
-OF
-IBUTTON
-STANDARDS`_
-中
-被
-specified。
+实现细节在 `BOOK OF IBUTTON STANDARDS`_ 中有规定。
 
-.. figure::
-   1-Wire_bus_topology.drawio.svg
-   :align:
-   center
-   :alt:
-   1-Wire
-   bus
-   topology
+.. figure:: 1-Wire_bus_topology.drawio.svg
+   :align: center
+   :alt: 1-Wire 总线拓扑
 
-   典型
-   的
-   1-Wire
-   bus
-   topology
+   典型的 1-Wire 总线拓扑
 
 
 .. _w1-master-api:
 
-W1
-Master
-API
+W1 主设备接口
 =================
 
-Zephyr
-的
-1-Wire
-Master
-API
-用
-来
-与
-1-Wire
-slave
-devices
-如
-temperature
-sensors
-和
-serial
-memories
-交互。
+Zephyr 的 1-Wire 主设备接口用于与 1-Wire 从设备（如温度传感器和串行存储器）交互。
 
-在
-Zephyr
-中
-这
-个
-API
-被
-拆分
-为
-以下
-layers。
+在 Zephyr 中，该接口分为以下层次。
 
-* Link
-  layer
-  处理
-  basic
-  communication
-  functions
-  如
-  bus
-  reset、
+* 链路层（link layer）处理基本通信功能，例如总线复位（bus reset）、在位检测（presence detect）和位传输操作。
+  它是 Zephyr 中唯一的硬件相关层。
+  该层由使用 Zephyr :ref:`uart_api` 接口的驱动程序支持，
+  应能在大多数 Zephyr 平台上工作。
+  未来可能添加基于 GPIO/Timer 的驱动程序以及硬件特定的驱动程序。
+* 1-Wire 网络层处理所有从设备识别和总线仲裁手段，
+  包括 ROM 命令，例如 Match ROM 或 Search ROM。
+
+   * 所有从设备都有一个唯一的 64 位识别号，其中包含 8 位 `1-Wire Family Code`_ 和 8 位 CRC。
+   * 为了在总线上找到从设备，标准规定了一种搜索算法，该算法依次检测总线上所有从设备。
+     该算法在 `1-Wire Search Algorithm Application Note`_ 中有描述。
+
+* 传输层和表示层（Presentation layer）功能未在通用 1-Wire 驱动程序中实现，
+  因此必须在各个从设备驱动程序中处理。
+
+1-Wire 接口被视为实验性的。
+
+
+配置选项
+*********************
+
+相关配置选项：
+
+* :kconfig:option:`CONFIG_W1`
+* :kconfig:option:`CONFIG_W1_NET`
+
+
+W1 串行驱动程序
+****************
+
+``zephyr,w1-serial`` 驱动程序使用 UART 外设实现 1-Wire 接口。各个 1-Wire 位被编码为通过 UART 发送的字节。标准速率下，数据传输使用 115200 波特率，复位/在位检测使用 9600 波特率。过驱速率下使用可配置的波特率，默认数据传输为 1000000 波特率，复位/在位检测为 115200 波特率。
+
+接口参考
+*************
+
+1-Wire 数据链路层
+====================
+
+.. doxygengroup:: w1_data_link
+
+1-Wire 网络层
+==================
+
+.. doxygengroup:: w1_network
+
+1-Wire 通用函数和辅助函数
+===================================
+
+与任何网络层都不直接相关的函数。
+
+.. doxygengroup:: w1_interface
+
+
+.. _BOOK OF IBUTTON STANDARDS:
+   https://www.analog.com/en/resources/technical-articles/book-of-ibuttonreg-standards.html
+
+.. _1-Wire Family Code:
+   https://www.analog.com/en/resources/technical-articles/1wire-software-resource-guide-device-description.html
+
+.. _1-Wire Search Algorithm Application Note:
+   https://www.analog.com/en/resources/app-notes/1wire-search-algorithm.html

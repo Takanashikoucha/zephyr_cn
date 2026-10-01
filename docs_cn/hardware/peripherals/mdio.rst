@@ -1,61 +1,16 @@
 .. _mdio_api:
 
-Management
-Data
-Input/Output
-（MDIO）
-###################################
+管理数据输入/输出（MDIO）
+##########################
 
-Overview
+概述
+****
+
+MDIO 是一种常用于与以太网 PHY 设备通信的总线。许多以太网 MAC 控制器也提供通过 MDIO 总线与外设设备通信的硬件。
+
+此 API 主要供 PHY 驱动使用，但也可由用户固件使用。
+
+API 参考
 ********
 
-MDIO
-是
-常用
-于
-与
-ethernet
-PHY
-devices
-通信
-的
-bus。
-许多
-ethernet
-MAC
-controllers
-也
-提供
-通过
-MDIO
-bus
-与
-peripheral
-device
-通信
-的
-hardware。
-
-这
-个
-API
-旨在
-主要
-被
-PHY
-drivers
-使用
-但
-也
-可以
-被
-user
-firmware
-使用。
-
-API
-Reference
-*************
-
-.. doxygengroup::
-   mdio_interface
+.. doxygengroup:: mdio_interface

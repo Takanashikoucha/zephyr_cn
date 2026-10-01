@@ -2,2335 +2,1278 @@
 
 .. _zephyr_3.5:
 
-Zephyr
-3.5.0
+Zephyr 3.5.0
 ############
 
-我们
-pleased
-to
-announce
-Zephyr
-version
-3.5.0
-的
-release。
+我们很高兴地宣布 Zephyr 版本 3.5.0 的发布。
 
-这
-个
-release
-的
-Major
-enhancements
-包括：
+本次发布的主要增强功能包括：
 
-*
-Added
-support
-for
-linkable
-loadable
-extensions
-（llext）
-*
-Added
-native_sim
-simulator
-target
-（successor
-to
-native_posix）
-*
-Added
-new
-的
-battery
-charger
-driver
-API
-*
-Added
-new
-的
-hardware
-spinlock
-driver
-API
-*
-Added
-new
-的
-modem
-subsystem
-*
-Added
-support
-for
-45+
-new
-的
-boards
-*
-Networking:
-improvements
-to
-CoAP、
-Connection
-Manager、
-DHCP、
-Ethernet、
-gPTP、
-ICMP、
-IPv6
-和
-LwM2M
-*
-Bluetooth:
-improvements
-to
-the
-Controller、
-Audio、
-Mesh、
-as
-well
-as
-the
-host
-stack
-in
-general
-*
-Improved
-的
-LVGL
-graphics
-library
-integration
-*
-Integrated
-support
-with
-the
-CodeChecker
-static
-analyzer
-*
-Picolibc
-now
-是
-default
-的
-C
-standard
-library
+* 新增对可链接可加载扩展（llext）的支持
+* 新增 native_sim 仿真器目标（native_posix 的继任者）
+* 新增电池充电器驱动 API
+* 新增硬件自旋锁驱动 API
+* 新增调制解调器子系统
+* 新增对 45+ 个新板级的支持
+* 网络：对 CoAP、连接管理器、DHCP、以太网、gPTP、ICMP、IPv6 和 LwM2M 的改进
+* 蓝牙：对控制器、音频、网状，以及主机栈的总体改进
+* 改进 LVGL 图形库集成
+* 集成 CodeChecker 静态分析器支持
+* Picolibc 现在是默认 C 标准库
 
-一
-个
-overview
-of
-changes
-required
-或
-recommended
-when
-migrating
-你
-的
-application
-from
-Zephyr
-v3.4.0
-to
-Zephyr
-v3.5.0
-可以
-found
-in
-separate
-的
-:ref:`migration
-guide<migration_3.5>`。
+从 Zephyr v3.4.0 迁移应用到 Zephyr v3.5.0 时
+所需或建议的更改概述
+可在单独的 :ref:`migration guide<migration_3.5>` 中找到。
 
-以下
-sections
-provide
-detailed
-的
-lists
-of
-changes
-by
-component。
+以下各节按组件提供详细的变更列表。
 
-Security
-Vulnerability
-Related
+安全漏洞相关
 ******************************
-以下
-的
-CVEs
-被
-这
-个
-release
-addressed:
+本次发布解决了以下 CVE：
 
-More
-detailed
-的
-information
-可以
-found
-在:
+更详细的信息可参见：
 https://docs.zephyrproject.org/latest/security/vulnerabilities.html
 
-*
-CVE
-2023
-3725
-`Zephyr
-project
-bug
-tracker
-GHSA
-2g3m
-p6c7
-8rr3
-<https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA
-2g3m
-p6c7
-8rr3>`_
+* CVE-2023-3725 `Zephyr 项目 bug 跟踪器 GHSA-2g3m-p6c7-8rr3
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-2g3m-p6c7-8rr3>`_
 
+* CVE-2023-4257 `Zephyr 项目 bug 跟踪器 GHSA-853q-q69w-gf5j
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-853q-q69w-gf5j>`_
 
-.. note::
+* CVE-2023-4258 `Zephyr 项目 bug 跟踪器 GHSA-m34c-cp63-rwh7
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-m34c-cp63-rwh7>`_
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-  * Added support to use both tinycrypt and PSA based crypto
-  * Added full virtual addresses support with the collisions resolution. The
-    :kconfig:option:`CONFIG_BT_MESH_LABEL_NO_RECOVER` Kconfig option is introduced to restore the
-    addresses for the subscription list and model publication.
-  * Added statistic module.
-  * Fixed an issue where a node acting as a LPN was triggering Friend Poll messages when sending a
-    segmented message over the loopback interface.
-  * Fixed an issue where provisioning completes successfully on a node when the identical Public Key
-    is used by a  provisioner.
-  * Fixed an issue where the :c:func:`settings_load` function called from a cooperative thread other
-    than the system workqueue caused the GATT Mesh Proxy Service registration to fail.
-  * Fixed an issue where a node could enter IV Update in Progress state if an old SNB with the
-    current IV Index and IV Update flag set to 1 was resent.
+* CVE-2023-4259 `Zephyr 项目 bug 跟踪器 GHSA-gghm-c696-f4j4
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-gghm-c696-f4j4>`_
 
-  * Mesh Protocol v1.1 changes
+* CVE-2023-4260 `Zephyr 项目 bug 跟踪器 GHSA-gj27-862r-55wh
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-gj27-862r-55wh>`_
 
-    * Added storing Private GATT Proxy state persistently.
-    * Added support for Firmware Distribution Upload OOB Start message in the Firwmware Distribution
-      Server model. The message support can be enabled with the
-      :kconfig:option:`CONFIG_BT_MESH_DFD_SRV_OOB_UPLOAD` Kconfig option.
-    * Added extended provisioning protocol timeout when OOB methods are used in the provisioning.
-    * Added support for Composition Data Pages 2, 129 and 130.
-    * Added documentation for Composition Data Pages 0, 1, 2, 128, 129 and 130.
-    * Added documentation for the Segmentation and Reassembly in the Transport layer.
-    * Added documentation for the SAR Configuration models
-    * Fixed an issue where the Opcode Aggregator Server model did not compile without the Opcode
-      Aggregator Client model.
-    * Fixed an issue where the identity address was used in Private GATT Proxy advertisements
-      instead of Non-Resolvable Private Addresses.
-    * Fixed the Proxy Privacy parameter support.
-    * Fixed an issue where the Composition Data Page 128 was not present on a node that has
-      instantiated the Remote Provisioning Server model.
-    * Fixed an issue where the Large Composition Data Server model did not support Composition Data
-      Pages other then 0.
-    * Fixed an issue where the Remote Provisioning Client model instanted on a node together with
-      the Remote Provisioning Server model could not reprovision itself.
-    * Fixed an issue where the acknowledgment timer in the Segmentation and Reassembly was not
-      restarted when the incoming Segment Acknowledgment message did not contain at least one
-      segment newly marked as acknowledged.
-    * Fixed an issue where the On-Demand Private Proxy Server and Client models had interdependency
-      that did not allow to compile them separately.
+* CVE-2023-4263 `Zephyr 项目 bug 跟踪器 GHSA-rf6q-rhhp-pqhf
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-rf6q-rhhp-pqhf>`_
 
-* Controller
+* CVE-2023-4264 `Zephyr 项目 bug 跟踪器 GHSA-rgx6-3w4j-gf5j
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-rgx6-3w4j-gf5j>`_
 
-  Improved support for Broadcast and Connected Isochronous channels in the Controller, enabling
-  LE audio application development. The Controller is experimental, is missing implementations for
-  interleaved packing in Isochronous channels' lower link layer.
+* CVE-2023-4424：截至 2023-11-01 处于保密期
 
-  * Added Checks for minimum sizes of Adv PDUs
-  * Added Kconfig Option to ignore Tx HCI ISO Data Packet Seq Num
-  * Added Kconfig for avoiding ISO SDU fragmentation
-  * Added Kconfig to maximize BIG event length and preempt PTO & CTRL subevents
-  * Added ``BT_CTLR_EVENT_OVERHEAD_RESERVE_MAX`` Kconfig
-  * Added memory barrier to ticker transactions
-  * Added missing nRF53x Tx Power Kconfig
-  * Added support for Flush Timeout in Connected ISO
-  * Fixed BIS payload sliding window overrun check
-  * Fixed CIS Central FT calculation
-  * Fixed CIS Central error handling
-  * Fixed CIS asymmetric PHY usage
-  * Fixed CIS encryption when DF support enabled
-  * Fixed ISO-AL for quality tests and time stamps
-  * Fixed PHY value in HCI LE CIS Established Event
-  * Fixed ULL stuck in semaphore under rare conditions
-  * Fixed assertion due to late PER CIS active set
-  * Fixed compiler instruction re-ordering that caused assertions
-  * Fixed connected ISO dynamic tx power
-  * Fixed failing advertising conformance tests
-  * Fixed handling received Auxiliary PDUs when Coded PHY not supported
-  * Fixed leak in scheduled ticker node when rescheduling ticker nodes
-  * Fixed missing host feature reset
-  * Fixed nRF53 SoC back-to-back PDU chaining
-  * Fixed nRF53 SoC back-to-back Tx Rx implementation
-  * Fixed regression in Adv PDU overflow calculation
-  * Fixed regression in observer that caused assertions and scheduling stall
-  * Fixed use of pre-programmed PPI on nRF SoCs
-  * Removed HCI ISO data with invalid status in preparation for FT support
-  * Updated Extended Advertising Report to not be generated when ``AUX_ADV_IND`` not received
-  * Updated to have ``EVENT_OVERHEAD_START_US`` verbose assertion in each state/role LLL
-  * Updated to stop following ``aux_ptr`` if ``DATA_LEN_MAX`` is reached during extended scanning
+* CVE-2023-5055：截至 2023-11-01 处于保密期
 
-Boards & SoC Support
+* CVE-2023-5139：截至 2023-10-25 处于保密期
+
+* CVE-2023-5184 `Zephyr 项目 bug 跟踪器 GHSA-8x3p-q3r5-xh9g
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-8x3p-q3r5-xh9g>`_
+
+* CVE-2023-5563 `Zephyr 项目 bug 跟踪器 GHSA-98mc-rj7w-7rpv
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-98mc-rj7w-7rpv>`_
+
+* CVE-2023-5753 `Zephyr 项目 bug 跟踪器 GHSA-hmpr-px56-rvww
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-hmpr-px56-rvww>`_
+
+内核
+******
+
+* 新增对通过 :c:func:`k_thread_stack_alloc` 动态线程栈分配的支持
+* 新增对 :c:func:`k_spin_trylock` 的支持
+* 新增 :c:func:`k_object_is_valid` 以检查内核对象是否有效。这替换了在树中重复的代码。
+
+架构
+*************
+
+* ARC
+
+  * 为 ARC VPX 处理器引入标量移植
+  * 为 ARCv3 HS（32 位和 64 位）SMP 平台引入支持，最多 12 个 CPU 核心
+  * 重新设计 ARC MWDT 工具链的 GNU 辅助工具使用。现在辅助工具可以从 Zephyr SDK（如果 SDK 已安装）使用
+  * 修复动态线程栈分配
+  * 修复 STR 汇编宏偏移计算问题，这可能导致 ARCv3 64bit 的构建错误
+  * 清理并使 ARC MWDT 工具链路径（ARCMWDT_TOOLCHAIN_PATH）的处理更用户友好
+
+* ARM
+
+  * Arm Cortex-M 的架构支持已从 Arm Cortex-A 和 Cortex-R 中分离。这包括处理任务（如 IRQ 管理、异常处理、线程处理和交换）的单独源模块。有关实现详情，请参见 :github:`60031`。
+
+* ARM64
+
+* RISC-V
+
+  * 新增支持，用于使用 PMP 检测空指针异常。
+  * 新增 :kconfig:option:`CONFIG_RISCV_RESERVED_IRQ_ISR_TABLES_OFFSET` 选项，允许在指定偏移处使用 IRQ 向量，以满足 Core-Local Interrupt Controller RISC-V 规范设定的要求。
+  * 新增 :kconfig:option:`CONFIG_RISCV_SOC_HAS_CUSTOM_SYS_IO` 选项，允许使用自定义系统输入/输出函数。
+  * 引入 :kconfig:option:`CONFIG_RISCV_TRAP_HANDLER_ALIGNMENT` 选项，用于设置 trap 处理代码的正确对齐，这取决于 ``MTVEC.BASE`` 字段大小并且是平台或应用特定的。
+
+* Xtensa
+
+  * 新增基本 MMU v2 支持。
+
+* x86
+
+  * 为 Intel Alder Lake 板级新增支持
+  * 为 Intel Sensor Hub（ISH）新增支持
+
+* POSIX
+
+  * 已重新设计以使用原生仿真器。
+  * 已新增板级。
+  * 对于新板级，可以使用嵌入式 C 库，并避免与主机符号和库的冲突。
+  * :ref:`POSIX OS 抽象<posix_support>` 在这些新板级中受支持。
+  * 现在支持 AMP 目标。
+  * 为 LLVM 源剖析/覆盖率新增支持。
+
+蓝牙
+*********
+
+* 音频
+
+  改进编解码配置和编解码能力的内存使用。修复 BAP 和 BAP 相关服务（ASCS、PACS、BASS）中的多个 bug，以及缺失的功能，例如适当的通知处理。
+
+  * 新增 BAP ``bt_bap_stream_get_tx_sync``
+  * 新增 CAP 流发送和 tx 同步
+  * 新增 ``bt_audio_codec_cap_get`` 辅助函数
+  * 为 CAP 新增长读/写支持
+  * 修复 ASCS 源 ASE 链路丢失状态转换
+  * 修复 ASCS 可能的 ASE 泄漏
+  * 修复 ASCS 以在 ASE 不在流状态时丢弃 ISO PDU
+  * 修复 BAP ``bt_bap_scan_delegator_find_state`` 实现
+  * 修复 BAP 在 ``broadcast_sink_create`` 中 PA 同步和 ID 的问题
+  * 修复 TMAS 特征权限
+  * 修复 ``tbs_client`` 缺失的发现完成事件
+  * 修复音频栈以在音频元数据中接受空 CCID 列表
+  * 修复 ASCS 中 metadata_backup 的大小错误
+  * 修复可能的 ASCS ASE 卡在释放状态
+  * 重构 ``bt_audio_codec_cap`` 为扁平数组
+  * 重构 ``bt_audio_codec_cfg`` 为扁平数组
+  * 移除 ``CONFIG_BT_PACS_{SNK,SRC}_CONTEXT``
+  * 从广播汇点移除扫描和 PA 同步
+  * 将 ``bt_codec`` 重命名为 ``bt_audio_codec_{cap, conf, data}``
+  * 重命名编解码 QoS 帧
+  * 用 ``BT_HCI_CODING_FORMAT_LC3`` 替换 ``BT_AUDIO_CODEC_LC3_ID``
+  * 用 errno 值替换 ``BT_AUDIO_CODEC_PARSE_ERR_`` 值。
+  * 重新设计 PACS 通知系统
+  * 基于 BAP QOS 更新 ASCS ISO QOS
+  * 更新 BAP 以默认过滤 PA 数据重复
+  * 更新 CSIP 以立即解锁非绑定设备。
+  * 更新 PACS 以在重新连接时通知绑定客户端
+  * 更新 ``bt_cap_stream_ops_register`` 以始终注册 BAP 回调
+  * 更新 ASCS ACL 断开连接行为
+  * 更新以将 ``bt_audio_codec_meta_get`` 拆分为 ``cfg`` 和 ``cap``
+
+* 方向查找
+
+* 主机
+
+  * 新增每连接 SMP 可绑定标志覆盖
+  * 新增 USE_NRPA 广播选项
+  * 新增 ``BT_CONN_PARAM_ANY`` 以允许将任何值设置到连接参数
+  * 新增高级广播 ISO 参数
+  * 新增高级单播 ISO 参数
+  * 新增用于管理蓝牙设置存储的新 API
+  * 修复 HCI ISO 数据包分片
+  * 修复发送到控制器的 HCI ISO SDU 长度
+  * 修复 OTS ``bt_ots_init`` 参数结构体命名
+  * 修复过程未完成时的 OTS 内存泄漏
+  * 修复连接引用泄漏
+  * 修复强制配对请求处理
+  * 修复主机以在启动遗留广播时使可解析私有地址无效
+  * 修复 ``bt_iso_cig_reconfigure`` 的问题
+  * 修复 ``bt_conn_le_start_encryption`` 中可能的缓冲区溢出
+  * 修复某些 SMP 问题
+  * 修复以在连接断开时中止配对
+  * 更新 L2CAP 接受回调
+  * 更新 LE L2CAP 连接回调以在连接响应之后
+  * 更新 PAwR 实现以在 BT_PRIVACY=y 时使用 RPA 作为响应器地址
+  * 修复 OTS ``bt_ots_init`` 参数结构体命名
+  * 修复过程未完成时的 OTS 内存泄漏
+  * 修复连接引用泄漏
+  * 修复强制配对请求处理
+  * 修复主机以在启动遗留广播时使可解析私有地址无效
+  * 修复 ``bt_iso_cig_reconfigure`` 的问题
+  * 修复 ``bt_conn_le_start_encryption`` 中可能的缓冲区溢出
+  * 修复某些 SMP 问题
+  * 修复以在连接断开时中止配对
+  * 更新 L2CAP 接受回调
+  * 更新 LE L2CAP 连接回调以在连接响应之后
+  * 更新 PAwR 实现以在 BT_PRIVACY=y 时使用 RPA 作为响应器地址
+
+* 网状
+
+  * 新增 TF-M 支持。
+  * 新增支持，用于同时使用 tinycrypt 和 PSA 基于的加密
+  * 新增对完整虚拟地址（具有冲突解决）的支持。引入 :kconfig:option:`CONFIG_BT_MESH_LABEL_NO_RECOVER` Kconfig 选项以恢复订阅列表和模型发布的地址。
+  * 新增统计模块。
+  * 修复问题，其中作为 LPN 操作的节点在通过回环接口发送分段消息时触发 Friend Poll 消息。
+  * 修复问题，其中在节点上配置成功完成，当配置器使用相同的公共密钥时。
+  * 修复问题，其中从除系统工作队列之外的协作线程调用的 :c:func:`settings_load` 函数导致 GATT Mesh Proxy 服务注册失败。
+  * 修复问题，其中节点可能进入 IV Update In Progress 状态，如果带有当前 IV Index 和 IV Update 标志设置为 1 的旧 SNB 被重新发送。
+
+  * 网状协议 v1.1 更改
+
+    * 新增持久存储私有 GATT Proxy 状态。
+    * 为固件分发服务器模型中的固件分发上传 OOB 启动消息新增支持。该消息支持可以通过 :kconfig:option:`CONFIG_BT_MESH_DFD_SRV_OOB_UPLOAD` Kconfig 选项启用。
+    * 在配置中使用 OOB 方法时新增扩展配置协议超时。
+    * 新增对组成数据页 2、129 和 130 的支持。
+    * 新增组成数据页 0、1、2、128、129 和 130 的文档。
+    * 新增传输层中分片和重组的文档。
+    * 新增 SAR 配置模型的文档
+    * 修复问题，其中操作码聚合器服务器模型在没有操作码聚合器客户端模型时无法编译。
+    * 修复问题，其中在私有 GATT Proxy 广播中使用身份地址而不是不可解析私有地址。
+    * 修复 Proxy 隐私参数支持。
+    * 修复问题，其中组成数据页 128 在已实例化远程配置服务器模型的节点上不存在。
+    * 修复问题，其中大型组成数据服务器模型不支持除 0 之外的组成数据页。
+    * 修复问题，其中与远程配置服务器模型一起在节点上实例化的远程配置客户端模型无法重新配置自身。
+    * 修复问题，其中分片和重组中的确认定时器在传入段确认消息不包含至少一个新标记为已确认的段时未重新启动。
+    * 修复问题，其中按需私有 Proxy 服务器和客户端模型具有相互依赖，不允许分别编译。
+
+* 控制器
+
+  改进控制器中广播和连接 Isochronous 通道的支持，启用 LE 音频应用开发。控制器是实验性的，缺少 Isochronous 通道底层链路层中交错打包的实现。
+
+  * 新增 Adv PDU 最小大小检查
+  * 新增 Kconfig 选项以忽略 Tx HCI ISO 数据包序列号
+  * 新增 Kconfig 以避免 ISO SDU 分片
+  * 新增 Kconfig 以最大化 BIG 事件长度并抢占 PTO & CTRL 子事件
+  * 新增 ``BT_CTLR_EVENT_OVERHEAD_RESERVE_MAX`` Kconfig
+  * 为 ticker 事务新增内存屏障
+  * 新增缺失的 nRF53x Tx 功率 Kconfig
+  * 为连接 ISO 中的 Flush 超时新增支持
+  * 修复 BIS 负载滑动窗口越界检查
+  * 修复 CIS 中心 FT 计算
+  * 修复 CIS 中心错误处理
+  * 修复 CIS 非对称 PHY 使用
+  * 修复在启用 DF 支持时的 CIS 加密
+  * 修复用于质量测试和时间戳的 ISO-AL
+  * 修复 HCI LE CIS Established 事件中的 PHY 值
+  * 修复 ULL 在罕见条件下卡在信号量
+  * 修复由于 PER CIS 活动集过晚导致的断言
+  * 修复导致断言的编译器指令重排序
+  * 修复连接 ISO 动态 tx 功率
+  * 修复失败的广播一致性测试
+  * 修复在 Coded PHY 不受支持时接收辅助 PDU 的处理
+  * 修复在重新调度 ticker 节点时计划 ticker 节点中的泄漏
+  * 修复缺失的主机特性重置
+  * 修复 nRF53 SoC 背靠背 PDU 链接
+  * 修复 nRF53 SoC 背靠背 Tx Rx 实现
+  * 修复 Adv PDU 溢出计算中的回归
+  * 修复导致断言和调度停滞的观察者中的回归
+  * 修复 nRF SoC 上预编程 PPI 的使用
+  * 在准备 FT 支持时移除具有无效状态的 HCI ISO 数据
+  * 更新扩展广播报告以在未收到 ``AUX_ADV_IND`` 时不生成
+  * 更新以在每个状态/角色 LLL 中拥有 ``EVENT_OVERHEAD_START_US`` 冗长断言
+  * 更新以在扩展扫描期间达到 ``DATA_LEN_MAX`` 时停止跟随 ``aux_ptr``
+
+板级和 SoC 支持
 ********************
 
-* Added support for these SoC series:
+* 新增对这些 SoC 系列的支持：
 
-  * Nuvoton NuMaker M46x series
-  * Added support for STM32F072X8 SoC variants
-  * Added support for STM32L051X6 SoC variants
-  * Added support for STM32L451XX SoC variants
-  * Added support for STM32L4Q5XX SoC variants
-  * Added support for STM32WBA SoC series
+  * Nuvoton NuMaker M46x 系列
+  * 新增对 STM32F072X8 SoC 变体的支持
+  * 新增对 STM32L051X6 SoC 变体的支持
+  * 新增对 STM32L451XX SoC 变体的支持
+  * 新增对 STM32L4Q5XX SoC 变体的支持
+  * 新增对 STM32WBA SoC 系列的支持
 
-* Removed support for these SoC series:
+* 移除对这些 SoC 系列的支持：
 
-* Made these changes in other SoC series:
+* 对其他 SoC 系列进行以下更改：
 
-  * i.MX RT SOCs no longer enable CONFIG_DEVICE_CONFIGURATION_DATA by default.
-    boards using external SDRAM should set CONFIG_DEVICE_CONFIGURATION_DATA
-    and CONFIG_NXP_IMX_EXTERNAL_SDRAM to enabled.
-  * i.MX RT SOCs no longer support CONFIG_OCRAM_NOCACHE, as this functionality
-    can be achieved using devicetree memory regions
-  * Refactored ESP32 SoC folders. So now these are a proper SoC series.
-  * RP2040: Changed to reset the I2C device on initializing
+  * i.MX RT SoC 不再默认启用 CONFIG_DEVICE_CONFIGURATION_DATA。使用外部 SDRAM 的板级应设置 CONFIG_DEVICE_CONFIGURATION_DATA 和 CONFIG_NXP_IMX_EXTERNAL_SDRAM 为启用。
+  * i.MX RT SoC 不再支持 CONFIG_OCRAM_NOCACHE，因为此功能可以使用设备树内存区域实现
+  * 重构 ESP32 SoC 文件夹。因此现在是适当的 SoC 系列。
+  * RP2040：更改为在初始化时重置 I2C 设备
 
-* Added support for these ARC boards:
+* 移除对这些 SoC 系列的支持：
 
-  * Added support for nsim_vpx5 - simulation (nSIM) platform with ARCv2 VPX5 core, close to
-    vpx5_integer_full template
-  * Added support for nsim_hs5x_smp_12cores - simulation (nSIM) platform with 12 cores SMP 32-bit
-    ARCv3 HS
-  * Added support for nsim_hs6x_smp_12cores - simulation (nSIM) platform with 12 cores SMP 64-bit
-    ARCv3 HS
+* 对其他 SoC 系列进行以下更改：
 
-* Added support for these ARM boards:
+  * i.MX RT SoC 不再默认启用 CONFIG_DEVICE_CONFIGURATION_DATA。
+    使用外部 SDRAM 的板级应设置 CONFIG_DEVICE_CONFIGURATION_DATA
+    和 CONFIG_NXP_IMX_EXTERNAL_SDRAM 为启用。
+  * i.MX RT SoC 不再支持 CONFIG_OCRAM_NOCACHE，
+    因为此功能可以使用设备树内存区域实现
+  * 重构 ESP32 SoC 文件夹。因此现在是适当的 SoC 系列。
+  * RP2040：更改为在初始化时重置 I2C 设备
 
-  * Nuvoton NuMaker Platform M467
+* 新增对这些 ARC 板级的支持：
+
+  * 新增对 nsim_vpx5 - 仿真（nSIM）平台（具有 ARCv2 VPX5 核心，接近 vpx5_integer_full 模板）的支持
+  * 新增对 nsim_hs5x_smp_12cores - 仿真（nSIM）平台（具有 12 核 SMP 32 位 ARCv3 HS）的支持
+  * 新增对 nsim_hs6x_smp_12cores - 仿真（nSIM）平台（具有 12 核 SMP 64 位 ARCv3 HS）的支持
+
+* 新增对这些 ARM 板级的支持：
+
+  * Nuvoton NuMaker 平台 M467
   * ST Nucleo U5A5ZJ Q
   * ST Nucleo WBA52CG
 
-* Added support for these ARM64 boards:
+* 新增对这些 ARM64 板级的支持：
 
-* Added support for these RISC-V boards:
+* 新增对这些 RISC-V 板级的支持：
 
-* Added support for these X86 boards:
+* 新增对这些 X86 板级的支持：
 
-* Added support for these Xtensa boards:
+* 新增对这些 ARM64 板级的支持：
 
-  * Added ``esp32_devkitc_wroom`` and ``esp32_devkitc_wrover``.
+* 新增对这些 RISC-V 板级的支持：
 
-  * Added ``esp32s3_luatos_core``.
+* 新增对这些 X86 板级的支持：
 
-  * Added ``m5stack_core2``.
+* 新增对这些 Xtensa 板级的支持：
 
-  * Added ``qemu_xtensa_mmu`` utilizing Diamond DC233c SoC to support
-    testing Xtensa MMU.
+* 新增对这些 ARM64 板级的支持：
 
-  * Added ``xiao_esp32s3``.
+* 新增对这些 RISC-V 板级的支持：
 
-  * Added ``yd_esp32``.
+* 新增对这些 X86 板级的支持：
 
-* Added support for these POSIX boards:
+* 新增对这些 ARM64 板级的支持：
+
+* 新增对这些 RISC-V 板级的支持：
+
+* 新增对这些 X86 板级的支持：
+
+* 新增对这些 Xtensa 板级的支持：
+
+  * 新增 ``esp32_devkitc_wroom`` 和 ``esp32_devkitc_wrover``。
+  * 新增 ``esp32s3_luatos_core``。
+  * 新增 ``m5stack_core2``。
+  * 新增利用 Diamond DC233c SoC 支持测试 Xtensa MMU 的 ``qemu_xtensa_mmu``。
+  * 新增 ``xiao_esp32s3``。
+  * 新增 ``yd_esp32``。
+
+* 新增对这些 POSIX 板级的支持：
 
   * :zephyr:board:`native_sim(_64) <native_sim>`
-  * nrf5340bsim_nrf5340_cpu(net|app). A simulated nrf5340 SOC, which uses Babblesim for its radio
-    traffic.
+  * nrf5340bsim_nrf5340_cpu(net|app)。仿真的 nrf5340 SoC，其无线电流量使用 Babblesim。
 
-* Made these changes for ARC boards:
+* 新增对这些 POSIX 板级的支持：
 
-  * Turned off unsupported stack checking option for hsdk4xd platform
-  * Changed vendor prefix for ARC QEMU platforms from "qemu" to "snps"
+  * :zephyr:board:`native_sim(_64) <native_sim>`
+  * nrf5340bsim_nrf5340_cpu(net|app)。仿真的 nrf5340 SoC，其无线电流量使用 Babblesim。
 
-* Made these changes for ARM boards:
+* 新增对这些 POSIX 板级的支持：
 
-  * ST morpho connector description was added on ST nucleo boards.
+  * :zephyr:board:`native_sim(_64) <native_sim>`
+  * nrf5340bsim_nrf5340_cpu(net|app)。仿真的 nrf5340 SoC，其无线电流量使用 Babblesim。
 
-  * rpi_pico:
+* 对这些 ARC 板级进行以下更改：
 
-    * The default adapter when debugging with openocd has been changed to cmsis-dap.
+  * 为 hsdk4xd 平台关闭不支持的栈检查选项
+  * 将 ARC QEMU 平台的供应商前缀从 "qemu" 更改为 "snps"
 
-* Made these changes for ARM64 boards:
+* 对这些 ARM 板级进行以下更改：
 
-* Made these changes for RISC-V boards:
+  * 在 ST nucleo 板级上新增 ST morpho 连接器描述。
 
-* Made these changes for X86 boards:
+  * rpi_pico：
 
-* Made these changes for Xtensa boards:
+    * 使用 openocd 调试时的默认适配器已更改为 cmsis-dap。
 
-  * esp32s3_devkitm:
+* 对这些 ARM 板级进行以下更改：
 
-    * Added USB-CDC support.
+  * 在 ST nucleo 板级上新增 ST morpho 连接器描述。
 
-    * Added CAN support.
+  * rpi_pico：
 
-* Made these changes for POSIX boards:
+    * 使用 openocd 调试时的默认适配器已更改为 cmsis-dap。
 
-  * nrf52_bsim:
+* 对这些 ARM64 板级进行以下更改：
 
-    * Has been reworked to use the native simulator as its runner.
-    * Multiple HW models improvements and fixes. GPIO & GPIOTE peripherals added.
+* 对这些 RISC-V 板级进行以下更改：
 
-* Removed support for these ARC boards:
+* 对这些 X86 板级进行以下更改：
 
-* Removed support for these ARM boards:
+* 对这些 ARM 板级进行以下更改：
 
-* Removed support for these ARM64 boards:
+  * 在 ST nucleo 板级上新增 ST morpho 连接器描述。
 
-* Removed support for these RISC-V boards:
+  * rpi_pico：
 
-* Removed support for these X86 boards:
+    * 使用 openocd 调试时的默认适配器已更改为 cmsis-dap。
 
-* Removed support for these Xtensa boards:
+* 对这些 ARM64 板级进行以下更改：
 
-  * Removed ``esp32``. Use ``esp32_devkitc_*`` instead.
+* 对这些 RISC-V 板级进行以下更改：
 
-* Made these changes in other boards:
+* 对这些 X86 板级进行以下更改：
 
-* Added support for these following shields:
+* 对这些 Xtensa 板级进行以下更改：
 
-  * Adafruit PiCowbell CAN Bus Shield for Pico
-  * Arduino UNO click shield
-  * G1120B0MIPI MIPI Display
-  * MikroElektronika MCP2518FD Click shield (CAN-FD)
-  * RK055HDMIPI4M MIPI Display
-  * RK055HDMIPI4MA0 MIPI Display
-  * Semtech SX1276MB1MAS LoRa Shield
+  * esp32s3_devkitm：
 
-Build system and infrastructure
+    * 新增 USB-CDC 支持。
+    * 新增 CAN 支持。
+
+* 对这些 POSIX 板级进行以下更改：
+
+  * nrf52_bsim：
+
+    * 已重新设计以使用原生仿真器作为其运行器。
+    * 多个硬件模型改进和修复。新增 GPIO & GPIOTE 外设。
+
+* 移除对这些 ARC 板级的支持：
+
+* 移除对这些 ARM 板级的支持：
+
+* 移除对这些 ARM64 板级的支持：
+
+* 移除对这些 RISC-V 板级的支持：
+
+* 移除对这些 X86 板级的支持：
+
+* 移除对这些 ARC 板级的支持：
+
+* 移除对这些 ARM 板级的支持：
+
+* 移除对这些 ARM64 板级的支持：
+
+* 移除对这些 RISC-V 板级的支持：
+
+* 移除对这些 X86 板级的支持：
+
+* 移除对这些 Xtensa 板级的支持：
+
+  * 移除 ``esp32``。改用 ``esp32_devkitc_*``。
+
+* 对其他板级进行以下更改：
+
+* 对其他板级进行以下更改：
+
+* 新增对以下屏蔽板的支持：
+
+  * Adafruit PiCowbell CAN 总线屏蔽板（用于 Pico）
+  * Arduino UNO click 屏蔽板
+  * G1120B0MIPI MIPI 显示
+  * MikroElektronika MCP2518FD Click 屏蔽板（CAN-FD）
+  * RK055HDMIPI4M MIPI 显示
+  * RK055HDMIPI4MA0 MIPI 显示
+  * Semtech SX1276MB1MAS LoRa 屏蔽板
+
+构建系统和基础设施
 *******************************
 
-* SCA (Static Code Analysis)
+* SCA（静态代码分析）
 
-  * Added support for CodeChecker
+  * 新增对 CodeChecker 的支持
 
-* Twister now supports ``required_snippets`` in testsuite .yml files, this can
-  be used to include a snippet when a test is ran (and exclude any boards from
-  running that the snippet cannot be applied to).
+* Twister 现在支持测试套件 .yml 文件中的 ``required_snippets``，这可以用于在运行测试时包含 snippet（并排除 snippet 无法应用到的任何板级）。
 
-* Interrupts
+* 中断
 
-  * Added support for shared interrupts
+  * 新增对共享中断的支持
 
-* Added support for setting MCUboot encryption key in sysbuild which is then
-  propagated to the bootloader and target images to automatically create
-  encrypted updates.
+* 新增支持，用于在 sysbuild 中设置 MCUboot 加密密钥，然后传播到引导加载器和目标映像以自动创建加密更新。
 
-* Build time priority checking: enable build time priority checking by default.
-  This fails the build if the initialization sequence in the final ELF file
-  does not match the devicetree hierarchy. It can be turned off by disabling
-  the :kconfig:option:`CONFIG_CHECK_INIT_PRIORITIES` option.
+* 构建时优先级检查：默认启用构建时优先级检查。如果最终 ELF 文件中的初始化序列与设备树层次结构不匹配，这会导致构建失败。可以通过禁用 :kconfig:option:`CONFIG_CHECK_INIT_PRIORITIES` 选项来关闭它。
 
-* Added a new ``initlevels`` target for printing the final device and
-  :c:macro:`SYS_INIT` initialization sequence from the final ELF file.
+* 新增新的 ``initlevels`` 目标，用于打印最终 ELF 文件中的最终设备和 :c:macro:`SYS_INIT` 初始化序列。
 
-* Reworked syscall code generations so that not all marshalling functions
-  will be included in the final binary. Syscalls associated with disabled
-  subsystems no longer have their marshalling functions generated.
+* 重新设计 syscall 代码生成，使并非所有 marshalling 函数都包含在最终二进制中。与禁用子系统关联的 Syscalls 不再生成其 marshalling 函数。
 
-* Partially enabled compiler warning about shadow variables for subset of
-  in-tree code. Out-of-tree code needs to be patched before we can fully
-  enable shadow variable warnings.
+* 为树内代码子集部分启用关于影子变量的编译器警告。树外代码需要在我们能够完全启用影子变量警告之前进行修补。
 
-Drivers and Sensors
+构建系统和基础设施
+*******************************
+
+* SCA（静态代码分析）
+
+  * 新增对 CodeChecker 的支持
+
+* Twister 现在支持测试套件 .yml 文件中的 ``required_snippets``，这可以用于在运行测试时包含 snippet（并排除 snippet 无法应用到的任何板级）。
+
+* 中断
+
+  * 新增对共享中断的支持
+
+* 新增支持，用于在 sysbuild 中设置 MCUboot 加密密钥，然后传播到引导加载器和目标映像以自动创建加密更新。
+
+* 构建时优先级检查：默认启用构建时优先级检查。如果最终 ELF 文件中的初始化序列与设备树层次结构不匹配，这会导致构建失败。可以通过禁用 :kconfig:option:`CONFIG_CHECK_INIT_PRIORITIES` 选项来关闭它。
+
+* 新增新的 ``initlevels`` 目标，用于打印最终 ELF 文件中的最终设备和 :c:macro:`SYS_INIT` 初始化序列。
+
+* 重新设计 syscall 代码生成，使并非所有 marshalling 函数都包含在最终二进制中。与禁用子系统关联的 Syscalls 不再生成其 marshalling 函数。
+
+* 为树内代码子集部分启用关于影子变量的编译器警告。树外代码需要在我们能够完全启用影子变量警告之前进行修补。
+
+构建系统和基础设施
+*******************************
+
+* SCA（静态代码分析）
+
+  * 新增对 CodeChecker 的支持
+
+* Twister 现在支持测试套件 .yml 文件中的 ``required_snippets``，
+  这可以用于在运行测试时包含 snippet
+  （并排除 snippet 无法应用到的任何板级）。
+
+* 中断
+
+  * 新增对共享中断的支持
+
+* 新增支持，用于在 sysbuild 中设置 MCUboot 加密密钥，
+  然后
+  传播
+  到
+  引导
+  加载器
+  和
+  目标
+  映像
+  以
+  自动
+  创建
+  加密
+  更新。
+
+* 构建时优先级检查：
+  默认
+  启用
+  构建
+  时
+  优先级
+  检查。
+  如果
+  最终
+  ELF
+  文件
+  中的
+  初始化
+  序列
+  与
+  设备树
+  层次
+  结构
+  不
+  匹配，
+  这
+  会
+  导致
+  构建
+  失败。
+  可以
+  通过
+  禁用
+  :kconfig:option:`CONFIG_CHECK_INIT_PRIORITIES`
+  选项
+  来
+  关闭
+  它。
+
+* 新增新的 ``initlevels`` 目标，
+  用于
+  打印
+  最终
+  ELF
+  文件
+  中的
+  最终
+  设备
+  和
+  :c:macro:`SYS_INIT`
+  初始化
+  序列。
+
+* 重新
+  设计
+  syscall
+  代码
+  生成，
+  使
+  并非
+  所有
+  marshalling
+  函数
+  都
+  包含
+  在
+  最终
+  二进制
+  中。
+  与
+  禁用
+  子系统
+  关联
+  的
+  Syscalls
+  不再
+  生成
+  其
+  marshalling
+  函数。
+
+* 为树内代码子集部分启用关于影子变量的编译器警告。树外代码需要在我们能够完全启用影子变量警告之前进行修补。
+
+驱动和传感器
 *******************
 
 * ADC
 
-  * Added support for STM32F0 HSI14 clock (dedicated ADC clock)
-  * Added support for STM32 ADC source clock and prescaler. On STM32F1 and STM32F3
-    series, ADC prescaler can be configured using dedicated RCC Clock Controller
-    option.
-  * Added support for the ADC sequencer for all STM32 series (except F1)
-  * Fixed STM32F4 ADC temperature and Vbat measurement.
-  * Added driver for TI ADS1112.
-  * Added driver for TI TLA2021.
-  * Added driver for Gecko ADC.
-  * Added driver for NXP S32 ADC SAR.
-  * Added driver for MAX1125x family.
-  * Added driver for MAX11102-MAX1117.
+  * 为 STM32F0 HSI14 时钟（专用 ADC 时钟）新增支持
+  * 为 STM32 ADC 源时钟和预分频器新增支持。在 STM32F1 和 STM32F3 系列中，
+    ADC 预分频器可以使用专用 RCC 时钟控制器选项配置。
+  * 为所有 STM32 系列（F1 除外）的 ADC 序列器新增支持
+  * 修复 STM32F4 ADC 温度和 Vbat 测量。
+  * 为 TI ADS1112 新增驱动。
+  * 为 TI TLA2021 新增驱动。
+  * 为 Gecko ADC 新增驱动。
+  * 为 NXP S32 ADC SAR 新增驱动。
+  * 为 MAX1125x 系列新增驱动。
+  * 为 MAX11102-MAX1117 新增驱动。
 
 * CAN
 
-  * Added support for TI TCAN4x5x CAN-FD controller with integrated transceiver
-    (:dtcompatible:`ti,tcan4x5x`).
-  * Added support for Microchip MCP251xFD CAN-FD controller (:dtcompatible:`microchip,mcp251xfd`).
-  * Added support for CAN statistics to the Bosch M_CAN controller driver backend.
-  * Switched the NXP S32 CANXL driver to use clock control for the CAN clock instead of hard-coding
-    a CAN clock frequency in the devicetree.
+  * 为具有集成收发器的 TI TCAN4x5x CAN-FD 控制器（:dtcompatible:`ti,tcan4x5x`）新增支持。
+  * 为 Microchip MCP251xFD CAN-FD 控制器（:dtcompatible:`microchip,mcp251xfd`）新增支持。
+  * 为 Bosch M_CAN 控制器驱动后端新增 CAN 统计支持。
+  * 将 NXP S32 CANXL 驱动切换为使用时钟控制来使用 CAN 时钟，
+    而不是在设备树中硬编码 CAN 时钟频率。
 
-* Clock control
+* 时钟控制
 
-  * Added support for Nuvoton NuMaker M46x
+  * 为 Nuvoton NuMaker M46x 新增支持
 
-* Counter
+* 计数器
 
-  * Added :kconfig:option:`CONFIG_COUNTER_RTC_STM32_SUBSECONDS` to enable subsecond as
-    the basic time tick on STM32 RTC based counter driver.
+  * 新增 :kconfig:option:`CONFIG_COUNTER_RTC_STM32_SUBSECONDS`
+    以
+    启用
+    亚秒
+    作为
+    STM32
+    RTC
+    基于
+    计数器
+    驱动
+    的
+    基本
+    时间
+    tick。
 
-  * Added support for Raspberry Pi Pico Timer
+  * 为 Raspberry Pi Pico 定时器新增支持
 
 * DAC
 
-  * Added support for Analog Devices AD56xx
-  * Added support for NXP lpcxpresso55s36 (LPDAC)
+  * 为 Analog Devices AD56xx 新增支持
+  * 为 NXP lpcxpresso55s36（LPDAC）新增支持
 
-* Disk
+* 磁盘
 
-  * Ramdisk driver is now configured using devicetree, and supports multiple
-    instances
+  * Ramdisk 驱动现在使用设备树配置，
+    并
+    支持
+    多个
+    实例
 
-* Display
+* 显示
 
-  * Added support for ST7735S (in ST7735R driver)
+  * 为 ST7735S（在 ST7735R 驱动中）新增支持
 
 * DMA
 
-  * Added support for NXP S32K to the eDMA driver
-  * Added support for NXP SMARTDMA
-  * Added support for NXP Pixel Pipeline (PXP) for display acceleration
-  * Added support for DMA get_status() to the SAM XDMAC driver
-  * Fixes for Intel HDA driver for L1 entry/exit, explicit SCS (sample container) settings
-  * Fixes for STM32U5 enables error interrupts, fixes block size and data size configuration
-  * Better Kconfig options for tuning static memory usage in NXP LPC driver
+  * 为 NXP S32K 新增对 eDMA 驱动的支持
+  * 为 NXP SMARTDMA 新增支持
+  * 为显示加速新增对 NXP Pixel Pipeline（PXP）的支持
+  * 为 SAM XDMAC 驱动新增 DMA get_status() 支持
+  * 修复 Intel HDA 驱动中 L1 进入/退出、显式 SCS（采样容器）设置
+  * 修复 STM32U5 以启用错误中断，修复块大小和数据大小配置
+  * 改进 NXP LPC 驱动中用于调整静态内存使用的 Kconfig 选项
 
 * EEPROM
 
-  * Added support for Fujitsu MB85RCxx series I2C FRAM (:dtcompatible:`fujitsu,mb85rcxx`).
+  * 为 Fujitsu MB85RCxx 系列 I2C FRAM（:dtcompatible:`fujitsu,mb85rcxx`）新增支持。
 
-* Entropy
+* 熵
 
-  * Added a requirement for ``entropy_get_entropy()`` to be thread-safe because
-    of random subsystem needs.
+  * 新增要求，
+    用于
+    ``entropy_get_entropy()``
+    必须
+    线程
+    安全，
+    因为
+    随机
+    子系统
+    需要。
 
-* Ethernet
+* 以太网
 
-  * Added :kconfig:option:`CONFIG_ETH_NATIVE_POSIX_RX_TIMEOUT` to set rx timeout for native posix.
-  * Added support for adin2111.
-  * Added support for NXP S32 GMAC.
-  * Added support for promiscuous mode in eth_smsc91x.
-  * Added support for STM32H5X SOC series.
-  * Added support for MDIO Clause 45 APIs.
-  * Added support for YD-ESP32 board Ethernet.
-  * Fixed stm32 to generate more unique MAC address by using device id as a base for the MAC.
-  * Fixed mcux to increase the PTP timestamp accuracy from 20us to 200ns.
-  * Fixed Ethernet max header size when using VLAN.
-  * Removed the ``mdio`` DT property. Please use :c:macro:`DT_INST_BUS()` in the driver instead.
-  * Reworked the device node hierarchy in smsc91x.
-  * Renamed the phy-dev property with phy-handle to match the Linux ethernet-controller binding
-    and move it up to ethernet.yaml so that it can be used by other drivers.
-  * Updated Ethernet PHY to use ``reg`` property in DT bindings.
-  * Updated driver DT bindings to use ``ethernet-phy`` devicetree node name consistently.
-  * Updated esp32 and sam-gmac DT so that the phy is pointed by a phandle rather than
-    a child node, this makes the phy device a child of mdio.
+  * 新增 :kconfig:option:`CONFIG_ETH_NATIVE_POSIX_RX_TIMEOUT`
+    以
+    设置
+    native
+    posix
+    的
+    rx
+    超时。
+  * 为 adin2111 新增支持。
+  * 为 NXP S32 GMAC 新增支持。
+  * 为 eth_smsc91x 中的混杂模式新增支持。
+  * 为 STM32H5X SOC 系列新增支持。
+  * 为 MDIO 第 45 条 API 新增支持。
+  * 为 YD-ESP32 板级以太网新增支持。
+  * 修复 stm32 以通过以设备 ID 作为 MAC 的基础来生成更唯一的 MAC 地址。
+  * 修复 mcux 以将 PTP 时间戳精度从 20us 增加到 200ns。
+  * 修复使用 VLAN 时的以太网最大头大小。
+  * 移除 ``mdio`` DT 属性。请在驱动中改用 :c:macro:`DT_INST_BUS()`。
+  * 重构 smsc91x 中的设备节点层次结构。
+  * 将 phy-dev 属性重命名为 phy-handle，
+    以
+    匹配
+    Linux
+    ethernet-controller
+    绑定
+    并
+    将其
+    移动
+    到
+    ethernet.yaml
+    以
+    供
+    其他
+    驱动
+    使用。
+  * 更新以太网 PHY 以在 DT 绑定中使用 ``reg`` 属性。
+  * 更新驱动 DT 绑定以一致地使用 ``ethernet-phy`` 设备树节点名称。
+  * 更新 esp32 和 sam-gmac DT 以通过 phandle 而不是子节点指向 phy，
+    这
+    使
+    phy
+    设备
+    成为
+    mdio
+    的
+    子节点。
 
-* Flash
+* 闪存
 
-  * Introduce npcx flash driver that supports two or more spi nor flashes via a
-    single Flash Interface Unit (FIU) module and Direct Read Access (DRA) mode
-    for better performance.
-  * Added support for Nuvoton NuMaker M46x embedded flash
-  * STM32 QSPI driver now supports Jedec SFDP parameter reading.
-  * STM32 OSPI driver now supports both Low and High ports of IO manager.
+  * 引入
+    npcx
+    闪存
+    驱动，
+    它
+    支持
+    通过
+    单个
+    Flash
+    Interface
+    Unit
+    （
+    FIU
+    ）
+    模块
+    和
+    Direct
+    Read
+    Access
+    （
+    DRA
+    ）
+    模式
+    的
+    两个
+    或
+    更多
+    spi
+    nor
+    闪存
+    以
+    获得
+    更好的
+    性能。
+  * 为 Nuvoton NuMaker M46x 嵌入式闪存新增支持
+  * STM32 QSPI 驱动现在支持 Jedec SFDP 参数读取。
+  * STM32 OSPI 驱动现在支持 IO 管理器的低端口和高端口。
 
 * GPIO
 
-  * Added support for Nuvoton NuMaker M46x
+  * 为 Nuvoton NuMaker M46x 新增支持
 
 * I2C
 
-  * STM32 V1 driver now supports large transactions (more than 256 bytes chunks)
-  * STM32 V2 driver now supports 10-bit addressing.
-  * I2C devices can now be used as wakeup source from STOP modes on STM32.
-  * Fix long ISR execution in Silicon Labs I2C target callback
-  * Fail gracefully on DMA max size for nRF52 devices in the TWIM driver
-  * Added support for Intel LPSS DMA usage in the DesignWare driver
-  * Added filtering of dumped messages for debugging using DeviceTree
-  * Added target mode to Silicon Labs Gecko driver
-  * Added Intel SEDI driver
-  * Added Infineon XMC4 driver
-  * Added Microchip PolarFire SoC driver
-  * Added Ambiq driver for Apollo4 SoCs
+  * STM32 V1 驱动现在支持大事务（超过 256 字节的块）
+  * STM32 V2 驱动现在支持 10 位寻址。
+  * I2C 设备现在可以在 STM32 上用作从 STOP 模式的唤醒源。
+  * 修复 Silicon Labs I2C 目标回调中的长 ISR 执行
+  * 在 TWIM 驱动中优雅地处理 nRF52 设备的 DMA 最大大小
+  * 为 DesignWare 驱动中的 Intel LPSS DMA 使用新增支持
+  * 新增使用 DeviceTree 调试转储消息的过滤
+  * 为 Silicon Labs Gecko 驱动新增目标模式
+  * 新增 Intel SEDI 驱动
+  * 新增 Infineon XMC4 驱动
+  * 新增 Microchip PolarFire SoC 驱动
+  * 为 Apollo4 SoCs 新增 Ambiq 驱动
 
 * I2S
 
-  * Fixed handling of the PCM data format in the NXP MCUX driver.
+  * 修复 NXP MCUX 驱动中 PCM 数据格式的处理。
 
 * I3C
 
-  * ``i3c_cdns``:
+  * ``i3c_cdns``：
 
-    * Fixed build error when :kconfig:option:`CONFIG_I3C_USE_IBI` is disabled.
+    * 修复在 :kconfig:option:`CONFIG_I3C_USE_IBI` 禁用时的构建错误。
 
-    * Fixed transfer issue when controller is busy. Now wait for controller to
-      idle before proceeding with another transfer.
+    * 修复在控制器忙时的传输问题。现在在继续另一个传输之前
+      等待控制器空闲。
 
 * IEEE 802.15.4
 
-  * A new mandatory method attr_get() was introduced into ieee802154_radio_api.
-    Drivers need to implement at least
-    IEEE802154_ATTR_PHY_SUPPORTED_CHANNEL_PAGES and
-    IEEE802154_ATTR_PHY_SUPPORTED_CHANNEL_RANGES.
-  * The hardware capabilities IEEE802154_HW_2_4_GHZ and IEEE802154_HW_SUB_GHZ
-    were removed as they were not aligned with the standard and some already
-    existing drivers couldn't properly express their channel page and channel
-    range (notably SUN FSK and HRP UWB drivers). The capabilities were replaced
-    by the standard conforming new driver attribute
-    IEEE802154_ATTR_PHY_SUPPORTED_CHANNEL_PAGES that fits all in-tree drivers.
-  * The method get_subg_channel_count() was removed from ieee802154_radio_api.
-    This method could not properly express the channel range of existing drivers
-    (notably SUN FSK drivers that implement channel pages > 0 and may not have
-    zero-based channel ranges or UWB drivers that could not be represented at
-    all). The method was replaced by the new driver attribute
-    IEEE802154_ATTR_PHY_SUPPORTED_CHANNEL_RANGES that fits all in-tree drivers.
+  * 在 ieee802154_radio_api 中引入了新的强制方法 attr_get()。
+    驱动至少需要实现
+    IEEE802154_ATTR_PHY_SUPPORTED_CHANNEL_PAGES 和
+    IEEE802154_ATTR_PHY_SUPPORTED_CHANNEL_RANGES。
+  * 移除了硬件能力 IEEE802154_HW_2_4_GHZ 和 IEEE802154_HW_SUB_GHZ，
+    因为它们与标准不一致，
+    并且
+    一些
+    已
+    存在
+    的
+    驱动
+    无法
+    正确
+    表达
+    其
+    通道
+    页
+    和
+    通道
+    范围
+    （
+    特别是
+    SUN
+    FSK
+    和
+    HRP
+    UWB
+    驱动
+    ）。
+    这些
+    能力
+    被
+    符合
+    标准的
+    新
+    驱动
+    属性
+    IEEE802154_ATTR_PHY_SUPPORTED_CHANNEL_PAGES
+    替换，
+    它
+    适合
+    所有
+    树
+    内
+    驱动。
+  * 从 ieee802154_radio_api 中移除了方法 get_subg_channel_count()。
+    此
+    方法
+    无法
+    正确
+    表达
+    已
+    存在
+    驱动
+    的
+    通道
+    范围
+    （
+    特别是
+    SUN
+    FSK
+    驱动
+    实现
+    通道
+    页
+    >
+    0
+    并且
+    可能
+    没有
+    零
+    基
+    通道
+    范围
+    或
+    无法
+    被
+    表示
+    的
+    UWB
+    驱动
+    ）。
+    此
+    方法
+    被
+    新
+    驱动
+    属性
+    IEEE802154_ATTR_PHY_SUPPORTED_CHANNEL_RANGES
+    替换，
+    它
+    适合
+    所有
+    树
+    内
+    驱动。
 
-* Interrupt Controller
+* 中断控制器
 
-  * GIC: Architecture version selection is now based on the device tree
+  * GIC：架构版本选择现在基于设备树
 
-* Input
+* 输入
 
-  * New drivers: :dtcompatible:`gpio-qdec`, :dtcompatible:`st,stmpe811`.
+  * 新驱动：:dtcompatible:`gpio-qdec`、:dtcompatible:`st,stmpe811`。
 
-  * Drivers converted from Kscan to Input: :dtcompatible:`goodix,gt911`
+  * 从 Kscan 转换为 Input 的驱动：:dtcompatible:`goodix,gt911`
     :dtcompatible:`xptek,xpt2046` :dtcompatible:`hynitron,cst816s`
-    :dtcompatible:`microchip,cap1203`.
+    :dtcompatible:`microchip,cap1203`。
 
-  * Added a Kconfig option for dumping all events to the console
-    :kconfig:option:`CONFIG_INPUT_EVENT_DUMP` and new shell commands
-    :kconfig:option:`CONFIG_INPUT_SHELL`.
+  * 为转储所有事件到控制台新增 Kconfig 选项
+    :kconfig:option:`CONFIG_INPUT_EVENT_DUMP` 和新 shell 命令
+    :kconfig:option:`CONFIG_INPUT_SHELL`。
 
-  * Merged ``zephyr,gpio-keys`` into :dtcompatible:`gpio-keys` and added
-    ``zephyr,code`` codes to all in-tree board ``gpio-keys`` nodes.
+  * 将 ``zephyr,gpio-keys`` 合并到 :dtcompatible:`gpio-keys`
+    并为
+    所有
+    树
+    内
+    板级
+    ``gpio-keys``
+    节点
+    添加
+    ``zephyr,code``
+    代码。
 
-  * Renamed the callback definition macro from ``INPUT_LISTENER_CB_DEFINE`` to
-    :c:macro:`INPUT_CALLBACK_DEFINE`.
+  * 将回调定义宏从 ``INPUT_LISTENER_CB_DEFINE``
+    重命名为
+    :c:macro:`INPUT_CALLBACK_DEFINE`。
 
 * PCIE
 
-  * Added support in shell to display PCIe capabilities.
+  * 在 shell 中新增支持以显示 PCIe 能力。
 
-  * Added virtual channel support.
+  * 新增虚拟通道支持。
 
-  * Added kconfig :kconfig:option:`CONFIG_PCIE_INIT_PRIORITY` to specify
-    initialization priority for host controller.
+  * 新增 kconfig :kconfig:option:`CONFIG_PCIE_INIT_PRIORITY`
+    以
+    指定
+    主机
+    控制器
+    的
+    初始化
+    优先级。
 
-  * Added support to get IRQ from ACPI PCI Routing Table (PRT).
+  * 新增支持，用于从 ACPI PCI 路由表（PRT）获取 IRQ。
 
 * ACPI
 
-  * Adopted the ACPICA library as a new module to further enhance ACPI support.
+  * 采用 ACPICA 库作为新模块以进一步增强 ACPI 支持。
 
-* Pin control
+* 引脚控制
 
-  * Added support for Nuvoton NuMaker M46x
+  * 为 Nuvoton NuMaker M46x 新增支持
 
 * PWM
 
-  * Added 4 channels capture on STM32 PWM driver.
-  * Added driver for Intel Blinky PWM.
-  * Added driver for MAX31790.
-  * Added driver for Infineon XMC4XXX CCU4.
-  * Added driver for Infineon XMC4XXX CCU8.
-  * Added MCUX CTimer based PWM driver.
-  * Added PWM driver based on TI CC13xx/CC26xx GPT timer.
-  * Reworked the pwm_nrf5_sw driver so that it can be used also on nRF53 and
-    nRF91 Series. Consequently, the driver was renamed to pwm_nrf_sw.
-  * Added driver for Nuvoton NuMaker family.
-  * Added PWM driver based on NXP S32 EMIOS peripheral.
+  * 为 STM32 PWM 驱动新增 4 通道捕获。
+  * 为 Intel Blinky PWM 新增驱动。
+  * 为 MAX31790 新增驱动。
+  * 为 Infineon XMC4XXX CCU4 新增驱动。
+  * 为 Infineon XMC4XXX CCU8 新增驱动。
+  * 新增 MCUX CTimer 基于 PWM 驱动。
+  * 新增基于 TI CC13xx/CC26xx GPT 定时器的 PWM 驱动。
+  * 重构 pwm_nrf5_sw 驱动，
+    使
+    其
+    可以
+    在
+    nRF53
+    和
+    nRF91
+    系列
+    上
+    使用。
+    因此，
+    驱动
+    被
+    重命名为
+    pwm_nrf_sw。
+  * 为 Nuvoton NuMaker 系列新增驱动。
+  * 新增基于 NXP S32 EMIOS 外设的 PWM 驱动。
 
-* Regulators
+* 调节器
 
-  * Added support for GPIO-controlled voltage regulator
+  * 为 GPIO 控制的电压调节器新增支持
 
-  * Added support for AXP192 PMIC
+  * 为 AXP192 PMIC 新增支持
 
-  * Added support for NXP VREF regulator
+  * 为 NXP VREF 调节器新增支持
 
-  * Fixed regulators can now specify their operating voltage
+  * 修复调节器现在可以指定其工作电压
 
-  * PFM mode is now support for nPM1300
+  * nPM1300 现在支持 PFM 模式
 
-  * Added new API to configure "ship" mode
+  * 新增用于配置 "ship" 模式的新 API
 
-  * Regulator shell allows to configure DVS modes
+  * 调节器 shell 允许配置 DVS 模式
 
-* Reset
+* 重置
 
-  * Added support for Nuvoton NuMaker M46x
+  * 为 Nuvoton NuMaker M46x 新增支持
 
-* Retained memory
+* 保留内存
 
-  * Added support for allowing mutex support to be forcibly disabled with
-    :kconfig:option:`CONFIG_RETAINED_MEM_MUTEX_FORCE_DISABLE`.
+  * 新增支持，
+    用于
+    允许
+    使用
+    :kconfig:option:`CONFIG_RETAINED_MEM_MUTEX_FORCE_DISABLE`
+    强制
+    禁用
+    互斥锁
+    支持。
 
-  * Fixed issue with user mode support not working.
+  * 修复用户模式支持不起作用的问题。
 
 * RTC
 
-  * Added support for STM32 RTC API driver. This driver is not compatible with
-    the use of RTC based implementation of COUNTER API.
+  * 为 STM32 RTC API 驱动新增支持。此驱动与
+    COUNTER
+    API
+    的
+    RTC
+    基于
+    实现
+    的
+    使用
+    不
+    兼容。
 
 * SDHC
 
-  * Added driver for EMMC Host controller present on Alder lake platforms
-  * Added driver for Atmel HSMCI controller present on SAM4E MCU series
+  * 为 Alder lake 平台上存在的 EMMC 主机控制器新增驱动
+  * 为 SAM4E MCU 系列上存在的 Atmel HSMCI 控制器新增驱动
 
-* Sensor
+* 传感器
 
-  * Reworked the :dtcompatible:`ti,bq274xx` to add ``BQ27427`` support, fixed
-    units for capacity and power channels.
-  * Added ADC current sense amplifier and voltage sensor drivers.
-  * Added ADI LTC2990 voltage, current, and temperature sensor driver.
-  * Added AMS TSL2540 ambient light sensor driver.
-  * Added Bosch BMI08x accelerometer/gyroscope driver.
-  * Added DFRobot A01NYUB distance sensor driver.
-  * Added Fintek F75303 temperature sensor driver.
-  * Added Isentek IST8310 magnetometer driver.
-  * Added Microchip TCN75A temperature sensor driver.
-  * Added NXP TEMPMON driver.
-  * Added Seeed HM330X dust sensor driver.
-  * Added TI TMAG5170 3D Hall sensor driver.
-  * Added power management support to BMM150, LM75, and Microchip tachometer
-    drivers.
-  * Added trigger support to the BMM150 magnetometer driver.
-  * Added tap trigger support to the LIS2DH accelerometer driver.
-  * Updated ST sensor drivers to use STMEMSC HAL i/f v2.3
-  * Updated the decoder APIs to vertically decode raw sensor data.
-  * Various fixes and enhancements in the NTC thermistor and INA23x drivers.
+  * 重构 :dtcompatible:`ti,bq274xx` 以添加 ``BQ27427`` 支持，
+    修复
+    容量
+    和
+    功率
+    通道
+    的
+    单位。
+  * 新增 ADC 电流感测放大器和电压传感器驱动。
+  * 新增 ADI LTC2990 电压、电流和温度传感器驱动。
+  * 新增 AMS TSL2540 环境光传感器驱动。
+  * 新增 Bosch BMI08x 加速度计/陀螺仪驱动。
+  * 新增 DFRobot A01NYUB 距离传感器驱动。
+  * 新增 Fintek F75303 温度传感器驱动。
+  * 新增 Isentek IST8310 磁力计驱动。
+  * 新增 Microchip TCN75A 温度传感器驱动。
+  * 新增 NXP TEMPMON 驱动。
+  * 新增 Seeed HM330X 灰尘传感器驱动。
+  * 新增 TI TMAG5170 3D 霍尔传感器驱动。
+  * 为 BMM150、LM75 和 Microchip 转速计驱动新增电源管理支持。
+  * 为 BMM150 磁力计驱动新增触发支持。
+  * 为 LIS2DH 加速度计驱动新增敲击触发支持。
+  * 更新 ST 传感器驱动以使用 STMEMSC HAL i/f v2.3
+  * 更新解码器 API 以垂直解码原始传感器数据。
+  * NTC 热敏电阻和 INA23x 驱动中的各种修复和增强。
 
-* Serial
+* 串行
 
-  * Added support for Nuvoton NuMaker M46x
+  * 为 Nuvoton NuMaker M46x 新增支持
 
-  * NS16550: Reworked how device initialization macros.
+  * NS16550：
+    重新
+    设计
+    设备
+    初始化
+    宏
+    的方式。
 
-    * ``CONFIG_UART_NS16550_ACCESS_IOPORT`` and ``CONFIG_UART_NS16550_SIMULT_ACCESS``
-      are removed. For UART using IO port access, add ``io-mapped`` property to
-      device tree node.
+    * ``CONFIG_UART_NS16550_ACCESS_IOPORT`` 和 ``CONFIG_UART_NS16550_SIMULT_ACCESS``
+      被移除。对于使用 IO 端口访问的 UART，
+      在
+      设备
+      树
+      节点
+      中添加
+      ``io-mapped``
+      属性。
 
-  * Added async support for ESP32S3.
+  * 为 ESP32S3 新增异步支持。
 
-  * Added support for serial TTY under ``native_posix``.
+  * 为 ``native_posix`` 下的串行 TTY 新增支持。
 
-  * Added support for UART on Efinix Sapphire SoCs.
+  * 为 Efinix Sapphire SoCs 上的 UART 新增支持。
 
-  * Added Intel SEDI UART driver.
+  * 新增 Intel SEDI UART 驱动。
 
-  * Added support for UART on BCM2711.
+  * 为 BCM2711 上的 UART 新增支持。
 
-  * ``uart_stm32``:
+  * ``uart_stm32``：
 
-    * Added RS485 support.
+    * 新增 RS485 支持。
 
-    * Added wide data support.
+    * 新增宽数据支持。
 
-  * ``uart_pl011``: added support for Ambiq SoCs.
+  * ``uart_pl011``：
+    为
+    Ambiq
+    SoCs
+    新增
+    支持。
 
-  * ``serial_test``: added support for interrupt and async APIs.
+  * ``serial_test``：
+    为
+    中断
+    和
+    异步
+    API
+    新增
+    支持。
 
-  * ``uart_emul``: added support for interrupt API.
+  * ``uart_emul``：
+    为
+    中断
+    API
+    新增
+    支持。
 
-  * ``uart_rpi_pico``: fixed handling Modbus DE-RE signal
+  * ``uart_rpi_pico``：
+    修复
+    Modbus
+    DE-RE
+    信号
+    处理
 
 * SPI
 
-  * Remove npcx spi driver implemented by Flash Interface Unit (FIU) module.
-  * Added support for Raspberry Pi Pico PIO based SPI.
+  * 移除
+    由
+    Flash
+    Interface
+    Unit
+    （
+    FIU
+    ）
+    模块
+    实现
+    的
+    npcx
+    spi
+    驱动。
+  * 为 Raspberry Pi Pico PIO 基于 SPI 新增支持。
 
-* Timer
+* 定时器
 
-  * The TI CC13xx/26xx system clock timer compatible was changed from
-    :dtcompatible:`ti,cc13xx-cc26xx-rtc` to :dtcompatible:`ti,cc13xx-cc26xx-rtc-timer`
-    and the corresponding Kconfig option from :kconfig:option:`CC13X2_CC26X2_RTC_TIMER`
-    to :kconfig:option:`CC13XX_CC26XX_RTC_TIMER` for improved consistency and
-    extensibility. No action is required unless the internal timer was modified.
+  * TI CC13xx/26xx 系统时钟定时器
+    compatible
+    从
+    :dtcompatible:`ti,cc13xx-cc26xx-rtc`
+    更改为
+    :dtcompatible:`ti,cc13xx-cc26xx-rtc-timer`，
+    相应的
+    Kconfig
+    选项
+    从
+    :kconfig:option:`CC13X2_CC26X2_RTC_TIMER`
+    更改为
+    :kconfig:option:`CC13XX_CC26XX_RTC_TIMER`
+    以
+    改进
+    一致性
+    和
+    可扩展性。
+    除非
+    修改
+    了
+    内部
+    定时器，
+    否则
+    无需
+    采取
+    任何
+    操作。
 
 * USB
 
-  * Added UDC driver for STM32 based MCU, relying on HAL/PCD. This driver is compatible
-    with UDC API (experimental).
-  * Added support for STM32H5 series on USB driver.
+  * 为基于 STM32 的 MCU 新增 UDC 驱动，
+    依赖于
+    HAL/PCD。
+    此
+    驱动
+    与
+    UDC
+    API
+    （
+    实验性
+    ）
+    兼容。
+  * 为 USB 驱动中的 STM32H5 系列新增支持。
 
 * WiFi
 
-  * Increased esp32 default network (TCP workq, RX and mgmt event) stack sizes to 2048 bytes.
-  * Reduced the RAM usage for esp32s2_saola in Wi-Fi samples.
-  * Fixed undefined declarations in winc1500.
-  * Fixed SPI buffer length in eswifi.
-  * Fixed esp32 data sending and channel selection in AP mode.
-  * Fixed esp_at driver init and network interface dormant state setting.
-
-Networking
-**********
-
-* CoAP:
-
-  * Optimized CoAP client library to use only a single thread internally.
-  * Converted CoAP client library to use ``zsock_*`` API internally.
-  * Fixed a bug in CoAP client library, which resulted in an incorrect
-    retransmission timeout calculation.
-  * Use 64 bit timer values for calculating transmission timeouts. This fixes potential problems for
-    devices that stay on for more than 49 days when the 32 bit uptime counter might roll over and
-    cause CoAP packets to not timeout at all on this event.
-  * API documentation improvements.
-  * Added new API functions:
-
-    * :c:func:`coap_has_descriptive_block_option`
-    * :c:func:`coap_remove_descriptive_block_option`
-    * :c:func:`coap_packet_remove_option`
-    * :c:func:`coap_packet_set_path`
-
-* Connection Manager:
-
-  * Added support for auto-connect and auto-down behaviors (controlled by
-    :c:enum:`CONN_MGR_IF_NO_AUTO_CONNECT` and :c:enum:`CONN_MGR_IF_NO_AUTO_DOWN`
-    flags).
-  * Split Connection Manager APIs into separate header files.
-  * Extended Connection Manager documentation to cover new functionalities.
-
-* DHCP:
-
-  * Added support for DHCPv4 unicast replies processing.
-  * Added support for DHCPv6 protocol.
-
-* Ethernet:
-
-  * Fixed ARP queueing so that the queued network packet is sent immediately
-    instead of queued 2nd time in the core network stack.
-
-* gPTP:
-
-  * Added support for detecting gPTP packets that use the default multicast destination address.
-  * Fixed Announce and Follow Up message handling.
-
-* ICMP:
-
-  * Fixed ICMPv6 error message type check.
-  * Reworked ICMP callback registration and handling, which allows to register
-    multiple handlers for the same ICMP message.
-  * Introduced an API to send ICMP Echo Request (ping).
-  * Added possibility to register offloaded ICMP ping handlers.
-  * Added support for setting packet priority for ping.
-
-* IPv6:
-
-  * Made sure that ongoing DAD procedure is cancelled when IPv6 address is removed.
-  * Fixed a bug, where Solicited-Node multicast address could be removed while
-    still in use.
-
-* LwM2M:
-
-  * Added support for tickless mode. This removes the 500 ms timeout from the socket loop
-    so the engine does not constantly wake up the CPU. This can be enabled by
-    :kconfig:option:`CONFIG_LWM2M_TICKLESS`.
-  * Added new :c:macro:`LWM2M_RD_CLIENT_EVENT_DEREGISTER` event.
-  * Block-wise sending now supports LwM2M read and composite-read operations as well.
-    When :kconfig:option:`CONFIG_LWM2M_COAP_BLOCK_TRANSFER` is enabled, any content that is larger
-    than :kconfig:option:`CONFIG_LWM2M_COAP_MAX_MSG_SIZE` is split into a block-wise transfer.
-  * Block-wise transfers don't require tokens to match anymore as this was not in line
-    with CoAP specification (CoAP doesn't require tokens reuse).
-  * Various fixes to bootstrap. Now client ensures that Bootstrap-Finish command is sent,
-    before closing the DTLS pipe. Also allows Bootstrap server to close the DTLS pipe.
-    Added timeout when waiting for bootstrap commands.
-  * Added support for X509 certificates.
-  * Various fixes to string handling. Allow setting string to zero length.
-    Ensure string termination when using string operations on opaque resources.
-  * Added support for Connection Monitoring object version 1.3.
-  * Added protection for Security object to prevent read/writes by the server.
-  * Fixed a possible notification stall in case of observation token change.
-  * Added new shell command, ``lwm2m create``, which allows to create LwM2M object instances.
-  * Added LwM2M interoperability test-suite against Leshan server.
-  * API documentation improvements.
-  * Several other minor fixes and improvements.
-
-* Misc:
-
-  * Time and timestamps in the network subsystem, PTP and IEEE 802.15.4
-    were more precisely specified and all in-tree call sites updated accordingly.
-    Fields for timed TX and TX/RX timestamps have been consolidated. See
-    :c:type:`net_time_t`, :c:struct:`net_ptp_time`, :c:struct:`ieee802154_config`,
-    :c:struct:`ieee802154_radio_api` and :c:struct:`net_pkt` for extensive
-    documentation. As this is largely an internal API, existing applications will
-    most probably continue to work unchanged.
-  * Added support for additional net_pkt filter hooks:
-
-    * :kconfig:option:`CONFIG_NET_PKT_FILTER_IPV4_HOOK`
-    * :kconfig:option:`CONFIG_NET_PKT_FILTER_IPV6_HOOK`
-    * :kconfig:option:`CONFIG_NET_PKT_FILTER_LOCAL_IN_HOOK`
-
-  * Reworked several networking components to use timepoint API.
-  * Added API functions facilitate going through all IPv4/IPv6 registered on an
-    interface (:c:func:`net_if_ipv4_addr_foreach`, :c:func:`net_if_ipv6_addr_foreach`).
-  * ``NET_EVENT_IPV6_PREFIX_ADD`` and ``NET_EVENT_IPV6_PREFIX_DEL`` events now provide
-    more detailed information about the prefix (:c:struct:`net_event_ipv6_prefix`).
-  * General cleanup of the shadowed variables across the networking subsystem.
-  * Added ``qemu_cortex_a53`` networking support.
-  * Introduced new modem subsystem.
-  * Added new :zephyr:code-sample:`cellular-modem` sample.
-  * Added support for network interface names (instead of reusing underlying device name).
-  * Removed support for Google Cloud IoT sample due to service retirement.
-  * Fixed a bug where packets passed in promiscuous mode could have been modified
-    by L2 in certain cases.
-  * Added support for setting syslog server (used for networking log backend)
-    IP address at runtime.
-  * Removed no longer used ``queued`` and ``sent`` net_pkt flags.
-  * Added support for binding zperf TCP/UDP server to a specific IP address.
-
-* MQTT-SN:
-
-  * Improved thread safety of internal buffers allocation.
-  * API documentation improvements.
-
-* OpenThread:
-
-  * Reworked :c:func:`otPlatEntropyGet` to use :c:func:`sys_csrand_get` internally.
-  * Introduced ``ieee802154_radio_openthread.h`` radio driver extension interface
-    specific for OpenThread. Added new transmit mode, specific to OpenThread,
-    :c:enum:`IEEE802154_OPENTHREAD_TX_MODE_TXTIME_MULTIPLE_CCA`.
-
-* PPP:
-
-  * Fixed PPP L2 usage of the network interface carrier state.
-  * Made PPP L2 thread priority configurable (:kconfig:option:`CONFIG_NET_L2_PPP_THREAD_PRIO`).
-  * Moved PPP L2 out of experimental stage.
-  * Prevent PPP connection reestablish when carrier is down.
-
-* Sockets:
-
-  * Added support for statically allocated socketpairs (in case no heap is available).
-  * Made send timeout configurable (:kconfig:option:`CONFIG_NET_SOCKET_MAX_SEND_WAIT`).
-  * Added support for ``FIONREAD`` and ``FIONBIO`` :c:func:`ioctl` commands.
-  * Fixed input filtering for connected datagram sockets.
-  * Fixed :c:func:`getsockname` operation on unconnected sockets.
-  * Added new secure socket options for DTLS Connection ID support:
-
-    * :c:macro:`TLS_DTLS_CID`
-    * :c:macro:`TLS_DTLS_CID_VALUE`
-    * :c:macro:`TLS_DTLS_PEER_CID_VALUE`
-    * :c:macro:`TLS_DTLS_CID_STATUS`
-
-  * Added support for :c:macro:`SO_REUSEADDR` and :c:macro:`SO_REUSEPORT` socket options.
-
-* TCP:
-
-  * Fixed potential stall in data retransmission, when data was only partially acknowledged.
-  * Made TCP work queue priority configurable (:kconfig:option:`CONFIG_NET_TCP_WORKER_PRIO`).
-  * Added support for TCP new Reno collision avoidance algorithm.
-  * Fixed source address selection on bound sockets.
-  * Fixed possible memory leak in case listening socket was closed during active handshake.
-  * Fixed RST packet handling during handshake.
-  * Refactored the code responsible for connection teardown to fix found bugs and
-    simplify future maintenance.
-
-* TFTP:
-
-  * Added new :zephyr:code-sample:`tftp-client` sample.
-  * API documentation improvements.
-
-* WebSocket
-
-  * WebSocket library no longer closes underlying TCP socket automatically on disconnect.
-    This aligns with the connect behavior, where the WebSocket library expects an already
-    connected TCP socket.
-
-* Wi-Fi:
-
-  * Added Passive scan support.
-  * The Wi-Fi scan API updated with Wi-Fi scan parameter to allow scan mode selection.
-  * Updated TWT handling.
-  * Added support for generic network manager API.
-  * Added support for Wi-Fi mode setting and selection.
-  * Added user input validation for SSID and PSK in Wi-Fi shell.
-  * Added scan extension for specifying channels, limiting scan results, filtering SSIDs,
-    setting active and passive channel dwell times and frequency bands.
-
-USB
-***
-
-* USB device HID
-  * Kconfig option USB_HID_PROTOCOL_CODE, deprecated in v2.6, is finally removed.
-
-Devicetree
-**********
-
-API
-===
-
-New general-purpose macros:
-
-- :c:macro:`DT_REG_ADDR_U64`
-- :c:macro:`DT_REG_ADDR_BY_NAME_U64`
-- :c:macro:`DT_INST_REG_ADDR_BY_NAME_U64`
-- :c:macro:`DT_INST_REG_ADDR_U64`
-- :c:macro:`DT_FOREACH_STATUS_OKAY_NODE_VARGS`
-- :c:macro:`DT_FOREACH_NODE_VARGS`
-- :c:macro:`DT_HAS_COMPAT_ON_BUS_STATUS_OKAY`
-
-New special-purpose macros introduced for dependency ordinals:
-
-- :c:macro:`DT_DEP_ORD_STR_SORTABLE`
-
-New general purpose macros introduced for fixed flash partitions:
-
-- :c:macro:`DT_MEM_FROM_FIXED_PARTITION`
-- :c:macro:`DT_FIXED_PARTITION_ADDR`
-
-Bindings
-========
-
-* Generic or vendor-independent:
-
-  * New bindings:
-
-    * :dtcompatible:`current-sense-amplifier`
-    * :dtcompatible:`current-sense-shunt`
-    * :dtcompatible:`gpio-qdec`
-    * :dtcompatible:`regulator-gpio`
-    * :dtcompatible:`usb-audio-feature-volume`
-
-  * Modified bindings:
-
-    * CAN (Controller Area Network) controller bindings:
-
-          * property ``phase-seg1-data`` deprecation status changed from False to True
-          * property ``phase-seg1`` deprecation status changed from False to True
-          * property ``phase-seg2-data`` deprecation status changed from False to True
-          * property ``phase-seg2`` deprecation status changed from False to True
-          * property ``prop-seg-data`` deprecation status changed from False to True
-          * property ``prop-seg`` deprecation status changed from False to True
-          * property ``sjw-data`` default value changed from None to 1
-          * property ``sjw-data`` deprecation status changed from False to True
-          * property ``sjw`` default value changed from None to 1
-          * property ``sjw`` deprecation status changed from False to True
-
-    * Ethernet controller bindings: new ``phy-handle`` property (in some
-      bindings, this was renamed from ``phy-dev``), matching the Linux
-      ethernet-controller binding.
-
-    * The ``riscv,isa`` property used by RISC-V CPU bindings no longer has an
-      ``enum`` value.
-
-    * :dtcompatible:`neorv32,cpu`:
-
-          * new property: ``mmu-type``
-          * new property: ``riscv,isa``
-
-    * :dtcompatible:`regulator-fixed`:
-
-          * new property: ``regulator-min-microvolt``
-          * new property: ``regulator-max-microvolt``
-          * property ``enable-gpios`` is no longer required
-
-    * :dtcompatible:`ethernet-phy`:
-
-          * removed property: ``address``
-          * removed property: ``mdio``
-          * property ``reg`` is now required
-
-    * :dtcompatible:`usb-audio-hs` and :dtcompatible:`usb-audio-hp`:
-
-          * new property: ``volume-max``
-          * new property: ``volume-min``
-          * new property: ``volume-res``
-          * new property: ``status``
-          * new property: ``compatible``
-          * new property: ``reg``
-          * new property: ``reg-names``
-          * new property: ``interrupts``
-          * new property: ``interrupts-extended``
-          * new property: ``interrupt-names``
-          * new property: ``interrupt-parent``
-          * new property: ``label``
-          * new property: ``clocks``
-          * new property: ``clock-names``
-          * new property: ``#address-cells``
-          * new property: ``#size-cells``
-          * new property: ``dmas``
-          * new property: ``dma-names``
-          * new property: ``io-channels``
-          * new property: ``io-channel-names``
-          * new property: ``mboxes``
-          * new property: ``mbox-names``
-          * new property: ``wakeup-source``
-          * new property: ``power-domain``
-          * new property: ``zephyr,pm-device-runtime-auto``
-
-    * :dtcompatible:`ntc-thermistor-generic`:
-
-          * removed property: ``r25-ohm``
-
-    * :dtcompatible:`ns16550`:
-
-          * new property: ``resets``
-          * new property: ``reset-names``
-
-    * :dtcompatible:`fixed-clock`:
-
-          * removed property: ``clocks``
-
-    * All CPU bindings got a new ``enable-method`` property. `pull request
-      60210 <https://github.com/zephyrproject-rtos/zephyr/pull/60210>`_ for
-      details.
-
-* Analog Devices, Inc. (adi):
-
-  * New bindings:
-
-    * :dtcompatible:`adi,ad5628`
-    * :dtcompatible:`adi,ad5648`
-    * :dtcompatible:`adi,ad5668`
-    * :dtcompatible:`adi,ad5672`
-    * :dtcompatible:`adi,ad5674`
-    * :dtcompatible:`adi,ad5676`
-    * :dtcompatible:`adi,ad5679`
-    * :dtcompatible:`adi,ad5684`
-    * :dtcompatible:`adi,ad5686`
-    * :dtcompatible:`adi,ad5687`
-    * :dtcompatible:`adi,ad5689`
-    * :dtcompatible:`adi,adin1110`
-    * :dtcompatible:`adi,adltc2990`
-
-  * Modified bindings:
-
-    * :dtcompatible:`adi,adin2111-mdio` (on adin2111 bus):
-
-          * removed property: ``protocol``
-
-* Altera Corp. (altr):
-
-  * New bindings:
-
-    * :dtcompatible:`altr,pio-1.0`
-
-* Ambiq Micro, Inc. (ambiq):
-
-  * New bindings:
-
-    * :dtcompatible:`ambiq,am1805`
-    * :dtcompatible:`ambiq,apollo4-pinctrl`
-    * :dtcompatible:`ambiq,counter`
-    * :dtcompatible:`ambiq,i2c`
-    * :dtcompatible:`ambiq,mspi`
-    * :dtcompatible:`ambiq,pwrctrl`
-    * :dtcompatible:`ambiq,spi`
-    * :dtcompatible:`ambiq,stimer`
-    * :dtcompatible:`ambiq,uart`
-    * :dtcompatible:`ambiq,watchdog`
-
-* AMS AG (ams):
-
-  * New bindings:
-
-    * :dtcompatible:`ams,tsl2540`
-
-* Andes Technology Corporation (andestech):
-
-  * New bindings:
-
-    * :dtcompatible:`andestech,atcwdt200`
-    * :dtcompatible:`andestech,plic-sw`
-    * :dtcompatible:`andestech,qspi-nor`
-
-* ARM Ltd. (arm):
-
-  * New bindings:
-
-    * :dtcompatible:`arm,cortex-a76`
-    * :dtcompatible:`arm,gic-v1`
-    * :dtcompatible:`arm,gic-v2`
-    * :dtcompatible:`arm,gic-v3`
-    * :dtcompatible:`arm,psci-1.1`
-
-* ASPEED Technology Inc. (aspeed):
-
-  * Modified bindings:
-
-    * :dtcompatible:`aspeed,ast10x0-reset`:
-
-          * specifier cells for space "reset" are now named: ['id'] (old value: None)
-          * specifier cells for space "clock" are now named: None (old value: ['reset_id'])
-
-* Atmel Corporation (atmel):
-
-  * New bindings:
-
-    * :dtcompatible:`atmel,sam-hsmci`
-
-  * Modified bindings:
-
-    * :dtcompatible:`atmel,sam-mdio`:
-
-          * removed property: ``protocol``
-          * property ``#address-cells`` const value changed from None to 1
-          * property ``#size-cells`` const value changed from None to 0
-          * property ``#address-cells`` is now required
-          * property ``#size-cells`` is now required
-
-* Bosch Sensortec GmbH (bosch):
-
-  * New bindings:
-
-    * :dtcompatible:`bosch,bmi08x-accel`
-    * :dtcompatible:`bosch,bmi08x-accel`
-    * :dtcompatible:`bosch,bmi08x-gyro`
-    * :dtcompatible:`bosch,bmi08x-gyro`
-
-  * Modified bindings:
-
-    * :dtcompatible:`bosch,bmm150`:
-
-          * new property: ``drdy-gpios``
-
-    * :dtcompatible:`bosch,bmi270`:
-
-          * new property: ``irq-gpios``
-
-* Broadcom Corporation (brcm):
-
-  * New bindings:
-
-    * :dtcompatible:`brcm,bcm2711-aux-uart`
-
-* Cadence Design Systems Inc. (cdns):
-
-  * New bindings:
-
-    * :dtcompatible:`cdns,tensilica-xtensa-lx3`
-
-* DFRobot (dfrobot):
-
-  * New bindings:
-
-    * :dtcompatible:`dfrobot,a01nyub`
-
-* Efinix Inc (efinix):
-
-  * New bindings:
-
-    * :dtcompatible:`efinix,sapphire-gpio`
-    * :dtcompatible:`efinix,sapphire-timer0`
-    * :dtcompatible:`efinix,sapphire-uart0`
-
-* EPCOS AG (epcos):
-
-  * Modified bindings:
-
-    * :dtcompatible:`epcos,b57861s0103a039`:
-
-          * removed property: ``r25-ohm``
-
-* Espressif Systems (espressif):
-
-  * Modified bindings:
-
-    * :dtcompatible:`espressif,esp-at` (on uart bus):
-
-          * new property: ``external-reset``
-
-    * :dtcompatible:`espressif,esp32-mdio`:
-
-          * removed property: ``protocol``
-          * property ``#address-cells`` const value changed from None to 1
-          * property ``#size-cells`` const value changed from None to 0
-          * property ``#address-cells`` is now required
-          * property ``#size-cells`` is now required
-
-    * :dtcompatible:`espressif,riscv`:
-
-          * new property: ``mmu-type``
-          * new property: ``riscv,isa``
-
-    * :dtcompatible:`espressif,esp32-spi`:
-
-          * new property: ``line-idle-low``
-
-* Feature Integration Technology Inc. (fintek):
-
-  * New bindings:
-
-    * :dtcompatible:`fintek,f75303`
-
-* FocalTech Systems Co.,Ltd (focaltech):
-
-  * Modified bindings:
-
-    * :dtcompatible:`focaltech,ft5336` (on i2c bus):
-
-          * new property: ``reset-gpios``
-
-* Fujitsu Ltd. (fujitsu):
-
-  * New bindings:
-
-    * :dtcompatible:`fujitsu,mb85rcxx`
-
-* Shenzhen Huiding Technology Co., Ltd. (goodix):
-
-  * Modified bindings:
-
-    * :dtcompatible:`goodix,gt911` (on i2c bus):
-
-          * bus list changed from ['kscan'] to []
-          * new property: ``alt-addr``
-
-* Himax Technologies, Inc. (himax):
-
-  * New bindings:
-
-    * :dtcompatible:`himax,hx8394`
-
-* Infineon Technologies (infineon):
-
-  * New bindings:
-
-    * :dtcompatible:`infineon,cat1-counter`
-    * :dtcompatible:`infineon,cat1-spi`
-    * :dtcompatible:`infineon,xmc4xxx-ccu4-pwm`
-    * :dtcompatible:`infineon,xmc4xxx-ccu8-pwm`
-    * :dtcompatible:`infineon,xmc4xxx-i2c`
-
-* Intel Corporation (intel):
-
-  * New bindings:
-
-    * :dtcompatible:`intel,agilex5-clock`
-    * :dtcompatible:`intel,alder-lake`
-    * :dtcompatible:`intel,apollo-lake`
-    * :dtcompatible:`intel,blinky-pwm`
-    * :dtcompatible:`intel,elkhart-lake`
-    * :dtcompatible:`intel,emmc-host`
-    * :dtcompatible:`intel,ish`
-    * :dtcompatible:`intel,loapic`
-    * :dtcompatible:`intel,sedi-gpio`
-    * :dtcompatible:`intel,sedi-i2c`
-    * :dtcompatible:`intel,sedi-ipm`
-    * :dtcompatible:`intel,sedi-uart`
-    * :dtcompatible:`intel,socfpga-agilex-sip-smc`
-    * :dtcompatible:`intel,socfpga-reset`
-    * :dtcompatible:`intel,timeaware-gpio`
-
-  * Removed bindings:
-
-    * ``intel,agilex-socfpga-sip-smc``
-    * ``intel,apollo_lake``
-    * ``intel,elkhart_lake``
-    * ``intel,gna``
-
-  * Modified bindings:
-
-    * :dtcompatible:`intel,niosv`:
-
-          * new property: ``mmu-type``
-          * new property: ``riscv,isa``
-
-    * :dtcompatible:`intel,adsp-imr`:
-
-          * new property: ``zephyr,memory-attr``
-          * property ``zephyr,memory-region-mpu`` enum value changed from ['RAM', 'RAM_NOCACHE', 'FLASH', 'PPB', 'IO', 'EXTMEM'] to None
-          * property ``zephyr,memory-region-mpu`` deprecation status changed from False to True
-
-    * :dtcompatible:`intel,lpss`:
-
-          * new property: ``dma-parent``
-
-    * :dtcompatible:`intel,adsp-shim-clkctl`:
-
-          * new property: ``adsp-clkctl-clk-ipll``
-
-* Isentek Inc. (isentek):
-
-  * New bindings:
-
-    * :dtcompatible:`isentek,ist8310`
-
-* Integrated Silicon Solutions Inc. (issi):
-
-  * New bindings:
-
-    * :dtcompatible:`issi,is31fl3216a`
-    * :dtcompatible:`issi,is31fl3733`
-
-* ITE Tech. Inc. (ite):
-
-  * New bindings:
-
-    * :dtcompatible:`ite,it8xxx2-sha`
-
-  * Modified bindings:
-
-    * :dtcompatible:`ite,it8xxx2-pinctrl-func`:
-
-          * new property: ``func3-ext``
-          * new property: ``func3-ext-mask``
-
-    * :dtcompatible:`ite,riscv-ite`:
-
-          * new property: ``mmu-type``
-          * new property: ``riscv,isa``
-
-    * :dtcompatible:`ite,enhance-i2c`:
-
-          * new property: ``target-enable``
-          * new property: ``target-pio-mode``
-
-* Linaro Limited (linaro):
-
-  * New bindings:
-
-    * :dtcompatible:`linaro,ivshmem-ipm`
-
-* Maxim Integrated Products (maxim):
-
-  * New bindings:
-
-    * :dtcompatible:`maxim,max11102`
-    * :dtcompatible:`maxim,max11103`
-    * :dtcompatible:`maxim,max11105`
-    * :dtcompatible:`maxim,max11106`
-    * :dtcompatible:`maxim,max11110`
-    * :dtcompatible:`maxim,max11111`
-    * :dtcompatible:`maxim,max11115`
-    * :dtcompatible:`maxim,max11116`
-    * :dtcompatible:`maxim,max11117`
-    * :dtcompatible:`maxim,max11253`
-    * :dtcompatible:`maxim,max11254`
-    * :dtcompatible:`maxim,max31790`
-
-* Microchip Technology Inc. (microchip):
-
-  * New bindings:
-
-    * :dtcompatible:`microchip,mcp251xfd`
-    * :dtcompatible:`microchip,mpfs-i2c`
-    * :dtcompatible:`microchip,tcn75a`
-
-  * Modified bindings:
-
-    * :dtcompatible:`microchip,xec-pwmbbled`:
-
-          * new property: ``enable-low-power-32k``
-
-    * :dtcompatible:`microchip,cap1203` (on i2c bus):
-
-          * bus list changed from ['kscan'] to []
-          * new property: ``input-codes``
-
-    * :dtcompatible:`microchip,xec-ps2`:
-
-          * new property: ``wakerx-gpios``
-
-* Motorola, Inc. (motorola):
-
-  * Modified bindings:
-
-    * :dtcompatible:`motorola,mc146818`:
-
-          * new property: ``clock-frequency``
-
-* Murata Manufacturing Co., Ltd. (murata):
-
-  * New bindings:
-
-    * :dtcompatible:`murata,ncp15wb473`
-
-* Nordic Semiconductor (nordic):
-
-  * New bindings:
-
-    * :dtcompatible:`nordic,npm1300-led`
-    * :dtcompatible:`nordic,npm1300-wdt`
-
-  * Removed bindings:
-
-    * ``nordic,nrf-cc310``
-    * ``nordic,nrf-cc312``
-
-  * Modified bindings:
-
-    * :dtcompatible:`nordic,nrf-ccm`:
-
-          * new property: ``headermask-supported``
-
-    * :dtcompatible:`nordic,nrf-twi`:
-
-          * new property: ``easydma-maxcnt-bits``
-
-    * :dtcompatible:`nordic,nrf-twim` and :dtcompatible:`nordic,nrf-twis`:
-
-          * new property: ``easydma-maxcnt-bits``
-          * new property: ``memory-regions``
-          * new property: ``memory-region-names``
-
-    * :dtcompatible:`nordic,nrf-spi`, :dtcompatible:`nordic,nrf-spis`, and
-      :dtcompatible:`nordic,nrf-spim`:
-
-          * new property: ``wake-gpios``
-
-    * :dtcompatible:`nordic,npm1300-charger`:
-
-          * new property: ``thermistor-cold-millidegrees``
-          * new property: ``thermistor-cool-millidegrees``
-          * new property: ``thermistor-warm-millidegrees``
-          * new property: ``thermistor-hot-millidegrees``
-          * new property: ``trickle-microvolt``
-          * new property: ``term-current-percent``
-          * new property: ``vbatlow-charge-enable``
-          * new property: ``disable-recharge``
-
-    * :dtcompatible:`nordic,nrf-uicr`:
-
-          * new property: ``nfct-pins-as-gpios``
-          * new property: ``gpio-as-nreset``
-
-    * :dtcompatible:`nordic,npm1300` (on i2c bus):
-
-          * new property: ``host-int-gpios``
-          * new property: ``pmic-int-pin``
-
-* Nuclei System Technology (nuclei):
-
-  * Modified bindings:
-
-    * :dtcompatible:`nuclei,bumblebee`:
-
-          * new property: ``mmu-type``
-          * new property: ``riscv,isa``
-
-* Nuvoton Technology Corporation (nuvoton):
-
-  * New bindings:
-
-    * :dtcompatible:`nuvoton,nct38xx`
-    * :dtcompatible:`nuvoton,nct38xx-gpio`
-    * :dtcompatible:`nuvoton,npcx-fiu-nor`
-    * :dtcompatible:`nuvoton,npcx-fiu-qspi`
-    * :dtcompatible:`nuvoton,numaker-fmc`
-    * :dtcompatible:`nuvoton,numaker-gpio`
-    * :dtcompatible:`nuvoton,numaker-pcc`
-    * :dtcompatible:`nuvoton,numaker-pinctrl`
-    * :dtcompatible:`nuvoton,numaker-pwm`
-    * :dtcompatible:`nuvoton,numaker-rst`
-    * :dtcompatible:`nuvoton,numaker-scc`
-    * :dtcompatible:`nuvoton,numaker-spi`
-    * :dtcompatible:`nuvoton,numaker-uart`
-
-  * Removed bindings:
-
-    * ``nuvoton,nct38xx-gpio``
-    * ``nuvoton,npcx-spi-fiu``
-
-  * Modified bindings:
-
-    * :dtcompatible:`nuvoton,npcx-sha`:
-
-          * new property: ``context-buffer-size``
-
-    * :dtcompatible:`nuvoton,npcx-adc`:
-
-          * new property: ``vref-mv``
-          * removed property: ``threshold-reg-offset``
-
-    * :dtcompatible:`nuvoton,adc-cmp`:
-
-          * new property: ``thr-sel``
-
-    * :dtcompatible:`nuvoton,npcx-pcc`:
-
-          * new property: ``pwdwn-ctl-val``
-          * property ``clock-frequency`` enum value changed from [100000000, 96000000, 90000000, 80000000, 66000000, 50000000, 48000000, 40000000, 33000000] to [120000000, 100000000, 96000000, 90000000, 80000000, 66000000, 50000000, 48000000]
-          * property ``ram-pd-depth`` enum value changed from [12, 15] to [8, 12, 15]
-
-* NXP Semiconductors (nxp):
-
-  * New bindings:
-
-    * :dtcompatible:`nxp,ctimer-pwm`
-    * :dtcompatible:`nxp,fs26-wdog`
-    * :dtcompatible:`nxp,imx-flexspi-w956a8mbya`
-    * :dtcompatible:`nxp,irqsteer-intc`
-    * :dtcompatible:`nxp,lpdac`
-    * :dtcompatible:`nxp,mbox-imx-mu`
-    * :dtcompatible:`nxp,mcux-dcp`
-    * :dtcompatible:`nxp,mcux-edma-v3`
-    * :dtcompatible:`nxp,pcf8563`
-    * :dtcompatible:`nxp,pxp`
-    * :dtcompatible:`nxp,s32-adc-sar`
-    * :dtcompatible:`nxp,s32-clock`
-    * :dtcompatible:`nxp,s32-emios`
-    * :dtcompatible:`nxp,s32-emios-pwm`
-    * :dtcompatible:`nxp,s32-gmac`
-    * :dtcompatible:`nxp,s32-qspi`
-    * :dtcompatible:`nxp,s32-qspi-device`
-    * :dtcompatible:`nxp,s32-qspi-nor`
-    * :dtcompatible:`nxp,s32k3-pinctrl`
-    * :dtcompatible:`nxp,smartdma`
-    * :dtcompatible:`nxp,tempmon`
-    * :dtcompatible:`nxp,vref`
-
-  * Modified bindings:
-
-    * :dtcompatible:`nxp,s32-netc-emdio`:
-
-          * removed property: ``protocol``
-          * property ``#address-cells`` const value changed from None to 1
-          * property ``#size-cells`` const value changed from None to 0
-          * property ``#address-cells`` is now required
-          * property ``#size-cells`` is now required
-
-    * :dtcompatible:`nxp,mipi-dsi-2l`:
-
-          * property ``nxp,lcdif`` is no longer required
-
-    * :dtcompatible:`nxp,imx-mipi-dsi`:
-
-          * property ``nxp,lcdif`` is no longer required
-
-    * :dtcompatible:`nxp,pca9633` (on i2c bus):
-
-          * new property: ``disable-allcall``
-
-    * :dtcompatible:`nxp,s32-sys-timer`:
-
-          * removed property: ``clock-frequency``
-          * property ``clocks`` is now required
-
-    * :dtcompatible:`nxp,imx-lpspi`:
-
-          * new property: ``data-pin-config``
-
-    * :dtcompatible:`nxp,s32-spi`:
-
-          * property ``clock-frequency`` is no longer required
-          * property ``clocks`` is now required
-
-    * :dtcompatible:`nxp,imx-wdog`:
-
-          * pinctrl support
-
-    * :dtcompatible:`nxp,s32-swt`:
-
-          * removed property: ``clock-frequency``
-          * property ``clocks`` is now required
-
-    * :dtcompatible:`nxp,lpc-lpadc`:
-
-          * new property: ``nxp,reference-supply``
-
-    * :dtcompatible:`nxp,kinetis-pit`:
-
-          * new property: ``max-load-value``
-          * property ``clocks`` is now required
-
-    * :dtcompatible:`nxp,mcux-edma`:
-
-          * new property: ``dmamux-reg-offset``
-          * new property: ``channel-gap``
-          * new property: ``irq-shared-offset``
-
-    * :dtcompatible:`nxp,imx-elcdif`:
-
-          * new property: ``nxp,pxp``
-
-* ON Semiconductor Corp. (onnn):
-
-  * New bindings:
-
-    * :dtcompatible:`onnn,ncp5623`
-
-* Princeton Technology Corp. (ptc):
-
-  * New bindings:
-
-    * :dtcompatible:`ptc,pt6314`
-
-* Quectel Wireless Solutions Co., Ltd. (quectel):
-
-  * New bindings:
-
-    * :dtcompatible:`quectel,bg95`
-
-* QuickLogic Corp. (quicklogic):
-
-  * New bindings:
-
-    * :dtcompatible:`quicklogic,eos-s3-pinctrl`
-
-  * Modified bindings:
-
-    * :dtcompatible:`quicklogic,usbserialport-s3b`:
-
-      * pinctrl support
-
-* Raspberry Pi Foundation (raspberrypi):
-
-  * New bindings:
-
-    * :dtcompatible:`raspberrypi,pico-header`
-    * :dtcompatible:`raspberrypi,pico-i2c`
-    * :dtcompatible:`raspberrypi,pico-spi-pio`
-    * :dtcompatible:`raspberrypi,pico-timer`
-
-* Raydium Semiconductor Corp. (raydium):
-
-  * New bindings:
-
-    * :dtcompatible:`raydium,rm67162`
-
-* Renesas Electronics Corporation (renesas):
-
-  * New bindings:
-
-    * :dtcompatible:`renesas,smartbond-lp-osc`
-    * :dtcompatible:`renesas,smartbond-timer`
-
-  * Modified bindings:
-
-    * :dtcompatible:`renesas,smartbond-flash-controller`:
-
-          * new property: ``read-cs-idle-delay``
-          * new property: ``erase-cs-idle-delay``
-
-* Smart Battery System (sbs):
-
-  * New bindings:
-
-    * :dtcompatible:`sbs,default-sbs-gauge`
-    * :dtcompatible:`sbs,sbs-charger`
-
-* Seeed Technology Co., Ltd (seeed):
-
-  * New bindings:
-
-    * :dtcompatible:`seeed,hm330x`
-
-* SiFive, Inc. (sifive):
-
-  * Modified bindings:
-
-    * :dtcompatible:`sifive,i2c0`:
-
-          * pinctrl support
-
-* Silicon Laboratories (silabs):
-
-  * New bindings:
-
-    * :dtcompatible:`silabs,gecko-adc`
-
-* Sino Wealth Electronic Ltd (sinowealth):
-
-  * New bindings:
-
-    * :dtcompatible:`sinowealth,sh1106`
-    * :dtcompatible:`sinowealth,sh1106`
-
-* Sitronix Technology Corporation (sitronix):
-
-  * Modified bindings:
-
-    * :dtcompatible:`sitronix,st7735r` (on spi bus):
-
-          * property ``reset-gpios`` is no longer required
-
-* Standard Microsystems Corporation (smsc):
-
-  * Modified bindings:
-
-    * :dtcompatible:`smsc,lan91c111-mdio`:
-
-          * removed property: ``protocol``
-          * property ``#address-cells`` const value changed from None to 1
-          * property ``#size-cells`` const value changed from None to 0
-          * property ``#address-cells`` is now required
-          * property ``#size-cells`` is now required
-
-    * :dtcompatible:`smsc,lan91c111`:
-
-          * new property: ``local-mac-address``
-          * new property: ``zephyr,random-mac-address``
-          * property ``reg`` is no longer required
-
-* Synopsys, Inc. (snps):
-
-  * New bindings:
-
-    * :dtcompatible:`snps,dw-timers`
-
-* Solomon Systech Limited (solomon):
-
-  * Modified bindings:
-
-    * :dtcompatible:`solomon,ssd1306fb`
-
-          * new property: ``inversion-on``
-          * new property: ``ready-time-ms``
-
-* Sequans Communications (sqn):
-
-  * New bindings:
-
-    * :dtcompatible:`sqn,hwspinlock`
-
-* STMicroelectronics (st):
-
-  * New bindings:
-
-    * :dtcompatible:`st,stm32-bxcan`
-    * :dtcompatible:`st,stm32-spi-host-cmd`
-    * :dtcompatible:`st,stm32f1-rcc`
-    * :dtcompatible:`st,stm32f3-rcc`
-    * :dtcompatible:`st,stm32wba-flash-controller`
-    * :dtcompatible:`st,stm32wba-hse-clock`
-    * :dtcompatible:`st,stm32wba-pll-clock`
-    * :dtcompatible:`st,stm32wba-rcc`
-    * :dtcompatible:`st,stmpe811`
-
-  * Removed bindings:
-
-    * ``st,stm32-can``
-
-  * Modified bindings:
-
-    * :dtcompatible:`st,stm32-pwm`:
-
-          * new property: ``four-channel-capture-support``
-
-    * :dtcompatible:`st,stm32f4-adc`:
-
-          * new property: ``st,adc-clock-source``
-          * new property: ``st,adc-prescaler``
-          * new property: ``st,adc-sequencer``
-          * removed property: ``temp-channel``
-          * removed property: ``vref-channel``
-          * removed property: ``vbat-channel``
-
-    * :dtcompatible:`st,stm32-adc`:
-
-          * new property: ``st,adc-clock-source``
-          * new property: ``st,adc-prescaler``
-          * new property: ``st,adc-sequencer``
-          * removed property: ``temp-channel``
-          * removed property: ``vref-channel``
-          * removed property: ``vbat-channel``
-
-    * :dtcompatible:`st,stm32f1-adc`:
-
-          * new property: ``st,adc-sequencer``
-          * removed property: ``temp-channel``
-          * removed property: ``vref-channel``
-          * removed property: ``vbat-channel``
-
-    * :dtcompatible:`st,stm32-ospi`:
-
-          * new property: ``io-low-port``
-          * new property: ``io-high-port``
-
-    * :dtcompatible:`st,stm32c0-hsi-clock`:
-
-          * removed property: ``clocks``
-
-    * :dtcompatible:`st,stm32-hse-clock`:
-
-          * removed property: ``clocks``
-
-    * :dtcompatible:`st,stm32wl-hse-clock`:
-
-          * removed property: ``clocks``
-
-    * :dtcompatible:`st,stm32g0-hsi-clock`:
-
-          * removed property: ``clocks``
-
-    * :dtcompatible:`st,stm32h7-hsi-clock`:
-
-          * removed property: ``clocks``
-
-    * :dtcompatible:`st,stm32-lse-clock`:
-
-          * removed property: ``clocks``
-
-    * :dtcompatible:`st,stm32u5-pll-clock`:
-
-          * new property: ``fracn``
-
-* Telink Semiconductor (telink):
-
-  * Modified bindings:
-
-    * :dtcompatible:`telink,b91-pwm`:
-
-          * pinctrl support
-
-    * :dtcompatible:`telink,b91`:
-
-          * new property: ``mmu-type``
-          * new property: ``riscv,isa``
-
-    * :dtcompatible:`telink,b91-i2c`:
-
-          * pinctrl support
-
-    * :dtcompatible:`telink,b91-spi`:
-
-          * pinctrl support
-
-    * :dtcompatible:`telink,b91-uart`:
-
-          * pinctrl support
-
-* Texas Instruments (ti):
-
-  * New bindings:
-
-    * :dtcompatible:`ti,ads1112`
-    * :dtcompatible:`ti,bq27z746`
-    * :dtcompatible:`ti,cc13xx-cc26xx-rtc-timer`
-    * :dtcompatible:`ti,cc13xx-cc26xx-timer`
-    * :dtcompatible:`ti,cc13xx-cc26xx-timer-pwm`
-    * :dtcompatible:`ti,cc32xx-pinctrl`
-    * :dtcompatible:`ti,davinci-gpio`
-    * :dtcompatible:`ti,davinci-gpio-nexus`
-    * :dtcompatible:`ti,lp5009`
-    * :dtcompatible:`ti,lp5012`
-    * :dtcompatible:`ti,lp5018`
-    * :dtcompatible:`ti,lp5024`
-    * :dtcompatible:`ti,lp5030`
-    * :dtcompatible:`ti,lp5036`
-    * :dtcompatible:`ti,lp5569`
-    * :dtcompatible:`ti,tas6422dac`
-    * :dtcompatible:`ti,tcan4x5x`
-    * :dtcompatible:`ti,tla2021`
-    * :dtcompatible:`ti,tmag5170`
-    * :dtcompatible:`ti,vim`
-
-  * Removed bindings:
-
-    * ``ti,cc13xx-cc26xx-rtc``
-    * ``ti,lp503x``
-
-  * Modified bindings:
-
-    * :dtcompatible:`ti,cc32xx-i2c`:
-
-          * pinctrl support
-
-    * :dtcompatible:`ti,ina230` (on i2c bus):
-
-          * new property: ``alert-config``
-          * new property: ``adc-mode``
-          * new property: ``vbus-conversion-time-us``
-          * new property: ``vshunt-conversion-time-us``
-          * new property: ``avg-count``
-          * new property: ``rshunt-micro-ohms``
-          * removed property: ``rshunt-milliohms``
-          * property ``config`` default value changed from None to 0
-          * property ``config`` deprecation status changed from False to True
-          * property ``config`` is no longer required
-
-    * :dtcompatible:`ti,ina237` (on i2c bus):
-
-          * new property: ``adc-mode``
-          * new property: ``vbus-conversion-time-us``
-          * new property: ``vshunt-conversion-time-us``
-          * new property: ``temp-conversion-time-us``
-          * new property: ``avg-count``
-          * new property: ``high-precision``
-          * new property: ``rshunt-micro-ohms``
-          * removed property: ``rshunt-milliohms``
-          * property ``adc-config`` default value changed from None to 0
-          * property ``config`` default value changed from None to 0
-          * property ``adc-config`` deprecation status changed from False to True
-          * property ``config`` deprecation status changed from False to True
-          * property ``adc-config`` is no longer required
-          * property ``config`` is no longer required
-
-    * :dtcompatible:`ti,cc32xx-uart`:
-
-          * pinctrl support
-
-* A stand-in for a real vendor which can be used in examples and tests (vnd):
-
-  * New bindings:
-
-    * :dtcompatible:`vnd,memory-attr`
-    * :dtcompatible:`vnd,reg-holder-64`
-    * :dtcompatible:`vnd,reserved-compat`
-
-  * Modified bindings:
-
-    * :dtcompatible:`vnd,serial`:
-
-          * property ``reg`` is no longer required
-
-* X-Powers (x-powers):
-
-  * New bindings:
-
-    * :dtcompatible:`x-powers,axp192`
-    * :dtcompatible:`x-powers,axp192-gpio`
-    * :dtcompatible:`x-powers,axp192-regulator`
-
-* Xen Hypervisor (xen):
-
-  * New bindings:
-
-    * :dtcompatible:`xen,xen`
-
-  * Removed bindings:
-
-    * ``xen,xen-4.15``
-
-* Xilinx (xlnx):
-
-  * New bindings:
-
-    * :dtcompatible:`xlnx,zynqmp-ipi-mailbox`
-
-* Shenzhen Xptek Technology Co., Ltd (xptek):
-
-  * Modified bindings:
-
-    * :dtcompatible:`xptek,xpt2046` (on spi bus):
-
-          * bus list changed from ['kscan'] to []
-
-* Zephyr-specific binding (zephyr):
-
-  * New bindings:
-
-    * :dtcompatible:`zephyr,fake-rtc`
-    * :dtcompatible:`zephyr,i2c-dump-allowlist`
-    * :dtcompatible:`zephyr,lvgl-button-input`
-    * :dtcompatible:`zephyr,lvgl-encoder-input`
-    * :dtcompatible:`zephyr,lvgl-pointer-input`
-    * :dtcompatible:`zephyr,mdio-gpio`
-    * :dtcompatible:`zephyr,native-tty-uart`
-    * :dtcompatible:`zephyr,ram-disk`
-    * :dtcompatible:`zephyr,sensing`
-    * :dtcompatible:`zephyr,sensing-phy-3d-sensor`
-
-  * Removed bindings:
-
-    * ``zephyr,gpio-keys``
-
-  * Modified bindings:
-
-    * :dtcompatible:`zephyr,mmc-disk` (on sd bus):
-
-          * new property: ``bus-width``
-
-    * :dtcompatible:`zephyr,bt-hci-spi` (on spi bus):
-
-          * new property: ``controller-data-delay-us``
-
-    * :dtcompatible:`zephyr,sdhc-spi-slot` (on spi bus):
-
-          * new property: ``pwr-gpios``
-
-    * :dtcompatible:`zephyr,memory-region`:
-
-          * new property: ``zephyr,memory-attr``
-          * property ``zephyr,memory-region-mpu`` enum value changed from ['RAM', 'RAM_NOCACHE', 'FLASH', 'PPB', 'IO', 'EXTMEM'] to None
-          * property ``zephyr,memory-region-mpu`` deprecation status changed from False to True
-          * property ``reg`` is now required
-
-Libraries / Subsystems
-**********************
-
-* Management
-
-  * Introduced MCUmgr client support with handlers for img_mgmt and os_mgmt.
-
-  * Added response checking to MCUmgr's :c:enumerator:`MGMT_EVT_OP_CMD_RECV`
-    notification callback to allow applications to reject MCUmgr commands.
-
-  * MCUmgr SMP version 2 error translation (to legacy MCUmgr error code) is now
-    supported in function handlers by setting ``mg_translate_error`` of
-    :c:struct:`mgmt_group` when registering a group. See
-    :c:type:`smp_translate_error_fn` for function details.
-
-  * Fixed an issue with MCUmgr img_mgmt group whereby the size of the upload in
-    the initial packet was not checked.
-
-  * Fixed an issue with MCUmgr fs_mgmt group whereby some status codes were not
-    checked properly, this meant that the error returned might not be the
-    correct error, but would only occur in situations where an error was
-    already present.
-
-  * Fixed an issue whereby the SMP response function did not check to see if
-    the initial zcbor map was created successfully.
-
-  * Fixes an issue with MCUmgr shell_mgmt group whereby the length of a
-    received command was not properly checked.
-
-  * Added optional mutex locking support to MCUmgr img_mgmt group, which can
-    be enabled with :kconfig:option:`CONFIG_MCUMGR_GRP_IMG_MUTEX`.
-
-  * Added MCUmgr settings management group, which allows for manipulation of
-    zephyr settings from a remote device, see :ref:`mcumgr_smp_group_3` for
-    details.
-
-  * Added :kconfig:option:`CONFIG_MCUMGR_GRP_IMG_ALLOW_CONFIRM_NON_ACTIVE_IMAGE_SECONDARY`
-    and :kconfig:option:`CONFIG_MCUMGR_GRP_IMG_ALLOW_CONFIRM_NON_ACTIVE_IMAGE_ANY`
-    that allow to control whether MCUmgr client will be allowed to confirm
-    non-active images.
-
-  * Added :kconfig:option:`CONFIG_MCUMGR_GRP_IMG_ALLOW_ERASE_PENDING` that allows
-    to erase slots pending for next boot, that are not revert slots.
-
-  * Added ``user_data`` as an optional field to :c:struct:`mgmt_handler` when
-    :kconfig:option:`CONFIG_MCUMGR_MGMT_HANDLER_USER_DATA` is enabled.
-
-  * Added optional ``force`` parameter to os mgmt reset command, this can be checked in the
-    :c:enumerator:`MGMT_EVT_OP_OS_MGMT_RESET` notification callback whose data structure is
-    :c:struct:`os_mgmt_reset_data`.
-
-  * Added configurable number of SMP encoding levels via
-    :kconfig:option:`CONFIG_MCUMGR_SMP_CBOR_MIN_ENCODING_LEVELS`, which automatically increments
-    minimum encoding levels for in-tree groups if :kconfig:option:`CONFIG_ZCBOR_CANONICAL` is
-    enabled.
-
-  * Added STM32 SPI backend for EC Host command protocol.
-
-  * Fixed settings_mgmt returning unknown error instead of invalid key specified error.
-
-  * Fixed fs_mgmt returning parameter too large error instead of file is empty error when
-    attempting to hash/checksum a file which is empty.
-
-* File systems
-
-  * Added support for ext2 file system.
-  * Added support of mounting littlefs on the block device from the shell/fs.
-  * Added alignment parameter to FS_LITTLEFS_DECLARE_CUSTOM_CONFIG macro, it can speed up read/write
-    operation for SDMMC devices in case when we align buffers on CONFIG_SDHC_BUFFER_ALIGNMENT,
-    because we can avoid extra copy of data from card buffer to read/prog buffer.
-
-* Random
-
-  * ``CONFIG_XOROSHIRO_RANDOM_GENERATOR``, deprecated a long time ago, is finally removed.
-
-* Retention
-
-  * Added the :ref:`blinfo_api` subsystem.
-
-  * Added support for allowing mutex support to be forcibly disabled with
-    :kconfig:option:`CONFIG_RETENTION_MUTEX_FORCE_DISABLE`.
-
-* Binary descriptors
-
-  * Added the :ref:`binary_descriptors` (``bindesc``) subsystem.
-
-* POSIX API
-
-  * Added dynamic thread stack support for :c:func:`pthread_create`
-  * Fixed :c:func:`stat` so that it returns file stats instead of filesystem stats
-  * Implemented :c:func:`pthread_barrierattr_destroy`, :c:func:`pthread_barrierattr_getpshared`,
-    :c:func:`pthread_barrierattr_init`, :c:func:`pthread_barrierattr_setpshared`,
-    :c:func:`pthread_condattr_destroy`, :c:func:`pthread_condattr_init`,
-    :c:func:`pthread_mutexattr_destroy`, :c:func:`pthread_mutexattr_init`, :c:func:`uname`,
-    :c:func:`sigaddset`, :c:func:`sigdelset`, :c:func:`sigemptyset`, :c:func:`sigfillset`,
-    :c:func:`sigismember`, :c:func:`strsignal`, :c:func:`pthread_spin_destroy`,
-    :c:func:`pthread_spin_init`, :c:func:`pthread_spin_lock`, :c:func:`pthread_spin_trylock`,
-    :c:func:`pthread_spin_unlock`, :c:func:`timer_getoverrun`, :c:func:`pthread_condattr_getclock`,
-    :c:func:`pthread_condattr_setclock`, :c:func:`clock_nanosleep`
-  * Added support for querying the number of bytes available to read via the
-    :c:macro:`FIONREAD` request to :c:func:`ioctl`
-  * Added :kconfig:option:`CONFIG_FDTABLE` to conditionally compile file descriptor table
-  * Added logging to POSIX threads, mutexes, and condition variables
-  * Fixed :c:func:`poll` issue with event file descriptors
-
-* LoRa/LoRaWAN
-
-  * Updated ``loramac-node`` from v4.6.0 to v4.7.0
-
-* CAN ISO-TP
-
-  * Added support for CAN FD.
-
-* RTIO
-
-  * Added atomic completion counter fixing a race caught by unit tests
-  * Added a :c:macro:`RTIO_SQE_NO_RESPONSE` flag for submissions when no completion notification
-    is needed
-  * Removed unused Kconfig options for different executors
-
-* ZBus
-
-  * Changed channels' and observers' metadata to comply with the data/config approach. ZBus stores
-    immutable config in iterable sections in Flash and the mutable portion of data in the RAM.
-  * The relationship between channels and observers is mapped using a new entity called
-    observation. The observation enables us to increase the granularity of masking observation.
-    Developers can mask individual observations, disable the observer, or use runtime observers.
-  * Added API :c:macro:`ZBUS_CHAN_ADD_OBS` macro for adding post-definition static observers of a
-    channel. That can replace the runtime observer feature, enabling developers to add static
-    observers after the channel definition in different files. It increases the composability of
-    the system using ZBus, making post-definition channel observation rely on the stack instead of
-    the heap.
-  * Added a new type of observer called Message Subscriber. ZBus' VDED will send a copy of the
-    message during the publication/notification process.
-  * Changed the VDED delivery sequence. Check the :ref:`documentation <zbus delivery sequence>`.
-  * ZBus runtime observers now rely on the heap instead of a memory pool.
-  * Added new iterable section iterators APIs (for channels and observers) can now receive a
-    ``user_data`` pointer to keep context between the function calls.
-  * Added APIs :c:macro:`ZBUS_LISTENER_DEFINE_WITH_ENABLE` and
-    :c:macro:`ZBUS_SUBSCRIBER_DEFINE_WITH_ENABLE` that allows developers to define observers'
-    statuses (enabled/disabled) programmatically. With the API, developers can create observers
-    initially disabled and enable them in runtime.
-
-* Power management
-
-  * Added :kconfig:option:`CONFIG_PM_NEED_ALL_DEVICES_IDLE`. When this
-    option is set the power management will keep the system active
-    if there is any device busy.
-  * :c:func:`pm_device_runtime_get` can be called from ISR now.
-  * Power states can be disabled directly in devicetree doing ``status = "disabled";``
-  * Added the helper function, :c:func:`pm_device_driver_init`, for
-    initializing devices into a specific power state.
-
-* Modem modules
-
-  * Added the :ref:`modem` subsystem.
-
-HALs
-****
-
-* Nordic
-
-  * Updated nrfx to version 3.1.0.
-
-* Nuvoton
-
-  * Added Nuvoton NuMaker M46x
-
-MCUboot
-*******
-
-  * Added :kconfig:option:`CONFIG_MCUBOOT_BOOTLOADER_NO_DOWNGRADE`
-    that allows to inform application that the on-board MCUboot has been configured
-    with downgrade  prevention enabled. This option is automatically selected for
-    DirectXIP mode and is available for both swap modes.
-
-  * Added :kconfig:option:`CONFIG_MCUBOOT_BOOTLOADER_MODE_OVERWRITE_ONLY`
-    that allows to inform application that the on-board MCUboot will overwrite
-    the primary slot with secondary slot contents, without saving the original
-    image in primary slot.
-
-  * Fixed issue with serial recovery not showing image details for decrypted images.
-
-  * Fixed issue with serial recovery in single slot mode wrongly iterating over 2 image slots.
-
-  * Fixed an issue with boot_serial repeats not being processed when output was sent, this would
-    lead to a divergence of commands whereby later commands being sent would have the previous
-    command output sent instead.
-
-  * Fixed an issue with the boot_serial zcbor setup encoder function wrongly including the buffer
-    address in the size which caused serial recovery to fail on some platforms.
-
-  * Fixed wrongly building in optimize for debug mode by default, this saves a significant amount
-    of flash space.
-
-  * Fixed issue with serial recovery use of MBEDTLS having undefined operations which led to usage
-    faults when the secondary slot image was encrypted.
-
-  * Fixed issue with bootutil asserting on maximum alignment in non-swap modes.
-
-  * Added error output when flash device fails to open and asserts are disabled, which will now
-    panic the bootloader.
-
-  * Added currently running slot ID and maximum application size to shared data function
-    definition.
-
-  * Added P384 and SHA384 support to imgtool.
-
-  * Added optional serial recovery image state and image set state commands.
-
-  * Added ``dumpinfo`` command for signed image parsing in imgtool.
-
-  * Added ``getpubhash`` command to dump the sha256 hash of the public key in imgtool.
-
-  * Added support for ``getpub`` to print the output to a file in imgtool.
-
-  * Added support for dumping the raw versions of the public keys in imgtool.
-
-  * Added support for sharing boot information with application via retention subsystem.
-
-  * Added support for serial recovery to read and handle encrypted seondary slot partitions.
-
-  * Removed ECDSA P224 support.
-
-  * Removed custom image list boot serial extension support.
-
-  * Reworked boot serial extensions so that they can be used by modules or from user repositories
-    by switching to iterable sections.
-
-  * Reworked image encryption support for Zephyr, static dummy key files are no longer in the code,
-    a pem file must be supplied to extract the private and public keys. The Kconfig menu has
-    changed to only show a single option for enabling encryption and selecting the key file.
-
-  * Reworked the ECDSA256 TLV curve agnostic and renamed it to ``ECDSA_SIG``.
-
-  * CDDL auto-generated function code has been replaced with zcbor function calls, this now allows
-    the parameters to be supplied in any order.
-
-  * The MCUboot version in this release is version ``2.0.0+0-rc1``.
-
-Nanopb
-******
-
-  * Changed project status to maintained.
-
-  * Added a separate nanopb.cmake file to be included by applications.
-
-  * Added helper cmake function ``zephyr_nanopb_sources`` to simplify ``.proto`` file inclusion.
-
-LVGL
-****
-
-  * Changed project status to maintained.
-
-  * Library has been updated to release v8.3.7.
-
-  * Added ``zephyr,lvgl-{pointer,button,encoder}-input`` pseudo device bindings.
-    :kconfig:option:`CONFIG_LV_Z_KSCAN_POINTER` is still supported but touch controllers
-    need a :dtcompatible:`zephyr,kscan-input` child node to emit input events.
-
-  * LVGL shell allows for monkey testing (requires :kconfig:option:`CONFIG_LV_USE_MONKEY`)
-    and inspecting memory usage.
-
-Trusted Firmware-A
-******************
-
-* Updated to TF-A 2.9.0.
-
-Documentation
-*************
-
-* Upgraded Sphinx to 6.2
-
-Tests and Samples
-*****************
-
-* Created common sample for file systems (``fs_sample``). It originates from sample for FAT
-  (``fat_fs``) and supports both FAT and ext2 file systems.
-
-* Created the zbus confirmed channel sample to demonstrate how to implement a delivery-guaranteed
-  channel using subscribers.
-
-* Created the zbus message subscriber sample to demonstrate how to use message subscribers.
+  * 增加
+    esp32
+    默认
+    网络
+    （
+    TCP
+    workq
+    、
+    RX
+    和
+    mgmt
+    事件
+    ）
+    栈
+    大小
+    到
+    2048
+    字节。
+  * 减少
+    Wi-Fi
+    示例
+    中
+    esp32s2_saola
+    的
+    RAM
+    使用。
+  * 修复
+    winc1500
+    中
+    的
+    未
+    定义
+    声明。
+  * 修复
+    eswifi
+    中
+    的
+    SPI
+    缓冲区
+    长度。
+  * 修复
+    AP
+    模式
+    中
+    esp32
+    数据
+    发送
+    和
+    通道
+    选择。
+  * 修复
+    esp_at
+    驱动
+    初始化
+    和
+    网络
+    接口
+    休眠
+    状态
+    设置。

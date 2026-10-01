@@ -1,204 +1,69 @@
 .. _uart_api:
 
-Universal
-Asynchronous
-Receiver-Transmitter
-（UART）
+通用异步收发器（UART）
 ##################################################
 
-Overview
+概述
 ********
 
-Zephyr
-提供
-三
-种
-不同
-的
-方式
-访问
-UART
-peripheral。
-根据
-method
-不同
-的
-API
-functions
-被
-使用
-根据
-下面
-的
-sections：
+Zephyr 提供三种不同的方式来访问 UART 外设。根据所选方法，不同的 API 函数按以下章节使用：
 
 1. :ref:`uart_polling_api`
 2. :ref:`uart_interrupt_api`
-3. :ref:`uart_async_api`
-   使用
-   :ref:`dma_api`
+3. :ref:`uart_async_api` 使用 :ref:`dma_api`
 
-Polling
-是
-访问
-UART
-peripheral
-的
-最
-基本
-的
-method。
-Read
-function
-:c:func:`uart_poll_in`
-是
-一
-个
-non
-blocking
-的
-function
-在
-没有
-valid
-data
-可用
-时
-返回
-一
-个
-character
-或
-``-1``。
-Write
-function
-:c:func:`uart_poll_out`
-是
-一
-个
-blocking
-的
-function
-thread
-等待
-直到
-给出
-的
-character
-被
-sent。
+轮询（Polling）是访问 UART 外设最基本的方法。读取函数 :c:func:`uart_poll_in` 是非阻塞函数，当没有有效数据可用时返回一个字符或 ``-1``。写入函数 :c:func:`uart_poll_out` 是阻塞函数，线程会等待直到给定字符被发送。
 
-用
-Interrupt
-driven
-API
-可能
-slow
-的
-communication
-可以
-在
-background
-发生
-同时
-thread
-继续
-其他
-tasks。
-Kernel
-的
-:ref:`kernel_data_passing_api`
-features
-可以
-被
-用
-来
-在
-thread
-和
-UART
-driver
-之间
-communication。
+使用中断驱动 API，可能较慢的通信可以在后台进行，同时线程继续执行其他任务。内核的 :ref:`kernel_data_passing_api` 特性可用于线程与 UART 驱动程序之间通信。
 
-Asynchronous
-API
-允许
-用
-DMA
-在
-background
-read
-和
-write
-data
-完全
-不
-interrupt
-MCU。
-然而
-setup
-比
-其他
-methods
-更
-复杂。
+异步 API 允许使用 DMA 在后台读取和写入数据，完全不中断 MCU。然而，其设置比其他方法更复杂。
 
 .. warning::
 
-   Interrupt
-   driven
-   API
-   和
-   Asynchronous
-   API
-   不
-   应该
-   同时
-   用于
-   同一
-   hardware
-   peripheral
-   因为
-   两
-   个
-   APIs
-   都
-   需要
-   hardware
-   interrupts
-   才
-   能
-   正确
-   工作。
-   同时
-   使用
-   两
-   个
-   APIs
-   的
-   callbacks
-   将
-   导致
-   相互
-   干扰。
-   :kconfig:option:`CONFIG_UART_EXCLUSIVE_API_CALLBACKS`
-   默认
-   被
-   启用
-   所以
-   只有
-   与
-   一
-   个
-   API
-   关联
-   的
-   callbacks
-   在
-   一
-   次
-   是
-   active
-   的。
+   中断驱动 API 和异步 API 不应同时用于同一硬件外设，因为两个 API 都需要硬件中断才能正常工作。同时使用两个 API 的回调会导致相互干扰。:kconfig:option:`CONFIG_UART_EXCLUSIVE_API_CALLBACKS` 默认启用，使得任一时刻只有与一个 API 关联的回调处于激活状态。
 
+
+配置选项
+*********************
+
+最重要的是，Kconfig 选项定义是否可以使用轮询 API（默认）、中断驱动 API 或异步 API。仅启用你需要的功能，以最小化内存占用。
+
+相关配置选项：
+
+* :kconfig:option:`CONFIG_SERIAL`
+* :kconfig:option:`CONFIG_UART_INTERRUPT_DRIVEN`
+* :kconfig:option:`CONFIG_UART_ASYNC_API`
+* :kconfig:option:`CONFIG_UART_WIDE_DATA`
+* :kconfig:option:`CONFIG_UART_USE_RUNTIME_CONFIGURE`
+* :kconfig:option:`CONFIG_UART_LINE_CTRL`
+* :kconfig:option:`CONFIG_UART_DRV_CMD`
+
+
+API 参考
+*************
+
+.. doxygengroup:: uart_interface
+
+
+.. _uart_polling_api:
+
+轮询 API
+===========
+
+.. doxygengroup:: uart_polling
+
+
+.. _uart_interrupt_api:
+
+中断驱动 API
+================
+
+.. doxygengroup:: uart_interrupt
+
+
+.. _uart_async_api:
+
+异步 API
+================
+
+.. doxygengroup:: uart_async

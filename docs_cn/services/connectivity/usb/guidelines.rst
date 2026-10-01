@@ -1,206 +1,56 @@
 .. _usb_guidelines:
 
-Common
-guidelines
-for
-USB
-tests
-and
-samples
+Common guidelines for USB tests and samples
 ###########################################
 
 Overview
 ********
 
-In
-general
-所有
-的
-USB
-samples
-和
-tests
-是
-platform
-agnostic
-的
-并
-不
-应该
-require
-一
-个
-platform
-specific
-的
-overlay。
-虽然
-tree
-中
-可能
-已
-有
-exceptions
-goal
-是
-avoid
-platform
-specific
-的
-overlays。
-USB
-sample
-或
-USB
-test
-没有
-obligation
-support
-特定
-的
-platform。
+通常（所有 USB samples 和 tests 为 platform agnostic（且不应需
+platform-specific overlay。尽管 tree 中可能已有例外（
+目标为避免 platform-specific overlays。USB sample 或
+USB test 无义务支持特定 platform。
 
-Board
-configuration
+Board configuration
 *******************
 
-Default
-USB
-device
-and
-host
-controller
+Default USB device and host controller
 ======================================
 
-USB
-support
-use
-``zephyr_udc0``
-node
-label
-assign
-default
-的
-USB
-device
-controller
-并
-use
-``zephyr_uhc0``
-node
-label
-assign
-default
-的
-USB
-host
-controller。
-根据
-board
-support
-什么
-它
-必须
-assign
-这些
-node
-labels
-才能
-execute
-tree
-中
-的
-samples
-和
+USB 支持用 ``zephyr_udc0`` node label 分配默认 USB device controller
+（用 ``zephyr_uhc0`` node label 分配默认 USB host controller。取决于
+board 支持什么（其须分配这些 node labels 以
+能执行 tree 中的 samples 和
 tests。
 
-Board
-metadata
-的
-Supported
-features
+Supported features for the board metadata
 =========================================
 
-只
-有
-两
-个
-supported
-的
-features
-用于
-board
-metadata
-file
-它们
-被
-Twister
-used
-用于
-pick
-up
-一
-个
-sample
-或
-test。
-对于
-带
-support
-device
-mode
-的
-USB
-controller
-的
-board
-feature
-是
-``usbd``。
-对于
-带
-support
-host
-mode
-的
-USB
-controller
-的
-board
-feature
-是
-``usbh``。
+board metadata file 仅有 Twister 用于选取 sample 或 test 的两个
+supported features。对支持 device
+mode 的 USB controller 的 board（feature 为 ``usbd``。对支持 host mode 的 USB controller 的 board（
+feature 为 ``usbh``。
 
-参考
-:ref:`twister_board_configuration`
-获取
-更多
-details。
+更多细节参见 :ref:`twister_board_configuration`。
 
-Deprecated
-features
+Deprecated features
 -------------------
 
-Feature
-``usb_device``
-不
-应该
-再
-被
-used。
-这
-个
-feature
-属于
-legacy
-的
-USB
-device
-stack
-它
-被
-deprecated
-并
-将
-被
-removed。
+Feature ``usb_device`` 不应再使用。此 feature 属于 legacy
+USB device stack（其已 deprecated 且将被移除。
+
+Tests Twister configuration
+***************************
+
+USB tests 可能需额外 hardware 或 software setup。这些 tests 应使用
+下表描述的 :ref:`fixtures <twister_fixtures>`。
+
++-----------------------------+-------------------------------------------------------------+
+| Fixture                     | Use case                                                    |
++=============================+=============================================================+
+| ``usb_host_connected``      | The test implements USB device functionality, and requires  |
+|                             | a USB host to be connected to the board under test.         |
++-----------------------------+-------------------------------------------------------------+
+| ``usb_device_connected``    | The test implements USB host functionality, and requires    |
+|                             | a USB device to be connected to the board under test.       |
++-----------------------------+-------------------------------------------------------------+

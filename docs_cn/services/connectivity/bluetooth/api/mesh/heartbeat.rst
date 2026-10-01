@@ -1,4 +1,6 @@
-.. _bluetooth_mesh_heartbeat:
+.. _bluetooth
+mesh
+heartbeat:
 
 Heartbeat
 #########
@@ -18,12 +20,15 @@ distance
 的
 functionality。
 
+The
 Heartbeat
 feature
-通过
+is
+configured
+through
+the
 :ref:`bluetooth_mesh_models_cfg_srv`
-model
-配置。
+model.
 
 Heartbeat
 messages
@@ -49,9 +54,8 @@ messages
 发送
 message
 时
-使用
-的
-original
+用的
+原始
 Time
 To
 Live
@@ -67,14 +71,14 @@ bitfield。
 通过
 这
 个
-接收
+receiving
 node
 可以
 determine
 message
 到达
 receiver
-时
+之前
 经过
 了
 多少
@@ -85,19 +89,14 @@ node
 什么
 features。
 
-可用
-的
+Available
 Heartbeat
 feature
-flags：
+flags:
 
--
 :c:macro:`BT_MESH_FEAT_RELAY`
--
 :c:macro:`BT_MESH_FEAT_PROXY`
--
 :c:macro:`BT_MESH_FEAT_FRIEND`
--
 :c:macro:`BT_MESH_FEAT_LOW_POWER`
 
 Heartbeat
@@ -106,54 +105,184 @@ publication
 
 Heartbeat
 publication
-通过
+is
+controlled
+through
+the
 Configuration
-models
-控制
-可以
-通过
-两
-种
-方式
-触发：
+models、
+and
+can
+be
+triggered
+in
+two
+ways:
 
 Periodic
 publication
-   Node
-   在
-   regular
-   intervals
-   发布
-   新
-   的
-   Heartbeat
-   message。
-   Publication
-   可以
-   被
-   configured
-   在
-   一定
-   数量
-   的
-   messages
-   后
-   stop
-   或
-   无限
-   继续。
+The
+node
+publishes
+a
+new
+Heartbeat
+message
+at
+regular
+intervals.
+The
+publication
+can
+be
+configured
+to
+stop
+after
+a
+certain
+number
+of
+messages、
+or
+continue
+indefinitely.
 
 Triggered
 publication
-   Node
-   每
-   次
-   feature
-   变化
-   时
-   发布
-   新
-   的
-   Heartbeat
-   message。
-   The
+The
+node
+publishes
+a
+new
+Heartbeat
+message
+every
+time
+a
+feature
+changes.
+The
+set
+of
+features
+that
+can
+trigger
+the
+publication
+is
+configurable.
+
+The
+two
+publication
+types
+can
+be
+combined.
+
+Heartbeat
+subscription
+**********************
+
+A
+node
+can
+be
+configured
+to
+subscribe
+to
+Heartbeat
+messages
+from
+one
+node
+at
+the
+time.
+To
+receive
+a
+Heartbeat
+message、
+both
+the
+source
+and
+destination
+must
+match
+the
+configured
+subscription
+parameters.
+
+Heartbeat
+subscription
+is
+always
+time
+limited、
+and
+throughout
+the
+subscription
+period、
+the
+node
+keeps
+track
+of
+the
+number
+of
+received
+Heartbeats
+as
+well
+as
+the
+minimum
+and
+maximum
+received
+hop
+count.
+
+All
+Heartbeats
+received
+with
+the
+configured
+subscription
+parameters
+are
+passed
+to
+the
+:cpp:member:`bt_mesh_hb_cb::recv`
+event
+handler.
+
+When
+the
+Heartbeat
+subscription
+period
+ends、
+the
+:cpp:member:`bt_mesh_hb_cb::sub_end`
+callback
+gets
+called.
+
+API
+reference
+**************
+
+..
+doxygengroup::
+bt_mesh_heartbeat

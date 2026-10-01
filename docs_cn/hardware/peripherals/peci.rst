@@ -1,82 +1,22 @@
 .. _peci_api:
 
-Platform
-Environment
-Control
-Interface
-（PECI）
+平台环境控制接口（PECI）
 #############################################
 
-Overview
+概述
 ********
-Platform
-Environment
-Control
-Interface
-缩写
-为
-PECI
-是
-2006
-年
-随
-Intel
-Core
-2
-Duo
-Microprocessors
-引入
-的
-thermal
-management
-standard。
-PECI
-interface
-允许
-外部
-devices
-读取
-processor
-temperature、
-执行
-processor
-manageability
-functions、
-并
-管理
-processor
-interface
-tuning
-和
-diagnostics。
-PECI
-bus
-driver
-APIs
-使
-Embedded
-Microcontrollers
-和
-CPUs
-之间
-的
-interaction
-成为
-可能。
+平台环境控制接口（Platform Environment Control Interface，缩写为 PECI）是一种热管理标准，于 2006 年随 Intel Core 2 Duo 微处理器推出。
+PECI 接口允许外部设备读取处理器温度、执行处理器可管理性功能，并管理处理器接口的调优与诊断。
+PECI 总线驱动 API 实现了嵌入式微控制器与 CPU 之间的交互。
 
-Configuration
-Options
+配置选项
 *********************
 
-相关
-配置
-选项：
+相关配置选项：
 
 * :kconfig:option:`CONFIG_PECI`
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   peci_interface
+.. doxygengroup:: peci_interface

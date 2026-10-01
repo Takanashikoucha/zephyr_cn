@@ -1,235 +1,48 @@
 .. _toolchain_designware_arc_mwdt:
 
-DesignWare
-ARC
-MetaWare
-Development
-Toolkit
-（MWDT）
+DesignWare ARC MetaWare 开发工具包（MWDT）
 ##################################################
 
-#. 你
-   需要
-   在
-   主机
-   上
-   安装
-   `ARC
-   MWDT
-   <https://www.synopsys.com/dw/ipdir.php?ds=sw_metaware>`_。
+#. 你需要在主机上安装 `ARC MWDT <https://www.synopsys.com/dw/ipdir.php?ds=sw_metaware>`__。
 
-#. 你
-   需要
-   在
-   主机
-   上
-   安装
-   :ref:`Zephyr
-   SDK
-   <toolchain_zephyr_sdk>`。
+#. 你需要在主机上安装 :ref:`Zephyr SDK <toolchain_zephyr_sdk>`。
 
    .. note::
-      Zephyr
-      SDK
-      用
-      作
-      设备
-      树
-      编译器
-      （DTC）、
-      QEMU
-      等
-      工具
-      的
-      来源。
-      即使
-      ARC
-      MWDT
-      工具链
-      用
-      于
-      Zephyr
-      RTOS
-      构建，
-      GNU
-      预
-      处理器
-      和
-      GNU
-      objcopy
-      可能
-      仍
-      用
-      于
-      设备
-      树
-      预
-      处理
-      和
-      ``.bin``
-      文件
-      生成
-      等
-      一些
-      步骤。
-      我们
-      也
-      用
-      Zephyr
-      SDK
-      作为
-      这些
-      ARC
-      GNU
-      工具
-      的
-      来源。
-      要
-      设置
-      ARC
-      GNU
-      工具链
-      请
-      使用
-      SDK
-      Bundle
-      （Full
-      或
-      Minimal）
-      而
-      非
-      单独
-      tarballs
-      的
-      手动
-      安装。
-      它
-      安装
-      并
-      注册
-      工具链
-      和
-      主机
-      工具
-      到
-      系统
-      中，
-      允许
-      你
-      避免
-      构建
-      Zephyr
-      时
-      的
-      工具链
-      相关
-      问题。
+      Zephyr SDK 用作设备树编译器（DTC）、QEMU 等工具的来源。
+      尽管 ARC MWDT 工具链用于 Zephyr RTOS 构建，但 GNU 预处理器和 GNU
+      objcopy 可能用于设备树预处理和 ``.bin`` 文件生成等步骤。
+      我们也将 Zephyr SDK 用作这些 ARC GNU 工具的来源。
+      要设置 ARC GNU 工具链，请使用 SDK 安装包（完整版或精简版）
+      而非手动安装单独的压缩包。
+      它会安装并注册工具链和主机工具到系统中，
+      让你避免构建 Zephyr 时的工具链相关问题。
 
-#. :ref:`Set
-   these
-   environment
-   variables
-   <env_vars>`：
+#. :ref:`设置以下环境变量 <env_vars>`：
 
-   - 设置
-     :envvar:`ZEPHYR_TOOLCHAIN_VARIANT`
-     为
-     ``arcmwdt``。
-   - 设置
-     :envvar:`ARCMWDT_TOOLCHAIN_PATH`
-     为
-     工具链
-     安装
-     目录。
-     MWDT
-     安装
-     提供
-     :envvar:`METAWARE_ROOT`
-     所以
-     简单
-     设置
-     :envvar:`ARCMWDT_TOOLCHAIN_PATH`
-     为
-     ``$METAWARE_ROOT/../``
-     （Linux）
-     或
-     ``%METAWARE_ROOT%\..\``
-     （Windows）。
+   - 将 :envvar:`ZEPHYR_TOOLCHAIN_VARIANT` 设置为 ``arcmwdt``。
+   - 将 :envvar:`ARCMWDT_TOOLCHAIN_PATH` 设置为工具链安装目录。
+     MWDT 安装提供 :envvar:`METAWARE_ROOT`，
+     所以只需将 :envvar:`ARCMWDT_TOOLCHAIN_PATH` 设置为
+     ``$METAWARE_ROOT/../``（Linux）或 ``%METAWARE_ROOT%\..\``（Windows）。
 
    .. tip::
-      如果
-      你
-      只
-      在
-      机器
-      上
-      安装
-      了
-      一
-      个
-      ARC
-      MWDT
-      工具链
-      版本
-      你
-      可以
-      跳过
-      设置
-      :envvar:`ARCMWDT_TOOLCHAIN_PATH`
-      --
-      它
-      会
-      被
-      自动
-      检测。
+      如果你只在一台机器上安装了一个 ARC MWDT 工具链版本，
+      你可以跳过设置 :envvar:`ARCMWDT_TOOLCHAIN_PATH`——它会被自动检测。
 
-#. 要
-   检查
-   你
-   在
-   当前
-   环境
-   中
-   正确
-   设置
-   了
-   这些
-   变量，
-   遵循
-   这些
-   示例
-   shell
-   会话
-   （:envvar:`ARCMWDT_TOOLCHAIN_PATH`
-   值
-   在
-   你
-   的
-   系统
-   上
-   可能
-   不同）：
+#. 要检查你是否在当前环境中正确设置了这些变量，
+   参考以下示例 shell 会话
+   （:envvar:`ARCMWDT_TOOLCHAIN_PATH` 的值在你的系统上可能不同）：
 
    .. code-block:: console
 
-      #
-      Linux:
-      $
-      echo
-      $ZEPHYR_TOOLCHAIN_VARIANT
+      # Linux:
+      $ echo $ZEPHYR_TOOLCHAIN_VARIANT
       arcmwdt
-      $
-      echo
-      $ARCMWDT_TOOLCHAIN_PATH
+      $ echo $ARCMWDT_TOOLCHAIN_PATH
       /home/you/ARC/MWDT_2023.03/
 
-      #
-      Windows:
-      >
-      echo
-      %ZEPHYR_TOOLCHAIN_VARIANT%
+      # Windows:
+      > echo %ZEPHYR_TOOLCHAIN_VARIANT%
       arcmwdt
-      >
-      echo
-      %ARCMWDT_TOOLCHAIN_PATH%
+      > echo %ARCMWDT_TOOLCHAIN_PATH%
       C:\ARC\MWDT_2023.03\

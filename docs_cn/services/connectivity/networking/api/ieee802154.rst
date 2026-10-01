@@ -1,205 +1,158 @@
 .. _ieee802154_interface:
 
-IEEE
-802.15.4
+IEEE 802.15.4
 #############
 
 .. contents::
     :local:
-    :depth:
-    2
+    :depth: 2
 
 Introduction
 ************
 
-IEEE
-802.15.4
-是
-一
-个
-technical
-standard
-它
-define
-low
-rate
-的
-wireless
-personal
-area
-networks
-（LR-WPANs）
-的
-operation。
-关于
-这
-个
-standard
-的
-更
-detailed
-的
-overview
-参考
-`IEEE
-802.15.4
-Wikipedia
-article
-<https://en.wikipedia.org/wiki/IEEE_802.15.4>`_。
+IEEE 802.15.4 是定义 low-rate wireless personal area networks（LR-WPANs）操作的 technical standard。此 standard 更详细的概述参见 `IEEE 802.15.4 Wikipedia article <https://en.wikipedia.org/wiki/IEEE_802.15.4>`_。
 
-Standard
-的
-最近
-version
-可以
-通过
-`IEEE
-GET
-Program
-<https://ieeexplore.ieee.org/browse/standards/get-program/page/series?id=68>`_
-accessed。
-你
-需要
-create
-一
-个
-free
-的
-IEEE
-account
-然后
-可以
-download
-它。
+Standard 的最新版本可通过 `IEEE GET Program <https://ieeexplore.ieee.org/browse/standards/get-program/page/series?id=68>`_ 获取。您需创建免费 IEEE account（然后可下载。
 
-我们
-当前
-follow
-IEEE
-802.15.4-2020
-specification。
-这
-个
-version
-与
-IEEE
-802.15.4-2015
-backwards
-compatible
-其
-parts
-包含
-在
-Thread
-protocol
-stack
-中。
-2020
-version
-也
-包含
-之前
-被
-accepted
-到
-standard
-中
-的
-extensions
-即
-IEEE
-802.15.4g
-（SUN
-FSK）
-和
-IEEE
-802.15.4e
-（TSCH）
-它们
-与
-industrial
-IoT
-和
-automation
-相关。
-关于
-UWB
-ranging
-technology
-的
-recent
-developments
-参考
-IEEE
-802.15.4z
-它
-还
-未
-被
-integrated
-到
-standard
-的
-mainline
-中。
+我们当前遵循 IEEE 802.15.4-2020 specification。此版本向后兼容 IEEE 802.15.4-2015（其部分包含在 Thread protocol stack 中。2020 版本还包含已被接受到 standard 中的先前 extensions（即 IEEE 802.15.4g（SUN FSK）和 IEEE 802.15.4e（TSCH）（其与 industrial IoT 和 automation 相关。UWB ranging technology 的最新发展参见 IEEE 802.15.4z（其尚未集成到 standard 的 mainline 中。
 
-当
-standard
-的
-sections
-在
-documentation
-中
-被
-cited
-时
-它们
-refer
-到
-IEEE
-802.15.4-2020
-的
-section、
-table
-和
-figure
-numbering
--
-除非
-另外
-specified。
+文档中引用 standard 的 sections 时（除非另有指定（其指 IEEE 802.15.4-2020 的 section、table 和 figure 编号。
 
-Zephyr
-support
-两
-个
-native
-IEEE
-802.15.4
-和
-Thread
-带
-6LoWPAN。
-Zephyr
-的
-:ref:`thread_protocol_interface`
-implementation
-based
-on
-`OpenThread
-<https://openthread.io/>`_。
-6LoWPAN
-中
-的
-IPv6
-header
-compression
-被
-used
-于
-native
-IEEE
-802.15.4。
+Zephyr 同时支持 native IEEE 802.15.4 和带 6LoWPAN 的 Thread。Zephyr 的 :ref:`thread_protocol_interface` 实现基于 `OpenThread <https://openthread.io/>`_。6LoWPAN 中的 IPv6 header compression 用于 native IEEE 802.15.4。
 
-Supported
-Drivers
+Supported Drivers
+*****************
+
+Zephyr 包含多个 in-tree IEEE 802.15.4 radio drivers 以用于各种 hardware platforms。以下表格提供所有可用 drivers 的概述（包括其 vendors、supported frequency bands、bus interfaces（以及用于启用每个 driver 的 Kconfig option。
+
+.. list-table:: IEEE 802.15.4 In-Tree Radio Drivers
+   :header-rows: 1
+   :widths: 15 15 30 15 10
+
+   * - Driver
+     - Vendor
+     - Compatible
+     - Frequency Band
+     - Bus
+   * - CC1200
+     - Texas Instruments
+     - :dtcompatible:`ti,cc1200`
+     - Sub-GHz
+     - SPI
+   * - CC13xx/CC26xx
+     - Texas Instruments
+     - :dtcompatible:`ti,cc13xx-cc26xx-ieee802154`
+     - 2.4 GHz
+     - On-chip
+   * - CC13xx/CC26xx Sub-GHz
+     - Texas Instruments
+     - :dtcompatible:`ti,cc13xx-cc26xx-ieee802154-subghz`
+     - Sub-GHz
+     - On-chip
+   * - CC2520
+     - Texas Instruments
+     - :dtcompatible:`ti,cc2520`
+     - 2.4 GHz
+     - SPI
+   * - DW1000
+     - Decawave (Qorvo)
+     - :dtcompatible:`decawave,dw1000`
+     - UWB (3.5–6.5 GHz)
+     - SPI
+   * - ESP32
+     - Espressif
+     - :dtcompatible:`espressif,esp32-ieee802154`
+     - 2.4 GHz
+     - On-chip
+   * - KW41Z
+     - NXP
+     - :dtcompatible:`nxp,kw41z-ieee802154`
+     - 2.4 GHz
+     - On-chip
+   * - MCR20A
+     - NXP
+     - :dtcompatible:`nxp,mcr20a`
+     - 2.4 GHz
+     - SPI
+   * - MCXW
+     - NXP
+     - :dtcompatible:`nxp,mcxw-ieee802154`
+     - 2.4 GHz
+     - On-chip
+   * - nRF5
+     - Nordic Semiconductor
+     - :dtcompatible:`nordic,nrf-ieee802154`
+     - 2.4 GHz
+     - On-chip
+   * - RF2XX (AT86RF2xx)
+     - Atmel (Microchip)
+     - :dtcompatible:`atmel,rf2xx`
+     - 2.4 GHz / Sub-GHz
+     - SPI
+   * - STM32WBA
+     - STMicroelectronics
+     - :dtcompatible:`st,stm32wba-ieee802154`
+     - 2.4 GHz
+     - On-chip
+   * - Telink B91
+     - Telink Semiconductor
+     - :dtcompatible:`telink,b91-zb`
+     - 2.4 GHz
+     - On-chip
+   * - UART Pipe
+     - Virtual (QEMU)
+     - :dtcompatible:`zephyr,ieee802154-uart-pipe`
+     - N/A (emulated)
+     - UART
+
+.. note::
+   UART Pipe driver 为用于在 QEMU 环境中测试 IEEE 802.15.4 networking 的 virtual driver。其不用于与真实 radio hardware 一起使用。
+
+每个 driver 的详细 configuration options 参见 :zephyr_file:`drivers/ieee802154/` 中对应的 Kconfig file。
+
+API Reference
+*************
+
+IEEE 802.15.4 API Overview
+==========================
+
+为所有受众提供整个 IEEE 802.15.4 subsystem 及其所有 APIs、configuration 和 user interfaces 的介绍和概述。
+
+.. doxygengroup:: ieee802154
+
+
+.. _ieee802154_mgmt_api:
+
+IEEE 802.15.4 Management API
+============================
+
+这是 IEEE 802.15.4 **application developers** 关注的主要 subsystem-specific API（其允许在 runtime 配置 IEEE 802.15.4 subsystem。Application developers 的其他相关 interfaces 为典型的 shell、socket、Kconfig 和 devicetree APIs（可通过 Zephyr 的 generic subsystem-independent 文档访问。在其中留意 IEEE802154/ieee802154 前缀。
+
+.. doxygengroup:: ieee802154_mgmt
+
+
+.. _ieee802154_driver_api:
+
+IEEE 802.15.4 Driver API
+========================
+
+这是 IEEE 802.15.4 **driver developers** 关注的主要 API。
+
+.. doxygengroup:: ieee802154_driver
+
+
+.. _ieee802154_l2_api:
+
+IEEE 802.15.4 L2 / Native Stack API
+===================================
+
+此文档记录 IEEE 802.15.4 L2 native stack（applications 和 drivers 均从不直接访问。其由 Zephyr 的上层 network layers（L3+）及其 socket 和 network context abstractions 内部调用。因此此 API 仅对 IEEE 802.15.4 **subsystem contributors** 有用。
+
+.. doxygengroup:: ieee802154_l2
+
+OpenThread L2 Adaptation Layer API
+==================================
+
+Zephyr 的 OpenThread L2 platform adaptation layer 将外部 OpenThread stack 与 Zephyr 的 IEEE 802.15.4 protocol agnostic driver API 粘合在一起。此 API 仅对 OpenThread L2 **subsystem contributors** 有用。
+
+OpenThread API 为 :ref:`thread_protocol_interface` subsystem 的一部分（并在那里文档化。

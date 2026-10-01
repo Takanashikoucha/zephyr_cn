@@ -27,14 +27,22 @@ requirements
 follows
 a
 suitable
-approach。
+approach.
 
-.. toctree::
-   :maxdepth:
-   1
-   :glob:
+..
+toctree::
+:
+maxdepth:
+1
+:
+glob:
 
-   safety_requirements.rst
-   safety_requirements_checklist.rst
-   getting_started/index
-   requirements_catalog.rst
+safety
+requirements.rst
+safety
+requirements
+checklist.rst
+getting
+started/index
+requirements
+catalog.rst

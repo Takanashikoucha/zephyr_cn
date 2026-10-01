@@ -3,36 +3,10 @@
 Networking
 ##########
 
-Networking
-section
-contain
-关于
-Zephyr
-kernel
-的
-network
-stack
-的
-information。
-Use
-这
-些
-information
-understand
-stacks
-operation
-背后
-的
-principles
-以及
-它们
-如何
-被
-implemented。
+Networking section 包含有关 Zephyr kernel 的 network stack 的信息。用这些信息理解 stacks 操作背后的 principles 及其如何实现。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    overview.rst
    net-stack-architecture.rst

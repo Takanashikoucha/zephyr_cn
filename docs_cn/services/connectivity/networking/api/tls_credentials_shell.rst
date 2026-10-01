@@ -1,136 +1,135 @@
 .. _tls_credentials_shell:
 
-TLS
-Credentials
-Shell
+TLS Credentials Shell
 #####################
 
-TLS
-Credentials
-shell
-提供
-一
-个
-command
-line
-interface
-用于
-manage
-installed
-的
-TLS
-credentials。
+TLS Credentials shell 为管理已安装的 TLS credentials 提供 command-line interface。
 
 Commands
 ********
 
 .. _tls_credentials_shell_buf_cred:
 
-Buffer
-Credential
-（``buf``）
+Buffer Credential (``buf``)
 ===========================
 
-Buffer
-data
-incrementally
-到
-credential
-buffer
-使
-它
-可以
-用
-:ref:`tls_credentials_shell_add_cred`
-command
-added。
+增量 buffer data 到 credential buffer 中（使其可用 :ref:`tls_credentials_shell_add_cred` command 添加。
 
-或者：
+替代方案：
 
-   -
-   Clear
-   credential
-   buffer。
+   - 清除 credential buffer。
 
-   -
-   Load
-   credential
-   直接
-   到
-   credential
-   buffer
-   以
-   ``Ctrl
-   +
-   c``
-   结束。
+   - 直接将 credential 加载到 credential buffer（以 ``Ctrl + c`` 结束。
 
 Usage
 -----
 
-要
-append
-``<DATA>``
-到
-credential
-buffer
-用：
+要将 ``<DATA>`` 追加到 credential buffer（用：
 
-.. code-block::
-   shell
+.. code-block:: shell
 
-   cred
-   buf
+   cred buf <DATA>
+
+根据需要多次使用以将完整 credential 加载到 credential buffer（然后用 :ref:`tls_credentials_shell_add_cred` command 存储。
+
+要将 ``<DATA>`` 直接加载到 credential buffer（用：
+
+.. code-block:: shell
+
+   cred buf load
    <DATA>
+   Ctrl + c
 
-用
-这
-个
-多
-少
-次
-都
-可以
-直到
-full
-的
-credential
-被
-loaded
-到
-credential
-buffer
-然后
-用
-:ref:`tls_credentials_shell_add_cred`
-command
-store
-它。
+要清除 credential buffer（用：
 
-要
-load
-``<DATA>``
-直接
-到
-credential
-buffer
-用：
+.. code-block:: shell
 
-.. code-block::
-   shell
+   cred buf clear
 
-   cred
-   buf
-   load
-   <DATA>
+Arguments
+---------
 
+.. csv-table::
+   :header: "Argument", "Description"
+   :widths: 15 85
 
-.. note::
+   "``<DATA>``", "要追加到 credential buffer 的 text data。可为 text（或 base64-encoded binary。细节参见 :ref:`tls_credentials_shell_add_cred` 和 :ref:`tls_credentials_shell_data_formats`。"
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+.. _tls_credentials_shell_add_cred:
+
+Add Credential (``add``)
+=========================
+
+向 TLS Credential store 添加 TLS credential。
+
+Credential contents 可随 ``cred add`` 调用内联提供（否则从 credential buffer 获取。
+
+Usage
 -----
 
-To retrieve and print a credential matching a specified sectag and credential type (if it exists), use:
+要用 credential buffer 中的数据添加 TLS credential（用：
+
+.. code-block:: shell
+
+   cred add <SECTAG> <TYPE> <BACKEND> <FORMAT>
+
+要用同一 command 提供的数据添加 TLS credential（用：
+
+.. code-block:: shell
+
+   cred add <SECTAG> <TYPE> <BACKEND> <FORMAT> <DATA>
+
+
+Arguments
+---------
+
+.. csv-table::
+   :header: "Argument", "Description"
+   :widths: 15 85
+
+   "``<SECTAG>``", "新 credential 使用的 sectag。可为任何 non-negative integer。"
+   "``<TYPE>``", "要添加的 credential type。有效值参见 :ref:`tls_credentials_shell_cred_types`。"
+   "``<BACKEND>``", "Reserved。须始终为 ``DEFAULT``（case-insensitive）。"
+   "``<FORMAT>``", "指定提供的 credential 的 storage format。有效值参见 :ref:`tls_credentials_shell_data_formats`。"
+   "``<DATA>``", "若提供（此 argument 用作 credential data（而非 credential buffer 中的任何 data。可为 text（或 base64-encoded binary。"
+
+.. _tls_credentials_shell_del_cred:
+
+Delete Credential (``del``)
+===========================
+
+从 credential store 删除指定 credential。
+
+Usage
+-----
+
+要删除匹配指定 sectag 和 credential type 的 credential（若存在）（用：
+
+.. code-block:: shell
+
+   cred del <SECTAG> <TYPE>
+
+Arguments
+---------
+
+.. csv-table::
+   :header: "Argument", "Description"
+   :widths: 15 85
+
+   "``<SECTAG>``", "要删除的 credential 的 sectag。可为任何 non-negative integer。"
+   "``<TYPE>``", "要删除的 credential type。有效值参见 :ref:`tls_credentials_shell_cred_types`。"
+
+.. _tls_credentials_shell_get_cred:
+
+Get Credential Contents (``get``)
+=================================
+
+获取并打印指定 credential 的内容。
+
+Usage
+-----
+
+要获取并打印匹配指定 sectag 和 credential type 的 credential（若存在）（用：
 
 .. code-block:: shell
 
@@ -143,39 +142,39 @@ Arguments
    :header: "Argument", "Description"
    :widths: 15 85
 
-   "``<SECTAG>``", "The sectag of the credential to get. Can be any non-negative integer."
-   "``<TYPE>``", "The type of credential to get. See :ref:`tls_credentials_shell_cred_types` for valid values."
-   "``<FORMAT>``", "Specifies the retrieval format for the provided credential. See :ref:`tls_credentials_shell_data_formats` for valid values."
+   "``<SECTAG>``", "要获取的 credential 的 sectag。可为任何 non-negative integer。"
+   "``<TYPE>``", "要获取的 credential type。有效值参见 :ref:`tls_credentials_shell_cred_types`。"
+   "``<FORMAT>``", "指定提供的 credential 的 retrieval format。有效值参见 :ref:`tls_credentials_shell_data_formats`。"
 
 .. _tls_credentials_shell_list_cred:
 
 List Credentials (``list``)
 ===========================
 
-List TLS credentials in the credential store.
+列出 credential store 中的 TLS credentials。
 
 Usage
 -----
 
-To list all available credentials, use:
+要列出所有可用 credentials（用：
 
 .. code-block:: shell
 
    cred list
 
-To list all credentials with a specified sectag, use:
+要列出所有带指定 sectag 的 credentials（用：
 
 .. code-block:: shell
 
    cred list <SECTAG>
 
-To list all credentials with a specified credential type, use:
+要列出所有带指定 credential type 的 credentials（用：
 
 .. code-block:: shell
 
    cred list any <TYPE>
 
-To list all credentials with a specified credential type and sectag, use:
+要列出所有带指定 credential type 和 sectag 的 credentials（用：
 
 .. code-block:: shell
 
@@ -189,84 +188,80 @@ Arguments
    :header: "Argument", "Description"
    :widths: 15 85
 
-   "``<SECTAG>``", "Optional. If provided, only list credentials with this sectag. Pass ``any`` or omit to allow any sectag. Otherwise, can be any non-negative integer."
-   "``<TYPE>``", "Optional. If provided, only list credentials with this credential type. Pass ``any`` or omit to allow any credential type. Otherwise, see :ref:`tls_credentials_shell_cred_types` for valid values."
+   "``<SECTAG>``", "Optional。若提供（仅列出带此 sectag 的 credentials。传 ``any`` 或省略以允许任何 sectag。否则（可为任何 non-negative integer。"
+   "``<TYPE>``", "Optional。若提供（仅列出带此 credential type 的 credentials。传 ``any`` 或省略以允许任何 credential type。否则（有效值参见 :ref:`tls_credentials_shell_cred_types`。"
 
 
 Output
 ------
 
-The command outputs all matching credentials in the following (CSV-compliant) format:
+Command 以以下（CSV-compliant）格式输出所有匹配的 credentials：
 
 .. code-block:: shell
 
    <SECTAG>,<TYPE>,<DIGEST>,<STATUS>
 
-Where:
+其中：
 
 .. csv-table::
    :header: "Symbol", "Value"
    :widths: 15 85
 
-   "``<SECTAG>``", "The sectag of the listed credential. A non-negative integer."
-   "``<TYPE>``", "Credential type short-code (see :ref:`tls_credentials_shell_cred_types` for details) of the listed credential."
-   "``<DIGEST>``", "A string digest representing the credential contents. The exact nature of this digest may vary depending on credentials storage backend, but currently for all backends this is a base64 encoded SHA256 hash of the raw credential contents (so different storage formats for essentially identical credentials will have different digests)."
-   "``<STATUS>``", "Status code indicating success or failure with generating a digest of the listed credential. 0 if successful, negative error code specific to the storage backend otherwise. Lines for which status is not zero will be printed with error formatting."
+   "``<SECTAG>``", "列出的 credential 的 sectag。Non-negative integer。"
+   "``<TYPE>``", "列出的 credential 的 credential type short-code（细节参见 :ref:`tls_credentials_shell_cred_types`）。"
+   "``<DIGEST>``", "表示 credential contents 的 string digest。此 digest 的确切性质可能因 credentials storage backend 而异（但当前对所有 backends 均为 raw credential contents 的 base64 encoded SHA256 hash（故本质上相同 credentials 的不同 storage formats 将有不同 digests）。"
+   "``<STATUS>``", "指示生成列出的 credential digest 成功或失败的 status code。成功为 0（否则为特定于 storage backend 的负 error code。Status 非零的行将以 error 格式打印。"
 
-After the list is printed, a final summary of the found credentials will be printed in the form:
+列表打印后（将打印找到的 credentials 的最终 summary（形式为：
 
 .. code-block:: shell
 
    <N> credentials found.
 
-Where ``<N>`` is the number of credentials found, and is zero if none are found.
+其中 ``<N>`` 为找到的 credentials 数量（若未找到则为 zero。
 
 .. _tls_credentials_shell_cred_types:
 
 Credential Types
 ****************
 
-The following keywords (case-insensitive) may be used to specify a credential type:
+以下 keywords（case-insensitive）可用于指定 credential type：
 
 .. csv-table::
    :header: "Keyword(s)", "Meaning"
    :widths: 15 85
 
-   "``CA_CERT``, ``CA``", "A trusted CA certificate."
-   "``SERVER_CERT``, ``SELF_CERT``, ``CLIENT_CERT``, ``CLIENT``, ``SELF``, ``SERV``", "Self or server certificate."
-   "``PRIVATE_KEY``, ``PK``", "A private key."
-   "``PRE_SHARED_KEY``, ``PSK``", "A pre-shared key."
-   "``PRE_SHARED_KEY_ID``, ``PSK_ID``", "ID for pre-shared key."
+   "``CA_CERT``, ``CA``", "受信任的 CA certificate。"
+   "``SERVER_CERT``, ``SELF_CERT``, ``CLIENT_CERT``, ``CLIENT``, ``SELF``, ``SERV``", "Self 或 server certificate。"
+   "``PRIVATE_KEY``, ``PK``", "Private key。"
+   "``PRE_SHARED_KEY``, ``PSK``", "Pre-shared key。"
+   "``PRE_SHARED_KEY_ID``, ``PSK_ID``", "Pre-shared key 的 ID。"
 
 .. _tls_credentials_shell_data_formats:
 
 Storage/Retrieval Formats
 *************************
 
-The :ref:`tls_credentials <sockets_tls_credentials_subsys>` module treats stored credentials as arbitrary binary buffers.
+:ref:`tls_credentials <sockets_tls_credentials_subsys>` module 将存储的 credentials 视为任意 binary buffers。
 
-For convenience, the TLS credentials shell offers four formats for providing and later retrieving these buffers using the shell.
+为便利（TLS credentials shell 提供四种格式以通过 shell 提供并随后检索这些 buffers。
 
-These formats and their (case-insensitive) keywords are as follows:
+这些格式及其（case-insensitive）keywords 如下：
 
 .. csv-table::
    :header: "Keyword", "Meaning", "Behavior during storage (``cred add``)", "Behavior during retrieval (``cred get``)"
    :widths: 3, 32, 34, 34
 
-   "``BIN``", "Credential is handled by shell as base64 and stored without NULL termination.", "Data entered into shell will be decoded from base64 into raw binary before storage. No terminator will be appended.", "Stored data will be encoded into base64 before being printed."
-   "``BINT``", "Credential is handled by shell as base64 and stored with NULL termination.", "Data entered into shell will be decoded from base64 into raw binary and a NULL terminator will be appended before storage.", "NULL terminator will be truncated from stored data before said data is encoded into base64 and then printed."
-   "``STR``", "Credential is handled by shell as literal string and stored without NULL termination.", "Text data entered into shell will be passed into storage as-written, without a NULL terminator.", "Stored data will be printed as text. Non-printable characters will be printed as ``?``"
-   "``STRT``", "Credential is handled by shell as literal string and stored with NULL-termination.", "Text data entered into shell will be passed into storage as-written, with a NULL terminator.", "NULL terminator will be truncated from stored data before said data is printed as text. Non-printable characters will be printed as ``?``"
+   "``BIN``", "Credential 由 shell 作为 base64 处理（存储时无 NULL termination。", "输入 shell 的 data 将在存储前从 base64 解码为 raw binary。不追加 terminator。", "存储的 data 将在打印前编码为 base64。"
+   "``BINT``", "Credential 由 shell 作为 base64 处理（存储时带 NULL termination。", "输入 shell 的 data 将在存储前从 base64 解码为 raw binary（并追加 NULL terminator。", "NULL terminator 将从存储的 data 截断（然后该 data 编码为 base64 并打印。"
+   "``STR``", "Credential 由 shell 作为 literal string 处理（存储时无 NULL termination。", "输入 shell 的 text data 将按原样传入存储（无 NULL terminator。", "存储的 data 作为 text 打印。Non-printable characters 打印为 ``?``"
+   "``STRT``", "Credential 由 shell 作为 literal string 处理（存储时带 NULL-termination。", "输入 shell 的 text data 将按原样传入存储（带 NULL terminator。", "NULL terminator 将在作为 text 打印前从存储的 data 截断。Non-printable characters 打印为 ``?``"
 
-The ``BIN`` format can be used to install credentials of any type, since base64 can be used to encode any concievable binary buffer.
-The remaining three formats are provided for convenience in special use-cases.
+``BIN`` format 可用于安装任何类型的 credentials（因为 base64 可用于编码任何可想象的 binary buffer。
+其余三种格式为特殊 use-cases 的便利提供。
 
-For example:
+例如：
 
-- To install printable pre-shared-keys, use ``STR`` to enter the PSK without first encoding it.
-  This ensures it is stored without a NULL terminator.
-- To install DER-formatted X.509 certificates (or other raw-binary credentials, such as non-printable PSKs) base64-encode the binary and use the ``BIN`` format.
-- To install PEM-formatted X.509 certificates or certificate chains, base64 encode the full PEM string (including new-lines and ``----BEGIN X ----`` / ``----END X----`` markers), and then use the ``BINT`` format to make sure the stored string is NULL-terminated.
-  This is required because Zephyr does not support multi-line strings in the shell.
-  Otherwise, the ``STRT`` format could be used for this purpose without base64 encoding.
-  It is possible to use ``BIN`` instead if you manually encode a NULL terminator into the base64.
+- 要安装 printable pre-shared-keys（用 ``STR`` 输入 PSK（无需先编码。确保其存储时无 NULL terminator。
+- 要安装 DER 格式的 X.509 certificates（或其他 raw-binary credentials（如 non-printable PSKs）（base64-encode 该 binary（并用 ``BIN`` format。
+- 要安装 PEM 格式的 X.509 certificates 或 certificate chains（base64 encode 完整 PEM string（含 new-lines 和 ``----BEGIN X ----`` / ``----END X----`` markers）（然后用 ``BINT`` format 确保存储的 string 为 NULL-terminated。这是必需的（因为 Zephyr 不支持 shell 中的 multi-line strings。否则（可用 ``STRT`` format 实现此目的而无需 base64 编码。若手动将 NULL terminator 编码到 base64 中（也可用 ``BIN`` 替代。

@@ -1,48 +1,15 @@
 .. _uhc_api:
 
-USB
-host
-controller
-（UHC）
-driver
-API
+USB host controller (UHC) driver API
 ####################################
 
-USB
-host
-controller
-driver
-API
-在
-:zephyr_file:`include/zephyr/drivers/usb/uhc.h`
-中
-described
-并
-被
-referred
-to
-作为
-``UHC
-driver``
-API。
+USB host controller driver API 描述在
+:zephyr_file:`include/zephyr/drivers/usb/uhc.h` 中（称为
+``UHC driver`` API。
 
-UHC
-driver
-API
-是
-experimental
-的
-并
-subject
-to
-change
-without
-notice。
+UHC driver API 为 experimental（且可能不经通知变更。
 
-Driver
-API
-reference
+Driver API reference
 ********************
 
-.. doxygengroup::
-   uhc_api
+.. doxygengroup:: uhc_api

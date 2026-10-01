@@ -1,18 +1,12 @@
 .. _timing_peripherals:
 
-Timing
+定时
 ######
 
-Timers、
-clocks、
-watchdogs、
-和
-timekeeping
-primitives。
+定时器、时钟、看门狗和计时原语。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    clock_control.rst
    clock_monitor.rst

@@ -21,7 +21,7 @@
      <p style="color:#93a6bd;margin:0 0 8px 0">
        本仓库在 Zephyr 官方源码基础上，新增了完整的中文技术文档与源码阅读指南，
        通过 GitHub Pages 直接访问：<br>
-       <a href="http://blog.kouchalab.win/zephyr_cn/" style="color:#5eead4">http://blog.kouchalab.win/zephyr_cn/</a>
+       <a href="https://takanashikoucha.github.io/zephyr_cn/" style="color:#5eead4">https://takanashikoucha.github.io/zephyr_cn/</a>
      </p>
      <p style="color:#93a6bd;margin:0">
        <strong style="color:#e6eef6">docs_cn/</strong> — 中文 rst 文档（Sphinx 构建）<br>

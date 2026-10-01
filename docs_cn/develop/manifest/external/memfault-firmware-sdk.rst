@@ -6,25 +6,16 @@ memfault-firmware-sdk
 简介
 ****
 
-`memfault-firmware-sdk`_ 为嵌入式开发者提供内置的远程调试、性能监控
-和 OTA 更新能力，面向基于 MCU 的设备。它自动从现场设备捕获崩溃报告、
-日志和堆栈跟踪，便于在无需物理接触的情况下诊断问题。该 SDK 还收集
-轻量级性能指标，如内存使用、电池续航、连接性和固件稳定性，以长期跟踪
-车队可靠性。
+`memfault-firmware-sdk`_ 为嵌入式开发者提供面向基于 MCU 的设备的内置远程调试、性能监控和 OTA 更新能力。它自动从现场设备捕获崩溃报告、日志和堆栈跟踪，便于在无需物理接触的情况下诊断问题。该 SDK 还收集轻量级性能指标，如内存使用、电池续航、连接性和固件稳定性，以长期跟踪车队可靠性。
 
-该 SDK 与 `Memfault`_ 平台通信，平台聚合这些数据，帮助团队更快
-地优先处理和解决问题。此外，该 SDK 支持空中固件更新，可实现受控
-发布和新版本远程部署。
+该 SDK 与 `Memfault`_ 平台通信，平台聚合这些数据，帮助团队更快地优先处理和解决问题。此外，该 SDK 支持空中固件更新，可实现受控发布和新版本远程部署。
 
-该 SDK 受自定义 BSD 风格许可保护，附带服务特定的使用限制。更多细节
-请参见 `Memfault Firmware SDK 许可`_。
+该 SDK 受自定义 BSD 风格许可保护，附带服务特定的使用限制。更多细节请参见 `Memfault Firmware SDK 许可`_。
 
 在 Zephyr 中使用
 ****************
 
-要将 ``memfault-firmware-sdk`` 作为 Zephyr :ref:`module <modules>`
-引入，将其作为 West 项目添加到 :file:`west.yaml` 文件，内容如下，
-然后运行 :command:`west update`：
+要将 ``memfault-firmware-sdk`` 作为 Zephyr :ref:`module <modules>` 引入，将其作为 West 项目添加到 :file:`west.yaml` 文件，内容如下，然后运行 :command:`west update`：
 
 .. code-block:: yaml
 
@@ -42,11 +33,9 @@ memfault-firmware-sdk
 
 .. note::
 
-   上面显示的 revision 仅为示例。请查看 `memfault-firmware-sdk`_
-   的 releases 页面获取最新的 release tag，确保使用所需版本。
+   上面显示的 revision 仅为示例。请查看 `memfault-firmware-sdk`_ 的 releases 页面获取最新的 release tag，确保使用所需版本。
 
-更详细的步骤和 API 文档请参阅 `memfault-firmware-sdk 文档`_ 以及
-提供的 `memfault-firmware-sdk 示例`_。
+更详细的步骤和 API 文档请参阅 `memfault-firmware-sdk 文档`_ 以及提供的 `memfault-firmware-sdk 示例`_。
 
 参考资料
 ********

@@ -1,258 +1,49 @@
 .. _pressure_policy:
 
-Pressure
-based
-CPU
-Frequency
-Scaling
-Policy
+Pressure based CPU Frequency Scaling Policy
 ###########################################
 
-Pressure
-policy
-evaluate
-ready
-queue
-的
-current
-pressure
-用于
-inform
-system
-P-state
-transitions。
+Pressure policy 评估 ready queue 的当前 pressure 以
+通知 system
+P-state transitions。
 
-Thread
-pressure
-用
-以下
-formula
-calculated：
+Thread pressure 由以下公式计算：
 
 .. math::
 
-   P_{sys}
-   =
-   \frac{\sum_{t
-   \in
-   R}
-   (P_{min}
-   -
-   prio_t
-   +
-   1)}
-          {\sum_{t
-   \in
-   T}
-   (P_{min}
-   -
-   prio_t
-   +
-   1)}
-   \times
-   100
+   P_{sys} = \frac{\sum_{t \in R} (P_{min} - prio_t + 1)}
+                   {\sum_{t \in T} (P_{min} - prio_t + 1)} \times 100
 
 其中
 
--
-:math:`R`
-是
-runnable
-（queued）
-threads
-的
-set
--
-:math:`T`
-是
-为
-pressure
-considered
-的
-所有
-threads
-的
-set
--
-:math:`w_t
-=
-P_{min}
--
-\text{prio}_t
-+
-1`
-是
-thread
-:math:`t`
-的
-weight
--
-:math:`P_{min}`
-是
-configured
-的
-minimum
-priority
-（numerically
-highest
-的
-value）
+- :math:`R` 为 runnable (queued) threads 集合
+- :math:`T` 为用于 pressure 考虑的所有 threads 集合
+- :math:`w_t = P_{min} - \text{prio}_t + 1` 为 thread :math:`t` 的 weight
+- :math:`P_{min}` 为考虑的配置最小 priority（数值上最大值）
 
-这
-produce
-一
-个
-normalized
-的
-system
-pressure
-在
-0
-和
-100
-之间
-它
-然后
-被
-used
-用于
-select
-appropriate
-的
-P-state
-如
-SoC
-或
-overlay
-file
-defined
-的。
+这产生 0 到 100 间的 normalized system pressure（然后用于
+按 SoC 或 overlay file 定义选择适当
+P-state。
 
-一
-旦
-normalized
-的
-system
-pressure
-被
-calculated
-它
-被
-treated
-作为
-system
-的
-'load'
-并
-policy
-将
-iterate
-通过
-SoC
-的
-available
-P-states
-并
-select
-first
-的
-P-state
-其
-normalized
-pressure
-大于
-或
-等于
-defined
-的
-threshold。
+计算 normalized system pressure 后（其被视为 system 'load'（
+然后 policy 遍历 SoC 的可用 P-states（并选择第一个
+normalized pressure 大于或等于定义 threshold 的 P-state。
 
-如果
-没有
-P-state
-match
-（即
-normalized
-pressure
-低于
-所有
-thresholds）
-policy
-将
-select
-soc_pstates
-array
-中
-的
-last
-P-state
-（lowest
-的
-performance
-state）。
+若无 P-state 匹配（即 normalized pressure 低于所有 thresholds）（policy 将选择
+soc_pstates array 中最后一个 P-state（最低 performance state。
 
-User
-可以
-通过
-adjust
-:kconfig:option:`CONFIG_CPU_FREQ_POLICY_PRESSURE_LOWEST_PRIO`
-option
-tune
-这
-个
-policy
-的
-responsiveness
-它
-应该
-被
-set
-到
-system
-中
-lowest
-priority
-的
-thread
-的
-priority
-（numerically
-highest
-的
-number）。
-Pressure
-policy
-将
-ignore
-低于
-这
-个
-option
-priority
-的
-threads
-并
-根据
-上面
-的
-formulae
-将
-change
-high
-priority
-thread
-run
-的
-perceived
-impact。
+User 可通过调整
+:kconfig:option:`CONFIG_CPU_FREQ_POLICY_PRESSURE_LOWEST_PRIO` option 调整此 policy 的
+responsiveness（其应设为
+system 中最低 priority thread 的 priority（数值上为最大数字）。Pressure
+policy 将忽略低于此 option 的 threads（且由于上述公式（将改变
+高 priority thread 运行的感知影响。
 
-参考
-:zephyr:code-sample:`cpu_freq_pressure`
-sample
-获取
-pressure
-policy
-的
-一
-个
-example。
+pressure policy 示例参见 :zephyr:code-sample:`cpu_freq_pressure` sample。
+
+此 policy 尝试主动评估 queued tasks（并在其执行时间前调整 clock
+frequency（尽管此 policy 对 threads 达成其 deadlines 并避免
+starvation 的 performance 或 determinism 不作任何保证。
+
+注意 :kconfig:option:`CONFIG_CPU_FREQ_POLICY_PRESSURE_LOWEST_PRIO` 包含 :kconfig:option:`CONFIG_TRACING`
+引入 context switching 的 overhead。

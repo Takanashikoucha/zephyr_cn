@@ -4,76 +4,18 @@
 PS/2
 ####
 
-Overview
+概述
 ********
-PS/2
-connector
-1987
-年
-首次
-上市
-在
-IBM
-的
-桌面
-PC
-line
-上
-之后
-成为
-mouse
-和
-keyboard
-connections
-的
-industry-wide
-standard。
-从
-2007
-年
-左右
-开始
-USB
-superseded
-PS/2
-并
-是
-现代
-peripheral
-device
-connection
-standard。
-为了
-在
-带
-PS/2
-connector
-的
-boards
-上
-的
-legacy
-支持
-Zephyr
-提供
-这些
-PS/2
-driver
-APIs。
+PS/2 连接器于 1987 年首次出现在 IBM 同名桌面 PC 产品线上，之后成为鼠标和键盘连接的行业标准。大约从 2007 年起，USB 取代了 PS/2，成为现代外设设备连接标准。对于带有 PS/2 连接器的开发板的遗留支持，Zephyr 提供了这些 PS/2 驱动程序 API。
 
-Configuration
-Options
+配置选项
 *********************
 
-相关
-配置
-选项：
+相关配置选项：
 
 * :kconfig:option:`CONFIG_PS2`
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   ps2_interface
+.. doxygengroup:: ps2_interface

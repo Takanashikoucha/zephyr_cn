@@ -1,986 +1,674 @@
 .. _modules:
 
-Modules
-（External
-projects）
-############################
+模块（外部项目）
+##################
 
-Zephyr
-依赖
-多
-个
-外部
-维护
-项目
-的
-源
-代码
-以
-避免
-重新
-发明
-轮子
-并
-在
-有
-意义
-时
-重用
-尽量
-多
-的
-成熟
-的、
-建立
-良好
-的
-代码。
-在
-Zephyr
-构建
-系统
-的
-上下文
-中
-它们
-被
-称为
-*modules*。
-这些
-modules
-必须
-与
-Zephyr
-构建
-系统
-集成，
-如
-本
-页
-其他
-节
-中
-更
-详细
-描述
-的
-那样。
+Zephyr 依赖多个外部维护项目的源代码，以避免重复造轮子，并在有意义时尽可能多地复用成熟的、久经考验的代码。在 Zephyr 构建系统的语境中，这些项目被称为*模块*。这些模块必须与 Zephyr 构建系统集成，如本页其他章节更详细地描述的那样。
 
-要
-被
-归类
-为
-被
-包含
-在
-默认
-modules
-列表
-中
-的
-候选
-者，
-外部
-项目
-被
-要求
-在
-Zephyr
-Project
-之外
-有
-自己
-的
-life-cycle，
-即
-位于
-自己
-的
-仓库
-中，
-并
-有
-自己
-的
-contribution
-和
-maintenance
-workflow
-和
-release
-process。
-Zephyr
-modules
-不
-应该
-包含
-专
-为
-Zephyr
-编写
-的
-代码。
-相反，
-这样
-的
-代码
-应该
-被
-贡献
-到
-主
-zephyr
-树。
+要被归类为纳入默认模块列表的候选者，外部项目必须拥有 Zephyr 项目之外的独立生命周期，即位于自己的仓库中，并拥有自己的贡献和维护工作流以及发布流程。Zephyr 模块不应包含专为 Zephyr 编写的代码。相反，这类代码应贡献到 zephyr 主树。
 
-要
-被
-包含
-在
-Zephyr
-项目
-默认
-manifest
-中
-的
-Modules
-需要
-提供
-功能
-或
-特性
-被
-项目
-Technical
-Steering
-Committee
-认可
-和
-批准
-并
-应该
-遵守
-:ref:`module
-licensing
-requirements<modules_licensing>`
-和
-:ref:`contribution
-guidelines<modules_contributing>`。
-它们
-也
-应该
-有
-一
-个
-承诺
-维护
-module
-代码库
-的
-Zephyr
-developer。
+要纳入 Zephyr 项目默认清单的模块，需要提供经项目技术指导委员会（TSC）认可并批准的功能或特性，并且应符合 :ref:`模块许可要求 <modules_licensing>` 和 :ref:`贡献指南 <modules_contributing>`。它们还应有一位致力于维护该模块代码库的 Zephyr 开发者。
 
-Zephyr
-依赖
-多
-个
-类别
-的
-modules，
-包括
-但
-不
-限于：
+Zephyr 依赖多个类别的模块，包括但不限于：
 
-- Debugger
-  集成
-- Silicon
-  vendor
-  Hardware
-  Abstraction
-  Layers
-  （HALs）
-- Cryptography
-  库
-- File
-  Systems
-- Inter-Process
-  Communication
-  （IPC）
-  库
+- 调试器集成
+- 芯片厂商的硬件抽象层（HAL）
+- 加密库
+- 文件系统
+- 进程间通信（IPC）库
 
-此外，
-在
-某些
-情况
-下
-modules
-（特别
-是
-vendor
-HALs）
-可以
-包含
-对
-可选
-:ref:`binary
-blobs
-<bin-blobs>`
-的
-引用。
+此外，在某些情况下，模块（尤其是厂商 HAL）可以包含对可选 :ref:`二进制 blob <bin-blobs>` 的引用。
 
-本
-页
-总结
-一
-列表
-策略
-和
-最佳
-实践
-旨在
-更好
-地
-组织
-Zephyr
-modules
-中
-的
-workflow。
+本页汇总了一系列策略和最佳实践，旨在更好地组织 Zephyr 模块中的工作流。
 
+.. _modules-vs-projects:
 
-.. note::
+模块与 west 项目
+******************
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-* changes required due to updates in the zephyr main tree
-* urgent changes that should not wait to be merged in the external project
-  first, such as fixes to security vulnerabilities.
+本页描述的 Zephyr 模块与 :ref:`west 项目 <west-workspace>` 不是同一个概念。事实上，模块 :ref:`根本不需要 west <modules_without_west>`。然而，当 :ref:`与 west 一起使用 <modules_using_west>` 模块时，构建系统会使用 west 来查找模块。
 
-Non-trivial changes to a module's codebase, including changes in the module
-design or functionality should be discouraged, if the module has an upstream
-project repository. In that case, such changes shall be submitted to the
-upstream project, directly.
+概括来说：
 
-:ref:`Submitting changes to modules <submitting_new_modules>` describes in
-detail the process of contributing changes to module repositories.
+模块是包含 :file:`zephyr/module.yml` 文件的仓库，这样 Zephyr 构建系统就可以从仓库中拉取源代码。
+:ref:`west 项目 <west-manifests-projects>` 是 :file:`west.yml` 清单文件中 ``projects:`` 部分的条目。
+west 项目通常也是模块，但并非总是如此。有些 west 项目不包含在最终固件镜像中（例如工具），因此不需要是模块。
+Zephyr 构建系统通过 :ref:`west 本身 <modules_using_west>` 或 :ref:`ZEPHYR_MODULES CMake 变量 <modules_without_west>` 来查找模块。
 
-Contribution guidelines
------------------------
+本页的内容仅适用于模块，而不适用于一般的 west 项目（除非它们本身是模块）。
 
-Contributing to Zephyr modules shall follow the generic project
-:ref:`Contribution guidelines <contribute_guidelines>`.
+模块仓库
+***********
 
-**Pull Requests:** may be merged with minimum of 2 approvals, including
-an approval by the PR assignee. In addition to this, pull requests in module
-repositories may only be merged if the introduced changes are verified
-with Zephyr CI tools, as described in more detail in other sections on
-this page.
+* 默认清单中包含的所有模块都应托管在 zephyrproject-rtos GitHub 组织下的仓库中。
 
-The merging of pull requests in the main branch of a module
-repository must be coupled with the corresponding manifest
-file update in the zephyr main tree.
+* 模块仓库的代码库应在仓库根目录的 :file:`zephyr/` 文件夹中包含一个 *module.yml* 文件。
 
-**Issue Reporting:** `GitHub issues`_ are intentionally disabled in module
-repositories, in
-favor of a centralized policy for issue reporting. Tickets concerning, for
-example, bugs or enhancements in modules shall be opened in the main
-zephyr repository. Issues should be appropriately labeled using GitHub
-labels corresponding to each module, where applicable.
+* 模块仓库名称应遵循使用小写字母和短横线（而非下划线）的约定。该规则适用于所有新的模块仓库，但直接跟踪外部项目（托管在 Git 仓库中）的仓库除外；此类模块可以以其外部项目对应物的名称命名。
 
   .. note::
 
-     It is allowed to file bug reports for zephyr modules to track
-     the corresponding upstream project bugs in Zephyr. These bug reports
-     shall not affect the
-     :ref:`Release Quality Criteria<release_quality_criteria>`.
+     不符合上述约定的现有模块仓库无需重命名以符合该约定。
+
+* 模块仓库名称应在 :file:`zephyr/module.yml` 文件中显式设置。
+
+* 模块应使用 "zephyr" 作为仓库主分支的默认名称。用于特定目的的分支，例如某个 LTS Zephyr 版本的模块分支，其名称应以 'zephyr\_' 前缀开头。
+
+* 如果模块拥有外部（上游）项目仓库，模块仓库应保留上游仓库的文件夹结构。
+
+  .. note::
+
+     模块仓库中不需要维护一个镜像外部仓库 master 分支的 'master' 分支。不建议这样做，因为这可能会围绕模块的主分支（应为 'zephyr'）造成混淆。
+
+* 模块应以以模块名称开头的包含路径公开其提供的所有头文件。（例如，mcuboot 应将其 ``bootutil/bootutil.h`` 公开为 "mcuboot/bootutil/bootutil.h"。）
+
+.. _modules_synchronization:
+
+与上游同步
+==========
+
+建议将模块仓库与对应外部项目的最新稳定版本同步。但是，如果需要获取模块代码库中的重要更新，则允许使用最新开发分支的尖端来更新 Zephyr 模块仓库。将模块与上游同步时，必须记录执行该特定更新的理由。
+
+允许实践的要求
+----------------------------------
+
+对模块仓库主分支的更改（包括与上游代码库的同步）只能通过拉取请求（pull request）应用。这些拉取请求必须能够由 Zephyr CI *验证* 且可*合并*（例如使用 Github UI 的 *Rebase and merge* 或 *Create a merge commit* 选项）。这确保传入的更改始终**可审查**，且 *下游* 模块仓库的历史是增量的（即现有的提交、标签等始终被保留）。该策略还允许直接在对将引入模块仓库的一组更改上运行 Zephyr CI、git lint、身份和许可检查。
+
+.. note::
+
+     不允许向模块的主分支强制推送（force-push）。
+
+允许的实践
+-----------------
+
+以下实践符合上述要求，应在所有模块仓库中遵循。由模块代码负责人选择首选的同步实践，但要求所选实践在相应模块仓库中始终被一致遵循。
+
+**使用来自上游的 diff 更新模块：**
+上游更改作为单个 *snapshot* 提交（手动 diff）通过针对模块主分支的拉取请求引入，可使用 *Rebase & merge* 操作合并。该方法简单，应适用于所有模块，缺点是在模块仓库中压制了上游历史。
+
+  .. note::
+
+     对于外部项目未托管在上游 Git 仓库中的模块，上述实践是唯一允许的实践。
+
+提交信息应指明上游项目 URL、模块更新到的版本（上游版本、标签、提交 SHA，如适用等），以及执行更新的原因。
+
+**通过合并上游分支更新模块：**
+通过执行目标上游分支（例如主分支、最新 release 分支等）的 Git 合并引入上游更改，将结果通过针对模块主分支的拉取请求提交，并使用 *Create a merge commit* 操作合并该拉取请求。
+该方法适用于拥有上游项目 Git 仓库的模块。该方法的主要优势是上游仓库历史（即原始提交 SHA）在模块仓库中被保留。该方法的缺点是在下游主分支中生成两个额外的合并提交。
+
+
+向 Zephyr 模块贡献代码
+******************************
+
+.. _modules_contributing:
+
+
+个人角色与职责
+===================================
+
+为便于管理 Zephyr 模块仓库，定义了以下个人角色。
+
+**管理员（Administrator）：** 每个 Zephyr 模块应有一位管理员，负责管理对模块仓库的访问权限，例如应模块负责人的要求在仓库中添加个人作为协作者。模块管理员是管理员（Administrators）团队的成员，该团队是由对模块 GitHub 仓库拥有管理员权限的项目成员组成的组。
+
+**模块负责人（Module owner）：** 每个模块应有一位模块代码负责人。模块负责人对 Zephyr 模块仓库的内容承担总体责任。具体而言，模块负责人将：
+
+* 协调模块仓库中的代码审查
+* 成为针对仓库主分支的拉取请求的默认指派人
+* 视情况请求向仓库添加更多协作者
+* 遵循 :ref:`modules_synchronization` 中描述的策略，定期将模块仓库与其上游对应物同步
+* 关注外部项目中的安全漏洞问题，并在上游代码库中可用安全修复后尽快更新模块仓库以包含这些修复
+* 在 Zephyr 发布说明中列出模块代码库中存在的任何已知安全漏洞问题。
+
+
+  .. note::
+
+     模块负责人不必是 Zephyr :ref:`维护者 <project_roles>`。
+
+**合并者（Merger）：** Zephyr 发布工程团队有权并有责任合并模块仓库主分支中已批准的拉取请求。
+
+
+维护模块代码库
+===============================
+
+zephyr 主树中的更新，例如公共 Zephyr API 的更新，可能需要修补模块的代码库。保持模块代码库最新的责任由此类更新的 Zephyr **贡献者**和模块**负责人**共同承担。具体而言：
+
+* 原始更改在 Zephyr 中的贡献者有义务提交模块仓库中所需的相应更改，以确保包含原始更改的拉取请求上的 Zephyr CI 以及模块集成测试都能成功。
+
+* 模块负责人对将模块代码库与 zephyr 主树同步和测试承担总体责任。这包括在 Zephyr CI 执行的测试之外偶尔对模块代码库进行高级测试。模块负责人必须修复 Zephyr 拉取请求 CI 运行未能捕获的模块代码库中的问题。
+
+
+.. _modules_changes:
+
+向模块贡献更改
+===============================
+
+直接向模块代码库提交和合并更改（即在相应外部项目仓库中合并之前）应仅限于：
+
+* 因 zephyr 主树更新而必需的更改
+* 不应等待先在外部项目中合并的紧急更改，例如安全漏洞的修复。
+
+如果模块拥有上游项目仓库，则应不鼓励对模块代码库进行非平凡的更改，包括模块设计或功能方面的更改。在这种情况下，此类更改应直接提交到上游项目。
+
+:ref:`向模块提交更改 <submitting_new_modules>` 详细描述了向模块仓库贡献更改的流程。
+
+贡献指南
+-----------------------
+
+向 Zephyr 模块贡献代码应遵循项目通用的 :ref:`贡献指南 <contribute_guidelines>`。
+
+**拉取请求：** 至少需要 2 个批准（包括 PR 指派人的批准）才能合并。此外，模块仓库中的拉取请求只有在其引入的更改使用 Zephyr CI 工具验证后才能合并，如本页其他章节更详细地描述的那样。
+
+模块仓库主分支中拉取请求的合并必须与 zephyr 主树中相应的清单文件更新相配套。
+
+**问题报告：** `GitHub issues`_ 在模块仓库中被有意禁用，以支持集中式的问题报告策略。涉及例如模块中的 bug 或增强功能的问题单应在 zephyr 主仓库中打开。应使用与每个模块对应的 GitHub 标签对问题进行适当标注（如适用）。
+
+  .. note::
+
+     允许为 zephyr 模块提交 bug 报告以跟踪相应的上游项目 bug。这些 bug 报告不应影响 :ref:`发布质量标准 <release_quality_criteria>`。
 
 
 .. _modules_licensing:
 
-Licensing requirements and policies
+许可要求与策略
 ***********************************
 
-All source files in a module's codebase shall include a license header,
-unless the module repository has **main license file** that covers source
-files that do not include license headers.
+模块代码库中的所有源文件都应包含许可头，除非模块仓库有一个覆盖未包含许可头的源文件的**主许可文件**。
 
-Main license files shall be added in the module's codebase by Zephyr
-developers, only if they exist as part of the external project,
-and they contain a permissive OSI-compliant license. Main license files
-should preferably contain the full license text instead of including an
-SPDX license identifier. If multiple main license files are present it
-shall be made clear which license applies to each source file in a module's
-codebase.
+主许可文件应由 Zephyr 开发者添加到模块代码库中，仅当它们作为外部项目的一部分存在且包含宽松的 OSI 兼容许可时。主许可文件最好包含完整的许可文本，而不是包含 SPDX 许可标识符。如果存在多个主许可文件，应明确哪个许可适用于模块代码库中的每个源文件。
 
-Individual license headers in module source files supersede the main license.
+模块源文件中的单独许可头优先于主许可。
 
-Any new content to be added in a module repository will require to have
-license coverage.
+任何要添加到模块仓库的新内容都需要有许可覆盖。
 
   .. note::
 
-     Zephyr recommends conveying module licensing via individual license
-     headers and main license files. This not a hard requirement; should
-     an external project have its own practice of conveying how licensing
-     applies in the module's codebase (for example, by having a single or
-     multiple main license files), this practice may be accepted by and
-     be referred to in the Zephyr module, as long as licensing requirements,
-     for example OSI compliance, are satisfied.
+     Zephyr 建议通过单独许可头和主许可文件来传达模块许可。这不是硬性要求；如果外部项目有自己的实践来传达许可如何适用于模块代码库（例如通过一个或多个主许可文件），只要满足许可要求（例如 OSI 兼容性），该实践可被 Zephyr 模块接受并在其中引用。
 
-License policies
+许可策略
 ================
 
-When creating a module repository a developer shall:
+创建模块仓库时，开发者应：
 
-* import the main license files, if they exist in the external project, and
-* document (for example in the module README or .yml file) the default license
-  that covers the module's codebase.
+* 导入主许可文件（如果它们在外部项目中存在）
+* 记录（例如在模块 README 或 .yml 文件中）覆盖模块代码库的默认许可。
 
-License checks
---------------
+许可检查
+------------------
 
-License checks (via CI tools) shall be enabled on every pull request that
-adds new content in module repositories.
+许可检查（通过 CI 工具）应在每个向模块仓库添加新内容的拉取请求上启用。
 
 
-Documentation requirements
+文档要求
 **************************
 
-All Zephyr module repositories shall include an .rst file documenting:
+所有 Zephyr 模块仓库都应包含一个 .rst 文件，记录：
 
-* the scope and the purpose of the module
-* how the module integrates with Zephyr
-* the owner of the module repository
-* synchronization information with the external project (commit, SHA, version etc.)
-* licensing information as described in :ref:`modules_licensing`.
+* 模块的范围和目的
+* 模块如何与 Zephyr 集成
+* 模块仓库的负责人
+* 与外部项目的同步信息（提交、SHA、版本等）
+* 如 :ref:`modules_licensing` 中描述的许可信息。
 
-The file shall be required for the inclusion of the module and the contained
-information should be kept up to date.
+该文件是模块纳入的必要条件，其中包含的信息应保持最新。
 
 
-Testing requirements
+测试要求
 ********************
 
-All Zephyr modules should provide some level of **integration** testing,
-ensuring that the integration with Zephyr works correctly.
-Integration tests:
+所有 Zephyr 模块应提供一定程度的**集成**测试，确保与 Zephyr 的集成正确工作。集成测试：
 
-* may be in the form of a minimal set of samples and tests that reside
-  in the zephyr main tree
-* should verify basic usage of the module (configuration,
-  functional APIs, etc.) that is integrated with Zephyr.
-* shall be built and executed (for example in QEMU) as part of
-  twister runs in pull requests that introduce changes in module
-  repositories.
+* 可以是以位于 zephyr 主树中的最小示例和测试集的形式
+* 应验证与 Zephyr 集成的模块基本使用（配置、功能 API 等）
+* 应在引入模块仓库更改的拉取请求的 twister 运行中作为一部分被构建和执行（例如在 QEMU 中）
 
   .. note::
 
-     New modules, that are candidates for being included in the Zephyr
-     default manifest, shall provide some level of integration testing.
+     作为纳入 Zephyr 默认清单候选者的新模块应提供一定程度的集成测试。
 
   .. note::
 
-     Vendor HALs are implicitly tested via Zephyr tests built or executed
-     on target platforms, so they do not need to provide integration tests.
+     厂商 HAL 通过构建或执行在目标平台上的 Zephyr 测试得到隐式测试，因此不需要提供集成测试。
 
-The purpose of integration testing is not to provide functional verification
-of the module; this should be part of the testing framework of the external
-project.
+集成测试的目的不是为模块提供功能验证；这应是外部项目测试框架的一部分。
 
-Certain external projects provide test suites that reside in the upstream
-testing infrastructure but are written explicitly for Zephyr. These tests
-may (but are not required to) be part of the Zephyr test framework.
+某些外部项目提供位于上游测试基础设施中但明确为 Zephyr 编写的测试套件。这些测试可以（但并非必须）成为 Zephyr 测试框架的一部分。
 
-Deprecating and removing modules
+弃用和移除模块
 *********************************
 
-Modules may be deprecated for reasons including, but not limited to:
+模块可能因以下原因（包括但不限于）被弃用：
 
-* Lack of maintainership in the module
-* Licensing changes in the external project
-* Codebase becoming obsolete
+* 模块缺乏维护
+* 外部项目中的许可变更
+* 代码库变得过时
 
-The module information shall indicate whether a module is
-deprecated and the build system shall issue a warning
-when trying to build Zephyr using a deprecated module.
+模块信息应指示某个模块是否已弃用，构建系统应在尝试使用已弃用的模块构建 Zephyr 时发出警告。
 
-Deprecated modules may be removed from the Zephyr default manifest
-after 2 Zephyr releases.
+已弃用的模块可在 2 个 Zephyr 版本发布后从 Zephyr 默认清单中移除。
 
   .. note::
 
-     Repositories of removed modules shall remain accessible via their
-     original URL, as they are required by older Zephyr versions.
+     已移除模块的仓库应通过其原始 URL 保持可访问，因为它们被较旧的 Zephyr 版本所依赖。
 
 
-Integrate modules in Zephyr build system
+在 Zephyr 构建系统中集成模块
 ****************************************
 
-The build system variable :makevar:`ZEPHYR_MODULES` is a `CMake list`_ of
-absolute paths to the directories containing Zephyr modules. These modules
-contain :file:`CMakeLists.txt` and :file:`Kconfig` files describing how to
-build and configure them, respectively. Module :file:`CMakeLists.txt` files are
-added to the build using CMake's `add_subdirectory()`_ command, and the
-:file:`Kconfig` files are included in the build's Kconfig menu tree.
+构建系统变量 :makevar:`ZEPHYR_MODULES` 是包含 Zephyr 模块的目录绝对路径的 `CMake 列表`_。这些模块包含 :file:`CMakeLists.txt` 和 :file:`Kconfig` 文件，分别描述如何构建和配置它们。模块的 :file:`CMakeLists.txt` 文件通过 CMake 的 `add_subdirectory()`_ 命令添加到构建中，:file:`Kconfig` 文件被包含在构建的 Kconfig 菜单树中。
 
-If you have :ref:`west <west>` installed, you don't need to worry about how
-this variable is defined unless you are adding a new module. The build system
-knows how to use west to set :makevar:`ZEPHYR_MODULES`. You can add additional
-modules to this list by setting the :makevar:`EXTRA_ZEPHYR_MODULES` CMake
-variable or by adding a :makevar:`EXTRA_ZEPHYR_MODULES` line to ``.zephyrrc``
-(See the section on :ref:`env_vars` for more details). This can be useful if you
-want to keep the list of modules found with west and also add your own. If
-:makevar:`EXTRA_ZEPHYR_MODULES` is set in multiple places, for example both as
-an environment variable and as a CMake variable, the final list of additional
-modules will be the merged result of all sources.
+如果你安装了 :ref:`west <west>`，除非你在添加新模块，否则不需要担心该变量如何定义。构建系统知道如何使用 west 来设置 :makevar:`ZEPHYR_MODULES`。你可以通过设置 :makevar:`EXTRA_ZEPHYR_MODULES` CMake 变量或在 ``.zephyrrc`` 中添加一行 :makevar:`EXTRA_ZEPHYR_MODULES` 来向该列表添加额外模块（参见 :ref:`env_vars` 章节了解更多细节）。如果你想保留用 west 找到的模块列表同时也添加自己的模块，这会有用。如果 :makevar:`EXTRA_ZEPHYR_MODULES` 在多个地方被设置，例如既作为环境变量又作为 CMake 变量，最终的额外模块列表将是所有来源的合并结果。
 
 .. note::
-   If the module ``FOO`` is provided by :ref:`west <west>` but also given with
-   ``-DEXTRA_ZEPHYR_MODULES=/<path>/foo`` then the module given by the command
-   line variable :makevar:`EXTRA_ZEPHYR_MODULES` will take precedence.
-   This allows you to use a custom version of ``FOO`` when building and still
-   use other Zephyr modules provided by :ref:`west <west>`.
-   This can for example be useful for special test purposes.
+    如果模块 ``FOO`` 由 :ref:`west <west>` 提供但同时也通过 ``-DEXTRA_ZEPHYR_MODULES=/<path>/foo`` 给出，则命令行变量 :makevar:`EXTRA_ZEPHYR_MODULES` 给出的模块将优先。这允许你在构建时使用 ``FOO`` 的自定义版本，同时仍使用 :ref:`west <west>` 提供的其他 Zephyr 模块。例如这对特殊测试目的会很有用。
 
-If you want to permanently add modules to the zephyr workspace and you are
-using zephyr as your manifest repository, you can also add a west manifest file
-into the :zephyr_file:`submanifests` directory. See
-:zephyr_file:`submanifests/README.txt` for more details.
+如果你想永久地将模块添加到 zephyr 工作区且使用 zephyr 作为你的清单仓库，你还可以将一个 west 清单文件添加到 :zephyr_file:`submanifests` 目录中。参见 :zephyr_file:`submanifests/README.txt` 了解更多细节。
 
-See :ref:`west-basics` for more on west workspaces.
+参见 :ref:`west-basics` 了解更多关于 west 工作区的内容。
 
-Finally, you can also specify the list of modules yourself in various ways, or
-not use modules at all if your application doesn't need them.
+最后，你还可以通过各种方式自己指定模块列表，或者如果你的应用不需要模块则完全不使用模块。
 
 .. _module-yml:
 
-Module yaml file description
+模块 yaml 文件描述
 ****************************
 
-A module can be described using a file named :file:`zephyr/module.yml`.
-The format of :file:`zephyr/module.yml` is described in the following:
+模块可以使用名为 :file:`zephyr/module.yml` 的文件来描述。:file:`zephyr/module.yml` 的格式描述如下：
 
-Module name
+模块名称
 ===========
 
-Each Zephyr module is given a name by which it can be referred to in the build
-system.
+每个 Zephyr 模块都被赋予一个名称，可以在构建系统中引用它。
 
-The name should be specified in the :file:`zephyr/module.yml` file. This will
-ensure the module name is not changeable through user-defined directory names
-or ``west`` manifest files:
+名称应在 :file:`zephyr/module.yml` 文件中指定。这将确保模块名称不能通过用户定义的目录名或 ``west`` 清单文件被更改：
 
 .. code-block:: yaml
 
-   name: <name>
+    name: <name>
 
-In CMake the location of the Zephyr module can then be referred to using the
-CMake variable ``ZEPHYR_<MODULE_NAME>_MODULE_DIR`` and the variable
-``ZEPHYR_<MODULE_NAME>_CMAKE_DIR`` holds the location of the directory
-containing the module's :file:`CMakeLists.txt` file.
+在 CMake 中，Zephyr 模块的位置随后可以使用 CMake 变量 ``ZEPHYR_<MODULE_NAME>_MODULE_DIR`` 引用，变量 ``ZEPHYR_<MODULE_NAME>_CMAKE_DIR`` 保存包含模块 :file:`CMakeLists.txt` 文件的目录的位置。
 
 .. note::
-   When used for CMake and Kconfig variables, all letters in module names are
-   converted to uppercase and all non-alphanumeric characters are converted
-   to underscores (_).
-   As example, the module ``foo-bar`` must be referred to as
-   ``ZEPHYR_FOO_BAR_MODULE_DIR`` in CMake and Kconfig.
+    当用于 CMake 和 Kconfig 变量时，模块名称中的所有字母都转换为大写，所有非字母数字字符都转换为下划线 (_)。
+    例如，模块 ``foo-bar`` 在 CMake 和 Kconfig 中必须被引用为 ``ZEPHYR_FOO_BAR_MODULE_DIR``。
 
-Here is an example for the Zephyr module ``foo``:
+以下是 Zephyr 模块 ``foo`` 的一个示例：
 
 .. code-block:: yaml
 
-   name: foo
+    name: foo
 
 .. note::
-   If the ``name`` field is not specified then the Zephyr module name will be
-   set to the name of the module folder.
-   As example, the Zephyr module located in :file:`<workspace>/modules/bar` will
-   use ``bar`` as its module name if nothing is specified in
-   :file:`zephyr/module.yml`.
+    如果未指定 ``name`` 字段，则 Zephyr 模块名称将被设置为模块文件夹的名称。
+    例如，位于 :file:`<workspace>/modules/bar` 的 Zephyr 模块如果在 :file:`zephyr/module.yml` 中未指定任何内容，将使用 ``bar`` 作为其模块名称。
 
-Module integration files (in-module)
+模块集成文件（模块内）
 ====================================
 
-Inclusion of build files, :file:`CMakeLists.txt` and :file:`Kconfig`, can be
-described as:
+构建文件 :file:`CMakeLists.txt` 和 :file:`Kconfig` 的包含可以描述为：
 
 .. code-block:: yaml
 
-   build:
-     cmake: <cmake-directory>
-     kconfig: <directory>/Kconfig
+    build:
+      cmake: <cmake-directory>
+      kconfig: <directory>/Kconfig
 
-The ``cmake: <cmake-directory>`` part specifies that
-:file:`<cmake-directory>` contains the :file:`CMakeLists.txt` to use. The
-``kconfig: <directory>/Kconfig`` part specifies the Kconfig file to use.
-Neither is required: ``cmake`` defaults to ``zephyr``, and ``kconfig``
-defaults to ``zephyr/Kconfig``.
+``cmake: <cmake-directory>`` 部分指定 :file:`<cmake-directory>` 包含要使用的 :file:`CMakeLists.txt`。``kconfig: <directory>/Kconfig`` 部分指定要使用的 Kconfig 文件。两者都不是必需的：``cmake`` 默认为 ``zephyr``，``kconfig`` 默认为 ``zephyr/Kconfig``。
 
-Here is an example :file:`module.yml` file referring to
-:file:`CMakeLists.txt` and :file:`Kconfig` files in the root directory of the
-module:
+以下是一个示例 :file:`module.yml` 文件，引用模块根目录中的 :file:`CMakeLists.txt` 和 :file:`Kconfig` 文件：
 
 .. code-block:: yaml
 
-   build:
-     cmake: .
-     kconfig: Kconfig
+    build:
+      cmake: .
+      kconfig: Kconfig
 
 .. _sysbuild_module_integration:
 
-Sysbuild integration
-====================
+Sysbuild 集成
+==================
 
-:ref:`Sysbuild<sysbuild>` is the Zephyr build system that allows for building
-multiple images as part of a single application, the sysbuild build process
-can be extended externally with modules as needed, for example to add custom
-build steps or add additional targets to a build. Inclusion of
-sysbuild-specific build files, :file:`CMakeLists.txt` and :file:`Kconfig`, can
-be described as:
+:ref:`Sysbuild <sysbuild>` 是 Zephyr 构建系统，允许作为单个应用的一部分构建多个镜像，sysbuild 构建过程可以按需通过模块从外部扩展，例如添加自定义构建步骤或向构建添加额外目标。sysbuild 特定的构建文件 :file:`CMakeLists.txt` 和 :file:`Kconfig` 的包含可以描述为：
 
 .. code-block:: yaml
 
-   build:
-     sysbuild-cmake: <cmake-directory>
-     sysbuild-kconfig: <directory>/Kconfig
+    build:
+      sysbuild-cmake: <cmake-directory>
+      sysbuild-kconfig: <directory>/Kconfig
 
-The ``sysbuild-cmake: <cmake-directory>`` part specifies that
-:file:`<cmake-directory>` contains the :file:`CMakeLists.txt` to use. The
-``sysbuild-kconfig: <directory>/Kconfig`` part specifies the Kconfig file to
-use.
+``sysbuild-cmake: <cmake-directory>`` 部分指定 :file:`<cmake-directory>` 包含要使用的 :file:`CMakeLists.txt`。``sysbuild-kconfig: <directory>/Kconfig`` 部分指定要使用的 Kconfig 文件。
 
-Here is an example :file:`module.yml` file referring to
-:file:`CMakeLists.txt` and :file:`Kconfig` files in the ``sysbuild`` directory of
-the module:
+以下是一个示例 :file:`module.yml` 文件，引用模块 ``sysbuild`` 目录中的 :file:`CMakeLists.txt` 和 :file:`Kconfig` 文件：
 
 .. code-block:: yaml
 
-   build:
-     sysbuild-cmake: sysbuild
-     sysbuild-kconfig: sysbuild/Kconfig
+    build:
+      sysbuild-cmake: sysbuild
+      sysbuild-kconfig: sysbuild/Kconfig
 
-The module description file :file:`zephyr/module.yml` can also be used to
-specify that the build files, :file:`CMakeLists.txt` and :file:`Kconfig`, are
-located in a :ref:`modules_module_ext_root`.
+模块描述文件 :file:`zephyr/module.yml` 还可以用于指定构建文件 :file:`CMakeLists.txt` 和 :file:`Kconfig` 位于 :ref:`modules_module_ext_root` 中。
 
-Build files located in a ``MODULE_EXT_ROOT`` can be described as:
+位于 ``MODULE_EXT_ROOT`` 中的构建文件可以描述为：
 
 .. code-block:: yaml
 
-   build:
-     sysbuild-cmake-ext: True
-     sysbuild-kconfig-ext: True
+    build:
+      sysbuild-cmake-ext: True
+      sysbuild-kconfig-ext: True
 
-This allows control of the build inclusion to be described externally to the
-Zephyr module.
+这允许在 Zephyr 模块外部描述构建包含的控制。
 
 .. _modules-vulnerability-monitoring:
 
-Vulnerability monitoring
+漏洞监控
 ========================
 
-The module description file :file:`zephyr/module.yml` can be used to improve vulnerability monitoring.
+模块描述文件 :file:`zephyr/module.yml` 可用于改进漏洞监控。
 
-If your module needs to track vulnerabilities using an external reference
-(e.g your module is forked from another repository), you can use the ``security`` section.
-It contains the field ``external-references`` that contains a list of references that needs to
-be monitored for your module. The supported formats are:
+如果你的模块需要使用外部引用跟踪漏洞（例如你的模块是从另一个仓库 fork 的），你可以使用 ``security`` 部分。它包含字段 ``external-references``，其中包含需要为你的模块监控的引用列表。支持的格式为：
 
-- CPE (Common Platform Enumeration)
-- PURL (Package URL)
+- CPE（通用平台枚举，Common Platform Enumeration）
+- PURL（包 URL，Package URL）
 
 .. code-block:: yaml
 
-   security:
-     external-references:
-       - <module-related-cpe>
-       - <an-other-module-related-cpe>
-       - <module-related-purl>
+    security:
+      external-references:
+        - <module-related-cpe>
+        - <an-other-module-related-cpe>
+        - <module-related-purl>
 
-A real life example for Mbed TLS module could look like this:
+Mbed TLS 模块的一个实际示例可能如下：
 
 .. code-block:: yaml
 
-   security:
-     external-references:
-       - cpe:2.3:a:arm:mbed_tls:3.5.2:*:*:*:*:*:*:*
-       - pkg:github/Mbed-TLS/mbedtls@V3.5.2
+    security:
+      external-references:
+        - cpe:2.3:a:arm:mbed_tls:3.5.2:*:*:*:*:*:*:*
+        - pkg:github/Mbed-TLS/mbedtls@V3.5.2
 
 .. note::
-   CPE field must follow the CPE 2.3 schema provided by `NVD
-   <https://csrc.nist.gov/projects/security-content-automation-protocol/specifications/cpe>`_.
-   PURL field must follow the PURL specification provided by `Github
-   <https://github.com/package-url/purl-spec/blob/master/PURL-SPECIFICATION.rst>`_.
+    CPE 字段必须遵循 `NVD <https://csrc.nist.gov/projects/security-content-automation-protocol/specifications/cpe>`_ 提供的 CPE 2.3 模式。
+    PURL 字段必须遵循 `Github <https://github.com/package-url/purl-spec/blob/master/PURL-SPECIFICATION.rst>`_ 提供的 PURL 规范。
 
 
-Build system integration
+构建系统集成
 ========================
 
-When a module has a :file:`module.yml` file, it will automatically be included into
-the Zephyr build system. The path to the module is then accessible through Kconfig
-and CMake variables.
+当模块拥有 :file:`module.yml` 文件时，它将被自动纳入 Zephyr 构建系统。模块的路径随后可以通过 Kconfig 和 CMake 变量访问。
 
-Zephyr modules
---------------
-
-In both Kconfig and CMake, the variable ``ZEPHYR_<MODULE_NAME>_MODULE_DIR``
-contains the absolute path to the module.
-
-Additionally, ``ZEPHYR_<MODULE_NAME>_MODULE`` and ``ZEPHYR_<MODULE_NAME>_MODULE_BLOBS``
-(in case the module declares blobs) symbols are automatically generated for available
-modules. These can be used e.g. to declare dependencies from other Kconfig symbols
-which depend on the module or blobs from the module. To satisfy compliance checking
-when building Zephyr without the module present, it's recommended for the module to
-have default definitions for these symbols in its respective Kconfig file under
-``modules/`` in the Zephyr main tree.
-
-In CMake, ``ZEPHYR_<MODULE_NAME>_CMAKE_DIR`` contains the
-absolute path to the directory containing the :file:`CMakeLists.txt` file that
-is included into CMake build system. This variable's value is empty if the
-module.yml file does not specify a CMakeLists.txt.
-
-To read these variables for a Zephyr module named ``foo``:
-
-- In CMake: use ``${ZEPHYR_FOO_MODULE_DIR}`` for the module's top level directory, and ``${ZEPHYR_FOO_CMAKE_DIR}`` for the directory containing its :file:`CMakeLists.txt`
-- In Kconfig: use ``$(ZEPHYR_FOO_MODULE_DIR)`` for the module's top level directory
-
-Notice how a lowercase module name ``foo`` is capitalized to ``FOO``
-in both CMake and Kconfig.
-
-These variables can also be used to test whether a given module exists.
-For example, to verify that ``foo`` is the name of a Zephyr module:
-
-.. code-block:: cmake
-
-  if(ZEPHYR_FOO_MODULE_DIR)
-    # Do something if FOO exists.
-  endif()
-
-In Kconfig, the variable may be used to find additional files to include.
-For example, to include the file :file:`some/Kconfig` in module ``foo``:
-
-.. code-block:: kconfig
-
-  source "$(ZEPHYR_FOO_MODULE_DIR)/some/Kconfig"
-
-During CMake processing of each Zephyr module, the following variables are
-also available:
-
-- the current module's name: ``${ZEPHYR_CURRENT_MODULE_NAME}``
-- the current module's top level directory: ``${ZEPHYR_CURRENT_MODULE_DIR}``
-- the current module's :file:`CMakeLists.txt` directory: ``${ZEPHYR_CURRENT_CMAKE_DIR}``
-
-This removes the need for a Zephyr module to know its own name during CMake
-processing. The module can source additional CMake files using these ``CURRENT``
-variables. For example:
-
-.. code-block:: cmake
-
-  include(${ZEPHYR_CURRENT_MODULE_DIR}/cmake/code.cmake)
-
-It is possible to append values to a Zephyr `CMake list`_ variable from the module's first
-CMakeLists.txt file.
-To do so, append the value to the list and then set the list in the PARENT_SCOPE
-of the CMakeLists.txt file. For example, to append ``bar`` to the ``FOO_LIST`` variable in the
-Zephyr CMakeLists.txt scope:
-
-.. code-block:: cmake
-
-  list(APPEND FOO_LIST bar)
-  set(FOO_LIST ${FOO_LIST} PARENT_SCOPE)
-
-An example of a Zephyr list where this is useful is when adding additional
-directories to the ``SYSCALL_INCLUDE_DIRS`` list.
-
-Sysbuild modules
+Zephyr 模块
 ----------------
 
-In both Kconfig and CMake, the variable ``SYSBUILD_CURRENT_MODULE_DIR``
-contains the absolute path to the sysbuild module. In CMake,
-``SYSBUILD_CURRENT_CMAKE_DIR`` contains the absolute path to the directory
-containing the :file:`CMakeLists.txt` file that is included into CMake build
-system. This variable's value is empty if the module.yml file does not specify
-a CMakeLists.txt.
+在 Kconfig 和 CMake 中，变量 ``ZEPHYR_<MODULE_NAME>_MODULE_DIR`` 包含模块的绝对路径。
 
-To read these variables for a sysbuild module:
+此外，``ZEPHYR_<MODULE_NAME>_MODULE`` 和 ``ZEPHYR_<MODULE_NAME>_MODULE_BLOBS``（在模块声明 blob 的情况下）符号会自动为可用模块生成。这些可用于例如声明来自依赖该模块或模块中 blob 的其他 Kconfig 符号的依赖关系。为了满足在模块不存在时构建 Zephyr 时的合规性检查，建议模块在其位于 Zephyr 主树 ``modules/`` 下的相应 Kconfig 文件中为这些符号提供默认定义。
 
-- In CMake: use ``${SYSBUILD_CURRENT_MODULE_DIR}`` for the module's top level
-  directory, and ``${SYSBUILD_CURRENT_CMAKE_DIR}`` for the directory containing
-  its :file:`CMakeLists.txt`
-- In Kconfig: use ``$(SYSBUILD_CURRENT_MODULE_DIR)`` for the module's top level
-  directory
+在 CMake 中，``ZEPHYR_<MODULE_NAME>_CMAKE_DIR`` 包含包含被纳入 CMake 构建系统的 :file:`CMakeLists.txt` 文件的目录的绝对路径。如果 module.yml 文件未指定 CMakeLists.txt，则该变量的值为空。
 
-In Kconfig, the variable may be used to find additional files to include.
-For example, to include the file :file:`some/Kconfig`:
+要读取 Zephyr 模块 ``foo`` 的这些变量：
+
+- 在 CMake 中：使用 ``${ZEPHYR_FOO_MODULE_DIR}`` 表示模块的顶级目录，使用 ``${ZEPHYR_FOO_CMAKE_DIR}`` 表示包含其 :file:`CMakeLists.txt` 的目录
+- 在 Kconfig 中：使用 ``$(ZEPHYR_FOO_MODULE_DIR)`` 表示模块的顶级目录
+
+注意小写模块名 ``foo`` 在 CMake 和 Kconfig 中都转换为大写 ``FOO``。
+
+这些变量还可以用于测试某个给定模块是否存在。例如，要验证 ``foo`` 是 Zephyr 模块的名称：
+
+.. code-block:: cmake
+
+    if(ZEPHYR_FOO_MODULE_DIR)
+        # Do something if FOO exists.
+    endif()
+
+在 Kconfig 中，该变量可用于查找要包含的额外文件。例如，要包含模块 ``foo`` 中的文件 :file:`some/Kconfig`：
 
 .. code-block:: kconfig
 
-  source "$(SYSBUILD_CURRENT_MODULE_DIR)/some/Kconfig"
+    source "$(ZEPHYR_FOO_MODULE_DIR)/some/Kconfig"
 
-The module can source additional CMake files using these variables. For
-example:
+在处理每个 Zephyr 模块的 CMake 过程中，以下变量也可用：
 
-.. code-block:: cmake
+- 当前模块的名称：``${ZEPHYR_CURRENT_MODULE_NAME}``
+- 当前模块的顶级目录：``${ZEPHYR_CURRENT_MODULE_DIR}``
+- 当前模块的 :file:`CMakeLists.txt` 目录：``${ZEPHYR_CURRENT_CMAKE_DIR}``
 
-  include(${SYSBUILD_CURRENT_MODULE_DIR}/cmake/code.cmake)
-
-It is possible to append values to a Zephyr `CMake list`_ variable from the
-module's first CMakeLists.txt file.
-To do so, append the value to the list and then set the list in the
-PARENT_SCOPE of the CMakeLists.txt file. For example, to append ``bar`` to the
-``FOO_LIST`` variable in the Zephyr CMakeLists.txt scope:
+这消除了 Zephyr 模块在 CMake 处理过程中需要知道自身名称的需求。模块可以使用这些 ``CURRENT`` 变量来 source 额外的 CMake 文件。例如：
 
 .. code-block:: cmake
 
-  list(APPEND FOO_LIST bar)
-  set(FOO_LIST ${FOO_LIST} PARENT_SCOPE)
+    include(${ZEPHYR_CURRENT_MODULE_DIR}/cmake/code.cmake)
 
-Sysbuild modules hooks
+可以从模块的第一个 CMakeLists.txt 文件向 Zephyr `CMake 列表`_ 变量追加值。
+为此，将值追加到列表，然后在 CMakeLists.txt 文件的 PARENT_SCOPE 中设置该列表。例如，要在 Zephyr CMakeLists.txt 作用域中向 ``FOO_LIST`` 变量追加 ``bar``：
+
+.. code-block:: cmake
+
+    list(APPEND FOO_LIST bar)
+    set(FOO_LIST ${FOO_LIST} PARENT_SCOPE)
+
+一个 Zephyr 列表的有用示例是向 ``SYSCALL_INCLUDE_DIRS`` 列表添加额外目录。
+
+Sysbuild 模块
+----------------
+
+在 Kconfig 和 CMake 中，变量 ``SYSBUILD_CURRENT_MODULE_DIR`` 包含 sysbuild 模块的绝对路径。在 CMake 中，``SYSBUILD_CURRENT_CMAKE_DIR`` 包含包含被纳入 CMake 构建系统的 :file:`CMakeLists.txt` 文件的目录的绝对路径。如果 module.yml 文件未指定 CMakeLists.txt，则该变量的值为空。
+
+要读取 sysbuild 模块的这些变量：
+
+- 在 CMake 中：使用 ``${SYSBUILD_CURRENT_MODULE_DIR}`` 表示模块的顶级目录，使用 ``${SYSBUILD_CURRENT_CMAKE_DIR}`` 表示包含其 :file:`CMakeLists.txt` 的目录
+- 在 Kconfig 中：使用 ``$(SYSBUILD_CURRENT_MODULE_DIR)`` 表示模块的顶级目录
+
+在 Kconfig 中，该变量可用于查找要包含的额外文件。例如，要包含文件 :file:`some/Kconfig`：
+
+.. code-block:: kconfig
+
+    source "$(SYSBUILD_CURRENT_MODULE_DIR)/some/Kconfig"
+
+模块可以使用这些变量来 source 额外的 CMake 文件。例如：
+
+.. code-block:: cmake
+
+    include(${SYSBUILD_CURRENT_MODULE_DIR}/cmake/code.cmake)
+
+可以从模块的第一个 CMakeLists.txt 文件向 Zephyr `CMake 列表`_ 变量追加值。
+为此，将值追加到列表，然后在 CMakeLists.txt 文件的 PARENT_SCOPE 中设置该列表。例如，要在 Zephyr CMakeLists.txt 作用域中向 ``FOO_LIST`` 变量追加 ``bar``：
+
+.. code-block:: cmake
+
+    list(APPEND FOO_LIST bar)
+    set(FOO_LIST ${FOO_LIST} PARENT_SCOPE)
+
+Sysbuild 模块钩子
 ----------------------
 
-Sysbuild provides an infrastructure which allows a sysbuild module to define
-a function which will be invoked by sysbuild at a pre-defined point in the
-CMake flow.
+Sysbuild 提供了一种基础设施，允许 sysbuild 模块定义一个函数，该函数将由 sysbuild 在 CMake 流程中预定义的点调用。
 
-Functions invoked by sysbuild:
+由 sysbuild 调用的函数：
 
-- ``<module-name>_pre_cmake(IMAGES <images>)``: This function is called for each
-  sysbuild module before CMake configure is invoked for all images.
-- ``<module-name>_post_cmake(IMAGES <images>)``: This function is called for each
-  sysbuild module after CMake configure has completed for all images.
-- ``<module-name>_pre_domains(IMAGES <images>)``: This function is called for each
-  sysbuild module before domains yaml is created by sysbuild.
-- ``<module-name>_post_domains(IMAGES <images>)``: This function is called for each
-  sysbuild module after domains yaml has been created by sysbuild.
+- ``<module-name>_pre_cmake(IMAGES <images>)``：此函数在为所有镜像调用 CMake configure 之前，为每个 sysbuild 模块调用。
+- ``<module-name>_post_cmake(IMAGES <images>)``：此函数在为所有镜像完成 CMake configure 之后，为每个 sysbuild 模块调用。
+- ``<module-name>_pre_domains(IMAGES <images>)``：此函数在 sysbuild 创建 domains yaml 之前，为每个 sysbuild 模块调用。
+- ``<module-name>_post_domains(IMAGES <images>)``：此函数在 sysbuild 创建 domains yaml 之后，为每个 sysbuild 模块调用。
 
-arguments passed from sysbuild to the function defined by a module:
+从 sysbuild 传递给模块定义的函数的参数：
 
-- ``<images>`` is the list of Zephyr images that will be created by the build system.
+- ``<images>`` 是构建系统将创建的 Zephyr 镜像列表。
 
-If a module ``foo`` want to provide a post CMake configure function, then the
-module's sysbuild :file:`CMakeLists.txt` file must define function ``foo_post_cmake()``.
+如果模块 ``foo`` 想提供一个 post CMake configure 函数，则该模块的 sysbuild :file:`CMakeLists.txt` 文件必须定义函数 ``foo_post_cmake()``。
 
-To facilitate naming of functions, the module name is provided by sysbuild CMake
-through the ``SYSBUILD_CURRENT_MODULE_NAME`` CMake variable when loading the
-module's sysbuild :file:`CMakeLists.txt` file.
+为便于函数命名，模块名称在加载模块的 sysbuild :file:`CMakeLists.txt` 文件时由 sysbuild CMake 通过 ``SYSBUILD_CURRENT_MODULE_NAME`` CMake 变量提供。
 
-Example of how the ``foo`` sysbuild module can define ``foo_post_cmake()``:
+``foo`` sysbuild 模块如何定义 ``foo_post_cmake()`` 的示例：
 
 .. code-block:: cmake
 
-   function(${SYSBUILD_CURRENT_MODULE_NAME}_post_cmake)
-     cmake_parse_arguments(POST_CMAKE "" "" "IMAGES" ${ARGN})
+    function(${SYSBUILD_CURRENT_MODULE_NAME}_post_cmake)
+        cmake_parse_arguments(POST_CMAKE "" "" "IMAGES" ${ARGN})
 
-     message("Invoking ${CMAKE_CURRENT_FUNCTION}. Images: ${POST_CMAKE_IMAGES}")
-   endfunction()
+        message("Invoking ${CMAKE_CURRENT_FUNCTION}. Images: ${POST_CMAKE_IMAGES}")
+    endfunction()
 
-Zephyr module dependencies
+Zephyr 模块依赖
 ==========================
 
-A Zephyr module may be dependent on other Zephyr modules to be present in order
-to function correctly. Or it might be that a given Zephyr module must be
-processed after another Zephyr module, due to dependencies of certain CMake
-targets.
+Zephyr 模块可能依赖于其他 Zephyr 模块的存在才能正确工作。或者，某个 Zephyr 模块可能由于某些 CMake 目标的依赖关系必须在另一个 Zephyr 模块之后处理。
 
-Such a dependency can be described using the ``depends`` field.
+这样的依赖关系可以使用 ``depends`` 字段描述。
 
 .. code-block:: yaml
 
-   build:
-     depends:
-       - <module>
+    build:
+      depends:
+        - <module>
 
-Here is an example for the Zephyr module ``foo`` that is dependent on the Zephyr
-module ``bar`` to be present in the build system:
+以下是 Zephyr 模块 ``foo`` 依赖于 Zephyr 模块 ``bar`` 存在于构建系统中的示例：
 
 .. code-block:: yaml
 
-   name: foo
-   build:
-     depends:
-       - bar
+    name: foo
+    build:
+      depends:
+        - bar
 
-This example will ensure that ``bar`` is present when ``foo`` is included into
-the build system, and it will also ensure that ``bar`` is processed before
-``foo``.
+该示例将确保 ``foo`` 被纳入构建系统时 ``bar`` 存在，并且确保 ``bar`` 在 ``foo`` 之前被处理。
 
 .. _modules_module_ext_root:
 
-Module integration files (external)
-===================================
+模块集成文件（外部）
+====================================
 
-Module integration files can be located externally to the Zephyr module itself.
-The ``MODULE_EXT_ROOT`` variable holds a list of roots containing integration
-files located externally to Zephyr modules.
+模块集成文件可以位于 Zephyr 模块本身之外。``MODULE_EXT_ROOT`` 变量保存一个根列表，其中包含位于 Zephyr 模块外部的集成文件。
 
-Module integration files in Zephyr
+Zephyr 中的模块集成文件
 ----------------------------------
 
-The Zephyr repository contain :file:`CMakeLists.txt` and :file:`Kconfig` build
-files for certain known Zephyr modules.
+Zephyr 仓库包含某些已知 Zephyr 模块的 :file:`CMakeLists.txt` 和 :file:`Kconfig` 构建文件。
 
-Those files are located under
+这些文件位于
 
 .. code-block:: none
 
-   <ZEPHYR_BASE>
-   └── modules
-       └── <module_name>
-           ├── CMakeLists.txt
-           └── Kconfig
+    <ZEPHYR_BASE>
+    └── modules
+        └── <module_name>
+            ├── CMakeLists.txt
+            └── Kconfig
 
-Module integration files in a custom location
+自定义位置中的模块集成文件
 ---------------------------------------------
 
-You can create a similar ``MODULE_EXT_ROOT`` for additional modules, and make
-those modules known to Zephyr build system.
+你可以为额外模块创建类似的 ``MODULE_EXT_ROOT``，并使这些模块被 Zephyr 构建系统知晓。
 
-Create a ``MODULE_EXT_ROOT`` with the following structure
+创建具有以下结构的 ``MODULE_EXT_ROOT``
 
 .. code-block:: none
 
-   <MODULE_EXT_ROOT>
-   └── modules
-       ├── modules.cmake
-       └── <module_name>
-           ├── CMakeLists.txt
-           └── Kconfig
+    <MODULE_EXT_ROOT>
+    └── modules
+        ├── modules.cmake
+        └── <module_name>
+            ├── CMakeLists.txt
+            └── Kconfig
 
-and then build your application by specifying ``-DMODULE_EXT_ROOT`` parameter to
-the CMake build system. The ``MODULE_EXT_ROOT`` accepts a `CMake list`_ of roots as
-argument.
+然后通过向 CMake 构建系统指定 ``-DMODULE_EXT_ROOT`` 参数来构建你的应用。``MODULE_EXT_ROOT`` 接受 `CMake 列表`_ 形式的根作为参数。
 
-A Zephyr module can automatically be added to the ``MODULE_EXT_ROOT``
-list using the module description file :file:`zephyr/module.yml`, see
-:ref:`modules_build_settings`.
+Zephyr 模块可以使用模块描述文件 :file:`zephyr/module.yml` 自动添加到 ``MODULE_EXT_ROOT`` 列表中，参见 :ref:`modules_build_settings`。
 
 .. note::
 
-   ``ZEPHYR_BASE`` is always added as a ``MODULE_EXT_ROOT`` with the lowest
-   priority.
-   This allows you to overrule any integration files under
-   ``<ZEPHYR_BASE>/modules/<module_name>`` with your own implementation your own
-   ``MODULE_EXT_ROOT``.
+    ``ZEPHYR_BASE`` 始终作为具有最低优先级的 ``MODULE_EXT_ROOT`` 被添加。
+    这允许你用你自己 ``MODULE_EXT_ROOT`` 中的实现覆盖 ``<ZEPHYR_BASE>/modules/<module_name>`` 下的任何集成文件。
 
-The :file:`modules.cmake` file must contain the logic that specifies the
-integration files for Zephyr modules via specifically named CMake variables.
+:file:`modules.cmake` 文件必须包含通过特定命名的 CMake 变量指定 Zephyr 模块集成文件的逻辑。
 
-To include a module's CMake file, set the variable ``ZEPHYR_<MODULE_NAME>_CMAKE_DIR``
-to the path containing the CMake file.
+要包含模块的 CMake 文件，将变量 ``ZEPHYR_<MODULE_NAME>_CMAKE_DIR`` 设置为包含 CMake 文件的路径。
 
-To include a module's Kconfig file, set the variable ``ZEPHYR_<MODULE_NAME>_KCONFIG``
-to the path to the Kconfig file.
+要包含模块的 Kconfig 文件，将变量 ``ZEPHYR_<MODULE_NAME>_KCONFIG`` 设置为 Kconfig 文件的路径。
 
-The following is an example on how to add support the ``FOO`` module.
+以下是如何添加对 ``FOO`` 模块支持的一个示例。
 
-Create the following structure
+创建以下结构
 
 .. code-block:: none
 
-   <MODULE_EXT_ROOT>
-   └── modules
-       ├── modules.cmake
-       └── foo
-           ├── CMakeLists.txt
-           └── Kconfig
+    <MODULE_EXT_ROOT>
+    └── modules
+        ├── modules.cmake
+        └── foo
+            ├── CMakeLists.txt
+            └── Kconfig
 
-and inside the :file:`modules.cmake` file, add the following content
+并在 :file:`modules.cmake` 文件内部添加以下内容
 
 .. code-block:: cmake
 
-   set(ZEPHYR_FOO_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR}/foo)
-   set(ZEPHYR_FOO_KCONFIG   ${CMAKE_CURRENT_LIST_DIR}/foo/Kconfig)
+    set(ZEPHYR_FOO_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR}/foo)
+    set(ZEPHYR_FOO_KCONFIG   ${CMAKE_CURRENT_LIST_DIR}/foo/Kconfig)
 
-Module integration files (zephyr/module.yml)
+模块集成文件（zephyr/module.yml）
 --------------------------------------------
 
-The module description file :file:`zephyr/module.yml` can be used to specify
-that the build files, :file:`CMakeLists.txt` and :file:`Kconfig`, are located
-in a :ref:`modules_module_ext_root`.
+模块描述文件 :file:`zephyr/module.yml` 可用于指定构建文件 :file:`CMakeLists.txt` 和 :file:`Kconfig` 位于 :ref:`modules_module_ext_root` 中。
 
-Build files located in a ``MODULE_EXT_ROOT`` can be described as:
+位于 ``MODULE_EXT_ROOT`` 中的构建文件可以描述为：
 
 .. code-block:: yaml
 
-   build:
-     cmake-ext: True
-     kconfig-ext: True
+    build:
+      cmake-ext: True
+      kconfig-ext: True
 
-This allows control of the build inclusion to be described externally to the
-Zephyr module.
+这允许在 Zephyr 模块外部描述构建包含的控制。
 
-The Zephyr repository itself is always added as a Zephyr module ext root.
+Zephyr 仓库本身始终被添加为 Zephyr 模块 ext root。
 
 .. _modules_build_settings:
 
-Build settings
+构建设置
 ==============
 
-It is possible to specify additional build settings that must be used when
-including the module into the build system.
+可以指定在将模块纳入构建系统时必须使用的额外构建设置。
 
-All ``root`` settings are relative to the root of the module.
+所有 ``root`` 设置相对于模块的根。
 
-Build settings supported in the :file:`module.yml` file are:
+:file:`module.yml` 文件中支持的构建设置为：
 
-- ``board_root``: Contains additional boards that are available to the build
-  system. Additional boards must be located in a :file:`<board_root>/boards`
-  folder.
-- ``dts_root``: Contains additional dts files related to the architecture/soc
-  families. Additional dts files must be located in a :file:`<dts_root>/dts`
-  folder.
-- ``snippet_root``: Contains additional snippets that are available for use.
-  These snippets must be defined in :file:`snippet.yml` files underneath the
-  :file:`<snippet_root>/snippets` folder. For example, if you have
-  ``snippet_root: foo``, then you should place your module's
-  :file:`snippet.yml` files in :file:`<your-module>/foo/snippets` or any
-  nested subdirectory.
-- ``soc_root``: Contains additional SoCs that are available to the build
-  system. Additional SoCs must be located in a :file:`<soc_root>/soc` folder.
-- ``arch_root``: Contains additional architectures that are available to the
-  build system. Additional architectures must be located in a
-  :file:`<arch_root>/arch` folder.
-- ``module_ext_root``: Contains :file:`CMakeLists.txt` and :file:`Kconfig` files
-  for Zephyr modules, see also :ref:`modules_module_ext_root`.
-- ``sca_root``: Contains additional :ref:`SCA <sca>` tool implementations
-  available to the build system. Each tool must be located in
-  :file:`<sca_root>/sca/<tool>` folder. The folder must contain a
-  :file:`sca.cmake`.
+- ``board_root``：包含构建系统可用的额外开发板。额外开发板必须位于 :file:`<board_root>/boards` 文件夹中。
+- ``dts_root``：包含与架构/SoC 家族相关的额外 dts 文件。额外 dts 文件必须位于 :file:`<dts_root>/dts` 文件夹中。
+- ``snippet_root``：包含可供使用的额外代码片段。这些片段必须定义在 :file:`<snippet_root>/snippets` 文件夹下的 :file:`snippet.yml` 文件中。例如，如果你有 ``snippet_root: foo``，则应将模块的 :file:`snippet.yml` 文件放在 :file:`<your-module>/foo/snippets` 或任何嵌套子目录中。
+- ``soc_root``：包含构建系统可用的额外 SoC。额外 SoC 必须位于 :file:`<soc_root>/soc` 文件夹中。
+- ``arch_root``：包含构建系统可用的额外架构。额外架构必须位于 :file:`<arch_root>/arch` 文件夹中。
+- ``module_ext_root``：包含 Zephyr 模块的 :file:`CMakeLists.txt` 和 :file:`Kconfig` 文件，另见 :ref:`modules_module_ext_root`。
+- ``sca_root``：包含构建系统可用的额外 :ref:`SCA <sca>` 工具实现。每个工具必须位于 :file:`<sca_root>/sca/<tool>` 文件夹中。该文件夹必须包含 :file:`sca.cmake`。
 
-Example of a :file:`module.yaml` file containing additional roots, and the
-corresponding file system layout.
+包含额外 root 的 :file:`module.yaml` 文件示例，以及相应的文件系统布局。
 
 .. code-block:: yaml
 
-   build:
-     settings:
-       board_root: .
-       dts_root: .
-       soc_root: .
-       arch_root: .
-       module_ext_root: .
+    build:
+      settings:
+        board_root: .
+        dts_root: .
+        soc_root: .
+        arch_root: .
+        module_ext_root: .
 
 
-requires the following folder structure:
+需要以下文件夹结构：
 
 .. code-block:: none
 
-   <zephyr-module-root>
-   ├── arch
-   ├── boards
-   ├── dts
-   ├── modules
-   └── soc
+    <zephyr-module-root>
+    ├── arch
+    ├── boards
+    ├── dts
+    ├── modules
+    └── soc
 
-Test Runner (Twister) integration
+测试运行器（Twister）集成
 =================================
 
-To execute both tests and samples available in modules, the Zephyr test runner
-(twister) should be pointed to the directories containing those samples and
-tests. This can be done by specifying the path to both samples and tests in the
-:file:`zephyr/module.yml` file.  Additionally, if a module defines out of tree
-boards, the module file can point twister to the path where those files
-are maintained in the module. For example:
+要执行模块中可用的测试和示例，应将 Zephyr 测试运行器（twister）指向包含这些示例和测试的目录。这可以通过在 :file:`zephyr/module.yml` 文件中指定示例和测试的路径来完成。此外，如果模块定义了树外开发板，模块文件可以指向 twister 到模块中维护这些文件的路径。例如：
 
 .. code-block:: yaml
 
@@ -993,79 +681,56 @@ are maintained in the module. For example:
     boards:
       - boards
 
-Tests and Samples defined in the :file:`zephyr/module.yml` file are not detected
-by twister automatically. To make twister aware of the tests and samples defined
-in modules, the path for those tests and samples must be added to the command line
-when executing twister, for example:
+:file:`zephyr/module.yml` 文件中定义的测试和示例不会被 twister 自动检测。要让 twister 知晓模块中定义的测试和示例，必须在执行 twister 时将那些测试和示例的路径添加到命令行，例如：
 
 .. code-block:: shell
 
-  ./scripts/zephyr_module.py --twister-out module_tests.args
-  if [ -s module_tests.args ]; then
-      west twister +module_tests.args --outdir module_tests ...
-  fi
+    ./scripts/zephyr_module.py --twister-out module_tests.args
+    if [ -s module_tests.args ]; then
+        west twister +module_tests.args --outdir module_tests ...
+    fi
 
 
 .. _modules-bin-blobs:
 
-Binary Blobs
-============
+二进制 Blob
+=============
 
-Zephyr supports fetching and using :ref:`binary blobs <bin-blobs>`, and their
-metadata is contained entirely in :file:`zephyr/module.yml`. This is because
-a binary blob must always be associated with a Zephyr module, and thus the
-blob metadata belongs in the module's description itself.
+Zephyr 支持获取和使用 :ref:`二进制 blob <bin-blobs>`，其元数据完全包含在 :file:`zephyr/module.yml` 中。这是因为二进制 blob 必须始终与 Zephyr 模块相关联，因此 blob 元数据属于模块的描述本身。
 
-Binary blobs are fetched using :ref:`west blobs <west-blobs>`.  If ``west`` is
-:ref:`not used <modules_without_west>`, they must be downloaded and
-verified manually.
+二进制 blob 使用 :ref:`west blobs <west-blobs>` 获取。如果 :ref:`未使用 <modules_without_west>` ``west``，则必须手动下载和验证。
 
-The ``blobs`` section in :file:`zephyr/module.yml` consists of a sequence of
-maps, each of which has the following entries:
+:file:`zephyr/module.yml` 中的 ``blobs`` 部分由一系列映射组成，每个映射具有以下条目：
 
-- ``path``: The path to the binary blob, relative to the :file:`zephyr/blobs/`
-  folder in the module repository
-- ``sha256``: `SHA-256 <https://en.wikipedia.org/wiki/SHA-2>`_ checksum of the
-  binary blob file
-- ``type``: The :ref:`type of binary blob <bin-blobs-types>`. Currently limited
-  to ``img`` or ``lib``
-- ``version``: A version string
-- ``license-path``: Path to the license file for this blob, relative to the root
-  of the module repository
-- ``url``: URL(s) that identify the location the blob will be fetched from, as
-  well as the fetching scheme to use. If it contains a list instead of a single string,
-  each URL will be considered as a fallback for fetching the same blob.
-- ``description``: Human-readable description of the binary blob
-- ``doc-url``: A URL pointing to the location of the official documentation for
-  this blob
+- ``path``：二进制 blob 的路径，相对于模块仓库中的 :file:`zephyr/blobs/` 文件夹
+- ``sha256``：二进制 blob 文件的 `SHA-256 <https://en.wikipedia.org/wiki/SHA-2>`_ 校验和
+- ``type``：:ref:`二进制 blob 的类型 <bin-blobs-types>`。目前仅限于 ``img`` 或 ``lib``
+- ``version``：版本字符串
+- ``license-path``：该 blob 许可文件的路径，相对于模块仓库的根
+- ``url``：标识 blob 将被从中获取的位置以及要使用的获取方案的 URL。如果包含的是列表而非单个字符串，每个 URL 都将被视为获取同一 blob 的回退。
+- ``description``：二进制 blob 的可读描述
+- ``doc-url``：指向该 blob 官方文档位置的 URL
 
-The following entries may also be present:
+以下条目也可能存在：
 
-- ``click-through``: A boolean indicating if a click-through license must be
-  accepted to download this blob
-- ``size``: Size of the blob in bytes. May be required by some fetchers
-- ``fetcher``: The method used to download the blob. If not set, the method is
-  inferred from the URL
+- ``click-through``：布尔值，指示是否必须接受 click-through 许可才能下载该 blob
+- ``size``：blob 的字节大小。某些获取器可能需要
+- ``fetcher``：用于下载 blob 的方法。如果未设置，方法从 URL 推断
 
-Package manager dependencies
-============================
+包管理器依赖
+===========================
 
-Zephyr modules can describe dependencies available from package managers,
-currently only ``pip`` is supported.
+Zephyr 模块可以描述来自包管理器的依赖，目前仅支持 ``pip``。
 
-A west extension command ``west packages <manager>`` is available to list
-dependencies for Zephyr and present modules that leverage this feature in their
-``module.yml`` file.
-Run ``west help packages`` for more details.
+west 扩展命令 ``west packages <manager>`` 可用于列出 Zephyr 的依赖并展示在其 ``module.yml`` 文件中利用此功能的模块。
+运行 ``west help packages`` 了解更多细节。
 
 Python pip
 ----------
 
-Calling ``west packages pip`` lists `requirement files`_ for Zephyr and modules.
-Passing ``--install`` installs these if there's an active virtual environment.
+调用 ``west packages pip`` 列出 Zephyr 和模块的 `requirement 文件`_。传入 ``--install`` 时，如果有活动的虚拟环境则安装这些文件。
 
-The following example demonstrates a ``zephyr/module.yml`` file with some
-requirement files in the ``scripts`` directory of the module.
+以下示例演示了一个 ``zephyr/module.yml`` 文件，其中模块 ``scripts`` 目录中有一些 requirement 文件。
 
 
 .. code-block:: yaml
@@ -1079,11 +744,10 @@ requirement files in the ``scripts`` directory of the module.
 
 .. _modules-runners:
 
-External Runners
+外部运行器
 ================
 
-If a module has out of tree boards that require custom :ref:`runners <west-runner>`,
-then it can add a list to its ``zephyr/module.yml`` file, for example:
+如果模块有需要自定义 :ref:`运行器 <west-runner>` 的树外开发板，则可以向其 ``zephyr/module.yml`` 文件添加一个列表，例如：
 
 
 .. code-block:: yaml
@@ -1092,67 +756,49 @@ then it can add a list to its ``zephyr/module.yml`` file, for example:
       - file: scripts/my-runner.py
 
 
-Each file entry is imported when executing ``west flash`` or ``west debug`` and
-subclasses of the ``ZephyrBinaryRunner`` are registered for use.
+每个文件条目在执行 ``west flash`` 或 ``west debug`` 时被导入，``ZephyrBinaryRunner`` 的子类被注册使用。
 
-Module Inclusion
+模块纳入
 ================
 
 .. _modules_using_west:
 
-Using West
+使用 West
 ----------
 
-If west is installed and :makevar:`ZEPHYR_MODULES` is not already set, the
-build system finds all the modules in your :term:`west installation` and uses
-those. It does this by running :ref:`west list <west-built-in-misc>` to get
-the paths of all the projects in the installation, then filters the results to
-just those projects which have the necessary module metadata files.
+如果安装了 west 且 :makevar:`ZEPHYR_MODULES` 尚未设置，构建系统会在你的 :term:`west 安装` 中找到所有模块并使用它们。它通过运行 :ref:`west list <west-built-in-misc>` 获取安装中所有项目的路径，然后过滤结果以仅保留具有必要模块元数据文件的项目。
 
-Each project in the ``west list`` output is tested like this:
+``west list`` 输出中的每个项目都按如下方式测试：
 
-- If the project contains a file named :file:`zephyr/module.yml`, then the
-  content of that file will be used to determine which files should be added
-  to the build, as described in the previous section.
+- 如果项目包含名为 :file:`zephyr/module.yml` 的文件，则该文件的内容将用于确定应将哪些文件添加到构建中，如前一节所述。
 
-- Otherwise (i.e. if the project has no :file:`zephyr/module.yml`), the
-  build system looks for :file:`zephyr/CMakeLists.txt` and
-  :file:`zephyr/Kconfig` files in the project. If both are present, the project
-  is considered a module, and those files will be added to the build.
+- 否则（即如果项目没有 :file:`zephyr/module.yml`），构建系统会在项目中查找 :file:`zephyr/CMakeLists.txt` 和 :file:`zephyr/Kconfig` 文件。如果两者都存在，该项目被视为模块，这些文件将被添加到构建中。
 
-- If neither of those checks succeed, the project is not considered a module,
-  and is not added to :makevar:`ZEPHYR_MODULES`.
+- 如果这两项检查都未成功，该项目不被视为模块，也不会被添加到 :makevar:`ZEPHYR_MODULES`。
 
 .. _modules_without_west:
 
-Without West
+不使用 West
 ------------
 
-If you don't have west installed or don't want the build system to use it to
-find Zephyr modules, you can set :makevar:`ZEPHYR_MODULES` yourself using one
-of the following options. Each of the directories in the list must contain
-either a :file:`zephyr/module.yml` file or the files
-:file:`zephyr/CMakeLists.txt` and :file:`Kconfig`, as described in the previous
-section.
+如果你没有安装 west 或不想让构建系统使用它来查找 Zephyr 模块，你可以使用以下选项之一自己设置 :makevar:`ZEPHYR_MODULES`。列表中的每个目录必须包含 :file:`zephyr/module.yml` 文件或 :file:`zephyr/CMakeLists.txt` 和 :file:`Kconfig` 文件，如前一节所述。
 
-#. At the CMake command line, like this:
+#. 在 CMake 命令行上，如下所示：
 
    .. code-block:: console
 
       cmake -DZEPHYR_MODULES=<path-to-module1>[;<path-to-module2>[...]] ...
 
-#. At the top of your application's top level :file:`CMakeLists.txt`, like this:
+#. 在你的应用顶级 :file:`CMakeLists.txt` 的顶部，如下所示：
 
    .. code-block:: cmake
 
       set(ZEPHYR_MODULES <path-to-module1> <path-to-module2> [...])
       find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 
-   If you choose this option, make sure to set the variable **before**  calling
-   ``find_package(Zephyr ...)``, as shown above.
+   如果你选择此选项，确保在调用 ``find_package(Zephyr ...)`` **之前**设置该变量，如上所示。
 
-#. In a separate CMake script which is pre-loaded to populate the CMake cache,
-   like this:
+#. 在一个单独预加载以填充 CMake 缓存的 CMake 脚本中，如下所示：
 
    .. code-block:: cmake
 
@@ -1160,72 +806,44 @@ section.
       set(ZEPHYR_MODULES <path-to-module1> <path-to-module2>
         CACHE STRING "pre-cached modules")
 
-   You can tell the build system to use this file by adding ``-C
-   zephyr-modules.cmake`` to your CMake command line.
+   你可以通过在 CMake 命令行中添加 ``-C zephyr-modules.cmake`` 来告诉构建系统使用该文件。
 
-Not using modules
+不使用模块
 -----------------
 
-If you don't have west installed and don't specify :makevar:`ZEPHYR_MODULES`
-yourself, then no additional modules are added to the build. You will still be
-able to build any applications that don't require code or Kconfig options
-defined in an external repository.
+如果你没有安装 west 且没有自己指定 :makevar:`ZEPHYR_MODULES`，则不会向构建中添加额外模块。你仍然能够构建任何不需要外部仓库中定义的代码或 Kconfig 选项的应用。
 
-Submitting changes to modules
+向模块提交更改
 ******************************
 
-When submitting new or making changes to existing modules the main repository
-Zephyr needs a reference to the changes to be able to verify the changes. In the
-main tree this is done using revisions. For code that is already merged and part
-of the tree we use the commit hash, a tag, or a branch name. For pull requests
-however, we require specifying the pull request number in the revision field to
-allow building the zephyr main tree with the changes submitted to the
-module.
+提交新模块或对现有模块进行更改时，主仓库 Zephyr 需要对更改有引用才能验证这些更改。在主树中，这通过修订（revision）完成。对于已合并并成为树一部分的代码，我们使用提交哈希、标签或分支名。然而对于拉取请求，我们要求在 revision 字段中指定拉取请求编号，以便能够使用提交到模块的更改构建 zephyr 主树。
 
-To avoid merging changes to master with pull request information, the pull
-request should be marked as ``DNM`` (Do Not Merge) or preferably a draft pull
-request to make sure it is not merged by mistake and to allow for the module to
-be merged first and be assigned a permanent commit hash. Drafts reduce noise by
-not automatically notifying anyone until marked as "Ready for review".
-Once the module is
-merged, the revision will need to be changed either by the submitter or by the
-maintainer to the commit hash of the module which reflects the changes.
+为避免将包含拉取请求信息的更改合并到 master，拉取请求应被标记为 ``DNM``（Do Not Merge，不要合并）或最好是草稿拉取请求，以确保它不会意外合并，并允许模块先被合并并被分配永久的提交哈希。草稿通过在被标记为 "Ready for review" 之前不自动通知任何人来减少噪音。
+模块合并后，revision 需要由提交者或维护者更改为反映该更改的模块提交哈希。
 
-Note that multiple and dependent changes to different modules can be submitted
-using exactly the same process. In this case you will change multiple entries of
-all modules that have a pull request against them.
+注意，对不同模块的多个相互依赖的更改可以使用完全相同的流程提交。在这种情况下，你将更改所有对其有拉取请求的模块的多个条目。
 
 .. _submitting_new_modules:
 
-Process for submitting a new module
+提交新模块的流程
 ===================================
 
-Please follow the process in :ref:`external-src-process` and obtain the TSC
-approval to integrate the external source code as a module
+请遵循 :ref:`external-src-process` 中的流程并获得 TSC 批准，将外部源代码作为模块集成
 
-If the request is approved, a new repository will
-created by the project team and initialized with basic information that would
-allow submitting code to the module project following the project contribution
-guidelines.
+如果请求被批准，项目团队将创建一个新的仓库并用允许按照项目贡献指南向模块项目提交代码的基本信息进行初始化。
 
-If a module is maintained as a fork of another project on Github, the Zephyr
-module related files and changes in relation to upstream need to be maintained
-in a special branch named ``zephyr``.
+如果模块作为 GitHub 上另一个项目的 fork 维护，与上游相关的 Zephyr 模块相关文件及更改需要在名为 ``zephyr`` 的特殊分支中维护。
 
-Maintainers from the Zephyr project will create the repository and initialize
-it. You will be added as a collaborator in the new repository.  Submit the
-module content (code) to the new repository following the guidelines described
-:ref:`here <modules_using_west>`, and then add a new entry to the
-:zephyr_file:`west.yml` with the following information:
+Zephyr 项目的维护者将创建该仓库并初始化它。你将被添加为新仓库的协作者。按照 :ref:`此处 <modules_using_west>` 描述的指南将模块内容（代码）提交到新仓库，然后在 :zephyr_file:`west.yml` 中添加一个新条目，包含以下信息：
 
    .. code-block:: console
 
-        - name: <name of repository>
-          path: <path to where the repository should be cloned>
-          revision: <ref pointer to module pull request>
+      - name: <name of repository>
+        path: <path to where the repository should be cloned>
+        revision: <ref pointer to module pull request>
 
 
-For example, to add *my_module* to the manifest:
+例如，要将 *my_module* 添加到清单：
 
 .. code-block:: console
 
@@ -1234,30 +852,24 @@ For example, to add *my_module* to the manifest:
       revision: pull/23/head
 
 
-Where 23 in the example above indicated the pull request number submitted to the
-*my_module* repository. Once the module changes are reviewed and merged, the
-revision needs to be changed to the commit hash from the module repository.
+其中上述示例中的 23 表示提交到 *my_module* 仓库的拉取请求编号。模块更改被审查和合并后，revision 需要更改为来自模块仓库的提交哈希。
 
 .. _changes_to_existing_module:
 
-Process for submitting changes to existing modules
-==================================================
+向现有模块提交更改的流程
+================================================
 
-#. Submit the changes using a pull request to an existing repository following
-   the :ref:`contribution guidelines <contribute_guidelines>` and
-   :ref:`expectations <contributor-expectations>`.
-#. Submit a pull request changing the entry referencing the module into the
-   :zephyr_file:`west.yml` of the main Zephyr tree with the following
-   information:
+#. 遵循 :ref:`贡献指南 <contribute_guidelines>` 和 :ref:`期望 <contributor-expectations>`，使用拉取请求向现有仓库提交更改。
+#. 提交一个拉取请求，更改主 Zephyr 树的 :zephyr_file:`west.yml` 中引用该模块的条目，包含以下信息：
 
    .. code-block:: console
 
-        - name: <name of repository>
-          path: <path to where the repository should be cloned>
-          revision: <ref pointer to module pull request>
+      - name: <name of repository>
+        path: <path to where the repository should be cloned>
+        revision: <ref pointer to module pull request>
 
 
-For example, to add *my_module* to the manifest:
+例如，要将 *my_module* 添加到清单：
 
 .. code-block:: console
 
@@ -1265,10 +877,7 @@ For example, to add *my_module* to the manifest:
       path: modules/lib/my_module
       revision: pull/23/head
 
-Where 23 in the example above indicated the pull request number submitted to the
-*my_module* repository. Once the module changes are reviewed and merged, the
-revision needs to be changed to the commit hash from the module repository.
-
+其中上述示例中的 23 表示提交到 *my_module* 仓库的拉取请求编号。模块更改被审查和合并后，revision 需要更改为来自模块仓库的提交哈希。
 
 
 .. _CMake list: https://cmake.org/cmake/help/latest/manual/cmake-language.7.html#lists

@@ -1,4 +1,6 @@
-.. _bt_l2cap_br:
+.. _bt
+l2cap
+br:
 
 Bluetooth
 Logical
@@ -9,11 +11,13 @@ Adaptation
 Protocol
 （L2CAP）
 for
-BR/EDR
+BR
+EDR
 #########################################################################
 
 L2CAP
-BR/EDR
+BR
+EDR
 提供
 Bluetooth
 Classic
@@ -29,14 +33,16 @@ features
 支持
 包括
 ECHO
-request/response
+request
+response
 和
 connectionless
 data
 channels。
 
 ECHO
-Request/Response
+Request
+Response
 *********************
 
 L2CAP
@@ -51,24 +57,26 @@ requests
 接收
 ECHO
 responses
+来
 测试
 connection。
-应用
+Applications
 可以
 注册
 callbacks
+来
 监控
 ECHO
 packets
-并
+和
 发送
 ECHO
 data。
 该
 feature
 通过
-configuration
-option
+配置
+选项
 :kconfig:option:`CONFIG_BT_CLASSIC`
 启用。
 
@@ -77,66 +85,461 @@ ECHO
 Callbacks
 ==========================
 
-要
-监控
+To
+monitor
 ECHO
-request/response
-packets
-注册
-一
-个
-:c:struct:`bt_l2cap_br_echo_cb`
+request
+response
+packets、
+register
+a
+:c:struct:`bt
+l2cap
+br
+echo
+cb`
 callback
-structure：
+structure:
 
-.. code-block:: c
+..
+code
+block::
+c
 
-   static
-   void
-   echo_req_cb(struct
-   bt_conn
-   *conn,
-   uint8_t
-   identifier,
-   struct
-   net_buf
-   *buf)
-   {
-       /*
-       Handle
-       ECHO
-       request
-       */
-   }
+static
+void
+echo
+req
+cb（struct
+bt
+conn
+*conn、
+uint8
+t
+identifier、
+struct
+net
+buf
+*buf）
+{
+/*
+Handle
+ECHO
+request
+*/
+}
 
-   static
-   void
-   echo_rsp_cb(struct
-   bt_conn
-   *conn,
-   struct
-   net_buf
-   *buf)
-   {
-       /*
-       Handle
-       ECHO
-       response
-       */
-   }
+static
+void
+echo
+rsp
+cb（struct
+bt
+conn
+*conn、
+struct
+net
+buf
+*buf）
+{
+/*
+Handle
+ECHO
+response
+*/
+}
 
-   static
-   struct
-   bt_l2cap_br_echo_cb
-   echo_cb
-   =
-   {
-       .req
-       =
-       echo_req_cb,
-       .rsp
-       =
-       echo_rsp_cb,
-   };
+static
+struct
+bt
+l2cap
+br
+echo
+cb
+echo
+cb
+=
+{
+.req
+=
+echo
+req
+cb、
+.rsp
+=
+echo
+rsp
+cb、
+};
 
-   bt_l2cap_br_echo_cb_register(&echo_cb);
+bt
+l2cap
+br
+echo
+cb
+register（&echo
+cb）;
+
+Sending
+ECHO
+Request
+====================
+
+To
+send
+an
+ECHO
+request、
+allocate
+a
+buffer
+with
+:c:macro:`BT
+L2CAP
+BR
+ECHO
+REQ
+RESERVE`
+bytes
+reserved
+for
+the
+L2CAP
+header:
+
+..
+code
+block::
+c
+
+struct
+net
+buf
+*buf;
+
+buf
+=
+net
+buf
+alloc（&pool、
+K
+FOREVER）;
+net
+buf
+reserve（buf、
+BT
+L2CAP
+BR
+ECHO
+REQ
+RESERVE）;
+net
+buf
+add
+mem（buf、
+data、
+data
+len）;
+
+bt
+l2cap
+br
+echo
+req（conn、
+buf）;
+
+Sending
+ECHO
+Response
+=====================
+
+To
+send
+an
+ECHO
+response
+（typically
+in
+response
+to
+a
+received
+ECHO
+request）
+allocate
+a
+buffer
+with
+:c:macro:`BT
+L2CAP
+BR
+ECHO
+RSP
+RESERVE`
+bytes
+reserved
+for
+the
+L2CAP
+header:
+
+..
+code
+block::
+c
+
+struct
+net
+buf
+*buf;
+
+buf
+=
+net
+buf
+alloc（&pool、
+K
+FOREVER）;
+net
+buf
+reserve（buf、
+BT
+L2CAP
+BR
+ECHO
+RSP
+RESERVE）;
+net
+buf
+add
+mem（buf、
+data、
+data
+len）;
+
+bt
+l2cap
+br
+echo
+rsp（conn、
+buf）;
+
+The
+identifier
+parameter
+must
+match
+the
+identifier
+from
+the
+received
+ECHO
+request
+to
+properly
+correlate
+the
+response
+with
+the
+request.
+
+Connectionless
+Data
+Channel
+***************************
+
+The
+connectionless
+data
+channel
+allows
+sending
+and
+receiving
+data
+to
+from
+a
+specific
+PSM
+（Protocol
+Service
+Multiplexer）
+without
+establishing
+a
+connection
+oriented
+L2CAP
+channel.
+The
+feature
+is
+enabled
+through
+the
+configuration
+option:
+:kconfig:option:`CONFIG_BT_L2CAP_CONNLESS`.
+
+Registering
+Connectionless
+Callbacks
+==================================
+
+To
+receive
+connectionless
+data、
+register
+a
+:c:struct:`bt
+l2cap
+br
+connless
+cb`
+callback
+structure:
+
+..
+code
+block::
+c
+
+static
+void
+connless
+recv
+cb（struct
+bt
+conn
+*conn、
+uint16
+t
+psm、
+struct
+net
+buf
+*buf）
+{
+/*
+Handle
+received
+connectionless
+data
+*/
+}
+
+static
+struct
+bt
+l2cap
+br
+connless
+cb
+connless
+cb
+=
+{
+.psm
+=
+MY
+PSM、
+/*
+Or
+0
+to
+receive
+all
+*/
+.sec
+level
+=
+BT
+SECURITY
+L1、
+.recv
+=
+connless
+recv
+cb、
+};
+
+bt
+l2cap
+br
+connless
+register（&connless
+cb）;
+
+Sending
+Connectionless
+Data
+===========================
+
+To
+send
+connectionless
+data、
+allocate
+a
+buffer
+with
+:c:macro:`BT
+L2CAP
+CONNLESS
+RESERVE`
+bytes
+reserved:
+
+..
+code
+block::
+c
+
+struct
+net
+buf
+*buf;
+
+buf
+=
+net
+buf
+alloc（&pool、
+K
+FOREVER）;
+net
+buf
+reserve（buf、
+BT
+L2CAP
+CONNLESS
+RESERVE）;
+net
+buf
+add
+mem（buf、
+data、
+data
+len）;
+
+bt
+l2cap
+br
+connless
+send（conn、
+psm、
+buf）;
+
+API
+Reference
+*************
+
+..
+doxygengroup::
+bt
+l2cap
+br

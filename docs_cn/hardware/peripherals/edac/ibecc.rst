@@ -1,214 +1,69 @@
 .. _edac_ibecc:
 
-In
-Band
-Error
-Correction
-Code
-（IBECC）
+带内纠错码（IBECC）
 #####################################
 
-Overview
+概述
 ********
 
-最初
-在
-Intel
-Elkhart
-Lake
-SOCs
-和
-later
-boards
-中
-找到
-的
-机制
-是
-带
-IBECC
-的
-integrated
-memory
-controller。
+最初在 Intel Elkhart Lake 系列 SoC 及后续板卡中发现的机制是一种集成带内纠错码（IBECC）的内存控制器。
 
-In-Band
-Error
-Correction
-Code
-（IBECC）
-通过
-提供
-error
-detection
-和
-correction
-提高
-reliability。
-IBECC
-可以
-为
-所有
-或
-physical
-memory
-space
-的
-特定
-regions
-工作。
-IBECC
-对
-不
-支持
-out-of-band
-ECC
-的
-memory
-technologies
-有用。
+带内纠错码（IBECC）通过提供错误检测和纠正能力来提高系统可靠性。
+IBECC 可以作用于物理内存空间的全部区域，也可以仅作用于特定区域。
+IBECC 特别适用于不支持带外 ECC 的内存技术。
 
-IBECC
-添加
-1/32
-memory
-的
-memory
-overhead。
-这
-memory
-不
-可
-访问
-并
-用
-于
-存储
-ECC
-syndrome
-data。
-IBECC
-将
-read
-/
-write
-transactions
-转换
-为
-两
-个
-分开
-的
-transactions：
-一
-个
-用于
-实际
-data
-另一
-个
-用于
-包含
-ECC
-value
-的
-cache
-line。
+IBECC 增加相当于内存容量 1/32 的开销。
+这部分内存不可访问，专门用于存储 ECC 校验数据。
+IBECC 将读/写事务转换为两个独立事务：一个用于实际数据，另一个用于包含 ECC 值的缓存行。
 
-有
-一
-个
-debug
-feature
-IBECC
-Error
-Injection
-帮助
-debug
-和
-验证
-IBECC
-functionality。
-ECC
-errors
-在
-write
-path
-上
-被
-injected
-并
-在
-read
-path
-上
-导致
-ECC
-errors。
+IBECC 提供了一个调试特性——错误注入（Error Injection），有助于调试和验证 IBECC 功能。ECC 错误在写路径上被注入，进而在读路径上触发 ECC 错误。
 
-IBECC
-Configuration
+IBECC 配置
 *******************
 
-有
-三
-个
-IBECC
-operation
-modes
-可以
-由
-Bootloader
-选择。
-它们
-在
-下面
-列出：
+有三种 IBECC 操作模式，可由引导加载程序选择。它们列举如下：
 
-* OPERATION_MODE
-  =
-  0x0
-  将
-  functional
-  mode
-  设置
-  为
-  基于
-  address
-  range
-  保护
-  requests
+* OPERATION_MODE = 0x0 将功能模式设置为基于地址范围保护请求
 
-* OPERATION_MODE
-  =
-  0x1
-  将
-  functional
-  mode
-  设置
-  为
-  所有
-  requests
-  不
-  被
-  保护
-  并
-  忽略
-  range
-  checks
+* OPERATION_MODE = 0x1 将功能模式设置为所有请求均不受保护，并忽略范围检查
 
-* OPERATION_MODE
-  =
-  0x2
-  将
-  functional
-  mode
-  设置
-  为
-  保护
-  所有
-  requests
-  并
-  忽略
-  range
-  checks
+* OPERATION_MODE = 0x2 将功能模式设置为保护所有请求，并忽略范围检查
+
+IBECC 操作模式通过 BIOS 或引导加载程序进行配置。对于操作模式 0，还有更多 BIOS 配置选项可用，例如内存区域设置。
+
+由于存在高安全风险，错误注入功能不应在生产环境中启用。错误注入功能仅在测试场景下启用。
+
+IBECC 日志
+*************
+
+IBECC 记录以下字段：
+
+* 错误地址（Error Address）
+
+* 错误校验码（Error Syndrome）
+
+* 错误类型（Error Type）
+
+  * 可纠正错误（CE）- 错误由 IBECC 模块检测并自动纠正。
+
+  * 不可纠正错误（UE）- 错误由 IBECC 模块检测但不自动纠正。
+
+IBECC 驱动为更高层应用提供错误类型，以便其实现针对处理这些内存错误的期望策略。错误校验码本身不在 IBECC 驱动中使用，但会原样提供给更高层应用。
+
+使用注意事项
+***********
+
+必须对不可屏蔽中断（NMI）格外小心。
+NMI 会在任何时刻到达，即使本地 CPU 已经禁用了中断。
+这意味着没有任何锁机制能够保护代码免受 NMI 的影响。
+Zephyr 的 IPC 机制普遍使用本地中断请求锁作为所有更高层同步原语的基础层。
+因此，你不能与 NMI 共享任何由锁"保护"的数据，因为这种保护机制对 NMI 无效。
+在 Zephyr API 中，唯一可用的、能对 NMI 生效的同步工具是原子操作层。
+这一点同样适用于由 NMI 处理程序调用的回调函数。
+
+配置选项
+********************
+
+相关配置选项：
+
+* :kconfig:option:`CONFIG_EDAC_IBECC`

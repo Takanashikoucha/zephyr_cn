@@ -1,4 +1,4 @@
-{# 极简 passthrough 布局 — 只输出 body 内容，不加任何包装 #}
+{# 荧枝布局 — 注入导航/面包屑/纤维画布/页脚 #}
 <!DOCTYPE html>
 <html{% if language is not none %} lang="{{ language }}"{% endif %}>
 <head>
@@ -18,6 +18,88 @@
   {%- if prev %}<link rel="prev" title="{{ prev.title|striptags|e }}" href="{{ prev.link|e }}"/>{% endif %}
 </head>
 <body>
-{% block body %}{% endblock %}
+  {# 全局纤维画布（素净档：文档页用低透明度，避免干扰阅读） #}
+  <canvas class="fiber-global" id="fiber-global"></canvas>
+  <div class="veil"></div>
+
+  {# 顶部导航 #}
+  <nav class="topnav">
+    <div class="topnav-inner">
+      <a class="topnav-brand" href="{{ pathto('index') }}">
+        <span class="brand-dot"></span>
+        <span class="brand-text">ZEPHYR</span>
+        <span class="brand-sub">中文文档</span>
+      </a>
+      <div class="topnav-links">
+        <a href="{{ pathto('index') }}">首页</a>
+        <a href="{{ pathto('introduction/index') }}">入门</a>
+        <a href="{{ pathto('develop/index') }}">开发</a>
+        <a href="{{ pathto('kernel/index') }}">内核</a>
+        <a href="{{ pathto('hardware/index') }}">硬件</a>
+        <a href="{{ pathto('build/index') }}">构建</a>
+        <a href="{{ pathto('源码阅读指南') }}">源码指南</a>
+      </div>
+    </div>
+  </nav>
+
+  {# 面包屑 #}
+  <div class="breadcrumb">
+    <a href="{{ pathto('index') }}">首页</a>
+    {%- for part in breadcrumbs %}
+    {%- if loop.last %}
+    <span class="bc-sep">/</span><span class="bc-current">{{ part.title|striptags }}</span>
+    {%- else %}
+    <span class="bc-sep">/</span><a href="{{ part.link }}">{{ part.title|striptags }}</a>
+    {%- endif %}
+    {%- endfor %}
+  </div>
+
+  {# 主内容 #}
+  <main class="main-content">
+    <div class="content-panel">
+      {% block body %}{% endblock %}
+    </div>
+  </main>
+
+  {# 底部前后翻页 #}
+  <nav class="bottomnav">
+    {%- if prev %}
+    <a class="nav-btn" href="{{ prev.link }}">
+      <span class="nav-arrow">←</span>
+      <span class="nav-label">{{ prev.title|striptags }}</span>
+    </a>
+    {%- else %}
+    <span class="nav-placeholder"></span>
+    {%- endif %}
+    <a class="nav-home" href="{{ pathto('index') }}" title="回到首页">
+      <span class="home-dot"></span>
+    </a>
+    {%- if next %}
+    <a class="nav-btn" href="{{ next.link }}">
+      <span class="nav-label">{{ next.title|striptags }}</span>
+      <span class="nav-arrow">→</span>
+    </a>
+    {%- else %}
+    <span class="nav-placeholder"></span>
+    {%- endif %}
+  </nav>
+
+  {# 页脚 #}
+  <footer class="site-footer">
+    <span class="footer-brand">⚡ theme: zephyr_cn luminous branch</span>
+    <span class="footer-ver">v{{ release }}</span>
+  </footer>
+
+  <script src="{{ pathto('_static/fiber.js', 1) }}"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      var cv = document.getElementById('fiber-global');
+      if (cv) {
+        cv.width = window.innerWidth;
+        cv.height = window.innerHeight;
+        initFiber(cv, { seed: {{ theme_fiber_seed }}, redBias: {{ theme_fiber_red_bias }} });
+      }
+    });
+  </script>
 </body>
 </html>

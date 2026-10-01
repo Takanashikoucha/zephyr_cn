@@ -5,99 +5,21 @@ DHCPv4
 
 .. contents::
     :local:
-    :depth:
-    2
+    :depth: 2
 
 Overview
 ********
 
-Dynamic
-Host
-Configuration
-Protocol
-（DHCP）
-是
-一
-个
-network
-management
-protocol
-被
-used
-在
-IPv4
-networks
-上。
-一
-个
-DHCPv4
-server
-dynamically
-assign
-一
-个
-IPv4
-address
-和
-其他
-network
-configuration
-parameters
-到
-network
-上
-的
-每个
-device
-使
-它们
-can
-communicate
-与
-其他
-IP
-networks。
-参考
-这
-个
-`DHCP
-Wikipedia
-article
-<https://en.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol>`_
-获取
-关于
-DHCP
-如何
-work
-的
-detailed
-overview。
+Dynamic Host Configuration Protocol（DHCP）是用于 IPv4 networks 的 network management protocol。DHCPv4 server 动态为网络上每个 device 分配 IPv4 address 和其他 network configuration parameters（使它们能与其他 IP networks 通信。DHCP 工作原理的详细概述参见此 `DHCP Wikipedia article <https://en.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol>`_。
 
-注意
-Zephyr
-support
-DHCPv4
-client
-和
-server
-两
-个
-functionality。
+注意 Zephyr 同时支持 DHCPv4 client 和 server 功能。
 
-Sample
-usage
+Sample usage
 ************
 
-参考
-:zephyr:code-sample:`dhcpv4-client`
-sample
-application
-获取
-details。
+参见 :zephyr:code-sample:`dhcpv4-client` sample application 以了解细节。
 
-API
-Reference
+API Reference
 *************
 
-.. doxygengroup::
-   dhcpv4
+.. doxygengroup:: dhcpv4

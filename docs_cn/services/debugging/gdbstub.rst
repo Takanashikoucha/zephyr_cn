@@ -1,156 +1,154 @@
 .. _gdbstub:
 
-GDB
-stub
+GDB stub
 ########
 
 .. contents::
    :local:
-   :depth:
-   2
+   :depth: 2
 
 Overview
 ********
 
-Gdbstub
-feature
-provide
-GDB
-Remote
-Serial
-Protocol
-（RSP）
-的
-一
-个
-implementation
-它
-允许
-你
-用
-GDB
-remotely
-debug
-Zephyr。
+Gdbstub feature 提供 GDB Remote
+Serial Protocol (RSP) 的实现（允许用 GDB 远程调试 Zephyr。
 
-Protocol
-support
-不同
-的
-connection
-types：
-serial、
-UDP/IP
-和
-TCP/IP。
-Zephyr
-当前
-只
-support
-serial
-device
-communication。
+Protocol 支持不同 connection types：serial、UDP/IP 和
+TCP/IP。Zephyr 当前仅支持 serial device communication。
 
-GDB
-program
-作为
-client
-同时
-Zephyr
-gdbstub
-作为
-server。
-当
-这
-个
-feature
-被
-enabled
-时
-Zephyr
-在
-:c:func:`gdb_init`
-start
-gdbstub
-service
-后
-stop
-它
-的
-execution
-并
-wait
-一
-个
-GDB
-connection。
-一
-旦
-connection
-被
-established
-可以
-synchronously
-与
-Zephyr
-interact。
-注意
-当前
-不
-可以
-asynchronously
-send
-commands
-到
-target。
+GDB program 作为 client（而 Zephyr gdbstub 作为
+server。启用此 feature 时（Zephyr 在
+:c:func:`gdb_init` 启动 gdbstub service 后停止执行（并等待 GDB
+connection。建立 connection 后可
+与 Zephyr 同步交互。注意当前不
+可能异步向 target 发送 commands。
 
 Features
 ********
 
-以下
-features
-被
-supported：
+支持以下 features：
 
-*
-Add
-和
-remove
-breakpoints
-*
-Continue
-和
-step
-target
-*
-Print
-backtrace
-*
-Read
-或
-write
-general
-registers
-*
-Read
-或
-write
-memory
+* 添加和移除 breakpoints
+* Continue 和 step target
+* Print backtrace
+* 读取或写入 general registers
+* 读取或写入 memory
 
-Enabling
-GDB
-Stub
+Enabling GDB Stub
 *****************
 
+GDB stub 可用 :kconfig:option:`CONFIG_GDBSTUB` option 启用。
 
-.. note::
+Using Serial Backend
+====================
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+GDB stub 的 serial backend 可用
+:kconfig:option:`CONFIG_GDBSTUB_SERIAL_BACKEND` option 启用。
+
+由于 serial backend 用 UART devices 发送和接收 GDB commands（
+
+* 若 board 有空闲 UART devices（将 chosen node 的 ``zephyr,gdbstub-uart``
+  property 设为空闲 UART device（使 :c:func:`printk`
+  和 log messages 不打印到用于 GDB 的同一 UART device。
+
+* 对仅有一个 UART device 的 boards（若
+  也用同一 UART device 输出（须禁用 :c:func:`printk` 和 logging。
+  GDB 相关 messages 可能与 log messages 交错（可能
+  产生非预期后果。通常可通过禁用
+  :kconfig:option:`CONFIG_PRINTK` 和 :kconfig:option:`CONFIG_LOG` 完成。
+
+Debugging
+*********
+
+Using Serial Backend
+====================
+
+#. 构建启用 GDB stub 和 serial backend。
+
+#. 将构建的 image 刷入 board 并重置 board。
+
+   * 执行现应暂停在 :c:func:`gdb_init`。
+
+#. 在 development machine 上执行 GDB 并连接到 GDB stub。
+
+   .. code-block:: bash
+
+      target remote <serial device>
+
+   例如（
+
+.. code-block:: bash
+
+      target remote /dev/ttyUSB1
+
+#. 可用 GDB commands 开始调试。
+
+Example
+*******
+
+有 test application :zephyr_file:`tests/subsys/debug/gdbstub`（其
+test cases ``debug.gdbstub.breakpoints`` 演示 Zephyr GDB stub 如何使用。
+Test 还有连接 QEMU 的 GDB stub 实现（在自定义
+port ``tcp:1235``）的 case（作为验证 test script 本身的
+reference。
+
+从 :envvar:`ZEPHYR_BASE` directory 用以下 command 运行
+test：
+
+   .. code-block:: console
+
+      west twister -p qemu_x86 -T tests/subsys/debug/gdbstub
+
+Test 应成功运行（现在让我们逐步做类似的事
+以从 GDB user 视角演示 Zephyr GDB stub 如何工作。
+
+以下 snippets 中（用并期望你自己的适当 directories 替代
+``<SDK install directory>``、``<build_directory>``、``<ZEPHYR_BASE>``。
+
+
+#. 打开两个 terminal windows。
+
+#. 第一个 terminal 中（构建并运行 test application：
+
+   .. zephyr-app-commands::
+      :zephyr-app: tests/subsys/debug/gdbstub
+      :host-os: unix
+      :board: qemu_x86
+      :gen-args: '-DCONFIG_QEMU_EXTRA_FLAGS="-serial tcp:localhost:5678,server"'
+      :goals: build run
+
+   注意我们设置 :kconfig:option:`CONFIG_QEMU_EXTRA_FLAGS` 将 QEMU serial
+   console port 导向 ``localhost`` TCP port ``5678``（以等待
+   下一步 GDB ``remote`` command 的
+   connection。
+
+#. 第二个 terminal 中（启动 GDB：
+
+   .. code-block:: bash
+
+      <SDK install directory>/x86_64-zephyr-elf/bin/x86_64-zephyr-elf-gdb
+
+   #. 告知 GDB 在哪查找构建的 ELF file：
+
+      .. code-block:: text
+
+         (gdb) symbol-file <build directory>/zephyr/zephyr.elf
+
+      GDB 响应：
+
+      .. code-block:: text
+
+         Reading symbols from <build directory>/zephyr/zephyr.elf...
+
+   #. 告知 GDB 连接之前通过 QEMU 的 ``-serial`` 重定向
+      作为 server 暴露的 Zephyr gdbstub serial backend（经
+      TCP port。
+
       .. code-block:: text
 
          (gdb) target remote localhost:5678
 
-      Response from GDB:
+      GDB 响应：
 
       .. code-block:: text
 
@@ -158,10 +156,10 @@ Stub
          arch_gdb_init () at <ZEPHYR_BASE>/arch/x86/core/ia32/gdbstub.c:252
          252     }
 
-      GDB also shows where the code execution is stopped. In this case,
-      it is at :zephyr_file:`arch/x86/core/ia32/gdbstub.c`, line 252.
+      GDB 还显示 code 执行停止处。此情况下（
+      在 :zephyr_file:`arch/x86/core/ia32/gdbstub.c` line 252。
 
-   #. Use command ``bt`` or ``backtrace`` to show the backtrace of stack frames.
+   #. 用 command ``bt`` 或 ``backtrace`` 显示 stack frames 的 backtrace。
 
       .. code-block:: text
 
@@ -176,8 +174,8 @@ Stub
          #7  0x00134988 in z_interrupt_stacks ()
          #8  0x00000000 in ?? ()
 
-   #. Use command ``list`` to show the source code and surroundings where
-      code execution is stopped.
+   #. 用 command ``list`` 显示
+      code 执行停止处的 source code 和 surroundings。
 
       .. code-block:: text
 
@@ -193,9 +191,9 @@ Stub
          255     _EXCEPTION_CONNECT_NOCODE(z_gdb_debug_isr, IV_DEBUG, 3);
          256     _EXCEPTION_CONNECT_NOCODE(z_gdb_break_isr, IV_BREAKPOINT, 3);
 
-   #. Use command ``s`` or ``step`` to step through program until it reaches
-      a different source line. Now that it finished executing :c:func:`arch_gdb_init`
-      and is continuing in :c:func:`gdb_init`.
+   #. 用 command ``s`` 或 ``step`` 逐步执行 program 直到到达
+      不同 source line。现在其完成执行 :c:func:`arch_gdb_init`
+      并在 :c:func:`gdb_init` 中继续。
 
       .. code-block:: text
 
@@ -217,9 +215,9 @@ Stub
          860     #ifdef CONFIG_XTENSA
          861     /*
 
-   #. Use command ``br`` or ``break`` to setup a breakpoint. For this example
-      set up a breakpoint at :c:func:`main`, and let code execution continue
-      without any intervention using command ``c`` (or ``continue``).
+   #. 用 command ``br`` 或 ``break`` 设置 breakpoint。此示例
+      在 :c:func:`main` 设置 breakpoint（并用 command ``c`` (或 ``continue``) 让 code 执行
+      继续而无需干预。
 
       .. code-block:: text
 
@@ -231,15 +229,15 @@ Stub
          (gdb) continue
          Continuing.
 
-      Once code execution reaches :c:func:`main`, execution will be stopped
-      and GDB prompt returns.
+      code 执行到达 :c:func:`main` 时（执行将停止
+      且 GDB prompt 返回。
 
       .. code-block:: text
 
          Breakpoint 1, main () at <ZEPHYR_BASE>/tests/subsys/debug/gdbstub/src/main.c:27
          27              printk("%s():enter\n", __func__);
 
-      Now GDB is waiting at the beginning of :c:func:`main`:
+      现在 GDB 等待在 :c:func:`main` 开头：
 
       .. code-block:: text
 
@@ -255,24 +253,24 @@ Stub
          30              return 0;
          31      }
 
-   #. To examine the value of ``ret``, the command ``p`` or ``print``
-      can be used.
+   #. 要检查 ``ret`` 的值（可用 command ``p`` 或 ``print``
+      。
 
       .. code-block:: text
 
          (gdb) p ret
          $1 = 1273788
 
-      Since ``ret`` has not been initialized, it contains some random value.
+      由于 ``ret`` 未初始化（其包含某随机值。
 
-   #. If step (``s`` or ``step``) is used here, it will continue execution
-      skipping the interior of :c:func:`test`.
-      To examine code execution inside :c:func:`test`,
-      a breakpoint can be set for :c:func:`test`, or simply using
-      ``si`` (or ``stepi``) to execute one machine instruction, where it has
-      the side effect of going into the function. The GDB command ``finish``
-      can be used to continue execution without intervention until the function
-      returns.
+   #. 若此处用 step（``s`` 或 ``step``）（将
+      继续执行（跳过 :c:func:`test` 内部。
+      要检查 :c:func:`test` 内的 code 执行（
+      可为 :c:func:`test` 设置 breakpoint（或简单用
+      ``si`` (或 ``stepi``) 执行一条 machine instruction（其
+      副作用为进入 function。GDB command ``finish``
+      可用于继续执行而无需干预（直到 function
+      返回。
 
       .. code-block:: text
 
@@ -282,12 +280,13 @@ Stub
          28              ret = test();
          Value returned is $2 = 30
 
-   #. Examine ``ret`` again which should have the return value from
-      :c:func:`test`. Sometimes, the assignment is not done until another
-      ``step`` is issued, as in this case. This is due to the assignment
-      code is done after returning from function. The assignment code is
-      generated by the toolchain as machine instructions which are not
-      visible when viewing the corresponding C source file.
+   #. 再次检查 ``ret``（其应有
+      :c:func:`test` 的返回值。有时（赋值直到另一
+      ``step`` 发出才完成（如此案例。这是因为
+      assignment
+      code 在 function 返回后执行。Assignment code
+      由 toolchain 生成（为查看对应 C source file 时
+      不可见的 machine instructions。
 
       .. code-block:: text
 
@@ -298,10 +297,10 @@ Stub
          (gdb) p ret
          $4 = 30
 
-   #. If ``continue`` is issued here, code execution will continue indefinitely
-      as there are no breakpoints to further stop execution. Breaking execution
-      in GDB via :kbd:`Ctrl-C` does not currently work as the Zephyr gdbstub does
-      not support this functionality yet. Switch to the first console with QEMU
-      running the Zephyr image and stop it manually with :kbd:`Ctrl+a x`.
-      When the same test is executed by Twister, it automatically takes care of
-      stopping the QEMU instance.
+   #. 若此处发出 ``continue``（code 执行将无限继续
+      因为没有进一步停止执行的 breakpoints。用 :kbd:`Ctrl-C` 在 GDB 中
+      中断执行当前不工作（因为 Zephyr gdbstub 尚不
+      支持此 functionality。切换到运行 Zephyr image 的 QEMU 的
+      第一个 console（并用 :kbd:`Ctrl+a x` 手动停止。
+      当 Twister 执行相同 test 时（其自动
+      负责停止 QEMU instance。

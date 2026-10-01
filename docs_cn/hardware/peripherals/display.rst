@@ -1,21 +1,12 @@
 .. _display_peripherals:
 
-Display
+显示
 #######
 
-Visual
-output、
-video
-interfaces
-和
-LED
-和
-lighting
-control。
+视觉输出、视频接口，以及 LED 与照明控制。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    display/index.rst
    auxdisplay.rst

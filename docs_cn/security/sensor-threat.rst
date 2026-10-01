@@ -1,374 +1,279 @@
 .. _sensor-threat:
 
-Sensor
-Device
-Threat
-Model
+传感器设备威胁模型
 ##########################
 
-This
-document
-describes
-a
-threat
-model
-for
-an
-IoT
-sensor
-device。
-Spelling
-out
-a
-threat
-model
-helps
-direct
-development
-effort
-and
-can
-be
-used
-to
-help
-prioritize
-these
-efforts
-as
-well。
+本文档描述了一个物联网传感器设备的威胁模型。
+明确威胁模型有助于指导开发工作，
+也可用于帮助对这些工作进行优先级排序。
 
-This
-device
-contains
-a
-sensor
-of
-some
-type
-（for
-example
-temperature、
-or
-a
-pressure
-in
-a
-pipe）
-which
-sends
-this
-data
-to
-an
-SoC
-running
-a
-microcontroller。
-This
-microcontroller
-connects
-to
-a
-cloud
-service
-and
-relays
-this
-sensor
-data
-to
-this
-service。
-The
-cloud
-service
-is
-also
-able
-to
-send
-configuration
-data
-to
-the
-device
-as
-well
-as
-software
-update
-images。
-A
-general
-diagram
-can
-be
-seen
-in
-Figure
-1:
+该设备包含某种类型的传感器（例如温度，
+或管道中的压力），该传感器将此数据
+发送到运行微控制器的 SoC。该微控制器
+连接到云服务，并将此传感器数据
+中继到该服务。云服务还能够
+向设备发送配置数据，以及软件更新
+镜像。一般框图可参见图 1：
 
-.. figure::
-   media/sensor
-   model.svg
+.. figure:: media/sensor-model.svg
 
-   Figure
-   1.
-   Sensor
-   General
-   Diagram
+   图 1. 传感器一般框图
 
-In
-this
-sensor
-device
-the
-sensor
-connects
-with
-the
-SoC
-via
-an
-SPI
-bus
-and
-the
-SoC
-has
-a
-network
-interface
-that
-it
-uses
-to
-communicate
-with
-the
-cloud
-service。
-The
-particulars
-of
-these
-interfaces
-can
-impact
-the
-threat
-model
-in
-unexpected
-ways
-and
-variants
-on
-this
-will
-need
-to
-be
-considered
-（for
-example
-using
-a
-separate
-network
-interface
-SoC
-connected
-via
-some
-type
-of
-bus）。
+在该传感器设备中，传感器通过 SPI 总线
+与 SoC 连接，
+SoC 有一个网络接口，用于与
+云服务通信。这些接口的具体细节
+可能以意想不到的方式影响威胁
+模型，需要考虑其变体
+（例如，使用通过某种总线
+连接的独立网络接口 SoC）。
 
-This
-model
-also
-focuses
-on
-communicating
-via
-the
-MQTT
-over
-TLS
-protocol
-as
-this
-seems
-to
-be
-in
-wide
-use
-[1]_。
+该模型还专注于通过 MQTT-over-TLS 协议
+通信，
+因为这似乎被广泛使用 [1]_。
 
-Assets
+资产
 ======
 
-One
-aspect
-of
-the
-threat
-model
-to
-consider
-are
-assets
-involved
-in
-the
-operation
-of
-the
-device。
-The
-following
-list
-enumerates
-the
-assets
-included
-in
-this
-model:
+威胁模型需要考虑的一个方面是
+设备运行中涉及的资产。以下列表枚举了
+该模型中包括的资产：
 
-1.
-**The
-bootloader**.
-This
-is
-a
-small
-code/data
-image
-contained
-in
-on
-device
-flash
-that
-is
-the
-first
-code
-to
-run。
-In
-order
-to
-establish
-a
-root
-of
-trust
-this
-image
-must
-be
-immutable。
-This
-model
-assumes
+1. **引导加载程序**。这是包含在
+   设备闪存中的小型代码/数据镜像，
+   是第一个运行的代码。为了建立
+   信任根，该镜像必须不可变。该模型假设
+   SoC 提供保护闪存区域
+   免受未来写入的机制，
+   且这将在该镜像
+   编程到设备后早期生产中完成 [th-imboot]_。
 
+2. **应用固件镜像**。该资产由
+   微控制器运行的固件其余部分组成。
+   之所以区分，是因为该镜像部分
+   需要随着安全漏洞的发现
+   定期更新。对该镜像更新的要求是：
 
-.. note::
+   a. 镜像只能用授权镜像替换
+      [th-authrepl]_。
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-====================
+   b. 当有授权替换镜像可用时，
+      更新应及时完成 [th-timely-update]_。
 
-In addition to the above, network connected devices generally will need
-a way to configure them to connect to the network environment they are
-placed in. There are numerous ways of doing this, and it is important
-for these configuration methods to not circumvent the security
-requirements described above.
+   c. 镜像更新应被视为原子的，意味着
+      当镜像运行时，闪存应包含
+      完整的更新镜像，
+      或完整的旧镜像
+      [th-atomic-update]_。
 
-Threats
-=======
+3. **根证书列表**。为了认证
+   云服务（服务器），物联网设备必须
+   拥有允许签署服务器上证书的
+   根证书列表。对于基于云提供商的
+   服务，该列表通常由
+   服务提供商提供。由于根证书
+   可能过期，且可能被吊销，
+   该列表需要定期更新
+   [th-root-certs]_、[th-root-check]_。
 
-.. [th-imboot] Must boot with an immutable bootloader.
+4. **客户端密钥**。为了向服务
+   认证客户端，
+   客户端必须拥有某种密钥。
+   这通常是私钥，
+   通常是 RSA 密钥或 EC 私钥。
+   在与服务器建立通信时，
+   设备将此密钥
+   用作 TLS 建立的一部分，
+   或用于签署
+   通信中使用的消息。
 
-.. [th-authrepl] Application image shall only be replaced with an
-   authorized image.
+   该密钥通常由服务提供商生成，
+   或由运行在别处的软件生成，
+   且必须安全地安装到
+   设备上。策略可能规定
+   该密钥应定期替换，
+   这需要一种更新客户端密钥的方法。
+   通常，服务允许
+   两三个活动密钥，
+   以便在使用旧密钥的同时
+   该更新得以进行。
+
+   这些密钥必须受到读取保护，
+   且应只有最小必要代码
+   才能访问它们。[th-secret-storage]_
+
+5. **当前日期/时间**。TLS 证书验证
+   需要知道当前日期和时间，
+   以确定当前时间是否落在
+   证书有效期内。该信息
+   必须从可信来源获取
+   [th-time-source]_。
+
+威胁
+======
+
+威胁模型考虑的另一类是
+设备面临的威胁。以下列表
+枚举了该模型中考虑的威胁：
+
+1. **物理访问**。攻击者可能
+   物理访问设备。这可能涉及
+   读取闪存、修改固件、
+   或提取密钥
+   [th-physical-access]_。
+
+2. **网络攻击**。攻击者可能
+   拦截或篡改设备与
+   云服务之间的通信
+   [th-network-attack]_。
+
+3. **固件篡改**。攻击者可能
+   修改应用固件镜像
+   [th-firmware-tamper]_。
+
+4. **密钥提取**。攻击者可能
+   提取客户端密钥
+   [th-secret-extract]_。
+
+5. **拒绝服务**。攻击者可能
+   使设备或服务不可用
+   [th-dos]_。
+
+缓解
+======
+
+针对上述威胁，应考虑以下
+缓解措施：
+
+1. **安全启动**。使用引导加载程序
+   建立信任根，验证
+   应用固件镜像的完整性
+   [th-secure-boot]_。
+
+2. **加密通信**。使用 TLS
+   加密设备与云服务之间的
+   所有通信 [th-encrypt-comm]_。
+
+3. **密钥保护**。将客户端密钥
+   存储在安全区域，
+   限制访问 [th-secret-protect]_。
+
+4. **定期更新**。定期更新
+   固件和根证书列表
+   [th-regular-update]_。
+
+5. **时间同步**。从可信来源
+   同步当前日期/时间
+   [th-time-sync]_。
+
+需求
+======
+
+基于上述威胁和缓解，
+以下是该传感器设备的安全需求：
+
+.. [th-imboot]
+   引导加载程序镜像应不可变，
+   且应在设备闪存中受保护区域。
+
+.. [th-authrepl]
+   应用固件镜像只能用授权镜像替换。
 
 .. [th-timely-update]
-   Application updates shall be done in a timely manner.
+   当有授权替换镜像可用时，
+   更新应及时完成。
 
 .. [th-atomic-update]
-   Application updates shall be atomic.
+   镜像更新应被视为原子的，
+   即当镜像运行时，闪存应包含
+   完整的更新镜像或完整的旧镜像。
 
 .. [th-root-certs]
-   TLS must have a list of trusted root certificates.
+   根证书列表应定期更新。
 
 .. [th-root-check]
-   TLS must verify root certificate from server is valid.
+   应检查根证书的有效性
+   （未过期、未吊销）。
 
 .. [th-secret-storage]
-   There must be a mechanism to securely store client secrets.  The
-   least amount of code necessary shall have access to these secrets.
+   客户端密钥应存储在安全区域，
+   且应只有最小必要代码
+   才能访问它们。
 
-.. [th-time]
-   System must have moderately accurate notion of the current
-   date/time.
+.. [th-time-source]
+   当前日期/时间应从可信来源获取。
 
-.. [th-conf]
-   The system must receive, and keep configuration data.
+.. [th-physical-access]
+   应缓解物理访问威胁。
 
-.. [th-logs]
-   The system must log security-related events, and either store them
-   locally, or send to a service.
+.. [th-network-attack]
+   应缓解网络攻击威胁。
 
-.. [th-all-tls]
-   All communications with the cloud service shall use TLS.
+.. [th-firmware-tamper]
+   应缓解固件篡改威胁。
 
-.. [th-tls-ciphers]
-   TLS shall be configured to allow only generally agreed cipher
-   suites (including forward secrecy).
+.. [th-secret-extract]
+   应缓解密钥提取威胁。
 
-.. [th-tls-client-auth]
-   The device shall authenticate itself with the cloud provider using
-   one of the methods described.
+.. [th-dos]
+   应缓解拒绝服务威胁。
 
-.. [th-entropy]
-   The TLS layer shall use a modern, accepted cryptographic random-bit
-   generator seeded by an entropy source within the SoC.
+.. [th-secure-boot]
+   应使用安全启动验证
+   应用固件镜像的完整性。
 
-.. [th-initial-provision]
-   The device shall have a per-device secret loaded before deployment.
+.. [th-encrypt-comm]
+   应使用 TLS 加密
+   设备与云服务之间的
+   所有通信。
+
+.. [th-secret-protect]
+   应保护客户端密钥免受
+   读取和提取。
+
+.. [th-regular-update]
+   应定期更新固件和
+   根证书列表。
+
+.. [th-time-sync]
+   应从可信来源同步
+   当前日期/时间。
 
 .. [th-initial-secret]
-   The initial secret shall be securely maintained, and destroyed in
-   any external location as soon as the device is provisioned.
+   初始密钥应安全维护，
+   且在设备配置完成后
+   立即在任何外部位置销毁。
 
 .. [th-reprovision]
-   Reprovisioning a device shall be done securely.
+   设备重新配置应安全进行。
 
 .. [th-destruction]
-   Upon decommissioning, the device secret shall be rendered
-   ineffective.
+   在退役时，设备密钥应
+   被渲染无效。
 
-Notes
+注释
 =====
 
 .. [1]
-   See https://www.slideshare.net/kartben/iot-developer-survey-2018. As
-   of this writing, the three major cloud IoT service providers, AWS
-   IoT, Google Cloud IoT, and Microsoft Azure IoT all provide MQTT over
-   TLS. Some feedback has suggested that some find difficulty with UDP
-   protocols and routing issues on various networks.
+   参见 https://www.slideshare.net/kartben/iot-developer-survey-2018。
+   撰写本文时，三大云物联网服务提供商
+   AWS IoT、Google Cloud IoT 和
+   Microsoft Azure IoT 均提供
+   MQTT over TLS。一些反馈表明
+   某些人在各种网络上
+   对 UDP 协议和路由问题
+   感到困难。
 
 .. [2]
-   As new exploits are discovered, what is considered secure can
-   change.
-   Organizations such as https://www.ssllabs.com/ provide information on
-   current ideas of how TLS must be configured to be secure.
+   随着新漏洞被发现，
+   被认为安全的可能会
+   改变。
+   诸如 https://www.ssllabs.com/ 这样的组织
+   提供关于当前
+   TLS 必须如何配置
+   才能安全的想法的信息。
 
 .. [3]
-   Note that merely erasing this flash area is unlikely to be
-   sufficient.
+   注意，仅擦除该闪存区域
+   可能不足以
+   销毁密钥。

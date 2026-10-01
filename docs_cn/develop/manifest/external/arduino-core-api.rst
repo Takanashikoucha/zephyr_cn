@@ -1,15 +1,12 @@
 .. _external_module_arduino_core_api:
 
-Arduino Core API
+Arduino 核心 API
 ################
 
 简介
 ****
 
-Arduino-Core-Zephyr 模块起源于 `Google Summer of Code 2022 项目`_，
-旨在为 Zephyr RTOS 应用提供 Arduino 风格的 API。该模块作为一个抽象
-层，让熟悉 Arduino 编程的开发人员无需学习全新的 API 和库，即可利用
-Zephyr 的能力。
+Arduino-Core-Zephyr 模块起源于 `Google Summer of Code 2022 项目`_，旨在为 Zephyr RTOS 应用提供 Arduino 风格的 API。该模块作为一个抽象层，让熟悉 Arduino 编程的开发人员无需学习全新的 API 和库，即可利用 Zephyr 的能力。
 
 理解其组件
 ==========
@@ -18,9 +15,7 @@ Zephyr 的能力。
 
 **1. ArduinoCore-API（通用 Arduino API 定义）**
 
-`ArduinoCore-API <https://github.com/arduino/ArduinoCore-API>`_ 是 Arduino 官方的
-硬件抽象层，定义了通用的 Arduino API。它包含抽象 API 定义**以及**与硬件无关
-功能的实现。
+`ArduinoCore-API <https://github.com/arduino/ArduinoCore-API>`_ 是 Arduino 官方的硬件抽象层，定义了通用的 Arduino API。它包含抽象 API 定义**以及**与硬件无关功能的实现。
 
 主要特点：
 
@@ -33,9 +28,7 @@ Zephyr 的能力。
 
 **2. ArduinoCore-Zephyr（Zephyr 特定实现）**
 
-`Arduino-Core-Zephyr <https://github.com/zephyrproject-rtos/ArduinoCore-zephyr>`_ 模块
-提供 Arduino API 的**Zephyr 特定实现**。依赖硬件的 Arduino 函数在这里使用
-Zephyr 原生 API 和驱动实现。
+`Arduino-Core-Zephyr <https://github.com/zephyrproject-rtos/ArduinoCore-zephyr>`_ 模块提供 Arduino API 的**Zephyr 特定实现**。依赖硬件的 Arduino 函数在这里使用 Zephyr 原生 API 和驱动实现。
 
 主要特点：
 
@@ -58,9 +51,7 @@ Zephyr 原生 API 和驱动实现。
 * 兼容现有 Arduino 库
 * 支持 Zephyr 中已有的各硬件平台的板级变体
 
-该模块将 Arduino 风格的编程引入 Zephyr，为从 Arduino 转向 Zephyr 的开发者
-提供更平缓的学习曲线，同时仍能受益于 Zephyr 的高级特性、可扩展性和广泛的
-硬件支持。
+该模块将 Arduino 风格的编程引入 Zephyr，为从 Arduino 转向 Zephyr 的开发者提供更平缓的学习曲线，同时仍能受益于 Zephyr 的高级特性、可扩展性和广泛的硬件支持。
 
 在 Zephyr 中使用
 ****************
@@ -68,9 +59,7 @@ Zephyr 原生 API 和驱动实现。
 将 Arduino Core API 添加到 Zephyr 项目
 ======================================
 
-#. 要将 Arduino Core for Zephyr 作为 Zephyr 模块引入，可以将其作为 West
-   项目添加到 west.yml 文件，或通过添加子 manifest（例如
-   ``zephyr/submanifests/arduinocore.yaml``）文件引入，内容如下：
+#. 要将 Arduino Core for Zephyr 作为 Zephyr 模块引入，可以将其作为 West 项目添加到 west.yml 文件，或通过添加子 manifest（例如 ``zephyr/submanifests/arduinocore.yaml``）文件引入，内容如下：
 
    .. code-block:: yaml
 
@@ -86,17 +75,13 @@ Zephyr 原生 API 和驱动实现。
 
       west update
 
-#. 对于 Linux 用户，模块中有一个 ``install.sh`` 脚本，会自动链接
-   ArduinoCore-API。如果无法使用该脚本，请按照以下手动步骤操作。
+#. 对于 Linux 用户，模块中有一个 ``install.sh`` 脚本，会自动链接 ArduinoCore-API。如果无法使用该脚本，请按照以下手动步骤操作。
 
    .. note::
 
-      如果 install.sh 脚本运行成功，请跳过下一步。下一步面向 Linux 用户，
-      其模块安装位置可能有所不同，或使用了带自定义路径的自定义
-      Zephyr 配置。
+      如果 install.sh 脚本运行成功，请跳过下一步。下一步面向 Linux 用户，其模块安装位置可能有所不同，或使用了带自定义路径的自定义 Zephyr 配置。
 
-#. 通过将 ArduinoCore-API 仓库中的 API 文件夹链接到 arduinocore-zephyr
-   文件夹，完成核心设置：
+#. 通过将 ArduinoCore-API 仓库中的 API 文件夹链接到 arduinocore-zephyr 文件夹，完成核心设置：
 
    .. code-block:: bash
 
@@ -107,8 +92,7 @@ Zephyr 原生 API 和驱动实现。
 在应用中使用 Arduino Core API
 ==============================
 
-#. 在应用的 ``prj.conf`` 文件中，启用 Arduino API 配置，方式类似于
-   `blinky_arduino 示例`_ 中的做法。
+#. 在应用的 ``prj.conf`` 文件中，启用 Arduino API 配置，方式类似于 `blinky_arduino 示例`_ 中的做法。
 
 #. 使用 Arduino 风格代码创建应用：
 
@@ -136,8 +120,7 @@ Zephyr 原生 API 和驱动实现。
 添加自定义板级支持
 ==================
 
-受支持的板位于 arduinocore-zephyr 的 ``variants/`` 目录中。
-要为自定义板添加支持：
+受支持的板位于 arduinocore-zephyr 的 ``variants/`` 目录中。要为自定义板添加支持：
 
 #. 在 ``variants/`` 目录中创建一个以板名命名的新文件夹
 #. 添加与板名匹配的 overlay 文件和 pinmap 头文件

@@ -1,197 +1,50 @@
 .. _i2s_api:
 
-Inter-IC
-Sound
-（I2S）
-Bus
+IC 间音频（I2S）总线
 ########################
 
-Overview
+概述
 ********
 
-I2S
-（Inter-IC
-Sound）
-API
-提供
-对
-标准
-I2S
-接口
-的
-支持
-以及
-常见
-的
-非
-标准
-extensions
-如
-PCM
-Short/Long
-Frame
-Sync
-和
-Left/Right
-Justified
-Data
-Formats。
+I2S（IC 间音频）API 支持标准 I2S 接口，以及常见的非标准扩展，例如 PCM 短/长帧同步（PCM Short/Long Frame Sync）和左/右对齐数据格式（Left/Right Justified Data Formats）。
 
 Shell
 *****
 
-当
-:kconfig:option:`CONFIG_I2S_SHELL`
-被
-启用
-时，
-``i2s``
-shell
-命令
-可用
-于
-通过
-任何
-I2S
-controller
-stream
-一
-个
-生成
-的
-sine
-test
-tone
-而
-不
-写
-应用
-代码。
-它
-只
-是
-transport；
-与
-``codec``
-shell
-配对
-将
-audio
-通过
-codec
-路由。
+启用 :kconfig:option:`CONFIG_I2S_SHELL` 后，可使用 ``i2s`` shell 命令，无需编写应用代码即可在任意 I2S 控制器上输出生成的正弦测试音。它仅负责传输；请将其与 ``codec`` shell 命令配合使用，以便通过 codec 路由音频。
 
-Tone
-命令
-分组
-在
-``i2s
-tone``
-下：
+测试音命令分组在 ``i2s tone`` 之下：
 
-* ``i2s
-  tone
-  start
-  <device>
-  [frequency_hz]
-  [sample_rate]
-  [bits]``
-  在
-  给出
-  的
-  I2S
-  device
-  上
-  开始
-  一
-  个
-  stereo
-  test
-  tone。
-  ``frequency_hz``
-  默认
-  440
-  Hz，
-  ``sample_rate``
-  默认
-  48000
-  Hz，
-  ``bits``
-  默认
-  16
-  （有效
-  值
-  是
-  16、
-  24
-  和
-  32）。
-* ``i2s
-  tone
-  stop``
-  停止
-  运行
-  的
-  tone。
-* ``i2s
-  tone
-  info``
-  显示
-  当前
-  tone
-  stream
-  状态。
+* ``i2s tone start <device> [frequency_hz] [sample_rate] [bits]`` 在指定的 I2S 设备上启动立体声测试音。``frequency_hz`` 默认为 440 Hz，``sample_rate`` 默认为 48000 Hz，``bits`` 默认为 16（有效值为 16、24 和 32）。
+* ``i2s tone stop`` 停止正在播放的测试音。
+* ``i2s tone info`` 显示当前测试音流的状态。
 
-例如，
-要
-stream
-一
-个
-1
-kHz、
-48
-kHz、
-16-bit
-的
-tone：
+例如，要输出一个 1 kHz、48 kHz、16 位的测试音：
 
 .. code-block:: console
 
-   uart:~$
-   i2s
-   tone
-   start
-   i2s@0
-   1000
-   48000
-   16
-   Streaming
-   1000
-   Hz
-   tone
-   on
-   i2s@0
-   @
-   48000
-   Hz,
-   16-bit
-   stereo
-   uart:~$
-   i2s
-   tone
-   info
-   state
-   :
-   streaming
-   i2s
-   dev
-   :
-   i2s@0
-   tone
-   :
-   1000
-   Hz
-   rate
-   :
-   48000
-   Hz
+   uart:~$ i2s tone start i2s@0 1000 48000 16
+   Streaming 1000 Hz tone on i2s@0 @ 48000 Hz, 16-bit stereo
+   uart:~$ i2s tone info
+   state    : streaming
+   i2s dev  : i2s@0
+   tone     : 1000 Hz
+   rate     : 48000 Hz
+   format   : 16-bit stereo, 64-frame blocks x 8
+   uart:~$ i2s tone stop
+   Stopped
+
+shell 使用的发送（TX）缓冲由 :kconfig:option:`CONFIG_I2S_SHELL_BLOCK_FRAMES` 和 :kconfig:option:`CONFIG_I2S_SHELL_BLOCK_COUNT` 控制。
+
+配置选项
+*********************
+
+相关配置选项：
+
+* :kconfig:option:`CONFIG_I2S`
+* :kconfig:option:`CONFIG_I2S_SHELL`
+
+API 参考
+*************
+
+.. doxygengroup:: i2s_interface

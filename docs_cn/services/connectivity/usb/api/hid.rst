@@ -1,74 +1,25 @@
 .. _usb_hid_common:
 
-Human
-Interface
-Devices
-（HID）
+Human Interface Devices (HID)
 #############################
 
-Common
-的
-USB
-HID
-part
-它
-可
-被
-used
-在
-USB
-support
-之外
-它
-defined
-在
-header
-file
-:zephyr_file:`include/zephyr/usb/class/hid.h`
-中。
+可在 USB support 外使用的通用 USB HID 部分（定义在
+header file :zephyr_file:`include/zephyr/usb/class/hid.h`。
 
-HID
-types
-reference
+HID types reference
 *******************
 
-.. doxygengroup::
-   usb_hid_definitions
+.. doxygengroup:: usb_hid_definitions
 
-HID
-items
-reference
+HID items reference
 *******************
 
-.. doxygengroup::
-   usb_hid_items
+.. doxygengroup:: usb_hid_items
 
-HID
-Mouse
-and
-Keyboard
-report
-descriptors
+HID Mouse and Keyboard report descriptors
 *****************************************
 
-Pre
-defined
-的
-Mouse
-和
-Keyboard
-report
-descriptors
-可以
-被
-HID
-device
-implementation
-used
-或
-简单
-作为
-examples。
+预定义的 Mouse 和 Keyboard report descriptors 可由
+HID device implementation 使用（或仅作示例。
 
-.. doxygengroup::
-   usb_hid_mk_report_desc
+.. doxygengroup:: usb_hid_mk_report_desc

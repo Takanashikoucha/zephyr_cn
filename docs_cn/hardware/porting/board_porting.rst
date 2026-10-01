@@ -1,258 +1,243 @@
 .. _board_porting_guide:
 
-Board
-Porting
-Guide
+Board 移植指南
 ###################
 
-要
-为
-新
-的
-:term:`board`
-添加
-Zephyr
-支持
-你
-至少
-需要
-一
-个
-*board
-directory*
-带
-各种
-files。
-Board
-directory
-中
-的
-files
-继承
-至少
-一
-个
-SoC
-和
-其
-所有
-features
-的
-支持。
-因此
-Zephyr
-必须
-也
-支持
-你的
-:term:`SoC`。
+要为新的 :term:`board` 添加 Zephyr 支持，你至少需要一个带各种文件的 *board 目录*。
+Board 目录中的文件继承对至少一个 SoC 及其所有功能的支持。
+因此，Zephyr 还必须支持你的 :term:`SoC`。
 
 .. _hw_model_v2:
 
-Transition
-to
-the
-current
-hardware
-model
+过渡到当前硬件模型
 ****************************************
 
-在
-Zephyr
-3.6.0
-发布
-后
-不久
-新
-的
-hardware
-model
-被
-引入
-Zephyr。
-这
-个
-新
-model
-overhaul
-了
-SoCs
-和
-boards
-被
-命名
-和
-defined
-的
-方式
-并
-添加
-对
-多年来
-被
-识别
-为
-重要
-的
-features
-的
-支持。
-其中
-包括：
+在 Zephyr 3.6.0 发布后不久，向 Zephyr 引入了新硬件模型。
+此新模型彻底改变了 SoCs 和 boards 的命名和定义方式，
+并添加了对多年来被识别为重要的功能的支持。
+其中包括：
 
-- 支持
-  multi
-  core、
-  multi
-  arch
-  AMP
-  （Asymmetrical
-  Multi
-  Processing）
-  SoCs
-- 支持
-  multi
-  SoC
-  boards
-- 支持
-  在
-  Zephyr
-  build
-  system
-  外
-  复用
-  SoC
-  和
-  board
-  Kconfig
-  trees
-- 支持
-  用
-  :ref:`sysbuild`
-  的
-  advanced
-  use
-  cases
-- 移除
-  所有
-  现有
-  的
-  arbitrary
-  和
-  inconsistent
-  的
-  Kconfig
-  和
-  folder
-  names
-  使用
+- 支持多核、多架构 AMP（非对称多处理）SoCs
+- 支持多 SoC boards
+- 支持在 Zephyr 构建系统之外复用 SoC 和 board Kconfig 树
+- 支持用 :ref:`sysbuild` 的高级用例
+- 移除所有现有任意和不一致的 Kconfig 和文件夹名称使用
 
-这
-页
-上
-的
-所有
-documentation
-都
-参考
-当前
-的
-hardware
-model。
-请
-参考
-Zephyr
-v3.6.0
-（或
-更早
-）
-的
-documentation
-获取
-之前
-的
-现在
-已
-obsolete
-的
-hardware
-model
-的
-信息。
+此页面上的所有文档都指当前硬件模型。
+请参见 Zephyr v3.6.0（或更早）中的文档以获取先前（现已过时）硬件模型的信息。
 
-关于
-新
-model
-背后
-的
-rationale、
-development
-和
-concepts
-的
-更多
-信息
-可以
-在
-:github:`original
-issue
-<51831>`、
-:github:`original
-Pull
-Request
-<50305>`
-以及
-关于
-引入
-的
-完整
-changes
-set
-的
-`hardware
-model
-v2
-commit`_
-中
-找到。
+有关新模型背后理由、开发和概念的更多信息可在 :github:`original issue <51831>`、
+:github:`original Pull Request <50305>` 中找到，
+对于引入的完整变更集，参见 `hardware model v2 commit`_。
 
-新
-hardware
-model
-的
-一些
-non
-critical
-的
-features、
-enhancements
-和
-improvements
-仍
-在
-development
-中。
-参考
-:github:`hardware
-model
-v2
-enhancements
-issue
-<69546>`
-获取
-完整
-列表。
+新硬件模型的某些非关键特性、增强和改进仍在开发中。
+参见 :github:`hardware model v2 enhancements issue <69546>` 获取完整列表。
 
+从先前硬件模型过渡到当前模型（通常称为 "hardware model v2"）
+需要对所有现有 board 和 SoC 定义进行修改。
+已决定不为先前模型提供直接向后兼容性，
+这使得从先前 Zephyr 版本过渡到包含新模型（v3.7.0 及以后）的用户
+如果他们有 out-of-tree board（或 SoC）有两个选项：
+
+#. 将 out-of-tree board 转换到当前硬件模型（推荐）
+#. 从 Zephyr v3.6.0 获取 SoC 定义并复制到你的下游仓库
+   （确保构建系统可通过 :ref:`zephyr module <modules>` 或 ``SOC_ROOT`` 找到它）。
+   这将允许你的 board（在先前硬件模型中定义）继续工作
+
+在将你的 board 从先前硬件模型转换到当前硬件模型时，
+我们建议先通读此页以详细了解模型。
+然后可以用 `example-application conversion Pull Request`_ 作为移植简单 board 的示例。
+此外，提供了 `conversion script`_ 且在许多情况下可靠工作
+（尽管多核 SoCs 可能未完全处理）。
+最后，`hardware model v2 commit`_ 包含所有现有 boards 从旧模型到当前模型的完整转换，
+因此你可以将其用作完整转换参考。
+
+.. _hardware model v2 commit: https://github.com/zephyrproject-rtos/zephyr/commit/8dc3f856229ce083c956aa301c31a23e65bd8cd8
+.. _example-application conversion Pull Request: https://github.com/zephyrproject-rtos/example-application/pull/58
+.. _conversion script: https://github.com/zephyrproject-rtos/zephyr/blob/main/scripts/utils/board_v1_to_v2.py
+
+.. _hw_support_hierarchy:
+
+硬件支持层级
+**************************
+
+Zephyr 的硬件支持基于一系列层级抽象。
+主要地，每个 :term:`board` 有一个或多个 :term:`SoC`。
+每个 SoC 可以可选地归类到 :term:`SoC series`，
+后者可以可选地属于 :term:`SoC family`。
+每个 SoC 有一个或多个 :term:`CPU cluster`，
+每个包含一个或多个特定 :term:`architecture` 的 :term:`CPU core`。
+
+你可以在下图可视化层级：
+
+.. figure:: board/hierarchy.png
+   :width: 500px
+   :align: center
+   :alt: Hardware support Hierarchy
+
+   Hardware 支持层级
+
+下面是本节描述的层级的几个示例，
+以每行一个 :term:`board` 及其对应层级条目的形式呈现。
+注意 :term:`SoC series` 和 :term:`SoC family` 层级并不总是被使用。
+
+.. table::
+
+   +--------------------------------------------+--------------------------+-------------+--------------------+--------------------+----------------+----------------------+
+   | :term:`board name`                         | :term:`board qualifiers` | :term:`SoC` | :term:`SoC Series` | :term:`SoC family` | CPU core       | :term:`architecture` |
+   +============================================+==========================+=============+====================+====================+================+======================+
+   | :zephyr:board:`nrf52dk`                    | nrf52832                 | nRF52832    | nRF52              | Nordic nRF         | Arm Cortex-M4  | ARMv7-M              |
+   +--------------------------------------------+--------------------------+-------------+--------------------+--------------------+----------------+----------------------+
+   | :zephyr:board:`frdm_k64f <frdm_k64f>`      | mk64f12                  | MK64F12     | Kinetis K6x        | NXP Kinetis        | Arm Cortex-M4  | ARMv7-M              |
+   +--------------------------------------------+--------------------------+-------------+--------------------+--------------------+----------------+----------------------+
+   | :zephyr:board:`rv32m1_vega <rv32m1_vega>`  | openisa_rv32m1/ri5cy     | RV32M1      | (Not used)         | (Not used)         | RI5CY          | RISC-V RV32          |
+   +--------------------------------------------+--------------------------+-------------+--------------------+--------------------+----------------+----------------------+
+   | :zephyr:board:`nrf5340dk`                  | nrf5340/cpuapp           | nRF5340     | nRF53              | Nordic nRF         | Arm Cortex-M33 | ARMv8-M              |
+   |                                            +--------------------------+-------------+--------------------+--------------------+----------------+----------------------+
+   |                                            | nrf5340/cpunet           | nRF5340     | nRF53              | Nordic nRF         | Arm Cortex-M33 | ARMv8-M              |
+   +--------------------------------------------+--------------------------+-------------+--------------------+--------------------+----------------+----------------------+
+   | :zephyr:board:`mimx8mp_evk <imx8mp_evk>`   | mimx8ml8/a53             | i.MX8M Plus | i.MX8M             | NXP i.MX           | Arm Cortex-A53 | ARMv8-A              |
+   |                                            +--------------------------+-------------+--------------------+--------------------+----------------+----------------------+
+   |                                            | mimx8ml8/m7              | i.MX8M Plus | i.MX8M             | NXP i.MX           | Arm Cortex-M7  | ARMv7-M              |
+   |                                            +--------------------------+-------------+--------------------+--------------------+----------------+----------------------+
+   |                                            | mimx8ml8/adsp            | i.MX8M Plus | i.MX8M             | NXP i.MX           | Cadence HIFI4  | Xtensa LX6           |
+   +--------------------------------------------+--------------------------+-------------+--------------------+--------------------+----------------+----------------------+
+
+术语的更多细节可在下一节找到。
+
+.. _board_terminology:
+
+Board 术语
+*****************
+
+上一节介绍了 Zephyr 分类和实现硬件支持的层级方式。
+本节聚焦于硬件支持周围使用的术语，
+特别是在定义和处理 boards 和 SoCs 时。
+
+Zephyr 中围绕 board 概念使用的整套术语在下图中描绘，
+该图以 :zephyr:board:`bl5340_dvk` board 作为参考。
+
+.. figure:: board/board-terminology.svg
+   :width: 500px
+   :align: center
+   :alt: Board terminology diagram
+
+   Board 术语图
+
+该图显示了用于描述 boards 的不同术语：
+
+- :term:`board name`：``bl5340_dvk``
+- 可选的 :term:`board revision`：``1.2.0``
+- :term:`board qualifiers`，可选地描述 :term:`SoC`、
+  :term:`CPU cluster` 和 :term:`variant`：``nrf5340/cpuapp/ns``
+- :term:`board target`，唯一标识上述组合，
+  可用于在使用 Zephyr 提供的工具时指定要为其构建的硬件：
+  ``bl5340_dvk@1.2.0/nrf5340/cpuapp/ns``
+
+从形式上看，这也可以看作
+:samp:`{board name}[@{revision}][/{board qualifiers}]`，
+它可以扩展为
+:samp:`{board name}[@{revision}][/{SoC}[/{CPU cluster}][/{variant}]]`。
+
+如果 board 只包含一个单核 SoC，那么 board target 中可以省略 SoC。
+这意味着如果 board 未定义任何 board qualifiers，
+board 名称可作为 board target 使用。
+相反，如果 board qualifiers 是 board 定义的一部分，
+那么可以通过省略 SoC 但保留对应的前斜杠来省略它：``//``。
+
+继续上面的示例，board :zephyr:board:`bl5340_dvk` 是单 SoC board，
+其中 SoC 定义了两个 CPU cluster：``cpuapp`` 和 ``cpunet``。
+其中一个 CPU cluster ``cpuapp`` 额外定义了一个非安全 board variant ``ns``。
+
+board qualifiers ``nrf5340/cpuapp/ns`` 可以读作：
+
+- ``nrf5340``：SoC，它是 Nordic nRF5340 双核 SoC
+- ``cpuapp``：CPU cluster ``cpuapp``，它由单个 Cortex-M33 CPU core 组成。
+  CPU cluster 中的核心数无法从 board qualifiers 确定。
+- ``ns``：一个 variant，在此情况下 ``ns`` 是 Zephyr 中常见的 variant 名称，
+  表示支持 :ref:`tfm` 的 boards 的非安全构建。
+
+并非所有 SoCs 都定义 CPU cluster 或 variants。
+例如像 :zephyr:board:`thingy52` 这样的简单 board
+包含一个没有 CPU cluster 和 variants 的单 SoC。
+对于 ``thingy52``，board target ``thingy52/nrf52832`` 可以读作：
+
+- ``thingy52``：board 名称。
+- ``nrf52832``：board qualifiers，在此情况下与 SoC 相同，
+  它是 Nordic nRF52832。
+
+确保你的 SoC 受支持
+*******************************
+
+首先确保你的 SoC 受 Zephyr 支持。
+如果是，是时候 :ref:`create-your-board-directory` 了。
+如果你不知道，试试：
+
+- 查看 :ref:`boards` 中看起来相关的名称，
+  并阅读单独的 board 文档以确认。
+- 询问你的 SoC vendor
+
+如果你需要添加 SoC、CPU cluster 甚至 architecture 支持，
+此页不是正确的页面，但这里有一些一般建议。
+
+Architecture
+=============
+
+参见 :ref:`architecture_porting_guide`。
+
+CPU Core
+========
+
+CPU core 支持文件放在 :zephyr_file:`arch` 下的 ``core`` 子目录中，
+例如 :zephyr_file:`arch/x86/core`。
+
+参见 :ref:`gs_toolchain` 了解 Zephyr 支持的工具链（编译器、链接器等）信息。
+如果你需要支持新工具链，:ref:`build_overview` 是开始学习构建系统的好地方。
+如果你正在寻求建议或希望协作支持工具链，请联系社区。
+
+SoC
+===
+
+Zephyr SoC 支持文件位于 :zephyr_file:`soc` 的特定于架构的子目录中。
+它们通常按 SoC family 分组。
+
+在为已经有 SoC 支持的 vendor 添加新的 SoC family 或 series 时，
+请尝试将通用功能提取到共享文件中以避免重复。
+如果你的 vendor 还没有支持，你可以在新目录 ``zephyr/soc/<VENDOR>/<YOUR-SOC>`` 中添加它；
+请使用自解释的目录名称。
+
+.. _create-your-board-directory:
+
+创建你的 board 目录
+***************************
+
+一旦你找到使用你的 SoC 的现有 board，
+你通常可以通过复制/粘贴其 board 目录并修改其内容以适配你的硬件来开始。
+
+你需要为你的 board 赋予一个唯一的名称。
+运行 ``west boards`` 查看已被占用的名称列表，然后选择一个新的名称。
+假设你的 board 叫做 ``plank``（请实际上不要使用该名称）。
+
+从创建 board 目录 ``zephyr/boards/<VENDOR>/plank`` 开始，
+其中 ``<VENDOR>`` 是你的 vendor 子目录。
+（你不必将 board 目录放在 zephyr 仓库中，但这是开始的最简单方式。
+参见 :ref:`custom_board_definition` 了解如何将你的 board 目录
+移到单独仓库的文档。）
+
+.. note::
+   如果要将你的 board 贡献给 Zephyr，``<VENDOR>`` 子目录是强制要求的，
+   但如果你的 board 放在本地仓库中，
+   则允许 ``<your-repo>/boards`` 下的任何文件夹结构。
+   如果 vendor 在 :zephyr_file:`dts/bindings/vendor-prefixes.txt`
+   的列表中有定义，则必须使用该 vendor 前缀作为 ``<VENDOR>``。
+   如果 vendor 未定义，可以使用 ``others`` 作为 vendor 前缀。
 
 .. note::
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-.. note::
+   board 目录名称不必与 board 名称匹配。
+   甚至可以在一个目录中定义多个 boards。
 
-  The board directory name does not need to match the name of the board.
-  Multiple boards can even be defined in one directory.
-
-Your board directory should look like this:
+你的 board 目录应该如下所示：
 
 .. code-block:: none
 
@@ -261,66 +246,62 @@ Your board directory should look like this:
    ├── board.cmake
    ├── CMakeLists.txt
    ├── doc
-   │   ├── plank.webp
-   │   └── index.rst
+   │   ├── plank.webp
+   │   └── index.rst
    ├── Kconfig.plank
    ├── Kconfig.defconfig
    ├── plank_<qualifiers>_defconfig
    ├── plank_<qualifiers>.dts
    └── plank_<qualifiers>.yaml
 
-Replace ``plank`` with your board's name, of course.
+当然，用你的 board 名称替换 ``plank``。
 
-The mandatory files are:
+强制文件是：
 
-#. :file:`board.yml`: a YAML file describing the high-level meta data of the
-   boards such as the boards names, their SoCs, and variants.
-   CPU clusters for multi-core SoCs are not described in this file as they are
-   inherited from the SoC's YAML description.
+#. :file:`board.yml`：描述 boards 高层元数据的 YAML 文件，
+   例如 boards 名称、它们的 SoCs 和 variants。
+   多核 SoCs 的 CPU cluster 不在此文件中描述，
+   因为它们继承自 SoC 的 YAML 描述。
 
-#. :file:`plank_<qualifiers>.dts`: a hardware description
-   in :ref:`devicetree <dt-guide>` format. This declares your SoC, connectors,
-   and any other hardware components such as LEDs, buttons, sensors, or
-   communication peripherals (USB, Bluetooth controller, etc).
+#. :file:`plank_<qualifiers>.dts`：以 :ref:`devicetree <dt-guide>`
+   格式的硬件描述。
+   这声明你的 SoC、连接器和任何其他硬件组件，
+   例如 LED、按钮、传感器或通信外设（USB、蓝牙控制器等）。
 
-#. :file:`Kconfig.plank`: the base software configuration for selecting SoC and
-   other board and SoC related settings. Kconfig settings outside of the board
-   and SoC tree must not be selected. To select general Zephyr Kconfig settings
-   the :file:`Kconfig` file must be used.
+#. :file:`Kconfig.plank`：选择 SoC 以及其他 board 和 SoC 相关设置的
+   基础软件配置。
+   不得选择 board 和 SoC 树之外的 Kconfig 设置。
+   要选择通用 Zephyr Kconfig 设置，必须使用 :file:`Kconfig` 文件。
 
+可选文件是：
 
-The optional files are:
+- :file:`Kconfig`、:file:`Kconfig.defconfig`：以 :ref:`kconfig` 格式的
+  软件配置。
+  这为软件功能和外设驱动程序提供默认设置。
+- :file:`plank_defconfig` 和 :file:`plank_<qualifiers>_defconfig`：
+  以 Kconfig ``.conf`` 格式的软件配置。
+- :file:`board.cmake`：用于 :ref:`flash-and-debug-support`
+- :file:`CMakeLists.txt`：如果你需要向构建中添加额外的源文件。
+- :file:`doc/index.rst`、:file:`doc/plank.webp`：你的 board 的文档和一张图片。
+  只有当你 :ref:`contributing-your-board` 给 Zephyr 时才需要它。
+- :file:`plank_<qualifiers>.yaml`：包含 :ref:`twister_script` 使用的
+  杂项元数据的 YAML 文件。
 
-- :file:`Kconfig`, :file:`Kconfig.defconfig` software configuration in
-  :ref:`kconfig` formats. This provides default settings for software features
-  and peripheral drivers.
-- :file:`plank_defconfig` and :file:`plank_<qualifiers>_defconfig`: software
-  configuration in Kconfig ``.conf`` format.
-- :file:`board.cmake`: used for :ref:`flash-and-debug-support`
-- :file:`CMakeLists.txt`: if you need to add additional source files to
-  your build.
-- :file:`doc/index.rst`, :file:`doc/plank.webp`: documentation for and a picture
-  of your board. You only need this if you're :ref:`contributing-your-board` to
-  Zephyr.
-- :file:`plank_<qualifiers>.yaml`: a YAML file with miscellaneous metadata used
-  by the :ref:`twister_script`.
-
-Board qualifiers of the form ``<soc>/<cpucluster>/<variant>`` are normalized so
-that ``/`` is replaced with ``_`` when used for filenames, for example:
-``soc1/foo`` becomes ``soc1_foo`` when used in filenames.
+形式为 ``<soc>/<cpucluster>/<variant>`` 的 board qualifiers
+会被规范化，使得在用于文件名时 ``/`` 被替换为 ``_``，
+例如：``soc1/foo`` 在用于文件名时变为 ``soc1_foo``。
 
 .. _board_description:
 
-Write your board YAML
+编写你的 board YAML
 *********************
 
-The board YAML file describes the board at a high level.
-This includes the SoC, board variants, and board revisions.
+board YAML 文件在高层描述 board。
+这包括 SoC、board variants 和 board revisions。
 
-Detailed configurations, such as hardware description and configuration are done
-in devicetree and Kconfig.
+详细配置，例如硬件描述和配置，在 devicetree 和 Kconfig 中完成。
 
-The skeleton of the board YAML file is:
+board YAML 文件的骨架是：
 
 .. code-block:: yaml
 
@@ -347,9 +328,9 @@ The skeleton of the board YAML file is:
      - name: <soc-2>
        ...
 
-It is possible to have multiple boards located in the board folder.
-If multiple boards are placed in the same board folder, then the file
-:file:`board.yml` must describe those in a list as:
+可以在 board 文件夹中放置多个 boards。
+如果多个 boards 放在同一 board 文件夹中，
+则 :file:`board.yml` 文件必须以列表形式描述它们，如下所示：
 
 .. code-block:: yaml
 
@@ -367,14 +348,15 @@ If multiple boards are placed in the same board folder, then the file
 
 .. _default_board_configuration:
 
-Write your devicetree
+编写你的 devicetree
 *********************
 
-The devicetree file :file:`boards/<vendor>/plank/plank_<qualifiers>.dts` describes your board
-hardware in the Devicetree Source (DTS) format (as usual, change ``plank`` to
-your board's name). If you're new to devicetree, see :ref:`devicetree-intro`.
+devicetree 文件 :file:`boards/<vendor>/plank/plank_<qualifiers>.dts`
+以 Devicetree Source (DTS) 格式描述你的 board 硬件
+（照例，将 ``plank`` 改为你的 board 名称）。
+如果你是 devicetree 新手，参见 :ref:`devicetree-intro`。
 
-In general, :file:`plank_<qualifiers>.dts` should look like this:
+通常，:file:`plank_<qualifiers>.dts` 应该如下所示：
 
 .. code-block:: devicetree
 
@@ -424,43 +406,40 @@ In general, :file:`plank_<qualifiers>.dts` should look like this:
            status = "okay";
    };
 
-In the case a board has only a single SoC, without any board variants then the dts file can be
-named :file:`<plank>.dts` instead, however this is not recommended due to the file silently be
-unused if a variant or other SoC is added to the board.
+在 board 只包含单个 SoC 且没有任何 board variants 的情况下，
+dts 文件可以命名为 :file:`<plank>.dts`，
+但由于如果向 board 添加了 variant 或其他 SoC 该文件会静默地不被使用，
+因此不推荐这样做。
 
-If you're in a hurry, simple hardware can usually be supported by copy/paste
-followed by trial and error. If you want to understand details, you will need
-to read the rest of the devicetree documentation and the devicetree
-specification.
+如果你赶时间，简单硬件通常可以通过复制/粘贴加试错来支持。
+如果你想了解细节，需要阅读其余的 devicetree 文档和 devicetree 规范。
 
 .. _dt_k6x_example:
 
-Example: FRDM-K64F and Hexiwear K64
+示例：FRDM-K64F 和 Hexiwear K64
 ===================================
 
 .. Give the filenames instead of the full paths below, as it's easier to read.
    The cramped 'foo.dts<path>' style avoids extra spaces before commas.
 
-This section contains concrete examples related to writing your board's
-devicetree.
+本节包含与编写你的 board devicetree 相关的具体示例。
 
-The FRDM-K64F and Hexiwear K64 board devicetrees are defined in
-:zephyr_file:`frdm_k64fs.dts <boards/nxp/frdm_k64f/frdm_k64f.dts>` and
-:zephyr_file:`hexiwear_k64.dts <boards/mikroe/hexiwear/hexiwear_mk64f12.dts>`
-respectively. Both boards have NXP SoCs from the same Kinetis SoC family, the
-K6X.
+FRDM-K64F 和 Hexiwear K64 board 的 devicetree 分别定义在
+:zephyr_file:`frdm_k64fs.dts <boards/nxp/frdm_k64f/frdm_k64f.dts>` 和
+:zephyr_file:`hexiwear_k64.dts <boards/mikroe/hexiwear/hexiwear_mk64f12.dts>` 中。
+两个 boards 都有来自同一 Kinetis SoC family K6X 的 NXP SoCs。
 
-Common devicetree definitions for K6X are stored in :zephyr_file:`nxp_k6x.dtsi
-<dts/arm/nxp/kinetis/k6x/nxp_k6x.dtsi>`, which is included by both board
-:file:`.dts` files. :zephyr_file:`nxp_k6x.dtsi<dts/arm/nxp/kinetis/k6x/nxp_k6x.dtsi>`
-in turn includes
-:zephyr_file:`armv7-m.dtsi<dts/arm/armv7-m.dtsi>`, which has common definitions
-for Arm v7-M cores.
+K6X 的通用 devicetree 定义存储在
+:zephyr_file:`nxp_k6x.dtsi <dts/arm/nxp/kinetis/k6x/nxp_k6x.dtsi>` 中，
+它被两个 board 的 :file:`.dts` 文件包含。
+:zephyr_file:`nxp_k6x.dtsi<dts/arm/nxp/kinetis/k6x/nxp_k6x.dtsi>`
+反过来包含 :zephyr_file:`armv7-m.dtsi<dts/arm/armv7-m.dtsi>`，
+后者有 Arm v7-M cores 的通用定义。
 
-Since :zephyr_file:`nxp_k6x.dtsi<dts/arm/nxp/kinetis/k6x/nxp_k6x.dtsi>` is meant to be
-generic across K6X-based boards, it leaves many devices disabled by default
-using ``status`` properties.  For example, there is a CAN controller defined as
-follows (with unimportant parts skipped):
+由于 :zephyr_file:`nxp_k6x.dtsi<dts/arm/nxp/kinetis/k6x/nxp_k6x.dtsi>`
+旨在跨基于 K6X 的 boards 通用化，
+它使用 ``status`` 属性默认禁用许多设备。
+例如，有一个 CAN 控制器定义如下（跳过不重要的部分）：
 
 .. code-block:: devicetree
 
@@ -470,13 +449,13 @@ follows (with unimportant parts skipped):
         ...
    };
 
-It is up to the board :file:`.dts` or application overlay files to enable these
-devices as desired, by setting ``status = "okay"``. The board :file:`.dts`
-files are also responsible for any board-specific configuration of the device,
-such as adding nodes for on-board sensors, LEDs, buttons, etc.
+由 board 的 :file:`.dts` 或应用程序 overlay 文件来决定
+是否通过设置 ``status = "okay"`` 来启用这些设备。
+board 的 :file:`.dts` 文件还负责设备的任何 board 特定配置，
+例如添加板载传感器、LED、按钮等的节点。
 
-For example, FRDM-K64 (but not Hexiwear K64) :file:`.dts` enables the CAN
-controller and sets the bus speed:
+例如，FRDM-K64（但 Hexiwear K64 不）的 :file:`.dts`
+启用 CAN 控制器并设置总线速度：
 
 .. code-block:: devicetree
 
@@ -484,27 +463,26 @@ controller and sets the bus speed:
         status = "okay";
    };
 
-The ``&can0 { ... };`` syntax adds/overrides properties on the node with label
-``can0``, i.e. the ``can@4002400`` node defined in the :file:`.dtsi` file.
+``&can0 { ... };`` 语法在标签为 ``can0`` 的节点上添加/覆盖属性，
+即 :file:`.dtsi` 文件中定义的 ``can@40024000`` 节点。
 
-Other examples of board-specific customization is pointing properties in
-``aliases`` and ``chosen`` to the right nodes (see :ref:`dt-alias-chosen`), and
-making GPIO/pinmux assignments.
+board 特定定制的其他示例是将 ``aliases`` 和 ``chosen`` 中的属性
+指向正确的节点（参见 :ref:`dt-alias-chosen`），
+以及进行 GPIO/pinmux 分配。
 
 .. _board_kconfig_files:
 
-Write Kconfig files
+编写 Kconfig 文件
 *******************
 
-Zephyr uses the Kconfig language to configure software features. Your board
-needs to provide some Kconfig settings before you can compile a Zephyr
-application for it.
+Zephyr 使用 Kconfig 语言配置软件功能。
+你的 board 需要提供一些 Kconfig 设置，
+然后才能为它编译 Zephyr 应用程序。
 
-Setting Kconfig configuration values is documented in detail in
-:ref:`setting_configuration_values`.
+设置 Kconfig 配置值在 :ref:`setting_configuration_values` 中详细记录。
 
-There is one mandatory Kconfig file in the board directory, and several optional
-files for a board named ``plank``:
+board 目录中有一个强制 Kconfig 文件，
+对于名为 ``plank`` 的 board 还有几个可选文件：
 
 .. code-block:: none
 
@@ -515,50 +493,48 @@ files for a board named ``plank``:
    └── plank_<qualifiers>_defconfig
 
 :file:`Kconfig.plank`
-  A shared Kconfig file which can be sourced both in Zephyr Kconfig and sysbuild
-  Kconfig trees.
+  一个共享 Kconfig 文件，可以在 Zephyr Kconfig 和 sysbuild
+  Kconfig 树中都被 source。
 
-  This file selects the SoC in the Kconfig tree and potential other SoC related
-  Kconfig settings. This file must not select anything outside the reusable
-  Kconfig board and SoC trees.
+  此文件在 Kconfig 树中选择 SoC 以及潜在的其他 SoC 相关
+  Kconfig 设置。
+  此文件不得选择可复用 Kconfig board 和 SoC 树之外的任何内容。
 
-  A :file:`Kconfig.plank` may look like this:
+  :file:`Kconfig.plank` 可能如下所示：
 
   .. code-block:: kconfig
 
      config BOARD_PLANK
              select SOC_SOC1
 
-  The Kconfig symbols :samp:`BOARD_{board}` and
-  :samp:`BOARD_{normalized_board_target}` are constructed by the build
-  system, therefore no type shall be defined in above code snippet.
+  Kconfig 符号 :samp:`BOARD_{board}` 和
+  :samp:`BOARD_{normalized_board_target}` 由构建系统构造，
+  因此上述代码片段中不应定义类型。
 
 :file:`Kconfig`
-  Included by :zephyr_file:`boards/Kconfig`.
+  由 :zephyr_file:`boards/Kconfig` 包含。
 
-  This file can add Kconfig settings which are specific to the current board.
+  此文件可以添加特定于当前 board 的 Kconfig 设置。
 
-  Not all boards have a :file:`Kconfig` file.
+  并非所有 boards 都有 :file:`Kconfig` 文件。
 
-  A board specific setting should be defining a custom setting and usually with
-  a prompt, like this:
+  board 特定设置应该是定义一个自定义设置，通常带有 prompt，如下所示：
 
   .. code-block:: kconfig
 
      config BOARD_FEATURE
              bool "Board specific feature"
 
-  If the setting name is identical to an existing Kconfig setting in Zephyr and
-  only modifies the default value of said setting, then
-  :file:`Kconfig.defconfig` should be used  instead.
+  如果设置名称与 Zephyr 中现有的 Kconfig 设置相同，
+  并且只修改该设置的默认值，
+  则应改用 :file:`Kconfig.defconfig`。
 
 :file:`Kconfig.defconfig`
-  Board-specific default values for Kconfig options.
+  Kconfig 选项的 board 特定默认值。
 
-  Not all boards have a :file:`Kconfig.defconfig` file.
+  并非所有 boards 都有 :file:`Kconfig.defconfig` 文件。
 
-  The entire file should be inside an ``if BOARD_PLANK`` / ``endif`` pair of
-  lines, like this:
+  整个文件应位于 ``if BOARD_PLANK`` / ``endif`` 行对内部，如下所示：
 
   .. code-block:: kconfig
 
@@ -576,150 +552,157 @@ files for a board named ``plank``:
 
      endif # BOARD_PLANK
 
-:file:`plank_<qualifiers>_defconfig` (or :file:`plank_defconfig` in limited circumstances)
-  A Kconfig fragment that is merged as-is into the final build directory
-  :file:`.config` whenever an application is compiled for your board.
+:file:`plank_<qualifiers>_defconfig`（或在有限情况下 :file:`plank_defconfig`）
+  一个 Kconfig fragment，每当为你的 board 编译应用程序时
+  原样合并到最终构建目录的 :file:`.config` 中。
 
-  :file:`plank_defconfig` can only be used with boards that have no qualifiers, no variants and a
-  single SoC present, though this style of naming is not recommended due to samples/tests or
-  downstream usage breaking suddenly without warning if a new SoC or board variant/qualifier is
-  added to an board in upstream Zephyr.
+  :file:`plank_defconfig` 只能用于没有 qualifiers、没有 variants 且
+  存在单个 SoC 的 boards，
+  尽管由于如果在上游 Zephyr 的 board 中添加了新 SoC 或 board variant/qualifier，
+  samples/tests 或下游使用会突然中断而无警告，
+  因此不推荐这种命名风格。
 
 .. note::
-  Multiple files are not merged and there is no fallback mechanism for files, this means if there
-  is a board with 2 different SoCs and each one has 2 board variants, a :file:`plank_defconfig`
-  file would be wholly unused, for the first qualifier and variant
-  :file:`plank_<soc1>_<variant1>_defconfig` will be used, it will not include other file.
+   多个文件不会被合并，文件之间也没有回退机制，
+   这意味着如果有一个 board 有 2 个不同的 SoCs 且每个有 2 个 board variants，
+   :file:`plank_defconfig` 文件对于第一个 qualifier 和 variant 将完全不被使用，
+   将使用 :file:`plank_<soc1>_<variant1>_defconfig`，
+   它不会包含其他文件。
 
-  The ``_defconfig`` should contain mandatory settings for your UART,
-  console, etc. The results are architecture-specific, but typically look
-  something like this:
+   ``_defconfig`` 应包含你的 UART、console 等的强制设置。
+   结果是特定于架构的，但通常看起来如下所示：
 
-  .. code-block:: cfg
+   .. code-block:: cfg
 
-     CONFIG_GPIO=y
-     CONFIG_CONSOLE=y
-     CONFIG_UART_CONSOLE=y
-     CONFIG_SERIAL=y
+      CONFIG_GPIO=y
+      CONFIG_CONSOLE=y
+      CONFIG_UART_CONSOLE=y
+      CONFIG_SERIAL=y
 
 :file:`plank_x_y_z_defconfig` / :file:`plank_<qualifiers>_x_y_z_defconfig`
-  A Kconfig fragment that is merged as-is into the final build directory
-  :file:`.config` whenever an application is compiled for your board revision
-  ``x.y.z``.
+  一个 Kconfig fragment，每当为你的 board revision ``x.y.z``
+  编译应用程序时原样合并到最终构建目录的 :file:`.config` 中。
 
-Build, test, and fix
+构建、测试和修复
 ********************
 
-Now it's time to build and test the application(s) you want to run on your
-board until you're satisfied.
+现在是时候构建和测试你想在你的 board 上运行的应用程序，
+直到你满意为止。
 
-For example:
+例如：
 
 .. code-block:: console
 
    west build -b plank samples/hello_world
    west flash
 
-For ``west flash`` to work, see :ref:`flash-and-debug-support` below. You can
-also just flash :file:`build/zephyr/zephyr.elf`, :file:`zephyr.hex`, or
-:file:`zephyr.bin` with any other tools you prefer.
+有关 ``west flash`` 如何工作，参见下面的 :ref:`flash-and-debug-support`。
+你也可以只用你偏好的任何其他工具刷写 :file:`build/zephyr/zephyr.elf`、
+:file:`zephyr.hex` 或 :file:`zephyr.bin`。
 
-Before submitting a board upstream, verify that every board target you add can
-pass the project's minimum open source test suite using only code from the
-mainline Zephyr repository and its modules. The suite currently consists of:
+在将 board 提交到上游之前，
+验证你添加的每个 board target 都能使用仅来自主线 Zephyr 仓库
+及其模块的代码通过项目的最小开源测试套件。
+该套件目前由以下组成：
 
 - :file:`samples/philosophers`
 - :file:`tests/kernel`
 
-For example, build the suite for a board target with:
+例如，为 board target 构建套件：
 
 .. code-block:: console
 
    west twister -p plank -T samples/philosophers -T tests/kernel
 
-For boards with multiple SoCs, CPU clusters, variants, or revisions, repeat the
-test suite for each new board target. A :zephyr:code-sample:`hello_world` build
-is also recommended as a quick smoke check, for example:
+对于有多个 SoCs、CPU cluster、variants 或 revisions 的 boards，
+为每个新 board target 重复测试套件。
+还建议进行 :zephyr:code-sample:`hello_world` 构建作为快速冒烟检查，
+例如：
 
 .. code-block:: console
 
    west build -p always -b plank/soc1/foo samples/hello_world
    west build -p always -b plank@1.0.0/soc1/foo samples/hello_world
 
-Use :ref:`sysbuild` if the board target requires it. When using board testing
-metadata, such as ``testing: only_tags`` in the board target YAML file, make
-sure the target is still validated against the minimum test suite in local
-testing or CI.
+如果 board target 需要，请使用 :ref:`sysbuild`。
+当使用 board 测试元数据，例如 board target YAML 文件中的
+``testing: only_tags`` 时，
+确保该 target 在本地测试或 CI 中仍对照最小测试套件进行验证。
 
 .. _porting-general-recommendations:
 
-General recommendations
+一般建议
 ***********************
 
-For consistency and to make it easier for users to build applications which remain board agnostic,
-please follow these guidelines when porting a board you intend to contribute to Zephyr:
+为了一致性以及让用户更容易构建保持 board 无关的应用程序，
+在移植你打算贡献给 Zephyr 的 board 时，请遵循以下准则：
 
-Enable valuable components in Devicetree
-  Devicetree nodes for valuable onboard components (LEDs, buttons, sensors, onboard
-  USB/Ethernet/BLE/Wi-Fi, etc.) must be **enabled by default** and have correct pin control and
-  driver configuration so that they work out of the box.
+在 Devicetree 中启用有价值的组件
+  有价值的板载组件（LED、按钮、传感器、板载
+  USB/Ethernet/BLE/Wi-Fi 等）的 Devicetree 节点必须**默认启用**
+  并具有正确的引脚控制和驱动程序配置，
+  以便它们开箱即用。
 
-Keep subsystems disabled by default (Kconfig)
-  Do not enable subsystems in the board defconfig unless they are strictly required for basic board
-  operation, or are explicitly listed as exceptions in these recommendations.
+默认禁用子系统（Kconfig）
+  不要在 board defconfig 中启用子系统，
+  除非它们是基本 board 操作严格必需的，
+  或者在这些建议中明确列为例外。
 
-Configure system clock and tick source
-  Set up a functioning system clock and tick source.
+配置系统时钟和 tick 源
+  设置一个可工作的系统时钟和 tick 源。
 
-Provide a default console
-  Use the ``zephyr,console`` chosen node to point to the UART controller used for console output.
+提供默认 console
+  使用 ``zephyr,console`` chosen 节点指向用于 console 输出的
+  UART 控制器。
 
-  Boards with built-in debug or a USB-to-UART adapter should set the console to the UART controller
-  connected to that adapter.
+  具有内置调试或 USB-to-UART 适配器的 boards
+  应将 console 设置为连接到该适配器的 UART 控制器。
 
-  USB-only boards without any debug adapter must include the common USB CDC-ACM
-  :zephyr_file:`Kconfig <boards/common/usb/Kconfig.cdc_acm_serial.defconfig>` and :zephyr_file:`DTS
-  <boards/common/usb/cdc_acm_serial.dtsi>` fragments to enable CDC-ACM UART as a default backend
-  for logging and shell.
+  没有任何调试适配器的纯 USB boards
+  必须包含通用 USB CDC-ACM
+  :zephyr_file:`Kconfig <boards/common/usb/Kconfig.cdc_acm_serial.defconfig>` 和
+  :zephyr_file:`DTS <boards/common/usb/cdc_acm_serial.dtsi>` fragment
+  以启用 CDC-ACM UART 作为日志和 shell 的默认后端。
 
-Add :ref:`shield interface <shield-interfaces>` definitions
-  For boards exposing standard expansion headers, add connector nodes and pin-muxing. Enable only
-  the peripherals needed for the expected/standard connector functionality.
+添加 :ref:`shield interface <shield-interfaces>` 定义
+  对于暴露标准扩展连接器的 boards，添加连接器节点和引脚复用。
+  仅启用预期/标准连接器功能所需的外设。
 
-Configure pins and peripheral instances
-  Map peripherals to the correct pins (e.g., SPI on Arduino SPI pins) and provide default pinmux
-  entries supporting the board's features.
+配置引脚和外设实例
+  将外设映射到正确的引脚（例如 SPI 在 Arduino SPI 引脚上），
+  并提供支持 board 功能的默认 pinmux 条目。
 
-Enable networking interfaces
-  If networking hardware is present, configure default interfaces for each supported technology so
-  that networking samples work out of the box.
+启用网络接口
+  如果存在网络硬件，为每种支持的技术配置默认接口，
+  以便网络 samples 开箱即用。
 
-Enable GPIO controllers
-  All GPIO ports connected to onboard components or expansion headers should be enabled.
+启用 GPIO 控制器
+  应启用所有连接到板载组件或扩展连接器的 GPIO 端口。
 
-Enable MPU and stack protection
-  It is recommended to enable the MPU when available (unless memory resources are too limited).
-  When the MPU is enabled, it is recommended to also enable hardware stack protection
-  (:kconfig:option:`CONFIG_HW_STACK_PROTECTION`) to ease debugging by allowing the kernel to detect stack overflows.
+启用 MPU 和栈保护
+  建议在有 MPU 时启用它（除非内存资源过于有限）。
+  当启用 MPU 时，建议还启用硬件栈保护
+  （:kconfig:option:`CONFIG_HW_STACK_PROTECTION`）
+  以便通过允许内核检测栈溢出来简化调试。
 
 .. _flash-and-debug-support:
 
-Flash and debug support
+Flash 和调试支持
 ***********************
 
-Zephyr supports :ref:`west-build-flash-debug` via west extension commands.
+Zephyr 通过 west 扩展命令支持 :ref:`west-build-flash-debug`。
 
-To add ``west flash`` and ``west debug`` support for your board, you need to
-create a :file:`board.cmake` file in your board directory. This file's job is
-to configure a "runner" for your board. (There's nothing special you need to
-do to get ``west build`` support for your board.)
+要为你的 board 添加 ``west flash`` 和 ``west debug`` 支持，
+你需要在 board 目录中创建一个 :file:`board.cmake` 文件。
+此文件的作用是为你的 board 配置一个 "runner"。
+（要让 ``west build`` 支持你的 board，不需要做特别的事情。）
 
-"Runners" are Zephyr-specific Python classes that wrap :ref:`flash and debug
-host tools <flash-debug-host-tools>` and integrate with west and the zephyr build
-system to support ``west flash`` and related commands. Each runner supports
-flashing, debugging, or both. You need to configure the arguments to these
-Python scripts in your :file:`board.cmake` to support those commands like this
-example :file:`board.cmake`:
+"Runners" 是 Zephyr 特定的 Python 类，
+它们封装 :ref:`flash and debug host tools <flash-debug-host-tools>`
+并与 west 和 zephyr 构建系统集成以支持 ``west flash`` 和相关命令。
+每个 runner 支持刷写、调试或两者兼有。
+你需要在 :file:`board.cmake` 中配置这些 Python 脚本的参数
+以支持这些命令，如下面的示例 :file:`board.cmake` 所示：
 
 .. code-block:: cmake
 
@@ -731,66 +714,65 @@ example :file:`board.cmake`:
    include(${ZEPHYR_BASE}/boards/common/jlink.board.cmake)
    include(${ZEPHYR_BASE}/boards/common/pyocd.board.cmake)
 
-This example configures the ``nrfutil``, ``nrfjprog``, ``jlink``, and ``pyocd``
-runners.
+此示例配置了 ``nrfutil``、``nrfjprog``、``jlink`` 和 ``pyocd`` runners。
 
 .. warning::
 
-   Runners usually have names which match the tools they wrap, so the ``jlink``
-   runner wraps Segger's J-Link tools, and so on. But the runner command line
-   options like ``--speed`` etc. are specific to the Python scripts.
+   Runners 通常有与其封装的工具匹配的名称，
+   因此 ``jlink`` runner 封装 Segger 的 J-Link 工具，等等。
+   但 runner 命令行选项如 ``--speed`` 等是特定于 Python 脚本的。
 
 .. note::
 
-   Runners and board configuration should be created without being targeted to
-   a single operating system if the tool supports multiple operating systems,
-   nor should it rely upon special system setup/configuration. For example; do
-   not assume that a user will have prior knowledge/configuration or (if using
-   Linux) special udev rules installed, do not assume one specific ``/dev/X``
-   device for all platforms as this will not be compatible with Windows or
-   macOS, and allow for overriding of the selected device so that multiple
-   boards can be connected to a single system and flashed/debugged at the
-   choice of the user.
+   如果工具支持多个操作系统，
+   runners 和 board 配置应在创建时不针对单个操作系统，
+   也不应依赖特殊的系统设置/配置。
+   例如：不要假设用户具有先验知识/配置或
+   （如果使用 Linux）安装了特殊 udev 规则，
+   不要假设所有平台都有特定的 ``/dev/X`` 设备，
+   因为这与 Windows 或 macOS 不兼容，
+   并允许覆盖所选设备，
+   以便可以将多个 boards 连接到单个系统
+   并按用户选择进行刷写/调试。
 
-For more details:
+有关更多细节：
 
-- Run ``west flash --context`` to see a list of available runners which support
-  flashing, and ``west flash --context -r <RUNNER>`` to view the specific options
-  available for an individual runner.
-- Run ``west debug --context`` and ``west debug --context <RUNNER>`` to get
-  the same output for runners which support debugging.
-- Run ``west flash --help`` and ``west debug --help`` for top-level options
-  for flashing and debugging.
-- See :ref:`west-runner` for Python APIs.
-- Look for :file:`board.cmake` files for other boards similar to your own for
-  more examples.
+- 运行 ``west flash --context`` 查看支持刷写的可用 runners 列表，
+  运行 ``west flash --context -r <RUNNER>`` 查看
+  单个 runner 的特定可用选项。
+- 运行 ``west debug --context`` 和 ``west debug --context <RUNNER>``
+  获取支持调试的 runners 的相同输出。
+- 运行 ``west flash --help`` 和 ``west debug --help``
+  获取刷写和调试的顶层选项。
+- 参见 :ref:`west-runner` 了解 Python API。
+- 查找与你自己的 board 类似的 boards 的 :file:`board.cmake` 文件
+  以获取更多示例。
 
-To see what a ``west flash`` or ``west debug`` command is doing exactly, run it
-in verbose mode:
+要查看 ``west flash`` 或 ``west debug`` 命令具体在做什么，
+以详细模式运行它：
 
 .. code-block:: sh
 
    west --verbose flash
    west --verbose debug
 
-Verbose mode prints any host tool commands the runner uses.
+详细模式打印 runner 使用的任何 host 工具命令。
 
-The order of the ``include()`` calls in your :file:`board.cmake` matters. The
-first ``include`` sets the default runner if it's not already set. For example,
-including ``nrfjprog.board.cmake`` first means that ``nrfjprog`` is the default
-flash runner for this board. Since ``nrfjprog`` does not support debugging,
-``jlink`` is the default debug runner.
+:file:`board.cmake` 中 ``include()`` 调用的顺序很重要。
+第一个 ``include`` 设置默认 runner（如果尚未设置）。
+例如，首先包含 ``nrfjprog.board.cmake``
+意味着 ``nrfjprog`` 是该 board 的默认 flash runner。
+由于 ``nrfjprog`` 不支持调试，``jlink`` 是默认调试 runner。
 
 .. _porting_board_revisions:
 
-Multiple board revisions
+多个 board revisions
 ************************
 
-See :ref:`application_board_version` for basics on this feature from the user
-perspective.
+参见 :ref:`application_board_version` 了解从用户角度
+此功能的基础知识。
 
-Board revisions are described in the ``revision`` entry of the
-:file:`board.yml`.
+Board revisions 在 :file:`board.yml` 的 ``revision`` 条目中描述。
 
 .. code-block:: yaml
 
@@ -803,78 +785,80 @@ Board revisions are described in the ``revision`` entry of the
        - name: <revA>
        - name: <revB>
 
-Zephyr natively supports the following revision formats:
+Zephyr 原生支持以下 revision 格式：
 
-- ``major.minor.patch``: match a three digit revision, such as ``1.2.3``.
-- ``number``: matches integer revisions
-- ``letter``: matches single letter revisions from ``A`` to ``Z`` only
+- ``major.minor.patch``：匹配三位 revision，例如 ``1.2.3``。
+- ``number``：匹配整数 revisions
+- ``letter``：仅匹配从 ``A`` 到 ``Z`` 的单个字母 revisions
 
 .. _board_fuzzy_revision_matching:
 
-Fuzzy revision matching
+模糊 revision 匹配
 =======================
 
-Fuzzy revision matching is enabled per default.
+模糊 revision 匹配默认启用。
 
-If the user selects a revision between those available, the closest revision
-number that is not larger than the user's choice is used. For example, if the
-board ``plank`` defines revisions ``0.5.0``, and ``1.5.0`` and the user builds
-for ``plank@0.7.0``, the build system will target revision ``0.5.0``.
+如果用户选择可用 revisions 之间的一个 revision，
+将使用不大于用户选择的最接近的 revision 号。
+例如，如果 board ``plank`` 定义了 revisions ``0.5.0`` 和 ``1.5.0``
+且用户为 ``plank@0.7.0`` 构建，
+构建系统将针对 revision ``0.5.0``。
 
-The build system will print this at CMake configuration time:
+构建系统将在 CMake 配置时打印此内容：
 
 .. code-block:: console
 
    -- Board: plank, Revision: 0.7.0 (Active: 0.5.0)
 
-This allows you to only create revision configuration files for board revision
-numbers that introduce incompatible changes.
+这允许你只为引入不兼容更改的 board revision 号
+创建 revision 配置文件。
 
-Similarly for ``letter`` revision format, if revisions ``A``, ``D``, and ``F``
-are defined and the user builds for ``plank@E``, the build system will target
-revision ``D``.
+类似地，对于 ``letter`` revision 格式，
+如果定义了 revisions ``A``、``D`` 和 ``F``
+且用户为 ``plank@E`` 构建，构建系统将针对 revision ``D``。
 
-Exact revision matching
+精确 revision 匹配
 =======================
 
-Exact revision matching is enabled when ``exact: true`` is specified in the
-revision section in :file:`board.yml`.
+当 :file:`board.yml` 的 revision 部分中指定 ``exact: true`` 时，
+启用精确 revision 匹配。
 
-When exact is defined then building for ``plank@0.7.0`` in the above example
-will result in the following error message:
+当定义 exact 时，在上述示例中为 ``plank@0.7.0`` 构建
+将导致以下错误消息：
 
 .. code-block:: console
 
    Board revision `0.7.0` not found.  Please specify a valid board revision.
 
-Board revision configuration adjustment
+Board revision 配置调整
 =======================================
 
-When the user builds for board ``plank@<revision>`` it is possible to make
-adjustments to the board's normal configuration.
+当用户为 board ``plank@<revision>`` 构建时，
+可以对该 board 的常规配置进行调整。
 
-As described in the :ref:`default_board_configuration` and
-:ref:`board_kconfig_files` sections the board default configuration is created
-from the files :file:`<board>.dts` / :file:`<board>_<qualifiers>.dts` and
-:file:`<board>_defconfig` / :file:`<board>_<qualifiers>_defconfig`.
-When building for a specific board revision, the above files are used as a
-starting point and the following board files will be used in addition:
+如 :ref:`default_board_configuration` 和
+:ref:`board_kconfig_files` 节所述，
+board 默认配置由文件 :file:`<board>.dts` / :file:`<board>_<qualifiers>.dts`
+和 :file:`<board>_defconfig` / :file:`<board>_<qualifiers>_defconfig` 创建。
+当为特定 board revision 构建时，
+上述文件用作起点，此外将使用以下 board 文件：
 
-- :file:`<board>_<qualifiers>_<revision>_defconfig`: a specific revision
-  defconfig which is only used for the board and SOC / variants identified by
-  ``<board>_<qualifiers>``.
+- :file:`<board>_<qualifiers>_<revision>_defconfig`：
+  特定 revision defconfig，
+  仅用于由 ``<board>_<qualifiers>`` 标识的 board 和 SOC / variants。
 
-- :file:`<board>_<qualifiers>_<revision>.overlay`: a specific revision dts
-  overlay which is only used for the board and SOC / variants identified by
-  ``<board>_<qualifiers>``.
+- :file:`<board>_<qualifiers>_<revision>.overlay`：
+  特定 revision dts overlay，
+  仅用于由 ``<board>_<qualifiers>`` 标识的 board 和 SOC / variants。
 
-This split allows boards with multiple SoCs, multi-core SoCs, or variants to
-place common revision adjustments which apply to all SoCs and variants in a
-single file, while still providing the ability to place SoC or variant specific
-adjustments in a dedicated revision file.
+这种拆分允许有多个 SoCs、多核 SoCs 或 variants 的 boards
+将适用于所有 SoCs 和 variants 的通用 revision 调整
+放在单个文件中，
+同时仍提供将 SoC 或 variant 特定调整
+放在专用 revision 文件中的能力。
 
-Using the ``plank`` board from previous sections, then we could have the following
-revision adjustments:
+使用前面章节中的 ``plank`` board，
+我们可以有以下 revision 调整：
 
 .. code-block:: none
 
@@ -882,24 +866,25 @@ revision adjustments:
    ├── plank_soc1_foo_1_5_0.overlay   # DTS overlay for plank board when building for soc1 variant foo on revision 1.5.0
    └── plank_soc1_foo_1_5_0_defconfig # Kconfig adjustment for plank board when building for soc1 variant foo on revision 1.5.0
 
-Custom revision.cmake files
+自定义 revision.cmake 文件
 ***************************
 
-Some boards may not use board revisions supported natively by Zephyr.
-For example string revisions.
+某些 boards 可能不使用 Zephyr 原生支持的 board revisions。
+例如字符串 revisions。
 
-One reason why Zephyr doesn't support string revisions is that strings can take
-many forms and it's not always clear if the given strings are just strings, such
-as ``blue``, ``green``, ``red``, etc. or if they provide an order which can be
-matched against higher or lower revisions, such as ``alpha``, ``beta```,
-``gamma``.
+Zephyr 不支持字符串 revisions 的原因之一是
+字符串可以有许多形式，
+并且并不总是清楚给定的字符串只是字符串，
+例如 ``blue``、``green``、``red`` 等，
+还是提供可以匹配更高或更低 revisions 的顺序，
+例如 ``alpha``、``beta``、``gamma``。
 
-Due to the sheer number of possibilities with strings, including the possibility
-of doing regex matches internally, then string revisions must be done using
-``custom`` revision type.
+由于字符串的可能性数量巨大，
+包括内部进行正则表达式匹配的可能性，
+那么字符串 revisions 必须使用 ``custom`` revision 类型完成。
 
-To indicate to the build system that ``custom`` revisions are used, the format
-field in the ``revision`` section of the :file:`board.yml` must be written as:
+要向构建系统指示使用 ``custom`` revisions，
+:file:`board.yml` 的 ``revision`` 部分中的 format 字段必须写为：
 
 .. code-block:: yaml
 
@@ -907,61 +892,61 @@ field in the ``revision`` section of the :file:`board.yml` must be written as:
      revision:
        format: custom
 
-When using custom revisions then a :file:`revision.cmake` must be created in the
-board directory.
+当使用 custom revisions 时，
+必须在 board 目录中创建 :file:`revision.cmake`。
 
-The :file:`revision.cmake` will be included by the build system when building
-for the board and it is the responsibility of the file to validate the revision
-specified by the user.
+:file:`revision.cmake` 将在为 board 构建时被构建系统包含，
+验证用户指定的 revision 是该文件的责任。
 
-The :makevar:`BOARD_REVISION` variable holds the revision value specified by the
-user.
+:makevar:`BOARD_REVISION` 变量保存用户指定的 revision 值。
 
-To signal to the build system that it should use a different revision than the
-one specified by the user, :file:`revision.cmake` can set the CMake variable
-:cmake:variable:`ACTIVE_BOARD_REVISION` to the revision to use instead. The corresponding
-Kconfig files and devicetree overlays must be named
-:file:`<board>_<ACTIVE_BOARD_REVISION>_defconfig` and
-:file:`<board>_<ACTIVE_BOARD_REVISION>.overlay`.
+要向构建系统发出信号应使用不同于用户指定的 revision，
+:file:`revision.cmake` 可以将 CMake 变量
+:cmake:variable:`ACTIVE_BOARD_REVISION` 设置为要替代使用的 revision。
+对应的 Kconfig 文件和 devicetree overlays 必须命名为
+:file:`<board>_<ACTIVE_BOARD_REVISION>_defconfig` 和
+:file:`<board>_<ACTIVE_BOARD_REVISION>.overlay`。
 
 .. _contributing-your-board:
 
-Contributing your board
+贡献你的 board
 ***********************
 
-If you want to contribute your board to Zephyr, first -- thanks!
+如果你想将你的 board 贡献给 Zephyr，首先——谢谢！
 
-There are some extra things you'll need to do:
+还有一些额外的事情你需要做：
 
-#. Make sure you've followed all the :ref:`porting-general-recommendations`.
-   They are requirements for boards included with Zephyr.
+#. 确保你已遵循所有 :ref:`porting-general-recommendations`。
+   它们是包含在 Zephyr 中的 boards 的要求。
 
-#. Add documentation for your board using the template file
-   :zephyr_file:`doc/templates/board.tmpl`. See :ref:`zephyr_doc` for
-   information on how to build your documentation before submitting
-   your pull request.
+#. 使用模板文件 :zephyr_file:`doc/templates/board.tmpl`
+   为你的 board 添加文档。
+   参见 :ref:`zephyr_doc` 了解如何在提交
+   pull request 之前构建你的文档的信息。
 
-#. Prepare a pull request adding your board which follows the
-   :ref:`contribute_guidelines`.
+#. 准备一个添加你的 board 的 pull request，
+   遵循 :ref:`contribute_guidelines`。
 
 .. _extend-board:
 
-Board extensions
+Board 扩展
 ****************
 
-The board hardware model in Zephyr allows you to extend an existing board with
-new board variants. Such board extensions can be done in your custom repository
-and thus outside of the Zephyr repository.
+Zephyr 中的 board 硬件模型允许你用新的 board variants
+扩展现有 board。
+这样的 board 扩展可以在你的自定义仓库中完成，
+从而在 Zephyr 仓库之外。
 
-Extending an existing board with an extra variant allows you to adjust an
-existing board and thereby during build to select building for the existing,
-unmodified board, or the new variant.
+用额外的 variant 扩展现有 board
+允许你调整现有 board，
+从而在构建期间选择为现有的、未修改的 board 构建，
+或为新的 variant 构建。
 
-To extend an existing board, first create a :file:`board.yml` in your extended
-board. Make sure to use the directory structure described in
-:ref:`create-your-board-directory`.
+要扩展现有 board，首先在你的扩展 board 中
+创建一个 :file:`board.yml`。
+确保使用 :ref:`create-your-board-directory` 中描述的目录结构。
 
-The skeleton of the board YAML file for extending a board is:
+扩展示 board 的 board YAML 文件骨架是：
 
 .. code-block:: yaml
 
@@ -971,7 +956,7 @@ The skeleton of the board YAML file for extending a board is:
        - name: <new-variant>
          qualifier: <existing-qualifier>
 
-When extending a board, your board directory should look like:
+当扩展示 board 时，你的 board 目录应如下所示：
 
 .. code-block:: none
 
@@ -980,12 +965,11 @@ When extending a board, your board directory should look like:
    ├── plank_<new-qualifiers>_defconfig
    └── plank_<new-qualifiers>.dts
 
-Replace ``plank`` with the real name of the board you extend.
+用你扩展的 board 的真实名称替换 ``plank``。
 
-In some cases you might want to also adjust additional settings, like the
-:file:`Kconfig.defconfig` or :file:`Kconfig.{board}`.
-Therefore it is also possible to provide the following in addition when
-extending a board.
+在某些情况下，你可能还想调整额外设置，
+例如 :file:`Kconfig.defconfig` 或 :file:`Kconfig.{board}`。
+因此扩展示 board 时也可以额外提供以下内容。
 
 .. code-block:: none
 

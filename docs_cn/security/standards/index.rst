@@ -1,4 +1,5 @@
-.. _security_standards:
+.. _security
+standards:
 
 Security
 standards
@@ -17,7 +18,7 @@ own
 assessment
 and
 response
-protocols。
+protocols.
 Today
 governments
 are
@@ -30,7 +31,7 @@ new
 mandates
 and
 security
-standards。
+standards.
 These
 standards
 define
@@ -41,7 +42,7 @@ compliance
 requirements
 for
 connected
-products。
+products.
 
 This
 section
@@ -56,13 +57,13 @@ for
 the
 Zephyr
 project
-itself
+itself、
 as
 well
 as
 downstream
 product
-developers。
+developers.
 The
 goal
 is
@@ -79,11 +80,16 @@ certifiable、
 compliant
 products
 using
-Zephyr。
+Zephyr.
 
-.. toctree::
-   :maxdepth:
-   1
+..
+toctree::
+:
+maxdepth:
+1
 
-   cyber-resilience-act.rst
-   etsi-303645.rst
+cyber
+resilience
+act.rst
+etsi
+303645.rst

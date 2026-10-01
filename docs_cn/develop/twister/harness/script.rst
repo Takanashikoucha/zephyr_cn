@@ -3,161 +3,26 @@
 Script
 ######
 
-``script``
-harness
-将
-shell
-脚本
-作为
-测试
-用例
-执行。
-它
-从
-``tests_scripts``
-harness
-配置
-选项
-解析
-脚本，
-将
-每个
-脚本
-作为
-子
-进程
-运行，
-并
-基于
-脚本
-exit
-code
-报告
-单独
-的
-pass/fail
-结果。
+``script`` 测试框架（harness）将 shell 脚本作为测试用例执行。它从 ``tests_scripts`` 测试框架配置项解析脚本，
+将每个脚本作为子进程运行，并根据脚本退出码报告单独的通过/失败结果。
 
-``script``
-harness
-也
-作为
-:ref:`bsim
-<twister_bsim_harness>`、
-:ref:`pytest
-<twister_pytest_harness>`
-和
-:ref:`ctest
-<twister_ctest_harness>`
-harnesses
-的
-基类，
-提供
-共享
-的
-子
-进程
-执行、
-输出
-流
-和
-日志
-处理。
+``script`` 测试框架同时作为 :ref:`bsim <twister_bsim_harness>`、
+:ref:`pytest <twister_pytest_harness>` 和 :ref:`ctest <twister_ctest_harness>` 测试框架的基类，
+提供共享的子进程执行、输出流和日志处理功能。
 
-tests_scripts:
-<list
-of
-script
-paths>
-(default
-tests_scripts)
-    指定
-    shell
-    脚本
-    路径
-    列表
-    相对
-    于
-    测试
-    源
-    目录
-    在
-    测试
-    scenario
-    运行
-    时
-    需要
-    执行。
-    每个
-    条目
-    可以
-    是
-    单一
-    文件、
-    目录
-    或
-    glob
-    pattern
-    的
-    路径。
-    当
-    指定
-    目录
-    时，
-    该
-    目录
-    中
-    所有
-    ``.sh``
-    文件
-    包括
-    其
-    子
-    目录
-    被
-    收集
-    （排除
-    以
-    ``_``
-    开头
-    的
-    文件）。
-    默认
-    是
-    ``tests_scripts``
-    目录。
+tests_scripts: <脚本路径列表>（默认 tests_scripts）
+    指定测试场景运行时需执行的 shell 脚本路径列表（相对于测试源目录）。
+    每个条目可以是单个文件的路径、一个目录或一个通配符（glob）模式。
+    指定目录时，收集该目录中所有 ``.sh`` 文件（包括其子目录，排除以 ``_`` 开头的文件）。
+    默认为 ``tests_scripts`` 目录。
 
     .. code-block:: yaml
 
-       harness:
-       script
-       harness_config:
-         tests_scripts:
-           -
-           tests_scripts/test_a.sh
-           -
-           ../../test/test_b.sh
-           -
-           $ENV_VAR/tests_scripts
+        harness: script
+        harness_config:
+          tests_scripts:
+            - tests_scripts/test_a.sh
+            - ../../test/test_b.sh
+            - $ENV_VAR/tests_scripts
 
-任何
-额外
-的
-命令行
-参数
-传递
-给
-Twister
-在
-``--``
-之后
-被
-转发
-给
-每个
-脚本
-作为
-额外
-的
-位置
-参数。
+传递给 Twister 的 ``--`` 之后的任何额外命令行参数，都会作为额外的位置参数转发给每个脚本。

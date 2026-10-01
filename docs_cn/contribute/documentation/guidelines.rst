@@ -1,450 +1,376 @@
 .. _doc_guidelines:
 
-Documentation
-Guidelines
+文档指南
 ########################
 
-.. highlight::
-   rst
+.. highlight:: rst
 
 .. note::
 
-   For
-   instructions
-   on
-   building
-   the
-   documentation
-   see
-   :ref:`zephyr_doc`。
+   关于构建文档的说明，参见 :ref:`zephyr_doc`。
 
-Zephyr
-Project
-content
-is
-written
-using
-the
-`reStructuredText`_
-markup
-language
-（.rst
-file
-extension）
-with
-Sphinx
-extensions
-and
-processed
-using
-Sphinx
-to
-create
-a
-formatted
-standalone
-website。
-Developers
-can
-view
-this
-content
-either
-in
-its
-raw
-form
-as
-.rst
-markup
-files
-or
-（with
-Sphinx
-installed）
-they
-can
-:ref:`build
-the
-documentation
-<zephyr_doc>`
-locally
-to
-generate
-the
-documentation
-in
-HTML
-or
-PDF
-format。
-The
-HTML
-content
-can
-then
-be
-viewed
-using
-a
-web
-browser。
-This
-same
-.rst
-content
-is
-served
-by
-the
-`Zephyr
-documentation`_
-website。
+Zephyr 项目内容使用 `reStructuredText`_ 标记语言（.rst 文件扩展名）和 Sphinx 扩展编写，并使用 Sphinx 处理以创建格式化的独立网站。开发者可以以原始 .rst 标记文件的形式查看这些内容，或者（安装 Sphinx 后）:ref:`在本地构建文档 <zephyr_doc>` 生成 HTML 或 PDF 格式的文档。HTML 内容随后可以用 Web 浏览器查看。相同的 .rst 内容由 `Zephyr 文档`_ 网站提供。
 
-You
-can
-read
-details
-about
-`reStructuredText`_
-and
-about
-`Sphinx
-extensions`_
-from
-their
-respective
-websites。
+你可以从 `reStructuredText`_ 和 `Sphinx 扩展`_ 各自的网站阅读其详细信息。
 
-.. _Sphinx
-   extensions:
-   https://www.sphinx-doc.org/en/stable/contents.html
-.. _reStructuredText:
-   https://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html
-.. _Sphinx
-   Inline
-   Markup:
-   https://sphinx-doc.org/markup/inline.html#inline-markup
-.. _Zephyr
-   documentation:
-   https://docs.zephyrproject.org
+.. _Sphinx 扩展: https://www.sphinx-doc.org/en/stable/contents.html
+.. _reStructuredText: https://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html
+.. _Sphinx 内联标记:  https://sphinx-doc.org/markup/inline.html#inline-markup
+.. _Zephyr 文档:  https://docs.zephyrproject.org
 
-This
-document
-provides
-a
-quick
-reference
-for
-commonly
-used
-reST
-and
-Sphinx
-defined
-directives
-and
-roles
-used
-to
-create
-the
-documentation
-you're
-reading。
+本文档提供常用 reST 和 Sphinx 定义指令与角色的快速参考，用于创建你正在阅读的文档。
 
-For
-instructions
-regarding
-writing
-good
-C
-API
-documentation
-see
-:ref:`doxygen_style`。
+关于编写良好 C API 文档的说明，参见 :ref:`doxygen_style`。
 
-Content
-Structure
+内容结构
 *****************
 
-Tabs
-spaces
-and
-indenting
+制表符、空格和缩进
 ===========================
 
+缩进在 reST 文件内容中很重要，推荐使用空格。额外的缩进（可能无意中）也会改变内容的渲染方式。对于列表和指令，将内容文本缩进到前一行第一个非空白字符处。例如::
 
-.. note::
+   * 跨多行的列表项
+     显示续行缩进的位置。
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-   * displayed
-   * horizontally
-   * so it doesn't
-   * use up so much
-   * space on
-   * the page
+   1. 对于编号列表项，续行应与上一行的文本对齐。
 
-A maximum of three columns will be displayed, and change based on the
-available width of the display window, reducing to one column on narrow
-(phone) screens if necessary.  We've deprecated use of the ``hlist``
-directive because it misbehaves on smaller screens.
+   .. code-block::
 
-Tables
+      指令块内的文本应与指令名称的第一个字符对齐。
+
+参见 Zephyr :ref:`coding_style` 了解额外要求。
+
+.. _headings:
+
+标题
+========
+
+虽然 reST 允许使用上划线和匹配的下划线来指示标题，但我们只使用下划线指示符表示标题。
+
+* 文档标题（h1）使用 ``#`` 作为下划线字符
+* 第一级节标题（h2）使用 ``*``
+* 第二级节标题（h3）使用 ``=``
+* 第三级节标题（h4）使用 ``-``
+
+标题下划线必须与标题文本等长。
+
+例如::
+
+   这是一个标题
+   #############
+
+   这里有一些内容
+
+   第一级节标题
+   *************
+
+
+列表
+=====
+
+对于项目符号列表，在段落开头放置星号（``*``）或连字符（``-``），续行缩进两个空格。
+
+列表（或子列表）中的第一项前面必须有一个空行，并且应与前面的段落缩进在同一级别（本身不缩进）。
+
+对于编号列表，以 1. 或 a. 开始，然后使用 ``#`` 号继续自动编号。续行缩进三个空格::
+
+   * 这是一个项目符号列表。
+   * 它有两个项，第二项有多行 reST 文本。额外行
+     缩进到项目符号列表文本的第一个字符。
+
+   1. 这是一个新的编号列表。如果前面没有空行，
+      它将是前面列表（或段落）的续行。
+   #. 它也有两个项。
+
+   a. 这是一个使用字母列表标题的编号列表
+   #. 它有三个项（其余列表项使用自动编号）
+   #. 这是第三项
+
+   #. 这是一个自动编号列表（默认使用从 1 开始的数字）。
+
+      #. 这是第一项下的第二级列表（同样自动编号）。注意缩进。
+      #. 嵌套列表中的第二项。
+   #. 回到包含列表的第二项。不需要空行，
+      但为了可读性加上也无妨。
+
+定义列表（包含术语及其定义）是记录带有解释的词语或短语的便捷方式。例如此 reST 内容::
+
+   Makefile 包含以下目标：
+
+   html
+      构建项目的 HTML 输出
+
+   clean
+      删除所有生成的输出，将文件夹恢复到干净状态。
+
+渲染效果为：
+
+   Makefile 包含以下目标：
+
+   html
+      构建项目的 HTML 输出
+
+   clean
+      删除所有生成的输出，将文件夹恢复到干净状态。
+
+多列列表
+==================
+
+如果你有一个很长的项目符号列表，其中每个项都很短，你可以使用特殊的 ``.. rst-class:: rst-columns`` 指令表示列表项应以多列渲染。该指令将应用于下一个非注释元素（例如段落），或应用于指令下方缩进的内容。例如，此无序列表::
+
+   .. rst-class:: rst-columns
+
+   * 一个
+   * 短项
+   * 应该
+   * 横向
+   * 显示
+   * 这样
+   * 就不会
+   * 占用
+   * 太多
+   * 页面
+   * 空间
+
+渲染效果为：
+
+.. rst-class:: rst-columns
+
+   * 一个
+   * 短项
+   * 应该
+   * 横向
+   * 显示
+   * 这样
+   * 就不会
+   * 占用
+   * 太多
+   * 页面
+   * 空间
+
+最多显示三列，并根据显示窗口的可用宽度变化，在窄（手机）屏幕上必要时减少为一列。我们已弃用 ``hlist`` 指令，因为它在较小屏幕上表现异常。
+
+表格
 ======
 
-There are a few ways to create tables, each with their limitations or
-quirks.  `Grid tables
+创建表格有几种方式，各有其限制或怪癖。`网格表格
 <https://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#grid-tables>`_
-offer the most capability for defining merged rows and columns, but are
-hard to maintain::
+在定义合并行和列方面提供最强大的能力，但难以维护::
 
    +------------------------+------------+----------+----------+
-   | Header row, column 1   | Header 2   | Header 3 | Header 4 |
-   | (header rows optional) |            |          |          |
+   | 表头行，列 1           | 表头 2     | 表头 3   | 表头 4   |
+   | （表头行可选）          |            |          |          |
    +========================+============+==========+==========+
-   | body row 1, column 1   | column 2   | column 3 | column 4 |
+   | 正文行 1，列 1         | 列 2       | 列 3     | 列 4     |
    +------------------------+------------+----------+----------+
-   | body row 2             | ...        | ...      | you can  |
-   +------------------------+------------+----------+ easily   +
-   | body row 3 with a two column span   | ...      | span     |
-   +------------------------+------------+----------+ rows     +
-   | body row 4             | ...        | ...      | too      |
+   | 正文行 2               | ...        | ...      | 你可以   |
+   +------------------------+------------+----------+ 轻松   +
+   | 正文行 3，跨两列       | ...        | 跨度     |
+   +------------------------+------------+----------+ 行     +
+   | 正文行 4               | ...        | ...      | 也是     |
    +------------------------+------------+----------+----------+
 
-This example would render as:
+此示例渲染效果为：
 
 +------------------------+------------+----------+----------+
-| Header row, column 1   | Header 2   | Header 3 | Header 4 |
-| (header rows optional) |            |          |          |
+| 表头行，列 1           | 表头 2     | 表头 3   | 表头 4   |
+| （表头行可选）          |            |          |          |
 +========================+============+==========+==========+
-| body row 1, column 1   | column 2   | column 3 | column 4 |
+| 正文行 1，列 1         | 列 2       | 列 3     | 列 4     |
 +------------------------+------------+----------+----------+
-| body row 2             | ...        | ...      | you can  |
-+------------------------+------------+----------+ easily   +
-| body row 3 with a two column span   | ...      | span     |
-+------------------------+------------+----------+ rows     +
-| body row 4             | ...        | ...      | too      |
+| 正文行 2               | ...        | ...      | 你可以   |
++------------------------+------------+----------+ 轻松   +
+| 正文行 3，跨两列       | ...        | 跨度     |
++------------------------+------------+----------+ 行     +
+| 正文行 4               | ...        | ...      | 也是     |
 +------------------------+------------+----------+----------+
 
-`List tables
+`列表表格
 <https://docutils.sourceforge.net/docs/ref/rst/directives.html#list-table>`_
-are much easier to maintain, but don't support row or column spans::
+维护起来容易得多，但不支持行或列跨度::
 
-   .. list-table:: Table title
+   .. list-table:: 表格标题
       :widths: 15 20 40
       :header-rows: 1
 
-      * - Heading 1
-        - Heading 2
-        - Heading 3
-      * - body row 1, column 1
-        - body row 1, column 2
-        - body row 1, column 3
-      * - body row 2, column 1
-        - body row 2, column 2
-        - body row 2, column 3
+      * - 表头 1
+        - 表头 2
+        - 表头 3
+      * - 正文行 1，列 1
+        - 正文行 1，列 2
+        - 正文行 1，列 3
+      * - 正文行 2，列 1
+        - 正文行 2，列 2
+        - 正文行 2，列 3
 
-This example would render as:
+此示例渲染效果为：
 
-.. list-table:: Table title
+.. list-table:: 表格标题
    :widths: 15 20 40
    :header-rows: 1
 
-   * - Heading 1
-     - Heading 2
-     - Heading 3
-   * - body row 1, column 1
-     - body row 1, column 2
-     - body row 1, column 3
-   * - body row 2, column 1
-     - body row 2, column 2
-     - body row 2, column 3
+   * - 表头 1
+     - 表头 2
+     - 表头 3
+   * - 正文行 1，列 1
+     - 正文行 1，列 2
+     - 正文行 1，列 3
+   * - 正文行 2，列 1
+     - 正文行 2，列 2
+     - 正文行 2，列 3
 
-The ``:widths:`` parameter lets you define relative column widths.  The
-default is equal column widths. If you have a three-column table and you
-want the first column to be half as wide as the other two equal-width
-columns, you can specify ``:widths: 1 2 2``.  If you'd like the browser
-to set the column widths automatically based on the column contents, you
-can use ``:widths: auto``.
+``:widths:`` 参数允许你定义相对列宽。默认是等宽列。如果你有一个三列表格，希望第一列的宽度是其他两个等宽列的一半，可以指定 ``:widths: 1 2 2``。如果希望浏览器根据列内容自动设置列宽，可以使用 ``:widths: auto``。
 
-Tabbed Content
-==============
+选项卡内容
+=============
 
-As introduced in the :ref:`getting_started`, you can provide alternative
-content to the reader via a tabbed interface. When the reader clicks on
-a tab, the content for that tab is displayed, for example::
+如 :ref:`getting_started` 中介绍的，你可以通过选项卡界面为读者提供替代内容。当读者点击选项卡时，显示该选项卡的内容，例如::
 
    .. tabs::
 
-      .. tab:: Apples
+      .. tab:: 苹果
 
-         Apples are green, or sometimes red.
+         苹果是绿色的，有时是红色的。
 
-      .. tab:: Pears
+      .. tab:: 梨
 
-         Pears are green.
+         梨是绿色的。
 
-      .. tab:: Oranges
+      .. tab:: 橙子
 
-         Oranges are orange.
+         橙子是橙色的。
 
-will display as:
-
-.. tabs::
-
-   .. tab:: Apples
-
-      Apples are green, or sometimes red.
-
-   .. tab:: Pears
-
-      Pears are green.
-
-   .. tab:: Oranges
-
-      Oranges are orange.
-
-Tabs can also be grouped, so that changing the current tab in one area
-changes all tabs with the same name throughout the page.  For example:
+显示效果为：
 
 .. tabs::
 
-   .. group-tab:: Linux
+   .. tab:: 苹果
 
-      Linux Line 1
+      苹果是绿色的，有时是红色的。
 
-   .. group-tab:: macOS
+   .. tab:: 梨
 
-      macOS Line 1
+      梨是绿色的。
 
-   .. group-tab:: Windows
+   .. tab:: 橙子
 
-      Windows Line 1
+      橙子是橙色的。
+
+选项卡也可以分组，使得在一个区域更改当前选项卡会更改整个页面中所有同名的选项卡。例如：
 
 .. tabs::
 
    .. group-tab:: Linux
 
-      Linux Line 2
+      Linux 第 1 行
 
    .. group-tab:: macOS
 
-      macOS Line 2
+      macOS 第 1 行
 
    .. group-tab:: Windows
 
-      Windows Line 2
+      Windows 第 1 行
 
-In this latter case, we're using ``.. group-tab::`` instead of simply
-``.. tab::``.  Under the hood, we're using the `sphinx-tabs
-<https://github.com/executablebooks/sphinx-tabs>`_ extension that's included
-in the Zephyr setup.  Within a tab, you can have most any content *other
-than a heading* (code-blocks, ordered and unordered lists, pictures,
-paragraphs, and such).  You can read more about sphinx-tabs from the
-link above.
+.. tabs::
+
+   .. group-tab:: Linux
+
+      Linux 第 2 行
+
+   .. group-tab:: macOS
+
+      macOS 第 2 行
+
+   .. group-tab:: Windows
+
+      Windows 第 2 行
+
+在后一种情况下，我们使用 ``.. group-tab::`` 而非简单的 ``.. tab::``。在底层，我们使用 Zephyr 配置中包含的 `sphinx-tabs
+<https://github.com/executablebooks/sphinx-tabs>`_ 扩展。在选项卡内，你可以有除*标题*外的几乎所有内容（code-block、有序和无序列表、图片、段落等）。你可以从上面的链接阅读更多关于 sphinx-tabs 的内容。
 
 
-Text Formatting
+文本格式
 ***************
 
-ReSTructuredText supports a variety of text formatting options. This section provides a quick
-reference for some of the most commonly used text formatting options in Zephyr documentation. For an
-exhaustive list, refer to the `reStructuredText Quick Reference`_,
-`reStructuredText Interpreted Text Roles`_ as well as the `additional roles provided by Sphinx`_.
+ReSTructuredText 支持多种文本格式选项。本节提供 Zephyr 文档中最常用的一些文本格式选项的快速参考。完整的列表，请参阅 `reStructuredText 快速参考`_、`reStructuredText 解释文本角色`_ 以及 `Sphinx 提供的额外角色`_。
 
-.. _reStructuredText Quick Reference: https://docutils.sourceforge.io/docs/user/rst/quickref.html
-.. _reStructuredText Interpreted Text Roles: https://docutils.sourceforge.io/docs/ref/rst/roles.html
-.. _additional roles provided by Sphinx: https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html
+.. _reStructuredText 快速参考: https://docutils.sourceforge.io/docs/user/rst/quickref.html
+.. _reStructuredText 解释文本角色: https://docutils.sourceforge.io/docs/ref/rst/roles.html
+.. _Sphinx 提供的额外角色: https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html
 
-Content Highlighting
+内容高亮
 ====================
 
-Some common reST inline markup samples:
+一些常见的 reST 内联标记示例：
 
-* one asterisk: ``*text*`` for emphasis (*italics*),
-* two asterisks: ``**text**`` for strong emphasis (**boldface**), and
-* two backquotes: ````text```` for ``inline code`` samples.
+* 一个星号：``*text*`` 表示强调（*斜体*），
+* 两个星号：``**text**`` 表示强强调（**粗体**），
+* 两个反引号：````text```` 表示 ``内联代码`` 示例。
 
-If asterisks or backquotes appear in running text and could be confused with
-inline markup delimiters, you can eliminate the confusion by adding a
-backslash (``\``) before it.
+如果星号或反引号出现在正文中且可能与内联标记分隔符混淆，可以在其前面添加反斜杠（``\``）来消除混淆。
 
-File Names and Commands
-=======================
+文件名和命令
+=====================
 
-Sphinx extends reST by supporting additional inline markup elements (called
-"roles") used to tag text with special
-meanings and allow style output formatting. (You can refer to the `Sphinx Inline Markup`_
-documentation for the full list).
+Sphinx 通过支持额外的内联标记元素（称为"角色"）扩展了 reST，用于标记具有特殊含义的文本并允许样式输出格式。（完整的列表请参阅 `Sphinx 内联标记`_ 文档）。
 
-While double quotes can be used for rendering text as "code", you are encouraged to use the
-following roles for marking up file names, command names, and other "special" text.
+虽然双引号可用于将文本渲染为"代码"，但鼓励使用以下角色来标记文件名、命令名和其他"特殊"文本。
 
-* :rst:role:`file` for file names, e.g., ``:file:`CMakeLists.txt``` will render as
+* :rst:role:`file` 用于文件名，例如 ``:file:`CMakeLists.txt``` 将渲染为
   :file:`CMakeLists.txt`
 
   .. note::
 
-     In case you want to indicate a "variable" file path, you may use curly braces to enclose the
-     variable part of the path, e.g., ``:file:`{boardname}_defconfig``` will render as
-     :file:`{boardname}_defconfig`.
+     如果要表示"变量"文件路径，可以使用花括号括住路径的变量部分，例如 ``:file:`{boardname}_defconfig``` 将渲染为
+     :file:`{boardname}_defconfig`。
 
-* :rst:role:`command` for command names, e.g., ``:command:`make``` will render as :command:`make`
+* :rst:role:`command` 用于命令名，例如 ``:command:`make``` 将渲染为 :command:`make`
 
-* :rst:role:`envvar` for environment variables, e.g., ``:envvar:`ZEPHYR_BASE``` will render as
+* :rst:role:`envvar` 用于环境变量，例如 ``:envvar:`ZEPHYR_BASE``` 将渲染为
   :envvar:`ZEPHYR_BASE`
 
-For creating references to files that are hosted in the Zephyr organization on GitHub, refer to
-:ref:`linking_to_zephyr_files` section below.
+要创建对托管在 GitHub 上 Zephyr 组织中文件的引用，请参阅下面的 :ref:`linking_to_zephyr_files` 节。
 
-User Interaction
+用户交互
 ================
 
-When documenting user interactions, such as key combinations or GUI interactions, use the following
-roles to highlight the commands in a meaningful way:
+在记录用户交互（如按键组合或 GUI 交互）时，使用以下角色以有意义的方式高亮命令：
 
-* :rst:role:`kbd` for keyboard input, e.g., ``:kbd:`Ctrl-C``` will render as :kbd:`Ctrl-C`
+* :rst:role:`kbd` 用于键盘输入，例如 ``:kbd:`Ctrl-C``` 将渲染为 :kbd:`Ctrl-C`
 
-* :rst:role:`menuselection` for menu selections, e.g., ``:menuselection:`File --> Open``` will render
-  as :menuselection:`File --> Open`
+* :rst:role:`menuselection` 用于菜单选择，例如 ``:menuselection:`文件 --> 打开``` 将
+  渲染为 :menuselection:`文件 --> 打开`
 
-* :rst:role:`guilabel` for GUI labels, e.g., ``:guilabel:`Cancel``` will render as :guilabel:`Cancel`
+* :rst:role:`guilabel` 用于 GUI 标签，例如 ``:guilabel:`取消``` 将渲染为 :guilabel:`取消`
 
-Mathematical Formulas
+数学公式
 =====================
 
-You can include mathematical formulas using either the :rst:role:`math` role or :rst:dir:`math`
-directive. The directive provides more flexibility in case you have a more complex formula.
+你可以使用 :rst:role:`math` 角色或 :rst:dir:`math` 指令包含数学公式。对于更复杂的公式，指令提供更多灵活性。
 
-The input language for mathematics is LaTeX markup. Example::
+数学的输入语言是 LaTeX 标记。示例::
 
-   The answer to life, the universe, and everything is :math:`30 + 2^2 + \sqrt{64} = 42`.
+   生命、宇宙以及一切的答案是 :math:`30 + 2^2 + \sqrt{64} = 42`。
 
-This would render as:
+渲染效果为：
 
-   The answer to life, the universe, and everything is :math:`30 + 2^2 + \sqrt{64} = 42`.
+   生命、宇宙以及一切的答案是 :math:`30 + 2^2 + \sqrt{64} = 42`。
 
-Non-ASCII Characters
+非 ASCII 字符
 ====================
 
-Prefer plain ASCII unless a specific symbol is required for correctness or conventional typography
-(for example units like µ, or well-known marks like ™).
+除非特定符号对正确性或传统排版是必需的（例如 µ 这样的单位，或 ™ 这样的知名标记），否则优先使用纯 ASCII。
 
-Avoid adding non-ASCII characters purely for aesthetic purposes.
+避免纯粹出于美观目的添加非 ASCII 字符。
 
-The file :zephyr_file:`doc/substitutions.txt` contains some basic HTML substitution definitions for
-special formatting needs (e.g. to force line breaks), but Unicode characters can and should be used
-directly in the documentation source files.
+文件 :zephyr_file:`doc/substitutions.txt` 包含一些基本的 HTML 替换定义用于特殊格式需求（例如强制换行），但 Unicode 字符可以且应该在文档源文件中直接使用。
 
-Code Blocks and Command Examples
-================================
+代码块和命令示例
+==================
 
-Use the reST :rst:dir:`code-block` directive to create a highlighted block of
-fixed-width text, typically used for showing formatted code or console
-commands and output.  Smart syntax highlighting is also supported (using the
-Pygments package). You can also directly specify the highlighting language.
-For example::
+使用 reST :rst:dir:`code-block` 指令创建高亮的等宽文本块，通常用于显示格式化代码或控制台命令和输出。也支持智能语法高亮（使用 Pygments 包）。你也可以直接指定高亮语言。例如::
 
    .. code-block:: c
 
@@ -456,11 +382,9 @@ For example::
          uint32_t data;
       } __packed;
 
-Note the blank line between the :rst:dir:`code-block` directive and the first
-line of the code-block body, and the body content is indented three
-spaces (to the first non-white space of the directive name).
+注意 :rst:dir:`code-block` 指令和 code-block 主体第一行之间的空行，主体内容缩进三个空格（到指令名称的第一个非空白字符处）。
 
-This would be rendered as:
+渲染效果为：
 
    .. code-block:: c
 
@@ -473,75 +397,67 @@ This would be rendered as:
       } __packed;
 
 
-Other languages are of course supported (see `languages supported by Pygments`_), and in particular,
-you are encouraged to make use of the following when appropriate:
+当然也支持其他语言（参见 `Pygments 支持的语言`_），特别是，鼓励在适当时使用以下语言：
 
-.. _`languages supported by Pygments`: https://pygments.org/languages/
+.. _`Pygments 支持的语言`: https://pygments.org/languages/
 
-* ``c`` for C code
-* ``cpp`` for C++ code
-* ``python`` for Python code
-* ``console`` for console output, i.e. interactive shell sessions where commands are prefixed by a
-  prompt (ex. ``$`` for Linux, or ``uart:~$`` for Zephyr's shell), and where the output is also
-  shown. The commands will be highlighted, and the output will not. What's more, copying code block
-  using the "copy" button will automatically copy just the commands, excluding the prompt and the
-  outputs of the commands.
-* ``shell`` or ``bash`` for shell commands. Both languages get highlighted the same but you may use
-  ``bash`` for conveying that the commands are bash-specific, and ``shell`` for generic shell
-  commands.
+* ``c`` 用于 C 代码
+* ``cpp`` 用于 C++ 代码
+* ``python`` 用于 Python 代码
+* ``console`` 用于控制台输出，即交互式 shell 会话，命令前面有提示符（例如 Linux 用 ``$``，Zephyr 的 shell 用 ``uart:~$``），并且也显示输出。命令会被高亮，输出不会。此外，使用"复制"按钮复制代码块时会自动仅复制命令，不包括提示符和命令的输出。
+* ``shell`` 或 ``bash`` 用于 shell 命令。两种语言的高亮效果相同，但你可以使用 ``bash`` 表示命令是 bash 特定的，``shell`` 表示通用 shell 命令。
 
   .. note::
 
-     Do not use ``bash`` or ``shell`` if your code block includes a prompt, use ``console`` instead.
+     如果代码块包含提示符，不要使用 ``bash`` 或 ``shell``，改用 ``console``。
 
-     Reciprocally, do not use ``console`` if your code block does not include a prompt and is not
-     showcasing an interactive session with command(s) and their output.
+     反之，如果代码块不包含提示符且不是展示带命令及其输出的交互式会话，不要使用 ``console``。
 
-     .. list-table:: When to use ``bash``/``shell`` vs. ``console``
+     .. list-table:: 何时使用 ``bash``/``shell`` 对比 ``console``
         :class: wrap-normal
         :header-rows: 1
         :widths: 20,40,40
 
-        * - Use case
-          - ``code-block`` snippet
-          - Expected output
+        * - 使用场景
+          - ``code-block`` 片段
+          - 预期输出
 
-        * - One or several commands, no output
+        * - 一个或多个命令，无输出
 
           - .. code-block:: rst
 
                .. code-block:: shell
 
-                  echo "Hello World!"
+                 echo "Hello World!"
 
           - .. code-block:: shell
 
                echo "Hello World!"
 
-        * - An interactive shell session with command(s) and their output
+        * - 带命令及其输出的交互式 shell 会话
 
           - .. code-block:: rst
 
                .. code-block:: console
 
-                  $ echo "Hello World!"
-                  Hello World!
+                 $ echo "Hello World!"
+                 Hello World!
 
           - .. code-block:: console
 
                $ echo "Hello World!"
                Hello World!
 
-        * - An interactive Zephyr shell session, with commands and their outputs
+        * - 带命令及其输出的交互式 Zephyr shell 会话
 
           - .. code-block:: rst
 
                .. code-block:: console
 
-                  uart:~$ version
-                  Zephyr version 3.5.99
-                  uart:~$ kernel uptime
-                  Uptime: 20970 ms
+                 uart:~$ version
+                 Zephyr version 3.5.99
+                 uart:~$ kernel uptime
+                 Uptime: 20970 ms
 
           - .. code-block:: console
 
@@ -550,133 +466,106 @@ you are encouraged to make use of the following when appropriate:
                uart:~$ kernel uptime
                Uptime: 20970 ms
 
-* ``bat`` for Windows batch files
-* ``cfg`` for config files with "KEY=value" entries (ex. Kconfig ``.conf`` files)
-* ``cmake`` for CMake
-* ``devicetree`` for Devicetree
-* ``kconfig`` for Kconfig
-* ``yaml`` for YAML
-* ``rst`` for reStructuredText
+* ``bat`` 用于 Windows 批处理文件
+* ``cfg`` 用于包含 "KEY=value" 条目的配置文件（例如 Kconfig ``.conf`` 文件）
+* ``cmake`` 用于 CMake
+* ``devicetree`` 用于 Devicetree
+* ``kconfig`` 用于 Kconfig
+* ``yaml`` 用于 YAML
+* ``rst`` 用于 reStructuredText
 
-When no language is specified, the language is set to ``none`` and the code block is not
-highlighted. You may also use ``none`` explicitly to achieve the same result; for example::
-
-   .. code-block:: none
-
-      This would be a block of text styled with a background
-      and box, but with no syntax highlighting.
-
-Would display as:
+当未指定语言时，语言设置为 ``none``，代码块不高亮。你也可以显式使用 ``none`` 达到相同效果；例如::
 
    .. code-block:: none
 
-      This would be a block of text styled with a background
-      and box, but with no syntax highlighting.
+      这将是一个带有背景和边框样式的文本块，但没有语法高亮。
 
-There's a shorthand for writing code blocks too: end the introductory paragraph with a double colon
-(``::``) and indent the code block content that follows it by three spaces.  On output, only one
-colon will be shown.  The code block will have no highlighting (i.e. ``none``). You may however use
-the :rst:dir:`highlight` directive to customize the default language used in your document (see for
-example how this is done at the beginning of this very document).
+显示效果为：
+
+   .. code-block:: none
+
+      这将是一个带有背景和边框样式的文本块，但没有语法高亮。
+
+编写代码块也有简写方式：在介绍段落末尾用双冒号（``::``）结尾，将紧随其后的代码块内容缩进三个空格。输出时只显示一个冒号。代码块将无高亮（即 ``none``）。不过你可以使用 :rst:dir:`highlight` 指令自定义文档中使用的默认语言（例如参见本文档开头如何做的）。
 
 
-Links and Cross-References
+链接和交叉引用
 **************************
 
 .. _internal-linking:
 
-Cross-referencing internal content
+交叉引用内部内容
 ==================================
 
-Traditional ReST links are only supported within the current file using the
-notation::
+传统 ReST 链接仅支持在当前文件内使用以下表示法::
 
-   Refer to the `internal-linking`_ page
+   参见 `internal-linking`_ 页面
 
-which renders as,
+渲染效果为，
 
-   Refer to the `internal-linking`_ page
+   参见 `internal-linking`_ 页面
 
-Note the use of a trailing
-underscore to indicate an outbound link. In this example, the label was
-added immediately before a heading, so the text that's displayed is the
-heading text itself. You can change the text that's displayed as the
-link writing this as::
+注意使用尾随下划线表示出站链接。在此示例中，标签添加在标题正前方，所以显示的文字就是标题文本本身。你可以将链接显示的文字更改为::
 
-   Refer to the `show this text instead <internal-linking_>`_ page
+   参见 `显示此文本 <internal-linking_>`_ 页面
 
-which renders as,
+渲染效果为，
 
-   Refer to the `show this text instead <internal-linking_>`_ page
+   参见 `显示此文本 <internal-linking_>`_ 页面
 
 
-Cross-referencing external content
+交叉引用外部内容
 ==================================
 
-With Sphinx's help, we can create
-link-references to any tagged text within the Zephyr Project documentation.
+借助 Sphinx 的帮助，我们可以创建对 Zephyr 项目文档中任何标记文本的链接引用。
 
-Target locations in a document are defined with a label directive::
+文档中的目标位置用标签指令定义::
 
-      .. _my label name:
+      .. _我的标签名:
 
-      Heading
-      =======
+      标题
+      ======
 
-Note the leading underscore indicating an inbound link.
-The content immediately following
-this label must be a heading, and is the target for a ``:ref:`my label name```
-reference from anywhere within the Zephyr documentation.
-The heading text is shown when referencing this label.
-You can also change the text that's displayed for this link, such as::
+注意前导下划线表示入站链接。此标签后紧跟的内容必须是标题，并且是从 Zephyr 文档任何位置 ``:ref:`我的标签名``` 引用的目标。引用此标签时显示标题文本。你也可以更改此链接显示的文字，例如::
 
-   :ref:`some other text <my label name>`
+   :ref:`其他文本 <我的标签名>`
 
 
-To enable easy cross-page linking within the site, each file should have
-a reference label before its title so it can
-be referenced from another file. These reference labels must be unique
-across the whole site, so generic names such as "samples" should be
-avoided.  For example the top of this document's .rst file is::
+为了便于站点内的跨页链接，每个文件应在其标题前有一个引用标签，以便从另一个文件引用。这些引用标签必须在整个站点中唯一，因此应避免使用 "samples" 这样的通用名称。例如本文档 .rst 文件的顶部是::
 
    .. _doc_guidelines:
 
-   Documentation Guidelines for the Zephyr Project
-   ###############################################
+   Zephyr 项目文档指南
+   ###############################
 
 
-Other .rst documents can link to this document using the ``:ref:`doc_guidelines``` tag and
-it will show up as :ref:`doc_guidelines`.  This type of internal cross reference works across
-multiple files, and the link text is obtained from the document source so if the title changes,
-the link text will update as well.
+其他 .rst 文档可以使用 ``:ref:`doc_guidelines``` 标签链接到本文档，显示为 :ref:`doc_guidelines`。这种内部交叉引用可以跨多个文件工作，链接文本从文档源获取，因此如果标题更改，链接文本也会更新。
 
-You can also define links to any URL and then reference it in your document.
-For example, with this label definition in the document::
+你还可以定义到任何 URL 的链接，然后在文档中引用它。例如，在文档中定义此标签::
 
-   .. _Zephyr Wikipedia Page:
+   .. _Zephyr 维基百科页面:
       https://en.wikipedia.org/wiki/Zephyr_(operating_system)
 
-you can reference it with::
+你可以用::
 
-   Read the `Zephyr Wikipedia Page`_ for more information about the
-   project.
+   阅读 `Zephyr 维基百科页面`_ 了解关于此项目的更多信息。
+
+来引用它。
 
 .. tip::
 
-   When a document contains many external links, it can be useful to list them in a single
-   "References" section at the end of the document. This can be done using the
-   :rst:dir:`target-notes` directive. Example::
+   当文档包含许多外部链接时，在文档末尾的单个"参考"节中列出它们可能很有用。这可以通过 :rst:dir:`target-notes` 指令实现。示例::
 
-      References
-      ==========
+     参考
+     =====
 
-      .. target-notes::
+     .. target-notes::
 
-      .. _external_link1: https://example.com
-      .. _external_link2: https://example.org
+     .. _external_link1: https://example.com
+     .. _external_link2: https://example.org
 
-Cross-referencing C documentation
-=================================
+交叉引用 C 文档
+================================
 
 .. rst:role:: c:member
               c:data
@@ -689,121 +578,105 @@ Cross-referencing C documentation
               c:enumerator
               c:type
 
-   You may use these roles to cross-reference the Doxygen documentation of C functions, macros,
-   types, etc.
+   你可以使用这些角色交叉引用 C 函数、宏、类型等的 Doxygen 文档。
 
-   They are rendered in the HTML output as links to the corresponding Doxygen documentation for the
-   item. For example::
+   它们在 HTML 输出中渲染为指向对应项 Doxygen 文档的链接。例如::
 
-      Check out :c:func:`gpio_pin_configure` for more information.
+     查看 :c:func:`gpio_pin_configure` 了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-      Check out :c:func:`gpio_pin_configure` for more information.
+     查看 :c:func:`gpio_pin_configure` 了解更多信息。
 
-   You may provide a custom link text, similar to the built-in :rst:role:`ref` role.
+   你可以提供自定义链接文本，类似于内置的 :rst:role:`ref` 角色。
 
-Cross-referencing CMake documentation
+交叉引用 CMake 文档
 =====================================
 
-You may use the following roles to cross-reference the documentation of Zephyr's CMake modules,
-commands, and variables.
+你可以使用以下角色交叉引用 Zephyr CMake 模块、命令和变量的文档。
 
 .. rst:role:: cmake:module
 
-   This role is used to reference a CMake module. For example::
+   此角色用于引用 CMake 模块。例如::
 
-      See :cmake:module:`extensions` for more information.
+     参见 :cmake:module:`extensions` 了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-      See :cmake:module:`extensions` for more information.
+     参见 :cmake:module:`extensions` 了解更多信息。
 
 .. rst:role:: cmake:command
 
-   This role is used to reference a CMake command. For example::
+   此角色用于引用 CMake 命令。例如::
 
-      See :cmake:command:`yaml_load` for more information.
+     参见 :cmake:command:`yaml_load` 了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-      See :cmake:command:`yaml_load` for more information.
+     参见 :cmake:command:`yaml_load` 了解更多信息。
 
-   Commands documented by CMake itself are referenced through their fully qualified name, given as
-   an explicit link target::
+   CMake 自身记录的命令通过其完全限定名引用，作为显式链接目标给出::
 
-      See :cmake:command:`target_sources <command:target_sources>` for more information.
+     参见 :cmake:command:`target_sources <command:target_sources>` 了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-      See :cmake:command:`target_sources <command:target_sources>` for more information.
+     参见 :cmake:command:`target_sources <command:target_sources>` 了解更多信息。
 
 .. rst:role:: cmake:variable
 
-   This role is used to reference a CMake variable. For example::
+   此角色用于引用 CMake 变量。例如::
 
-      See :cmake:variable:`CMAKE_C_COMPILER` for more information.
+     参见 :cmake:variable:`CMAKE_C_COMPILER` 了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-      See :cmake:variable:`CMAKE_C_COMPILER` for more information.
+     参见 :cmake:variable:`CMAKE_C_COMPILER` 了解更多信息。
 
-Visual Elements
+视觉元素
 ***************
 
 .. _doc_images:
 
-Images
+图像
 ======
 
-Images are included in the documentation by using an :rst:dir:`image` directive::
+图像通过使用 :rst:dir:`image` 指令包含在文档中::
 
    .. image:: ../../images/doc-gen-flow.png
       :align: center
-      :alt: alt text for the image
+      :alt: 图像的替代文本
 
-or if you'd like to add an image caption, use::
+或者如果你想添加图像标题，使用::
 
     .. figure:: ../../images/doc-gen-flow.png
-       :alt: image description
+       :alt: 图像描述
 
-       Caption for the figure
+       插图的标题
 
-The file name specified is relative to the document source file,
-and we recommend putting images into an ``images`` folder where the document
-source is found.
+指定的文件名相对于文档源文件，我们建议将图像放在文档源所在目录的 ``images`` 文件夹中。
 
-The usual image formats handled by a web browser are supported: WebP, PNG, GIF,
-JPEG, and SVG.
+支持 Web 浏览器通常处理的图像格式：WebP、PNG、GIF、JPEG 和 SVG。
 
-Keep the image size only as large as needed, generally at least 500 px wide but
-no more than 1000 px, and no more than 100 KB unless a particularly large image
-is needed for clarity.
+图像大小只保留到需要的程度，通常至少 500 px 宽但不超过 1000 px，且不超过 100 KB，除非需要特别大的图像以提高清晰度。
 
-Recommended image formats based on content
+基于内容推荐的图像格式
 ------------------------------------------
 
-* **Screenshots**: WebP or PNG.
-* **Diagrams**: Consider using Graphviz for simple diagrams (see
-  `dedicated section <graphviz_diagrams>`_ below. If using an external tool, SVG is preferred.
-* **Photos** (ex. boards): WebP, no larger than 600 px on the largest dimension.
-  Whenever the subject can be isolated from its background (typically the case for board photos),
-  save the image with a transparent background so it blends in with both light and dark
-  documentation themes.
+* **屏幕截图**：WebP 或 PNG。
+* **图表**：考虑使用 Graphviz 创建简单图表（参见下面的 `专门章节 <graphviz_diagrams>`_。如果使用外部工具，优先使用 SVG。
+* **照片**（例如板级）：WebP，最大维度不超过 600 px。只要主体可以从背景中分离出来（通常是板级照片的情况），以透明背景保存图像，使其在浅色和深色文档主题中都能融合。
 
-  You can convert an existing image to a properly sized WebP using `cwebp`_ or `ImageMagick`_. For
-  example::
+  你可以使用 `cwebp`_ 或 `ImageMagick`_ 将现有图像转换为正确尺寸的 WebP。例如::
 
-     # Using cwebp (resize width to 600 px, height auto, ~80% quality).
-     # For a portrait image, use "-resize 0 600" to cap the height instead.
+     # 使用 cwebp（宽度缩放到 600 px，高度自动，约 80% 质量）。
+     # 对于竖版图像，改用 "-resize 0 600" 来限制高度。
      cwebp -resize 600 0 board_name.png -o board_name.webp
 
-     # Using ImageMagick
+     # 使用 ImageMagick
      magick board_name.png -resize 600x600 -quality 80 board_name.webp
 
-  When the source already has a transparent background (e.g. a PNG with an alpha channel), both
-  tools preserve transparency in the resulting WebP. The ``-resize 600 0`` / ``600x600`` arguments
-  only scale the image down, preserving its aspect ratio.
+  当源已经有透明背景（例如带 alpha 通道的 PNG）时，两个工具都会保留结果 WebP 中的透明性。``-resize 600 0`` / ``600x600`` 参数仅缩小图像，保持其宽高比。
 
 .. _cwebp: https://developers.google.com/speed/webp/download
 .. _ImageMagick: https://imagemagick.org/
@@ -811,17 +684,14 @@ Recommended image formats based on content
 .. _graphviz_diagrams:
 
 Graphviz
-========
+=========
 
-`Graphviz`_ is a tool for creating diagrams specified in a simple text language. As it's important
-to allow for diagrams used in the documentation to be easily maintained, we encourage the use of
-Graphviz for creating diagrams. Graphviz is particularly well suited for creating state diagrams, flow
-charts, and other types of diagrams that can be expressed as a graph.
+`Graphviz`_ 是用于创建以简单文本语言指定的图表的工具。由于文档中使用的图表需要易于维护，我们鼓励使用 Graphviz 创建图表。Graphviz 特别适合创建状态图、流程图以及可以表示为图的其他类型图表。
 
-To include a Graphviz diagram in a document, use the :rst:dir:`graphviz` directive. For example::
+要在文档中包含 Graphviz 图表，使用 :rst:dir:`graphviz` 指令。例如::
 
    .. graphviz::
-      :caption: An example graph using Graphviz
+      :caption: 使用 Graphviz 的示例图
 
       digraph G {
          rankdir=LR;
@@ -830,10 +700,10 @@ To include a Graphviz diagram in a document, use the :rst:dir:`graphviz` directi
          C -> D;
       }
 
-Would render as:
+渲染效果为：
 
    .. graphviz::
-      :caption: An example graph using Graphviz
+      :caption: 使用 Graphviz 的示例图
 
       digraph G {
          rankdir=LR;
@@ -842,26 +712,21 @@ Would render as:
          C -> D;
       }
 
-Please refer to the `Graphviz documentation`_ for more information on how to create diagrams using
-Graphviz's DOT language.
+更多如何使用 Graphviz 的 DOT 语言创建图表的信息，请参阅 `Graphviz 文档`_。
 
 .. _Graphviz: https://graphviz.org
-.. _Graphviz documentation: https://graphviz.org/documentation
+.. _Graphviz 文档: https://graphviz.org/documentation
 
 Mermaid
 =======
 
-`Mermaid`_ is a tool for creating diagrams and visualizations using a simple text-based syntax. It
-is particularly well-suited for creating flowcharts, sequence diagrams, class diagrams, and
-state transition diagrams.
+`Mermaid`_ 是用于使用简单基于文本的语法创建图表和可视化的工具。它特别适合创建流程图、时序图、类图和状态转换图。
 
-To include a mermaid diagram in a document, use the :rst:dir:`mermaid` directive. For example::
+要在文档中包含 mermaid 图表，使用 :rst:dir:`mermaid` 指令。例如::
 
    .. mermaid::
-      :caption: State transition diagram for a GPIO debounce
-      :alt: GPIO debounce state diagram showing transitions between inactive and active states
-            through maybe_active and maybe_inactive intermediate states before each state becomes
-            stable.
+      :caption: GPIO 去抖的状态转换图
+      :alt: GPIO 去抖状态图，显示从不活动状态到活动状态的转换，经过 maybe_active 和 maybe_inactive 中间状态，直到每个状态变得稳定。
 
       ---
       config:
@@ -872,14 +737,14 @@ To include a mermaid diagram in a document, use the :rst:dir:`mermaid` directive
 
           State inactive {
               [*] --> stable_inactive
-              stable_inactive --> maybe_active : edge to active
-              maybe_active --> stable_inactive : edge to inactive
+              stable_inactive --> maybe_active : 到活动状态的边
+              maybe_active --> stable_inactive : 到不活动状态的边
           }
 
           State active {
               [*] --> stable_active
-              stable_active --> maybe_inactive : edge to inactive
-              maybe_inactive --> stable_active : edge to active
+              stable_active --> maybe_inactive : 到不活动状态的边
+              maybe_inactive --> stable_active : 到活动状态的边
           }
 
           [*] --> inactive
@@ -888,13 +753,11 @@ To include a mermaid diagram in a document, use the :rst:dir:`mermaid` directive
           maybe_inactive --> inactive : After(x ms)
 
 
-Would render as:
+渲染效果为：
 
 .. mermaid::
-   :caption: State transition diagram for a GPIO debounce
-   :alt: GPIO debounce state diagram showing transitions between inactive and active states
-         through maybe_active and maybe_inactive intermediate states before each state becomes
-         stable.
+   :caption: GPIO 去抖的状态转换图
+   :alt: GPIO 去抖状态图，显示从不活动状态到活动状态的转换，经过 maybe_active 和 maybe_inactive 中间状态，直到每个状态变得稳定。
 
    ---
    config:
@@ -905,14 +768,14 @@ Would render as:
 
        State inactive {
            [*] --> stable_inactive
-           stable_inactive --> maybe_active : edge to active
-           maybe_active --> stable_inactive : edge to inactive
+           stable_inactive --> maybe_active : 到活动状态的边
+           maybe_active --> stable_inactive : 到不活动状态的边
        }
 
        State active {
            [*] --> stable_active
-           stable_active --> maybe_inactive : edge to inactive
-           maybe_inactive --> stable_active : edge to active
+           stable_active --> maybe_inactive : 到不活动状态的边
+           maybe_inactive --> stable_active : 到活动状态的边
        }
 
        [*] --> inactive
@@ -921,258 +784,237 @@ Would render as:
        maybe_inactive --> inactive : After(x ms)
 
 
-A diagram is drawn across the width of the page and its height follows from its aspect ratio, so a
-diagram that is taller than it is wide ends up much larger than it needs to be. Turning off
-``useMaxWidth``, as in the example above, keeps the diagram at the size Mermaid computed for it; it
-still shrinks to fit a narrow screen. The setting belongs to the diagram type, ``state`` here and
-``flowchart``, ``sequence`` or another type elsewhere.
+图表在页面宽度范围内绘制，其高度取决于其宽高比，因此比宽度高的图表最终会比需要的尺寸大得多。关闭 ``useMaxWidth``（如上面的示例），使图表保持 Mermaid 计算的尺寸；它仍然会缩小以适应窄屏幕。此设置属于图表类型，此处为 ``state``，其他位置为 ``flowchart``、``sequence`` 或另一种类型。
 
-For references about supported diagrams, syntax, and samples; please refer to the `Mermaid documentation`_.
-For fast iteration when creating or updating diagrams, you can use the `Mermaid live editor`_.
+关于支持的图表、语法和示例的参考，请参阅 `Mermaid 文档`_。创建或更新图表时为了快速迭代，你可以使用 `Mermaid 在线编辑器`_。
 
 .. _Mermaid: https://mermaid.js.org/
-.. _Mermaid documentation: https://mermaid.js.org/intro/
-.. _Mermaid live editor: https://mermaid.live/
+.. _Mermaid 文档: https://mermaid.js.org/intro/
+.. _Mermaid 在线编辑器: https://mermaid.live/
 
-Custom Sphinx Roles and Directives
+自定义 Sphinx 角色和指令
 **********************************
 
-The Zephyr documentation uses custom Sphinx roles and directives to provide additional functionality
-and to make it easier to write and maintain consistent documentation.
+Zephyr 文档使用自定义 Sphinx 角色和指令提供额外功能，并便于编写和维护一致的文档。
 
-Application build commands
+应用构建命令
 ==========================
 
 .. rst:directive:: .. zephyr-app-commands::
 
-   Generate consistent documentation of the shell commands needed to manage (build, flash, etc.) an
-   application
+   生成管理（构建、烧录等）应用所需的 shell 命令的一致文档
 
-   For example, to generate commands to build ``samples/hello_world`` for ``qemu_x86`` use::
+   例如，要为 ``qemu_x86`` 生成构建 ``samples/hello_world`` 的命令，使用::
 
-      .. zephyr-app-commands::
-         :zephyr-app: samples/hello_world
-         :board: qemu_x86
-         :goals: build
+     .. zephyr-app-commands::
+        :zephyr-app: samples/hello_world
+        :board: qemu_x86
+        :goals: build
 
-   This will render as:
+   渲染效果为：
 
-      .. zephyr-app-commands::
-         :zephyr-app: samples/hello_world
-         :board: qemu_x86
-         :goals: build
+     .. zephyr-app-commands::
+        :zephyr-app: samples/hello_world
+        :board: qemu_x86
+        :goals: build
 
-   .. rubric::  Options
+   .. rubric::  选项
 
    .. rst:directive:option:: tool
       :type: string
 
-      Which tool to use. Valid options are currently ``cmake``, ``west`` and ``all``.
-      The default is ``west``.
+      使用哪个工具。当前有效选项为 ``cmake``、``west`` 和 ``all``。默认为 ``west``。
 
    .. rst:directive:option:: app
       :type: string
 
-      Path to the application to build.
+      要构建的应用路径。
 
    .. rst:directive:option:: zephyr-app
       :type: string
 
-      Path to the application to build, this is an app present in the upstream zephyr repository.
-      Mutually exclusive with ``:app:``.
+      要构建的应用路径，这是上游 zephyr 仓库中存在的
+      应用。与 ``:app:`` 互斥。
 
    .. rst:directive:option:: cd-into
       :type: no value
 
-      If set, build instructions are given from within the ``:app:`` folder, instead of outside of
-      it.
+      如果设置，构建说明从 ``:app:`` 文件夹内部给出，而非外部。
 
    .. rst:directive:option:: generator
       :type: string
 
-      Which build system to generate.
+      生成哪个构建系统。
 
-      Valid options are currently ``ninja`` and ``make``. The default is ``ninja``. This option is
-      not case sensitive.
+      当前有效选项为 ``ninja`` 和 ``make``。默认为 ``ninja``。此选项不区分大小写。
 
    .. rst:directive:option:: host-os
 
-      Which host OS the instructions are for.
+      说明针对哪个宿主操作系统。
 
-      Valid options are ``unix``, ``win`` and ``all``. The default is ``all``.
+      有效选项为 ``unix``、``win`` 和 ``all``。默认为 ``all``。
 
    .. rst:directive:option:: board
       :type: string
 
-      If set, build commands will target the given board.
+      如果设置，构建命令将针对给定的板级。
 
    .. rst:directive:option:: shield
       :type: string
 
-      If set, build commands will target the given shield.
+      如果设置，构建命令将针对给定的 shield。
 
-      Multiple shields can be provided in a comma separated list.
+      可以用逗号分隔的列表提供多个 shield。
 
    .. rst:directive:option:: conf
 
-      If set, build commands will use the given configuration file(s).
+      如果设置，构建命令将使用给定的配置文件。
 
-      If multiple configuration files are provided, enclose the space-separated list of files with
-      double quotes, e.g., `"a.conf b.conf"`.
+      如果提供多个配置文件，用双引号括住空格分隔的文件列表，例如 `"a.conf b.conf"`。
 
    .. rst:directive:option:: gen-args
       :type: string
 
-      If set, indicates additional arguments to the CMake invocation.
+      如果设置，表示 CMake 调用的额外参数。
 
    .. rst:directive:option:: build-args
       :type: string
 
-      If set, indicates additional arguments to the build invocation.
+      如果设置，表示构建调用的额外参数。
 
    .. rst:directive:option:: west-args
       :type: string
 
-      If set, additional arguments to the west invocation (ignored for ``:tool: cmake``).
+      如果设置，west 调用的额外参数（对 ``:tool: cmake`` 忽略）。
 
    .. rst:directive:option:: flash-args
       :type: string
 
-      If set, additional arguments to the flash invocation.
+      如果设置，烧录调用的额外参数。
 
    .. rst:directive:option:: debug-args
       :type: string
 
-      If set, additional arguments to the debug invocation.
+      如果设置，调试调用的额外参数。
 
    .. rst:directive:option:: debugserver-args
       :type: string
 
-      If set, additional arguments to the debugserver invocation.
+      如果设置，debugserver 调用的额外参数。
 
    .. rst:directive:option:: attach-args
       :type: string
 
-      If set, additional arguments to the attach invocation.
+      如果设置，attach 调用的额外参数。
 
    .. rst:directive:option:: snippets
       :type: string
 
-      If set, indicates the application should be compiled with the listed snippets.
+      如果设置，表示应用应使用列出的片段编译。
 
-      Multiple snippets can be provided in a comma separated list.
+      可以用逗号分隔的列表提供多个片段。
 
    .. rst:directive:option:: build-dir
       :type: string
 
-      If set, the application build directory will *APPEND* this relative, Unix-separated, path to
-      the standard build directory. This is mostly useful for distinguishing builds for one
-      application within a single page.
+      如果设置，应用构建目录将*追加*此相对 Unix 分隔路径到标准构建目录。这主要用于在单个页面中区分一个应用的构建。
 
    .. rst:directive:option:: build-dir-fmt
       :type: string
 
-      If set, assume that `west config build.dir-fmt`` has been set to this path.
+      如果设置，假设 `west config build.dir-fmt`` 已设置为此路径。
 
-      Exclusive with ``:build-dir:`` and depends on ``:tool: west``.
+      与 ``:build-dir:`` 互斥，并依赖于 ``:tool: west``。
 
    .. rst:directive:option:: goals
       :type: string
 
-      A whitespace-separated list of what to do with the app (any of ``build``, ``flash``,
-      ``debug``, ``debugserver``, ``run``).
+      对应用做什么的空格分隔列表（``build``、``flash``、``debug``、``debugserver``、``run`` 中任意组合）。
 
-      Commands to accomplish these tasks will be generated in the right order.
+      完成这些任务的命令将按正确顺序生成。
 
    .. rst:directive:option:: maybe-skip-config
       :type: no value
 
-      If set, this indicates the reader may have already created a build directory and changed
-      there, and will tweak the text to note that doing so again is not necessary.
+      如果设置，表示读者可能已经创建了构建目录并进入其中，将调整文本以说明无需再次执行。
 
    .. rst:directive:option:: compact
       :type: no value
 
-      If set, the generated output is a single code block with no additional comment lines.
+      如果设置，生成的输出是单个代码块，无额外注释行。
 
 
 .. _linking_to_zephyr_files:
 
-Cross-referencing files in the Zephyr tree
+交叉引用 Zephyr 树中的文件
 ==========================================
 
-Special roles are available to reference files in the Zephyr tree. For example, referencing this
-very file can be done using the :rst:role:`zephyr_file` role.
+有特殊的角色可用于引用 Zephyr 树中的文件。例如，引用本文档本身可以使用 :rst:role:`zephyr_file` 角色。
 
 .. rst:role:: zephyr_file
 
-   This role is used to reference a file in the Zephyr tree. For example::
+   此角色用于引用 Zephyr 树中的文件。例如::
 
-      Check out :zephyr_file:`doc/contribute/documentation/guidelines.rst` for more information.
+     查看 :zephyr_file:`doc/contribute/documentation/guidelines.rst` 了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-      Check out :zephyr_file:`doc/contribute/documentation/guidelines.rst` for more information.
+     查看 :zephyr_file:`doc/contribute/documentation/guidelines.rst` 了解更多信息。
 
-   You can reference specific lines or line ranges in a file by appending :samp:`#L{line_number}` or
-   :samp:`#L{start_line}-L{end_line}` to the file path::
+   通过在文件路径后追加 :samp:`#L{line_number}` 或 :samp:`#L{start_line}-L{end_line}` 可以引用文件中的特定行或行范围::
 
-      See :zephyr_file:`doc/contribute/documentation/guidelines.rst#L3` for the main heading of
-      this document.
+     参见 :zephyr_file:`doc/contribute/documentation/guidelines.rst#L3` 查看本文档的主标题。
 
-   Will render as:
+   渲染效果为：
 
-      See :zephyr_file:`doc/contribute/documentation/guidelines.rst#L3` for the main heading of
-      this document.
+     参见 :zephyr_file:`doc/contribute/documentation/guidelines.rst#L3` 查看本文档的主标题。
 
-   The role automatically verifies that the referenced file exists in the Zephyr tree and will
-   generate a warning during documentation build if the file is not found.
+   该角色自动验证引用的文件存在于 Zephyr 树中，如果文件未找到，将在文档构建期间生成警告。
 
    .. note::
 
-      Use the line references sparingly as keeping them accurate over time can be challenging as the
-      content of the linked file is subject to change.
+      谨慎使用行引用，因为随着链接文件内容的变化，随时间保持其准确性可能具有挑战性。
 
-   You may use the :rst:role:`zephyr_raw` role instead if you want to reference the "raw" content.
+   如果你想引用"原始"内容，可以改用 :rst:role:`zephyr_raw` 角色。
 
 .. rst:role:: zephyr_raw
 
-   This role is used to reference the raw content of a file in the Zephyr tree. For example::
+   此角色用于引用 Zephyr 树中文件的原始内容。例如::
 
-      Check out :zephyr_raw:`doc/contribute/documentation/guidelines.rst` for more information.
+     查看 :zephyr_raw:`doc/contribute/documentation/guidelines.rst` 了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-      Check out :zephyr_raw:`doc/contribute/documentation/guidelines.rst` for more information.
+     查看 :zephyr_raw:`doc/contribute/documentation/guidelines.rst` 了解更多信息。
 
 .. rst:role:: module_file
 
-   This role is used to reference a module in the Zephyr tree. For example::
+   此角色用于引用 Zephyr 树中的模块。例如::
 
-         Check out :module_file:`hal_stm32:CMakeLists.txt` for more information.
+        查看 :module_file:`hal_stm32:CMakeLists.txt` 了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-         Check out :module_file:`hal_stm32:CMakeLists.txt` for more information.
+        查看 :module_file:`hal_stm32:CMakeLists.txt` 了解更多信息。
 
-   Similar to :rst:role:`zephyr_file`, you can reference specific lines or line ranges in a file.
+   与 :rst:role:`zephyr_file` 类似，你可以引用文件中的特定行或行范围。
 
-Cross-referencing GitHub issues and pull requests
-=================================================
+交叉引用 GitHub issue 和 pull request
+==================================================
 
 .. rst:role:: github
 
-   This role is used to reference a GitHub issue or pull request.
+   此角色用于引用 GitHub issue 或 pull request。
 
-   For example, to reference issue #1234::
+   例如，要引用 issue #1234::
 
-      Check out :github:`1234` for more background about this known issue.
+     查看 :github:`1234` 了解此已知 issue 的更多背景。
 
-   This will render as:
+   渲染效果为：
 
-      Check out :github:`1234` for more background about this known issue.
+     查看 :github:`1234` 了解此已知 issue 的更多背景。
 
-Doxygen API documentation
+Doxygen API 文档
 =========================
 
 .. app.add_directive("doxygengroup", DoxygenGroupDirective)
@@ -1180,428 +1022,362 @@ Doxygen API documentation
 
 .. rst:directive:: .. doxygengroup:: name
 
-   This directive is used to output a short description of a Doxygen group and a link to the
-   corresponding Doxygen-generated documentation.
+   此指令用于输出 Doxygen 组的简短描述和指向相应 Doxygen 生成文档的链接。
 
-   All the code samples (declared using the :rst:dir:`zephyr:code-sample` directive) indicating the
-   group as relevant will automatically be list and referenced in the rendered output.
+   所有使用 :rst:dir:`zephyr:code-sample` 指令声明并标记该组为相关的代码示例将自动列出并在渲染输出中引用。
 
-   For example::
+   例如::
 
-      .. doxygengroup:: can_interface
+     .. doxygengroup:: can_interface
 
-   Will render as:
+   渲染效果为：
 
-      .. doxygengroup:: can_interface
+     .. doxygengroup:: can_interface
 
 
-   .. rubric:: Options
+   .. rubric:: 选项
 
    .. rst:directive:option:: project
       :type: project name (optional)
 
-      Associated Doxygen project. This can be useful when multiple Doxygen
-      projects are configured.
+      关联的 Doxygen 项目。当配置了多个 Doxygen 项目时这可能很有用。
 
 .. rst:role:: c:group
 
-   This role is used to reference a Doxygen group in the Zephyr tree. In the HTML documentation,
-   they are rendered as links to the corresponding Doxygen-generated documentation for the group.
-   For example::
+   此角色用于引用 Zephyr 树中的 Doxygen 组。在 HTML 文档中，它们渲染为指向该组对应 Doxygen 生成文档的链接。例如::
 
-      Check out :c:group:`gpio_interface` for more information.
+     查看 :c:group:`gpio_interface` 了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-      Check out :c:group:`gpio_interface` for more information.
+     查看 :c:group:`gpio_interface` 了解更多信息。
 
-   You may provide a custom link text, similar to the built-in :rst:role:`ref` role.
+   你可以提供自定义链接文本，类似于内置的 :rst:role:`ref` 角色。
 
 
-Kconfig options
-===============
+Kconfig 选项
+================
 
-If you want to reference a Kconfig option from a document, you can use the
-:rst:role:`kconfig:option` role and provide the name of the option you want to reference. The role
-will automatically generate a link to the documentation of the Kconfig option when building HTML
-output.
+如果你想从文档中引用 Kconfig 选项，可以使用 :rst:role:`kconfig:option` 角色并提供要引用的选项名称。该角色在构建 HTML 输出时会自动生成指向 Kconfig 选项文档的链接。
 
-Make sure to use the full name of the Kconfig option, including the ``CONFIG_`` prefix.
+务必使用 Kconfig 选项的完整名称，包括 ``CONFIG_`` 前缀。
 
 .. rst:role:: kconfig:option
 
-   This role is used to reference a Kconfig option in the Zephyr tree. For example::
+   此角色用于引用 Zephyr 树中的 Kconfig 选项。例如::
 
-      Check out :kconfig:option:`CONFIG_GPIO` for more information.
+     查看 :kconfig:option:`CONFIG_GPIO` 了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-      Check out :kconfig:option:`CONFIG_GPIO` for more information.
+     查看 :kconfig:option:`CONFIG_GPIO` 了解更多信息。
 
 .. rst:role:: kconfig:option-regex
 
-   This role is used to create links to regex searches for Kconfig options. It generates a link to
-   the Kconfig search page with the provided regex pattern automatically filled in as the search
-   query. It is useful for referencing multiple Kconfig options that share a common prefix, or
-   belong to a common category. For example::
+   此角色用于创建到 Kconfig 选项正则表达式搜索的链接。它生成指向 Kconfig 搜索页面的链接，提供的正则表达式模式自动填入作为搜索查询。它适用于引用共享公共前缀的多个 Kconfig 选项，或属于公共类别的选项。例如::
 
-      Check out :kconfig:option-regex:`CONFIG_SECURE_STORAGE_ITS_(STORE|TRANSFORM)_.*_CUSTOM` for
-      the various customization possibilities.
+     查看 :kconfig:option-regex:`CONFIG_SECURE_STORAGE_ITS_(STORE|TRANSFORM)_.*_CUSTOM` 了解各种自定义可能性。
 
-   Will render as:
+   渲染效果为：
 
-      Check out :kconfig:option-regex:`CONFIG_SECURE_STORAGE_ITS_(STORE|TRANSFORM)_.*_CUSTOM` for
-      the various customization possibilities.
+     查看 :kconfig:option-regex:`CONFIG_SECURE_STORAGE_ITS_(STORE|TRANSFORM)_.*_CUSTOM` 了解各种自定义可能性。
 
-   It is encouraged to provide a custom link text to make the reference more readable. For example::
+   鼓励提供自定义链接文本使引用更易读。例如::
 
-      Check out the :kconfig:option-regex:`ITS Kconfig options <CONFIG_SECURE_STORAGE_ITS_.*>`
-      for more information.
+     查看 :kconfig:option-regex:`ITS Kconfig 选项 <CONFIG_SECURE_STORAGE_ITS_.*>` 了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-      Check out the :kconfig:option-regex:`ITS Kconfig options <CONFIG_SECURE_STORAGE_ITS_.*>`
-      for more information.
+     查看 :kconfig:option-regex:`ITS Kconfig 选项 <CONFIG_SECURE_STORAGE_ITS_.*>` 了解更多信息。
 
-Devicetree bindings
-===================
+设备树绑定
+==================
 
-If you want to reference a Devicetree binding from a document, you can use the
-:rst:role:`dtcompatible` role and provide the compatible string of the binding you want to
-reference. The role will automatically generate a link to the documentation of the binding when
-building HTML output.
+如果你想从文档中引用设备树绑定，可以使用 :rst:role:`dtcompatible` 角色并提供要引用的绑定的 compatible 字符串。该角色在构建 HTML 输出时会自动生成指向绑定文档的链接。
 
 .. rst:role:: dtcompatible
 
-   This role can be used inline to make a reference to the generated documentation for the
-   Devicetree compatible given as argument.
+   此角色可用于内联引用作为参数给出的设备树 compatible 的生成文档。
 
-   There may be more than one page for a single compatible. For example, that happens if a binding
-   behaves differently depending on the bus the node is on. If that occurs, the reference points at
-   a "disambiguation" page which links out to all the possibilities, similarly to how Wikipedia
-   disambiguation pages work. Example::
+   单个 compatible 可能有多于一个页面。例如，当绑定根据节点所在的总线表现不同时就会发生这种情况。如果发生，引用指向一个"消歧"页面，链接到所有可能性，类似于 Wikipedia 消歧页面的工作方式。示例::
 
-      Check out :dtcompatible:`zephyr,input-longpress` for more information.
+     查看 :dtcompatible:`zephyr,input-longpress` 了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-      Check out :dtcompatible:`zephyr,input-longpress` for more information.
+     查看 :dtcompatible:`zephyr,input-longpress` 了解更多信息。
 
-Code samples
+代码示例
 ============
 
 .. rst:directive:: .. zephyr:code-sample:: id
 
-   This directive is used to describe a code sample, including which noteworthy APIs it may be
-   exercising.
+   此指令用于描述代码示例，包括它可能使用哪些值得注意的 API。
 
-   For example::
+   例如::
 
-      .. zephyr:code-sample:: blinky
-         :name: Blinky
-         :relevant-api: gpio_interface
+     .. zephyr:code-sample:: blinky
+        :name: Blinky
+        :relevant-api: gpio_interface
 
-         Blink an LED forever using the GPIO API.
+        使用 GPIO API 永久闪烁一个 LED。
 
-   The content of the directive is used as the description of the code sample.
+   指令的内容用作代码示例的描述。
 
-   .. rubric:: Options
+   .. rubric:: 选项
 
    .. rst:directive:option:: name
       :type: text
 
-      Indicates the human-readable short name of the sample.
+      表示示例的人类可读短名称。
 
    .. rst:directive:option:: relevant-api
       :type: text
 
-      Optional space-separated list of Doxygen group names that correspond to the APIs exercised
-      by the code sample.
+      可选的空格分隔的 Doxygen 组名称列表，对应代码示例使用的 API。
 
 .. rst:role:: zephyr:code-sample
 
-   This role is used to reference a code sample described using :rst:dir:`zephyr:code-sample`.
+   此角色用于引用使用 :rst:dir:`zephyr:code-sample` 描述的代码示例。
 
-   For example::
+   例如::
 
-      Check out :zephyr:code-sample:`blinky` for more information.
+     查看 :zephyr:code-sample:`blinky` 了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-      Check out :zephyr:code-sample:`blinky` for more information.
+     查看 :zephyr:code-sample:`blinky` 了解更多信息。
 
-   This can be used exactly like the built-in :rst:role:`ref` role, i.e. you may provide a custom
-   link text. For example::
+   它可以完全像内置的 :rst:role:`ref` 角色一样使用，即你可以提供自定义链接文本。例如::
 
-      Check out :zephyr:code-sample:`blinky code sample <blinky>` for more information.
+     查看 :zephyr:code-sample:`blinky 代码示例 <blinky>` 了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-      Check out :zephyr:code-sample:`blinky code sample <blinky>` for more information.
+     查看 :zephyr:code-sample:`blinky 代码示例 <blinky>` 了解更多信息。
 
 .. rst:directive:: .. zephyr:code-sample-category:: id
 
-   This directive is used to define a category for grouping code samples.
+   此指令用于定义用于分组代码示例的类别。
 
-   For example::
+   例如::
 
-      .. zephyr:code-sample-category:: gpio
-         :name: GPIO
-         :show-listing:
+     .. zephyr:code-sample-category:: gpio
+        :name: GPIO
+        :show-listing:
 
-         Samples related to the GPIO subsystem.
+        与 GPIO 子系统相关的示例。
 
-   The contents of the directive is used as the description of the category. It can contain any
-   valid reStructuredText content.
+   指令的内容用作类别的描述。它可以包含任何有效的 reStructuredText 内容。
 
-   .. rubric:: Options
+   .. rubric:: 选项
 
    .. rst:directive:option:: name
       :type: text
 
-      Indicates the human-readable name of the category.
+      表示类别的人类可读名称。
 
    .. rst:directive:option:: show-listing
       :type: flag
 
-      If set, a listing of code samples in the category will be shown. The listing is automatically
-      generated based on all code samples found in the subdirectories of the current document.
+      如果设置，将显示类别中代码示例的列表。列表基于当前文档子目录中发现的所有代码示例自动生成。
 
    .. rst:directive:option:: glob
       :type: text
 
-      A glob pattern to match the files to include in the listing. The default is `*/*` but it can
-      be overridden e.g. when samples may be found in directories not sitting directly under the
-      category directory.
+      匹配要包含在列表中的文件的 glob 模式。默认为 `*/*`，但可以覆盖，例如当示例可能位于不直接在类别目录下的目录中时。
 
 .. rst:role:: zephyr:code-sample-category
 
-   This role is used to reference a code sample category described using
-   :rst:dir:`zephyr:code-sample-category`.
+   此角色用于引用使用 :rst:dir:`zephyr:code-sample-category` 描述的代码示例类别。
 
-   For example::
+   例如::
 
-      Check out :zephyr:code-sample-category:`cloud` samples for more information.
+     查看 :zephyr:code-sample-category:`cloud` 示例了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-      Check out :zephyr:code-sample-category:`cloud` samples for more information.
+     查看 :zephyr:code-sample-category:`cloud` 示例了解更多信息。
 
 .. rst:directive:: .. zephyr:code-sample-listing::
 
-   This directive is used to show a listing of all code samples found in one or more categories.
+   此指令用于显示一个或多个类别中发现的所有代码示例的列表。
 
-   For example::
+   例如::
 
-      .. zephyr:code-sample-listing::
-         :categories: cloud
+     .. zephyr:code-sample-listing::
+        :categories: cloud
 
-   Will render as:
+   渲染效果为：
 
-      .. zephyr:code-sample-listing::
-         :categories: cloud
+     .. zephyr:code-sample-listing::
+        :categories: cloud
 
-   .. rubric:: Options
+   .. rubric:: 选项
 
    .. rst:directive:option:: categories
       :type: text
 
-      A space-separated list of category IDs for which to show the listing.
+      要显示列表的类别 ID 的空格分隔列表。
 
    .. rst:directive:option:: live-search
       :type: flag
 
-      A flag to include a search box right above the listing. The search box allows users to filter
-      the listing by code sample name/description, which can be useful for categories with a large
-      number of samples. This option is only available in the HTML builder.
+      在列表正上方包含搜索框的标志。搜索框允许用户按代码示例名称/描述过滤列表，这对于包含大量示例的类别可能很有用。此选项仅在 HTML 构建器中可用。
 
-Boards
+板级
 ======
 
 .. rst:directive:: .. zephyr:board:: name
 
-   This directive is used at the beginning of a document to indicate it is the main documentation
-   page for a board whose name is given as the directive argument.
+   此指令用于在文档开头表示它是名称作为指令参数给出的板级的主文档页面。
 
-   For example::
+   例如::
 
-      .. zephyr:board:: wio_terminal
+     .. zephyr:board:: wio_terminal
 
-   The metadata for the board is read from various config files and used to automatically populate
-   some sections of the board documentation. A board documentation page that uses this directive
-   can be linked to using the :rst:role:`zephyr:board` role.
+   板级的元数据从各种配置文件读取，用于自动填充板级文档的某些部分。使用此指令的板级文档页面可以使用 :rst:role:`zephyr:board` 角色链接。
 
 .. rst:role:: zephyr:board
 
-   This role is used to reference a board documented using :rst:dir:`zephyr:board`.
+   此角色用于引用使用 :rst:dir:`zephyr:board` 文档化的板级。
 
-   For example::
+   例如::
 
-      Check out :zephyr:board:`wio_terminal` for more information.
+     查看 :zephyr:board:`wio_terminal` 了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-      Check out :zephyr:board:`wio_terminal` for more information.
+     查看 :zephyr:board:`wio_terminal` 了解更多信息。
 
 .. rst:directive:: .. zephyr:board-catalog::
 
-   This directive is used to generate a catalog of Zephyr-supported boards that can be used to
-   quickly browse the list of all supported boards and filter them according to various criteria.
+   此指令用于生成 Zephyr 支持板级的目录，可用于快速浏览所有支持板级的列表并根据各种标准过滤。
 
 .. rst:role:: zephyr:board-catalog
 
-   This role is used to reference the board catalog page, optionally with filter parameters.
-   For example::
+   此角色用于引用板级目录页面，可选带过滤参数。例如::
 
-      Check out :zephyr:board-catalog:`` for more information.
+     查看 :zephyr:board-catalog:`` 了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-      Check out :zephyr:board-catalog:`` for more information.
+     查看 :zephyr:board-catalog:`` 了解更多信息。
 
-   This role can be used exactly like the built-in :rst:role:`ref` role, i.e. you may provide a
-   custom link text. For example::
+   此角色可以完全像内置的 :rst:role:`ref` 角色一样使用，即你可以提供自定义链接文本。例如::
 
-      Check out the :zephyr:board-catalog:`boards using this compatible <#compatibles=ti,hdc2080>`
-      for more information.
+     查看 :zephyr:board-catalog:`使用此 compatible 的板级 <#compatibles=ti,hdc2080>` 了解更多信息。
 
-   Will render as:
+   渲染效果为：
 
-      Check out the :zephyr:board-catalog:`boards using this compatible <#compatibles=ti,hdc2080>`
-      for more information.
+     查看 :zephyr:board-catalog:`使用此 compatible 的板级 <#compatibles=ti,hdc2080>` 了解更多信息。
 
 .. rst:directive:: .. zephyr:board-supported-hw::
 
-   This directive is used to show supported hardware features for all the targets of the board
-   documented in the current page. The tables are automatically generated based on the board's
-   Devicetree.
+   此指令用于显示当前页文档化板级的所有目标的支持硬件特性。表格基于板级的设备树自动生成。
 
-   The directive must be used in a document that also contains a :rst:dir:`zephyr:board` directive,
-   as it relies on the board information to generate the table.
+   此指令必须用于也包含 :rst:dir:`zephyr:board` 指令的文档，因为它依赖板级信息生成表格。
 
    .. note::
 
-      This directive requires that the documentation is built with hardware features generation enabled
-      (``zephyr_generate_hw_features`` config option set to ``True``). If disabled, a warning message
-      will be shown instead of the hardware features tables.
+      此指令要求文档在启用硬件特性生成的情况下构建（``zephyr_generate_hw_features`` 配置选项设为 ``True``）。如果禁用，将显示警告消息而非硬件特性表格。
 
-      It is possible to limit the hardware features generation to boards from a specific list of vendors
-      to speed up documentation builds without completely disabling the hardware features table. Set the
-      config option ``zephyr_hw_features_vendor_filter`` to the list of vendors to generate features for.
-      If the option is empty, hardware features are generated for all boards from all vendors.
+      可以将硬件特性生成限制为来自特定供应商列表的板级，以加快文档构建速度而不完全禁用硬件特性表格。将配置选项 ``zephyr_hw_features_vendor_filter`` 设为要生成特性的供应商列表。如果选项为空，为所有供应商的所有板级生成硬件特性。
 
-      The config option ``zephyr_hw_features_twister_extra_flags`` can be used to provide additional flags to the
-      twister command.
+      配置选项 ``zephyr_hw_features_twister_extra_flags`` 可用于为 twister 命令提供额外标志。
 
 .. rst:directive:: .. zephyr:board-supported-runners::
 
-   This directive is used to show the supported runners for the board documented in the current
-   page, including which runner is the default for flashing and debugging.
+   此指令用于显示当前页文档化板级的支持 runner，包括哪个 runner 是烧录和调试的默认。
 
-   The directive must be used in a document that also contains a :rst:dir:`zephyr:board` directive,
-   as it relies on the board information to generate the table.
+   此指令必须用于也包含 :rst:dir:`zephyr:board` 指令的文档，因为它依赖板级信息生成表格。
 
    .. note::
 
-      Similar to :rst:dir:`zephyr:board-supported-hw`, this directive requires hardware features
-      generation to be enabled (``zephyr_generate_hw_features`` config option set to ``True``) to
-      produce a complete table. If disabled, a warning message will be shown instead of the runners
-      tables.
+      与 :rst:dir:`zephyr:board-supported-hw` 类似，此指令需要启用硬件特性生成（``zephyr_generate_hw_features`` 配置选项设为 ``True``）才能生成完整表格。如果禁用，将显示警告消息而非 runner 表格。
 
-Accessibility Guidelines
+可访问性指南
 ************************
 
-Accessibility is an important aspect of documentation, ensuring that all users, including those with
-disabilities, can access and understand the content.
+可访问性是文档的重要方面，确保所有用户（包括残障人士）都能访问和理解内容。
 
-When writing and maintaining Zephyr Project documentation, please follow these guidelines to improve
-accessibility for everyone.
+在编写和维护 Zephyr 项目文档时，请遵循以下指南以提高所有人的可访问性。
 
-Images and Figures
+图像和插图
 ==================
 
-All images and figures must include appropriate alternative text (alt text) to convey the meaning of
-the visual content to users who rely on screen readers or cannot view images.
+所有图像和插图必须包含适当的替代文本（alt 文本），向依赖屏幕阅读器或无法查看图像的用户传达视觉内容的含义。
 
-* Use the ``:alt:`` attribute when including images using the :rst:dir:`image` directive.  Example:
+* 使用 :rst:dir:`image` 指令包含图像时，使用 ``:alt:`` 属性。示例：
 
   .. code-block:: rst
      :emphasize-lines: 2
 
      .. image:: image/doc-gen-flow.png
-        :alt: Documentation generation process overview
+        :alt: 文档生成流程概览
 
-* If the image contains text, ensure that the alt text includes this text verbatim.
+* 如果图像包含文本，确保 alt 文本逐字包含此文本。
 
-* When using the :rst:dir:`figure` directive, which allows for a caption, the ``:alt:`` text is
-  still important. The alt text should describe the image itself, while the caption provides
-  additional context or interpretation. Example:
+* 使用允许标题的 :rst:dir:`figure` 指令时，``:alt:`` 文本仍然重要。alt 文本应描述图像本身，而标题提供额外的上下文或解释。示例：
 
   .. code-block:: rst
      :emphasize-lines: 4
 
      .. figure:: ../../images/arch-diagram.png
-        :alt: High-level overview of Zephyr OS architecture showing layers and components.
+        :alt: Zephyr 操作系统架构的高层概览，显示层次和组件。
 
-        High-level overview of Zephyr OS architecture.
+        Zephyr 操作系统架构的高层概览。
 
-- Avoid using images as the sole method of conveying information that can be explained
-  clearly with text.
+- 避免将图像作为传达可以用文字清楚解释的信息的唯一方法。
 
-.. admonition:: Best Practices for writing alt text
+.. admonition:: 编写 alt 文本的最佳实践
    :class: tip
 
-   * **Be Accurate and Equivalent**: Present the same essential information as the image.
-   * **Be Succinct**: Convey the core message of the image concisely.
-   * **Avoid Redundancy**: Do not use phrases like "Image of..." or "Picture of..." as screen readers
-     typically announce the element as an image.
-   * **Describe, Don't Interpret**: Stick to describing what is visually present on the image.
-   * **Complex Images**: For charts, diagrams, or other complex visuals, provide a summary in the alt
-     text. If a full understanding requires more detail, consider providing a more detailed
-     description in the surrounding text or as part of the figure caption. Using text-based diagram
-     tools like :ref:`Graphviz <graphviz_diagrams>` can also improve accessibility.
+   * **准确且等价**：呈现与图像相同的本质信息。
+   * **简洁**：简洁地传达图像的核心信息。
+   * **避免冗余**：不要使用 "Image of..." 或 "Picture of..." 这样的短语，因为屏幕阅读器通常会将元素宣布为图像。
+   * **描述，而非解释**：坚持描述图像上视觉呈现的内容。
+   * **复杂图像**：对于图表、示意图或其他复杂视觉，在 alt 文本中提供摘要。如果完全理解需要更多细节，考虑在周围文本中或作为插图标题的一部分提供更详细的描述。使用 :ref:`Graphviz <graphviz_diagrams>` 等基于文本的图表工具也可以提高可访问性。
 
 
-Headings and Structure
-======================
+标题和结构
+====================
 
-Use :ref:`headings <headings>` to structure your document logically. This allows users of assistive
-technologies to understand the document's organization and navigate it efficiently.
+使用 :ref:`headings <headings>` 逻辑地组织文档。这允许辅助技术用户理解文档的组织并高效地导航。
 
-Tables
+表格
 ======
 
-Tables should be used only for tabular data and must be accessible to screen readers.
+表格应仅用于表格数据，且必须对屏幕阅读器可访问。
 
-* Always define headers for rows and columns.
+* 始终为行和列定义标题。
 
-* Use the :rst:dir:`list-table` directive when possible for better responsiveness and accessibility.
+* 尽可能使用 :rst:dir:`list-table` 指令以获得更好的响应性和可访问性。
 
-* Include a caption for tables where context is not immediately obvious. Example:
+* 在上下文不那么明显的表格中包含标题。示例：
 
   .. code-block:: rst
      :emphasize-lines: 1
 
-     .. list-table:: GPIO Pin Configuration Options
+     .. list-table:: GPIO 引脚配置选项
         :widths: 15 30
         :header-rows: 1
 
-        * - Field
-          - Description
+        * - 字段
+          - 描述
         * - GPIO_INPUT
-          - Configures pin as input
+          - 将引脚配置为输入
         * - GPIO_OUTPUT
-          - Configures pin as output
+          - 将引脚配置为输出
 
-Additional Resources
-====================
+额外资源
+==================
 
-For more general guidance on web accessibility you may refer to W3C's
-`Web Content Accessibility Guidelines (WCAG)`_
+关于 Web 可访问性的更多一般性指导，请参阅 W3C 的 `Web 内容可访问性指南 (WCAG)`_
 
-.. _`Web Content Accessibility Guidelines (WCAG)`: https://www.w3.org/WAI/standards-guidelines/wcag/
+.. _`Web 内容可访问性指南 (WCAG)`: https://www.w3.org/WAI/standards-guidelines/wcag/
 
-References
+参考
 **********
 
 .. target-notes::

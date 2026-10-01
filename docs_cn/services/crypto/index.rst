@@ -1,47 +1,15 @@
 .. _cryptography:
 
-Cryptography
+加密
 ############
 
-Crypto
-section
-contain
-关于
-Zephyr
-kernel
-supported
-的
-cryptographic
-primitives
-的
-information。
-Use
-这
-些
-information
-understand
-不同
-algorithms
-operation
-背后
-的
-principles
-以及
-它们
-如何
-被
-implemented。
+加密部分包含有关 Zephyr 内核支持的密码原语的信息。使用这些信息可以理解不同算法运行的原理及其实现方式。
 
-以下
-crypto
-libraries
-被
-included：
+已包含以下加密库：
 
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    psa_crypto.rst
    random/index.rst

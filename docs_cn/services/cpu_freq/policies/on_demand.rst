@@ -1,164 +1,22 @@
 .. _on_demand_policy:
 
-On
-Demand
-CPU
-Frequency
-Scaling
-Policy
+On-Demand CPU Frequency Scaling Policy
 ######################################
 
-On
-Demand
-policy
-用
-:ref:`CPU
-Load
-<cpu_load>`
-evaluate
-current
-的
-CPU
-load
-并
-compare
-它
-与
-SoC
-P-state
-definition
-defined
-的
-trigger
-threshold。
+On-Demand policy 用
+:ref:`CPU Load <cpu_load>` 评估当前 CPU load（并将其与
+SoC P-state definition 定义的 trigger threshold 比较。
 
-On
-Demand
-policy
-将
-iterate
-通过
-defined
-的
-P-states
-并
-select
-first
-的
-P-state
-其
-CPU
-load
-大于
-或
-等于
-defined
-的
-threshold。
+On-Demand policy 将遍历定义的 P-states（并选择第一个
+CPU load 大于或等于定义 threshold 的 P-state。
 
-如果
-没有
-P-state
-match
-（即
-CPU
-load
-低于
-所有
-thresholds）
-policy
-将
-select
-soc_pstates
-array
-中
-的
-last
-P-state
-（lowest
-的
-performance
-state）。
-这
-是
-policy
-intrinsic
-的：
-P-states
-必须
-在
-devicetree
-中
-按
-decreasing
-的
-threshold
-order
-defined
-并
-last
-P-state
-将
-被
-used
-用于
-低于
-所有
-thresholds
-的
-loads。
+若无 P-state 匹配（即 CPU load 低于所有 thresholds）（policy 将选择
+soc_pstates array 中最后一个 P-state（最低 performance state。这是
+policy 固有的：P-states 须在 devicetree 中按递减 threshold 顺序定义（且
+最后一个 P-state 用于低于所有 thresholds 的 loads。
 
-参考
-:zephyr:code-sample:`cpu_freq_on_demand`
-sample
-获取
-on
-demand
-policy
-的
-一
-个
-example。
+on-demand policy 示例参见 :zephyr:code-sample:`cpu_freq_on_demand` sample。
 
-这
-个
-policy
-是
-reactive
-的。
-Frequency
-adjustments
-只
-在
-system
-load
-的
-change
-被
-observed
-后
-发生
-所以
-它
-无法
-anticipate
-sudden
-的
-high
-loads。
-Policy
-没有
-task
-deadlines
-的
-notion
-并
-不
-应该
-被
-considered
-作为
-real
-time
-的
-policy。
+此 policy 为 reactive。仅在观察到 system load 变化后才发生 frequency 调整（
+故其不能预见突然高 loads。Policy 无 task deadlines 概念（
+不应视为 real-time policy。

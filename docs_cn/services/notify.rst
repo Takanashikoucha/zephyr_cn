@@ -1,208 +1,28 @@
 .. _async_notification:
 
-Asynchronous
-Notifications
+异步通知
 ##########################
 
-Zephyr
-APIs
-often
-include
-:ref:`api_term_async`
-的
-functions
-那里
-一
-个
-operation
-被
-initiated
-且
-application
-需要
-在
-它
-complete
-时
-被
-informed
-以及
-它
-是否
-succeeded。
-Use
-:c:func:`k_poll`
-通常
-是
-一
-个
-good
-的
-method
-但
-某些
-application
-architectures
-可能
-更
-suitable
-于
-callback
-notification
-且
-operations
-如
-enabling
-clocks
-和
-power
-rails
-可能
-需要
-在
-kernel
-functions
-available
-之前
-被
-invoked
-所以
-busy
-wait
-用于
-completion
-可能
-被
-needed。
+Zephyr 的 API 通常包含 :ref:`api_term_async` 函数，其中操作被发起后，
+应用需要在操作完成时收到通知，并知道该操作是否成功。
+使用 :c:func:`k_poll` 通常是一个好方法，但某些应用架构可能更适合回调通知，
+而启用时钟和电源轨等操作可能需要在内核函数可用之前调用，
+因此可能需要忙等待完成。
 
-这
-个
-API
-intended
-被
-embedded
-在
-specific
-的
-subsystems
-中
-如
-:ref:`resource_mgmt_onoff`
-和
-其他
-support
-async
-transactions
-的
-APIs。
-Subsystem
-的
-wrappers
-负责
-从
-include
-notification
-element
-的
-requests
-中
-extract
-operation
-specific
-的
-data
-并
-用
-API
-required
-的
-parameters
-invoke
-callbacks。
+该 API 旨在嵌入到特定子系统中，例如 :ref:`resource_mgmt_onoff`
+以及其他支持异步事务的 API。子系统封装层负责从包含通知元素的请求中
+提取操作特定的数据，并使用 API 所需的参数调用回调。
 
-一
-个
-limitation
-是
-这
-个
-API
-不
-suitable
-用于
-:ref:`syscalls`
-因为：
+一个限制是该 API 不适用于 :ref:`syscalls`，因为：
 
-*
-:c:struct:`sys_notify`
-不
-是
-一
-个
-kernel
-object
-*
-从
-userspace
-copy
-notification
-content
-会
-break
-implementing
-function
-中
-:c:macro:`CONTAINER_OF`
-的
-use
-*
-Spin
-wait
-和
-callback
-notification
-的
-methods
-both
-都
-不
-能
-被
-accepted
-从
-userspace
-callers
+* :c:struct:`sys_notify` 不是内核对象；
+* 从用户空间复制通知内容会破坏实现函数中 :c:macro:`CONTAINER_OF` 的使用；
+* 自旋等待和回调通知方法都无法从用户空间调用者接受。
 
-当
-从
-user
-mode
-thread
-invoked
-的
-asynchronous
-operation
-需要
-notification
-时
-subsystem
-或
-driver
-应该
-provide
-一
-个
-syscall
-API
-它
-use
-:c:struct:`k_poll_signal`
-用于
-notification。
+当从用户模式线程发起的异步操作需要通知时，子系统或驱动应提供一个
+使用 :c:struct:`k_poll_signal` 进行通知的 syscall API。
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   sys_notify_apis
+.. doxygengroup:: sys_notify_apis

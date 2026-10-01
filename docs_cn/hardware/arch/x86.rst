@@ -1,231 +1,94 @@
 .. _x86_developer_guide:
 
-x86
-Developer
-Guide
+x86 开发者指南
 ###################
 
-Overview
+概述
 ********
 
-本
-页
-包含
-关于
-为
-基于
-x86
-的
-platforms
-开发
-时
-某些
-方面
-的
-信息。
+本页面包含针对基于 x86 的平台进行开发时某些方面的信息。
 
-Virtual
-Memory
+虚拟内存
 **************
 
-在
-非常
-早期
-的
-boot
-期间，
-page
-tables
-被
-加载
-所以
-技术
-上
-kernel
-在
-virtual
-address
-space
-中
-执行。
-默认
-情况
-下，
-physical
-和
-virtual
-memory
-是
-identity
-mapped
-的
-因此
-给出
-执行
-发生
-在
-physical
-address
-space
-中
-的
-外观。
-physical
-address
-space
-由
-dts
-:c:macro:`DT_CHOSEN_SRAM_ADDR`
-和
-:c:macro:`DT_CHOSEN_SRAM_SIZE`
-标记
-而
-virtual
-address
-space
-由
-:kconfig:option:`CONFIG_KERNEL_VM_BASE`
-和
-:kconfig:option:`CONFIG_KERNEL_VM_SIZE`
-标记。
-注意
-:kconfig:option:`CONFIG_SRAM_OFFSET`
-控制
-Zephyr
-kernel
-被
-放置
-在
-memory
-中
-的
-哪里，
-以及
-其
-对应
-的
-:kconfig:option:`CONFIG_KERNEL_VM_OFFSET`。
+在非常早期的启动阶段，页表会被加载，因此从技术角度来说，内核运行在虚拟地址空间中。
+默认情况下，物理内存和虚拟内存采用恒等映射（identity mapping），因此呈现出运行在物理地址空间中的表象。
+物理地址空间由 dts 中的 :c:macro:`DT_CHOSEN_SRAM_ADDR` 和 :c:macro:`DT_CHOSEN_SRAM_SIZE` 标记，
+而虚拟地址空间由 :kconfig:option:`CONFIG_KERNEL_VM_BASE` 和 :kconfig:option:`CONFIG_KERNEL_VM_SIZE` 标记。
+请注意，:kconfig:option:`CONFIG_SRAM_OFFSET` 控制 Zephyr 内核在内存中的放置位置，其对应的虚拟地址侧配置项为 :kconfig:option:`CONFIG_KERNEL_VM_OFFSET`。
 
-将
-Virtual
-Address
-Space
-与
-Physical
-Address
-Space
-分开
-=========================================================
+将虚拟地址空间与物理地址空间分离
+==========================================================
 
-在
-32-bit
-x86
-上，
-可以
-有
-分开
-的
-physical
-和
-virtual
-address
-space。
-代码
-和
-数据
-在
-virtual
-address
-space
-中
-链接，
-但
-仍
-被
-加载
-在
-physical
-memory
-中。
-然而，
-在
-boot
-期间，
-代码
-和
-数据
-必须
-在
-:file:`arch/x86/core/ia32/crt0.S`
-内部
-的
-``vm_enter``
-之前
-在
-physical
-address
-space
-中
-可用
-并
-可
-寻址。
-在
-``vm_enter``
-之后，
-代码
-执行
-通过
-virtual
-addresses
-完成
-并
-数据
-可以
-通过
-它们
-的
-virtual
-addresses
-引用。
-这
-是
-可能
-的
-因为
-page
-table
-生成
-脚本
-（:file:`arch/x86/gen_mmu.py`）
-在
-page
-directory
-level
-identity
-maps
-physical
-addresses
-除了
-将
-virtual
-addresses
-映射
-到
-physical
-memory。
-在
-boot
-process
-中
-更
-晚
-的时候，
-page
-directory
-level
-的
-identity
-mapping
-entries
-被
+在 32 位 x86 上，可以让物理地址空间和虚拟地址空间相互分离。
+代码和数据链接在虚拟地址空间中，但仍被加载到物理内存中。
+然而，在启动过程中，在 :file:`arch/x86/core/ia32/crt0.S` 内部的 ``vm_enter`` 执行之前，
+代码和数据必须已经可用，并且能够在物理地址空间中寻址。
+在 ``vm_enter`` 之后，代码执行通过虚拟地址进行，数据也可以通过其虚拟地址来引用。
+这是可行的，因为页表生成脚本（:file:`arch/x86/gen_mmu.py`）除了将虚拟地址映射到物理内存之外，
+还在页目录（page directory）级别对物理地址进行恒等映射。
+在启动过程的后续阶段，页目录级别恒等映射的条目会在 :c:func:`z_x86_mmu_init()` 中被清除，
+从而实际上移除物理内存的恒等映射。
+对于用户态隔离，必须执行这种解除映射，否则用户态将通过物理地址访问受限内存。
+由于恒等映射是在页目录级别完成的，因此无需为页表分配额外的空间。
+不过，可能仍需要为额外的页目录表分配空间。
+
+虚拟地址空间的位置有以下限制：
+
+- 物理地址空间和虚拟地址空间必须不相交（disjoint）。
+  这是必需的，因为页目录表中的条目将被清除。
+  如果两者相交，就会清除虚拟地址所需的条目。
+
+  - 如果启用了 :kconfig:option:`CONFIG_X86_PAE`（``=y``），由于 PDP（Page Directory Pointer，页目录指针）的每个条目覆盖 1GB 的内存，每个地址空间必须位于各自的 1GB 区域中。例如：
+
+    - 假设 ``CONFIG_SRAM_OFFSET`` 和 ``CONFIG_KERNEL_VM_OFFSET`` 均为 ``0x0``。
+
+    - ``DT_CHOSEN_SRAM_ADDR == 0x00000000`` 且 ``CONFIG_KERNEL_VM_BASE = 0x40000000`` 是合法的，而
+
+    - ``DT_CHOSEN_SRAM_ADDR == 0x00000000`` 且 ``CONFIG_KERNEL_VM_BASE = 0x20000000`` 则不合法。
+
+  - 如果禁用了 :kconfig:option:`CONFIG_X86_PAE`（``=n``），由于 PD（Page Directory，页目录）的每个条目覆盖 4MB 的内存，每个地址空间必须位于各自的 4MB 区域中。
+
+  - 此外，``DT_CHOSEN_SRAM_ADDR`` 和 ``CONFIG_KERNEL_VM_BASE`` 还必须与目标区域的起始地址对齐。
+
+在构建时指定额外的内存映射
+***************************************************
+
+页表生成脚本（:file:`arch/x86/gen_mmu.py`）使用第一遍链接器生成的内核镜像，
+生成代码执行和数据访问所需的多级页表。
+可以向该脚本传递额外的命令行参数以生成额外的内存映射。
+这对于在非常早期的启动阶段进行静态映射和/或设备 MMIO 访问非常有用。
+要向该脚本传递额外的命令行参数，请在板级配置文件中填充一个名为 ``X86_EXTRA_GEN_MMU_ARGUMENTS`` 的 CMake 列表。
+示例如下：
+
+.. code-block:: cmake
+
+   set(X86_EXTRA_GEN_MMU_ARGUMENTS
+       --map 0xA0000000,0x2000
+       --map 0x80000000,0x400000,LWUX,0xB0000000)
+
+参数 ``--map`` 接受以下取值：``<physical address>,<size>[,<flags:LUWX>[,<virtual address>]]``，其中：
+
+- ``<physical address>`` 是映射的物理地址。（必需）
+
+- ``<size>`` 是要映射的区域大小。（必需）
+
+- ``<flags>`` 是与该映射关联的标志：（可选）
+
+  - ``L``：页目录级别的大页（large page）。
+
+  - ``U``：允许用户态访问。
+
+  - ``W``：可读/写。
+
+  - ``X``：允许执行。
+
+  - ``D``：禁用缓存（cache disabled）。
+
+    - 默认为小页（4KB）、仅超级用户态可访问、只读，且禁止执行。
+
+- ``<virtual address`` 是映射的虚拟地址。（可选）
+
+请注意，指定额外的内存映射需要为预分配的页表（包括内核页表和每个 domain 的页表）提供更大的存储空间。
+需要使用 :kconfig:option:`CONFIG_X86_EXTRA_PAGE_TABLE_PAGES` 来指定还要为页表预留多少个额外的内存页。
+如果所需空间与要求空间不完全一致，``gen_mmu.py`` 脚本会打印一条消息，指示该 kconfig 的值应该设为多少。

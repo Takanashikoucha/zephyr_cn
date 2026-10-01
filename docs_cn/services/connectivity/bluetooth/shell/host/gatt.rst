@@ -1,157 +1,19 @@
-Bluetooth:
-GATT
-Shell
+Bluetooth: GATT Shell
 #####################
 
-以下
-examples
-假设
-你
-已
-有
-两
-个
-devices
-被
-connected。
+以下示例假设您已有两个已连接的 devices。
 
-要
-在
-client
-侧
-perform
-service
-discovery
-用
-:code:`gatt
-discover`
-command。
-这
-应该
-print
-GATT
-server
-上
-可用
-的
-所有
-services。
+要在 client 端执行 service discovery（使用 :code:`gatt discover` 命令。这应打印 GATT server 上所有可用的 services。
 
-在
-server
-侧
-你
-可以
-用
-:code:`gatt
-register`
-command
-register
-pre
-defined
-的
-test
-services。
-当
-完成
-后
-你
-应该
-在
-client
-侧
-运行
-discovery
-command
-时
-seen
-新
-添加
-的
-services。
+在 server 端（可用 :code:`gatt register` 命令注册预定义的 test services。完成后（运行 discovery 命令时应在 client 端看到新添加的 services。
 
-你
-现在
-可以
-在
-client
-侧
-subscribe
-到
-那些
-新
-的
-services。
-这
-里
-是
-如何
-subscribe
-到
-test
-service
-的
-一
-个
-example：
+现在可在 client 端订阅这些新 services。以下是如何订阅 test service 的示例：
 
-.. code-block::
-   console
+.. code-block:: console
 
-        uart:~$
-        gatt
-        subscribe
-        26
-        25
+        uart:~$ gatt subscribe 26 25
         Subscribed
 
-Server
-现在
-可以
-用
-command
-:code:`gatt
-notify`
-notify
-client。
+Server 现在可用 :code:`gatt notify` 命令通知 client。
 
-GATT
-command
-提供
-的
-另一个
-option
-是
-initiate
-MTU
-exchange。
-要
-做
-这
-个
-用
-:code:`gatt
-exchange-mtu`
-command。
-要
-update
-shell
-的
-maximum
-MTU
-你
-需要
-update
-shell
-的
-configuration
-file
-中
-的
-Kconfig
-symbols。
-参考
-:zephyr:code-sample:`bluetooth_mtu_update`
-获取
-更多
-details。
+GATT command 提供的另一个选项是发起 MTU exchange。为此（使用 :code:`gatt exchange-mtu` 命令。要更新 shell 最大 MTU（需更新 shell configuration file 中的 Kconfig symbols。更多细节参见 :zephyr:code-sample:`bluetooth_mtu_update`。

@@ -1,42 +1,21 @@
 .. _sent_api:
 
-Single
-Edge
-Nibble
-Transmission
-（SENT）
+单边缘尼布尔传输（SENT）
 ######################################
 
-Overview
+概述
 ********
 
-SENT
-API
-提供
-与
-Single
-Edge
-Nibble
-Transmission
-（SENT）
-devices
-通信
-的
-functionality。
+SENT API 提供与单边缘尼布尔传输（SENT）设备通信的功能。
 
-Configuration
-Options
+配置选项
 *********************
 
-相关
-配置
-选项：
+相关配置选项：
 
 * :kconfig:option:`CONFIG_SENT`
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   sent_interface
+.. doxygengroup:: sent_interface

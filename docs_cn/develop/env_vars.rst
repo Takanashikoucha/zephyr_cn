@@ -3,43 +3,15 @@
 环境变量
 =====================
 
-本文档
-中
-的
-各种
-页面
-引用
-设置
-Zephyr
-特定
-环境变量。
-本页
-描述
-如何
-做。
+本文档中的各种页面引用设置 Zephyr 特定环境变量。本页描述如何做。
 
-设置
-变量
+设置变量
 *****************
 
-选项
-1：
-只
-一次
+选项 1：只一次
 -------------------
 
-要
-将
-环境变量
-``MY_VARIABLE`` 设置
-为
-``foo``
-用于
-当前
-终端
-窗口
-的
-生命周期：
+要将环境变量 ``MY_VARIABLE`` 设置为 ``foo`` 用于当前终端窗口的生命周期：
 
 .. tabs::
 
@@ -57,504 +29,86 @@ Zephyr
 
 .. warning::
 
-   这
-   最
-   适合
-   实验。
-   如果
-   你
-   关闭
-   终端
-   窗口、
-   使用
-   另一个
-   终端
-   窗口
-   或
-   标签、
-   重启
-   电脑
-   等，
-   这个
-   设置
-   将
-   永远
-   丢失。
+   这最适合实验。如果你关闭终端窗口、使用另一个终端窗口或标签、重启电脑等，这个设置将永远丢失。
 
-   如果
-   你
-   想
-   继续
-   使用
-   设置，
-   推荐
-   使用
-   选项
-   2
-   或
-   3。
+   如果你想继续使用设置，推荐使用选项 2 或 3。
 
-选项
-2：
-在
-所有
-终端
-中
+选项 2：在所有终端中
 --------------------------
 
 .. tabs::
 
    .. group-tab:: Linux/macOS
 
-      将
-      ``export MY_VARIABLE=foo`` 行
-      添加
-      到
-      你
-      主
-      目录
-      中
-      你
-      shell
-      的
-      启动
-      脚本。
-      对于
-      Bash，
-      这
-      通常
-      是
-      Linux
-      上
-      的
-      :file:`~/.bashrc`
-      或
-      macOS
-      上
-      的
-      :file:`~/.bash_profile`。
-      这些
-      启动
-      脚本
-      中
-      的
-      更改
-      不
-      影响
-      已
-      启动
-      的
-      shell
-      实例；
-      尝试
-      打开
-      新
-      终端
-      窗口
-      获取
-      新
-      设置。
+      将 ``export MY_VARIABLE=foo`` 行添加到你主目录中你 shell 的启动脚本。对于 Bash，这通常是 Linux 上的 :file:`~/.bashrc` 或 macOS 上的 :file:`~/.bash_profile`。这些启动脚本中的更改不影响已启动的 shell 实例；尝试打开新终端窗口获取新设置。
 
    .. group-tab:: Windows
 
-      你
-      可以
-      在
-      ``cmd.exe`` 中
-      使用
-      ``setx`` 程序
-      或
-      第三方
-      RapidEE
-      程序。
+      你可以在 ``cmd.exe`` 中使用 ``setx`` 程序或第三方 RapidEE 程序。
 
-      要
-      使用
-      ``setx``，
-      键入
-      这个
-      命令，
-      然后
-      关闭
-      终端
-      窗口。
-      任何
-      新
-      ``cmd.exe`` 窗口
-      将
-      有
-      ``MY_VARIABLE`` 设置
-      为
-      ``foo``。
+      要使用 ``setx``，键入这个命令，然后关闭终端窗口。任何新 ``cmd.exe`` 窗口将有 ``MY_VARIABLE`` 设置为 ``foo``。
 
       .. code-block:: console
 
          setx MY_VARIABLE foo
 
-      要
-      安装
-      RapidEE，
-      一个
-      免费
-      图形
-      环境变量
-      编辑器，
-      `使用
-      Chocolatey`_
-      在
-      管理员
-      命令
-      提示符
-      中：
+      要安装 RapidEE，一个免费图形环境变量编辑器，`使用 Chocolatey`_ 在管理员命令提示符中：
 
       .. code-block:: console
 
          choco install rapidee
 
-      然后
-      你
-      可以
-      从
-      终端
-      运行
-      ``rapidee`` 启动
-      程序
-      并
-      设置
-      环境变量。
-      确保
-      使用
-      "User"
-      环境变量
-      区域
-      --
-      否则，
-      你
-      必须
-      以
-      管理员
-      身份
-      运行
-      RapidEE。
-      退出
-      前
-      确保
-      通过
-      点击
-      左上
-      角
-      的
-      Save
-      按钮
-      保存
-      你的
-      更改。
-      你
-      在
-      RapidEE
-      中
-      做
-      的
-      设置
-      在
-      你
-      打开
-      新
-      终端
-      窗口
-      时
-      将
-      可用。
+      然后你可以从终端运行 ``rapidee`` 启动程序并设置环境变量。确保使用 "User" 环境变量区域 -- 否则，你必须以管理员身份运行 RapidEE。退出前确保通过点击左上角的 Save 按钮保存你的更改。你在 RapidEE 中做的设置在你打开新终端窗口时将可用。
 
 .. _env_vars_zephyrrc:
 
-选项
-3：
-使用
-``zephyr_rc`` 文件
+选项 3：使用 ``zephyrrc`` 文件
 ----------------------------------
 
-如果
-你
-不
-想
-让
-变量
-的
-设置
-对
-你的
-所有
-终端
-可用，
-但
-仍
-想
-保存
-值
-用于
-使用
-Zephyr
-时
-加载
-到
-你的
-环境
-中，
-选择
-这个
-选项。
+如果你不想让变量的设置对你的所有终端可用，但仍想保存值用于使用 Zephyr 时加载到你的环境中，选择这个选项。
 
 .. tabs::
 
    .. group-tab:: Linux/macOS
 
-      Zephyr
-      支持
-      :file:`zephyrrc` 文件
-      的
-      多个
-      位置，
-      在
-      可能
-      时
-      遵循
-      XDG
-      Base
-      Directory
-      Specification。
-      在
-      以下
-      位置
-      之一
-      创建
-      zephyrrc
-      文件
-      （它们
-      将
-      按
-      顺序
-      检查）：
+      Zephyr 支持 :file:`zephyrrc` 文件的多个位置，在可能时遵循 XDG Base Directory Specification。在以下位置之一创建 zephyrrc 文件（它们将按顺序检查）：
 
       #. :file:`$XDG_CONFIG_HOME/zephyr/zephyrrc`
       #. :file:`$HOME/.config/zephyr/zephyrrc`
       #. :file:`$HOME/.zephyrrc`
 
-      将
-      这
-      行
-      添加
-      到
-      你
-      偏好
-      位置
-      的
-      文件：
+      将这行添加到你偏好位置的文件：
 
       .. code-block:: console
 
          export MY_VARIABLE=foo
 
-      要
-      将
-      这个
-      值
-      取回
-      你的
-      当前
-      终端
-      环境，
-      **你
-      必须
-      运行**
-      ``source zephyr-env.sh``
-      从
-      主
-      ``zephyr`` 仓库。
-      除
-      其他
-      事情
-      外，
-      这个
-      脚本
-      source
-      你的
-      :file:`zephyrrc`
-      （它
-      从
-      上面
-      位置
-      列表
-      找到
-      的
-      第一个）。
+      要将这个值取回你的当前终端环境，**你必须运行** ``source zephyr-env.sh`` 从主 ``zephyr`` 仓库。除其他事情外，这个脚本会加载你的 :file:`zephyrrc`（它从上面位置列表找到的第一个）。
 
-      如果
-      你
-      关闭
-      窗口
-      等，
-      值
-      将
-      丢失；
-      重新
-      运行
-      ``source
-      zephyr-env.sh`` 取回
-      它。
+      如果你关闭窗口等，值将丢失；重新运行 ``source zephyr-env.sh`` 取回它。
 
    .. group-tab:: Windows
 
-      用
-      记事本
-      这样
-      的
-      文本
-      编辑器
-      将
-      ``set MY_VARIABLE=foo`` 行
-      添加
-      到
-      文件
-      :file:`%userprofile%\\zephyrrc.cmd`
-      保存
-      值。
+      用记事本这样的文本编辑器将 ``set MY_VARIABLE=foo`` 行添加到文件 :file:`%userprofile%\\zephyrrc.cmd` 保存值。
 
-      要
-      将
-      这个
-      值
-      取回
-      你的
-      当前
-      终端
-      环境，
-      **你
-      必须
-      运行**
-      ``zephyr-env.cmd``
-      在
-      ``cmd.exe`` 窗口
-      中
-      在
-      更改
-      目录
-      到
-      主
-      ``zephyr`` 仓库
-      之后。
-      除
-      其他
-      事情
-      外，
-      这个
-      脚本
-      运行
-      :file:`%userprofile%\\zephyrrc.cmd`。
+      要将这个值取回你的当前终端环境，**你必须运行** ``zephyr-env.cmd`` 在 ``cmd.exe`` 窗口中在更改目录到主 ``zephyr`` 仓库之后。除其他事情外，这个脚本运行 :file:`%userprofile%\\zephyrrc.cmd`。
 
-      如果
-      你
-      关闭
-      窗口
-      等，
-      值
-      将
-      丢失；
-      重新
-      运行
-      ``zephyr-env.cmd`` 取回
-      它。
+      如果你关闭窗口等，值将丢失；重新运行 ``zephyr-env.cmd`` 取回它。
 
-      这些
-      脚本：
+      这些脚本：
 
-      - 将
-        :envvar:`ZEPHYR_BASE` 设置
-        为
-        zephyr
-        仓库
-        的
-        位置
-      - 向
-        你的
-        :envvar:`PATH` 环境变量
-        添加
-        某些
-        Zephyr
-        特定
-        位置
-        （如
-        zephyr
-        的
-        :file:`scripts`
-        目录）
-      - 加载
-        上面
-        :ref:`env_vars_zephyrrc`
-        中
-        描述
-        的
-        ``zephyrrc`` 文件
-        中
-        的
-        任何
-        设置。
+      - 将 :envvar:`ZEPHYR_BASE` 设置为 zephyr 仓库的位置
+      - 向你的 :envvar:`PATH` 环境变量添加某些 Zephyr 特定位置（如 zephyr 的 :file:`scripts` 目录）
+      - 加载上面 :ref:`env_vars_zephyrrc` 中描述的 ``zephyrrc`` 文件中的任何设置。
 
-      因此
-      你
-      可以
-      在
-      你
-      需要
-      任何
-      这些
-      设置
-      的
-      任何
-      时候
-      使用
-      它们。
+      因此你可以在你需要任何这些设置的任何时候使用它们。
 
 .. _zephyr-env:
 
-Zephyr
-环境
-脚本
+Zephyr 环境脚本
 **************************
 
-你
-可以
-使用
-zephyr
-仓库
-脚本
-``zephyr-env.sh``（用于
-macOS
-和
-Linux）
-和
-``zephyr-env.cmd``（用于
-Windows）
-将
-Zephyr
-特定
-设置
-加载
-到
-当前
-终端
-的
-环境
-中。
-要
-做到
-这，
-从
-zephyr
-仓库
-运行
-这个
-命令：
+你可以使用 zephyr 仓库脚本 ``zephyr-env.sh``（用于 macOS 和 Linux）和 ``zephyr-env.cmd``（用于 Windows）将 Zephyr 特定设置加载到当前终端的环境中。要做到这，从 zephyr 仓库运行这个命令：
 
 .. tabs::
 
@@ -570,261 +124,69 @@ zephyr
 
          zephyr-env.cmd
 
-这些
-脚本：
+这些脚本：
 
-- 将
-  :envvar:`ZEPHYR_BASE` 设置
-  为
-  zephyr
-  仓库
-  的
-  位置
-- 向
-  你的
-  ``PATH`` 环境变量
-  添加
-  某些
-  Zephyr
-  特定
-  位置
-  （如
-  zephyr
-  的
-  :file:`scripts`
-  目录）
-- 加载
-  上面
-  :ref:`env_vars_zephyrrc`
-  中
-  描述
-  的
-  ``zephyrrc`` 文件
-  中
-  的
-  任何
-  设置。
+- 将 :envvar:`ZEPHYR_BASE` 设置为 zephyr 仓库的位置
+- 向你的 ``PATH`` 环境变量添加某些 Zephyr 特定位置（如 zephyr 的 :file:`scripts` 目录）
+- 加载上面 :ref:`env_vars_zephyrrc` 中描述的 ``zephyrrc`` 文件中的任何设置。
 
-因此
-你
-可以
-在
-你
-需要
-任何
-这些
-设置
-的
-任何
-时候
-使用
-它们。
+因此你可以在你需要任何这些设置的任何时候使用它们。
 
 .. _env_vars_important:
 
-重要
-环境变量
+重要环境变量
 *******************************
 
-一些
-:ref:`important-build-vars`
-也
-可以
-在
-环境
-中
-设置。
-这里
-是
-一些
-这些
-重要
-环境变量
-的
-描述。
-这
-不
-是
-全面
-的
-列表。
+一些 :ref:`important-build-vars` 也可以在环境中设置。这里是一些这些重要环境变量的描述。这不是全面的列表。
 
 .. envvar:: BOARD
 
-   见
-   :ref:`important-build-vars`。
+   见 :ref:`important-build-vars`。
 
 .. envvar:: CONF_FILE
 
-   见
-   :ref:`important-build-vars`。
+   见 :ref:`important-build-vars`。
 
 .. envvar:: SHIELD
 
-   见
-   :ref:`shields`。
+   见 :ref:`shields`。
 
 .. envvar:: ZEPHYR_BASE
 
-   见
-   :ref:`important-build-vars`。
+   见 :ref:`important-build-vars`。
 
 .. envvar:: EXTRA_ZEPHYR_MODULES
 
-   见
-   :ref:`important-build-vars`。
+   见 :ref:`important-build-vars`。
 
 .. envvar:: ZEPHYR_MODULES
 
-   见
-   :ref:`important-build-vars`。
+   见 :ref:`important-build-vars`。
 
 .. envvar:: ZEPHYR_BOARD_ALIASES
 
-   见
-   :ref:`gs-board-aliases`
+   见 :ref:`gs-board-aliases`
 
-以下
-额外
-环境变量
-在
-配置
-用于
-构建
-Zephyr
-应用
-的
-:ref:`工具链 <gs_toolchain>` 时
-重要。
+以下额外环境变量在配置用于构建 Zephyr 应用的 :ref:`工具链 <gs_toolchain>` 时重要。
 
 .. envvar:: ZEPHYR_SDK_INSTALL_DIR
 
-   Zephyr
-   SDK
-   安装
-   的
-   路径。
+   Zephyr SDK 安装的路径。
 
 .. envvar:: ZEPHYR_TOOLCHAIN_VARIANT
 
-   要
-   使用
-   的
-   工具链
-   的
-   名称。
+   要使用的工具链的名称。
 
 .. envvar:: {TOOLCHAIN}_TOOLCHAIN_PATH
 
-   :envvar:`ZEPHYR_TOOLCHAIN_VARIANT`
-   指定
-   的
-   工具链
-   的
-   路径。
-   例如，
-   如果
-   ``ZEPHYR_TOOLCHAIN_VARIANT=host/llvm``，
-   使用
-   ``LLVM_TOOLCHAIN_PATH``。
-   （注意
-   形成
-   环境变量
-   名称
-   时
-   的
-   大写
-   小写。）
+   :envvar:`ZEPHYR_TOOLCHAIN_VARIANT` 指定的工具链的路径。例如，如果 ``ZEPHYR_TOOLCHAIN_VARIANT=host/llvm``，使用 ``LLVM_TOOLCHAIN_PATH``。（注意形成环境变量名称时的大写小写。）
 
-你
-可能
-在
-:ref:`更新
-Zephyr
-SDK
-工具链 <gs_toolchain_update>` 时
-需要
-更新
-这些
-变量
-中
-的
-某些。
+你可能在 :ref:`更新 Zephyr SDK 工具链 <gs_toolchain_update>` 时需要更新这些变量中的某些。
 
-仿真器
-和
-开发板
-可能
-也
-依赖
-额外
-的
-程序。
-构建
-系统
-将
-尝试
-自动
-定位
-这些
-程序，
-但
-可能
-依赖
-额外
-的
-CMake
-或
-环境变量
-来
-做到
-。
-请
-查阅
-你的
-仿真器
-或
-开发板
-的
-文档
-获取
-更多
-信息。
-以下
-环境变量
-在
-这种
-情况
-下
-可能
-有用：
+仿真器和开发板可能也依赖额外的程序。构建系统将尝试自动定位这些程序，但可能依赖额外的 CMake 或环境变量来做到。请查阅你的仿真器或开发板的文档获取更多信息。以下环境变量在这种情况下可能有用：
 
 .. envvar:: PATH
 
-   ``PATH``
-   是
-   在
-   Unix
-   类
-   或
-   Microsoft
-   Windows
-   操作
-   系统
-   上
-   使用
-   的
-   环境变量，
-   用于
-   指定
-   可
-   执行
-   程序
-   位于
-   的
-   一
-   组
-   目录。
+   ``PATH`` 是在 Unix 类或 Microsoft Windows 操作系统上使用的环境变量，用于指定可执行程序位于的一组目录。
 
-.. _使用
-   Chocolatey: https://chocolatey.org/packages/RapidEE
+.. _使用 Chocolatey: https://chocolatey.org/packages/RapidEE

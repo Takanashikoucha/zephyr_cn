@@ -1,281 +1,243 @@
 .. _bin-blobs:
 
-Binary
-Blobs
+二进制 Blob
 ############
 
-In
-the
-context
-of
-an
-operating
-system
-that
-supports
-multiple
-architectures
-and
-many
-different
-IC
-families
-some
-functionality
-may
-be
-unavailable
-without
-the
-help
-of
-executable
-code
-distributed
-in
-binary
-form。
-Binary
-blobs
-（or
-blobs
-for
-short）
-are
-files
-containing
-proprietary
-machine
-code
-or
-data
-in
-a
-binary
-format
-e.g.
-without
-corresponding
-source
-code
-released
-under
-an
-OSI
-approved
-license。
+在支持多种架构和众多不同 IC 系列的操作系统中，
+某些功能如果没有以二进制形式分发的可执行代码的帮助，
+可能无法使用。二进制 blob（或简称 blob）
+是包含专有机器代码或二进制格式数据的文件，
+例如没有以 OSI 批准的许可证发布的对应源代码。
 
-Zephyr
-supports
-downloading
-and
-using
-third
-party
-binary
-blobs
-via
-its
-built
-in
-mechanisms
-with
-some
-important
-caveats
-described
-in
-the
-following
-sections。
-It
-is
-important
-to
-note
-that
-all
-the
-information
-in
-this
-section
-applies
-only
-to
-`upstream
-（vanilla）
-Zephyr
-<https://github.com/zephyrproject-rtos/zephyr>`_。
+Zephyr 通过其内置机制支持下载和使用第三方二进制 blob，
+带有一些重要的注意事项，描述在以下各节中。
+重要的是要指出，本节中的所有信息仅适用于
+`上游（原生）Zephyr <https://github.com/zephyrproject-rtos/zephyr>`_。
 
-There
-are
-no
-limitations
-whatsoever
-（except
-perhaps
-license
-compatibility）
-in
-the
-support
-for
-binary
-blobs
-in
-forks
-or
-third
-party
-distributions
-of
-Zephyr。
-In
-fact
-Zephyr's
-build
-system
-supports
-arbitrary
-use
-cases
-related
-to
-blobs。
-This
-includes
-linking
-against
-libraries
-flashing
-images
-to
-targets
-etc。
-Users
-are
-therefore
-free
-to
-create
-Zephyr
-based
-downstream
-software
-which
-uses
-binary
-blobs
-if
-they
-cannot
-meet
-the
-requirements
-described
-in
-this
-page。
+在 Zephyr 的分支或第三方发行版中，对二进制 blob 的支持
+没有任何限制（也许除了许可证兼容性）。
+事实上，Zephyr 的构建系统支持与 blob 相关的任意用例，
+这包括链接库、向目标刷写镜像等。
+因此，如果用户无法满足本页描述的要求，
+可以自由创建使用二进制 blob 的基于 Zephyr 的下游软件。
 
-Software
-license
+软件许可证
 ****************
 
-Most
-binary
-blobs
-are
-distributed
-under
-proprietary
-licenses
-which
-vary
-significantly
-in
-nature
-and
-conditions。
-It
-is
-up
-to
-the
-vendor
-to
-specify
-the
-license
-as
-part
-of
-the
-blob
-submission
-process。
-Blob
-vendors
-may
-impose
-a
-click
-through
-or
-other
-EULA
-like
-workflow
-when
-users
-fetch
-and
-install
-blobs。
+大多数二进制 blob 在专有许可证下分发，
+其性质和条件差异很大。
+由供应商在 blob 提交过程中指定许可证。
+Blob 供应商可以在用户获取和安装 blob 时
+强制要求点击同意或其他类似 EULA 的工作流程。
 
-Hosting
+托管
 *******
 
-Blobs
-must
-be
-hosted
-on
-the
-Internet
-and
-managed
-by
-third
-party
-infrastructure。
-Two
-potential
-examples
-are
-Git
-repositories
-and
-web
-servers
-managed
-by
-individual
-hardware
-vendors。
+Blob 必须托管在互联网上，并由第三方基础设施管理。
+两个潜在的示例是由各个硬件供应商管理的
+Git 仓库和 Web 服务器。
 
-The
-Zephyr
-Project
-does
-not
-host
-binary
-blobs
-in
-its
-Git
-repositories
-or
-anywhere
-else。
+Zephyr 项目不会在其 Git 仓库或任何其他地方托管二进制 blob。
+
+获取 blob
+**************
+
+Blob 由 :ref:`west blobs <west-blobs>` 命令从官方第三方来源获取。
+
+Blob 本身必须在 :ref:`module.yml <modules-bin-blobs>` 文件中指定，
+这些文件包含在各供应商分别维护的独立 Zephyr :ref:`模块仓库 <modules>` 中。
+这意味着，为了将二进制 blob 的引用包含到上游 Zephyr 发行版中，
+必须先存在一个模块仓库，
+或者作为提交过程的一部分创建该仓库。
+
+每个可获取的 blob 必须在对应的 :file:`module.yml` 文件中单独标识。Blob 的规格说明必须包含：
+
+- 对 blob 本身的抽象描述
+- 版本信息
+- 对供应商提供文档的引用
+- blob 的 :ref:`类型 <bin-blobs-types>`，必须是允许的类型之一
+- blob 的校验和，``west blobs`` 在下载后检查。这是可复现性所必需的，并且允许在 blob 使用 Git 和 west 变更时进行二分查找问题
+- 适用于 blob 的许可证文本或对该文本的引用，采用 SPDX 格式
+
+参见 :ref:`对应章节 <modules-bin-blobs>` 获取字段的更正式定义。
+
+:ref:`west blobs <west-blobs>` 命令可用于列出可用 blob 的元数据，并从用户选择的模块中获取 blob。
+
+``west blobs`` 命令仅获取和存储二进制 blob 本身。任何伴随代码，包括 blob 的接口头文件，必须存在于对应的模块仓库中。
+
+污染
+********
+
+包含二进制 blob 会污染 Zephyr 构建。
+污染的定义源自 `Linux kernel
+<https://www.kernel.org/doc/html/latest/admin-guide/tainted-kernels.html>`_，
+在 Zephyr 的上下文中，
+被污染的镜像是指包含二进制 blob 的镜像。
+
+污染将通过以下方式告知用户：
+
+- 一个或多个 Kconfig 选项 ``TAINT_BLOBS_*`` 将被设置为 ``y``
+- Zephyr 构建系统在其配置阶段将发出警告。可以使用 Kconfig 禁用该警告
+- ``west spdx`` 命令将在其输出中包含被污染的状态
+- 内核的默认致命错误处理器也会明确打印内核的被污染状态
+- 启动横幅打印内核的被污染状态
+
+.. _bin-blobs-types:
+
+允许的类型
+*************
+
+以下二进制 blob 类型在 Zephyr 中是可接受的：
+
+* 预编译库：硬件使能库，
+  以预编译的二进制形式分发，
+  通常用于 SoC 外设。
+  一个示例可以是无线外设的使能库
+* 固件镜像：包含二级处理器或 CPU 可执行代码的镜像。
+  这可以是完整的或部分（通常是增量或补丁数据），
+  通常由主 CPU 复制到 RAM 或闪存中。
+  一个示例可以是运行 Bluetooth LE Controller 的核心的固件
+* 杂项二进制数据文件。
+  一个示例可以是预训练神经网络模型数据
+
+通过专有库提供的与硬件无关的功能是不可接受的。例如，作为静态归档分发的专有且与硬件无关的 TCP/IP 栈将被拒绝。
+
+请注意，仅仅因为 blob 具有可接受的类型
+并不意味着它将被项目无条件接受；
+任何 blob 都可能因其他原因被逐案拒绝
+（参见下方的库特定要求）。
+在有分歧的情况下，TSC 是仲裁者，
+决定特定 blob 是否属于上述类型之一。
+
+预编译库特定要求
+*****************************************
+
+本节包含特定于预编译库 blob 的额外要求。
+
+任何希望提交预编译库的人必须声明该库满足这些要求。
+如果后来发现 blob 不满足这些要求，
+项目可以从上游发行版中移除该 blob。
+
+接口头文件
+======================
+
+预编译库必须附带一个或多个头文件，
+以非 copyleft 的 OSI 批准许可证分发，
+定义库的接口。
+
+允许的依赖
+====================
+
+本节定义与库 blob 要求构建系统提供的外部符号相关的需求。
+
+* blob 不得直接依赖 Zephyr API。
+  换句话说，必须在完全不存在任何 Zephyr 源代码的情况下
+  能够构建该二进制文件。
+  这是松耦合和可维护性所必需的，
+  因为 Zephyr API 可能会变更，
+  而此类 blob 不能由所有项目维护者修改
+* 相反，如果预编译库中的代码需要 Zephyr（或一般而言 RTOS）
+  提供的功能，
+  则可以随库一起提供操作系统抽象层（也称为移植层）的实现。
+  此操作系统抽象层的实现必须以源代码形式存在，
+  以 OSI 批准的许可证发布，
+  并使用 Doxygen 文档化。
+
+工具链要求
+======================
+
+预编译库 blob 必须采用与 Zephyr 项目支持的工具链兼容
+且可链接的数据格式。
+这是可维护性和可用性所必需的。
+然而，使用此类库可能需要特殊的编译器和/或链接器标志。
+例如，移植层可能需要特殊标志，
+或者静态归档可能需要使用特定的链接器标志。
+
+有限范围
+=============
+
+允许任意库 blob 存在会降低上游 Zephyr 软件发行版开源程度的风险。
+作为一个极端示例，一个 zephyr 内核时钟驱动程序
+只是库 blob 的移植层的目标将无法使用开源软件启动。
+
+为缓解此风险，上游库 blob 的范围受到限制。
+项目维护者定义一个开源测试套件，
+上游目标必须能够仅使用主线发行版及其模块中包含的
+开源软件通过该测试套件。
+开源测试套件目前由以下组成：
+
+- :file:`samples/philosophers`
+- :file:`tests/kernel`
+
+此测试套件的范围可能随时间增长。
+目标是指定最小功能集的测试，
+这些功能必须通过开源软件支持，
+适用于任何具有上游 Zephyr 支持的目标。
+
+在发布团队的酌情决定下，如果项目无法通过此测试套件，可能会移除对硬件目标的支持。
+
+支持和维护
+***********************
+
+Zephyr 项目不需要负责贡献的二进制 blob 的维护和支持。
+因此，在 Zephyr 项目发布团队的酌情决定下，
+并逐案处理：
+
+- 在 zephyr 仓库跟踪器上报告的 GitHub issues，如果需要使用 blob 才能重现，可能不被视为 bug
+- 此类 issues 可能因超出 Zephyr 项目范围而关闭
+
+这并不意味着需要 blob 才能重现的 issues
+将在未调查的情况下关闭。
+例如，该 issue 可能暴露了 Zephyr 代码路径中的 bug，
+而没有 blob 很难或无法触发。
+项目维护者可能接受并尝试解决此类 issues。
+
+然而，需要一些灵活性，
+因为项目维护者可能无法确定给定 issue
+是由于 Zephyr 还是 blob 本身的 bug 造成的，
+可能由于缺乏硬件而无法重现 bug 等。
+
+Blob 必须有指定的维护者，
+必须对来自用户的 issue 报告做出响应，
+并提供 blob 的更新以解决问题。
+在 Zephyr 项目发布团队的酌情决定下，
+引用 blob 的模块修订版
+可能随时因其维护者的响应或支持不足
+而从 :file:`zephyr/west.yml` 中移除。
+这是维护项目对 bit-rot、安全问题等的控制所必需的。
+
+提议集成二进制 blob 的提交者必须承诺在可预见的未来维护该 blob 的集成。
+
+关于持续集成，二进制 blob **不会**在项目的 CI 基础设施中获取，
+该基础设施构建并可选地执行测试和示例
+以防止回归和问题进入代码库。
+这包括在打开新的 GitHub Pull Request 时运行的 CI，
+以及任何其他定期调度的 CI 基础设施执行。
+
+.. _blobs-process:
+
+提交和审查流程
+*****************************
+
+要将二进制 blob 的引用包含到项目中，
+它们应通过标准的 pull request (PR) 工作流程提交，
+不需要 Technical Steering Committee (TSC) 批准。
+维护者和审查者负责确保所有 blob 相关的提交
+符合 :ref:`bin-blobs` 中定义的文档化标准。
+
+初始集成二进制 blob 的 PR 应包含关于 blob
+及其提供功能的详细信息。
+PR 应包含以下信息以支持审查：
+
+* 二进制 blob 的来源。
+* blob 的类型（预编译库、固件镜像）。
+* blob 将被引用的 Zephyr 模块。
+* 对 blob 功能的简要描述。
+* blob 依赖哪些其他组件（如果有）？
+* blob 分发的许可证。
+
+如果初始集成 PR 获得适当的批准，
+则可以集成二进制 blob。
+任何技术分歧应适用标准的 :ref:`PR 升级程序 <pr_technical_escalation>`。
+
+后续对二进制 blob 的更新遵循 :ref:`模块更新程序 <modules_changes>`。

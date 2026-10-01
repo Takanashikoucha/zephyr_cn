@@ -1,125 +1,29 @@
 .. _installation_linux:
 
-安装
-Linux
-主机
-依赖
-###############################
+安装 Linux 主机依赖
+###################
 
-以下
-Linux
-发行版
-有
-可用
-文档：
+以下 Linux 发行版有可用的文档：
 
 * Ubuntu
 * Fedora
-* Clear
-  Linux
-* Arch
-  Linux
+* Clear Linux
+* Arch Linux
 
-对于
-不
-基于
-滚动
-发布
-的
-发行版，
-某些
-要求
-和
-依赖
-可能
-不
-被
-你的
-包
-管理器
-满足。
-在
-这种
-情况
-下
-请
-遵循
-提供
-的
-额外
-说明
-来
-从
-包
-管理器
-之外
-的
-来源
-查找
-软件。
+对于非滚动发布（rolling release）的发行版，
+你的包管理器可能无法满足部分要求和依赖项。
+在这种情况下，请按照提供的额外说明，
+从包管理器以外的来源查找软件。
 
-.. note:: 如果
-   你
-   在
-   企业
-   防火墙
-   后面
-   工作，
-   你
-   很可能
-   需要
-   配置
-   代理
-   来
-   访问
-   互联网，
-   如果
-   你
-   还
-   没
-   做
-   的
-   话。
-   尽管
-   某些
-   工具
-   使用
-   环境变量
-   ``http_proxy``
-   和
-   ``https_proxy``
-   获取
-   其
-   代理
-   设置，
-   某些
-   使用
-   其
-   自己
-   的
-   配置
-   文件，
-   最
-   突出
-   的
-   是
-   ``apt``
-   和
-   ``git``。
+.. note:: 如果你在企业防火墙后面工作，你可能需要配置代理来访问互联网
+   （如果你还没有这样做的话）。虽然一些工具使用环境变量
+   ``http_proxy`` 和 ``https_proxy`` 获取代理设置，
+   但一些工具使用自己的配置文件，最典型的是 ``apt`` 和 ``git``。
 
-更新
-你的
-操作
-系统
-****************************
+更新你的操作系统
+****************
 
-确保
-你的
-主机
-系统
-是
-最新
-的。
+确保你的主机系统是最新的。
 
 .. tabs::
 
@@ -136,15 +40,13 @@ Linux
 
          sudo dnf upgrade
 
-   .. group-tab:: Clear
-      Linux
+   .. group-tab:: Clear Linux
 
       .. code-block:: console
 
          sudo swupd update
 
-   .. group-tab:: Arch
-      Linux
+   .. group-tab:: Arch Linux
 
       .. code-block:: console
 
@@ -152,92 +54,18 @@ Linux
 
 .. _linux_requirements:
 
-安装
-要求
-和
-依赖
-*************************************
+安装要求和依赖
+**************
 
-.. NOTE
-   FOR
-   DOCS
-   AUTHORS:
-   DO
-   NOT
-   PUT
-   DOCUMENTATION
-   BUILD
-   DEPENDENCIES
-   HERE.
+.. NOTE FOR DOCS AUTHORS: DO NOT PUT DOCUMENTATION BUILD DEPENDENCIES HERE.
 
-   这
-   一
-   节
-   是
-   构建
-   Zephyr
-   二进制
-   文件
-   的
-   依赖，
-   *不
-   是*
-   本
-   文档。
-   如果
-   你
-   需要
-   添加
-   只
-   用于
-   构建
-   文档
-   的
-   依赖，
-   添加
-   到
-   doc/README.rst。
-   （这个
-   更改
-   是
-   在
-   引入
-   文档
-   的
-   LaTeX->PDF
-   支持
-   后
-   做
-   的，
-   因为
-   texlive
-   的
-   占用
-   空间
-   巨大
-   且
-   不
-   构建
-   PDF
-   文档
-   的
-   用户
-   不
-   需要。）
+   本节针对构建 Zephyr 二进制文件所需的依赖项，*不是*
+   本文档的依赖。如果你需要添加一个仅构建文档才需要的依赖项，
+   请将其添加到 doc/README.rst。（此更改是在文档引入 LaTeX->PDF
+   支持之后做出的，因为 texlive 的占用量非常大，
+   而不构建 PDF 文档的用户并不需要它。）
 
-注意
-Ninja
-和
-Make
-都
-用
-这些
-说明
-安装；
-你
-只
-需要
-一个。
+注意，下面的说明会同时安装 Ninja 和 Make；你只需要其中一个。
 
 .. tabs::
 
@@ -259,135 +87,31 @@ Make
            python3-pip python3-tkinter xz file python3-devel SDL2-devel \
            libusb1-devel
 
-   .. group-tab:: Clear
-      Linux
+   .. group-tab:: Clear Linux
 
       .. code-block:: console
 
          sudo swupd bundle-add c-basic dev-utils dfu-util dtc \
            os-core-dev python-basic python3-basic python3-tcl
 
-      Clear
-      Linux
-      的
-      重点
-      是
-      *本地*
-      性能
-      和
-      安全
-      而
-      不
-      是
-      交叉
-      编译。
-      因此
-      它
-      独特
-      地
-      默认
-      向
-      所有
-      用户
-      的
-      :ref:`环境 <env_vars>`
-      导出
-      一
-      组
-      编译器
-      和
-      链接器
-      标志。
-      Zephyr
-      的
-      CMake
-      构建
-      系统
-      会
-      因为
-      这些
-      警告
-      或
-      失败。
-      要
-      清除
-      这些
-      中
-      的
-      C/C++
-      标志
-      并
-      修复
-      Zephyr
-      构建，
-      以
-      root
-      身份
-      运行
-      以下
-      命令
-      然后
-      登出
-      再
-      登入：
+      Clear Linux 的侧重点是 *原生* 性能和安全，而不是交叉编译。
+      因此，它独特地默认向所有用户的 :ref:`环境 <env_vars>`
+      导出一组编译器和链接器标志。
+      Zephyr 的 CMake 构建系统会因此发出警告甚至失败。
+      要清除这些标志中的 C/C++ 标志并修复 Zephyr 构建，
+      请以 root 身份运行以下命令，然后注销并重新登录：
 
       .. code-block:: console
 
          echo 'unset CFLAGS CXXFLAGS' >> /etc/profile.d/unset_cflags.sh
 
-      注意
-      这个
-      命令
-      为
-      *系统
-      上
-      所有
-      用户*
-      取消
-      设置
-      C/C++
-      标志。
-      每个
-      Linux
-      发行版
-      都
-      有
-      独特
-      的、
-      相对
-      复杂
-      且
-      可能
-      演变
-      的
-      bash
-      初始化
-      文件
-      序列
-      相互
-      source，
-      Clear
-      Linux
-      不
-      是
-      例外。
-      如果
-      你
-      需要
-      更
-      灵活
-      的
-      方案，
-      从
-      查看
-      ``/usr/share/defaults/etc/profile``
-      中
-      的
-      逻辑
-      开始。
+      注意，该命令会为 *系统上的所有用户* 取消设置 C/C++ 标志。
+      每个 Linux 发行版都有一组独特的、相对复杂的、
+      且可能不断演变的 bash 初始化文件，它们相互 source，
+      Clear Linux 也不例外。如果你需要更灵活的解决方案，
+      可以从查看 ``/usr/share/defaults/etc/profile`` 中的逻辑入手。
 
-   .. group-tab:: Arch
-      Linux
+   .. group-tab:: Arch Linux
 
       .. code-block:: console
 
@@ -397,74 +121,16 @@ Make
 CMake
 =====
 
-需要
-:ref:`较
-新
-的
-CMake
-版本 <install-required-tools>`。
-用
-``cmake --version``
-检查
-你
-有
-什么
-版本。
-如果
-你
-有
-旧
-版本，
-有
-几种
-方式
-获取
-更
-新
-的
-版本：
+需要一个 :ref:`较新的 CMake 版本 <install-required-tools>`。
+使用 ``cmake --version`` 检查你当前的版本。
+如果你使用的是较旧的版本，有几种方式可以获得更新的版本：
 
-* 在
-  Ubuntu
-  上，
-  你
-  可以
-  遵循
-  添加
-  `kitware
-  第三方
-  apt
-  仓库
-  <https://apt.kitware.com/>`_
-  的
-  说明
-  用
-  apt
-  获取
-  cmake
-  的
-  更新
-  版本。
+* 在 Ubuntu 上，你可以按照添加
+  `kitware 第三方 apt 仓库 <https://apt.kitware.com/>`_
+  的说明，使用 apt 获取更新版本的 cmake。
 
-* 从
-  CMake
-  项目
-  网站
-  下载
-  并
-  安装
-  打包
-  的
-  cmake。
-  （注意
-  这
-  不
-  会
-  卸载
-  cmake
-  的
-  之前
-  版本。）
+* 从 CMake 项目网站下载并安装打包好的 cmake。
+  （注意：这不会卸载之前版本的 cmake。）
 
   .. code-block:: console
 
@@ -474,51 +140,12 @@ CMake
      sudo ./cmake-3.21.1-Linux-x86_64.sh --skip-license --prefix=/usr/local
      hash -r
 
-  如果
-  安装
-  脚本
-  将
-  cmake
-  放
-  到
-  你
-  PATH
-  上
-  的
-  新
-  位置，
-  ``hash -r``
-  命令
-  可能
-  是
-  必要
-  的。
+  如果安装脚本把 cmake 放到了你 PATH 中的新位置，
+  可能就需要执行 ``hash -r`` 命令。
 
-* 从
-  CMake
-  项目
-  本身
-  提供
-  的
-  预
-  构建
-  二进制
-  文件
-  下载
-  并
-  安装，
-  在
-  `CMake
-  下载`_
-  页面
-  中。
-  例如，
-  要
-  在
-  :file:`~/bin/cmake`
-  安装
-  版本
-  3.21.1：
+* 从 CMake 项目自己在 `CMake Downloads`_ 页面提供的
+  预构建二进制文件中下载并安装。
+  例如，要在 :file:`~/bin/cmake` 安装 3.21.1 版本：
 
   .. code-block:: console
 
@@ -527,420 +154,89 @@ CMake
      yes | sh cmake-3.21.1-Linux-x86_64.sh | cat
      echo "export PATH=$PWD/cmake-3.21.1-Linux-x86_64/bin:\$PATH" >> $HOME/.zephyrrc
 
-* 使用
-  ``pip3``：
+* 使用 ``pip3``：
 
   .. code-block:: console
 
      pip3 install --user cmake
 
-  注意
-  这
-  不
-  会
-  卸载
-  cmake
-  的
-  之前
-  版本
-  并
-  将
-  新
-  cmake
-  安装
-  到
-  你的
-  ~/.local/bin
-  文件夹，
-  因此
-  你
-  需要
-  将
-  ~/.local/bin
-  添加
-  到
-  你的
-  PATH。
-  （细节
-  见
-  :ref:`python-pip`。）
+  注意：这不会卸载之前版本的 cmake，
+  并且会把新的 cmake 安装到你的 ~/.local/bin 目录，
+  因此你需要将 ~/.local/bin 添加到 PATH。
+  （详情见 :ref:`python-pip`。）
 
-* 检查
-  你
-  发行版
-  的
-  beta
-  或
-  不稳定
-  发布
-  包
-  库
-  获取
-  更新。
+* 检查你的发行版的 beta 或 unstable 发布软件包库中是否有更新。
 
-* 在
-  Ubuntu
-  上
-  你
-  也
-  可以
-  使用
-  snap
-  获取
-  可用
-  的
-  最新
-  版本：
+* 在 Ubuntu 上，你还可以使用 snap 获取当前可用的最新版本：
 
   .. code-block:: console
 
      sudo snap install cmake
 
-更新
-cmake
-后，
-用
-``cmake --version``
-验证
-新
-安装
-的
-cmake
-被
-找到。
-你
-可能
-还
-想
-卸载
-包
-管理器
-提供
-的
-CMake
-以
-避免
-冲突。
-（使用
-``whereis cmake``
-查找
-其他
-已
-安装
-版本。）
+更新 cmake 后，使用 ``cmake --version``
+验证新安装的 cmake 能够被找到。
+你可能还想卸载包管理器提供的 CMake，以避免冲突。
+（使用 ``whereis cmake`` 查找其他已安装的版本。）
 
-DTC
-（Device
-Tree
-Compiler）
-==========================
+DTC（Device Tree Compiler，设备树编译器）
+========================================
 
-需要
-:ref:`较
-新
-的
-DTC
-版本 <install-required-tools>`。
-用
-``dtc --version``
-检查
-你
-有
-什么
-版本。
-如果
-你
-有
-旧
-版本，
-要么
-从
-源
-构建
-安装
-更
-新
-的
-版本，
-要么
-安装
-:ref:`Zephyr
-SDK <toolchain_zephyr_sdk>`
-中
-捆绑
-的
-那个。
+需要一个 :ref:`较新的 DTC 版本 <install-required-tools>`。
+使用 ``dtc --version`` 检查你当前的版本。
+如果你使用的是较旧的版本，
+可以通过从源码构建来安装一个更新的版本，
+或者安装 :ref:`Zephyr SDK <toolchain_zephyr_sdk>` 中捆绑的那个。
 
 Python
 ======
 
-需要
-:ref:`现代
-Python
-3
-版本 <install-required-tools>`。
-用
-``python3 --version``
-检查
-你
-有
-什么
-版本。
+需要一个 :ref:`较新的 Python 3 版本 <install-required-tools>`。
+使用 ``python3 --version`` 检查你当前的版本。
 
-如果
-你
-有
-旧
-版本，
-你
-将
-需要
-安装
-更
-新
-的
-Python
-3。
-你
-可以
-从
-源
-构建，
-或
-使用
-你
-发行版
-包
-管理器
-渠道
-的
-backport
-（如果
-可用）。
-推荐
-在
-虚拟
-环境
-中
-隔离
-这个
-Python
-以
-避免
-干扰
-你的
-系统
-Python。
+如果你使用的是较旧的版本，就需要安装一个更新的 Python 3。
+你可以从源码构建，
+或者（如果可用）使用你发行版软件包渠道中的 backport。
+建议将该 Python 隔离在虚拟环境中，以避免干扰系统 Python。
 
 .. _pyenv: https://github.com/pyenv/pyenv
 
-安装
-Zephyr
-软件
-开发
-套件
-（SDK）
-*************************************************
+安装 Zephyr 软件开发套件（SDK）
+******************************
 
-Zephyr
-软件
-开发
-套件
-（SDK）
-包含
-Zephyr
-每个
-受
-支持
-架构
-的
-工具链。
-它
-还
-包括
-额外
-的
-主机
-工具，
-如
-自定义
-QEMU
-和
-OpenOCD。
+Zephyr 软件开发套件（SDK）包含 Zephyr 所支持的每种架构的工具链。
+它还包括额外的主机工具，例如定制 QEMU 和 OpenOCD。
 
-强烈
-推荐
-使用
-Zephyr
-SDK，
-在
-某些
-条件
-下
-甚至
-可能
-是
-必须
-的
-（例如
-在
-QEMU
-中
-运行
-某些
-架构
-的
-测试）。
+强烈推荐使用 Zephyr SDK，
+在某些条件下它甚至是必需的
+（例如，在 QEMU 中运行某些架构的测试）。
 
-要
-安装
-SDK，
-遵循
-:ref:`Zephyr
-SDK
-安装
-指南 <linux_zephyr_sdk>`
-的
-Linux
-步骤。
+要安装 SDK，请按照 :ref:`Zephyr SDK 安装指南 <linux_zephyr_sdk>`
+中的 Linux 步骤操作。
 
 .. _sdkless_builds:
 
-在
-Linux
-上
-不
-使用
-Zephyr
-SDK
-构建
-****************************************
+在 Linux 上不使用 Zephyr SDK 构建
+********************************
 
-Zephyr
-SDK
-为
-方便
-和
-易用
-提供。
-它
-提供
-所有
-Zephyr
-目标
-架构
-的
-工具链，
-构建
-应用
-或
-运行
-测试
-时
-不
-需要
-任何
-额外
-标志。
-除
-交叉
-编译器
-外，
-Zephyr
-SDK
-还
-提供
-预
-构建
-的
-主机
-工具。
-不过，
-可以
-用
-:ref:`工具链`
-章节
-中
-描述
-的
-其他
-工具链
-不
-使用
-SDK
-的
-工具链
-构建。
+Zephyr SDK 是为了方便和易用而提供的。
+它为所有 Zephyr 目标架构提供工具链，
+构建应用或运行测试时不需要任何额外标志。
+除了交叉编译器，Zephyr SDK 还提供预构建的主机工具。
+不过，使用 :ref:`工具链` 一节中描述的其他工具链，
+不使用 SDK 的工具链进行构建也是可行的。
 
-如
-上面
-已
-注意
-的，
-SDK
-还
-包括
-预
-构建
-的
-主机
-工具。
-要
-使用
-SDK
-的
-预
-构建
-主机
-工具
-配合
-来自
-其他
-来源
-的
-工具链，
-你
-必须
-将
-:envvar:`ZEPHYR_SDK_INSTALL_DIR`
-环境变量
-设置
-为
-Zephyr
-SDK
-安装
-目录。
-要
-不
-使用
-Zephyr
-SDK
-的
-预
-构建
-主机
-工具
-构建，
-:envvar:`ZEPHYR_SDK_INSTALL_DIR`
-环境变量
-必须
-取消
-设置。
+如上所述，SDK 还包括预构建的主机工具。
+要使用 SDK 的预构建主机工具配合来自其他来源的工具链，
+你必须将 :envvar:`ZEPHYR_SDK_INSTALL_DIR` 环境变量
+设置为 Zephyr SDK 安装目录。
+要不使用 Zephyr SDK 的预构建主机工具进行构建，
+:envvar:`ZEPHYR_SDK_INSTALL_DIR` 环境变量必须处于未设置状态。
 
-要
-确保
-这个
-变量
-取消
-设置，
-运行：
+要确保该变量处于未设置状态，运行：
 
 .. code-block:: console
 
    unset ZEPHYR_SDK_INSTALL_DIR
 
-.. _Zephyr
-   SDK
-   发布: https://github.com/zephyrproject-rtos/sdk-ng/tags
-.. _CMake
-   下载: https://cmake.org/download
+.. _Zephyr SDK Releases: https://github.com/zephyrproject-rtos/sdk-ng/tags
+.. _CMake Downloads: https://cmake.org/download

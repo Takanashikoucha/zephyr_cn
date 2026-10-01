@@ -1,98 +1,22 @@
 .. _zephyr_release_notes:
 
-Releases
+版本发布
 ########
 
-Zephyr
-被
-distributed
-作为
-source
-code
-和
-build
-scripts
-而
-不
-是
-binary
-image。
-Use
-:ref:`west`
-:ref:`get
-the
-code
-<get_the_code>`
-用于
-specific
-的
-version
-并
-see
-`GitHub
-repository`_
-获取
-tagged
-releases
-的
-full
-history。
+Zephyr 以源代码和构建脚本的形式分发，而不是以二进制镜像的形式。使用 :ref:`west` :ref:`获取代码 <get_the_code>` 获取特定版本的代码，并在 `GitHub 仓库`_ 查看已打标签版本的完整历史。
 
-当前
-和
-past
-releases
-的
-technical
-documentation
-available
-在
-https://docs.zephyrproject.org/
-（use
-version
-selector
-select
-你
-的
-release
-of
-interest）。
+当前和过往版本的技术文档可在 https://docs.zephyrproject.org/ 获取（使用版本选择器选择你感兴趣的版本）。
 
 .. _supported_releases:
 
-Supported
-Releases
+受支持的版本
 ******************
 
-下面
-的
-table
-list
-所有
-actively
-supported
-的
-releases。
-对
-most
-users
-recommended
-的
-starting
-point
-是
-**latest
-stable
-release**
-或
-**current
-LTS
-release**。
+下表列出了所有当前受支持的版本。对大多数用户而言，推荐的起点是**最新稳定版本**或**当前 LTS 版本**。
 
 .. toctree::
    :hidden:
-   :maxdepth:
-   1
+   :maxdepth: 1
    :glob:
    :reversed:
 
@@ -102,117 +26,149 @@ release**。
    migration-guide-4.[3-5]
 
 .. note::
-   |
-   Next
-   planned
-   的
-   release
-   是
-   **Zephyr
-   4.5**
-   targeted
-   for
-   **October
-   2026**。
-   |
-   Associated
-   的
-   :doc:`Release
-   Notes
-   <release-notes-4.5>`
-   和
-   :doc:`Migration
-   Guide
-   <migration-guide-4.5>`
-   的
-   working
-   drafts
-   已
-   available。
+   | 下一个计划发布的版本是 **Zephyr 4.5**，目标时间为 **2026 年 10 月**。
+   | 相关的 :doc:`发布说明 <release-notes-4.5>` 和 :doc:`迁移指南 <migration-guide-4.5>` 的工作草稿已经可用。
 
 .. list-table::
-   :header-rows:
-   1
+   :header-rows: 1
+
+   * - 版本
+     - 发布日期
+     - 生命周期结束
+     - 状态
+     - 配套文档
+   * - `Zephyr 4.4.0`_
+     - 2026-04-14
+     - 2027-04-12
+     - 最新稳定版本
+     - * :doc:`发布说明 <release-notes-4.4>`
+       * :doc:`迁移指南 <migration-guide-4.4>`
+   * - `Zephyr 4.3.0`_
+     - 2025-11-14
+     - 2026-10-15
+     - 稳定版本
+     - * :doc:`发布说明 <release-notes-4.3>`
+       * :doc:`迁移指南 <migration-guide-4.3>`
+   * - `Zephyr 3.7.0 (LTS3)`_
+     - 2024-07-26
+     - 2029-07-27
+     - 长期支持
+     - * :doc:`发布说明 <release-notes-3.7>`
+       * :doc:`迁移指南 <migration-guide-3.7>`
+
+已达到生命周期结束的先前 LTS 版本：
+
++-------------------------+---------------+
+| 版本                    | 生命周期结束  |
++=========================+===============+
+| `Zephyr 2.7.6 (LTS2)`_  | 2025-01-26    |
++-------------------------+---------------+
+| `Zephyr 1.14.1 (LTS1)`_ | 2022-01-01    |
++-------------------------+---------------+
+
+生命周期结束的版本
+=====================
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+
+   eol_releases
+
+生命周期结束的版本不再维护，也不会收到安全修复。这些版本的发布说明和迁移指南可在 :ref:`这里 <eol_releases>` 获取。
+
+.. _zephyr_release_cycle:
+
+版本生命周期与维护
+**********************************
+
+主版本与维护版本
+==============================
+
+Zephyr 按**六个月一次的节奏**发布主版本，目标为每年的 4 月和 10 月。这一时间表提供定期、经过充分测试的版本，不会用过频繁的更新让用户不堪重负，并避开各地方的重大节日。
+
+维护（点）版本在某个主版本分支上积累了足够多的重大修复时，按不定期发布。每个点版本在发布前都会经过完整的 QA 周期。
+
+长期支持与维护
+=================================
+
+虽然稳定版本在 2 个发布周期（大约 1 年）内受支持，但某些特定版本将由 Zephyr 项目支持更长的时间，这些版本被称为长期支持（LTS）版本。
+
+Zephyr :ref:`长期支持 (LTS) <release_process_lts>` 版本每 2.5 到 3 年发布一次，并从主代码树独立分支出来，在发布后大约 5 年内独立维护。
+
+这为项目用户提供了更多稳定性，并留出更多时间升级到下一个 LTS 版本。
 
 
-.. note::
+过渡到新的发布节奏
+========================================
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-| 4.6     | April 2027        | LTS4                |
+向新发布节奏的过渡将从 2026 年开始。Zephyr 4.4 计划在 2026 年 4 月发布，后续版本将每六个月发布一次。
+
+即将发布的版本的预期时间线如下：
+
 +---------+-------------------+---------------------+
-| 5.0     | October 2027      | Start of 5.x cycle  |
+| 版本    | 计划日期          | 备注                |
++=========+===================+=====================+
+| 4.4     | 2026 年 4 月      |                     |
 +---------+-------------------+---------------------+
-| 5.1     | April 2028        |                     |
+| 4.5     | 2026 年 10 月     |                     |
 +---------+-------------------+---------------------+
-| 5.2     | October 2028      |                     |
+| 4.6     | 2027 年 4 月      | LTS4                |
 +---------+-------------------+---------------------+
-| 5.3     | April 2029        |                     |
+| 5.0     | 2027 年 10 月     | 5.x 周期开始        |
 +---------+-------------------+---------------------+
-| 5.4     | October 2029      | LTS5                |
+| 5.1     | 2028 年 4 月      |                     |
++---------+-------------------+---------------------+
+| 5.2     | 2028 年 10 月     |                     |
++---------+-------------------+---------------------+
+| 5.3     | 2029 年 4 月      |                     |
++---------+-------------------+---------------------+
+| 5.4     | 2029 年 10 月     | LTS5                |
 +---------+-------------------+---------------------+
 
-Starting with the 5.x release cycle, all releases will follow the new six-month
-cadence from the beginning.
+从 5.x 发布周期开始，所有版本从一开始都将遵循新的六个月节奏。
 
 
-Security Fixes
-==============
-
-Each security issue fixed within Zephyr is backported or submitted to the
-following releases:
-
-- Currently supported Long Term Support (LTS) release.
-
-- The most recent two releases.
-
-For more information, see  :ref:`Security Vulnerability Reporting <reporting>`.
-
-Release documentation
-*********************
-
-Each release includes two companion documents:
-
-- Release notes summarize changes made across the project during the release cycle.
-- Migration guides describe changes that require action when moving an application from one major
-  release to the next.
-
-Release Notes
+安全修复
 =============
 
-Release notes contain a list of changes that have been made to the different
-areas of the project during the development cycle of the release.
-Changes that require the user to modify their own application to support the new
-release may be mentioned in the release notes, but the details regarding *what*
-needs to be changed are to be detailed in the release's migration guide.
+Zephyr 内修复的每个安全问题都会被回溯移植或提交到以下版本：
 
-Updates to the release notes post release cycle is permitted but limited to
-style, typographical fixes and to upmerge the notes from maintenance release
-branches with the sole purpose of keeping the latest documentation consistent
-with the changes in the project.
+- 当前受支持的长期支持（LTS）版本。
 
-Migration Guides
+- 最近两个版本。
+
+更多信息参见 :ref:`安全漏洞报告 <reporting>`。
+
+版本发布文档
+*********************
+
+每个版本包含两份配套文档：
+
+- 发布说明总结了发布周期期间项目各处所做的更改。
+- 迁移指南描述了将应用程序从一个主版本迁移到下一个版本时需要采取行动的更改。
+
+发布说明
+=============
+
+发布说明包含在版本开发周期期间对项目不同领域所做的更改列表。需要用户修改自身应用程序以支持新版本的更改可能会在发布说明中提及，但关于*什么*需要更改的细节应在该版本的迁移指南中详述。
+
+发布周期之后对发布说明的更新是被允许的，但仅限于风格、排版更正，以及将维护版本分支的说明向上合并到主分支，唯一目的是保持最新文档与项目更改保持一致。
+
+迁移指南
 ================
 
-Zephyr provides migration guides for all major releases, in order to assist
-users transition from the previous release.
+Zephyr 为所有主版本提供迁移指南，以协助用户从先前版本过渡。
 
-As mentioned in the previous section, changes in the code that require an action
-(i.e. a modification of the source code or configuration files) on the part of
-the user in order to keep the existing behavior of their application belong in
-in the migration guide. This includes:
+如上节所述，需要用户采取行动（即修改源代码或配置文件）才能保持其应用程序现有行为的代码更改应归入迁移指南。这包括：
 
-- Breaking API changes
-- Deprecations
-- Devicetree or Kconfig changes that affect the user (changes to defaults,
-  renames, etc)
-- Treewide changes that have an effect (e.g. changing the include path or
-  defaulting to a different C standard library)
-- Anything else that can affect the compilation or runtime behavior of an
-  existing application
+- 破坏性的 API 更改
+- 弃用项
+- 影响用户的设备树（Devicetree）或 Kconfig 更改（默认值更改、重命名等）
+- 有影响的全代码树更改（例如更改包含路径，或默认使用不同的 C 标准库）
+- 任何其他可能影响现有应用程序编译或运行时行为的内容
 
-Each entry in the migration guide must include a brief explanation of the change
-as well as refer to the Pull Request that introduced it, in order for the user
-to be able to understand the context of the change.
+迁移指南中的每个条目必须包含对该更改的简要说明，并引用引入该更改的拉取请求（Pull Request），以便用户能够理解该更改的背景。
 
 .. _`GitHub repository`: https://github.com/zephyrproject-rtos/zephyr
 .. _`GitHub tagged releases`: https://github.com/zephyrproject-rtos/zephyr/tags

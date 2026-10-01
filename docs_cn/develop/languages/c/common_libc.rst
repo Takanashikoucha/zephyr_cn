@@ -1,255 +1,34 @@
 .. _c_library_common:
 
-通用
-C
-库
-代码
+通用 C 库代码
 #####################
 
-Zephyr
-提供
-某些
-C
-库
-函数，
-设计
-用于
-与
-多个
-C
-库
-配合
-使用。
-这些
-要么
-提供
-多个
-C
-库
-中
-不
-可用
-的
-函数，
-要么
-设计
-用于
-用
-更
-适合
-在
-Zephyr
-环境
-中
-使用
-的
-代码
-替换
-C
-库
-中
-的
-功能。
+Zephyr 提供一些 C 库函数，设计用于与多个 C 库配合使用。
+这些函数要么提供多个 C 库中不可用的功能，要么用更适合在 Zephyr 环境中使用的代码替换 C 库中的功能。
 
-时间
-函数
+时间函数
 *************
 
-这
-提供
-标准
-C
-函数
-:c:func:`time`
-的
-实现，
-依赖
-Zephyr
-函数
-:c:func:`sys_clock_gettime`。
-这个
-函数
-可以
-通过
-选择
-:kconfig:option:`COMMON_LIBC_TIME`
-启用。
+它提供了标准 C 函数 :c:func:`time` 的实现，依赖 Zephyr 函数 :c:func:`sys_clock_gettime`。这个函数可以通过选择 :kconfig:option:`COMMON_LIBC_TIME` 启用。
 
-动态
-内存
-管理
+动态内存管理
 *************************
 
-通用
-动态
-内存
-管理
-实现
-可以
-通过
-在
-应用
-配置
-文件
-中
-选择
-:kconfig:option:`CONFIG_COMMON_LIBC_MALLOC`
-启用。
+通用动态内存管理实现可以通过在应用配置文件中选择 :kconfig:option:`CONFIG_COMMON_LIBC_MALLOC` 来启用。
 
-通用
-C
-库
-内部
-使用
-:ref:`内核
-内存
-堆
-API
-<heap_v2>`
-管理
-标准
-动态
-内存
-管理
-接口
-函数
-如
-:c:func:`malloc`
-和
-:c:func:`free`
-使用
-的
-内存
-堆。
+通用 C 库内部使用 :ref:`内核内存堆 API <heap_v2>` 来管理内存堆，
+该堆被 :c:func:`malloc` 和 :c:func:`free` 等标准动态内存管理接口函数使用。
 
-内部
-内存
-堆
-通常
-位于
-``.bss``
-段
-中。
-不过，
-当
-启用
-用户
-空间
-时，
-它
-被
-放
-在
-一个
-叫
-``z_malloc_partition``
-的
-专用
-内存
-分区
-中，
-可以
-从
-用户
-模式
-线程
-访问。
-内部
-内存
-堆
-的
-大小
-由
-:kconfig:option:`CONFIG_COMMON_LIBC_MALLOC_ARENA_SIZE`
-指定。
+内部内存堆通常位于 ``.bss`` 段中。不过，当启用用户空间时，
+它被放置在一个名为 ``z_malloc_partition`` 的专用内存分区中，该分区可以被用户模式线程访问。
+内部内存堆的大小由 :kconfig:option:`CONFIG_COMMON_LIBC_MALLOC_ARENA_SIZE` 指定。
 
-使用
-通用
-C
-库
-的
-应用
-的
-默认
-堆
-大小
-是
-零
-（无
-堆）。
-对于
-其他
-C
-库
-用户，
-如果
-存在
-MMU，
-那么
-默认
-堆
-是
-16kB。
-否则，
-堆
-使用
-所有
-可用
-内存。
+使用通用 C 库的应用的默认堆大小为零（无堆）。
+对于其他 C 库用户，如果存在 MMU，则默认堆为 16kB。否则，堆使用所有可用内存。
 
-也
-有
-分开
-的
-控制
-选择
-:c:func:`calloc`
-（:kconfig:option:`COMMON_LIBC_CALLOC`）
-和
-:c:func:`reallocarray`
-（:kconfig:option:`COMMON_LIBC_REALLOCARRAY`）。
-两个
-都
-默认
-启用，
-因为
-那
-不
-影响
-不
-使用
-它们
-的
-应用
-的
-内存
-使用。
+另外还有独立的控制选项来选择 :c:func:`calloc`（:kconfig:option:`COMMON_LIBC_CALLOC`）
+和 :c:func:`reallocarray`（:kconfig:option:`COMMON_LIBC_REALLOCARRAY`）。
+这两者默认均启用，因为在不使用它们的应用中启用并不影响内存占用。
 
-通用
-C
-库
-实现
-的
-标准
-动态
-内存
-管理
-接口
-函数
-是
-线程
-安全
-的
-并
-可以
-被
-多个
-线程
-同时
-调用。
-这些
-函数
-在
-:file:`lib/libc/common/source/stdlib/malloc.c`
-中
-实现。
+通用 C 库实现的标准动态内存管理接口函数是线程安全的，可以被多个线程同时调用。
+这些函数实现在 :file:`lib/libc/common/source/stdlib/malloc.c` 中。

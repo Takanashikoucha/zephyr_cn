@@ -1,176 +1,177 @@
 .. _tsc:
 
-Technical
-Steering
-Committee
-（TSC）
-**********************************
+技术指导委员会（TSC）
+**************************
 
-TSC
-Member
-Role
+TSC 成员角色
 ###############
 
-The
-TSC
-role
-and
-its
-responsibilities
-is
-defined
-in
-the
-`Zephyr
-project
-charter`_。
+TSC 角色及其职责在 `Zephyr 项目章程`_ 中定义。
 
-Membership
+成员
 ++++++++++
 
-A
-TSC
-member
-plays
-a
-pivotal
-role
-in
-shaping
-the
-technical
-direction
-of
-the
-Zephyr
-Project。
-TSC
-members
-work
-collaboratively
-with
-other
-TSC
-members、
-contributors、
-and
-stakeholders
-to
-ensure
-the
-project's
-success
-and
-sustainability。
+TSC 成员在塑造 Zephyr 项目的技术方向中发挥着关键作用。TSC 成员与其他 TSC 成员、贡献者和利益相关者协作，以确保项目的成功与可持续发展。
 
-By
-fulfilling
-the
-rights
-and
-responsibilities
-below
-TSC
-members
-contribute
-to
-the
-overall
-success
-and
-growth
-of
-the
-Zephyr
-Project
-ensuring
-that
-it
-remains
-a
-vibrant
-and
-thriving
-open
-source
-community
-for
-years
-to
-come。
+通过履行以下权利和职责，TSC 成员为 Zephyr 项目的整体成功与成长做出贡献，确保项目在多年之后依然是一个充满活力、蓬勃发展的开源社区。
 
 
-Rights
+权利
 ------
 
-Decision
-Making
-   Participate
-   in
-   key
-   decisions
-   related
-   to
-   the
-   project's
-   technical
-   direction
-   including
-   architectural
-   changes、
-   feature
-   additions、
-   and
-   release
-   planning。
+决策
+  参与与项目技术方向相关的关键决策，包括架构变更、功能新增和发布规划。
 
-Voting
-   Exercise
-   voting
-   rights
-   on
-   important
-   matters
-   discussed
-   within
-   the
-   TSC
-   including
-   feature
-   proposals、
-   code
-   contributions、
-   and
-   community
-   initiatives。
+投票
+  对 TSC 内讨论的重要事项行使投票权，包括功能提案、代码贡献和社区倡议。
 
-Access
-   Gain
-   access
-   to
-   relevant
-   project
-   repositories、
-   documentation、
-   and
-   communication
-   channels
-   to
-   stay
-   informed
-   and
-   contribute
-   effectively。
+访问
+  获得相关项目仓库、文档和沟通渠道的访问权限，以掌握信息并有效贡献。
 
-Leadership
-   Take
-   on
-   leadership
-   roles
-   within
-   working
-   groups
-   or
-   subcommittees
-   dedicated
-   to
+领导
+  在专注于特定技术领域或倡议的工作组或分委员会中担任领导角色。
+
+代表
+  作为更广泛的 Zephyr 社区的代表，为贡献者、用户和利益相关者的利益发声。
+
+职责
+----------------
+
+TSC 成员被期望履行以下职责，但并非必须全部履行：
+
+技术监督
+  对技术事项提供指导和监督，通过作为工作组和委员会的核心成员积极参与，确保与项目目标、标准和最佳实践保持一致。
+
+代码审查
+  参与代码审查，以维护代码质量、一致性与对项目标准的兼容性。
+
+社区参与
+  通过论坛、邮件列表、会议和其他渠道与社区互动，以促进协作、回应关切并收集反馈。
+
+文档
+  为项目文档的开发和维护做出贡献，包括技术指南、API 参考和最佳实践。
+
+发布管理
+  与发布经理和其他利益相关者协作规划和协调项目发布，确保按时交付和质量保证。
+
+贡献者支持
+  支持和指导新贡献者，帮助他们熟悉项目的代码库、流程和社区规范。
+
+议题分诊
+  协助对用户和贡献者报告的议题进行分诊和优先级排序，促进及时解决和沟通。
+
+合规与许可
+  确保符合项目许可要求和开源最佳实践，处理可能出现的许可相关问题。
+
+冲突解决
+  促进建设性的讨论，解决社区内的技术分歧或冲突，营造健康且包容的环境。
+
+持续改进
+  持续寻求改进项目治理、流程和基础设施的机会，推动创新与可持续发展。
+
+
+指定 TSC 成员
++++++++++++++++++++++
+
+参见 `Zephyr 项目章程`_ 了解更多细节。
+
+- 指定的 TSC 成员没有任期限制，除了其在所代表组织的任职期限或其组织在 Zephyr 项目的成员资格外。
+- 指定的 TSC 成员可以从同一组织中选定一名候补。
+
+选举产生的 TSC 成员
++++++++++++++++++++
+
+根据 `Zephyr 项目章程`_，TSC 成员可以以每季度不超过一名的速度提名技术社区的代表。
+
+- 确认候选人需要多数票。
+- 一旦当选，TSC 成员任期 2 年。
+- 选举产生的 TSC 成员无权任命候补。
+- 为确保 TSC 的连续性，在 2 年任期结束时，TSC 必须重新确认选举产生的成员资格。如果该成员拒绝新任期，或 TSC 未能重新确认任期，该席位将开放给新的提名。
+- 如果一名选举产生的 TSC 成员在 2 年任期结束前辞职，其席位将在季度提名限制之外开放给新成员。当选成员将履行 2 年任期。
+- TSC 有权终止那些变得不活跃且未履行本文档所述 TSC 成员职责的选举产生的成员。
+- 选举产生的成员数量不得超过指定成员总数的 20%。
+- 2024 年 5 月之前当选的现有 TSC 成员，应在完成自首次当选以来的 2 年任期后重新确认。
+
+暂停
++++++++++++
+
+如项目章程第 8b 节所述，缺席连续三次会议的代表其投票权将被暂停，且被暂停的代表不计入法定人数要求。
+
+代表的暂停将在其出席的下一次会议开始时结束，投票权随之恢复。TSC 对缺席连续三次 TSC 周会的投票成员执行暂停政策。
+
+多日会议（面对面活动）计为“一次”会议。TSC 于 2022 年 2 月 16 日投票停止默认执行暂停政策。TSC 于 2023 年 1 月 18 日投票重新恢复暂停政策的默认执行。
+
+暂停通知将发送给缺席连续三次会议的代表，并注明其权利将在下次出席 TSC 会议时恢复。
+
+.. note::
+
+   根据项目章程第 4b 节，白金成员和白银成员可以选择放弃 TSC 的一个投票席位。
+
+   选择放弃后又希望稍后重新夺回席位的成员，其投票权将在通知 TSC 主席后出席的第二次连续会议开始时恢复。
+
+
+投票
+++++++
+
+Zephyr 项目中的投票在项目章程第 8 节中定义。
+
+以下补充了额外的澄清要点/TSC 解释。治理委员会可以选择更新章程以纳入以下细化内容。在此之前，额外的澄清（在需要时）将在流程工作组中讨论，并在 TSC 中批准。
+
+- TSC 会内投票：对于请求 Zephyr 技术指导委员会（TSC）进行会内投票的事项，假设法定人数要求已满足，默认投票机制将是一项口头动议，以判断是否存在普遍共识。
+- 如果对某项动议没有异议，则视为存在普遍共识，该动议通过。
+- 如有任何异议被提出，投票将转移到邮件进行，并按项目章程第 8 节所列的投票指南执行。
+- 如果 TSC 主席认为某项动议紧急，且假设法定人数要求已满足，主席可以在会内召集一次点名投票。
+
+投票选项
+--------------
+
+- 投票选项为：
+
+  - “赞成”，
+  - “反对” 或
+  - “弃权”
+
+弃权
+----------
+
+弃权在统计投票时既不计入负面也不计入正面；当成员弃权时，他们实际上只是出席以贡献法定人数。
+
+弃权不影响决定一项投票所需的票数。
+
+法定人数
+------
+
+TSC 会议的法定人数应要求 60% 的投票代表……（参见章程 8b 节）
+
+决议
+---------
+
+通过投票作出的决议应基于多数票，前提是至少百分之六十（60%）的 **TSC** 代表必须出席，或通过电子方式或书面行动参与，才能进行有效投票。（参见章程 8c 节）
+
+示例 A：
+
+   40 名有资格的 TSC 投票者。3 人对某项动议的投票弃权。12 人投赞成。11 人投反对。
+
+   达到法定人数：投出 26 票（法定人数 = 40 的 60% = 24）
+   多数票：12 赞成 vs. 11 反对。赞成获胜。
+   动议通过。
+
+示例 B：
+
+   40 名有资格的 TSC 投票者。5 人对某项动议的投票弃权。12 人投赞成。6 人投反对。达到法定人数？投出 23 票（法定人数 = 40 的 60% = 24）
+
+   投票无效。未达到法定人数。
+
+示例 C：
+
+   40 名有资格的 TSC 投票者。21 人对某项动议的投票弃权。2 人投赞成。1 人投反对。达到法定人数？投出 24 票（法定人数 = 40 的 60% = 24）
+
+   多数票：2 赞成 vs. 1 反对。赞成获胜。
+
+不可更改的投票
++++++++++++++++
+
+投票一旦投出即视为不可更改。投票者不得在动议提出到结果宣布的时间之间更改其投票。
+
+.. _Zephyr project charter:
+   https://www.zephyrproject.org/wp-content/uploads/2023/08/LF-Zephyr-Charter-2023.08.21.pdf

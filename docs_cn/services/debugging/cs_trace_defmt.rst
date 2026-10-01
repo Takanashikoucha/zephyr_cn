@@ -1,135 +1,24 @@
 .. _cs_trace_defmt:
 
-ARM
-Coresight
-Trace
-Deformatter
+ARM Coresight Trace Deformatter
 ###############################
 
-Formatter
-是
-一
-种
-method
-将
-多
-个
-trace
-streams
-（由
-7
-bit
-ID
-specified）
-wrap
-到
-单
-个
-output
-stream
-中。
-Formatter
-use
-16
-byte
-的
-frames
-它们
-wrap
-up
-to
-15
-bytes
-的
-data。
-它
-例如
-被
-ETR
-（Embedded
-Trace
-Router）
-used
-它是
-一
-个
-circular
-RAM
-buffer
-各种
-trace
-streams
-的
-data
-可以
-被
-saved
-在
-那里。
-通常
-tracing
-data
-被
-host
-offline
-decoded
-但
-deformatter
-可以
-on
-chip
-被
-used
-用于
-在
-application
-runtime
-期间
-decode
-data。
+Formatter 为将多个 trace streams（由 7 bit ID 指定）封装为
+单个输出 stream 的方法。Formatter 用 16 byte frames（封装最多 15 bytes 的
+data。例如（其被 ETR (Embedded Trace Router) 使用（其为 circular RAM
+buffer（各种 trace streams 的 data 可存储于此。通常 tracing data
+由 host 离线解码（但 deformatter 可在-chip 用于
+application runtime 期间解码 data。
 
 Usage
 *****
 
-Deformatter
-用
-一
-个
-user
-callback
-initialized。
-Data
-用
-:c:func:`cs_trace_defmt_process`
-在
-16
-bytes
-的
-chunks
-中
-decoded。
-Callback
-在
-stream
-change
-或
-reach
-chunk
-的
-end
-时
-被
-called。
-Callback
-contain
-stream
-ID
-和
+Deformatter 用 user callback 初始化。Data 用
+:c:func:`cs_trace_defmt_process` 以 16 bytes chunks 解码。每次 stream 变更或
+到达 chunk 末尾时调用 callback。Callback 包含 stream ID 和
 data。
 
-API
-documentation
+API documentation
 *****************
 
-.. doxygengroup::
-   cs_trace_defmt
+.. doxygengroup:: cs_trace_defmt

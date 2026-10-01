@@ -1,36 +1,12 @@
 .. _bluetooth_mesh_dfu_cli:
 
-Firmware
-Update
-Client
+Firmware Update Client
 ######################
 
-Firmware
-Update
-Client
-负责
-在
-mesh
-network
-中
-distribute
-firmware
-updates。
-Firmware
-Update
-Client
-用
-:ref:`bluetooth_mesh_blob_cli`
-作为
-它
-transfers
-的
-transport。
+Firmware Update Client 负责通过 mesh network 分发 firmware updates。Firmware Update Client 使用 :ref:`bluetooth_mesh_blob_cli` 作为其 transfers 的 transport。
 
 
-API
-reference
+API reference
 *************
 
-.. doxygengroup::
-   bt_mesh_dfu_cli
+.. doxygengroup:: bt_mesh_dfu_cli

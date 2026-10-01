@@ -1,134 +1,28 @@
 .. _retained_mem_api:
 
-Retained
-Memory
+保留内存
 ###############
 
-Overview
+概述
 ********
 
-Retained
-memory
-driver
-API
-提供
-从
-memory
-areas
-read/write
-的
-方式
-其中
-memory
-的
-contents
-在
-device
-被
-powered
-期间
-被
-retained
-（data
-可能
-在
-low
-power
-modes
-中
-丢失）。
+保留内存（retained memory）驱动程序 API 提供了一种读写内存区域的方式，这些内存区域的内容在设备通电期间会保留（在低功耗模式下数据可能会丢失）。
 
-Configuration
-Options
+配置选项
 *********************
 
-相关
-配置
-选项：
+相关配置选项：
 
 * :kconfig:option:`CONFIG_RETAINED_MEM`
 * :kconfig:option:`CONFIG_RETAINED_MEM_INIT_PRIORITY`
 * :kconfig:option:`CONFIG_RETAINED_MEM_MUTEX_FORCE_DISABLE`
 
-Mutex
-protection
+互斥锁保护
 ****************
 
-Retained
-memory
-drivers
-的
-Mutex
-protection
-在
-应用
-被
-编译
-带
-multithreading
-support
-时
-默认
-被
-启用。
-这
-意味着
-不同
-的
-threads
-可以
-安全
-地
-调用
-retained
-memory
-functions
-而
-不
-与
-其他
-concurrent
-thread
-function
-usage
-clash
-但
-意味着
-retained
-memory
-functions
-不
-能
-从
-ISRs
-使用。
-可以
-通过
-启用
-:kconfig:option:`CONFIG_RETAINED_MEM_MUTEX_FORCE_DISABLE`
-全局
-禁用
-所有
-retained
-memory
-drivers
-的
-mutex
-protection
-—
-users
-然后
-负责
-确保
-function
-calls
-不
-相互
-conflict。
+当应用程序以多线程支持编译时，保留内存驱动程序的互斥锁（mutex）保护默认启用。这意味着不同的线程可以安全地调用保留内存函数，而不会与其他并发线程的函数使用发生冲突；但也意味着保留内存函数不能在中断服务程序（ISR）中使用。可以通过启用 :kconfig:option:`CONFIG_RETAINED_MEM_MUTEX_FORCE_DISABLE` 在所有保留内存驱动程序上全局禁用互斥锁保护——此时用户需自行确保各函数调用之间互不冲突。
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   retained_mem_interface
+.. doxygengroup:: retained_mem_interface

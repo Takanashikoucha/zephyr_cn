@@ -1,610 +1,480 @@
 .. _architecture_porting_guide:
 
-Architecture
-Porting
-Guide
+体系结构移植指南
 ##########################
 
-Architecture
-port
-被
-需要
-以
-使
-Zephyr
-能
-在
-当前
-不
-被
-支持
-的
-:abbr:`ISA
-(instruction
-set
-architecture)`
-或
-:abbr:`ABI
-(Application
-Binary
-Interface)`
-上
-运行。
+当 Zephyr 需要运行在尚未支持的 :abbr:`ISA (指令集体系结构)` 或 :abbr:`ABI (应用二进制接口)` 上时，就需要进行体系结构移植。
 
-下面
-是
-Zephyr
-支持
-的
-ISAs
-和
-ABIs
-的
-示例：
+以下是 Zephyr 支持的指令集体系结构和 ABI 示例：
 
-* x86_32
-  ISA
-  带
-  System
-  V
-  ABI
-* ARMv7
-  M
-  ISA
-  带
-  Thumb2
-  instruction
-  set
-  和
-  ARM
-  Embedded
-  ABI
-  （aeabi）
-* ARCv2
-  ISA
+* x86_32 指令集体系结构，配 System V ABI
+* ARMv7-M 指令集体系结构，配 Thumb2 指令集和 ARM 嵌入式 ABI（aeabi）
+* ARCv2 指令集体系结构
 
-关于
-Kconfig
-configuration
-的
-信息
-参考
-:ref:`setting_configuration_values`。
-Architectures
-使用
-与
-boards
-类似
-的
-Kconfig
-configuration
-scheme。
+关于 Kconfig 配置的信息，参见 :ref:`setting_configuration_values`。体系结构使用的 Kconfig 配置方案与板卡类似。
 
-一
-个
-architecture
-port
-可以
-被
-分成
-多
-个
-parts；
-大多数
-是
-required
-的
-一些
-是
-optional
-的：
+体系结构移植可分为若干部分；大多数是必需的，某些是可选的：
 
-* **Early
-  boot
-  sequence**：
-  每个
-  architecture
-  在
-  CPU
-  从
-  reset
-  出来
-  时
-  必须
-  执行
-  不同
-  的
-  steps
-  （required）。
+* **早期启动序列**：每个体系结构在 CPU 从复位状态恢复时必须采取不同的步骤（必需）。
 
-* **Interrupt
-  和
-  exception
-  handling**：
-  每个
-  architecture
-  用
-  特定
-  的
-  manner
-  处理
-  asynchronous
-  和
-  unrequested
-  events
-  （required）。
+* **中断与异常处理**：每个体系结构以特定方式处理异步的、未被请求的事件（必需）。
 
-* **Thread
-  context
-  switching**：
-  Zephyr
-  的
-  context
-  switch
-  依赖
-  于
-  ABI
-  每个
-  ISA
-  有
-  不同
-  的
-  registers
-  set
-  需要
-  save
-  （required）。
+* **线程上下文切换**：Zephyr 的上下文切换依赖于 ABI，每个指令集体系结构需要保存的寄存器集合各不相同（必需）。
 
-* **Thread
-  creation
-  和
-  termination**：
-  Thread
-  的
-  initial
-  stack
-  frame
-  是
-  ABI
-  和
-  architecture
-  特定
-  的
-  thread
-  abortion
-  可能
-  也
-  是
-  （required）。
+* **线程创建与终止**：线程的初始栈帧取决于 ABI 和体系结构，线程中止（abort）可能也是如此（必需）。
 
-* **Device
-  drivers**：
-  大多数
-  情况
-  下
-  system
-  clock
-  timer
-  和
-  interrupt
-  controller
-  与
-  architecture
-  绑定
-  （一些
-  required
-  一些
-  optional）。
+* **设备驱动程序**：大多数情况下，系统时钟定时器与中断控制器和体系结构绑定（部分必需，部分可选）。
 
-* **Utility
-  libraries**：
-  一些
-  common
-  kernel
-  APIs
-  依赖
-  architecture
-  特定
-  的
-  implementation
-  用于
-  performance
-  reasons
-  （required）。
+* **工具库**：某些常用内核 API 出于性能原因依赖于体系结构特定的实现（必需）。
 
+* **CPU 空闲/电源管理**：大多数体系结构提供了让 CPU 进入睡眠的指令（部分可选，但很可能非常需要）。
+
+* **故障管理**：用于实现体系结构特定的调试辅助以及线程中致命错误的处理（部分可选）。
+
+* **链接器脚本与工具链**：构建系统与镜像链接时很可能需要体系结构特定的细节（必需）。
+
+* **内存管理与内存映射**：用于支持内存管理与内存映射的体系结构特定细节。
+
+* **栈对象**：用于栈对象相关的内存保护硬件的体系结构特定细节。
+
+* **用户模式线程**：用于支持用户模式下的线程。
+
+* **GDB 桩**：用于支持 GDB 桩以启用远程调试。
+
+早期启动序列
+*******************
+
+早期启动序列的目标是将系统从复位后的状态带到可以运行 C 代码（从而运行通用内核初始化序列）的状态。大多数时候只需很少的步骤，而某些体系结构需要执行更多工作。
+
+所有体系结构的通用步骤：
+
+* 建立初始栈。
+* 如果运行 :abbr:`XIP (eXecute-In-Place，就地执行)` 内核，将已初始化的数据从 ROM 复制到 RAM。
+* 如果不使用 ELF 加载器，清零 BSS 段。
+* 跳转到 :code:`z_cstart()`，即早期内核初始化
+
+  * :code:`z_cstart()` 负责从启动时运行的假上下文
+    切换出去，切换到主线程。
+
+某些必须采取的体系结构特定步骤示例：
+
+* 如果在 x86_32 上以实模式（real mode）获得控制权，切换到 32 位保护模式。
+* 在 x86_32 上设置段寄存器，以处理将段寄存器留在未知或损坏状态的引导加载程序。
+* 在 Cortex-M3/4 上初始化板卡特定的看门狗。
+* 在 Cortex-M 上将栈从 MSP 切换到 PSP。
+* 在 Cortex-M 上使用不同于调用 z_swap() 的方法，以防止竞态条件。
+* 在 ARCv2 上设置 FIRQ 和常规 IRQ 处理。
+
+早期启动序列钩子
+=========================
+
+Zephyr 暴露了若干钩子（描述于 :zephyr_file:`include/zephyr/platform/hooks.h`），允许在启动过程的精确时刻执行 SoC 或板卡特定的代码。
+
+内核负责从与体系结构无关的代码中调用大多数钩子。然而，某些钩子必须在早期启动序列期间调用；由于该序列在体系结构特定的代码中实现，对钩子的调用也必须在那里完成。以下给出了早期启动序列的大致概述，以及体系结构特定代码应在何时调用钩子：
+
+#. 执行从与体系结构特定的入口点开始，其名称与 :kconfig:option:`CONFIG_KERNEL_ENTRY` 匹配。
+
+#. 体系结构特定状态立即被重新初始化（如果启用了 :kconfig:option:`CONFIG_INIT_ARCH_HW_AT_BOOT`）。
+
+#. 调用 :c:func:`soc_early_reset_hook`。
+
+   .. note::
+    在调用此钩子之前无需建立有效的栈。
+    但是，钩子在返回前允许覆盖栈指针。
+    体系结构特定的代码不得期望 :c:func:`soc_early_reset_hook` 调用期间栈指针寄存器的值被保留。
+
+    在具有多个栈指针的体系结构上，通常有一个可直接访问的*"主"*栈指针
+    和若干*"次"*栈指针寄存器。
+    :c:func:`soc_early_reset_hook` 的实现可以覆盖*"主"*栈指针，
+    但**不得**读取或修改任何*"次"*栈指针的值。
+    （这使得体系结构特定代码可以在调用 :c:func:`soc_early_reset_hook` 之前
+    设置其想要的任何*"次"*栈指针）
+
+    例如，ARM Cortex-A 体系结构定义了若干执行模式，
+    每个都有自己的栈指针寄存器 :samp:`sp_{mode}`。
+    当处理器在模式 :samp:`{X}` 中执行时，涉及 ``sp`` 通用寄存器的操作
+    作用于 :samp:`sp_{X}`。
+    在此体系结构上，假设调用 :c:func:`soc_early_reset_hook` 时
+    处理器在模式 :samp:`{M}` 中执行，
+    该钩子允许覆盖 :samp:`sp_{M}`（通过 ``sp`` 可访问），
+    但**不得**读取或覆盖任何其他 :samp:`sp_{mode}`
+    （其中 :samp:`{mode} != {M}`）。
+
+    :c:func:`soc_early_reset_hook` 的实现允许不将执行返回到
+    体系结构特定的代码，此时它们"接管"系统。
+    此类钩子不受上述规则约束，可以读取或覆盖任何栈指针。
+    但是，当提供此类实现时，早期启动序列的其余部分显然不会执行。
+
+#. 为早期启动序列的后续步骤建立初始栈。
+
+#. 执行体系结构特定的*"从休眠到 RAM（suspend-to-RAM）恢复"*逻辑
+
+   .. note::
+    参见 :kconfig:option:`CONFIG_PM_S2RAM` 和体系结构特定实现
+    以获取更多细节，但注意：如果此逻辑判定正在退出
+    休眠到 RAM 状态，则早期启动序列的其余部分不会执行。
+
+#. 调用 :c:func:`soc_reset_hook`。
+
+#. *在此执行体系结构特定的操作（汇编）...*
+
+#. 调用 :c:func:`z_prep_c`。此体系结构特定函数用 C 实现。
+
+#. :c:func:`z_prep_c` 立即调用 :c:func:`soc_prep_hook`。
+
+#. *在此执行体系结构特定的操作（C）...*
+
+#. 调用 :c:func:`z_cstart`。与体系结构无关的代码开始执行。
+
+中断与异常处理
+********************************
+
+每个体系结构以不同方式定义中断与异常处理。
+
+当设备想向处理器发出信号表示有工作要代其完成时，它触发一个中断。
+当线程执行了软件串行流程本身不处理的操作时，它触发一个异常。
+中断和异常都将控制权交给处理程序。
+就中断而言，该处理程序称为 :abbr:`ISR (中断服务例程)`。
+处理程序执行异常或中断所需的工作。
+对于中断，该工作是设备特定的。
+对于异常，取决于异常类型，
+但大多数情况下由内核本身负责提供处理程序。
+
+内核必须在处理程序自身执行的工作之外执行一些工作。例如：
+
+* 在将控制权交给处理程序之前：
+
+  * 保存当前正在执行的上下文。
+  * 可能退出省电模式，
+    包括唤醒设备。
+  * 如果退出无滴答空闲模式，更新内核运行时间。
+
+* 在从处理程序收回控制权之后：
+
+  * 决定是否执行上下文切换。
+  * 在执行上下文切换时，
+    恢复被切换进来的上下文。
+
+此工作在各体系结构间概念上相同，但细节完全不同：
+
+* 要保存和恢复的寄存器。
+* 执行工作的处理器指令。
+* 异常的编号。
+* 等等。
+
+因此需要一个体系结构特定的实现，称为中断/异常桩（stub）。
+
+另一个问题是内核将 ISR 的签名定义为：
+
+.. code-block:: C
+
+    void (*isr)(void *parameter)
+
+各体系结构没有一致或原生的方式来处理 ISR 的参数。因此有两种常用的参数处理方法。
+
+* 利用某种体系结构定义的机制，在桩中强制传入参数值。这在 X86 系体系结构中常见。
+
+* 通过单独的表插入并跟踪 ISR 的参数，需要体系结构在运行时确定当前执行的是哪个中断。为真实中断向量表的所有条目安装一个通用的中断处理分发器（demuxer），然后从单独的表中获取设备的 ISR 和参数。此方法在 ARC 和 ARM 体系结构中通过 :kconfig:option:`CONFIG_GEN_ISR_TABLES` 实现中常见。可以通过查看 x86 的 :code:`_interrupt_enter()`、ARM 的 :code:`_isr_wrapper()`，或 :zephyr_file:`arch/arc/core/isr_wrapper.S` 中 ARC 的完整实现描述来找到桩的示例。
+
+每个体系结构还必须实现中断控制原语：
+
+* 锁定中断：:c:macro:`irq_lock()`、:c:macro:`irq_unlock()`。
+* 注册中断：:c:macro:`IRQ_CONNECT()`。
+* 如可能，编程设置优先级 :c:func:`irq_priority_set`。
+* 启用/禁用中断：:c:macro:`irq_enable()`、:c:macro:`irq_disable()`。
 
 .. note::
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-* The parameters to the ISR are inserted and tracked via a separate table
-  requiring the architecture to discover at runtime which interrupt is
-  executing. A common interrupt handler demuxer is installed for all entries of
-  the real interrupt vector table, which then fetches the device's ISR and
-  parameter from the separate table. This approach is commonly used in the ARC
-  and ARM architectures via the :kconfig:option:`CONFIG_GEN_ISR_TABLES` implementation.
-  You can find examples of the stubs by looking at :code:`_interrupt_enter()` in
-  x86, :code:`_isr_wrapper()` in ARM, or the full implementation description for
-  ARC in :zephyr_file:`arch/arc/core/isr_wrapper.S`.
+  :c:macro:`IRQ_CONNECT` 是一个利用汇编和/或链接器脚本技巧
+  在构建时连接中断的宏，可节省启动时间和代码段大小。
 
-Each architecture also has to implement primitives for interrupt control:
+向量表应包含针对每个可能发生的中断和异常的处理程序。
+处理程序可以简单到一个自旋循环。
+但我们强烈建议处理程序至少打印一些调试信息。
+这些信息有助于弄清楚出了什么问题——
+无论是遇到属于故障（fault）的异常（如除零或非法内存访问），
+还是遇到非预期的中断（:dfn:`虚假中断`）。
+参见 :zephyr_file:`arch/arm/core/cortex_m/fault.c` 中的 ARM 实现作为示例。
 
-* locking interrupts: :c:macro:`irq_lock()`, :c:macro:`irq_unlock()`.
-* registering interrupts: :c:macro:`IRQ_CONNECT()`.
-* programming the priority if possible :c:func:`irq_priority_set`.
-* enabling/disabling interrupts: :c:macro:`irq_enable()`, :c:macro:`irq_disable()`.
-
-.. note::
-
-  :c:macro:`IRQ_CONNECT` is a macro that uses assembler and/or linker script
-  tricks to connect interrupts at build time, saving boot time and text size.
-
-The vector table should contain a handler for each interrupt and exception that
-can possibly occur. The handler can be as simple as a spinning loop. However,
-we strongly suggest that handlers at least print some debug information. The
-information helps figuring out what went wrong when hitting an exception that
-is a fault, like divide-by-zero or invalid memory access, or an interrupt that
-is not expected (:dfn:`spurious interrupt`). See the ARM implementation in
-:zephyr_file:`arch/arm/core/cortex_m/fault.c` for an example.
-
-Thread Context Switching
+线程上下文切换
 ************************
 
-Multi-threading is the basic purpose to have a kernel at all. Zephyr supports
-two types of threads: preemptible and cooperative. The rules for determining
-the next thread to schedule are handled by the kernel. However, it is up to
-the architecture port to implement the method of the context switch itself.
+多线程是拥有内核的基本目的。Zephyr 支持两种类型的线程：可抢占（preemptible）和协作（cooperative）。确定下一个要调度的线程的规则由内核处理。然而，上下文切换本身的方法由体系结构移植来实现。
 
-Zephyr provides two mutually exclusive interfaces for context switching. The
-preferred interface to use is :code:`arch_switch` which is selected when
-:kconfig:option:`CONFIG_USE_SWITCH` is enabled. The alternative interface is
-:code:`arch_swap`--selected when :kconfig:option:`CONFIG_USE_SWITCH`
-is disabled. When porting to a new architecture, only one of these needs to
-implemented; however, for SMP platforms it must be :code:`arch_switch`.
+Zephyr 提供两个互斥的上下文切换接口。
+首选使用的接口是 :code:`arch_switch`，
+在启用 :kconfig:option:`CONFIG_USE_SWITCH` 时选用。
+替代接口是 :code:`arch_swap`——
+在禁用 :kconfig:option:`CONFIG_USE_SWITCH` 时选用。
+移植到新体系结构时只需实现其中一个；
+但对于 SMP 平台，必须是 :code:`arch_switch`。
 
-A context switch can happen in several circumstances:
+上下文切换可能在若干情况下发生：
 
-* When a thread executes a blocking operation, such as taking a semaphore that
-  is currently unavailable.
+* 当线程执行阻塞操作时，例如获取当前不可用的信号量。
 
-* When a preemptible thread unblocks a thread of higher priority by releasing
-  the object on which it was blocked.
+* 当一个可抢占线程通过释放其阻塞的对象，解锁了更高优先级的线程。
 
-* When an interrupt unblocks a thread of higher priority than the one currently
-  executing, if the currently executing thread is preemptible.
+* 当一个中断解锁了比当前执行线程更高优先级的线程，且当前执行线程是可抢占的。
 
-* When a thread runs to completion.
+* 当一个线程运行完毕。
 
-* When a thread causes a fatal exception and is removed from the running
-  threads. For example, referencing invalid memory,
+* 当一个线程导致致命异常并被从运行线程中移除。例如引用了非法内存。
 
-Therefore, the context switching must thus be able to handle all these cases.
+因此，上下文切换必须能够处理所有这些情况。
 
-There are two types of context switches: :dfn:`cooperative` and :dfn:`preemptive`.
+有两种类型的上下文切换：:dfn:`协作式`和 :dfn:`抢占式`。
 
-* A *cooperative* context switch happens when a thread willfully gives the
-  control to another thread. There are two cases where this happens
+* *协作式*上下文切换发生在线程自愿将控制权交给另一个线程时。有两种情况会发生
 
-  * When a thread explicitly yields.
-  * When a thread tries to take an object that is currently unavailable and is
-    willing to wait until the object becomes available.
+  * 当线程显式让出（yield）。
+  * 当线程尝试获取当前不可用的对象
+    并愿意等待该对象可用。
 
-* A *preemptive* context switch happens either because an ISR or a
-  thread causes an operation that schedules a thread of higher priority than the
-  one currently running, if the currently running thread is preemptible.
-  An example of such an operation is releasing an object on which the thread
-  of higher priority was waiting.
+* *抢占式*上下文切换发生是因为一个 ISR 或线程触发了一个操作，该操作调度了比当前运行线程更高优先级的线程（前提是当前运行线程是可抢占的）。此类操作的一个示例是释放了更高优先级线程正在等待的对象。
 
 .. note::
 
-  Control is never taken from cooperative thread when one of them is the
-  running thread.
+  当某个协作式线程是正在运行的线程时，永远不会从它手中夺走控制权。
 
-A cooperative context switch is always done by having a thread call the
-internal kernel routine :code:`z_swap` (or one of its variants). This in turn
-will call either :code:`arch_switch` or :code:`arch_swap` as appropriate.
-When these are called, no checks are done to determine if the context switch is
-to happen--the context switch must happen.
+协作式上下文切换总是通过线程调用内核内部例程 :code:`z_swap`（或其变体）来完成。
+这进而调用 :code:`arch_switch` 或 :code:`arch_swap`（视情况而定）。
+当这些被调用时，不会执行任何检查来判断上下文切换是否应该发生——
+上下文切换必须发生。
 
 .. note::
 
-  On 32-bit x86, :code:`arch_swap` is generic enough and the architecture
-  flexible enough that it can be called when exiting an interrupt to provoke
-  the context switch. This should not be taken as a rule, since
-  neither the ARM Cortex-M nor ARCv2 port do this.
+  在 32 位 x86 上，:code:`arch_swap` 足够通用且体系结构足够灵活，
+  可以在退出中断时调用它来触发上下文切换。
+  不应将此视为规则，因为 ARM Cortex-M 和 ARCv2 的移植都不这样做。
 
-Since :code:`z_swap` is cooperative, the caller-saved registers from the ABI are
-already on the stack. There is no need to save them in the k_thread structure.
+由于 :code:`z_swap` 是协作式的，ABI 中由调用方保存的寄存器已经在栈上。无需在 k_thread 结构中保存它们。
 
-A context switch can also be performed preemptively. This happens upon exiting
-an ISR, in the kernel interrupt exit stub:
+上下文切换也可以以抢占式执行。这发生在退出 ISR 时，在内核的中断退出桩中：
 
-* :code:`_interrupt_enter` on x86 after the handler is called.
-* :code:`z_arm_exc_exit` and :code:`z_arm_int_exit` on ARM.
-* :code:`_firq_exit` and :code:`_rirq_exit` on ARCv2.
+* x86 上处理程序调用后的 :code:`_interrupt_enter`。
+* ARM 上的 :code:`z_arm_exc_exit` 和 :code:`z_arm_int_exit`。
+* ARCv2 上的 :code:`_firq_exit` 和 :code:`_rirq_exit`。
 
-The decision logic to invoke the context switch is simple and is only performed
-when exiting a non-nested interrupt:
+调用上下文切换的决策逻辑很简单，仅在退出非嵌套中断时执行：
 
-When :kconfig:option:`CONFIG_USE_SWITCH` is enabled ...
+当启用 :kconfig:option:`CONFIG_USE_SWITCH` 时 ...
 
-* The interrupt exit code shall call :c:func:`z_get_next_switch_handle`, and
-  return to the thread context identified by the returned switch handle
+* 中断退出代码应调用 :c:func:`z_get_next_switch_handle`，并返回由返回的切换句柄（switch handle）标识的线程上下文
 
-When :kconfig:option:`CONFIG_USE_SWITCH` is not enabled ...
+当未启用 :kconfig:option:`CONFIG_USE_SWITCH` 时 ...
 
-* The interrupt exit code shall fetch the cached thread from the ready queue, and:
+* 中断退出代码应从就绪队列获取缓存的线程，并：
 
-  * If the cached thread is not the current thread, invoke the context switch.
-  * Otherwise do not invoke it.
+  * 如果缓存的线程不是当前线程，则调用上下文切换。
+  * 否则不调用。
 
-This is simple, but crucial: if this is not implemented correctly, the kernel
-will not function as intended and will experience bizarre crashes, mostly due
-to stack corruption.
+这很简单，但至关重要：如果未正确实现，内核将不按预期工作并出现奇怪的崩溃，大多由栈损坏引起。
 
-Thread Creation and Termination
+线程创建与终止
 *******************************
 
-To start a new thread, a stack frame must be constructed so that the context
-switch can pop it the same way it would pop one from a thread that had been
-context switched out. This is to be implemented in an architecture-specific
-:code:`_new_thread` internal routine.
+要启动新线程，必须构建一个栈帧，使上下文切换可以像弹出被切换出线程的栈帧一样弹出它。这要在体系结构特定的 :code:`_new_thread` 内部例程中实现。
 
-The thread entry point is also not to be called directly, i.e. it should not be
-set as the :abbr:`PC (program counter)` for the new thread. Rather it must be
-wrapped in :code:`_thread_entry`. This means that the PC in the stack
-frame shall be set to :code:`_thread_entry`, and the thread entry point shall
-be passed as the first parameter to :code:`_thread_entry`. The specifics of
-this depend on the ABI.
+线程入口点也不应被直接调用，
+即不应将其设置为新线程的 :abbr:`PC (程序计数器)`。
+相反，它必须用 :code:`_thread_entry` 包装。
+这意味着栈帧中的 PC 应设置为 :code:`_thread_entry`，
+线程入口点应作为第一个参数传递给 :code:`_thread_entry`。
+具体细节取决于 ABI。
 
-The need for an architecture-specific thread termination implementation depends
-on the architecture. There is a generic implementation, but it might not work
-for a given architecture.
+是否需要体系结构特定的线程终止实现取决于体系结构。存在一个通用实现，但它可能对某个体系结构不起作用。
 
-One reason that has been encountered for having an architecture-specific
-implementation of thread termination is that aborting a thread might be
-different if aborting because of a graceful exit or because of an exception.
-This is the case for ARM Cortex-M, where the CPU has to be taken out of handler
-mode if the thread triggered a fatal exception, but not if the thread
-gracefully exits its entry point function.
+遇到的一种需要体系结构特定线程终止实现的原因是：
+中止线程的方式可能因中止原因不同而不同——是优雅退出还是异常。
+ARM Cortex-M 就是这种情况：
+如果线程触发了致命异常，CPU 必须被从处理程序模式（handler mode）中取出；
+但如果线程优雅地退出了其入口点函数，则不需要。
 
-This means implementing an architecture-specific version of
-:c:func:`k_thread_abort`, and setting the Kconfig option
-:kconfig:option:`CONFIG_ARCH_HAS_THREAD_ABORT` as needed for the architecture (e.g. see
-:zephyr_file:`arch/arm/core/cortex_m/Kconfig`).
+这意味着要实现 :c:func:`k_thread_abort` 的体系结构特定版本，
+并根据需要为该体系结构设置 Kconfig 选项
+:kconfig:option:`CONFIG_ARCH_HAS_THREAD_ABORT`
+（例如参见 :zephyr_file:`arch/arm/core/cortex_m/Kconfig`）。
 
-Thread Local Storage
+线程本地存储
 ********************
 
-To enable thread local storage on a new architecture:
+要在新体系结构上启用线程本地存储（TLS）：
 
-#. Implement :c:func:`arch_tls_stack_setup` to setup the TLS storage area in
-   stack. Refer to the toolchain documentation on how the storage area needs
-   to be structured. Some helper functions can be used:
+#. 实现 :c:func:`arch_tls_stack_setup`，在栈中建立 TLS 存储区域。参见工具链文档了解存储区域需要如何组织。可以使用某些辅助函数：
 
-   * Function :c:func:`z_tls_data_size` returns the size
-     needed for thread local variables (excluding any extra data required by
-     toolchain and architecture).
-   * Function :c:func:`z_tls_copy` prepares the TLS storage area for
-     thread local variables. This only copies the variable themselves and
-     does not do architecture and/or toolchain specific data.
+   * 函数 :c:func:`z_tls_data_size` 返回线程本地变量所需的尺寸（不包括工具链和体系结构所需的任何额外数据）。
+   * 函数 :c:func:`z_tls_copy` 为线程本地变量准备 TLS 存储区域。它只复制变量本身，不处理体系结构和/或工具链特定的数据。
 
-#. In the context switching, grab the ``tls`` field inside the new thread's
-   ``struct k_thread`` and put it into an appropriate register (or some
-   other variable) for access to the TLS storage area. Refer to toolchain
-   and architecture documentation on which registers to use.
-#. In kconfig, add ``select ARCH_HAS_THREAD_LOCAL_STORAGE`` to
-   kconfig related to the new architecture.
-#. Run the ``tests/kernel/threads/tls`` to make sure the new code works.
+#. 在上下文切换时，获取新线程的 ``struct k_thread`` 中的 ``tls`` 字段，并将其放入适当的寄存器（或其他变量）中，以访问 TLS 存储区域。参见工具链和体系结构文档了解应使用哪些寄存器。
+#. 在 Kconfig 中，向与新体系结构相关的 Kconfig 项添加 ``select ARCH_HAS_THREAD_LOCAL_STORAGE``。
+#. 运行 ``tests/kernel/threads/tls`` 测试，确保新代码工作正常。
 
-Device Drivers
+设备驱动程序
 **************
 
-The kernel requires very few hardware devices to function. In theory, the only
-required device is the interrupt controller, since the kernel can run without a
-system clock. In practice, to get access to most, if not all, of the sanity
-check test suite, a system clock is needed as well. Since these two are usually
-tied to the architecture, they are part of the architecture port.
+内核只需要很少的硬件设备即可运行。
+理论上，唯一必需的设备是中断控制器，
+因为内核可以在没有系统时钟的情况下运行。
+实际上，为了能够访问大部分（如果不是全部）健全性检查测试套件，
+还需要系统时钟。
+由于这两者通常与体系结构绑定，它们是体系结构移植的一部分。
 
-Interrupt Controllers
+中断控制器
 =====================
 
-There can be significant differences between the interrupt controllers and the
-interrupt concepts across architectures.
+不同体系结构之间的中断控制器和中断概念可能有显著差异。
 
-For example, x86 has the concept of an :abbr:`IDT (Interrupt Descriptor Table)`
-and different interrupt controllers. The position of an interrupt in the IDT
-determines its priority.
+例如，x86 有 :abbr:`IDT (中断描述符表)` 和不同中断控制器的概念。中断在 IDT 中的位置决定其优先级。
 
-On the other hand, the ARM Cortex-M has the :abbr:`NVIC (Nested Vectored
-Interrupt Controller)` as part of the architecture definition. There is no need
-for an IDT-like table that is separate from the NVIC vector table. The position
-in the table has nothing to do with priority of an IRQ: priorities are
-programmable per-entry.
+另一方面，ARM Cortex-M 将 :abbr:`NVIC (嵌套向量中断控制器)` 作为体系结构定义的一部分。无需独立于 NVIC 向量表的 IDT 类表。表中的位置与 IRQ 的优先级无关：优先级可按条目编程。
 
-The ARCv2 has its interrupt unit as part of the architecture definition, which
-is somewhat similar to the NVIC. However, where ARC defines interrupts as
-having a one-to-one mapping between exception and interrupt numbers (i.e.
-exception 1 is IRQ1, and device IRQs start at 16), ARM has IRQ0 being
-equivalent to exception 16 (and weirdly enough, exception 1 can be seen as
-IRQ-15).
+ARCv2 将其中断单元作为体系结构定义的一部分，与 NVIC 有些类似。
+然而，ARC 将中断定义为异常编号与中断编号之间的一对一映射
+（即异常 1 是 IRQ1，设备 IRQ 从 16 开始），
+而 ARM 中 IRQ0 等价于异常 16
+（奇怪的是，异常 1 可被视为 IRQ-15）。
 
-All these differences mean that very little, if anything, can be shared between
-architectures with regards to interrupt controllers.
+所有这些差异意味着，就中断控制器而言，各体系结构之间几乎（如果有的话）无法共享任何东西。
 
-System Clock
-============
+系统时钟
+=============
 
-x86 has APIC timers and the HPET as part of its architecture definition. ARM
-Cortex-M has the SYSTICK exception. Finally, ARCv2 has the timer0/1 device.
+x86 将 APIC 定时器和 HPET 作为其体系结构定义的一部分。ARM Cortex-M 有 SYSTICK 异常。最后，ARCv2 有 timer0/1 设备。
 
-Kernel timeouts are handled in the context of the system clock timer driver's
-interrupt handler.
+内核超时在系统时钟定时器驱动程序的中断处理程序上下文中处理。
 
 
-Console Over Serial Line
+通过串口使用控制台
 ========================
 
-There is one other device that is almost a requirement for an architecture
-port, since it is so useful for debugging. It is a simple polling, output-only,
-serial port driver on which to send the console (:code:`printk`,
-:code:`printf`) output.
+还有另一个对体系结构移植几乎是必需的设备，因为它对调试非常有用。它是一个简单的轮询式、仅输出的串口驱动程序，用于发送控制台（:code:`printk`、:code:`printf`）输出。
 
-It is not required, and a RAM console (:kconfig:option:`CONFIG_RAM_CONSOLE`)
-can be used to send all output to a circular buffer that can be read
-by a debugger instead.
+它不是必需的，可以使用 RAM 控制台（:kconfig:option:`CONFIG_RAM_CONSOLE`）将所有输出发送到可由调试器读取的循环缓冲区。
 
-Utility Libraries
+工具库
 *****************
 
-The kernel depends on a few functions that can be implemented with very few
-instructions or in a lock-less manner in modern processors. Those are thus
-expected to be implemented as part of an architecture port.
+内核依赖一些函数，这些函数可以用很少的指令或现代处理器中的无锁方式实现。因此预计它们作为体系结构移植的一部分来实现。
 
-* Atomic operators.
+* 原子操作。
 
-  * If instructions do exist for a given architecture, the implementation is
-    configured using the :kconfig:option:`CONFIG_ATOMIC_OPERATIONS_ARCH` Kconfig
-    option.
+  * 如果某体系结构存在相应指令，
+    实现通过 :kconfig:option:`CONFIG_ATOMIC_OPERATIONS_ARCH`
+    Kconfig 选项配置。
 
-  * If instructions do not exist for a given architecture,
-    a generic version that wraps :c:func:`irq_lock` or :c:func:`irq_unlock`
-    around non-atomic operations exists. It is configured using the
-    :kconfig:option:`CONFIG_ATOMIC_OPERATIONS_C` Kconfig option.
+  * 如果某体系结构不存在相应指令，
+    则存在一个通用版本，用 :c:func:`irq_lock` 或
+    :c:func:`irq_unlock` 包装非原子操作。
+    它通过 :kconfig:option:`CONFIG_ATOMIC_OPERATIONS_C`
+    Kconfig 选项配置。
 
-* Find-least-significant-bit-set and find-most-significant-bit-set.
+* 查找最低有效置位（find-least-significant-bit-set）和查找最高有效置位（find-most-significant-bit-set）。
 
-  * If instructions do not exist for a given architecture, it is always
-    possible to implement these functions as generic C functions.
+  * 如果某体系结构不存在相应指令，
+    总是可以将这些函数实现为通用 C 函数。
 
-It is possible to use compiler built-ins to implement these, but be careful
-they use the required compiler barriers.
+可以用编译器内建函数（built-ins）来实现这些，但注意它们必须使用所需的编译器屏障（barrier）。
 
-CPU Idling/Power Management
+CPU 空闲/电源管理
 ***************************
 
-The kernel provides support for CPU power management with two functions:
-:c:func:`arch_cpu_idle` and :c:func:`arch_cpu_atomic_idle`.
+内核通过两个函数提供 CPU 电源管理支持：:c:func:`arch_cpu_idle` 和 :c:func:`arch_cpu_atomic_idle`。
 
-:c:func:`arch_cpu_idle` can be as simple as calling the power saving
-instruction for the architecture with interrupts unlocked, for example
-:code:`hlt` on x86, :code:`wfi` or :code:`wfe` on ARM, :code:`sleep` on ARC.
-This function can be called in a loop within a context that does not care if it
-get interrupted or not by an interrupt before going to sleep. There are
-basically two scenarios when it is correct to use this function:
+:c:func:`arch_cpu_idle` 可以简单到
+在中断未锁定时调用该体系结构的省电指令，
+例如 x86 上的 :code:`hlt`、
+ARM 上的 :code:`wfi` 或 :code:`wfe`、
+ARC 上的 :code:`sleep`。
+此函数可以在一个不关心睡眠前是否会被中断打断的上下文中循环调用。
+基本上有两种情况使用此函数是正确的：
 
-* In a single-threaded system, in the only thread when the thread is not used
-  for doing real work after initialization, i.e. it is sitting in a loop doing
-  nothing for the duration of the application.
+* 在单线程系统中，在初始化后不用于做实际工作的唯一线程中，即它在整个应用期间坐在循环中什么都不做。
 
-* In the idle thread.
+* 在空闲线程（idle thread）中。
 
-:c:func:`arch_cpu_atomic_idle`, on the other hand, must be able to atomically
-re-enable interrupts and invoke the power saving instruction. It can thus be
-used in real application code, again in single-threaded systems.
+而 :c:func:`arch_cpu_atomic_idle` 必须能够原子地重新启用中断并调用省电指令。因此它可以用于真实的应用代码，同样用于单线程系统。
 
-Normally, idling the CPU should be left to the idle thread, but in some very
-special scenarios, these APIs can be used by applications.
+通常，CPU 空闲应留给空闲线程，但在某些非常特殊的场景中，应用可以使用这些 API。
 
-Both functions must exist for a given architecture. However, the implementation
-can be simply the following steps, if desired:
+两个函数必须对给定体系结构都存在。但是，如需要，实现可以简单地是以下步骤：
 
-#. unlock interrupts
-#. NOP
+#. 解锁中断
+#. NOP（空操作）
 
-However, a real implementation is strongly recommended.
+不过，强烈建议提供真实实现。
 
-Fault Management
+故障管理
 ****************
 
-In the event of an unhandled CPU exception, the architecture
-code must call into :c:func:`z_fatal_error`.  This function dumps
-out architecture-agnostic information and makes a policy
-decision on what to do next by invoking :c:func:`k_sys_fatal_error`.
-This function can be overridden to implement application-specific
-policies that could include locking interrupts and spinning forever
-(the default implementation) or even powering off the
-system (if supported).
+在发生未处理的 CPU 异常时，
+体系结构代码必须调用 :c:func:`z_fatal_error`。
+此函数输出与体系结构无关的信息，
+并通过调用 :c:func:`k_sys_fatal_error` 做出下一步的策略决策。
+此函数可以被覆盖以实现应用特定的策略，
+可能包括锁定中断并永远自旋（默认实现），
+甚至关闭系统（如果支持）。
 
-Toolchain and Linking
+工具链与链接
 *********************
 
-Toolchain support has to be added to the build system.
+必须向构建系统添加工具链支持。
 
-Some architecture-specific definitions are needed in :zephyr_file:`include/zephyr/toolchain/gcc.h`.
-See what exists in that file for currently supported architectures.
+需要在 :zephyr_file:`include/zephyr/toolchain/gcc.h` 中定义某些体系结构特定的定义。参见该文件中当前支持的体系结构的内容。
 
-Each architecture also needs its own linker script, even if most sections can
-be derived from the linker scripts of other architectures. Some sections might
-be specific to the new architecture, for example the SCB section on ARM and the
-IDT section on x86.
+每个体系结构还需要自己的链接器脚本，即使大多数段可以从其他体系结构的链接器脚本派生。某些段可能特定于新体系结构，例如 ARM 上的 SCB 段和 x86 上的 IDT 段。
 
-Memory Management and Memory Mapping
+内存管理与内存映射
 ************************************
 
-If the target platform enables paging and requires drivers to memory-map
-their I/O regions, :kconfig:option:`CONFIG_MMU` needs to be enabled and the
-following API implemented:
+如果目标平台启用分页（paging）并要求驱动程序对其 I/O 区域进行内存映射，需要启用 :kconfig:option:`CONFIG_MMU` 并实现以下 API：
 
 - :c:func:`arch_mem_map`
 - :c:func:`arch_mem_unmap`
 - :c:func:`arch_page_phys_get`
 
-Stack Objects
+栈对象
 *************
 
-The presence of memory protection hardware affects how stack objects are
-created. All architecture ports must specify the required alignment of the
-stack pointer, which is some combination of CPU and ABI requirements. This
-is defined in architecture headers with :c:macro:`ARCH_STACK_PTR_ALIGN` and
-is typically something small like 4, 8, or 16 bytes.
+内存保护硬件的存在影响栈对象的创建方式。
+所有体系结构移植必须指定栈指针所需的对齐，
+它是 CPU 和 ABI 要求的某种组合。
+这在体系结构头文件中用 :c:macro:`ARCH_STACK_PTR_ALIGN` 定义，
+通常是 4、8 或 16 字节这样的小值。
 
-Two types of thread stacks exist:
+存在两种类型的线程栈：
 
-- "kernel" stacks defined with :c:macro:`K_KERNEL_STACK_DEFINE()` and related
-  APIs, which can host kernel threads running in supervisor mode or
-  used as the stack for interrupt/exception handling. These have significantly
-  relaxed alignment requirements and use less reserved data. No memory is
-  reserved for privilege elevation stacks.
+- "内核"栈，用 :c:macro:`K_KERNEL_STACK_DEFINE()` 和相关 API 定义，
+  可以托管运行在监督模式（supervisor mode）的内核线程，
+  或用作中断/异常处理的栈。
+  这些的对齐要求显著放宽，且使用的保留数据更少。
+  不为权限提升栈（privilege elevation stacks）保留内存。
 
-- "thread" stacks which typically use more memory, but are capable of hosting
-  thread running in user mode, as well as any use-cases for kernel stacks.
+- "线程"栈通常使用更多内存，但能够托管运行在用户模式的线程，以及内核栈的任何用例。
 
-If :kconfig:option:`CONFIG_USERSPACE` is not enabled, "thread" and "kernel" stacks are
-equivalent.
+如果未启用 :kconfig:option:`CONFIG_USERSPACE`，"线程"栈和"内核"栈等价。
 
-Additional macros may be defined in the architecture layer to specify
-the alignment of the base of stack objects, any reserved data inside the
-stack object not used for the thread's stack buffer, and how to round up
-stack sizes to support user mode threads. In the absence of definitions
-some defaults are assumed:
+体系结构层可能定义额外的宏，以指定栈对象基部的对齐、栈对象内不用于线程栈缓冲区的保留数据，以及如何向上取整栈尺寸以支持用户模式线程。在没有定义的情况下，假设某些默认值：
 
-- :c:macro:`ARCH_KERNEL_STACK_RESERVED`: default no reserved space
-- :c:macro:`ARCH_THREAD_STACK_RESERVED`: default no reserved space
-- :c:macro:`ARCH_KERNEL_STACK_OBJ_ALIGN`: default align to
-  :c:macro:`ARCH_STACK_PTR_ALIGN`
-- :c:macro:`ARCH_THREAD_STACK_OBJ_ALIGN`: default align to
-  :c:macro:`ARCH_STACK_PTR_ALIGN`
-- :c:macro:`ARCH_THREAD_STACK_SIZE_ALIGN`: default round up to
-  :c:macro:`ARCH_STACK_PTR_ALIGN`
+- :c:macro:`ARCH_KERNEL_STACK_RESERVED`：默认无保留空间
+- :c:macro:`ARCH_THREAD_STACK_RESERVED`：默认无保留空间
+- :c:macro:`ARCH_KERNEL_STACK_OBJ_ALIGN`：默认对齐到 :c:macro:`ARCH_STACK_PTR_ALIGN`
+- :c:macro:`ARCH_THREAD_STACK_OBJ_ALIGN`：默认对齐到 :c:macro:`ARCH_STACK_PTR_ALIGN`
+- :c:macro:`ARCH_THREAD_STACK_SIZE_ALIGN`：默认向上取整到 :c:macro:`ARCH_STACK_PTR_ALIGN`
 
-All stack creation macros are defined in terms of these.
+所有栈创建宏都基于这些来定义。
 
-Stack objects all have the following layout, with some regions potentially
-zero-sized depending on configuration. There are always two main parts:
-reserved memory at the beginning, and then the stack buffer itself. The
-bounds of some areas can only be determined at runtime in the context of
-its associated thread object. Other areas are entirely computable at build
-time.
+所有栈对象都有以下布局，某些区域根据配置可能为零大小。始终有两个主要部分：开头的保留内存，然后是栈缓冲区本身。某些区域的边界只能在关联线程对象的上下文中于运行时确定。其他区域在构建时完全可计算。
 
-Some architectures may need to carve-out reserved memory at runtime from the
-stack buffer, instead of unconditionally reserving it at build time, or to
-supplement an existing reserved area (as is the case with the ARM FPU).
-Such carve-outs will always be tracked in ``thread.stack_info.start``.
-The region specified by	``thread.stack_info.start`` and
-``thread.stack_info.size`` is always fully accessible by a user mode thread.
-``thread.stack_info.delta`` denotes an offset which can be used to compute
-the initial stack pointer from the very end of the stack object, taking into
-account storage for TLS and ASLR random offsets.
+某些体系结构可能需要从栈缓冲区中在运行时切出（carve-out）保留内存，
+而不是在构建时无条件保留它，
+或补充一个现有的保留区域（ARM FPU 就是这种情况）。
+此类切出始终在 ``thread.stack_info.start`` 中跟踪。
+``thread.stack_info.start`` 和 ``thread.stack_info.size`` 指定的区域
+始终完全可被用户模式线程访问。
+``thread.stack_info.delta`` 表示一个偏移，
+可用于从栈对象的末端计算初始栈指针，
+同时考虑 TLS 和 ASLR 随机偏移的存储。
 
 .. code-block:: none
 
@@ -615,84 +485,61 @@ account storage for TLS and ASLR random offsets.
    |.....................| <- thread.stack_info.start
    | Unused stack buffer |
    |                     |
-   |.....................| <- thread's current stack pointer
+   |.....................| <- 线程当前的栈指针
    | Used stack buffer   |
    |                     |
-   |.....................| <- Initial stack pointer. Computable
-   | ASLR Random offset  |      with thread.stack_info.delta
+   |.....................| <- 初始栈指针。可用
+   | ASLR Random offset  |      thread.stack_info.delta 计算
    +---------------------| <- thread.userspace_local_data
    | Thread-local data   |
    +---------------------+ <- thread.stack_info.start + thread.stack_info.size
 
 
-At present, Zephyr does not support stacks that grow upward.
+目前，Zephyr 不支持向上增长的栈。
 
-No Memory Protection
+无内存保护
 ====================
 
-If no memory protection is in use, then the defaults are sufficient.
+如果不使用内存保护，则默认值足够。
 
-HW-based stack overflow detection
+基于硬件的栈溢出检测
 =================================
 
-This option uses hardware features to generate a fatal error if a thread
-in supervisor mode overflows its stack. This is useful for debugging, although
-for a couple reasons, you can't reliably make any assertions about the state
-of the system after this happens:
+此选项使用硬件特性，在监督模式线程溢出其栈时生成致命错误。这对调试有用，但由于几个原因，在此发生后无法可靠地对系统状态做出任何断言：
 
-* The kernel could have been inside a critical section when the overflow
-  occurs, leaving important global data structures in a corrupted state.
+* 溢出发生时内核可能正处于临界区（critical section）中，将重要全局数据结构留在损坏状态。
 
-* For systems that implement stack protection using a guard memory region,
-  it's possible to overshoot the guard and corrupt adjacent data structures
-  before the hardware detects this situation.
+* 对于用保护（guard）内存区域实现栈保护的系统，在硬件检测到此情况之前，可能超出保护区域并损坏相邻数据结构。
 
-To enable the :kconfig:option:`CONFIG_HW_STACK_PROTECTION` feature, the system must
-provide some kind of hardware-based stack overflow protection, and enable the
-:kconfig:option:`CONFIG_ARCH_HAS_STACK_PROTECTION` option.
+要启用 :kconfig:option:`CONFIG_HW_STACK_PROTECTION` 特性，
+系统必须提供某种基于硬件的栈溢出保护，
+并启用 :kconfig:option:`CONFIG_ARCH_HAS_STACK_PROTECTION` 选项。
 
-Two forms of HW-based stack overflow detection are supported: dedicated
-CPU features for this purpose, or special read-only guard regions immediately
-preceding stack buffers.
+支持两种基于硬件的栈溢出检测形式：用于此目的的专用 CPU 特性，或紧邻栈缓冲区之前的特殊只读保护区域。
 
-:kconfig:option:`CONFIG_HW_STACK_PROTECTION` only catches stack overflows for
-supervisor threads. This is not required to catch stack overflow from user
-threads; :kconfig:option:`CONFIG_USERSPACE` is orthogonal.
+:kconfig:option:`CONFIG_HW_STACK_PROTECTION` 仅捕获监督线程的栈溢出。捕获用户线程的栈溢出不需要；:kconfig:option:`CONFIG_USERSPACE` 与之是正交的。
 
-This feature only detects supervisor mode stack overflows, including stack
-overflows when handling system calls. It doesn't guarantee that the kernel has
-not been corrupted. Any stack overflow in supervisor mode should be treated as
-a fatal error, with no assertions about the integrity of the overall system
-possible.
+此特性仅检测监督模式栈溢出，包括处理系统调用时的栈溢出。它不保证内核未被损坏。监督模式中的任何栈溢出都应视为致命错误，无法对整体系统完整性做出任何断言。
 
-Stack overflows in user mode are recoverable (from the kernel's perspective)
-and require no special configuration; :kconfig:option:`CONFIG_HW_STACK_PROTECTION`
-only applies to catching overflows when the CPU is in supervisor mode.
+用户模式中的栈溢出是可恢复的（从内核的角度），且不需要特殊配置；:kconfig:option:`CONFIG_HW_STACK_PROTECTION` 仅适用于捕获 CPU 处于监督模式时的溢出。
 
-CPU-based stack overflow detection
+基于 CPU 的栈溢出检测
 ----------------------------------
 
-If we are detecting stack overflows in supervisor mode via special CPU
-registers (like ARM's SPLIM), then the defaults are sufficient.
+如果通过特殊 CPU 寄存器（如 ARM 的 SPLIM）检测监督模式中的栈溢出，则默认值足够。
 
 
 
-Guard-based stack overflow detection
+基于保护区域的栈溢出检测
 ------------------------------------
 
-We are detecting supervisor mode stack overflows via special memory protection
-region located immediately before the stack buffer that generates an exception
-on write. Reserved memory will be used for the guard region.
+通过紧邻栈缓冲区之前的特殊内存保护区域检测监督模式栈溢出，该区域在写入时生成异常。保留内存将用于保护区域。
 
-:c:macro:`ARCH_KERNEL_STACK_RESERVED` should be defined to the minimum size
-of a memory protection region. On most ARM CPUs this is 32 bytes.
-:c:macro:`ARCH_KERNEL_STACK_OBJ_ALIGN` should also be set to the required
-alignment for this region.
+:c:macro:`ARCH_KERNEL_STACK_RESERVED` 应定义为内存保护区域的最小尺寸。
+在大多数 ARM CPU 上这是 32 字节。
+:c:macro:`ARCH_KERNEL_STACK_OBJ_ALIGN` 也应设置为该区域所需的对齐。
 
-MMU-based systems should not reserve RAM for the guard region and instead
-simply leave an non-present virtual page below every stack when it is mapped
-into the address space. The stack object will still need to be properly aligned
-and sized to page granularity.
+基于 MMU 的系统不应为保护区域保留 RAM，而应简单地在每个栈映射到地址空间时，在其下方留下一个不存在的（non-present）虚拟页。栈对象仍需正确对齐和按页粒度确定大小。
 
 .. code-block:: none
 
@@ -704,54 +551,32 @@ and sized to page granularity.
    | Stack buffer                |
    .                             .
 
-Guard carve-outs for kernel stacks are uncommon and should be avoided if
-possible. They tend to be needed for two situations:
+内核栈的保护区域切出（guard carve-out）不常见，应尽可能避免。它们往往在两种情况下需要：
 
-* The same stack may be re-purposed to host a user thread, in which case
-  the guard is unnecessary and shouldn't be unconditionally reserved.
-  This is the case when privilege elevation stacks are not inside the stack
-  object.
+* 同一个栈可能被重新用于托管用户线程，此时保护区域不需要，也不应无条件保留。当权限提升栈不在栈对象内部时就是这种情况。
 
-* The required guard size is variable and depends on context. For example, some
-  ARM CPUs have lazy floating point stacking during exceptions and may
-  decrement the stack pointer by a large value without writing anything,
-  completely overshooting a minimally-sized guard and corrupting adjacent
-  memory. Rather than unconditionally reserving a larger guard, the extra
-  memory is carved out if the thread uses floating point.
+* 所需的保护区域大小可变且取决于上下文。例如，某些 ARM CPU 在异常期间有惰性浮点栈（lazy floating point stacking），可能不写入任何东西就将栈指针减少大量值，完全超出最小尺寸的保护区域并损坏相邻内存。与其无条件保留更大的保护区域，不如在线程使用浮点时切出额外内存。
 
-User mode enabled
-=================
+启用用户模式
+================
 
-Enabling user mode activates two new requirements:
+启用用户模式激活两个新要求：
 
-* A separate fixed-sized privilege mode stack, specified by
-  :kconfig:option:`CONFIG_PRIVILEGED_STACK_SIZE`, must be allocated that the user
-  thread cannot access. It is used as the stack by the kernel when handling
-  system calls. If stack guards are implemented, a stack guard region must
-  be able to be placed before it, with support for carve-outs if necessary.
+* 必须分配一个单独的、固定大小的权限模式栈（由 :kconfig:option:`CONFIG_PRIVILEGED_STACK_SIZE` 指定），用户线程不能访问它。内核在处理系统调用时将其用作栈。如果实现了栈保护区域，必须能在其之前放置栈保护区域，如需要则支持切出。
 
-* The memory protection hardware must be able to program a region that exactly
-  covers the thread's stack buffer, tracked in ``thread.stack_info``. This
-  implies that :c:macro:`ARCH_THREAD_STACK_SIZE_ADJUST()` will need to round
-  up the requested stack size so that a region may cover it, and that
-  :c:macro:`ARCH_THREAD_STACK_OBJ_ALIGN()` is also specified per the
-  granularity of the memory protection hardware.
+* 内存保护硬件必须能够编程一个恰好覆盖线程栈缓冲区的区域（在 ``thread.stack_info`` 中跟踪）。这意味着 :c:macro:`ARCH_THREAD_STACK_SIZE_ADJUST()` 需要向上取整请求的栈尺寸，以便一个区域可以覆盖它，且 :c:macro:`ARCH_THREAD_STACK_OBJ_ALIGN()` 也应按内存保护硬件的粒度指定。
 
-This becomes more complicated if the memory protection hardware requires that
-all memory regions be sized to a power of two, and aligned to their own size.
-This is common on older MPUs and is known with
-:kconfig:option:`CONFIG_MPU_REQUIRES_POWER_OF_TWO_ALIGNMENT`.
+如果内存保护硬件要求所有内存区域的大小为其自身大小的 2 的幂，
+并对齐到其自身大小，情况会更复杂。
+这在较旧的 MPU 上常见，
+用 :kconfig:option:`CONFIG_MPU_REQUIRES_POWER_OF_TWO_ALIGNMENT` 标识。
 
-``thread.stack_info`` always tracks the user-accessible part of the stack
-object, it must always be correct to program a memory protection region with
-user access using the range stored within.
+``thread.stack_info`` 始终跟踪栈对象中用户可访问的部分，用其内存储的范围来编程一个允许用户访问的内存保护区域必须始终正确。
 
-Non power-of-two memory region requirements
+非 2 的幂内存区域要求
 -------------------------------------------
 
-On systems without power-of-two region requirements, the reserved memory area
-for threads stacks defined by :c:macro:`K_THREAD_STACK_RESERVED` may be used to
-contain the privilege mode stack. The layout could be something like:
+在没有 2 的幂区域要求的系统上，:c:macro:`K_THREAD_STACK_RESERVED` 定义的线程栈保留内存区域可用于包含权限模式栈。布局可能类似：
 
 .. code-block:: none
 
@@ -767,50 +592,34 @@ contain the privilege mode stack. The layout could be something like:
    | Stack buffer                 |      K_THREAD_STACK_RESERVED =
    .                              .      thread.stack_info.start
 
-The guard region, and any carve-out (if needed) would be configured as a
-read-only region when the thread is created.
+保护区域和任何切出（如需要）在线程创建时配置为只读区域。
 
-* If the thread is a supervisor thread, the privilege elevation region is just
-  extra stack memory. An overflow will eventually crash into the guard region.
+* 如果线程是监督线程，权限提升区域只是额外的栈内存。溢出最终会崩溃到保护区域。
 
-* If the thread is running in user mode, a memory protection region will be
-  configured to allow user threads access to the stack buffer, but nothing
-  before or after it. An overflow in user mode will crash into the privilege
-  elevation stack, which the user thread has no access to. An overflow when
-  handling a system call will crash into the guard region.
+* 如果线程在用户模式运行，将配置一个内存保护区域，允许用户线程访问栈缓冲区，但不允许其前后。用户模式中的溢出会崩溃到权限提升栈，用户线程无法访问它。处理系统调用时的溢出会崩溃到保护区域。
 
-On an MMU system there should be no physical guards; the privilege mode stack
-will be mapped into kernel memory, and the stack buffer in the user part of
-memory, each with non-present virtual guard pages below them to catch runtime
-stack overflows.
+在 MMU 系统上不应有物理保护区域；权限模式栈将映射到内核内存，栈缓冲区在内存的用户部分，各自在其下方有不存在的虚拟保护页，以捕获运行时栈溢出。
 
-Other platform data may be stored before the guard region, but this is highly
-discouraged if such data could be stored in ``thread.arch`` somewhere.
+其他平台数据可能存储在保护区域之前，但如果此类数据可以存储在 ``thread.arch`` 某处，则强烈不推荐这样做。
 
-:c:macro:`ARCH_THREAD_STACK_RESERVED` will need to be defined to capture
-the size of the reserved region containing platform data, privilege elevation
-stacks, and guards. It must be appropriately sized such that an MPU region
-to grant user mode access to the stack buffer can be placed immediately
-after it.
+:c:macro:`ARCH_THREAD_STACK_RESERVED` 需要定义为包含平台数据、权限提升栈和保护区域的保留区域的尺寸。它必须尺寸适当，使得授予用户模式访问栈缓冲区的 MPU 区域可以紧接其后放置。
 
-Power-of-two memory region requirements
+2 的幂内存区域要求
 ---------------------------------------
 
-Thread stack objects must be sized and aligned to the same power of two,
-without any reserved memory to allow efficient packing in memory. Thus,
-any guards in the thread stack must be completely carved out, and the
-privilege elevation stack must be allocated elsewhere.
+线程栈对象必须按相同的 2 的幂确定尺寸和对齐，且不保留任何保留内存，以允许在内存中高效打包。因此，线程栈中的任何保护区域必须被完全切出，权限提升栈必须在其他地方分配。
 
-:c:macro:`ARCH_THREAD_STACK_SIZE_ADJUST()` and
-:c:macro:`ARCH_THREAD_STACK_OBJ_ALIGN()` should both be defined to
-:c:macro:`Z_POW2_CEIL()`. :c:macro:`K_THREAD_STACK_RESERVED` must be 0.
+:c:macro:`ARCH_THREAD_STACK_SIZE_ADJUST()` 和
+:c:macro:`ARCH_THREAD_STACK_OBJ_ALIGN()`
+都应定义为 :c:macro:`Z_POW2_CEIL()`。
+:c:macro:`K_THREAD_STACK_RESERVED` 必须为 0。
 
-For the privilege stacks, the :kconfig:option:`CONFIG_GEN_PRIV_STACKS` must be,
-enabled. For every thread stack found in the system, a corresponding fixed-size
-kernel stack used for handling system calls is generated. The address
-of the privilege stacks can be looked up quickly at runtime based on the
-thread stack address using :c:func:`z_priv_stack_find()`. These stacks are
-laid out the same way as other kernel-only stacks.
+对于权限栈，必须启用 :kconfig:option:`CONFIG_GEN_PRIV_STACKS`。
+对系统中找到的每个线程栈，
+生成一个对应的、固定大小的内核栈，用于处理系统调用。
+权限栈的地址可以用 :c:func:`z_priv_stack_find()`
+基于线程栈地址在运行时快速查找。
+这些栈的布局与其他仅内核用的栈相同。
 
 .. code-block:: none
 
@@ -822,8 +631,8 @@ laid out the same way as other kernel-only stacks.
    | Privilege elevation stack   |
    |                             |
    +-----------------------------+ <- z_priv_stack_find(thread.stack_obj) +
-                                        K_KERNEL_STACK_RESERVED +
-                                        CONFIG_PRIVILEGED_STACK_SIZE
+                                         K_KERNEL_STACK_RESERVED +
+                                         CONFIG_PRIVILEGED_STACK_SIZE
 
    +-----------------------------+ <- thread.stack_obj
    | MPU guard carve-out         |
@@ -832,46 +641,31 @@ laid out the same way as other kernel-only stacks.
    | Stack buffer                |
    .                             .
 
-The guard carve-out in the thread stack object is only used if the thread is
-running in supervisor mode. If the thread drops to user mode, there is no guard
-and the entire object is used as the stack buffer, with full access to the
-associated user mode thread and ``thread.stack_info`` updated appropriately.
+线程栈对象中的保护区域切出仅在线程运行于监督模式时使用。如果线程降到用户模式，则没有保护区域，整个对象用作栈缓冲区，关联的用户模式线程拥有完全访问权限，``thread.stack_info`` 相应更新。
 
-User Mode Threads
+用户模式线程
 *****************
 
-To support user mode threads, several kernel-to-arch APIs need to be
-implemented, and the system must enable the :kconfig:option:`CONFIG_ARCH_HAS_USERSPACE`
-option. Please see the documentation for each of these functions for more
-details:
+要支持用户模式线程，需要实现若干内核到体系结构（kernel-to-arch）API，且系统必须启用 :kconfig:option:`CONFIG_ARCH_HAS_USERSPACE` 选项。请参见每个函数的文档获取更多细节：
 
-* :c:func:`arch_buffer_validate` to test whether the current thread has
-  access permissions to a particular memory region
+* :c:func:`arch_buffer_validate`，测试当前线程是否对特定内存区域有访问权限
 
-* :c:func:`arch_user_mode_enter` which will irreversibly drop a supervisor
-  thread to user mode privileges. The stack must be wiped.
+* :c:func:`arch_user_mode_enter`，不可逆地将监督线程降到用户模式权限。栈必须被擦除。
 
-* :c:func:`arch_syscall_oops` which generates a kernel oops when system
-  call parameters can't be validated, in such a way that the oops appears to be
-  generated from where the system call was invoked in the user thread
+* :c:func:`arch_syscall_oops`，在系统调用参数无法验证时生成内核 oops，使得 oops 看起来来自用户线程中调用系统调用的位置
 
-* :c:func:`arch_syscall_invoke0` through
-  :c:func:`arch_syscall_invoke6` invoke a system call with the
-  appropriate number of arguments which must all be passed in during the
-  privilege elevation via registers.
+* :c:func:`arch_syscall_invoke0` 到 :c:func:`arch_syscall_invoke6`，以适当数量的参数调用系统调用，所有参数必须通过寄存器在权限提升期间传入。
 
-* :c:func:`arch_is_user_context` return nonzero if the CPU is currently
-  running in user mode
+* :c:func:`arch_is_user_context`，如果 CPU 当前运行在用户模式则返回非零
 
-* :c:func:`arch_mem_domain_max_partitions_get` which indicates the max
-  number of regions for a memory domain. MMU systems have an unlimited amount,
-  MPU systems have constraints on this.
+* :c:func:`arch_mem_domain_max_partitions_get`，指示内存域（memory domain）的最大区域数。MMU 系统有无限数量，MPU 系统对此有限制。
 
-Some architectures may need to update software memory management structures
-or modify hardware registers on another CPU when memory domain APIs are invoked.
-If so, :kconfig:option:`CONFIG_ARCH_MEM_DOMAIN_SYNCHRONOUS_API` must be selected by the
-architecture and some additional APIs must be implemented. This is common
-on MMU systems and uncommon on MPU systems:
+某些体系结构可能在调用内存域 API 时需要更新软件内存管理结构，
+或在另一个 CPU 上修改硬件寄存器。
+如果是，体系结构必须选择
+:kconfig:option:`CONFIG_ARCH_MEM_DOMAIN_SYNCHRONOUS_API`，
+且必须实现若干额外 API。
+这在 MMU 系统上常见，在 MPU 系统上不常见：
 
 * :c:func:`arch_mem_domain_thread_add`
 
@@ -881,215 +675,153 @@ on MMU systems and uncommon on MPU systems:
 
 * :c:func:`arch_mem_domain_partition_remove`
 
-Please see the doxygen documentation of these APIs for details.
+请参见这些 API 的 doxygen 文档了解细节。
 
-In addition to implementing these APIs, there are some other tasks as well:
+除实现这些 API 外，还有一些其他任务：
 
-* :c:func:`_new_thread` needs to spawn threads with :c:macro:`K_USER` in
-  user mode
+* :c:func:`_new_thread` 需要在用户模式下用 :c:macro:`K_USER` 生成线程
 
-* On context switch, the outgoing thread's stack memory should be marked
-  inaccessible to user mode by making the appropriate configuration changes in
-  the memory management hardware.. The incoming thread's stack memory should
-  likewise be marked as accessible. This ensures that threads can't mess with
-  other thread stacks.
+* 在上下文切换时，应通过内存管理硬件中适当的配置更改，将传出线程的栈内存标记为用户模式不可访问。传入线程的栈内存同样应标记为可访问。这确保线程不能干扰其他线程的栈。
 
-* On context switch, the system needs to switch between memory domains for
-  the incoming and outgoing threads.
+* 在上下文切换时，系统需要在传入和传出线程的内存域之间切换。
 
-* Thread stack areas must include a kernel stack region. This should be
-  inaccessible to user threads at all times. This stack will be used when
-  system calls are made. This should be fixed size for all threads, and must
-  be large enough to handle any system call.
+* 线程栈区域必须包含一个内核栈区域。它对用户线程应始终不可访问。此栈在发起系统调用时使用。它对所有线程应为固定大小，且必须足够大以处理任何系统调用。
 
-* A software interrupt or some kind of privilege elevation mechanism needs to
-  be established. This is closely tied to how the _arch_syscall_invoke macros
-  are implemented. On system call, the appropriate handler function needs to
-  be looked up in _k_syscall_table. Bad system call IDs should jump to the
-  :c:enum:`K_SYSCALL_BAD` handler. Upon completion of the system call, care
-  must be taken not to leak any register state back to user mode.
+* 需要建立软件中断或某种权限提升机制。这与 _arch_syscall_invoke 宏的实现紧密相关。在系统调用时，需要在 _k_syscall_table 中查找适当的处理函数。非法的系统调用 ID 应跳转到 :c:enum:`K_SYSCALL_BAD` 处理程序。在系统调用完成时，必须注意不将任何寄存器状态泄漏回用户模式。
 
-GDB Stub
+GDB 桩
 ********
 
-To enable GDB stub for remote debugging on a new architecture:
+要在新体系结构上启用 GDB 桩以进行远程调试：
 
-#. Create a new ``gdbstub.h`` header file under appropriate architecture
-   include directory (:file:`include/zephyr/arch/<arch>/gdbstub.h`).
+#. 在适当的体系结构 include 目录（:file:`include/zephyr/arch/<arch>/gdbstub.h`）下创建新的 ``gdbstub.h`` 头文件。
 
-   * Create a new struct ``struct gdb_ctx`` as the GDB context.
+   * 创建新的结构体 ``struct gdb_ctx`` 作为 GDB 上下文。
 
-     * Must define a member named ``exception`` of type ``unsigned int`` to
-       store the GDB exception reason. This value needs to be set before
-       entering :c:func:`z_gdb_main_loop`.
+     * 必须定义一个名为 ``exception`` 的 ``unsigned int`` 类型成员，用于存储 GDB 异常原因。此值需要在进入 :c:func:`z_gdb_main_loop` 之前设置。
 
-     * Architecture can define as many members as needed for GDB stub to
-       function.
+     * 体系结构可以定义 GDB 桩运行所需的任意数量成员。
 
-     * Pointer to this struct needs to be passed to :c:func:`z_gdb_main_loop`,
-       where this pointer will be passed to other GDB stub functions.
+     * 此结构体的指针需要传递给 :c:func:`z_gdb_main_loop`，该指针将传递给其他 GDB 桩函数。
 
-#. Functions for entering and exiting GDB stub main loop.
+#. 进入和退出 GDB 桩主循环的函数。
 
-   * If the architecture relies on interrupts to service breakpoints,
-     interrupt service routines (ISR) need to be implemented, which
-     will serve as the entry point to GDB stub main loop.
+   * 如果体系结构依赖中断来服务断点（breakpoint），需要实现中断服务例程（ISR），它作为 GDB 桩主循环的入口点。
 
-   * These functions need to save and restore context so code execution
-     can continue as if no breakpoints have been encountered.
+   * 这些函数需要保存和恢复上下文，以便代码执行可以像未遇到断点一样继续。
 
-   * These functions need to call :c:func:`z_gdb_main_loop` after saving
-     execution context to go into the GDB stub main loop to receive commands
-     from GDB.
+   * 这些函数需要在保存执行上下文后调用 :c:func:`z_gdb_main_loop`，进入 GDB 桩主循环以接收来自 GDB 的命令。
 
-   * Before calling :c:func:`z_gdb_main_loop`, :c:member:`gdb_ctx.exception`
-     must be set to specify the exception reason.
+   * 在调用 :c:func:`z_gdb_main_loop` 之前，必须设置 :c:member:`gdb_ctx.exception` 以指定异常原因。
 
-#. Implement necessary functions to support GDB stub functionality:
+#. 实现支持 GDB 桩功能所需的函数：
 
    * :c:func:`arch_gdb_init`
 
-     * This needs to initialize necessary bits to support GDB stub functionality,
-       for example, setting up the GDB context and connecting debug interrupts.
+     * 这需要初始化支持 GDB 桩功能所需的各项，例如建立 GDB 上下文和连接调试中断。
 
-     * This must stop code execution via architecture specific method (e.g.
-       raising debug interrupts). This allows GDB to connect during boot.
+     * 这必须通过体系结构特定的方法停止代码执行（例如触发调试中断）。这允许 GDB 在启动期间连接。
 
    * :c:func:`arch_gdb_continue`
 
-     * This function is called when GDB sends a ``c`` or ``continue`` command
-       to continue code execution.
+     * 当 GDB 发送 ``c`` 或 ``continue`` 命令继续代码执行时调用此函数。
 
    * :c:func:`arch_gdb_step`
 
-     * This function is called when GDB sends a ``si`` or ``stepi`` command
-       to execute one machine instruction, before returning to GDB prompt.
+     * 当 GDB 发送 ``si`` 或 ``stepi`` 命令执行一条机器指令后返回 GDB 提示符时调用此函数。
 
-   * Hardware register read/write functions:
+   * 硬件寄存器读/写函数：
 
-     * Since the GDB stub is running on the target, manipulation of hardware
-       registers need to cached to avoid affecting the execution of GDB stub.
-       Think of it as context switching, where the execution context is
-       changed to the GDB stub. So that the register values of the running
-       thread before context switch need to be stored. Manipulation of
-       register values must only be done to this cached copy. The updated
-       values will then be written to hardware registers before switching
-       back to the previous running thread.
+     * 由于 GDB 桩运行在目标上，对硬件寄存器的操作需要缓存，以避免影响 GDB 桩的执行。将其视为上下文切换，其中执行上下文更改为 GDB 桩。因此上下文切换前运行线程的寄存器值需要存储。寄存器值的操作仅对此缓存副本执行。更新的值然后在切换回之前运行的线程前写入硬件寄存器。
 
      * :c:func:`arch_gdb_reg_readall`
 
-       * This collects all hardware register values that would appear in
-         a ``g``/``G`` packets which will be sent back to GDB. The format of
-         the G-packet is architecture specific. Consult GDB on what is
-         expected.
+       * 这收集将出现在发回 GDB 的 ``g``/``G`` 数据包中的所有硬件寄存器值。G 数据包的格式是体系结构特定的。参考 GDB 文档了解预期内容。
 
-       * Note that, for most architectures, a valid G-packet must be returned
-         and sent to GDB. If a packet without incorrect length is sent to
-         GDB, GDB will abort the debugging session.
+       * 注意，对于大多数体系结构，必须返回并发送一个有效的 G 数据包给 GDB。如果向 GDB 发送长度不正确的数据包，GDB 将中止调试会话。
 
      * :c:func:`arch_gdb_reg_writeall`
 
-       * This takes a G-packet sent by GDB and populates the hardware
-         registers with values from the G-packet.
+       * 这接受 GDB 发送的 G 数据包，并用数据包中的值填充硬件寄存器。
 
      * :c:func:`arch_gdb_reg_readone`
 
-       * This reads the value of one hardware register and sends
-         the result to GDB.
+       * 这读取一个硬件寄存器的值并将结果发送到 GDB。
 
      * :c:func:`arch_gdb_reg_writeone`
 
-       * This writes the value of one hardware register received from GDB.
+       * 这将 GDB 接收的一个硬件寄存器的值写入该寄存器。
 
-   * Breakpoints:
+   * 断点：
 
-     * :c:func:`arch_gdb_add_breakpoint` and
-       :c:func:`arch_gdb_remove_breakpoint`
+     * :c:func:`arch_gdb_add_breakpoint` 和 :c:func:`arch_gdb_remove_breakpoint`
 
-     * GDB may decide to use software breakpoints which modifies
-       the memory at the breakpoint locations to replace the instruction
-       with software breakpoint or trap instructions. GDB will then
-       restore the memory content once execution reaches the breakpoints.
-       GDB supports this by default and there is usually no need to
-       handle software breakpoints in the architecture code (where
-       breakpoint type is ``0``).
+     * GDB 可能决定使用软件断点，它修改断点位置的内存，用软件断点或陷阱（trap）指令替换指令。GDB 然后在执行到达断点时恢复内存内容。GDB 默认支持此，通常无需在体系结构代码中处理软件断点（断点类型为 ``0``）。
 
-     * Hardware breakpoints (type ``1``) are required if the code is
-       in ROM or flash that cannot be modified at runtime. Consult
-       the architecture datasheet on how to enable hardware breakpoints.
+     * 如果代码在无法在运行时修改的 ROM 或 flash 中，则需要硬件断点（类型 ``1``）。参考体系结构数据手册了解如何启用硬件断点。
 
-     * If hardware breakpoints are not supported by the architecture,
-       there is no need to implement these in architecture code.
-       GDB will then rely on software breakpoints.
+     * 如果体系结构不支持硬件断点，则无需在体系结构代码中实现这些。GDB 将依赖软件断点。
 
-#. For architecture where certain memory regions are not accessible,
-   an array named :c:var:`gdb_mem_region_array` of type
-   :c:struct:`gdb_mem_region` needs to be defined to specify regions
-   that are accessible. For each array item:
+#. 对于某些内存区域不可访问的体系结构，需要定义一个名为 :c:var:`gdb_mem_region_array` 的 :c:struct:`gdb_mem_region` 类型数组，以指定可访问的区域。对每个数组项：
 
-   * :c:member:`gdb_mem_region.start` specifies the start of a memory
-     region.
+   * :c:member:`gdb_mem_region.start` 指定内存区域的起始。
 
-   * :c:member:`gdb_mem_region.end` specifies the end of a memory
-     region.
+   * :c:member:`gdb_mem_region.end` 指定内存区域的结束。
 
-   * :c:member:`gdb_mem_region.attributes` specifies the permission
-     of a memory region.
+   * :c:member:`gdb_mem_region.attributes` 指定内存区域的权限。
 
-     * :c:macro:`GDB_MEM_REGION_RO`: region is read-only.
+     * :c:macro:`GDB_MEM_REGION_RO`：区域只读。
 
-     * :c:macro:`GDB_MEM_REGION_RW`: region is read-write.
+     * :c:macro:`GDB_MEM_REGION_RW`：区域可读可写。
 
-   * :c:member:`gdb_mem_region.alignment` specifies read/write alignment
-     of a memory region. Use ``0`` if there is no alignment requirement
-     and read/write can be done byte-by-byte.
+   * :c:member:`gdb_mem_region.alignment` 指定内存区域的读/写对齐。如果无对齐要求且读/写可逐字节进行，则使用 ``0``。
 
-API Reference
+API 参考
 *************
 
-Timing
+时序
 ======
 
 .. doxygengroup:: arch-timing
 
-Threads
+线程
 =======
 
 .. doxygengroup:: arch-threads
 
 .. doxygengroup:: arch-tls
 
-Power Management
+电源管理
 ================
 
 .. doxygengroup:: arch-pm
 
-Symmetric Multi-Processing
+对称多处理
 ==========================
 
 .. doxygengroup:: arch-smp
 
-Interrupts
+中断
 ==========
 
 .. doxygengroup:: arch-irq
 
-Userspace
+用户空间
 =========
 
 .. doxygengroup:: arch-userspace
 
-Memory Management
+内存管理
 =================
 
 .. doxygengroup:: arch-mmu
 
-Miscellaneous Architecture APIs
+其他体系结构 API
 ===============================
 
 .. doxygengroup:: arch-misc
 
-GDB Stub APIs
+GDB 桩 API
 =============
 
 .. doxygengroup:: arch-gdbstub

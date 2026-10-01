@@ -2,220 +2,215 @@
 
 .. _zephyr_1.10:
 
-Zephyr
-Kernel
-1.10.0
+Zephyr Kernel 1.10.0
 #####################
 
-我们
-pleased
-to
-announce
-Zephyr
-kernel
-version
-1.10.0
-的
-release。
+我们很高兴宣布 Zephyr 内核版本 1.10.0 的发布。
 
-这
-个
-release
-的
-Major
-enhancements
-包括：
+本次发布的主要增强包括：
 
-*
-Initial
-alpha
-quality
-的
-thread
-level
-的
-memory
-protection
-在
-x86
-上
-userspace
-和
-memory
-domains
-*
-Build
-system
-的
-Major
-overhaul
-和
-从
-Kbuild
-到
-CMake
-的
-switch。
-*
-Newtron
-Flash
-Filesystem
-（NFFS）
-Support
-*
-Increased
-的
-testsuite
-coverage
-且
-most
-的
-testcases
-被
-migrated
-用于
-use
-ztest
-*
-Integration
-与
-MCUBOOT
-Bootloader
-*
-Additional
-的
-SoC、
-platform
-和
-driver
-support
-for
-many
-已
-supported
-的
-platforms。
+* x86 上初始 alpha 质量的线程级内存保护、用户空间和内存域
+  domains
+* 构建系统的重大改造，从 Kbuild 切换到 CMake
+* 新特隆闪存文件系统（NFFS）支持
+* 测试套件覆盖范围增加，大多数测试用例迁移到使用 ztest
+* 与 MCUBOOT 引导加载器集成
+* 为许多已支持的平台添加额外的 SoC、平台和驱动支持
+  platforms.
 
-以下
-sections
-provide
-detailed
-的
-lists
-of
-changes
-by
-component。
+以下各节提供按组件分类的更改详细列表。
 
 Kernel
 ******
 
-*
-Remove
-deprecated
-的
-k_mem_pool_defrag
-code
-*
-Initial
-alpha
-quality
-的
-thread
-level
-的
-memory
-protection
-在
-x86
-上
-userspace
-和
-memory
-domains:
+* 移除已弃用的 k_mem_pool_defrag 代码
+* x86 上初始 alpha 质量的线程级内存保护、用户空间和内存域
+  domains:
 
-   *
-   相同
-   的
-   kernel
-   &
-   driver
-   APIs
-   for
-   kernel
-   和
-   user
-   mode
-   threads
-   *
-   System
-   calls
-   for
-   privilege
-   elevation
-   *
-   Stack
-   overflow
-   protection
-   *
-   Kernel
-   object
-   和
-   device
-   driver
-   permission
-   tracking
-   *
-   Simple
-   的
-   app
-   vs.
-   kernel
-   memory
-   separation
-   *
-   Memory
-   domain
-   APIs
-   for
-   fine
-   tuning
-   memory
-   region
-   permissions
-   *
-   Stack
-   memory
-   protection
-   from
-   other
-   threads
+  * Same kernel & driver APIs for kernel and user mode threads
+  * System calls for privilege elevation
+  * Stack overflow protection
+  * Kernel object and device driver permission tracking
+  * Simple app vs. kernel memory separation
+  * Memory domain APIs for fine-tuning memory region permissions
+  * Stack memory protection from other threads
 
-*
-Add
-以下
-的
-application
-facing
-的
-memory
-domain
-APIs:
+* 添加以下面向应用的内存域 API：
 
-   *
-   k_mem_domain_init()
-   -
-   用于
-   initialize
-   一
-   个
-   memory
-   domain
+  * k_mem_domain_init() - to initialize a memory domain
+  * k_mem_domain_destroy() - to destroy a memory domain
+  * k_mem_domain_add_partition() - to add a partition into a domain
+  * k_mem_domain_remove_partition() - to remove a partition from a domain
+  * k_mem_domain_add_thread() - to add a thread into a domain
+  * k_mem_domain_remove_thread() - to remove a thread from a domain
+* 添加 k_calloc()，使用内核堆实现传统 calloc() 语义
+  semantics.
+* 引入对象验证机制：所有从用户空间发出的涉及内核对象（包括设备驱动）指针的系统调用
+  which involve pointers to kernel objects (including device drivers), will need
+  to have those pointers validated; userspace must never be able to crash the
+  kernel by passing it garbage.
+
+Architectures
+*************
+
+* nrf52：添加 LOW_POWER 状态和 SYSTEM_OFF 支持
+* 添加架构特定内存域 API
+* Xtensa 无滴答内核实现
+* 添加以下 ARM SoC 支持：
+
+  * NXP i.MX RT1052
+  * Silabs EFM32WG
+  * STM F0
+  * TI MSP432P4xx
+
+Boards
+******
+* Jailhouse 移植：该移植将使 Zephyr 能够在 x86-64 系统上作为来宾操作系统运行。
+  systems. It comes with a test on QEMU to validate that, thus this new board
+  introduction.
+* nrf52 系列 SoC 电源管理
+* 添加以下 ARM 开发板支持：
+
+  * 96b_neonkey
+  * efm32wg_stk3800
+  * mimxrt1050_evk
+  * msp_exp432p401r_launchxl
+  * nucleo_f030r8
+  * nucleo_f091rc
+  * stm32f411e_disco
+  * stm32f412g_disco
+  * stm32l476g_disco
+  * usb_kw24d512
+
+Drivers and Sensors
+*******************
+
+* timer：在 xtensa_sys_timer 中添加无滴答内核支持
+* 将 ``random`` 重命名为 ``entropy``
+* 添加 Atmel SAM I2S（SSC）驱动
+* 添加 Atmel SAM DMA（XDMAC）驱动
+* 添加 plantower PMS7003 驱动
+* 添加 Altera shim 驱动用于 JTAG UART 软 IP
+* 添加 Altera shim 驱动用于 timer 软 IP
+* 引入 mcux ccm 驱动
+* 引入 mcux igpio shim 驱动
+
+Networking
+**********
+
+* HTTP API 改为使用 net-app API。旧 HTTP API 已弃用
+* 添加回环网络接口支持。仅用于测试
+* 添加 LWM2M 多分片网络数据包支持
+* 新的 CoAP 库实现，支持更长的网络数据包
+* 弃用 ZoAP 库
+* 添加 mDNS（多播 DNS）支持
+* 添加 SNTP（简单网络时间协议）客户端库
+* 以下各项的修复：TCP、RPL、ARP、DNS、LWM2M、以太网、net-app API、
+  shell, and BSD socket API
+* 网络管理 API 修复
+* 网络示例应用修复
+* 6lo IPv6 头部压缩修复
+* IEEE 802.15.4 通用修复
+* IEEE 802.15.4 mcr20a 驱动修复
+* IEEE 802.15.4 kw41z 驱动修复
+* IEEE 802.15.4 nrf5 驱动修复
+
+Bluetooth
+*********
+
+* 多个与资格认证相关的 Bluetooth Mesh 修复
+* 支持 Bluetooth Mesh Friend Node 角色
+* 支持 Bluetooth Mesh Foundation Client 模型
+* 新的 Bluetooth Mesh shell 模块和测试应用
+* 支持 BLE 控制器中的 PA/LNA 放大器
+* 支持 BLE 控制器中的额外 VS 命令
+* BLE 控制器的多个稳定性修复
+
+Build and Infrastructure
+************************
+
+* Zephyr 项目已迁移到 CMake，这是在更大努力中使 Zephyr
+  larger effort to make Zephyr easier to use for application developers
+  working on different platforms with different development environment
+  needs.  This change retains Kconfig as-is, and replaces all Makefiles
+  with corresponding CMakeLists.txt.  The DSL-like Make language that
+  KBuild offers is replaced by a set of CMake extensions that provide
+  either simple one-to-one translations of KBuild features or introduce
+  new concepts that replace KBuild concepts. Please re-read the Getting
+  Started guide
+  (https://docs.zephyrproject.org/1.10.0/getting_started/getting_started.html)
+  with updated instructions for setting up and developing on your host-OS.
+  You *will* need to port your own out-of-tree scripts and Makefiles to
+  CMake.
+
+Libraries / Subsystems
+***********************
+
+* sys_rand32_get() 函数的实现已移到新的
+  "random" subsystem. There are new implementations for this function, one based
+  in the Xoroshift128+ PRNG (using a hardware number generator to seed), and
+  another that obtains random numbers directly from a hardware number generator
+  driver. Hardware number generator drivers have been moved to a
+  "drivers/entropy" directory; these drivers only expose the interface provided
+  by include/entropy.h.
+* TinyCrypt 更新到版本 0.2.8
+
+HALs
+****
+
+* 添加 Altera HAL 以支持 NIOS-II 开发板
+* 为 mimxrt1051 和 mimxrt1052 添加 mcux 2.3.0
+* stm32cube：stm32f0xx v.1.9 的 HAL/LL 静态库
+* 添加 STM32 系列 USB 驱动支持
+* 为 EFM32WG SoC 添加 Silabs Gecko SDK
+* Simplelink：将 cc32xx SDK 更新到版本 1.50.00.06
+
+Documentation
+*************
+
+* 由于 doxygen 子组和缺失 Sphinx 指令导致的缺失 API 文档
+  Sphinx directives now included.
+* 在所有已发布的文档页面添加注释，
+  be available from the master branch version of the documentation.
+* 文档更新为在所有示例中使用 CMake（而非 Make），
+  using a new Sphinx extension to keep examples consistent.
+* 入门指南材料更新以包含版本 1.10 所需的
+  and build instructions required for version 1.10.
+* 不再隐藏文档构建过程中的所有预期警告
+  process (there are some known doxygen/sphinx issues), the build
+  now outputs all warnings, and then reports
+  if any new/unexpected warnings or errors were detected.
+* 移除过时的 V1 到 V2 移植材料
+* 继续更新新开发板支持、新示例和新功能的文档
+  and new features.
+* 文档与新的 zephyrproject.org 网站集成
+* 文档迁移到 docs.zephyrproject.org 站点
+  from zephyrproject.org/doc)
+
+Tests and Samples
+*****************
+
+* 基准测试：基准测试代码清理
+* 添加用户空间保护测试
+* 将所有测试迁移到 ztest 并清理编码风格和格式
+
+Issue Related Items
+*******************
+
+自上次 1.9.0 标记发布以来解决了以下 GitHub issue：
 
 
-.. note::
+.. comment  列表派生自 Jira/GitHub Issue 查询：...
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+* :github:`779` - CI: shippable - provide some means to allow users to rebuild
+* :github:`1166` - Keeping reusable components under samples/ leads to build issues
+* :github:`1236` - Cleanup CONFIG_EXECUTION_BENCHMARKING
+* :github:`1241` - tests/net/ipv6/ FAILED on qc1000:x86
+* :github:`1242` - tests/kernel/mutex/mutex/ FAILED @ esp32
+* :github:`1256` - [cmake] A board should support multiple configurations (variants)
+* :github:`1270` - Issue : Information CC3220SF LaunchXL
+* :github:`1280` - shell on Arduino Due prints "shell>" before the delayed boot banner
+* :github:`1289` - C++ 11 support!
 * :github:`1332` - sanitycheck builds too many duplicates in CI, make it smarter
 * :github:`1392` - No module named 'elftools'
 * :github:`1397` - no serialport output

@@ -3,175 +3,170 @@
 .. _zephyr_1.14:
 .. _zephyr_1.14.1:
 
-Zephyr
-1.14.3
+Zephyr 1.14.3
 ####################
 
-这
-是
-一
-个
-LTS
-maintenance
-的
-release
-带
-fixes。
+这是一个 LTS 维护版本，包含修复。
 
-Security
-Vulnerability
-Related
+Security Vulnerability Related
 ******************************
 
-以下
-的
-security
-vulnerabilities
-（CVEs）
-在
-这
-个
-release
-中
-被
-addressed:
+以下安全漏洞（CVE）已在此
+版本中解决：
 
-*
-CVE
-2020
-10066
-*
-CVE
-2020
-10069
-*
-CVE
-2020
-13601
-*
-CVE
-2020
-13602
+* CVE-2020-10066
+* CVE-2020-10069
+* CVE-2020-13601
+* CVE-2020-13602
 
-More
-detailed
-的
-information
-可以
-found
-在:
+更详细的信息可在以下位置找到：
 https://docs.zephyrproject.org/latest/security/vulnerabilities.html
 
-Issues
-Fixed
+Issues Fixed
 ************
 
-这些
-GitHub
-issues
-自
-previous
-的
-1.14.0
-tagged
-release
-以来
-被
-addressed:
+自上次 1.14.0 标记发布以来解决了以下 GitHub issue：
+release:
 
-..
-   comment
-   List
-   derived
-   from
-   GitHub
-   Issue
-   query:
-   ...
-   *
-   :github:`issuenumber`
-   -
-   issue
-   title
+.. comment  列表派生自 GitHub Issue 查询：...
+   * :github:`issuenumber` - issue title
 
-*
-:github:`18334`
--
-DNS
-resolution
-is
-broken
-for
-some
-addresses
-in
-master/2.0
-pre
-*
-:github:`19917`
--
-Bluetooth:
-Controller:
-Missing
-LL_ENC_RSP
-after
-HCI
-LTK
-Negative
-Reply
-*
-:github:`21107`
--
-LL_ASSERT
-and
-'Imprecise
-data
-bus
-error'
-in
-LL
-Controller
-*
-:github:`21257`
--
-tests/net/net_pkt
-failed
-on
-mimxrt1050_evk
-board.
-*
-:github:`21299`
--
-bluetooth:
-Controller
-does
-not
-release
-buffer
-on
-central
-side
-after
-peripheral
-reset
-*
-:github:`21601`
--
-'!radio_is_ready()'
-failed
-*
-:github:`21756`
--
-tests/kernel/obj_tracing
-failed
-on
-mec15xxevb_assy6853
-board.
+* :github:`18334` - DNS resolution is broken for some addresses in master/2.0-pre
+* :github:`19917` - Bluetooth: Controller: Missing LL_ENC_RSP after HCI LTK Negative Reply
+* :github:`21107` - LL_ASSERT and 'Imprecise data bus error' in LL Controller
+* :github:`21257` - tests/net/net_pkt failed on mimxrt1050_evk board.
+* :github:`21299` - bluetooth: Controller does not release buffer on central side after peripheral reset
+* :github:`21601` - '!radio_is_ready()' failed
+* :github:`21756` - tests/kernel/obj_tracing failed on mec15xxevb_assy6853 board.
+* :github:`22968` - Bluetooth: controller: LEGACY: ASSERTION failure on invalid packet sequence
+* :github:`23069` - Bluetooth: controller: Assert in data length update procedure
+* :github:`23109` - LL.TS Test LL/CON/SLA/BV-129-C fails (split)
+* :github:`23805` - Bluetooth: controller: Switching to non conn adv fails for Mesh LPN
+* :github:`24601` - Bluetooth: Mesh: Config Client's net_key_status pulls two key indexes, should pull one.
+* :github:`25518` - settings_fcb: Fix storing the data
+* :github:`25519` - wrong debug function cause kinds of building error
+* :github:`26080` - gPTP time sync fails if having more than one port
+* :github:`28151` - gPTP should allow user setting of priority1 and priority2 fields used in BMCA
+* :github:`28177` - gPTP gptp_priority_vector struct field ordering is wrong
+* :github:`29386` - unexpected behavior when doing syscall with 7 or more arguments
+* :github:`29858` - Bluetooth: Mesh: RPL cleared on LPN disconnect
+* :github:`32430` - Bluetooth: thread crashes when configuring a non 0 Slave Latency
+* :github:`32898` - Bluetooth: controller: Control PDU buffer leak into Data PDU buffer pool
 
+Zephyr 1.14.2
+####################
 
-.. note::
+这是一个 LTS 维护版本，包含修复。
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+Security Vulnerability Related
+******************************
+
+以下安全漏洞（CVE）已在此
+版本中解决：
+
+* CVE-2020-10019
+* CVE-2020-10021
+* CVE-2020-10022
+* CVE-2020-10023
+* CVE-2020-10024
+* CVE-2020-10027
+* CVE-2020-10028
+
+更详细的信息可在以下位置找到：
+https://docs.zephyrproject.org/latest/security/vulnerabilities.html
+
+Issues Fixed
+************
+
+自上次 1.14.0 标记发布以来解决了以下 GitHub issue：
+release:
+
+.. comment  列表派生自 GitHub Issue 查询：...
+   * :github:`issuenumber` - issue title
+
+* :github:`11617` - net: ipv4: udp: broadcast delivery not supported
+* :github:`11743` - logging: add user mode access
+* :github:`14459` - usb: samples: mass: doesn't build with FLASH overlay
+* :github:`15119` - GPIO callback not disabled from an interrupt
+* :github:`15339` - RISC-V: RV32M1: Load access fault when accessing GPIO port E
+* :github:`15354` - counter: stm32: Issue with LSE clock source selection
+* :github:`15373` - IPv4 link local packets are not sent with ARP ethernet type
+* :github:`15443` - usb_dc_stm32: Missing semaphore initialization and missing pin remapping configuration
+* :github:`15444` - Error initiating sdhc disk
+* :github:`15497` - USB DFU: STM32: usb dfu mode doesn't work
+* :github:`15507` - NRF52840: usb composite MSC + HID (with CONFIG_ENABLE_HID_INT_OUT_EP)
+* :github:`15526` - Unhandled identity in bt_conn_create_slave_le
+* :github:`15558` - support for power-of-two MPUs on non-XIP systems
+* :github:`15601` - pwm: nRF default prescalar value is wrong
+* :github:`15603` - Unable to use C++ Standard Library
+* :github:`15605` - Unaligned memory access by ldrd
+* :github:`15678` - Watchdog peripheral api docs aren't generated correctly.
+* :github:`15698` - bluetooth: bt_conn: No proper ID handling
+* :github:`15733` - Bluetooth: controller: Central Encryption setup overlaps Length Request procedure
+* :github:`15794` - mps2_an385 crashes if CONFIG_INIT_STACKS=y and CONFIG_COVERAGE=y
+* :github:`15817` - nrf52: HFXO is not turned off as expected
+* :github:`15904` - concerns with use of CONFIG_BT_MESH_RPL_STORE_TIMEOUT in examples
+* :github:`15911` - Stack size is smaller than it should be
+* :github:`15975` - Openthread - fault with dual network interfaces
+* :github:`16001` - ARC iotdk supports MPU and fpu in hardware but not enabled in kconfig
+* :github:`16002` - the spi base reg address in arc_iot.dtsi has an error
+* :github:`16010` - Coverage reporting fails on many tests
+* :github:`16012` - Source IP address for DHCP renewal messages is unset
+* :github:`16046` - modules are being processed too late.
+* :github:`16080` - Zephyr UART shell crashes on start if main() is blocked
+* :github:`16089` - Mcux Ethernet driver does not detect carrier anymore (it's alway on)
+* :github:`16090` - mpu align support for code relocation on non-XIP system
+* :github:`16143` - posix: clock_settime calculates the base time incorrectly
+* :github:`16155` - drivers: can: wrong value used for filter mode set
+* :github:`16257` - net: icmpv4: Zephyr sends echo reply with multicast source address
+* :github:`16307` - cannot move location counter backwards error happen
+* :github:`16323` - net: ipv6: tcp: unexpected reply to malformed HBH in TCP/IPv6 SYN
+* :github:`16339` - openthread: off-by-one error when calculating ot_flash_offset for settings
+* :github:`16354` - net: ipv6: Zephyr does not reply to fragmented packet
+* :github:`16375` - net: ipv4: udp: Zephyr does not reply to a valid datagram with checksum zero
+* :github:`16379` - net: ipv6: udp: Zephyr replies with illegal UDP checksum zero
+* :github:`16411` - bad regex for west version check in host-tools.cmake
+* :github:`16412` - on reel_board the consumption increases because TX pin is floating
+* :github:`16413` - Missing dependency in cmake
+* :github:`16414` - Backport west build --pristine
+* :github:`16415` - Build errors with C++
+* :github:`16416` - sram size for RT1015 and RT1020 needs to be update.
+* :github:`16417` - issues with can filter mode set
+* :github:`16418` - drivers: watchdog: sam0: check if timeout is valid
+* :github:`16419` - Bluetooth: XTAL feature regression
+* :github:`16478` - Bluetooth: Improper bonded peers handling
+* :github:`16570` - [Coverity CID :198877]Null pointer dereferences in /subsys/net/ip/net_if.c
+* :github:`16577` - [Coverity CID :198870]Error handling issues in /subsys/net/lib/lwm2m/lwm2m_obj_firmware_pull.c
+* :github:`16581` - [Coverity CID :198866]Null pointer dereferences in /subsys/net/lib/dns/llmnr_responder.c
+* :github:`16584` - [Coverity CID :198863]Error handling issues in /subsys/net/lib/sntp/sntp.c
+* :github:`16600` - Bluetooth: Mesh: Proxy SAR timeout is not implemented
+* :github:`16602` - Bluetooth: GATT Discovery: Descriptor Discovery by range Seg Fault
+* :github:`16639` - eth: pinging frdm k64f eventually leads to unresponsive ethernet device
+* :github:`16678` - LPN establishment of Friendship never completes if there is no response to the initial Friend Poll
+* :github:`16711` - Settings reworked to const char processing
+* :github:`16734` - Bluetooth: GATT: Writing 1 byte to a CCC access invalid memory
+* :github:`16745` - PTHREAD_MUTEX_DEFINE(): don't store into the _k_mutex section
+* :github:`16746` - boards: nrf52840_pca10059: Configure NFC pins as GPIOs by default
+* :github:`16749` - IRQ_CONNECT and irq_enable calls in the SiFive UART driver is misconfigured
+* :github:`16750` - counter:  lack of interrupt when CC=0
+* :github:`16760` - K_THREAD_STACK_EXTERN() confuses gen_kobject_list.py
+* :github:`16779` - [Zephyr v1.14] ARM: fix the start address of MPU guard in stack-fail checking (when building with no user mode)
+* :github:`16799` - Bluetooth: L2CAP: Interpretation of SCID and DCID in Disconnect is wrong
+* :github:`16861` - nRF52: UARTE: Data corruption right after resuming device
+* :github:`16864` - Bluetooth: Mesh: Rx buffer exhaustion causes deadlock
+* :github:`16893` - Bluetooth: Multiple local IDs, privacy problem
+* :github:`16943` - Missing test coverage for lib/os/crc*.c
+* :github:`16944` - Insufficient test coverage for lib/os/json.c
+* :github:`17031` - Compiler warnings in settings module in Zephyr 1.14
+* :github:`17038` - code relocation generating different memory layout cause user mode not working
+* :github:`17041` - [1.14] Bluetooth: Mesh: RPL handling is not in line with the spec
+* :github:`17055` - net: Incorrect data length after the connection is established
+* :github:`17057` - Bluetooth: Mesh: Implementation doesn't conform to latest errata and 1.0.1 version
+* :github:`17092` - Bluetooth: GAP/IDLE/NAMP/BV-01-C requires Read by UUID
+* :github:`17170` - x86_64 crash with spinning child thread
+* :github:`17171` - Insufficient code coverage for lib/os/fdtable.c
+* :github:`17177` - ARM: userspace/test_bad_syscall fails on ARMv8-M
+* :github:`17190` - net-mgmt should pass info element size to callback
 * :github:`17250` - After first GC operation the 1st sector had become scratch and the 2nd sector had became write sector.
 * :github:`17251` - w25q: erase operations must be erase-size aligned
 * :github:`17262` - insufficient code coverage for lib/os/base64.c
@@ -251,40 +246,40 @@ board.
 Zephyr 1.14.1
 #############
 
-This is an LTS maintenance release with fixes, as well as Bluetooth
-qualification listings for the Bluetooth protocol stack included in Zephyr.
+这是一个 LTS 维护版本，包含修复，以及 Zephyr 中
+包含的 Bluetooth 协议栈的资格认证列表
 
-See :ref:`zephyr_1.14.0` for the previous version release notes.
+有关之前版本的发布说明，请参阅 :ref:`zephyr_1.14.0`。
 
 Security Vulnerability Related
 ******************************
 
-The following security vulnerability (CVE) was addressed in this
-release:
+以下安全漏洞（CVE）已在此
+版本中解决：
 
-* Fixes CVE-2019-9506: The Bluetooth BR/EDR specification up to and
-  including version 5.1 permits sufficiently low encryption key length
-  and does not prevent an attacker from influencing the key length
-  negotiation. This allows practical brute-force attacks (aka "KNOB")
-  that can decrypt traffic and inject arbitrary ciphertext without the
-  victim noticing.
+* 修复 CVE-2019-9506：Bluetooth BR/EDR 规范直到
+版本 5.1 允许足够低的加密密钥长度
+且不阻止攻击者影响密钥长度
+协商。这允许实际的暴力攻击（又称 "KNOB"）
+可以解密流量并注入任意密文而
+受害者未察觉
 
 Bluetooth
 *********
 
-* Qualification:
+* 资格认证：
 
-  * 1.14.x Host subsystem qualified with QDID 139258
-  * 1.14.x Mesh subsystem qualified with QDID 139259
-  * 1.14.x Controller component qualified on Nordic nRF52 with QDID 135679
+* 1.14.x Host 子系统通过 QDID 139258 资格认证
+* 1.14.x Mesh 子系统通过 QDID 139259 资格认证
+* 1.14.x Controller 组件在 Nordic nRF52 上通过 QDID 135679 资格认证
 
 Issues Fixed
 ************
 
-These GitHub issues were addressed since the previous 1.14.0 tagged
+自上次 1.14.0 标记发布以来解决了以下 GitHub issue：
 release:
 
-.. comment  List derived from GitHub Issue query: ...
+.. comment  列表派生自 GitHub Issue 查询：...
    * :github:`issuenumber` - issue title
 
 * :github:`11617` - net: ipv4: udp: broadcast delivery not supported
@@ -440,29 +435,29 @@ release:
 Zephyr Kernel 1.14.0
 ####################
 
-We are pleased to announce the release of Zephyr kernel version 1.14.0.
+我们很高兴宣布 Zephyr 内核版本 1.14.0 的发布。
 
-Major enhancements with this release include:
+本次发布的主要增强包括：
 
-* The Zephyr project now supports over 160 different board configurations
-  spanning 8 architectures. All architectures are rigorously tested and
-  validated using one of the many simulation platforms supported by the
-  project: QEMU, Renode, ARC Simulator, and the native POSIX configuration.
+* Zephyr 项目现在支持超过 160 种不同的开发板配置，
+涵盖 8 种架构。所有架构都经过严格测试和
+验证，使用项目支持的多种仿真平台之一：
+QEMU、Renoise、ARC Simulator 和原生 POSIX 配置
 
-* The timing subsystem has been reworked and reimplemented, greatly
-  simplifying the resulting drivers, removing thousands of lines
-  of code, and reducing a typical kernel build size by hundreds of bytes.
-  TICKLESS_KERNEL mode is now the default on all architectures.
+* 计时子系统已重新设计和重新实现，
+大大简化了生成的驱动，删除了数千行
+代码，并将典型内核构建大小减少数百字节。
+TICKLESS_KERNEL 模式现在是所有架构的默认设置
 
-* The Symmetric Multi-Processing (SMP) subsystem continues to evolve
-  with the addition of a new CPU affinity API that can "pin" threads to
-  specific cores or sets of cores. The core kernel no longer uses the
-  global irq_lock on SMP systems, and exclusively uses the spinlock API
-  (which on uniprocessor systems reduces to the same code).
+* 对称多处理（SMP）子系统继续发展，
+添加了新的 CPU 亲和性 API，可以将线程"固定"到
+特定核心或核心集合。核心内核不再在 SMP 系统上使用
+全局 irq_lock，而是专门使用自旋锁 API
+（在单处理器系统上减少为相同的代码）
 
-* Zephyr now has support for the x86_64 architecture. It is currently
-  implemented only for QEMU targets, supports arbitrary numbers of CPUs,
-  and runs in SMP mode by default, our first platform to do so.
+* Zephyr 现在支持 x86_64 架构。目前
+仅针对 QEMU 目标实现，支持任意数量的 CPU，
+默认以 SMP 模式运行，这是我们第一个这样做的平台
 
 * We've overhauled the Network packet (:ref:`net-pkt <net_pkt_interface>`)
   API and moved the majority of components and protocols to use the

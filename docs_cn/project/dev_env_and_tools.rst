@@ -1,294 +1,277 @@
 .. _dev-environment-and-tools:
 
-Development
-Environment
-and
-Tools
+开发环境与工具
 #################################
 
-Code
-Review
+代码审查
 ************
 
-GitHub
-is
-intended
-to
-provide
-a
-framework
-for
-reviewing
-every
-commit
-before
-it
-is
-accepted
-into
-the
-code
-base。
-Changes
-in
-the
-form
-of
-Pull
-Requests
-（PR）
-are
-uploaded
-to
-GitHub
-but
-don't
-actually
-become
-a
-part
-of
-the
-project
-until
-they've
-been
-reviewed
-passed
-a
-series
-of
-checks
-（CI）
-and
-are
-approved
-by
-maintainers。
-GitHub
-is
-used
-to
-support
-the
-standard
-open
-source
-practice
-of
-submitting
-patches
-which
-are
-then
-reviewed
-by
-the
-project
-members
-before
-being
-applied
-to
-the
-code
-base。
+GitHub 旨在提供一个框架，用于在提交被接受到代码库之前对其进行审查。以拉取请求（Pull Request，PR）形式提交的更改会上传到 GitHub，但在经过审查、通过一系列检查（CI）并获维护者批准之前，实际上不会成为项目的一部分。GitHub 用于支持提交补丁的标准开源实践，这些补丁随后由项目成员在应用到代码库之前进行审查。
 
-Pull
-requests
-should
-be
-appropriately
-:ref:`labeled<gh_labels>`
-and
-linked
-to
-any
-relevant
-:ref:`bug
-or
-feature
-tracking
-issues<bug_reporting>`
-.
+拉取请求应适当 :ref:`标记<gh_labels>`，并链接到任何相关的 :ref:`错误报告或特性跟踪 issue<bug_reporting>`。
 
-The
-Zephyr
-project
-uses
-GitHub
-for
-code
-reviews
-and
-Git
-tree
-management。
-When
-submitting
-a
-change
-or
-an
-enhancement
-to
-any
-Zephyr
-component
-a
-developer
-should
-use
-GitHub。
-GitHub
-Actions
-automatically
-assigns
-a
-responsible
-reviewer
-on
-a
-component
-basis
-as
-defined
-in
-the
-:zephyr_file:`MAINTAINERS.yml`
-file
-stored
-with
-the
-code
-tree
-in
-the
-Zephyr
-project
-repository。
-A
-limited
-set
-of
-release
-managers
-are
-allowed
-to
-merge
-a
-pull
-request
-into
-the
-main
-branch
-once
-reviews
-are
-complete。
+Zephyr 项目使用 GitHub 进行代码审查和 Git 代码树管理。向任何 Zephyr 组件提交更改或增强时，开发者应使用 GitHub。GitHub Actions 会基于组件自动分配负责审查者，如存储在 Zephyr 项目仓库代码树中的 :zephyr_file:`MAINTAINERS.yml` 文件所定义。有限的一组发布管理人在审查完成后被允许将拉取请求合并到 main 分支。
 
 .. _review_time:
 
-Give
-reviewers
-time
-to
-review
-before
-code
-merge
+在代码合并前给审查者审查时间
 ================================
 
-The
-Zephyr
-project
-is
-a
-global
-project
-that
-is
-not
-tied
-to
-a
-certain
-geography
-or
-timezone。
-We
-have
-developers
-and
-contributors
-from
-across
-the
-globe。
-When
-changes
-are
-proposed
-using
-pull
-request
-we
-need
-to
-allow
-for
-a
-minimal
-review
-time
-to
-give
-developers
-and
-contributors
-the
-opportunity
-to
-review
-and
-comment
-on
-changes。
-There
-are
-different
-categories
-of
-changes
-and
-we
-know
-that
-some
-changes
-do
-require
-reviews
-by
-subject
-matter
-experts
-and
-owners
-of
-the
-subsystem
-being
-changed。
-Many
-changes
-fall
-under
-the
-"trivial"
-category
-that
-can
-be
+Zephyr 项目是一个全球性项目，不绑定于特定地理区域或时区。我们有来自全球的开发者与贡献者。当通过拉取请求提议更改时，我们需要预留最短审查时间，给开发者和贡献者审查和评论更改的机会。更改有不同的类别，我们知道某些更改需要由相关领域专家和所更改子系统的负责人进行审查。许多更改属于"琐碎"类别，可以用一般审查处理，无需排队给维护者或代码负责人审查。此外，某些更改可能需要进一步讨论，或由 TSC 或安全工作组做出决定。总结上述内容，下图给出了每个类别的最短审查时间建议：
+
+
+.. figure:: pull_request_classes.png
+    :align: center
+    :alt: 拉取请求类别
+    :figclass: align-center
+
+    拉取请求类别
+
+工作流程
+---------
+
+- 更改的作者可以在其拉取请求中建议该更改应属于哪个类别。监控更改流入的项目维护者或 TSC 成员可以通过添加一条说明更改为何应属于另一类别的评论来更改拉取请求的标签。
+- 项目将使用标签系统对拉取请求进行分类。
+- 更改不应在最短时间到期之前被合并。
+
+类别/标签
+-----------------
+
+Hotfix
+  任何修复阻碍开发者日常工作的 issue 的更改，例如 CI 故障、测试故障、影响用户体验的小文档修复。
+
+  此类修复在通过 CI 检查后可以随时合并。根据修复内容、严重程度以及是否有其他人（作者之外）可审查，项目负责人之一可以在没有审查的情况下附带理由将其合并。
+
+Trivial
+  琐碎更改是指那些足够明显、无需维护者或代码负责人参与的更改。此类更改不应改变子系统或组件的逻辑或设计。例如，琐碎更改可以是：
+
+  - 文档更改
+  - 配置更改
+  - 构建系统的小调整
+  - 不改变逻辑的代码逻辑小优化
+  - 测试更改和修复
+  - 支持额外配置或开发板等的示例修改
+
+Maintainer
+  任何触及子系统或组件逻辑或原始设计的更改都需要由代码负责人或指定的子系统维护者审查。如果代码更改是由负责人以外的贡献者或开发者发起的，则拉取请求需要分配给代码负责人，其必须通过向作者提供反馈并请求其他开发者进行更多审查，将拉取请求驱动到可合并状态。
+
+Security
+  看似对系统整体安全性有影响的更改需要由安全工作组的安全专家审查。
+
+TSC 和工作组
+  引入新特性或功能、或改变整体系统工作方式的更改需要由 TSC 或相应的工作组审查。例如，对于 :ref:`破坏性 API 更改 <breaking_api_changes>`，提案需要在架构会议上提出，以便相关干系人了解该更改。
+
+拉取请求应有负责人
+=======================================
+
+- 拉取请求的负责人不应与拉取请求的作者相同
+- 拉取请求的负责人负责将拉取请求驱动到可合并状态
+- 负责人负责驳回过期的审查意见，并寻求额外开发者和贡献者的审查
+- 没有负责人批准的拉取请求不应被合并
+
+拉取请求不应由作者在无审查的情况下合并
+===========================================================
+
+所有拉取请求都需要审查，作者不应在没有审查的情况下合并。以下例外情况适用：
+
+- 紧急修复：修复 CI 问题、回退、系统故障
+- 发布相关更改：更改版本文件、应用标签以及与发布相关的活动，不涉及任何代码更改。
+
+开发者和贡献者应始终寻求审查，但有时审查者不可用，且需要尽快将代码更改纳入代码树。
+
+审查者不应在没有评论或理由的情况下"请求更改"
+======================================================================
+
+对拉取请求的任何更改请求（-1）都必须有理由。审查者应避免在没有理由的情况下阻止拉取请求。如果审查者认为某个更改在没有其审查的情况下不应被合并，则：请求更改类别，例如：
+
+- Trivial -> Maintainer
+- 将拉取请求分配给自己，这意味着该拉取请求在没有你批准的情况下不应被合并。
+
+
+拉取请求在合并前应至少有 2 个批准
+======================================================================
+
+拉取请求只有获得两个正面审查（批准）才能合并。除合并拉取请求的人之外（合并 != 批准），还需要两个额外的批准才能合并拉取请求。合并请求的人可以在不批准的情况下直接合并，或者先批准再合并，以达到所需的 2 个批准。
+
+审查者应跟踪其已提供反馈的拉取请求
+=====================================================================
+
+如果审查者已在拉取请求中请求了更改，他或她应监控该拉取请求的状态，和/或响应提及请求，查看其反馈是否已被处理。若未这样做，负面审查意见应由负责人或仓库负责人驳回。审查意见将按以下标准驳回：
+
+- 反馈或关注点已被作者明显处理
+- 审查者在 2 周后未重新查看该拉取请求，且作者已多次提醒
+- 审查意见与代码更改无关，或请求没有理由的结构性更改，例如：
+
+  - 拆分 PR
+  - 你能修复碰巧出现在 diff 中的这段无关代码吗
+  - 你能修复无关的 issue 吗
+  - 等等。
+
+关闭过期的 issue 和拉取请求
+======================================
+
+- GitHub 上的拉取请求和 issue 部分**不是**讨论论坛。它们是我们需要执行并驱动到关闭的事项。讨论请使用邮件列表。
+- 对于 issue 和拉取请求两者，原始发布人都需要响应问题，并提供关于该 issue 或更改的澄清。一周没有响应后，会第二次尝试向贡献者征求回复。再一周没有响应后，该事项可以被关闭（标记为 draft 和 DNM 的拉取请求除外）。
+
+持续集成
+***********************
+
+提交到 GitHub 的所有更改都要接受在模拟平台和架构上运行的测试，以识别可以立即发现的故障和回归。使用 Twister 的测试还会额外执行所有开发板和平台的构建测试。文档更改也会通过审查和构建测试来验证文档生成会成功。
+
+CI 测试运行期间发现的任何失败都会导致 CI 系统自动分配的负面审查。预期开发者修复问题、重新整理其补丁并重新提交。
+
+CI 基础设施当前运行以下测试：
+
+- 运行 ``checkpatch`` 检查代码风格问题（出错时可投 -1；参见备注）
+- Gitlint：基于项目要求的 Git 提交风格
+- 许可证检查：检查冲突的许可证
+- 运行 ``twister`` 脚本
+
+  - 在 QEMU 中运行内核测试（出错时可投 -1）
+  - 为不同开发板构建各种示例（出错时可投 -1）
+
+- 验证文档正确构建。
+
+.. note::
+
+   ``checkpatch`` 是一个 Perl 脚本，使用正则表达式提取需要 C 语言解析器才能准确处理的信息。因此它有时会发出误报。已知情况包括类似以下结构：
+
+     .. code-block:: c
+
+       static uint8_t __aligned(PAGE_SIZE) page_pool[PAGE_SIZE * POOL_PAGES];
+       IOPCTL_Type *base = config->base;
+
+   两行都会产生关于 ``*`` 运算符周围空格的诊断信息：第一行被错误识别为指针类型声明（正确的应为 ``PAGE_SIZE *POOL_PAGES``），第二行被错误识别为乘法表达式（正确的应为 ``IOPCTL_Type * base``）。
+
+   在 CI 基础设施得出错误答案的情况下，维护者可以推翻 -1。
+
+
+.. _gh_labels:
+
+在 GitHub 中为 issue 和拉取请求添加标签
+*******************************************
+
+项目使用 GitHub issue 和拉取请求（PR）来跟踪和管理对 Zephyr 项目的日常和长期工作与贡献。我们使用 GitHub **标签**按区域、类型、优先级等对这些 issue 和 PR 进行分类和组织，使查找和报告相关事项更容易。
+
+所有 GitHub issue 或拉取请求都必须适当添加标签。issue 和 PR 通常会被分配多个标签，以帮助在不同可用类别中对它们进行分类。审查 PR 时，如果它有缺失或不正确的标签，维护者应当修复它。
+
+这能节省我们所有人搜索的时间，降低 PR 或 issue 被遗忘的可能性，加快审查速度，避免重复的 issue 报告等。
+
+这些是我们当前拥有的标签，按适用性分组：
+
+仅适用于 issue 的标签
+================
+
+.. list-table::
+   :header-rows: 1
+
+   * - 标签
+     - 描述
+
+   * - :guilabel:`priority: {high|medium|low}`
+     - 用于对错误的影响和重要性进行分类。
+
+       备注：issue 优先级通常在错误分诊或 TSC 会议中设置或更改。
+
+   * - :guilabel:`Regression`
+     - 曾经可以正常工作但不再正常的东西（错误子类型）。
+
+   * - :guilabel:`Duplicate`
+     - 该 issue 是另一个 issue 的重复（请指明是哪个）。
+
+   * - :guilabel:`Good first issue`
+     - 适合首次贡献者接手。
+
+   * - :guilabel:`Release Notes`
+     - 需要在发布说明中作为已知问题（附带额外信息）提及的 issue。
+
+仅适用于拉取请求的标签
+======================================
+
+该 issue 或 PR 描述了对某个稳定 API 的更改。
+
+.. list-table::
+   :header-rows: 1
+
+   * - 标签
+     - 描述
+
+   * - :guilabel:`Hotfix`
+     - 修复阻碍开发的 issue。
+
+   * - :guilabel:`Trivial`
+     - 可以拥有更短审查时间且任何人可审查的简单更改，例如拼写错误、直接的一行错误修复等。
+
+   * - :guilabel:`Maintainer`
+     - 需要维护者审查。
+
+   * - :guilabel:`Security Review`
+     - 由安全专家审查。
+
+   * - :guilabel:`DNM`
+     - 该 PR 不应被合并（Do Not Merge）。对于进行中的工作，优先使用 GitHub "draft" PR。
+
+   * - :guilabel:`Needs review`
+     - 该 PR 需要维护者关注。
+
+   * - :guilabel:`Backport`
+     - 该 PR 是一个回移或应该被回移。
+
+   * - :guilabel:`Licensing`
+     - 该 PR 存在需要许可专家审查的许可问题。
+
+.. note::
+   对于所有适用于 PR 的标签：请注意，标签连同 PR 的复杂性会影响合并应保留多长时间以确保适当审查。参见 :ref:`审查流程 <review_time>` 了解细节。
+
+
+同时适用于拉取请求和 issue 的标签
+================================================
+
+.. list-table::
+   :header-rows: 1
+
+   * - 标签
+     - 描述
+
+   * - :guilabel:`area: {area-name}`
+     - 指示受该错误或拉取请求影响的 Zephyr 子系统（例如 :guilabel:`area: Kernel`、:guilabel:`area: I2C`、:guilabel:`area: Memory Management`）、项目功能（例如 :guilabel:`area: Debugging`、:guilabel:`area: Documentation`、:guilabel:`area: Process`）或其他类别（例如 :guilabel:`area: Coding Style`、:guilabel:`area: MISRA-C`）。
+
+       区域维护者应能按区域标签过滤，找到与该区域相关的所有 issue 和 PR。
+
+   * - :guilabel:`platform: {platform-name}`
+     - 仅影响某个特定平台的 issue 或 PR。
+
+   * - :guilabel:`TSC`
+     - TSC 是技术指导委员会（Technical Steering Committee）的缩写。该 issue 将在下一次 `TSC 会议`_（如果时间允许）中讨论。
+
+        .. _`TSC meeting`: https://github.com/zephyrproject-rtos/zephyr/wiki/Technical-Steering-Committee-(TSC)
+
+   * - :guilabel:`Breaking API Change`
+     - 该 issue 或 PR 描述了对某个稳定 API 的破坏性更改。参见 :ref:`breaking_api_changes` 中的额外信息。
+
+   * - :guilabel:`bug`
+     - 该 issue 是一个错误，或该 PR 正在修复一个错误。
+
+   * - :guilabel:`Coverity`
+     - Coverity 检测到的问题或其修复。
+
+   * - :guilabel:`Waiting for response`
+     - Zephyr 开发者正在等待提交者回复某个问题，或处理某个 issue。
+
+   * - :guilabel:`Blocked`
+     - 被另一个 PR 或 issue 阻塞。
+
+   * - :guilabel:`Stale`
+     - 一个看似被遗弃、需要作者关注的 issue 或 PR。
+
+   * - :guilabel:`In progress`
+     - 对于 PR：表示正在进行中，尚不应合并。对于 issue：表示正在处理中。
+
+   * - :guilabel:`RFC`
+     - 作者希望获得社区的反馈。对于 PR，应被视为草稿。
+
+   * - :guilabel:`LTS`
+     - 与长期支持（Long Term Support）发布分支相关。
+
+   * - :guilabel:`EXT`
+     - 与外部组件相关。

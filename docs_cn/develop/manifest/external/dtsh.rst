@@ -6,14 +6,11 @@ DTSh
 简介
 ****
 
-`DTSh <DTSh-Handbook_>`_ 是一个交互式 DTS 文件查看器，带有
-shell 风格的命令行界面：
+`DTSh <DTSh-Handbook_>`_ 是一个交互式 DTS 文件查看器，带有 shell 风格的命令行界面：
 
 - 轻松*导航*和*可视化* devicetree
-- 根据支持的总线协议、binding、生成的 IRQ、内存大小，或
-  "sensor"、"PWM" 等关键字查找节点
-- 将命令输出重定向到文件（文本、HTML、SVG），
-  用于记录硬件配置或简单记笔记
+- 根据支持的总线协议、binding、生成的 IRQ、内存大小，或 "sensor"、"PWM" 等关键字查找节点
+- 将命令输出重定向到文件（文本、HTML、SVG），用于记录硬件配置或简单记笔记
 - 上下文自动补全、命令历史、语义高亮、用户配置
 - 可脚本化（即批处理模式）
 
@@ -22,11 +19,9 @@ shell 风格的命令行界面：
 在 Zephyr 中使用
 ****************
 
-要安装 DTSh 模块，需要定义自己的 manifest 文件，
-或通过添加子 manifest 引入。
+要安装 DTSh 模块，需要定义自己的 manifest 文件，或通过添加子 manifest 引入。
 
-例如，假设与 `Zephyr 入门指南`_ 相同的路径，
-创建 ``zephyrproject/zephyr/submanifests/dtsh.yaml``，内容如下：
+例如，假设与 `Zephyr 入门指南`_ 相同的路径，创建 ``zephyrproject/zephyr/submanifests/dtsh.yaml``，内容如下：
 
 .. code-block:: yaml
 
@@ -47,8 +42,7 @@ shell 风格的命令行界面：
 
 .. note::
 
-   ``west update dtsh`` 会从 `DTSh 项目 <DTSh-project_>`_ 拉取所有
-   tags：请忽略它们，它们不对应该 Zephyr 模块的版本，与此处完全无关。
+   ``west update dtsh`` 会从 `DTSh 项目 <DTSh-project_>`_ 拉取所有 tags：请忽略它们，它们不对应该 Zephyr 模块的版本，与此处完全无关。
 
 West 命令
 *********
@@ -80,8 +74,7 @@ West 命令
 
 .. note::
 
-   建议将模块安装到默认位置 ``modules/tools/dtsh``。
-   否则，运行 ``west dtsh`` 之前务必设置 ``ZEPHYR_BASE`` 环境变量。
+   建议将模块安装到默认位置 ``modules/tools/dtsh``。否则，运行 ``west dtsh`` 之前务必设置 ``ZEPHYR_BASE`` 环境变量。
 
 参考资料
 ********

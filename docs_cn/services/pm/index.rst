@@ -1,40 +1,13 @@
 .. _pm-guide:
 
-Power
-Management
+电源管理
 ################
 
-Zephyr
-RTOS
-power
-management
-subsystem
-provide
-several
-的
-means
-用于
-system
-integrator
-implement
-power
-management
-support
-它
-可以
-take
-full
-advantage
-of
-SoCs
-的
-power
-saving
-features。
+Zephyr RTOS 电源管理子系统为系统集成者提供了多种实现电源管理支持的手段，
+使其能够充分利用 SoC 的节电特性。
 
 .. toctree::
-   :maxdepth:
-   2
+   :maxdepth: 2
 
    overview
    system

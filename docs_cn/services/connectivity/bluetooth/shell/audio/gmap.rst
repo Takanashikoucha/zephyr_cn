@@ -48,14 +48,12 @@ central
 peripheral）
 都
 应该
-do
-一
-个
+对
 remote
 device
 的
 GMAS
-的
+做
 discovery
 以
 查看
@@ -73,167 +71,406 @@ GMAP
 Shell
 ********************
 
-当
+When
+the
 Bluetooth
 stack
-被
+has
+been
 initialized
 （:code:`bt
 init`）
-后
+the
 GMAS
-可以
-通过
-调用
+can
+be
+registered
+by
+calling
 :code:`gmap
-init`
-被
-registered。
-也
-强烈
-建议
-通过
-:code:`bap
-init`
-启用
-BAP。
-
-.. code-block::
-   console
-
-   uart:~$
-   gmap
-   --help
-   gmap
-   -
-   Bluetooth
-   GMAP
-   shell
-   commands
-   Subcommands:
-     init
-      :
-      [none]
-     set_role
-  :
-      [ugt
-      |
-      ugg
-      |
-      bgr
-      |
-      bgs]
-     discover
-  :
-      [none]
-     ac_1
-      :
-      Unicast
-      audio
-      configuration
-      1
-     ac_2
-      :
-      Unicast
-      audio
-      configuration
-      2
-     ac_3
-      :
-      Unicast
-      audio
-      configuration
-      3
-     ac_4
-      :
-      Unicast
-      audio
-      configuration
-      4
-     ac_5
-      :
-      Unicast
-      audio
-      configuration
-      5
-     ac_6_i
-    :
-      Unicast
-      audio
-      configuration
-      6(i)
-     ac_6_ii
-   :
-      Unicast
-      audio
-      configuration
-      6(ii)
-     ac_7_ii
-   :
-      Unicast
-      audio
-      configuration
-      7(ii)
-     ac_8_i
-    :
-      Unicast
-      audio
-      configuration
-      8(i)
-     ac_8_ii
-   :
-      Unicast
-      audio
-      configuration
-      8(ii)
-     ac_11_i
-   :
-      Unicast
-      audio
-      configuration
-      11(i)
-     ac_11_ii
-  :
-      Unicast
-      audio
-      configuration
-      11(ii)
-     ac_12
-     :
-      Broadcast
-      audio
-      configuration
-      12
-     ac_13
-     :
-      Broadcast
-      audio
-      configuration
-      13
-     ac_14
-     :
-      Broadcast
-      audio
-      configuration
-      14
-
-:code:`set_role`
-command
-可以
-用
-来
-在
-runtime
-change
-role
-假设
-device
-支持
-该
-role
-（GMAP
-roles
-依赖
-某些
+init`.
+It
+is
+also
+strongly
+suggested
+to
+enable
 BAP
-configurations）。
+via
+:code:`bap
+init`.
+
+..
+code
+block::
+console
+uart:~$
+gmap
+--help
+gmap
+Bluetooth
+GMAP
+shell
+commands
+Subcommands:
+init
+:
+[none]
+set
+role
+:
+[ugt
+|
+ugg
+|
+bgr
+|
+bgs]
+discover
+:
+[none]
+ac
+1
+:
+Unicast
+audio
+configuration
+1
+ac
+2
+:
+Unicast
+audio
+configuration
+2
+ac
+3
+:
+Unicast
+audio
+configuration
+3
+ac
+4
+:
+Unicast
+audio
+configuration
+4
+ac
+5
+:
+Unicast
+audio
+configuration
+5
+ac
+6
+i
+:
+Unicast
+audio
+configuration
+6（i）
+ac
+6
+ii
+:
+Unicast
+audio
+configuration
+6（ii）
+ac
+7
+ii
+:
+Unicast
+audio
+configuration
+7（ii）
+ac
+8
+i
+:
+Unicast
+audio
+configuration
+8（i）
+ac
+8
+ii
+:
+Unicast
+audio
+configuration
+8（ii）
+ac
+11
+i
+:
+Unicast
+audio
+configuration
+11（i）
+ac
+11
+ii
+:
+Unicast
+audio
+configuration
+11（ii）
+ac
+12
+:
+Broadcast
+audio
+configuration
+12
+ac
+13
+:
+Broadcast
+audio
+configuration
+13
+ac
+14
+:
+Broadcast
+audio
+configuration
+14
+
+The
+:code:`set
+role`
+command
+can
+be
+used
+to
+change
+the
+role
+at
+runtime、
+assuming
+that
+the
+device
+supports
+the
+role
+（the
+GMAP
+roles
+depend
+on
+some
+BAP
+configurations）.
+
+Example
+Central
+with
+GMAP
+UGT
+role
+**********************************
+
+Connect
+and
+establish
+Gaming
+Audio
+streams
+using
+Audio
+Configuration
+（AC）
+3
+（some
+logging
+has
+been
+omitted
+for
+clarity）:
+
+..
+code
+block::
+console
+uart:~$
+bt
+init
+uart:~$
+bap
+init
+uart:~$
+gmap
+init
+uart:~$
+bt
+connect
+<address>
+uart:~$
+gatt
+exchange
+mtu
+uart:~$
+bap
+discover
+Discover
+complete:
+err
+0
+uart:~$
+cap
+initiator
+discover
+discovery
+completed
+with
+CSIS
+uart:~$
+gmap
+discover
+gmap
+discovered
+for
+conn
+0x2001c7d8:
+role
+0x0f
+ugg
+feat
+0x07
+ugt
+feat
+0x6f
+bgs
+feat
+0x01
+bgr
+feat
+0x03
+uart:~$
+bap
+preset
+sink
+32_2_gr
+uart:~$
+bap
+preset
+source
+32_2_gs
+uart:~$
+gmap
+ac
+3
+Starting
+2
+streams
+for
+AC_3
+stream
+0x20020060
+config
+operation
+rsp
+code
+0
+reason
+0
+stream
+0x200204d0
+config
+operation
+rsp
+code
+0
+reason
+0
+stream
+0x200204d0
+qos
+operation
+rsp
+code
+0
+reason
+0
+stream
+0x20020060
+qos
+operation
+rsp
+code
+0
+reason
+0
+Stream
+0x20020060
+enabled
+stream
+0x200204d0
+enable
+operation
+rsp
+code
+0
+reason
+0
+Stream
+0x200204d0
+enabled
+stream
+0x20020060
+enable
+operation
+rsp
+code
+0
+reason
+0
+Stream
+0x20020060
+started
+stream
+0x200204d0
+start
+operation
+rsp
+code
+0
+reason
+0
+Stream
+0x200204d0
+started
+Unicast
+start
+completed
+uart:~$
+bap
+start
+sine
+Started
+transmitting
+on
+default
+stream
+0x20020060
+[0]:
+stream
+0x20020060
+:
+TX
+LC3:
+80
+（seq
+num
+24800）

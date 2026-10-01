@@ -1,238 +1,78 @@
 .. _sensor-read-and-decode:
 
-Read
-and
-Decode
+读取与解码
 ###############
 
-快速
-stabilizing
-的
-用于
-read
-sensor
-data
-的
-APIs
-是：
+用于读取传感器数据的快速稳定 API 有：
 
 * :c:func:`sensor_read`
 * :c:func:`sensor_read_async_mempool`
 * :c:func:`sensor_get_decoder`
 * :c:func:`sensor_decode`
 
-对
-:ref:`sensor-fetch-and-get`
-的
-benefits
+相对 :ref:`sensor-fetch-and-get` 的优势
 *********************************************************
 
-这些
-APIs
-允许
-更
-广泛
-的
-sensors、
-sensor
-types、
-和
-data
-flows
-的
-使用。
-这些
-是
-Zephyr
-中
-面向
-未来
-的
-APIs
-并
-解决
-了
-与
-:ref:`sensor-fetch-and-get`
-遇到
-的
-许多
-issues。
+这些 API 允许更广泛地使用传感器、传感器类型和数据流。
+这些是 Zephyr 中面向未来的 API，解决了在 :ref:`sensor-fetch-and-get` 中遇到的许多问题。
 
-:c:func:`sensor_read`
-和
-类似
-的
-functions
-将
-sensor
-encoded
-data
-获取
-到
-caller
-提供
-的
-buffer
-中。
-Decode
-（:c:func:`sensor_decode`）
-然后
-将
-sensor
-特定
-的
-encoded
-data
-decode
-为
-fixed
-point
-:c:type:`q31_t`
-values
-作为
-per
-channel
-的
-vectors。
-这
-允许
-使用
-在
-data
-vectors
-上
-工作
-的
-fixed
-point
-DSP
-functions
-做
-进一步
-处理
-（例如
-low
-pass
-filters、
-FFT、
-fusion、
-等
-等）。
+:c:func:`sensor_read` 和类似函数将传感器编码数据获取到调用者提供的缓冲区中。
+解码（:c:func:`sensor_decode`）然后将传感器特定的编码数据解码为按通道组织的定点 :c:type:`q31_t` 值向量。
+这使得可以使用在数据向量上工作的定点 DSP 函数进行进一步处理（例如低通滤波器、FFT、融合等）。
 
-Read
-默认
-是
-asynchronous
-的
-在
-其
-implementation
-中
-并
-利用
-:ref:`rtio`
-启用
-chaining
-asynchronous
-requests
-或
-从
-单
-个
-call
-context
-同时
-对
-多
-个
-sensors
-发起
-requests。
+读取在实现中默认是异步的，并利用 :ref:`rtio` 来启用链式异步请求，
+或从单个调用上下文同时对许多传感器发起请求。
 
-这
-使
-得
-在
-与
-sensors
-工作
-时
-非常
-有用
-的
-code
-flows
-成为
-可能
-如：
+这在使用传感器时启用了极其有用的代码流程，例如：
 
-* 获取
-  raw
-  sensor
-  data
-  从不
-  decode、
-  稍
-  后
-  decode、
-  或
-  在
-  单独
-  的
-  processor
-  （例如
-  一
-  个
-  phone）
-  上
-  decode。
-* 直接
-  从
-  interrupt
-  handler
-  为
-  sensors
-  发起
-  read。
-  不
-  需要
-  dedicated
-  thread
-  节省
-  precious
-  stack
-  space。
-  不
-  需要
-  work
-  queue
-  引入
-  variable
-  latency。
-  从
-  单
-  个
-  call
-  context
-  （interrupt/thread/work
-  queue）
-  同时
-  为
-  多
-  个
-  sensors
-  发起
-  read。
-* 为
-  Ping-Pong
-  （double
-  buffering）
-  setups
-  对
-  同一
-  device
-  请求
-  多
-  个
-  reads。
+* 获取原始传感器数据，从不解码、稍后解码或在单独的处理器上解码（例如手机）。
+* 直接从中断处理程序为传感器发起读取。无需专用线程，节省宝贵的栈空间。
+  无需工作队列，避免引入可变延迟。从单个调用上下文（中断/线程/工作队列）同时对多个传感器发起读取。
+* 请求对同一设备的多次读取，用于乒乓（双缓冲）设置。
+* 创建完整的传感器数据流管道，允许软件定义的虚拟传感器（:ref:`sensing`），
+  全部从单个线程以 DAG 处理顺序进行。
+* 潜在地预编程 DMA 在 GPIO 事件上触发，使 CPU 完全脱离处理 FIFO 水位线等传感器事件的流程。
+
+此外，:ref:`sensor-fetch-and-get` 的其他与内存和触发器处理相关的缺点也得到解决。
+
+* 触发器产生入队的事件，而不是回调。
+* 触发器可以设置为自动获取数据，潜在地启用 GPIO 中断上的预编程 DMA 传输。
+* 由于回调和上下文切换长时间持有中断屏蔽而导致触发器被遗漏的概率大大降低。
+* 通过将 FIFO 触发器连接起来将数据读取到内存池分配的缓冲区中，支持传感器 FIFO。
+* 所有传感器处理都可以在用户模式（内存保护）线程中完成。
+* 同一类型的多个传感器通道得到更好的支持。
+
+.. note::
+   要完全实现 `Read and Decode`_ 的优势，需要 :ref:`rtio` 合规的通信访问到传感器。
+   通常这意味着启用 :ref:`rtio` 的 SPI 或 I2C 总线驱动。
+
+轮询读取
+************
+
+使用 `Read and Decode`_ 的轮询读取可以通过为传感器实例化一个轮询 I/O 设备（类似于文件描述符）来实现，
+指定要轮询的期望通道。请求阻塞或非阻塞读取，然后可选地将数据解码为定点值。
+
+轮询温度传感器并打印其读数，可能是展示这一切如何工作的最简单示例。
+
+.. literalinclude:: temp_polling.c
+   :language: c
+
+多传感器轮询读取
+**********************************
+
+读取与解码的优势之一是在单个线程中并发读取许多传感器的许多通道。
+实际上，读取请求为所有传感器及其通道异步启动。当每个读取完成时，我们随后解码传感器数据。
+示例很有说服力，因此下面是一个展示如何在使用多个温度传感器的多个温度通道时工作的示例：
+
+.. literalinclude:: multiple_temp_polling.c
+   :language: c
+
+流式
+*********
+
+使用 `Read and Decode`_ 处理触发器通过设置流 I/O 设备配置来实现。
+流指定要捕获的触发器集合，以及是否应随事件一起捕获数据。
+
+
+.. literalinclude:: accel_stream.c
+   :language: c

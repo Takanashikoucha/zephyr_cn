@@ -1,85 +1,16 @@
-Overview
+概述
 ########
 
-Power
-management
-subsystem
-provided
-的
-interfaces
-和
-APIs
-被
-designed
-为
-architecture
-和
-SOC
-independent
-的。
-这
-使
-power
-management
-implementations
-可以
-easily
-adapted
-到
-不同
-的
-SoCs
-和
-architectures。
+电源管理子系统提供的接口和 API 被设计为
+与架构和 SoC 无关。这使得电源管理实现
+能够轻松适配不同的 SoC 和架构。
 
-Architecture
-和
-SOC
-independence
-通过
-将
-core
-PM
-infrastructure
-与
-SoC
-specific
-的
-components
-的
-implementations
-separate
-achieved。
-因此
-一
-个
-coherent
-的
-abstraction
-被
-presented
-到
-OS
-的
-rest
-和
-application
-layer。
+架构和 SoC 无关性是通过将核心 PM 基础设施
+与 SoC 特定组件的实现分离来实现的。
+因此，向操作系统其余部分和应用层
+呈现了一个一致的抽象。
 
-Power
-management
-features
-被
-classified
-到
-以下
-categories。
+电源管理特性分为以下类别。
 
-*
-System
-Power
-Management
-*
-Device
-Power
-Management
+* 系统电源管理
+* 设备电源管理

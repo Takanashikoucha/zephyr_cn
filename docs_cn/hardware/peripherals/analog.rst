@@ -1,19 +1,12 @@
 .. _analog_peripherals:
 
-Analog
+模拟
 ######
 
-Analog-to-digital
-和
-digital-to-analog
-converters、
-comparators
-和
-amplifiers。
+模数转换器、数模转换器、比较器和放大器。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    adc.rst
    dac.rst

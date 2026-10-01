@@ -3,628 +3,136 @@
 Newlib
 ######
 
-`Newlib`_
-是
-一个
-为
-嵌入式
-系统
-编写
-的
-完整
-C
-库
-实现。
-它
-是
-一个
-独立
-的
-开源
-项目，
-不
-以
-源
-代码
-形式
-包含
-在
-Zephyr
-中。
-相反，
-:ref:`toolchain_zephyr_sdk`
-包括
-每个
-受
-支持
-架构
-的
-预
-编译
-库
-（:file:`libc.a`
-和
+`Newlib`_ 是一个为嵌入式系统编写的
+完整 C 库实现。它是一个独立的开源项目，
+并不以源代码形式包含在 Zephyr 中。
+相反，:ref:`toolchain_zephyr_sdk` 为每个受支持的架构
+包含一个预编译库（:file:`libc.a` 和
 :file:`libm.a`）。
 
 .. note::
-   其他
-   第三方
-   工具链，
-   如
-   :ref:`toolchain_gnuarmemb`，
-   也
-   捆绑
-   Newlib
-   作为
-   预
-   编译
-   库。
+   其他第三方工具链（例如 :ref:`toolchain_gnuarmemb`）
+   也捆绑了 Newlib 的预编译库。
 
-Zephyr
-实现
-"API
-hook"
-函数，
-这些
-函数
-被
-Newlib
-中
-的
-C
-标准
-库
-函数
-调用。
-这些
-hook
-函数
-在
-:file:`lib/libc/newlib/libc-hooks.c`
-中
-实现
-并
-将
-库
-内部
-系统
-调用
-转换
-为
-等价
-的
-Zephyr
-API
-调用。
+Zephyr 实现了被 Newlib 中的
+C 标准库函数调用的 "API hook" 函数。
+这些钩子函数在 :file:`lib/libc/newlib/libc-hooks.c`
+中实现，并将库内部的系统调用
+转换为等价的 Zephyr API 调用。
 
-Newlib
-类型
+Newlib 类型
 ***************
 
-:ref:`toolchain_zephyr_sdk`
-中
-包含
-的
-Newlib
-有
-两个
-版本：
-'full'
-和
-'nano'
-变体。
+:ref:`toolchain_zephyr_sdk` 中包含的 Newlib
+有两个版本：'full' 和 'nano' 变体。
 
-Full
-Newlib
+Full Newlib
 ===========
 
-Newlib
-full
-变体
-（:file:`libc.a`
-和
-:file:`libm.a`）
-是
-Zephyr
-SDK
-中
-可用
-的
-最
-强大
-的
-Newlib
-变体，
-支持
-几乎
-所有
-标准
-C
-库
-功能。
-它
-为
-性能
-优化
-（偏好
-性能
-而非
-代码
-大小）
-且
-其
-占用
-空间
-显著
-大于
-nano
-变体。
+Newlib full 变体（:file:`libc.a` 和 :file:`libm.a`）
+是 Zephyr SDK 中可用的功能最完整的
+Newlib 变体，支持几乎所有标准 C 库功能。
+它针对性能进行了优化（性能优先于代码大小），
+其占用空间显著大于 nano 变体。
 
-这个
-变体
-可以
-通过
-在
-应用
-配置
-文件
-中
-选择
-:kconfig:option:`CONFIG_NEWLIB_LIBC`
-并
-取消
-选择
-:kconfig:option:`CONFIG_NEWLIB_LIBC_NANO`
-启用。
+该变体可以通过在应用配置文件中
+选择 :kconfig:option:`CONFIG_NEWLIB_LIBC`
+并取消选择 :kconfig:option:`CONFIG_NEWLIB_LIBC_NANO`
+来启用。
 
-Nano
-Newlib
+Nano Newlib
 ===========
 
-Newlib
-nano
-变体
-（:file:`libc_nano.a`
-和
-:file:`libm_nano.a`）
-是
-Newlib
-的
-大小
-优化
-版本，
-支持
-full
-变体
-支持
-的
-所有
-功能
-除
-了
-C99
-引入
-的
-新
-格式
-说明符，
-如
-``char``、
-``long
-long``
-类型
-格式
-说明符
-（即
-``%hhX``
-和
-``%llX``）。
+Newlib nano 变体（:file:`libc_nano.a` 和
+:file:`libm_nano.a`）是 Newlib 的大小优化版本，
+支持 full 变体支持的所有功能，
+但不支持 C99 引入的新格式说明符，
+例如 ``char`` 和 ``long long`` 类型的
+格式说明符（即 ``%hhX`` 和 ``%llX``）。
 
-这个
-变体
-可以
-通过
-在
-应用
-配置
-文件
-中
-选择
-:kconfig:option:`CONFIG_NEWLIB_LIBC`
-和
-:kconfig:option:`CONFIG_NEWLIB_LIBC_NANO`
-启用。
+该变体可以通过在应用配置文件中
+选择 :kconfig:option:`CONFIG_NEWLIB_LIBC`
+和 :kconfig:option:`CONFIG_NEWLIB_LIBC_NANO`
+来启用。
 
-注意
-Newlib
-nano
-变体
-不
-对
-所有
-架构
-可用。
-nano
-变体
-的
-可用性
-由
-:kconfig:option:`CONFIG_HAS_NEWLIB_LIBC_NANO`
-指定。
+请注意，Newlib nano 变体并非对所有架构都可用。
+nano 变体的可用性由
+:kconfig:option:`CONFIG_HAS_NEWLIB_LIBC_NANO` 指定。
 
-.. _`Newlib`:
-   https://sourceware.org/newlib/
+.. _`Newlib`: https://sourceware.org/newlib/
 
-格式化
-输出
+格式化输出
 ****************
 
-Newlib
-支持
-所有
-标准
-C
-格式化
-输入
-和
-输出
-函数，
-包括
-``printf``、
-``fprintf``、
-``sprintf``
-和
-``sscanf``。
+Newlib 支持所有标准 C 格式化输入和输出函数，
+包括 ``printf``、``fprintf``、``sprintf`` 和 ``sscanf``。
 
-Newlib
-格式化
-输入
-和
-输出
-函数
-实现
-支持
-C
-标准
-定义
-的
-所有
-格式
-说明符，
-以下
-例外：
+Newlib 的格式化输入和输出函数实现
+支持 C 标准定义的所有格式说明符，
+但有以下例外：
 
-* 浮点
-  格式
-  说明符
-  （例如
-  ``%f``）
-  需要
-  启用
-  :kconfig:option:`CONFIG_NEWLIB_LIBC_FLOAT_PRINTF`
-  和
+* 浮点格式说明符（例如 ``%f``）需要启用
+  :kconfig:option:`CONFIG_NEWLIB_LIBC_FLOAT_PRINTF` 和
   :kconfig:option:`CONFIG_NEWLIB_LIBC_FLOAT_SCANF`。
-* C99
-  格式
-  说明符
-  不
-  被
-  Newlib
-  nano
-  变体
-  支持
-  （即
-  ``char``
-  的
-  ``%hhX``、
-  ``long
-  long``
-  的
-  ``%llX``、
-  ``intmax_t``
-  的
-  ``%jX``、
-  ``size_t``
-  的
-  ``%zX``、
-  ``ptrdiff_t``
-  的
-  ``%tX``）。
+* C99 格式说明符不被 Newlib nano 变体支持
+  （即 ``char`` 的 ``%hhX``、``long long`` 的 ``%llX``、
+  ``intmax_t`` 的 ``%jX``、``size_t`` 的 ``%zX``、
+  ``ptrdiff_t`` 的 ``%tX``）。
 
-动态
-内存
-管理
+动态内存管理
 *************************
 
-Newlib
-实现
-内部
-堆
-分配器
-来
-管理
-标准
-动态
-内存
-管理
-接口
-函数
-（例如
-:c:func:`malloc`
-和
-:c:func:`free`）
-使用
-的
-内存
-块。
+Newlib 实现了一个内部堆分配器，
+用于管理标准动态内存管理接口函数
+（例如 :c:func:`malloc` 和 :c:func:`free`）
+所使用的内存块。
 
-Newlib
-实现
-的
-内部
-堆
-分配器
-可能
-在
-使用
-的
-不同
-类型
-的
-Newlib
-之间
-变化。
-例如，
-Zephyr
-SDK
-的
-Full
-Newlib
-（:file:`libc.a`
-和
-:file:`libm.a`）
-中
-实现
-的
-堆
-分配器
-向
-操作
-系统
-请求
-更大
-的
-内存
-块
-且
-与
-Nano
-Newlib
-（:file:`libc_nano.a`
-和
-:file:`libm_nano.a`）
-相比
-有
-显著
-更
-高
-的
-最小
-内存
-要求。
+Newlib 实现的内部堆分配器
+可能因所使用的 Newlib 类型不同而有所差异。
+例如，Zephyr SDK 的 Full Newlib
+（:file:`libc.a` 和 :file:`libm.a`）中实现的
+堆分配器会向操作系统请求更大的内存块，
+与 Nano Newlib（:file:`libc_nano.a` 和
+:file:`libm_nano.a`）相比，
+其最小内存需求显著更高。
 
-Newlib
-动态
-内存
-管理
-函数
-和
-Zephyr
-侧
-libc
-hooks
-之间
-唯一
-的
-接口
-是
-:c:func:`sbrk`
-函数，
-Newlib
-用
-它
-管理
-为其
-内部
-堆
-分配器
-保留
-的
-内存
-池
-大小。
+Newlib 动态内存管理函数与
+Zephyr 侧 libc 钩子之间唯一的接口
+是 :c:func:`sbrk` 函数，
+Newlib 用它来管理为其内部堆分配器
+保留的内存池的大小。
 
-在
-:file:`libc-hooks.c`
-中
-实现
-的
-:c:func:`_sbrk`
-hook
-函数
-处理
-来自
-Newlib
-的
-内存
-池
-大小
-更改
-请求
-并
-通过
-在
-系统
-内存
-不足
-时
-返回
-错误
-确保
-Newlib
-内部
-堆
-分配器
-内存
-池
-大小
-不
-超过
-可用
-内存
-空间
-的
-数量。
+在 :file:`libc-hooks.c` 中实现的
+:c:func:`_sbrk` 钩子函数
+处理来自 Newlib 的内存池大小变更请求，
+并在系统内存不足时返回错误，
+从而确保 Newlib 内部堆分配器的
+内存池大小不超过可用内存空间的数量。
 
-当
-启用
-用户
-空间
-时，
-Newlib
-内部
-堆
-分配器
-内存
-池
-被
-放
-在
-一个
-叫
-``z_malloc_partition``
-的
-专用
-内存
-分区
-中，
-可以
-从
-用户
-模式
-线程
-访问。
+当启用用户空间时，
+Newlib 内部堆分配器的内存池
+被放置在一个名为 ``z_malloc_partition`` 的
+专用内存分区中，该分区可以被用户模式线程访问。
 
-Newlib
-堆
-可用
-的
-内存
-空间
-数量
-取决于
-系统
-配置：
+Newlib 堆可用的内存空间数量
+取决于系统配置：
 
-* 当
-  MMU
-  启用
-  （选择
-  :kconfig:option:`CONFIG_MMU`），
-  为
-  Newlib
-  堆
-  保留
-  的
-  内存
-  空间
-  数量
-  由
-  :c:func:`k_mem_free_get`
-  函数
-  返回
-  的
-  空闲
-  内存
-  空间
-  大小
-  或
+* 当启用 MMU（选择了 :kconfig:option:`CONFIG_MMU`）时，
+  为 Newlib 堆保留的内存空间数量
+  由 :c:func:`k_mem_free_get` 函数返回的
+  空闲内存空间大小或
   :kconfig:option:`CONFIG_NEWLIB_LIBC_MAX_MAPPED_REGION_SIZE`
-  设置，
-  取
-  最小
-  的
-  那个。
+  决定，取其中最小者。
 
-* 当
-  MPU
-  启用
-  且
-  MPU
-  需要
-  2
-  的
-  幂
-  分区
-  大小
-  和
-  地址
-  对齐
+* 当启用 MPU 且 MPU 需要 2 的幂次方的
+  分区大小和地址对齐
   （:kconfig:option:`CONFIG_NEWLIB_LIBC_ALIGNED_HEAP_SIZE`
-  设置
-  为
-  非
-  零
-  值），
-  为
-  Newlib
-  堆
-  保留
-  的
-  内存
-  空间
-  数量
-  由
-  :kconfig:option:`CONFIG_NEWLIB_LIBC_ALIGNED_HEAP_SIZE`
-  设置。
+  被设置为非零值）时，
+  为 Newlib 堆保留的内存空间数量
+  由 :kconfig:option:`CONFIG_NEWLIB_LIBC_ALIGNED_HEAP_SIZE` 决定。
 
-* 否则，
-  为
-  Newlib
-  堆
-  保留
-  的
-  内存
-  空间
-  数量
-  等于
-  SRAM
-  区域
-  中
-  空闲
-  （未
-  分配）
-  内存
-  的
-  数量。
+* 否则，为 Newlib 堆保留的内存空间数量
+  等于 SRAM 区域中空闲（未分配）内存的数量。
 
-Newlib
-实现
-的
-标准
-动态
-内存
-管理
-接口
-函数
-是
-线程
-安全
-的
-并
-可以
-被
-多个
-线程
-同时
-调用。
+Newlib 实现的标准动态内存管理接口函数
+是线程安全的，可以被多个线程同时调用。

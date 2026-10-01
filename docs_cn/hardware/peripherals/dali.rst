@@ -3,80 +3,26 @@
 DALI
 ####
 
-DALI
-是
-digital
-addressable
-lighting
-interface，
-专业
-lighting
-solutions
-的
-communication
-standard。
-这
-个
-API
-是
-unstable
-的
-并
-可能
-改变。
+DALI 是数字可寻址照明接口，一种用于专业照明解决方案的通信标准。
+此 API 不稳定且可能更改。
 
-Basic
-Operation
+基本操作
 ***************
 
-DALI
-standard
-使用
-基于
-通过
-bus
-system
-交换
-frames
-的
-communication
-model。
-一
-个
-frame
-是
-manchester
-encoded
-data，
-以
-stop
-condition
-终止。
-DALI
-standard
-要求
-transmitter
-和
-receiver
-的
-特定
-行为。
+DALI 标准使用基于通过总线系统交换帧的通信模型。
+帧是曼彻斯特编码的数据，以停止条件终止。DALI 标准
+要求发射器和接收器的特定行为。
 
-Configuration
-Options
+配置选项
 *********************
 
-相关
-配置
-选项：
+相关配置选项：
 
 * :kconfig:option:`CONFIG_DALI`
 * :kconfig:option:`CONFIG_DALI_PWM`
 
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   dali_interface
+.. doxygengroup:: dali_interface

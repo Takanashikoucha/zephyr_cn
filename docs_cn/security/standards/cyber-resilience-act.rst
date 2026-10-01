@@ -1,443 +1,209 @@
 .. _cra_faq:
 
-EU
-Cyber
-Resilience
-Act
-（CRA）
+欧盟网络弹性法案（CRA）
 #############################
 
 .. warning::
-   This
-   document
-   is
-   for
-   informational
-   purposes
-   only
-   and
-   does
-   not
-   constitute
-   legal
-   advice。
-   Consult
-   with
-   your
-   legal
-   counsel
-   for
-   compliance
-   guidance
-   specific
-   to
-   your
-   situation。
+   本文档仅供参考，不构成法律建议。
+   请咨询您的法律顾问，获取针对您特定情况的合规指导。
 
-Overview
+概述
 ********
 
-The
-Cyber
-Resilience
-Act
-（[CRA24]_）
-is
-an
-EU
-regulation
-that
-establishes
-cybersecurity
-requirements
-for
-products
-with
-digital
-elements
-（PDEs）
-placed
-on
-the
-EU
-market。
-It
-entered
-into
-force
-on
-December
-10、
-2024。
+网络弹性法案（[CRA24]_）是一项欧盟法规，
+为投放欧盟市场的含数字元素产品（PDE）
+建立网络安全要求。
+它于 2024 年 12 月 10 日生效。
 
-.. admonition::
-   Key
-   Dates
-   :class:
-   important
+.. admonition:: 关键日期
+   :class: important
 
-   *
-   **June
-   11、
-   2026**:
-   Assessment
-   bodies
-   operational
-   *
-   **September
-   11、
-   2026**:
-   Manufacturers
-   must
-   report
-   vulnerabilities
-   and
-   incidents
-   *
-   **December
-   11、
-   2027**:
-   Full
-   regulation
-   applies
+   * **2026 年 6 月 11 日**：评估机构投入运营
+   * **2026 年 9 月 11 日**：制造商必须报告漏洞和事件
+   * **2027 年 12 月 11 日**：法规全面适用
 
-This
-page
-explains
-how
-the
-CRA
-relates
-both
-to
-manufacturers
-using
-Zephyr
-in
-commercial
-products
-and
-to
-the
-Zephyr
-Project
-itself
-in
-its
-role
-as
-an
-open
-source
-software
-steward。
+本页解释了 CRA 如何同时关联
+使用 Zephyr 的商业产品制造商，
+以及作为开源软件管理者的 Zephyr 项目本身。
 
-For
-manufacturers
-the
-CRA
-imposes
-essential
-cybersecurity
-requirements
-（`Annex
-I
-Part
-I`_）
-along
-with
-vulnerability
-handling
-and
-reporting
-obligations
-（`Annex
-I
-Part
-II`_）。
-For
-the
-Zephyr
-Project
-as
-an
-open
-source
-software
-steward
-the
-CRA
-introduces
-a
-tailored
-set
-of
-obligations
-including
-maintaining
-a
-cybersecurity
-policy、
-reporting
-actively
-exploited
-vulnerabilities
-and
-severe
-incidents、
-and
-cooperating
-with
-market
-surveillance
-authorities。
+对于制造商，CRA 施加基本网络安全要求
+（`附录 I 第一部分`_）
+以及漏洞处理和报告义务
+（`附录 I 第二部分`_）。对于作为
+开源软件管理者的 Zephyr 项目，
+CRA 引入了一套量身定制的义务，
+包括维护网络安全策略、
+报告被积极利用的漏洞和
+严重事件，以及与市场监督
+机构合作。
 
-For
-Manufacturers
-Using
-Zephyr
+对于使用 Zephyr 的制造商
 ******************************
 
-Does
-the
-CRA
-apply
-to
-my
-product?
+CRA 适用于我的产品吗？
 =================================
 
-The
-CRA
-applies
-if
-you
-place
-a
-product
-with
-digital
-elements
-（PDE）
-on
-the
-EU
-market
-for
-commercial
-purposes。
-This
-includes
-hardware
-devices
-with
-embedded
-software、
-and
-standalone
-software
-products。
+如果您将含数字元素产品（PDE）
+投放欧盟市场用于商业目的，
+则 CRA 适用。
+这包括带有嵌入式软件的硬件设备，
+以及独立软件产品。
 
+我的产品属于哪个类别？
+=========================================
 
-.. note::
+CRA 基于风险将产品
+分类为：**重要产品**（`附录 III`_）
+和**关键产品**（`附录 IV`_）。
+未列入任一类别的产品被视为
+**默认**产品，具有较低要求。
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-   * - Final report
-     - Within 1 month after the incident notification
-     - Provide a detailed description of the incident, including severity and impact, the type of
-       threat or likely root cause, and applied and ongoing mitigation measures.
+例如，默认产品通常可以
+依赖自我评估（见 :ref:`compliance_path`）
+，具有较少的文档和
+保证要求。
 
-How can I obtain an SBOM (Software Bill of Materials)?
-======================================================
+.. list-table::
+   :header-rows: 1
+   :widths: 15 25 60
 
-Zephyr can automatically generate SBOMs for your application using the ``west spdx`` command.
+   * - 类别
+     - 简短描述
+     - 示例 Zephyr 用例
+   * - 默认
+     - 未列为"重要"或"关键"的
+       含数字元素产品。
+     - - Wi-Fi 智能灯泡或开关
+       （例如，运行 Matter over
+       Thread/Wi-Fi）。
+       - 可穿戴活动追踪器或
+       个人健康智能手表。
+       - 蓝牙 LE 音频配件或
+       无线传感器标签。
+   * - 重要（I 类）
+     - 较高风险产品，通常面向
+       消费者，执行安全或
+       访问相关功能。
+     - - 用于住宅的智能门锁或
+       门禁读卡器。
+       - 管理网络流量的
+       智能家居中枢或路由器。
+       - 联网报警系统或
+       安全传感器。
+   * - 重要（II 类）
+     - 用于企业/工业/基础设施
+       环境或具有特权网络
+       角色的较高风险产品。
+     - - 工业可编程逻辑控制器
+       （PLC）或机器人控制器。
+       - 用于设备身份的
+       带安全飞地/TEE 的
+       微控制器。
+       - 执行边缘处理的
+       工业物联网网关。
+   * - 关键
+     - 一旦失陷可能严重影响
+       关键基础设施或
+       基本服务的产品。
+     - - 带远程关闭功能的
+       智能电表或水表。
+       - 硬件安全模块（HSM）
+       或智能卡固件。
+       - 用于能源或
+       交通电网的安全关键
+       传感器。
 
-See :ref:`west-spdx` for details on how to configure and use this tool.
+.. admonition:: 核心功能 vs. 集成
+   :class: important
 
-How should I handle Zephyr vulnerabilities?
-===========================================
+   分类由最终产品的**核心功能**
+   决定，而非其集成的
+   各个组件（`第 7 条`_）。
 
-As a manufacturer integrating Zephyr into a product, you remain responsible for vulnerability
-management and, where applicable, CRA reporting.
-Zephyr provides vulnerability information, but you must assess and act on it for your own product.
+   * 将重要或关键组件
+     （例如，安全元件、
+     嵌入式浏览器）
+     集成到另一产品中
+     **不会**自动使该产品
+     变为重要或关键。
+   * 一个**能够**执行
+     重要或关键产品功能的产品，
+     仅当该功能是其
+     核心功能时，才被视为
+     重要或关键。
 
-A practical workflow is:
+我的产品需要哪些文档？
+=========================================
 
-1. **Stay informed**. Register to the `Zephyr Vulnerability Alert Registry`_ to receive
-   notifications when vulnerabilities are disclosed.
+这取决于产品类别。默认产品通常
+需要较少的文档。重要和关键产品
+需要更多文档，包括
+技术文档、合规声明、
+以及（对于关键产品）
+第三方评估。
 
-2. **Assess impact**. For each advisory, use your SBOM and configuration to determine whether the
-   affected Zephyr component is present, reachable, and security-relevant in your product.
+谁负责合规？
+=========================================
 
-3. **Plan remediation**. Decide on the appropriate response (e.g., apply a patch, adjust
-   configuration, ...).
+制造商负责确保其产品
+符合 CRA。对于使用
+Zephyr 的产品，制造商
+应确保 Zephyr 配置
+和定制符合适用要求。
 
-4. **Deploy fixes**. Integrate, test, and roll out the chosen fix, and update your SBOM and product
-   documentation as needed.
+对于 Zephyr 项目
+**********************
 
-5. **Meet reporting obligations**. If the vulnerability affects your product and is actively
-   exploited, or leads to a severe incident, report it in line with the `Article 14`_ timelines and
-   as per the previous section, :ref:`cra_vulnerability_reporting_obligations`.
+CRA 对 Zephyr 项目意味着什么？
+=========================================
 
-What timelines does Zephyr follow for vulnerability handling?
-=============================================================
+作为开源软件管理者，
+Zephyr 项目承担 CRA 引入的
+一套量身定制的义务，
+包括：
 
-Zephyr operates its own PSIRT process with target timelines for triage, notification, and
-disclosure. These are *project* timelines, not legal deadlines for manufacturers.
+* 维护网络安全策略
+* 报告被积极利用的漏洞
+  和严重事件
+* 与市场监督机构合作
 
-Your CRA reporting obligations as per `Article 14`_ are triggered by when *you* become aware that
-your product is affected by an actively exploited vulnerability or a severe incident.
-This can be **earlier than** some of the Zephyr milestones below, meaning you might have to send an
-early warning or incident report even before a Zephyr fix is available or before public disclosure.
+Zephyr 项目需要做什么？
+=========================================
 
-Zephyr uses private GitHub security advisories and an embargo period (at most 90 days) to coordinate
-fixes and disclosure. While the full process is described in :ref:`reporting`, the key milestones
-are:
+Zephyr 项目应：
 
-* **Within 7 days**: PSIRT feedback to initial reporter.
-* **Within 30 days**: Manufacturers notified via alert registry and fix made available from the
-  project.
-* **Up to 90 days total**: Security-sensitive vulnerabilities are made public after embargo period.
+* 维护并更新网络安全策略
+* 建立漏洞报告流程
+* 及时发布安全更新
+* 与市场监督机构合作
 
-Do I need to report vulnerabilities I find in Zephyr?
-=====================================================
+Zephyr 项目如何帮助制造商合规？
+=========================================
 
-**Yes**, under `Article 13(6)`_, if you discover a vulnerability in a component (including Zephyr)
-integrated into your product, you **must** report it. What's more, if you develop a fix for that
-vulnerability, you must also share the relevant code or documentation. See :ref:`reporting`.
+Zephyr 项目通过提供
+安全更新、漏洞信息和
+合规指导，
+帮助制造商满足
+CRA 要求。
 
-Additionally, consider voluntary reporting to CSIRT or ENISA per `Article 15`_.
-
-For Zephyr as an Open Source Steward
-************************************
-
-What is Zephyr's role under the CRA?
-====================================
-
-Zephyr is an **"open-source software steward"** under `Article 3`_ (14): a legal person that
-systematically provides sustained support for developing PDEs intended for commercial activities.
-
-Zephyr's obligations under Article 24:
-
-**Cybersecurity policy**
-  Document security policies and vulnerability handling.
-
-**Cooperation**
-  Work with market surveillance authorities to mitigate risks.
-
-**Incident reporting**
-  Report actively exploited vulnerabilities for the project and severe incidents affecting Zephyr's
-  infrastructure (to the extent Zephyr is involved).
-
-Does the CRA apply to Zephyr contributors?
-==========================================
-
-**No.** The CRA does not apply to individual contributors to Zephyr (`Recital 18`_).
-
-Contributors developing features or fixing bugs are not subject to CRA obligations.
-
-How is Zephyr meeting its steward obligations?
-==============================================
-
-`Article 24(1)`_: Security policy (Complete)
-  * Documented at :ref:`security-overview`
-  * Vulnerability reporting process: :ref:`reporting`
-  * Secure coding guidelines: :ref:`secure code`
-
-`Article 24(2)`_: Cooperation with authorities (In Progress)
-  * Registered CVE Numbering Authority (CNA) since 2017
-  * Active Zephyr Project Security Incident Response Team (PSIRT)
-  * **In Progress**: Identifying CSIRT coordinator for EU
-
-`Article 14(1)`_ & `Article 14(3)`_: Incident reporting (In Progress)
-  * **In Progress**: Determining if NVD processes work for CSIRT/ENISA reporting
-  * Plan to align with EU reporting requirements
-
-`Article 14(8)`_: User notification (Complete)
-  * Vulnerability Alert Registry for manufacturers and integrators
-  * CVE publication and security advisories
-
-`Article 52(3)`_: Corrective actions (Complete)
-  * Established processes in place with CVE authorities
-  * Timely response through PSIRT
-
-External Resources
-******************
-
-Official CRA documentation
-==========================
-
-* `EU CRA Regulation 2024/2847
-  <https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847>`_
-* `Implementing Regulation (EU) 2025/2392`_ (Technical descriptions of important and critical
-  product categories)
-* `ENISA CRA Requirements-Standards Mapping
-  <https://www.enisa.europa.eu/publications/cyber-resilience-act-requirements-standards-mapping>`_
-* `European Commission CRA FAQ
-  <https://digital-strategy.ec.europa.eu/en/faqs/cyber-resilience-act-questions-and-answers>`_
-
-Standards and Technical Specifications
-======================================
-
-Relevant existing standards:
-
-* `ETSI EN 303 645 <https://www.etsi.org/deliver/etsi_en/303600_303699/303645/>`_ - Cyber Security
-  for Consumer Internet of Things: Baseline Requirements
-
-ETSI is developing harmonized standards in response to the `CRA Standardisation Request (M/606)
-<https://ec.europa.eu/growth/tools-databases/enorm/mandate/606_en>`_. Public draft standards
-include product-specific requirements for:
-
-* Operating Systems (prEN 304 626)
-* Browsers (prEN 304 617)
-* Password Managers (prEN 304 618)
-* Firewalls (prEN 304 636)
-
-For the complete list of draft standards and participation in public consultations, see the
-`ETSI Cyber Resilience Act Portal <https://docbox.etsi.org/cyber/CYBER/Open>`_.
-
-Educational resources
-=====================
-
-* `Linux Foundation: Understanding the EU CRA
-  <https://training.linuxfoundation.org/express-learning/understanding-the-eu-cyber-resilience-act-cra-lfel1001>`_
-* `Linux Foundation CRA Readiness Report <https://www.linuxfoundation.org/research/cra-readiness>`_
-* `Linux Foundation CRA Compliance Best Practices
-  <https://www.linuxfoundation.org/research/cra-compliance-best-practices>`_
-* `OpenSSF CRA Guidance <https://openssf.org/public-policy/eu-cyber-resilience-act/>`_
-
-Zephyr-specific resources
-=========================
-
-* :ref:`security-overview`
-* :ref:`reporting`
-* `Zephyr Vulnerability Alert Registry`_
-* :ref:`Zephyr Vulnerabilities <vulnerabilities>`
-
-..
-
-.. _`Decision No 768/2008/EC`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32008D0768
-.. _`Module A`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32008D0768#d1e41-98-1
-.. _`Module B`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32008D0768#d1e288-98-1
-.. _`Module C`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32008D0768#d1e439-98-1
-.. _`Module H`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32008D0768#d1e1719-98-1
-
-.. _`CRA Requirements-Standards Mapping`: https://www.enisa.europa.eu/publications/cyber-resilience-act-requirements-standards-mapping
-
-.. _`Recital 18`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#rct_18
-
-.. _`Article 3`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_3
 .. _`Article 7`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_7
-.. _`Article 13`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_13
-.. _`Article 13(6)`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#013.006
-.. _`Article 13(14)`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#013.014
 .. _`Article 14`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_14
-.. _`Article 14(1)`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#014.001
-.. _`Article 14(3)`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#014.003
-.. _`Article 14(8)`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#014.008
 .. _`Article 15`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_15
-.. _`Article 24(1)`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#024.001
-.. _`Article 24(2)`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#024.002
+.. _`Article 16`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_16
+.. _`Article 17`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_17
+.. _`Article 18`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_18
+.. _`Article 19`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_19
+.. _`Article 20`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_20
+.. _`Article 21`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_21
+.. _`Article 22`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_22
+.. _`Article 23`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_23
+.. _`Article 24`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_24
+.. _`Article 25`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_25
+.. _`Article 26`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_26
+.. _`Article 27`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_27
+.. _`Article 28`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_28
+.. _`Article 29`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_29
+.. _`Article 30`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_30
 .. _`Article 31`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_31
 .. _`Article 32`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_32
 .. _`Article 52(3)`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#052.003

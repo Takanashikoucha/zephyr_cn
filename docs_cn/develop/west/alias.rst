@@ -1,198 +1,58 @@
 .. _west-aliases:
 
-West
-aliases
+West 别名
 ############
 
-West
-允许
-添加
-alias
-命令
-到
-本地、
-全局
-或
-系统
-配置
-文件。
-这些
-aliases
-使
-添加
-快捷
-方式
-变
-得
-简单
-用于
-常
-用
-的
-或
-难以
-记忆
-的
-命令
-以
-方便
-开发。
+West 允许在本地、全局或系统配置文件中添加别名命令。这些别名为常用或难以记住的命令提供快捷方式，便于开发。
 
-类似
-于
-``git``
-aliases
-如何
-工作，
-alias
-命令
-被
-替换
-为
-alias
-的
-完整
-文本
-并
-解析
-为
-新
-的
-shell
-参数
-列表
-（内部
-用
-Python
-函数
-`shlex.split()`_
-拆分
-值）。
-这
-使
-添加
-参数
-参数
-成为
-可能
-如
-它们
-被
-传递
-给
-原始
-命令。
-空格
-被
-考虑
-为
-参数
-分隔符；
-如果
-参数
-不
-应该
-被
-拆分
-用
-适当
-的
-转义。
+与 ``git`` 别名的工作方式类似，别名命令会被替换为其完整文本，并作为新的 shell 参数列表进行解析（内部使用 Python 函数 `shlex.split()`_ 拆分该值）。这使得可以像传递给原始命令一样添加参数。空格被视为参数分隔符；如果参数不应被拆分，请使用正确的转义。
 
-.. _shlex.split():
-   https://docs.python.org/3/library/shlex.html#shlex.split
+.. _shlex.split(): https://docs.python.org/3/library/shlex.html#shlex.split
 
-要
-添加
-新
-的
-alias
-简单
-调用
-``west
-config``
-命令：
+要添加新别名，只需调用 ``west config`` 命令：
 
 .. code-block:: shell
 
-   west
-   config
-   alias.mylist
-   "list
-   -f
-   '{name}
-   {revision}'"
+   west config alias.mylist "list -f '{name} {revision}'"
 
-要
-列出
-aliases，
-用
-:samp:`west
-help
-{some_alias}`。
+要列出别名，使用 :samp:`west help {some_alias}`。
 
-递归
-aliases
-被
-允许
-因为
-alias
-命令
-可以
-包含
-其他
-aliases，
-有效
-地
-构建
-更
-复杂
-但
-容易
-记忆
-的
-命令。
+允许递归别名，因为别名命令可以包含其他别名，从而有效地构建出更复杂但更易记住的命令。
 
-可以
-覆盖
-现有
-命令，
-例如
-传递
-默认
-参数：
+也可以覆盖已有命令，例如传递默认参数：
 
 .. code-block:: shell
 
-   west
-   config
-   alias.update
-   "update
-   -o=--depth=1
-   -n"
+   west config alias.update "update -o=--depth=1 -n"
 
 .. warning::
 
-   覆盖/
-   遮蔽
-   其他
-   或
-   内置
-   命令
-   是
-   高级
-   用例，
-   它
-   可以
-   导致
-   奇怪
-   的
-   副作用
-   并
-   应该
-   非常
-   小心
-   地
-   做。
+   覆盖/遮蔽其他命令或内置命令属于高级用法，可能导致奇怪的副作用，应谨慎操作。
 
-Examples
+示例
+--------
+
+向全局配置添加 ``west run`` 和 ``west menuconfig`` 快捷方式，以调用 ``west build`` 的对应 CMake 目标：
+
+.. code-block:: shell
+
+   west config --global alias.run "build --pristine=never --target run"
+   west config --global alias.menuconfig "build --pristine=never --target menuconfig"
+
+为正在积极开发的示例（sample）创建一个带额外选项的别名：
+
+.. code-block:: shell
+
+   west config alias.sample "build -b native_sim samples/hello_world -t run -- -DCONFIG_ASSERT=y"
+
+覆盖 ``west update`` 以检查本地缓存：
+
+.. code-block:: shell
+
+   west config alias.update "update --path-cache $HOME/.cache/zephyrproject"
+
+通过 west 运行 :ref:`Twister <twister_script>` 时，自动排除 32 位 native 模拟器目标。这在没有 32 位主机 C 库的主机系统上（例如 Linux/AArch64）尤其有用：
+
+.. code-block:: shell
+
+   west config alias.twister "twister --exclude-platform native_sim/native"

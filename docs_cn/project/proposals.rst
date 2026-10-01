@@ -1,221 +1,70 @@
 .. _feature-tracking:
 
-Feature
-Tracking
-#################
+功能跟踪
+########
 
-To
-propose
-something
-new
-to
-the
-Zephyr
-Project:
+向 Zephyr 项目提议新事物：
 
-#.
-Start
-by
-searching
-existing
-`issues
-<https://github.com/zephyrproject-rtos/zephyr/issues>`_
-to
-see
-if
-there
-is
-prior
-work
-on
-the
-area。
-#.
-If
-not
-feel
-free
-to
-create
-a
-`new
-issue
-<https://github.com/zephyrproject-rtos/zephyr/issues/new/choose>`_
-of
-the
-appropriate
-type
-（Enhancement、
-RFC/Proposal、
-etc.）
+#. 先从搜索现有 `议题
+   <https://github.com/zephyrproject-rtos/zephyr/issues>`_ 开始，
+   查看该领域是否已有先前工作。
+#. 如果没有，请随意创建一个适当类型的
+   `新议题
+   <https://github.com/zephyrproject-rtos/zephyr/issues/new/choose>`_
+   （增强、RFC/提案等）。
 
-You
-should
-contact
-an
-assigned
-owner
-if
-you'd
-like
-to
-discuss
-or
-contribute
-to
-an
-existing
-issue's
-implementation。
+如果你想讨论或为某个现有议题的实现做出贡献，
+应联系其指派的所有者。
 
 .. note::
 
-   Previously
-   the
-   project
-   used
-   `GitHub
-   labels
+   此前，项目使用 `GitHub 标签
    <https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels>`_
-   to
-   track
-   feature
-   related
-   work。
-   You
-   may
-   find
-   issues
-   with
-   labels
-   like
-   "Feature"
-   or
-   "Enhancement"。
+   来跟踪功能相关工作。
+   你可能会发现带有“功能”或“增强”等标签的议题。
 
-   These
-   labels
-   are
-   deprecated
-   for
-   new
-   issues
-   which
-   should
-   be
-   of
-   the
-   appropriate
-   type
-   instead。
-   For
-   example
-   create
-   an
-   issue
-   of
-   type
-   Enhancement
-   instead
-   of
-   adding
-   the
-   Enhancement
-   label
-   to
-   a
-   new
-   issue。
+   这些标签对新议题已弃用，
+   新议题应改为创建为适当的类型。
+   例如，应创建一个类型为“增强”的议题，
+   而不是向一个新议题添加“增强”标签。
 
-Roadmap
-and
-Release
-Plans
-*************************
+路线图与发布计划
+****************
 
-Project
-roadmaps
-and
-release
-plans
-are
-both
-important
-tools
-for
-the
-project
-but
-they
-have
-very
-different
-purposes
-and
-should
-not
-be
-confused。
-A
-project
-roadmap
-communicates
-the
-high
-level
-overview
-of
-a
-project's
-strategy
-while
-a
-release
-plan
-is
-a
-tactical
-document
-designed
-to
-capture
-and
-track
-the
-features
-planned
-for
-upcoming
-releases。
+项目路线图和发布计划都是项目的重要工具，
+但两者的目的截然不同，不应混淆。
+项目路线图传达的是项目战略的高层概览，
+而发布计划则是一份战术性文档，
+用于记录并跟踪计划在即将发布的版本中包含的功能。
 
--
-The
-project
-roadmap
-communicates
-the
-why
-a
-release
-plan
-details
-the
-what
--
-A
-release
-plan
-spans
-only
-a
-few
-months
-a
-product
-roadmap
-might
-cover
-a
-year
-or
-more
+- 项目路线图传达的是“为什么”；发布计划详述的是“做什么”
+- 发布计划只涵盖短短几个月；产品路线图则可能覆盖一年或更长时间
+
+
+项目路线图
+==========
+
+项目路线图应当作为项目战略目标与预期的高层可视化摘要。
+
+如果构建得当，路线图可以基于多种原因成为有价值的工具。
+它可以帮助项目以有说服力的方式向现有和新干系人展示其计划，
+帮助招募新成员，
+并且可以作为团队和社区在整个项目开发过程中随时参考的有用资源，
+以确保大家仍在按既定计划执行。
+
+因此，路线图应只包含战略层面的细节、
+主要项目主题、史诗（epic）和目标。
+
+
+发布计划
+========
+
+当项目路线图的高层战略被转化为基于特定功能、增强项和修复项
+构建的可执行计划——这些内容需要进入某个特定版本或里程碑——时，
+发布计划就开始发挥作用。
+
+发布计划传达的是计划纳入项目下一个版本
+（或接下来几个版本）的那些功能和增强项。
+因此它更像一份项目计划，
+将宏大的构想拆解为较小的项目，
+以便社区和项目的主要干系人能够推进并取得进展。

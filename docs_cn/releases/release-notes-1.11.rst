@@ -2,192 +2,189 @@
 
 .. _zephyr_1.11:
 
-Zephyr
-Kernel
-1.11.0
+Zephyr Kernel 1.11.0
 #####################
 
-我们
-pleased
-to
-announce
-Zephyr
-kernel
-version
-1.11.0
-的
-release。
+我们很高兴宣布 Zephyr 内核版本 1.11.0 的发布。
 
-这
-个
-release
-的
-Major
-enhancements
-包括：
+本次发布的主要增强包括：
 
-*
-Thread
-level
-的
-memory
-protection
-在
-x86、
-ARC
-和
-Arm
-上
-userspace
-和
-memory
-domains
-*
-Symmetric
-Multi
-Processing
-（SMP）
-support
-在
-Xtensa
-architecture
-上。
-*
-Initial
-的
-Armv8
-M
-architecture
-support。
-*
-Native
-的
-development
-environment
-在
-Microsoft
-Windows
-上。
-*
-Native
-的
-build
-target
-在
-POSIX
-platforms
-上。
-*
-POSIX
-PSE52
-partial
-support。
-*
-Thread
-support
-通过
-与
-OpenThread
-的
-integration。
-*
-Firmware
-over
-the
-air
-（FOTA）
-updates
-通过
-BLE
-用
-MCUmgr。
-*
-Lightweight
-的
-flash
-storage
-layer
-for
-constrained
-devices。
-*
-Additional
-的
-SoC、
-platform
-和
-driver
-support
-for
-many
-已
-supported
-的
-platforms。
+* x86、ARC 和 Arm 上的线程级内存保护、用户空间和内存域
+  domains
+* Xtensa 架构上的对称多处理（SMP）支持
+* 初始 Armv8-M 架构支持
+* Microsoft Windows 上的原生开发环境
+* POSIX 平台上的原生构建目标
+* POSIX PSE52 部分支持
+* 通过与 OpenThread 集成实现线程支持
+* 使用 MCUmgr 通过 BLE 进行固件空中（FOTA）更新
+* 用于受限设备的轻量级闪存存储层
+* 为许多已支持的平台添加额外的 SoC、平台和驱动支持
+  platforms.
 
-以下
-sections
-provide
-detailed
-的
-lists
-of
-changes
-by
-component。
+以下各节提供按组件分类的更改详细列表。
 
 Kernel
 ******
 
-*
-Initial
-的
-Symmetric
-Multi
-Processing
-（SMP）
-support
-被
-added:
+* 添加初始对称多处理（SMP）支持：
 
-   *
-   SMP
-   aware
-   的
-   scheduler
-   *
-   SMP
-   timer
-   和
-   idling
-   support
-   *
-   Available
-   在
-   Xtensa
-   architecture
-   上
-*
-POSIX
-PSE52
-support:
+  * SMP 感知的调度器
+  * SMP 定时器和空闲支持
+  * 可在 Xtensa 架构上使用
+* POSIX PSE52 支持：
 
-   *
-   Timer、
-   clock、
-   scheduler
-   和
-   pthread
-   APIs
+  * Timer、clock、scheduler 和 pthread API
 
 Architectures
 *************
 
+* 用户空间和系统调用相关更改：
 
-.. note::
+  * 添加 ARC 用户空间实现
+  * 添加 Arm 用户空间实现
+  * 修复了几个与栈保护相关的 MPU 问题
+* Armv8-M 初始架构支持，包括以下核心：
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-.. comment  List derived from GitHub Issue query: ...
+  * Arm Cortex-M23
+  * Arm Cortex-M33
+* 用于原生 GNU/Linux 和 macOS 构建目标的新 POSIX 架构：
+
+  * 目标为可在主机操作系统上运行的原生可执行文件
+
+Boards
+******
+
+* 用于 POSIX 架构的新 native_posix 开发板：
+
+  * 包含硬件模型模板
+  * 添加控制台和日志支持
+  * 中断和定时器在几种不同配置中模拟
+* 添加以下 Arm 开发板支持：
+
+  * adafruit_trinket_m0
+  * arduino_zero
+  * lpcxpresso54114
+  * nrf52_sparkfun
+  * nucleo_f429zi
+  * stm32f072_eval
+  * stm32f072b_disco
+* 移除 Panther 开发板支持，包括 boards/x86/panther 和
+  boards/arc/panther_ss
+* 重构 dts.fixup 使通用 SoC 相关修复位于 arch/<*>/soc
+  开发板 dts.fixup 仅用于开发板特定项目
+
+Drivers and Sensors
+*******************
+
+* ESP32 SoC 的新 LED PWM 驱动
+* 修复 ESP32 I2C 驱动
+* 为 nios-II 添加 I2C 主机、QSPI 闪存和 GPIO 驱动
+* 为 LPC54114 添加 PinMux、GPIO、串口驱动
+* 为 sam0 添加 PinMux、GPIO、串口、SPI 和看门狗驱动
+* 添加 APA102 和 WS2821B led_strip 驱动
+* 添加原生 entropy 驱动
+* 将一些传感器移到 dts
+* 添加 AMG88xx、CCS811 和 VL53L0x 传感器驱动
+* 以百分比重新定义 SENSOR_CHAN_HUMIDITY
+
+Networking
+**********
+
+* 添加通用 OpenThread 支持
+* 为 nRF5 IEEE 802.15.4 驱动添加 OpenThread 支持
+* NXP MCUX 以太网驱动 IPv6 多播加入/离开增强
+* 以太网 STM32 修复
+* 添加 IEEE 802.15.4 Sub-GHz TI CC1200 芯片支持
+* 添加 IEEE 802.15.4 测试驱动（upipe）hw 过滤支持
+* IEEE 802.15.4 无线电 API 增强
+* 网络回环驱动修复
+* 网络管理 API 事件增强
+* 可监控 IPv6 邻居添加和移除
+* 静态 IPv4 和 DHCPv4 配置增强
+* Bluetooth IPSP 断开连接修复
+* 网络缓冲增强
+* ICMPv4 和 ICMPv6 错误检查修复
+* 网络接口地址处理增强
+* 添加网络接口之间的路由支持
+* LWM2M 修复和增强
+* 移除旧 legacy HTTP API
+* 移除旧 legacy ZoAP API
+* CoAP 修复
+* TCP 修复
+* HTTP 修复
+* RPL 修复
+* Net-app API 修复
+* Net-shell 修复
+* BSD socket API 修复
+
+Bluetooth
+*********
+
+* 控制器的多个修复
+* 借助专用分片池修复潜在的连接传输死锁问题
+  of a dedicated fragment pool
+* Mesh 支持的多个修复
+* 为 Mesh 添加测试自动化（用于 tests/bluetooth/tester）
+
+Build and Infrastructure
+************************
+
+* Microsoft Windows 上的原生开发环境：
+
+  * 使用 CMake 和 Kconfiglib 避免需要仿真层
+  * 使用 Chocolatey 的包管理支持以简化设置
+  * 使用 Ninja 时构建时间与 Linux 和 macOS 相当
+
+Libraries / Subsystems
+***********************
+
+* 基于跨 RTOS MCUmgr 的新管理子系统：
+
+  * 通过 BLE 和串口的安全固件更新
+  * 支持文件系统访问和统计
+  * mcumgr 跨平台命令行工具
+
+* FCB（文件循环缓冲）轻量级存储层：
+
+  * NOR 闪存的磨损均衡支持
+  * 适用于内存受限设备
+
+HALs
+****
+
+* 将 Arm CMSIS 从版本 4.5.0 更新到 5.2.0
+* 将 stm32cube stm32l4xx 从版本 1.9.0 更新到 1.10.0
+* 将 stm32cube stm32f4xx 从版本 1.16.0 更新到 1.18.0
+* 添加 Atmel SAMD21 HAL
+* 为 LPC54114 添加 mcux 2.2.1
+* 添加 STM 的 VL53L0x 传感器 HAL
+* 导入并迁移到 Nordic SoC 上的 nRFx 0.8.0
+* 添加 QSPI 控制器 HAL 驱动
+
+Documentation
+*************
+
+* 添加 MPU 特定栈和用户空间文档
+* 改进 Native（POSIX）支持文档
+* 新示例和支持开发板的文档
+* 通用文档澄清和改进
+* 将每日构建的 master 分支文档标识为 "Latest" 版本
+* 解决 Sphinx 生成的页内链接问题
+* 更新文档生成工具（Doxygen、Sphinx、Breathe、Docutils）
+
+Tests and Samples
+*****************
+
+* 为用户空间测试添加额外测试和测试改进
+
+Issue Related Items
+*******************
+
+自上次 1.10.0 标记发布以来解决了以下 GitHub issue：
+release:
+
+.. comment  列表派生自 GitHub Issue 查询：...
 
 * :github:`1082` - build all tests have issues for devices that don't exist on a given board
 * :github:`1281` - spi_ll_stm32 driver does not support stm32f1soc

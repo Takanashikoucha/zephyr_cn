@@ -3,220 +3,37 @@
 Power
 #####
 
-``power``
-harness
-用
-来
-测量
-和
-验证
-电流
-消耗。
-它
-与
-'pytest'
-集成
-用
-硬件
-power
-monitor
-执行
-自动化
-数据
-收集
-和
-分析。
+``power`` 测试框架用于测量和验证电流消耗。它与 pytest 集成，使用硬件电源监控器执行自动化数据收集和分析。
 
-harness
-执行
-以下
-步骤：
+该测试框架执行以下步骤：
 
-1. 通过
-   ``PowerMonitor``
-   抽象
-   接口
-   初始化
-   power
-   监控
-   设备
-   （例如
-   ``stm_powershield``）。
-#. 为
-   定义
-   的
-   ``measurement_duration``
-   开始
-   电流
-   测量。
-#. 收集
-   原始
-   电流
-   波形
-   数据。
-#. 用
-   peak
-   检测
-   算法
-   基于
-   power
-   转换
-   将
-   数据
-   分段
-   为
-   定义
-   的
-   执行
-   阶段。
-#. 用
-   工具
-   函数
-   计算
-   每个
-   阶段
-   的
-   RMS
-   电流
-   值。
-#. 将
-   计算
-   的
-   值
-   与
-   用户
-   定义
-   的
-   预期
-   RMS
-   值
-   比较。
+1. 通过 ``PowerMonitor`` 抽象接口初始化电源监控设备（例如 ``stm_powershield``）。
+#. 为定义的 ``measurement_duration`` 开始电流测量。
+#. 收集原始电流波形数据。
+#. 使用峰值检测算法，基于电源转换将数据分段为定义的执行阶段。
+#. 使用工具函数计算每个阶段的 RMS 电流值。
+#. 将计算值与用户定义的期望 RMS 值进行比较。
 
 .. code-block:: yaml
 
-   harness:
-   power
-   harness_config:
-     fixture:
-     pm_probe
-     power_measurements:
-       elements_to_trim:
-       100
-       min_peak_distance:
-       40
-       min_peak_height:
-       0.008
-       peak_padding:
-       40
-       measurement_duration:
-       6
-       num_of_transitions:
-       4
-       expected_rms_values:
-       [56.0,
-       4.0,
-       1.2,
-       0.26,
-       140]
-       tolerance_percentage:
-       20
+    harness: power
+    harness_config:
+      fixture: pm_probe
+      power_measurements:
+        elements_to_trim: 100
+        min_peak_distance: 40
+        min_peak_height: 0.008
+        peak_padding: 40
+        measurement_duration: 6
+        num_of_transitions: 4
+        expected_rms_values: [56.0, 4.0, 1.2, 0.26, 140]
+        tolerance_percentage: 20
 
-- **elements_to_trim**
-  –
-  测量
-  开始
-  时
-  丢弃
-  的
-  样本
-  数
-  以
-  消除
-  噪声。
-- **min_peak_distance**
-  –
-  检测
-  到
-  的
-  电流
-  peaks
-  之间
-  的
-  最小
-  距离
-  （帮助
-  检测
-  不同
-  转换）。
-- **min_peak_height**
-  –
-  资格
-  为
-  peak
-  的
-  最小
-  电流
-  阈值
-  （以
-  安培
-  计）。
-- **peak_padding**
-  –
-  每个
-  检测
-  到
-  的
-  peak
-  周围
-  扩展
-  的
-  样本
-  数。
-- **measurement_duration**
-  –
-  记录
-  电流
-  数据
-  的
-  总
-  时间
-  （以
-  秒
-  计）。
-- **num_of_transitions**
-  –
-  测试
-  执行
-  期间
-  DUT
-  中
-  预期
-  的
-  power
-  状态
-  转换
-  数。
-- **expected_rms_values**
-  –
-  每个
-  识别
-  的
-  执行
-  阶段
-  的
-  目标
-  RMS
-  值
-  （以
-  毫安
-  计）。
-- **tolerance_percentage**
-  –
-  从
-  预期
-  RMS
-  值
-  的
-  允许
-  偏差
-  百分比。
+- **elements_to_trim** – 测量开始时丢弃的样本数，以消除噪声。
+- **min_peak_distance** – 检测到的电流峰值之间的最小距离（有助于检测不同的转换）。
+- **min_peak_height** – 作为峰值的最低电流阈值（单位：安培）。
+- **peak_padding** – 每个检测到的峰值周围扩展的样本数。
+- **measurement_duration** – 记录电流数据的总时间（单位：秒）。
+- **num_of_transitions** – 测试执行期间被测设备（DUT）中期望的电源状态转换次数。
+- **expected_rms_values** – 每个识别出的执行阶段的目标 RMS 值（单位：毫安）。
+- **tolerance_percentage** – 允许偏离期望 RMS 值的百分比。

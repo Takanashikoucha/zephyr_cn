@@ -1,20 +1,6 @@
 .. _net_context_interface:
 
-Networking
-Context
+Networking Context
 ##################
 
-Net
-context
-API
-不
-intended
-用于
-application
-use。
-Application
-应该
-use
-:ref:`bsd_sockets_interface`
-API
-instead。
+Net_context API 不用于 application 使用。Application 应改用 :ref:`bsd_sockets_interface` API。

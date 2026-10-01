@@ -9,28 +9,8 @@
 .. _west-apis-manifest:
 .. _west-apis-util:
 
-West
-APIs
+West API
 #########
 
-West
-APIs
-不
-被
-文档
-化
-因为
-要么
-west
-缺失
-或
-zephyr
-仓库
-在
-文档
-构建
-期间
-未
-用
-west
-初始化。
+west API 未被文档化，因为在文档构建期间 west 缺失，
+或者 zephyr 仓库未使用 west 初始化。

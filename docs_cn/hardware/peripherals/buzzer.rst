@@ -1,289 +1,46 @@
 .. _buzzer_api:
 
-Buzzer
+蜂鸣器
 ######
 
-Buzzer
-subsystem
-暴露
-一
-个
-API
-统一
-驱动
-buzzer
-hardware，
-无论
-底层
-part
-是
-由
-PWM
-channel
-驱动
-的
-passive
-piezo
-还是
-由
-单一
-GPIO
-line
-控制
-的
-active
-buzzer。
+蜂鸣器子系统暴露一个 API，用于统一驱动蜂鸣器硬件，
+无论底层部件是由 PWM 通道驱动的无源压电蜂鸣器，
+还是由单个 GPIO 引脚控制的有源蜂鸣器。
 
-Basic
-Operation
+基本操作
 ***************
 
-应用
-通过
-devicetree
-获取
-一
-个
-buzzer
-device
-并
-通过
-:zephyr_file:`include/zephyr/drivers/buzzer.h`
-中
-的
-函数
-驱动
-它：
+应用通过设备树（devicetree）获取蜂鸣器设备，
+并通过 :zephyr_file:`include/zephyr/drivers/buzzer.h` 中的函数驱动它：
 
-Buzzer
-API
-calls
-不
-等待
-请求
-的
-tone
-duration。
-Durations
-描述
-hardware
-应该
-保持
-发出
-tone
-的
-时间
-长度
-而
-非
-调用
-thread
-应该
-sleep
-的
-时间；
-用
-:c:macro:`BUZZER_DURATION_FOREVER`
-播放
-直到
-显式
-stop。
+蜂鸣器 API 调用不会等待所请求的音调持续时间。持续时间描述的是
+硬件应保持发声多长时间，而不是调用线程应睡眠多长时间；
+使用 :c:macro:`BUZZER_DURATION_FOREVER` 可一直播放，直到显式停止。
 
-- :c:func:`buzzer_tone`
-  在
-  特定
-  frequency
-  播放
-  特定
-  duration
-  的
-  tone。
-  Hardware
-  保持
-  发出
-  tone
-  请求
-  的
-  duration
-  并
-  driver
-  自动
-  将其
-  静音。
-- :c:func:`buzzer_beep`
-  播放
-  buzzer
-  的
-  natural
-  operating
-  frequency，
-  由
-  board
-  file
-  在
-  ``pwms``
-  DT
-  property
-  的
-  period
-  cell
-  中
-  编码
-  （通常
-  是
-  piezo
-  的
-  mechanical
-  resonance，
-  即
-  part
-  能
-  产生
-  的
-  最
-  响
-  的
-  tone）。
-  在
-  active
-  buzzers
-  上
-  这
-  个
-  调用
-  等价
-  于
-  将
-  GPIO
-  line
-  驱动
-  为
-  on，
-  因为
-  hardware
-  oscillator
-  决定
-  实际
-  pitch。
-- :c:func:`buzzer_set_volume`
-  调整
-  感知
-  的
-  loudness。
-  零
-  立即
-  静音；
-  非
-  零
-  值
-  被
-  存储
-  并
-  在
-  下次
-  tone
-  时
-  应用。
-  Active
-  buzzers
-  缺乏
-  analog
-  volume
-  control，
-  将
-  零
-  映射
-  为
-  silent
-  将
-  任何
-  非
-  零
-  值
-  映射
-  为
-  它们
-  的
-  单一
-  audible
-  level。
-- :c:func:`buzzer_stop`
-  立即
-  取消
-  任何
-  进行
-  中
-  的
-  tone。
+- :c:func:`buzzer_tone` 以特定频率播放持续特定时间的音调。硬件会按请求的持续时间
+  持续发声，随后驱动会自动将其静音。
+- :c:func:`buzzer_beep` 播放蜂鸣器的自然工作频率，该频率由板级文件
+  编码在 ``pwms`` 设备树属性的周期（period）单元中（通常是压电元件的机械共振频率，
+  即该部件能产生的最响音调）。对于有源蜂鸣器，该调用等效于
+  将 GPIO 引脚置高电平，因为实际音高由硬件振荡器决定。
+- :c:func:`buzzer_set_volume` 调整感知响度。零值立即静音；非零值
+  会被保存，并在下一次播放音调时应用。有源蜂鸣器没有模拟音量控制，
+  因此将零值映射为静音，将任何非零值映射为其唯一可听音量等级。
+- :c:func:`buzzer_stop` 立即取消任何正在进行的音调。
 
-Backends
+后端
 ********
 
-提供
-两
-个
-devicetree
-可
-发现
-的
-backends：
+提供两种可通过设备树发现的后端：
 
-- :dtcompatible:`pwm-buzzer`
-  用于
-  由
-  PWM
-  channel
-  驱动
-  的
-  passive
-  piezo
-  buzzers。
-  PWM
-  channel
-  period
-  设置
-  audio
-  frequency
-  并
-  duty
-  cycle
-  设置
-  感知
-  的
-  volume；
-  driver
-  从
-  应用
-  的
-  tone
-  和
-  volume
-  请求
-  推导
-  两
-  者。
-- :dtcompatible:`gpio-buzzer`
-  用于
-  通过
-  单一
-  GPIO
-  驱动
-  的
-  active
-  buzzers。
-  Driver
-  对
-  任何
-  非
-  零
-  frequency
-  将
-  line
-  切换
-  为
-  on
-  对
-  :c:macro:`BUZZER_FREQ_REST`
-  切换
-  为
-  off。
+- :dtcompatible:`pwm-buzzer` 用于由 PWM 通道驱动的无源压电蜂鸣器。
+  PWM 通道的周期决定音频频率，占空比（duty cycle）决定感知音量；
+  驱动从应用的音调和音量请求中派生出这两者。
+- :dtcompatible:`gpio-buzzer` 用于通过单个 GPIO 驱动的有源蜂鸣器。
+  驱动对任何非零频率将该引脚置高，
+  对 :c:macro:`BUZZER_FREQ_REST` 则将其置低。
+
+API 参考
+*************
+
+.. doxygengroup:: buzzer_interface

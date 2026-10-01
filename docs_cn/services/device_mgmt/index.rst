@@ -1,39 +1,14 @@
 .. _device_mgmt:
 
-Device
-Management
+Device Management
 #################
 
-这
-个
-section
-cover
-用于
-manage
-device
-在
-它
-整个
-lifecycle
-中
-的
-services
-如
-firmware
-updates
-和
-query
-embedded
-在
-firmware
-image
-中
-的
+此 section 涵盖管理 device 整个
+lifecycle 的 services（如 firmware updates 和查询内嵌在 firmware image 中的
 metadata。
 
 .. toctree::
-    :maxdepth:
-    1
+    :maxdepth: 1
 
     mcumgr.rst
     mcumgr_handlers.rst

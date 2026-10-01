@@ -1,221 +1,41 @@
 .. _mac-setup-alts:
 
-macOS
-替代
-设置
-说明
-####################################
+macOS 替代设置说明
+##################
 
 .. _mac-gatekeeper:
 
-关于
-Gatekeeper
-的
-重要
-注意
-*******************************
+关于 Gatekeeper 的重要说明
+**************************
 
-从
-macOS
-10.15
-Catalina
-开始，
-从
-macOS
-Terminal
-应用
-（或
-任何
-其他
-终端
-仿真器）
-启动
-的
-应用
-受到
-与
-从
-Dock
-启动
-的
-应用
-应用
-的
-相同
-系统
-安全
-策略
-的
-约束。
-这
-意味着
-如果
-你
-用
-网络
-浏览器
-下载
-可
-执行
-二进制
-文件，
-macOS
-默认
-不
-会
-让
-你
-从
-Terminal
-执行
-它们。
-要
-绕过
-这个
-问题
-你
-可以
-采取
-两种
-不同
-方法：
+从 macOS 10.15 Catalina 开始，从 macOS Terminal 应用
+（或任何其他终端仿真器）启动的应用程序，
+受到与从 Dock 启动的应用程序相同的系统安全策略约束。
+这意味着，如果你使用网络浏览器下载可执行二进制文件，
+macOS 默认不允许你从 Terminal 执行它们。
+要绕过这个问题，你可以采取两种不同的方法：
 
-* 运行
-  ``xattr -r -d com.apple.quarantine /path/to/folder``
-  其中
-  ``path/to/folder``
-  是
-  包含
-  你
-  想
-  运行
-  的
-  可
-  执行
-  文件
-  的
-  外层
-  文件夹
-  的
-  路径。
+* 运行 ``xattr -r -d com.apple.quarantine /path/to/folder``，
+  其中 ``path/to/folder`` 是存放你想运行的可执行文件的
+  外层文件夹的路径。
 
-* 打开
-  :menuselection:`系统
-  偏好
-  设置
-  -->
-  安全性
-  和
-  隐私
-  -->
-  隐私`
-  然后
-  向下
-  滚动
-  到
-  "Developer
-  Tools"。
-  然后
-  解锁
-  锁
-  以
-  能够
-  做
-  更改
-  并
-  勾选
-  对应
-  你
-  选择
-  的
-  终端
-  仿真器
-  的
-  复选框。
-  这
-  将
-  应用
-  到
-  从
-  这种
-  终端
-  程序
-  启动
-  的
-  任何
-  可
-  执行
-  文件。
+* 打开 :menuselection:`系统偏好设置 --> 安全性与隐私 --> 隐私`，
+  然后向下滚动到 "Developer Tools"。
+  接着解锁锁以允许进行更改，
+  并勾选对应你所选终端仿真器的复选框。
+  这将适用于从该终端程序启动的任何可执行文件。
 
-注意
-这
-一
-节
-**不**
-适用
-于
-用
-Homebrew
-安装
-的
-可
-执行
-文件，
-因为
-那些
-被
-``brew``
-本身
-自动
-解除
-隔离。
-不过
-这对
-大多数
-:ref:`工具链`
-相关。
+注意，本节 **不** 适用于使用 Homebrew 安装的可执行文件，
+因为 ``brew`` 本身会自动解除它们的隔离状态。
+不过，这对大多数 :ref:`工具链` 是适用的。
 
-.. _macOS
-   Gatekeeper: https://en.wikipedia.org/wiki/Gatekeeper_(macOS)
+.. _macOS Gatekeeper: https://en.wikipedia.org/wiki/Gatekeeper_(macOS)
 
-MacPorts
-用户
-的
-额外
-注意
-***********************************
+MacPorts 用户的额外说明
+**********************
 
-尽管
-MacPorts
-不
-被
-本
-指南
-官方
-支持，
-可以
-使用
-MacPorts
-替代
-Homebrew
-在
-macOS
-上
-获取
-所有
-需要
-的
-依赖。
-注意
-也
-可能
-需要
-安装
-``rust``
-和
-``cargo``
-使
-Python
-依赖
-正确
-安装。
+虽然 MacPorts 未被本指南官方支持，
+但你可以使用 MacPorts 代替 Homebrew
+来获取 macOS 上的所有所需依赖项。
+另外注意，你可能需要安装 ``rust`` 和 ``cargo``，
+Python 依赖项才能正确安装。

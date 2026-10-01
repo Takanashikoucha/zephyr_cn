@@ -1,322 +1,76 @@
 .. _sca:
 
-静态
-代码
-分析
-（SCA）
+静态代码分析（SCA）
 ##########################
 
-Zephyr
-中
-对
-静态
-代码
-分析
-工具
-的
-支持
-通过
-CMake
-实现。
+Zephyr 对静态代码分析工具的支持通过 CMake 实现。
 
-构建
-设置
-:makevar:`ZEPHYR_SCA_VARIANT`
-可以
-用
-来
-指定
-要
-使用
-的
-SCA
-工具。
-:envvar:`ZEPHYR_SCA_VARIANT`
-也
-被
-支持
-作为
-:ref:`环境变量
-<env_vars>`。
+构建设置 :makevar:`ZEPHYR_SCA_VARIANT` 可用于指定要使用的 SCA 工具。
+:envvar:`ZEPHYR_SCA_VARIANT` 也作为 :ref:`环境变量 <env_vars>` 受支持。
 
-用
-``-DZEPHYR_SCA_VARIANT=<tool>``，
-例如
-``-DZEPHYR_SCA_VARIANT=sparse``
-启用
-静态
-分析
-工具
-``sparse``。
+使用 ``-DZEPHYR_SCA_VARIANT=<tool>``，例如 ``-DZEPHYR_SCA_VARIANT=sparse``，
+即可启用静态分析工具 ``sparse``。
 
 .. _sca_infrastructure:
 
-SCA
-工具
-基础设施
+SCA 工具基础设施
 ***********************
 
-对
-一个
-SCA
-工具
-的
-支持
-在
-一个
-:file:`sca.cmake`
-文件
-中
-实现。
-:file:`sca.cmake`
-必须
-放
-在
-:file:`{SCA_ROOT}/cmake/sca/{tool}/sca.cmake`
-下。
-Zephyr
-本身
-始终
-被
-添加
-作为
-:makevar:`SCA_ROOT`
-但
-构建
-系统
-提供
-添加
-额外
-文件夹
-到
-:makevar:`SCA_ROOT`
-设置
-的
-可能。
+SCA 工具的支持在 :file:`sca.cmake` 文件中实现。
+:file:`sca.cmake` 必须放在 :file:`{SCA_ROOT}/cmake/sca/{tool}/sca.cmake` 下。
+Zephyr 本身始终被添加到 :makevar:`SCA_ROOT`，
+但构建系统允许向 :makevar:`SCA_ROOT` 设置中添加额外的文件夹。
 
-你
-可以
-通过
-创建
-以下
-结构
-提供
-树
-外
-SCA
-工具
-的
-支持：
+你可以通过创建以下结构为树外 SCA 工具提供支持：
 
 .. code-block:: none
 
-   <sca_root>/
-                 #
-                 自定义
-                 SCA
-                 root
-   └──
-   cmake/
-       └──
-       sca/
-           └──
-           <tool>/
-           #
-           SCA
-           工具
-           名称，
-           这
-           是
-           给
-           ZEPHYR_SCA_VARIANT
-           的
-           值
-               └──
-               sca.cmake
-               #
-               配置
-               工具
-               与
-               Zephyr
-               一起
-               使用
-               的
-               CMake
-               代码
+   <sca_root>/                 # Custom SCA root
+   └── cmake/
+       └── sca/
+           └── <tool>/         # Name of SCA tool, this is the value given to ZEPHYR_SCA_VARIANT
+               └── sca.cmake   # CMake code that configures the tool to be used with Zephyr
 
-要
-在
-``/path/to/my_tools/cmake/sca``
-下
-添加
-``foo``
-创建
-以下
-结构：
+要在 ``/path/to/my_tools/cmake/sca`` 下添加 ``foo``，创建以下结构：
 
 .. code-block:: none
 
    /path/to/my_tools
-           └──
-           cmake/
-               └──
-               sca/
-                   └──
-                   foo/
-                       └──
-                       sca.cmake
+           └── cmake/
+               └── sca/
+                   └── foo/
+                       └── sca.cmake
 
-要
-用
-``foo``
-作为
-SCA
-工具
-你
-必须
-然后
-指定
-``-DZEPHYR_SCA_VARIANT=foo``。
+要将 ``foo`` 用作 SCA 工具，必须指定 ``-DZEPHYR_SCA_VARIANT=foo``。
 
-记住
-将
-``/path/to/my_tools``
-添加
-到
-:makevar:`SCA_ROOT`。
+记得将 ``/path/to/my_tools`` 添加到 :makevar:`SCA_ROOT`。
 
-:makevar:`SCA_TOOL`
-可以
-作为
-普通
-CMake
-设置
-用
-``-DSCA_ROOT=<sca_root>``
-设置，
-或
-由
-Zephyr
-模块
-在
-其
-:file:`module.yml`
-文件
-中
-添加，
-见
-:ref:`Zephyr
-Modules
--
-Build
-settings
-<modules_build_settings>`
+:makevar:`SCA_TOOL` 可以用 ``-DSCA_ROOT=<sca_root>`` 作为普通 CMake 设置，
+也可以由 Zephyr 模块在其 :file:`module.yml` 文件中添加，
+参见 :ref:`Zephyr 模块 - 构建设置 <modules_build_settings>`
 
-编译器
-和
-链接器
-launcher
+编译器与链接器启动器
 =============================
 
-需要
-观察
-或
-包装
-编译
-和
-链接
-命令
-的
-SCA
-工具
-通过
-从
-其
-:file:`sca.cmake`
-设置
-``CMAKE_<LANG>_COMPILER_LAUNCHER``
-和
-``CMAKE_<LANG>_LINKER_LAUNCHER``
-变量
-做
-到。
-它们
-必须
-作为
-普通
-变量
-设置，
-不
-是
-作为
-cache
-条目。
+需要观察或包装编译和链接命令的 SCA 工具，
+通过在其 :file:`sca.cmake` 中设置 ``CMAKE_<LANG>_COMPILER_LAUNCHER`` 和
+``CMAKE_<LANG>_LINKER_LAUNCHER`` 变量来实现。
+它们必须作为普通变量设置，而非缓存条目。
 
-用
-这种
-方式
-设置
-的
-launcher
-替换
-任何
-已经
-配置
-的
-launcher，
-``ccache``
-包括
-在内。
-是
-透明
-包装器
-的
-工具，
-意味
-它
-运行
-给
-它
-的
-命令
-不
-修改，
-可以
-替代
-地
-通过
-追加
-之前
-的
-launcher
-保持
-它：
+以这种方式设置的启动器会替换任何已配置的启动器，``ccache`` 也包括在内。
+如果一个工具是透明包装器（即它原样运行所接收的命令），
+则可以通过追加的方式保留前一个启动器：
 
 .. code-block:: cmake
 
-   set(CMAKE_C_COMPILER_LAUNCHER
-   ${my_wrapper}
-   ${CMAKE_C_COMPILER_LAUNCHER})
+   set(CMAKE_C_COMPILER_LAUNCHER ${my_wrapper} ${CMAKE_C_COMPILER_LAUNCHER})
 
 .. _sca_native_tools:
 
-本地
-SCA
-工具
-支持
+原生 SCA 工具支持
 ***********************
 
-以下
-是
-Zephyr
-构建
-系统
-本地
-支持
-的
-SCA
-工具
-列表。
+以下是 Zephyr 构建系统原生支持的 SCA 工具列表。
 
 .. toctree::
    :maxdepth: 1

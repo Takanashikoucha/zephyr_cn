@@ -1,15 +1,13 @@
 .. _watchdog_api:
 
-Watchdog
+看门狗
 ########
 
-Overview
+概述
 ********
 
 
-API
-Reference
+接口参考
 *************
 
-.. doxygengroup::
-   watchdog_interface
+.. doxygengroup:: watchdog_interface

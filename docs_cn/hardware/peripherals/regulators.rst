@@ -1,155 +1,19 @@
 .. _regulator_api:
 
-Regulators
+稳压器
 ##########
 
-这
-个
-subsystem
-提供
-对
-voltage
-和
-current
-regulators
-的
-control。
-一
-个
-常见
-的
-example
-是
-控制
-一
-个
-transistor
-的
-GPIO
-它
-向
-不
-总是
-需要
-的
-device
-供应
-current。
-另
-一
-个
-example
-是
-PMIC
-通常
-是
-复杂
-得
-多
-的
-device。
+此子系统提供对电压和电流稳压器的控制。一个常见示例是：用一个 GPIO 控制一个晶体管，而该晶体管向某个并非总是需要供电的设备供电。另一个示例是 PMIC（电源管理集成电路），它通常是一个复杂得多的设备。
 
-``*-supply``
-devicetree
-properties
-被
-用
-来
-识别
-devicetree
-node
-直接
-依赖
-的
-regulator(s)。
-在
-node
-的
-driver
-内
-regulator
-API
-被
-用
-来
-在
-device
-要
-active
-时
-发出
-power
-requests
-并在
-device
-shut
-down
-时
-释放
-power
-request。
+``*-supply`` 设备树（devicetree）属性用于标识某个设备树节点直接依赖的稳压器。在该节点对应的驱动程序内部，使用稳压器 API 在设备需要激活时发出供电请求，在设备关闭时释放供电请求。
 
-需要
-regulator
-的
-最
-简单
-的
-case
-是
-只有
-一
-个
-client
-的
-情况。
-在
-那些
-情况
-下
-使用
-regulator
-device
-infrastructure
-的
-cost
-不
-被
-justify
-应该
-使用
-``*-gpios``
-devicetree
-properties。
-这些
-regulators
-没有
-device
-interface
-因为
-它们
-完全
-在
-对应
-node
-的
-driver
-内
-被
-control
-例如
-一
-个
-sensor。
+需要稳压器的最简单情况是只有一个客户端的情况。在这些情况下，使用稳压器设备基础设施的开销并不合理，应当改用 ``*-gpios`` 设备树属性。这些稳压器没有设备接口，因为它们完全在对应节点（例如传感器）的驱动程序内部进行控制。
 
 .. _regulator_api_reference:
 
-API
-Reference
+API 参考
 **************
 
-.. doxygengroup::
-   regulator_interface
+.. doxygengroup:: regulator_interface
 
-.. doxygengroup::
-   regulator_fake
+.. doxygengroup:: regulator_fake

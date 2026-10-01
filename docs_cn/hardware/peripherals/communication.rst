@@ -1,22 +1,12 @@
 .. _communication_peripherals:
 
-Communication
+通信
 #############
 
-Serial
-buses
-（I2C、
-SPI、
-UART、
-CAN）
-和
-其他
-communication
-interfaces。
+串行总线（I2C、SPI、UART、CAN）及其他通信接口。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    can/index.rst
    i2c.rst

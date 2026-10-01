@@ -1,8 +1,6 @@
 .. _barriers_api:
 
-Barriers
-API
+屏障 API
 ************
 
-.. doxygengroup::
-   barrier_apis
+.. doxygengroup:: barrier_apis

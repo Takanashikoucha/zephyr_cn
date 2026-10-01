@@ -1,205 +1,61 @@
 .. _gnss_api:
 
-GNSS
-（Global
-Navigation
-Satellite
-System）
+GNSS（全球导航卫星系统）
 #########################################
 
-Overview
+概述
 ********
 
-GNSS
-是
-一
-个
-总称
-涵盖
-用于
-navigation
-的
-satellite
-systems
-如
-GPS
-（Global
-Positioning
-System）。
-GNSS
-services
-通常
-通过
-GNSS
-modems
-访问
-它们
-接收
-并
-处理
-GNSS
-signals
-确定
-它们
-的
-position
-或
-更
-具体
-地
-说
-它们
-的
-antennas
-position。
-它们
-通常
-额外
-提供
-精确
-的
-time
-synchronization
-mechanism
-通常
-命名
-为
-PPS
-（Pulse-Per-Second）。
+GNSS 是涵盖用于导航的卫星系统（如 GPS，即全球定位系统）的通用术语。GNSS 服务通常通过 GNSS 调制解调器访问，这些调制解调器接收并处理 GNSS 信号以确定自身位置，或更具体地说，确定其天线位置。它们通常还提供精确的时间同步机制，通常称为 PPS（秒脉冲）。
 
-Subsystem
-support
+子系统支持
 *****************
 
-GNSS
-subsystem
-基于
-:ref:`modem`。
-GNSS
-subsystem
-覆盖
-所有
-从
-向
-modem
-发送
-和
-接收
-commands
-到
-解析、
-创建
-和
-处理
-NMEA0183
-messages。
+GNSS 子系统基于 :ref:`modem`。GNSS 子系统涵盖从向调制解调器发送和接收命令，到解析、创建和处理 NMEA0183 消息的一切。
 
-为
-额外
-的
-基于
-NMEA0183
-的
-GNSS
-modems
-添加
-支持
-需要
-的
-不
-过
-是
-实现
-特定
-GNSS
-modem
-的
-power
-management
-和
-configuration。
+为额外的基于 NMEA0183 的 GNSS 调制解调器添加支持
+只需要为特定 GNSS 调制解调器实现电源管理和配置。
 
-为
-使用
-其他
-protocols
-和/或
-buses
-而
-非
-通常
-的
-NMEA0183
-over
-UART
-的
-GNSS
-modems
-添加
-支持
-是
-可能
-的
-但
-将
-需要
-driver
-developer
-做
-更
-多
-工作。
+为使用除通常 UART 上的 NMEA0183 之外的其他协议和/或总线的 GNSS 调制解调器添加支持是可能的，但需要驱动开发者多做一些工作。
 
-Power
-management
+电源管理
 *****************
 
-GNSS
-receivers
-通常
-在
-被
-上电
-时
-就
-开始
-acquiring
-和
-tracking
-GNSS
-signals
-除非
-被
-配置
-为
-其他
-方式。
-要
-节省
-power，
-应用
-可以
-要么
-从
-GNSS
-receiver
-移除
-power
-或
-停止
-内部
-GNSS
-engine
-主动
-acquiring
-和
-tracking
-signals。
-后
-一
-个
-option
-停止
-position
-computation
-同时
+GNSS 接收器通常在通电后立即开始获取和跟踪 GNSS 信号，除非另行配置。为了节省电源，应用可以移除 GNSS 接收器的电源，或停止内部 GNSS 引擎主动获取和跟踪信号。后一种选项在保持接收器通电且功耗降低的同时停止位置计算，并且与主机的通信链路可用于其他操作或恢复 GNSS 引擎。
+
+在 GNSS 子系统中，这可以用 :c:func:`gnss_stop` API 调用完成。这与 Zephyr 的设备电源管理（挂起/恢复）不同：接收器保持通电并能与主机应用通信，但 GNSS 跟踪被停止。
+
+GNSS 跟踪可以用 :c:func:`gnss_start` 恢复。应用可以指定 :c:enum:`gnss_start_mode`，它影响首次定位时间。热启动保留导航数据并允许接收器快速重新获取信号，而温启动和冷启动分别丢弃部分或全部导航数据，导致更长的获取时间。
+
+GNSS 设备驱动必须确保 GNSS 调制解调器在从挂起或断电状态恢复时开始跟踪，而不需要应用显式调用 :c:func:`gnss_start`。大多数接收器在此情况下最终会执行冷启动，仅仅是因为它们在断电期间丢失了跟踪数据，但驱动可以尝试温启动或热启动，如果调制解调器保留了足够的状态以更快完成。要求是跟踪在通电时自动恢复；清除导航数据只是调制解调器断电的副作用，而非从挂起恢复的有意部分。
+
+GNSS 设备驱动必须确保 GNSS 调制解调器在从挂起或断电状态恢复时开始跟踪，而不需要应用显式调用 :c:func:`gnss_start`。大多数接收器在此情况下最终会执行冷启动，仅仅是因为它们在断电期间丢失了跟踪数据，但驱动可以尝试温启动或热启动，如果调制解调器保留了足够的状态以更快完成。
+
+GNSS 设备驱动必须确保 GNSS 调制解调器在从挂起或断电状态恢复时开始跟踪，而不需要应用显式调用 :c:func:`gnss_start`。大多数接收器在此情况下最终会执行冷启动，仅仅是因为它们在断电期间丢失了跟踪数据，但驱动可以尝试温启动或热启动，如果调制解调器保留了足够的状态以更快完成。
+
+GNSS 设备驱动必须确保 GNSS 调制解调器在从挂起或断电状态恢复时开始跟踪，而不需要应用显式调用 :c:func:`gnss_start`。大多数接收器在此情况下最终会执行冷启动，仅仅是因为它们在断电期间丢失了跟踪数据，但驱动可以尝试温启动或热启动，如果调制解调器保留了足够的状态以更快完成。
+
+GNSS 设备驱动必须确保 GNSS 调制解调器在从挂起或断电状态恢复时开始跟踪，而不需要应用显式调用 :c:func:`gnss_start`。大多数接收器在此情况下最终会执行冷启动，仅仅是因为它们在断电期间丢失了跟踪数据，但驱动可以尝试温启动或热启动，如果调制解调器保留了足够的状态以更快完成。
+
+GNSS 设备驱动必须确保 GNSS 调制解调器在从挂起或断电状态恢复时开始跟踪，而不需要应用显式调用 :c:func:`gnss_start`。大多数接收器在此情况下最终会执行冷启动，仅仅是因为它们在断电期间丢失了跟踪数据，但驱动可以尝试温启动或热启动，如果调制解调器保留了足够的状态以更快完成。
+
+GNSS 设备驱动必须确保 GNSS 调制解调器在从挂起或断电状态恢复时开始跟踪，而不需要应用显式调用 :c:func:`gnss_start`。大多数接收器在此情况下最终会执行冷启动，仅仅是因为它们在断电期间丢失了跟踪数据，但驱动可以尝试温启动或热启动，如果调制解调器保留了足够的状态以更快完成。
+
+配置选项
+*********************
+
+相关配置选项：
+
+* :kconfig:option:`CONFIG_GNSS`
+* :kconfig:option:`CONFIG_GNSS_SATELLITES`
+* :kconfig:option:`CONFIG_GNSS_DUMP_TO_LOG`
+
+导航参考
+********************
+
+.. doxygengroup:: navigation
+
+GNSS API 参考
+******************
+
+.. doxygengroup:: gnss_interface

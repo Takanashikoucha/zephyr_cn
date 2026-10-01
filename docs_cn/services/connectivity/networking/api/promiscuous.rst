@@ -1,167 +1,71 @@
 .. _promiscuous_interface:
 
-Promiscuous
-Mode
+Promiscuous Mode
 ################
 
 .. contents::
     :local:
-    :depth:
-    2
+    :depth: 2
 
 Overview
 ********
 
-Promiscuous
-mode
-是
-network
-interface
-controller
-的
-一
-个
-mode
-它
-使
-它
-将
-它
-received
-的
-所有
-traffic
-pass
-到
-application
-而
-不
-只
-pass
-controller
-被
-specifically
-programmed
-receive
-的
-frames。
-这
-个
-mode
-通常
-被
-used
-用于
-packet
-sniffing
-如
-用于
-diagnose
-network
-connectivity
-issues
-通过
-show
-application
-所有
-通过
-network
-被
-transferred
-的
-data。
-（参考
-`Wikipedia
-article
-on
-promiscuous
-mode
-<https://en.wikipedia.org/wiki/Promiscuous_mode>`_
-获取
-更多
-information。）
+Promiscuous mode 为 network interface controller 的 mode（使其将接收到的所有 traffic 传递给 application（而非仅传递 controller 专门编程以接收的 frames。此 mode 通常用于 packet sniffing（通过向 application 显示网络上传输的所有 data 来诊断 network connectivity issues。（更多信息参见 `Wikipedia article on promiscuous mode
+<https://en.wikipedia.org/wiki/Promiscuous_mode>`_。）
 
-Network
-promiscuous
-APIs
-被
-used
-用于
-enable
-和
-disable
-这
-个
-mode
-同时
-wait
-并
-receive
-network
-data
-arrive。
-不
-是
-所有
-的
-network
-technologies
-或
-network
-device
-drivers
-support
-promiscuous
-mode。
+Network promiscuous APIs 用于启用和禁用此 mode（以及等待和接收 network data 到达。并非所有 network technologies 或 network device drivers 支持 promiscuous mode。
 
-Sample
-usage
+Sample usage
 ************
 
-首先
-promiscuous
-mode
-需要
-被
-application
-turned
-ON
-如
-这
-个：
+首先 application 须如下开启 promiscuous mode：
 
-.. code-block::
-   c
+.. code-block:: c
 
-   ret
-   =
-   net_promisc_mode_on(iface);
-   if
-   (ret
-   <
-   0)
-   {
-       if
-   (ret
-   ==
-   -EALREADY)
-   {
-           printf("Promiscuous
-   mode
-   already
-   enabled\n");
-       }
-   else
-   {
-           printf("Cannot
-   enable
-   promiscuous
-   mode
-   for
-   "
-              "interface
-   %p
-   (%d)\n",
-   iface,
-   ret);
-       }
+	ret = net_promisc_mode_on(iface);
+	if (ret < 0) {
+		if (ret == -EALREADY) {
+			printf("Promiscuous mode already enabled\n");
+		} else {
+			printf("Cannot enable promiscuous mode for "
+			       "interface %p (%d)\n", iface, ret);
+		}
+	}
+
+
+若无 error（application 可开始等待 network data：
+
+.. code-block:: c
+
+	while (true) {
+		pkt = net_promisc_mode_wait_data(K_FOREVER);
+		if (pkt) {
+			print_info(pkt);
+		}
+
+		net_pkt_unref(pkt);
+	}
+
+
+最后 application 可如下关闭 promiscuous mode：
+
+.. code-block:: c
+
+	ret = net_promisc_mode_off(iface);
+	if (ret < 0) {
+		if (ret == -EALREADY) {
+			printf("Promiscuous mode already disabled\n");
+		} else {
+			printf("Cannot disable promiscuous mode for "
+			       "interface %p (%d)\n", iface, ret);
+		}
+	}
+
+
+更全面的示例参见 :zephyr:code-sample:`net-promiscuous-mode`。
+
+
+API Reference
+*************
+
+.. doxygengroup:: promiscuous

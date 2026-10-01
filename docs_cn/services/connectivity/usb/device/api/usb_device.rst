@@ -1,164 +1,30 @@
 .. _usb_device_stack_api:
 
-USB
-device
-stack
-API
-（deprecated）
+USB device stack API (deprecated)
 #################################
 
-API
-reference
+API reference
 *************
 
-有
-两
-种
-方式
-transmit
-data
-use
-'low'
-level
-的
-read/write
-API
-或
-'high'
-level
-的
-transfer
-API。
+有两种传输 data 的方式（用 'low' level read/write API 或
+'high' level transfer API。
 
-Low
-level
-API
-   要
-transmit
-data
-到
-host
-class
-driver
-应该
-call
-usb_write()。
-在
-completion
-时
-registered
-的
-endpoint
-callback
-将
-被
-called。
-在
-send
-另
-一
-个
-packet
-之前
-class
-driver
-应该
-wait
-previous
-的
-write
-完成。
-当
-data
-被
-received
-时
-registered
-的
-endpoint
-callback
-被
-called。
-usb_read()
-应该
-被
-used
-用于
-retrieve
-received
-的
-data。
-对于
-CDC
-ACM
-sample
-driver
-这
-通过
-endpoint
-array
-（cdc_acm_ep_data）
-中
-mentioned
-的
-OUT
-bulk
-endpoint
-handler
-（cdc_acm_bulk_out）
-done。
+Low level API
+  向 host 传输 data 时（class driver 应调用 usb_write()。
+  完成后将调用注册的 endpoint callback。发送
+  另一 packet 前（class driver 应等待前一 write 完成。
+  收到 data 时（调用注册的 endpoint callback。
+  应用 usb_read() 检索收到的 data。
+  对 CDC ACM sample driver（这通过 endpoint array (cdc_acm_ep_data) 中提到的
+  OUT bulk endpoint handler
+  (cdc_acm_bulk_out) 发生。
 
-High
-level
-API
-   Usb_transfer
-method
-可
-被
-used
-用于
-transfer
-data
-到/从
-host。
-Transfer
-API
-将
-automatically
-split
-data
-transmission
-到
-一
-个
-或
-多
-个
-USB
-transaction
-s
-根据
-endpoint
-max
-packet
-size。
-Class
-driver
-不
-需要
-implement
-endpoint
-callback
-并
-应该
-set
-这
-个
-callback
-到
-generic
-的
-usb_transfer_ep_callback。
+High level API
+  usb_transfer method 可用于向/从 host 传输 data。
+  Transfer API 将根据 endpoint max packet size 自动将
+  data 传输拆分为一个或多个
+  USB transaction(s)。Class driver
+  无需实现 endpoint callback（且应将此 callback 设为
+  通用 usb_transfer_ep_callback。
 
-.. doxygengroup::
-   _usb_device_core_api
+.. doxygengroup:: _usb_device_core_api

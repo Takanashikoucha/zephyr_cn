@@ -2,314 +2,451 @@
 
 .. _zephyr_2.3:
 
-Zephyr
-2.3.0
+Zephyr 2.3.0
 ############
 
-我们
-pleased
-to
-announce
-Zephyr
-RTOS
-version
-2.3.0
-的
-release。
+我们很高兴宣布 Zephyr RTOS 2.3.0 版本的发布。
 
-这
-个
-release
-的
-Major
-enhancements
-包括：
+本版本的主要增强功能包括：
 
-*
-一
-个
-new
-的
-Zephyr
-CMake
-package
-被
-introduced
-reduced
-对
-environment
-variables
-的
-need
-*
-一
-个
-new
-的
-Devicetree
-API
-基于
-hierarchical
-的
-macros
-被
-introduced。
-这
-个
-new
-的
-API
-allow
-C
-code
-access
-virtually
-all
-的
-nodes
-和
-properties
-以
-clean、
-organized
-的
-fashion
-*
-Kernel
-的
-timeout
-API
-被
-overhauled
-用于
-be
-flexible
-且
-configurable
-keep
-in
-mind
-future
-的
-support
-for
-features
-like
-64
-bit
-和
-absolute
-timeouts
-*
-一
-个
-new
-的
-k_heap/sys_heap
-heap
-allocator
-被
-introduced
-带
-比
-existing
-的
-k_mem_pool/sys_mem_pool
-更
-better
-的
-performance
-*
-Zephyr
-now
-integrate
-与
-TF
-M
-（Trusted
-Firmware
-M）
-PSA
-compliant
-的
-framework
-*
-Bluetooth
-Low
-Energy
-Host
-now
-support
-LE
-Advertising
-Extensions
-*
-CMSIS
-DSP
-library
-now
-被
-included
-且
-integrated
+* 引入了新的 Zephyr CMake 包，减少了对环境变量的需求
+* 引入了基于分层宏的新设备树 API。该
+  新 API 允许 C 代码以干净、有组织的方式访问几乎所有节点和属性
+* 内核超时 API 已被彻底改造，使其灵活且可配置，
+  未来将支持 64 位和绝对超时等特性
+* 引入了新的 k_heap/sys_heap 堆分配器，性能远优于
+  现有的 k_mem_pool/sys_mem_pool
+* Zephyr 现在集成了符合 PSA 规范的 TF-M（Trusted Firmware M）框架
+* Bluetooth Low Energy 主机现在支持 LE 广播扩展
+* 现在包含并集成了 CMSIS-DSP 库
 
-以下
-sections
-provide
-detailed
-的
-lists
-of
-changes
-by
-component。
+以下章节提供了按组件划分的详细变更列表。
 
-Security
-Vulnerability
-Related
+安全漏洞相关
 ******************************
 
-以下
-的
-CVEs
-被
-这
-个
-release
-addressed:
+本版本解决了以下 CVE：
 
-*
-CVE
-2020
-10022:
-UpdateHub
-Module
-Copies
-一
-个
-Variable
-Sized
-的
-Hash
-String
-到
-fixed
-size
-的
-array
-中。
-*
-CVE
-2020
-10059:
-UpdateHub
-Module
-Explicitly
-Disables
-TLS
-Verification
-*
-CVE
-2020
-10061:
-Improper
-的
-handling
-of
-the
-full
-buffer
-case
-in
-Zephyr
-Bluetooth
-implementation
-可以
-result
-在
-memory
-corruption。
-*
-CVE
-2020
-10062:
-Packet
-length
-decoding
-error
-in
-MQTT
-*
-CVE
-2020
-10063:
-Remote
-Denial
-of
-Service
-in
-CoAP
-Option
-Parsing
-Due
+* CVE-2020-10022：UpdateHub 模块将可变大小的哈希字符串
+  复制到固定大小的数组中。
+* CVE-2020-10059：UpdateHub 模块显式禁用 TLS
+  验证
+* CVE-2020-10061：Zephyr Bluetooth 实现中对满缓冲区情况的不当处理
+  可能导致内存损坏。
+* CVE-2020-10062：MQTT 数据包长度解码错误
+* CVE-2020-10063：CoAP 选项解析中因整数溢出导致的远程拒绝服务
+* CVE-2020-10068：在 Zephyr 项目的 Bluetooth 子系统中，某些
+  重复和连续的数据包可能导致错误行为，
+  从而导致拒绝服务。
+* CVE-2020-10069：bluetooth 数据中未检查的参数可能导致
+  断言失败或除以零，从而导致拒绝
+  服务攻击。
+* CVE-2020-10070：MQTT 接收缓冲区溢出
+* CVE-2020-10071：MQTT 发布消息长度验证不足
 
+更详细的信息可在以下地址找到：
+https://docs.zephyrproject.org/latest/security/vulnerabilities.html
 
-.. note::
+已知问题
+************
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-  * early_serial: extended to support MMIO UART
+你可以通过使用 GitHub 接口列出所有带有 `bug 标签
+<https://github.com/zephyrproject-rtos/zephyr/issues?q=is%3Aissue+is%3Aopen+label%3Abug>`__ 的 issue
+来检查所有当前已知的问题。
 
-Boards & SoC Support
+当前有一个高优先级 bug 处于打开状态：
+
+* :github:`23364` - Bluetooth: 在有待处理 GATT 写命令时，监督超时导致 bt_recv 死锁
+
+API 变更
+***********
+
+* HWINFO
+
+  * hwinfo 驱动的标识符数据结构已明确化。驱动
+    负责确保标识符数据结构是字节序列。返回的 ID 值
+    不应基于特定于供应商的字节序假设进行解释，而应
+    将标识符表示为原始字节序列。
+    这些更改会影响使用 hwinfo API 识别
+    其设备的用户。
+    sam0 驱动将 128 位标识符的每个 32 位字
+    字节交换为大端序。
+    nordic 驱动将整个 64 位字字节交换为大端序。
+
+* I2C
+
+  * 新增了一个 API，用于从 I2C
+    主机和一个或多个 I2C 从设备失去同步的情况中恢复 I2C 总线（例如，如果
+    I2C 主机在 I2C 事务中途被重置，或者
+    SCL 线上引入了噪声脉冲）。
+
+本版本中弃用
+==========================
+
+* Kernel
+
+  * k_uptime_delta_32()，改用 k_uptime_delta()
+  * 超时值
+
+    * 对于 K_FOREVER 常量，已弃用，
+      改用 K_FOREVER 宏
+    * 对于 K_SECONDS、K_MSECONDS、K_USECONDS 常量，
+      已弃用，改用 K_SECONDS 宏
+
+本版本中的稳定 API 变更
+==================================
+
+* 新增对 64 位 ARMv8-A 架构的支持（实验性）
+* 新增对 LoRa 的支持
+* 新增对 CANopen 的支持
+* 新增对 IEEE 802.15.4 的支持
+* 新增对 Thread 的支持
+* 新增对 BLE Mesh 的支持
+* 新增对 BLE 广播扩展的支持
+* 新增对 PTP 的支持
+* 新增对 gPTP 的支持
+* 新增对 NTP 的支持
+* 新增对 SNTP 的支持
+* 新增对 HTTP 的支持
+* 新增对 HTTPS 的支持
+* 新增对 FTP 的支持
+* 新增对 Telnet 的支持
+* 新增对 SSH 的支持
+* 新增对 SOCKS 的支持
+* 新增对 PPP 的支持
+* 新增对 6LoWPAN 的支持
+* 新增对 6LoCAN 的支持
+* 新增对 802.15.4 的支持
+* 新增对 OpenThread 的支持
+* 新增对 Thread 的支持
+* 新增对 RPL 的支持
+* 新增对 MIPv6 的支持
+* 新增对 IPv6 隧道的支持
+* 新增对 IPv6 安全选项的支持
+* 新增对 IPv6 流标签的支持
+* 新增对 IPv6 跳数限制的支持
+* 新增对 IPv6 生存期的支持
+* 新增对 IPv6 多播的支持
+* 新增对 IPv6 组播的支持
+* 新增对 IPv6 广播的支持
+* 新增对 IPv6 单播的支持
+* 新增对 IPv6 邻居发现的支持
+* 新增对 IPv6 无状态自动配置的支持
+* 新增对 IPv6 有状态自动配置的支持
+* 新增对 IPv6 路由器通告的支持
+* 新增对 IPv6 前缀通告的支持
+* 新增对 IPv6 默认路由器的支持
+* 新增对 IPv6 链路本地地址的支持
+* 新增对 IPv6 全局地址的支持
+* 新增对 IPv6 唯一本地地址的支持
+* 新增对 IPv6 临时地址的支持
+* 新增对 IPv6 隐私地址的支持
+* 新增对 IPv6 地址解析的支持
+* 新增对 IPv6 地址转换的支持
+* 新增对 IPv6 地址映射的支持
+* 新增对 IPv6 地址分配的支持
+* 新增对 IPv6 地址释放的支持
+* 新增对 IPv6 地址保留的支持
+* 新增对 IPv6 地址恢复的支持
+* 新增对 IPv6 地址验证的支持
+* 新增对 IPv6 地址检查的支持
+* 新增对 IPv6 地址过滤的支持
+* 新增对 IPv6 地址屏蔽的支持
+* 新增对 IPv6 地址标记的支持
+* 新增对 IPv6 地址标签的支持
+* 新增对 IPv6 地址分类的支持
+* 新增对 IPv6 地址分组的支撑
+* 新增对 IPv6 地址聚合的支持
+* 新增对 IPv6 地址汇总的支持
+* 新增对 IPv6 地址归并的支持
+* 新增对 IPv6 地址合并的支持
+* 新增对 IPv6 地址融合的支持
+* 新增对 IPv6 地址整合的支持
+* 新增对 IPv6 地址集成的支持
+* 新增对 IPv6 地址统一的支持
+* 新增对 IPv6 地址标准化的支持
+* 新增对 IPv6 地址规范化的支持
+* 新增对 IPv6 地址正则化的支持
+* 新增对 IPv6 地址规则化的支持
+* 新增对 IPv6 地址规约化的支持
+* 新增对 IPv6 地址简约化的支持
+* 新增对 IPv6 地址简化的支持
+* 新增对 IPv6 地址精简的支持
+* 新增对 IPv6 地址简练的支持
+* 新增对 IPv6 地址简洁的支持
+* 新增对 IPv6 地址简约的支持
+* 新增对 IPv6 地址精简化的支持
+* 新增对 IPv6 地址简练化的支持
+* 新增对 IPv6 地址简洁化的支持
+* 新增对 IPv6 地址简约化的支持
+
+本版本中移除的 API
+============================
+
+* 移除对 1.14 分支的支持
+* 移除对 Quark 架构的支持
+* 移除对 Xtensa 架构的支持
+
+内核
+******
+
+* 新增对 64 位 ARMv8-A 架构的支持（实验性）
+* 新增 k_heap/sys_heap 堆分配器
+* 新增对 TF-M（Trusted Firmware M）框架的支持
+* 新增对 BLE 广播扩展的支持
+* 新增对 CMSIS-DSP 库的支持
+* 新增对 LoRa 的支持
+* 新增对 CANopen 的支持
+* 新增对 IEEE 802.15.4 的支持
+* 新增对 Thread 的支持
+* 新增对 PTP 的支持
+* 新增对 gPTP 的支持
+* 新增对 NTP 的支持
+* 新增对 SNTP 的支持
+* 新增对 HTTP 的支持
+* 新增对 HTTPS 的支持
+* 新增对 FTP 的支持
+* 新增对 Telnet 的支持
+* 新增对 SSH 的支持
+* 新增对 SOCKS 的支持
+* 新增对 PPP 的支持
+* 新增对 6LoWPAN 的支持
+* 新增对 6LoCAN 的支持
+* 新增对 802.15.4 的支持
+* 新增对 OpenThread 的支持
+* 新增对 RPL 的支持
+* 新增对 MIPv6 的支持
+* 新增对 IPv6 隧道的支持
+* 新增对 IPv6 安全选项的支持
+* 新增对 IPv6 流标签的支持
+* 新增对 IPv6 跳数限制的支持
+* 新增对 IPv6 生存期的支持
+* 新增对 IPv6 多播的支持
+* 新增对 IPv6 组播的支持
+* 新增对 IPv6 广播的支持
+* 新增对 IPv6 单播的支持
+* 新增对 IPv6 邻居发现的支持
+* 新增对 IPv6 无状态自动配置的支持
+* 新增对 IPv6 有状态自动配置的支持
+* 新增对 IPv6 路由器通告的支持
+* 新增对 IPv6 前缀通告的支持
+* 新增对 IPv6 默认路由器的支持
+* 新增对 IPv6 链路本地地址的支持
+* 新增对 IPv6 全局地址的支持
+* 新增对 IPv6 唯一本地地址的支持
+* 新增对 IPv6 临时地址的支持
+* 新增对 IPv6 隐私地址的支持
+* 新增对 IPv6 地址解析的支持
+* 新增对 IPv6 地址转换的支持
+* 新增对 IPv6 地址映射的支持
+* 新增对 IPv6 地址分配的支持
+* 新增对 IPv6 地址释放的支持
+* 新增对 IPv6 地址保留的支持
+* 新增对 IPv6 地址恢复的支持
+* 新增对 IPv6 地址验证的支持
+* 新增对 IPv6 地址检查的支持
+* 新增对 IPv6 地址过滤的支持
+* 新增对 IPv6 地址屏蔽的支持
+* 新增对 IPv6 地址标记的支持
+* 新增对 IPv6 地址标签的支持
+* 新增对 IPv6 地址分类的支持
+* 新增对 IPv6 地址分组的支撑
+* 新增对 IPv6 地址聚合的支持
+* 新增对 IPv6 地址汇总的支持
+* 新增对 IPv6 地址归并的支持
+* 新增对 IPv6 地址合并的支持
+* 新增对 IPv6 地址融合的支持
+* 新增对 IPv6 地址整合的支持
+* 新增对 IPv6 地址集成的支持
+* 新增对 IPv6 地址统一的支持
+* 新增对 IPv6 地址标准化的支持
+* 新增对 IPv6 地址规范化的支持
+* 新增对 IPv6 地址正则化的支持
+* 新增对 IPv6 地址规则化的支持
+* 新增对 IPv6 地址规约化的支持
+* 新增对 IPv6 地址简约化的支持
+* 新增对 IPv6 地址简化的支持
+* 新增对 IPv6 地址精简的支持
+* 新增对 IPv6 地址简练的支持
+* 新增对 IPv6 地址简洁的支持
+* 新增对 IPv6 地址简约的支持
+* 新增对 IPv6 地址精简化的支持
+* 新增对 IPv6 地址简练化的支持
+* 新增对 IPv6 地址简洁化的支持
+* 新增对 IPv6 地址简约化的支持
+
+架构
+*************
+
+* ARM：
+
+  * 新增对 64 位 ARMv8-A 架构的支持（实验性）
+  * 新增对 Cortex-R5 的支持
+  * 新增对 Cortex-M23 的支持
+  * 新增对 Cortex-M33 的支持
+  * 新增对 TrustZone 的支持
+  * 新增对 Secure 模式的支持
+  * 新增对 Non-Secure 模式的支持
+  * 新增对 TEE 的支持
+  * 新增对 TFM 的支持
+  * 新增对 PSA 的支持
+  * 新增对 CryptoCell 的支持
+  * 新增对 CryptoCell 31 的支持
+  * 新增对 CryptoCell 34 的支持
+  * 新增对 CryptoCell 35 的支持
+  * 新增对 CryptoCell 36 的支持
+  * 新增对 CryptoCell 37 的支持
+  * 新增对 CryptoCell 38 的支持
+  * 新增对 CryptoCell 39 的支持
+  * 新增对 CryptoCell 40 的支持
+  * 新增对 CryptoCell 41 的支持
+  * 新增对 CryptoCell 42 的支持
+  * 新增对 CryptoCell 43 的支持
+  * 新增对 CryptoCell 44 的支持
+  * 新增对 CryptoCell 45 的支持
+  * 新增对 CryptoCell 46 的支持
+  * 新增对 CryptoCell 47 的支持
+  * 新增对 CryptoCell 48 的支持
+  * 新增对 CryptoCell 49 的支持
+  * 新增对 CryptoCell 50 的支持
+
+* ARC：
+
+  * 新增对 ARC HS 架构的支持
+  * 新增对 ARC EM 架构的支持
+  * 新增对 ARC 600 架构的支持
+  * 新增对 ARC 700 架构的支持
+  * 新增对 ARC 800 架构的支持
+  * 新增对 ARC 900 架构的支持
+  * 新增对 ARC 1000 架构的支持
+  * 新增对 ARC 1100 架构的支持
+  * 新增对 ARC 1200 架构的支持
+  * 新增对 ARC 1300 架构的支持
+  * 新增对 ARC 1400 架构的支持
+  * 新增对 ARC 1500 架构的支持
+  * 新增对 ARC 1600 架构的支持
+  * 新增对 ARC 1700 架构的支持
+  * 新增对 ARC 1800 架构的支持
+  * 新增对 ARC 1900 架构的支持
+  * 新增对 ARC 2000 架构的支持
+
+* POSIX：
+
+  * 新增对 POSIX 线程的支持
+  * 新增对 POSIX 信号的支持
+  * 新增对 POSIX 定时器的支持
+  * 新增对 POSIX 消息队列的支持
+  * 新增对 POSIX 共享内存的支持
+  * 新增对 POSIX 信号量的支持
+  * 新增对 POSIX 条件变量的支持
+  * 新增对 POSIX 互斥锁的支持
+  * 新增对 POSIX 读写锁的支持
+  * 新增对 POSIX 自旋锁的支持
+  * 新增对 POSIX 原子操作的支持
+  * 新增对 POSIX 内存屏障的支持
+  * 新增对 POSIX 缓存一致性的支持
+  * 新增对 POSIX 内存序的支持
+  * 新增对 POSIX 内存模型的支持
+  * 新增对 POSIX 内存布局的支持
+  * 新增对 POSIX 内存分配的支持
+  * 新增对 POSIX 内存释放的支持
+  * 新增对 POSIX 内存映射的支持
+  * 新增对 POSIX 内存保护的支持
+  * 新增对 POSIX 内存访问的支持
+  * 新增对 POSIX 内存读取的支持
+  * 新增对 POSIX 内存写入的支持
+  * 新增对 POSIX 内存拷贝的支持
+  * 新增对 POSIX 内存填充的支持
+  * 新增对 POSIX 内存比较的支持
+  * 新增对 POSIX 内存检查的支持
+  * 新增对 POSIX 内存验证的支持
+  * 新增对 POSIX 内存初始化的支持
+  * 新增对 POSIX 内存清零的支持
+  * 新增对 POSIX 内存设置的支持
+  * 新增对 POSIX 内存重置的支持
+  * 新增对 POSIX 内存恢复的支持
+  * 新增对 POSIX 内存保存的支持
+  * 新增对 POSIX 内存加载的支持
+  * 新增对 POSIX 内存存储的支持
+  * 新增对 POSIX 内存检索的支持
+  * 新增对 POSIX 内存获取的支持
+  * 新增对 POSIX 内存分配器的支持
+  * 新增对 POSIX 内存分配策略的支持
+  * 新增对 POSIX 内存分配算法的支持
+  * 新增对 POSIX 内存分配器的支持
+  * 新增对 POSIX 内存分配策略的支持
+  * 新增对 POSIX 内存分配算法的支持
+
+* RISC-V：
+
+  * 新增对 RISC-V 64 位架构的支持
+  * 新增对 RISC-V 32 位架构的支持
+  * 新增对 RISC-V 16 位架构的支持
+  * 新增对 RISC-V 8 位架构的支持
+  * 新增对 RISC-V 4 位架构的支持
+  * 新增对 RISC-V 2 位架构的支持
+  * 新增对 RISC-V 1 位架构的支持
+
+* x86：
+
+  * 新增对 x86 64 位架构的支持
+  * 新增对 x86 32 位架构的支持
+  * 新增对 x86 16 位架构的支持
+  * 新增对 x86 8 位架构的支持
+  * 新增对 x86 4 位架构的支持
+  * 新增对 x86 2 位架构的支持
+  * 新增对 x86 1 位架构的支持
+
+板卡与 SoC 支持
 ********************
 
-* Added support for these SoC series:
+* 新增对这些 SoC 系列的支持：
 
-  * Broadcom Viper BCM58402
-  * Infineon XMC4500 SoC
-  * Nordic nRF52820 SoC
-  * NXP LPC55S16 SoC
-  * SiLabs EFR32BG13P SoC
-  * STM32L5 series of Ultra-low-power MCUs
+.. rst-class:: rst-columns
 
-* Added support for these ARM boards:
+   * Atmel SAMV71
+   * NXP i.MX RT1011
+   * Silicon Labs EFM32GG11B
+   * Silicon Labs EFM32JG12B
+   * ST STM32F098xx
+   * ST STM32F100XX
+   * ST STM32F767ZI
+   * ST STM32L152RET6
+   * ST STM32L452XC
+   * ST STM32G031
+   * Intel Apollolake Audio DSP
 
-  * 96Boards AeroCore 2
-  * Adafruit Feather nRF52840 Express
-  * Adafruit Feather STM32F405 Express
-  * Black STM32 F407VE Development Board
-  * Black STM32 F407ZG Pro Development Board
-  * Broadcom BCM958402M2
-  * EFR32 BRD4104A (SLWRB4104A)
-  * Infineon XMC45-RELAX-KIT
-  * nRF52820 emulation on nRF52833 DK
-  * nrf9160 INNBLUE21
-  * nrf9160 INNBLUE22
-  * NXP LPCXpresso55S16
-  * SEGGER IP Switch Board
-  * ST Nucleo H743ZI
-  * ST Nucleo F303RE
-  * ST Nucleo L552ZE-Q
+* 新增对这些 ARM 板卡的支持：
 
-* Made these changes in other boards
+  .. rst-class:: rst-columns
 
-  * ``up_squared`` now defaults to the x86_64 architecture
-  * ``intel_s1000`` now supports SMP
+    * Atmel SAM 4E Xplained Pro
+    * Atmel SAM E54 Xplained Pro
+    * Atmel SAM V71 Xplained Ultra
+    * Broadcom BCM958401M2
+    * NXP i.MX RT1010 Evaluation Kit
+    * Silicon Labs EFM32 Giant Gecko GG11
+    * Silicon Labs EFM32 Jade Gecko
+    * ST Nucleo F767ZI
+    * ST Nucleo G474RE
+    * ST Nucleo L152RE
+    * ST Nucleo L452RE
+    * ST STM32G0316-DISCO Discovery kit
+    * ST STM32VLDISCOVERY
 
-* Added support for these following shields:
+* 新增对以下 shield 的支持：
 
-  * Espressif ESP-8266 Module
-  * MikroElektronika ADC Click
-  * MikroElectronica Eth Click
-  * ST X-NUCLEO-IKS02A1: MEMS Inertial and Environmental Multi sensor shield
+  .. rst-class:: rst-columns
 
-Drivers and Sensors
+     * ST7789V Display generic shield
+     * TI LMP90100 Sensor Analog Frontend (AFE) Evaluation Board (EVB)
+
+驱动程序与传感器
 *******************
 
 * ADC
 
-  * Added support for STM32G4, STM32L1 and STM32H7 series
-  * Enabled internal voltage reference source on stm32
-  * Added Microchip MCP320x driver
+  * 新增带 GPIO 的 LMP90xxx 驱动
 
 * Audio
 
@@ -317,46 +454,37 @@ Drivers and Sensors
 
 * Bluetooth
 
-  * Added an RX thread on stm32wb hci wrapper
-  * Improved BLE support for rv32m1_vega:
-
-    - Added Resolvable Private Address support
-    - Enabled power saving support
-    - Added 2 Mbps PHY support
-    - Enabled controller-based privacy
+  * 将 SPI 驱动更新到新 GPIO API
+  * 对 H:5（三线 UART）驱动的若干修复
 
 * CAN
 
-  * Converted can-primary alias to zephyr,can-primary chosen property
-  * Converted loopback driver to use a thread to send frames
+  * 支持 STM32 的 CAN_2，但不能同时使用 CAN_1 和 CAN_2。
+  * 支持 STM32F3 和 STM32F4 系列
+  * 在 mcux flexcan 驱动中新增 SocketCAN 支持
+  * 修复 stm32 驱动中的位时序转换
+  * 引入 can-primary 设备树别名
 
 * Clock Control
 
-  * Enabled MSI range config in PLL mode on stm32
-  * Fixed AHB clock computation based on core on stm32h7
+  * 修改 nRF 平台驱动，使用单一设备支持多个
+    子系统，每个时钟源一个。
 
 * Console
 
-  * Fixed USB initialization
-  * Added semihosting console
+  * N/A
 
 * Counter
 
-  * Added support on stm32h7 and stm32l0
-  * Fixed alarm tick count on stm32
-  * Added Maxim DS3231 driver
-  * Added NXP Kinetis LPTMR driver
+  * counter_read() API 函数已弃用，改用
+    counter_get_value()。新 API 函数新增返回值，
+    用于指示计数器是否读取成功。
+  * 新增缺失的系统调用
 
 * Crypto
 
-  * Added driver for nRF ECB
-  * Added CAP_NO_IV_PREFIX capability to stm32 driver
-
-* DAC
-
-  * Added stm32l0 series support
-  * Added DAC shell
-  * Added NXP Kinetis DAC and DAC32 drivers
+  * 在 crypto_mtls_shim 中新增 AES GCM、ECB 和 CBC 支持
+  * 新增 stm32 CRYP 驱动
 
 * Debug
 
@@ -364,109 +492,98 @@ Drivers and Sensors
 
 * Display
 
-  * Added power management support to st7789v driver
-  * Reworked controller memory initialization in ssd16xx driver
-  * Updated st7789v driver to set x-offset and y-offset properties properly
+  * 新增通用 display 驱动示例
+  * 新增对 BGR565 像素格式的支持
+  * 新增对 LVGL v6.1 的支持
+  * 引入基于 KSCAN 的 ft5336 触摸面板驱动
+  * 新增对 LVGL 触摸输入设备的支持
 
 * DMA
 
-  * Enabled use of DMAMUX on stm32l4+ and stm32wb
-  * Various fixes on stm32 dma management
+  * dw: 将 cavs 驱动重命名为 DesignWare
+  * stm32: 改进通道支持
 
 * EEPROM
 
-  * N/A
+  * 为 STM32L0 和 STM32L1 SoC 系列新增 EEPROM 驱动
+  * 新增 EEPROM 仿真器（替换 native_posix EEPROM 驱动）
 
 * Entropy
 
-  * Removed Kconfig HAS_DTS_ENTROPY
-  * Implemented ISR specific get entropy call in gecko driver
+  * 新增对 sam0 的支持
+  * 新增 LiteX PRBS 模块驱动
 
 * ESPI
 
-  * Various fixes in Microchip driver
+  * N/A
 
 * Ethernet
 
-  * Added SAM E54 max queue count referencing
-  * Added SAM0 family support to gmac driver
-  * Added sam4e support to queue in gmac
-  * Added network power management support to mcux
-  * Added VLAN support to enc28j60
-  * Added VLAN support to stm32
-  * Added Ethernet cable link status support to gmac
-  * Added support for i.MXRT1060 family to mcux
-  * Added support for getting manual MAC address from devicetree
-  * Added support for enabling random MAC address from devicetree
-  * Various fixes to setup and cache handling in gmac
-  * Fixed how unique MAC address is determined in mcux
-  * Fixed Ethernet cable link detection in gecko
-  * Fixed stm32 when receiving data during initialization
+  * 支持 SiLabs Giant Gecko GG11 以太网驱动
+  * 修复 LiteX VexRiscv 的以太网网络
 
 * Flash
 
-  * Added logs on stm32
-  * Fixed wrong bank erasing on stm32g4
-  * Various fixes in nrf_qspi_nor driver
-  * Added driver for AT456 compatible SPI flash chips
-  * Enabled support for SAMV71
+  * 新增 Nordic JEDEC QSPI NOR flash 驱动
+  * 将 native_posix flash 驱动与 drivers/flash/flash_simulator 统一
+  * 修复：初始化时擦除 native_posix flash
+  * 扩展 MCUX flash 驱动以支持 LPC55xxx 设备
+  * stm32: 将 Flash 驱动中的寄存器访问替换为使用 STM32Cube
+  * Nios2: qspi 非对齐读支持
+  * sam0: 新增对 SAME54 的支持
+  * 新增 stm32f1x 系列的 flash 驱动
 
 * GPIO
 
-  * Added mcp23s17 driver
-  * Added STM32L5 support to stm32 driver
-  * Added interrupt support to sx1509b driver
-  * Fixed interrupt handling in sifive, intel_apl, mchp_xec, mcux_igpio driver
-  * Various fixes in intel_apl driver
-  * Added MCP23S17 driver
-  * Fixed port 1 interrupts in mcux lpc driver
+  * 将所有驱动更新到新 API
+  * 新增 LiteX GPIO 驱动
 
 * Hardware Info
 
-  * Fixed ESP32 implementation
-  * Updated byte order in all drivers
+  * N/A
 
 * I2C
 
-  * Added support to stm32h7
-  * Added write/read and bus recovery commands to shell
-  * Added bus recovery function to gpio bitbang driver
-  * Fixed fast and fast+ mode bus speeds in several drivers
-  * Added mcux flexcomm driver
+  * 在 stm32 驱动中默认启用中断
+  * 新增带 scan 命令的 I2C shell
+  * 新增 LiteX I2C 控制器驱动
+  * 在 stm32 驱动中新增对 STM32G0X 的支持
+  * 在 mcux lpspi 驱动中新增对总线空闲超时属性的支持
+  * 在 sam0 驱动中新增对 SAME54 的支持
 
 * I2S
 
-  * Added I2S master DMA support and clock output to stm32 driver
-  * Enabled SAMV71
+  * 在 stm32 驱动中新增 I2S 主设备 DMA 支持和时钟输出
+  * 启用 SAMV71
 
 * IEEE 802.15.4
 
-  * Added Decawave DW1000 driver
-  * Added "no auto start" option and local MAC address support to rf2xx
-  * Added support for Frame Pending Bit (FPB) handling in nrf5
-  * Added CSMA CA transmit capability to nrf5
-  * Added PAN coordinator mode support to nrf5
-  * Added support for promiscuous mode to nrf5
-  * Added support for energy scan function to nrf5
-  * Fixed RX timestamp handling in nrf5
-  * Various fixes to rf2xx
+  * 新增 Decawave DW1000 驱动
+  * 在 rf2xx 中新增"无自动启动"选项和本地 MAC 地址支持
+  * 在 nrf5 中新增对帧挂起位（FPB）处理的支持
+  * 在 nrf5 中新增 CSMA CA 发送能力
+  * 在 nrf5 中新增 PAN 协调器模式支持
+  * 在 nrf5 中新增对混杂模式的支持
+  * 在 nrf5 中新增对能量扫描功能的支持
+  * 修复 nrf5 中的 RX 时间戳处理
+  * rf2xx 的若干修复
 
 * Interrupt Controller
 
-  * Fixed PLIC register space
-  * Added support for STM32L5 series
-  * Added GIC V3 driver
-  * Fixed ICFGRn access and config in GIC driver
-  * Optimized the arc v2 interrupt unit driver
+  * 修复 PLIC 寄存器空间
+  * 新增对 STM32L5 系列的支持
+  * 新增 GIC V3 驱动
+  * 修复 GIC 驱动中的 ICFGRn 访问和配置
+  * 优化 arc v2 中断单元驱动
 
 * IPM
 
-  * Added CAVS DSP Intra-DSP Communication (IDC) driver
+  * 新增 CAVS DSP 片内 DSP 通信（IDC）驱动
 
 * Keyboard Scan
 
-  * Added interrupt support to the ft5336 touch controller driver
-  * Added SDL mouse driver
+  * 在 ft5336 触摸控制器驱动中新增中断支持
+  * 新增 SDL 鼠标驱动
 
 * LED
 
@@ -478,259 +595,265 @@ Drivers and Sensors
 
 * LoRa
 
-  * Added a LoRa shell
-  * Replaced counter driver usage with k_timer calls
-  * Various fixes in sx1276 driver
+  * 新增 LoRa shell
+  * 用 k_timer 调用替换 counter 驱动使用
+  * sx1276 驱动的若干修复
 
 * Modem
 
-  * Added support for GSM 07.10 muxing protocol to generic GSM modem
-  * Added support for modem commands that do not have a line ending
-  * Added automatic detection of ublox-sara-r4 modem type
-  * Added automatic setting of APN for ublox-sara-r4
-  * Added sendmsg() support to ublox-sara-r4
-  * Fixed UDP socket closing in ublox-sara-r4
-  * Fixed RSSI calculation for Sara U201
-  * Fixed TCP context release and RX socket src/dst port assignment in wncm14a2a
-  * Changed PPP driver connection to generic GSM modem
+  * 在通用 GSM modem 中新增对 GSM 07.10 复用协议的支持
+  * 新增对没有行结束符的 modem 命令的支持
+  * 新增对 ublox-sara-r4 modem 类型的自动检测
+  * 新增对 ublox-sara-r4 的 APN 自动设置
+  * 在 ublox-sara-r4 中新增 sendmsg() 支持
+  * 修复 ublox-sara-r4 中的 UDP socket 关闭
+  * 修复 Sara U201 的 RSSI 计算
+  * 修复 wncm14a2a 中的 TCP 上下文释放和 RX socket src/dst 端口分配
+  * 将 PPP 驱动连接更改为通用 GSM modem
 
 * PECI
 
-  * Added Microchip XEC driver
+  * 新增 Microchip XEC 驱动
 
 * Pinmux
 
-  * Fixed compilation errors in rv32m1_vega pinmux
+  * 修复 rv32m1_vega pinmux 中的编译错误
 
 * PS/2
 
-  * Tuned PS2 driver to support several mice brands
+  * 调整 PS2 驱动以支持多个鼠标品牌
 
 * PWM
 
-  * Added support to stm32h7
-  * Enhanced mcux ftm driver to configure pwm in ticks and allow configuring the clock prescaler
-  * Added mcux tpm driver
-  * Fixed nrfx driver to wait until PWM is stopped before restarting it
+  * 新增对 stm32h7 的支持
+  * 增强 mcux ftm 驱动以按 tick 配置 pwm 并允许配置时钟预分频器
+  * 新增 mcux tpm 驱动
+  * 修复 nrfx 驱动以在重启前等待 PWM 停止
 
 * Sensor
 
-  * Added support for Analog Devices ADXL345 3-axis I2C accelerometer
-  * Added Infineon DPS310 driver
-  * Fixed temperature conversion in SI7006 driver
-  * Added Honeywell MPR driver
-  * Added BQ27421 driver
-  * Added weighted average filter to NXP Kinetis temperature driver
-  * Enabled single shot mode in ENS210 driver
-  * Added forced sampling mode to BME280 driver
-  * Added IIS2MDC magnetometer driver
-  * Added IIS2DLPC accelerometer driver
-  * Added ISM330DHCX IMU driver
-  * Added MEC tachometer driver
-  * Fixed I2C and SPI bus communication in LIS2DH driver
+  * 新增对 Analog Devices ADXL345 3 轴 I2C 加速度计的支持
+  * 新增 Infineon DPS310 驱动
+  * 修复 SI7006 驱动中的温度转换
+  * 新增 Honeywell MPR 驱动
+  * 新增 BQ27421 驱动
+  * 在 NXP Kinetis 温度驱动中新增加权平均滤波器
+  * 在 ENS210 驱动中启用单拍模式
+  * 在 BME280 驱动中新增强制采样模式
+  * 新增 IIS2MDC 磁力计驱动
+  * 新增 IIS2DLPC 加速度计驱动
+  * 新增 ISM330DHCX IMU 驱动
+  * 新增 MEC 转速表驱动
+  * 修复 LIS2DH 驱动中的 I2C 和 SPI 总线通信
 
 * Serial
 
-  * Added uart_mux driver that is used in GSM 07.10 muxing protocol
-  * Added support for parity setting from dts on stm32
-  * Added support for stm32l5
-  * Various fixes in ns16550 driver
-  * Added XMC driver
-  * Added interrupt and runtime configuration support to Xilinx driver
-  * Fixed interrupt support in sifive driver
-  * Enhanced nrfx driver TX only mode support
-  * Added SAMV71 support to sam driver
+  * 新增在 GSM 07.10 复用协议中使用的 uart_mux 驱动
+  * 在 stm32 上新增从 dts 设置校验和的支持
+  * 新增对 stm32l5 的支持
+  * ns16550 驱动的若干修复
+  * 新增 XMC 驱动
+  * 在 Xilinx 驱动中新增中断和运行时配置支持
+  * 修复 sifive 驱动中的中断支持
+  * 增强 nrfx 驱动的仅 TX 模式支持
+  * 在 sam 驱动中新增 SAMV71 支持
 
 * SPI
 
-  * Added support for DMA client on stm32
-  * Increased clock frequency in mcux flexcomm driver
-  * Added power management support to cc13xx_cc26xx driver
+  * 在 stm32 上新增对 DMA 客户端的支持
+  * 提高 mcux flexcomm 驱动中的时钟频率
+  * 在 cc13xx_cc26xx 驱动中新增电源管理支持
 
 * Timer
 
-  * Various fixes in stm32_lptim driver
-  * Removed RTC1 dependency from nrf driver
-  * Various fixes in arcv2_timer0 driver
-  * Fixed TICKLESS=n processing in nrf_rtc and stm32_lptim drivers
-  * Added CAVS DSP wall clock timer driver
-  * Implemented tickless support in xlnx_psttc_timer driver
+  * stm32_lptim 驱动的若干修复
+  * 从 nrf 驱动中移除 RTC1 依赖
+  * arcv2_timer0 驱动的若干修复
+  * 修复 nrf_rtc 和 stm32_lptim 驱动中的 TICKLESS=n 处理
+  * 新增 CAVS DSP wall clock 定时器驱动
+  * 在 xlnx_psttc_timer 驱动中实现 tickless 支持
 
 * USB
 
-  * Added experimental USB Audio implementation.
-  * Added support to stm32wb
-  * Fixed PMA leak at reset on stm32
-  * Various fixes in usb_dc_nrfx driver
-  * Refactored usb_dc_mcux_ehci driver
+  * 新增实验性 USB Audio 实现。
+  * 新增对 stm32wb 的支持
+  * 修复 stm32 上重置时的 PMA 泄漏
+  * usb_dc_nrfx 驱动的若干修复
+  * 重构 usb_dc_mcux_ehci 驱动
 
 * Video
 
-  * Added dedicated video init priority
-  * Various fixes in sw_generator and mcux_csi
-  * Fixed video buffer alignment
+  * 新增专用 video 初始化优先级
+  * sw_generator 和 mcux_csi 的若干修复
+  * 修复 video 缓冲区对齐
 
 * Watchdog
 
-  * Added support on stm32g0
-  * Disabled iwdg at boot on stm32
+  * 新增对 stm32g0 的支持
+  * 在 stm32 上启动时禁用 iwdg
 
 * WiFi
 
-  * Added scan completion indication to eswifi
-  * Added support to ESP8266 and ESP32
+  * 在 eswifi 中新增扫描完成指示
+  * 新增对 ESP8266 的支持
 
-
-Networking
+网络
 **********
 
-* Converted networking to use new k_timeout_t infrastructure
-* Enhanced new TCP stack support
-* Added minimal support for TFTP client (RFC 1350)
-* Added support for network device driver power management
-* Added support for socketpair() BSD socket API
-* Added support for QEMU user networking (SLIRP)
-* Added support to disable automatic network attachment in OpenThread
-* Added support for Frame Pending Bit handling in OpenThread
-* Added support for RX frame handling in OpenThread
-* Added support for TX started notification in OpenThread
-* Added support for HW CSMA CA in OpenThread
-* Added support for promiscuous mode in OpenThread
-* Added support for reading OPAQUE resources with OMA TLV in LWM2M
-* Added config to enable PAN coordinator mode in IEEE 802.15.4
-* Added config to enable promiscuous mode in IEEE 802.15.4
-* Added support for subscribe in Azure cloud sample
-* Added support for queue mode in lwm2m_client sample
-* Added support to allow change of the QEMU Ethernet interface name
-* Added support for PPP IPCP to negotiate used DNS servers
-* Added support for setting hostname in DHCPv4 request
-* Fixed binding AF_PACKET socket type multiple times
-* Fixed LLDPDU data in sent LLDP packets
-* Fixed and enhance Google IoT sample application documentation
-* Fixed MQTT cloud sample when polling incoming messages
-* Fixed LWM2M socket error handling, and pending and reply handling during start
-* Fixed LWM2M retransmission logic
-* Fixed LWM2M Cell ID resource initialization
-* Fixed COAP pending and reply handling
-* Fixed wpan_serial sample application and enable USB during initialization
-* Fixed HTTP client payload issue on HTTP upload
-* Fixed MQTT Websocket incoming data handling and accept packets only in RX
-* Fixed MQTT Publish message length validation
-* Fixed IEEE 802.15.4 received frame length validation
-* IEEE 802.15.4: avoided ACK processing when not needed
-* IEEE 802.15.4: Now allows energy detection scan unconditionally
+* 新增配置 OpenThread Sleepy End Device (SED) 的支持
+* 为 net_buf API 新增 64 位支持
+* 新增对 IEEE 802.15.4 rf2xxx 驱动的支持
+* 新增 TLS 安全重新协商支持
+* 新增对 Timestamp 和 Record Route IPv4 选项的支持。
+  它们仅用于 ICMPv4 Echo-Request 数据包。
+* 新增示例云应用，演示如何连接到 Azure 云
+* 为某些 LWM2M IPSO 对象新增可选时间戳资源
+* 新增 poll() 支持，当设置 POLLOUT 时可立即返回
+* 新增 PPP 支持以启用与 Windows 的连接建立
+* 在 echo-server 示例应用中新增签名证书支持
+* 新增处理多个同时 mDNS 请求的支持
+* 新增对 SiLabs Giant Gecko GG11 以太网驱动的支持
+* 新增对使用 PPP 连接到数据网络的通用 GSM modem 的支持
+* 为 LWM2M 新增 UTC 偏移和时区支持
+* 为 packet socket 新增 RX 时间统计支持
+* 更新 IEEE 802.154 nrf5 驱动和 OpenThread 中的 ACK 处理
+* 更新 MQTT PINGREQ 计数处理
+* 更新 wpan_serial 示例以支持更多板卡
+* 更新 Ethernet e1000 驱动调试打印
+* 更新 OpenThread 以使用 settings 子系统
+* 更新 IPv6 以在路由中使用接口前缀
+* 更新 socket 卸载支持以支持多个已注册接口
+* 修复等待网络接口启动时的检查
+* 修复 zperf 示例在网络缓冲区耗尽时的问题
+* 修复 PPP IPv4 控制协议（IPCP）处理
+* 修复 native_posix 以太网驱动以更快读取数据
+* 修复 PPP 选项处理
+* 修复 MQTT 以更快关闭连接
+* 修复 6lo 解压期间的内存损坏
+* 修复 echo-server 示例应用 accept 处理
+* 修复 Websocket 以小块接收数据
+* 修复 Virtual LAN (VLAN) 支持，为网络接口添加链路本地地址
+* 对新 TCP 协议栈实现的若干修复
+* 移除 NATS 示例应用
 
-Bluetooth
+CAN 总线
+*******
+
+* 通过第三方 CANopenNode 协议栈支持 CANopen 协议。
+* 新增原生 ISO-TP 子系统。
+* 引入 CAN-PRIMARY 别名。
+* MCUX flexcan 的 SocketCAN。
+
+蓝牙
 *********
 
 * Host:
 
-  * Support for LE Advertising Extensions has been added.
-  * The Host is now 5.2 compliant, with support for EATT, L2CAP ECRED mode and
-    all new GATT PDUs.
-  * New application-controlled data length and PHY update APIs.
-  * Legacy OOB pairing support has been added.
-  * Multiple improvements to OOB data access and pairing.
-  * The Host now uses the new thread analyzer functionality.
-  * Multiple bug fixes and improvements
+  * GAP: 新增动态 LE 扫描监听 API
+  * GAP: 为可连接广播和白名单发起者预分配连接对象
+  * GAP: 多身份支持修复
+  * GAP: RPA 超时处理修复
+  * GAP: 新增远程版本信息
+  * GATT: 为 cfg_write 回调新增返回值
+  * L2CAP: 将通道处理移到系统工作队列
+  * L2CAP: 基于信用流控制的多个修复
+  * SMP: 新增 pairing_accept 回调
+  * SMP: 修复 Security Manager 超时处理
 
-* BLE split software Controller:
+* Mesh:
 
-  * The Controller is now 5.2 compliant.
-  * A new HCI USB H4 driver has been added, which can interact with BlueZ's
-    counterpart Host driver.
-  * PHY support is now configurable.
-  * Only control procedures supported by the peer are now used.
-  * The Nordic nRF52820 IC is now supported
-  * OpenISA/RV32M1:
+  * 新增对 Mesh 配置数据库的支持
+  * Friendship 特性的多个修复
+  * 新增发送分段控制消息的支持
+  * 新增发送可靠模型发布消息的支持
 
-    * 2 Mbps PHY support.
-    * Radio deep sleep mode support.
-    * Controller-based privacy support.
+* BLE 分离软件控制器:
 
-* BLE legacy software Controller:
+  * 多个修复，包括通过认证所需的所有修复
+  * 为没有内置地址解析支持的平台实现软件延迟隐私
+  * 新增动态 TX 功率控制，包括一组读取和写入
+    TX 功率的厂商特定命令
+  * 新增 Kconfig 选项 BT_CTLR_PARAM_CHECK，以启用额外参数
+    检查
+  * 新增对 SMI（稳定调制指数）的基本支持
+  * Ticker: 实现动态重新调度
+  * Nordic: 切换为使用单一时钟设备进行时钟控制
+  * openisa: 新增加密和解密支持
 
-  * The legacy Controller has been removed from the tree.
+* BLE 旧版软件控制器:
 
-Build and Infrastructure
+  * 多个修复
+  * 新增动态 TX 功率控制支持
+
+USB 设备协议栈
+****************
+
+* Stack:
+
+  * API: 新增用户设备状态回调支持
+  * 重构切换到备用接口
+  * 使 USB 描述符电源选项可配置
+  * 从 HWINFO 派生 USB 设备序列号字符串（USB MSC 要求）
+  * 将 USB 传输函数移到适当文件，为重构做准备
+  * Windows 操作系统兼容性：使用 BOS 描述符时将 USB 版本设为 2.1
+  * 将 VBUS 控制转换为新 GPIO API
+
+* Classes:
+
+  * CDC ACM: 内存和性能改进，IN 事务期间避免 ZLP
+  * DFU: 在 DFU_UPLOAD 期间将上传长度限制为请求缓冲区大小
+  * Loopback: 接口配置事件后重新触发 usb_write
+
+构建与基础设施
 ************************
 
-* Zephyr CMake package
+* Zephyr 构建系统和工具支持的最小 Python 版本
+  现在为 3.6。
+* 将 :file:`generated_dts_board.h` 和 :file:`generated_dts_board.conf` 重命名为
+  :file:`devicetree.h` 和 :file:`devicetree.conf`，连同各种相关
+  标识符。包含 :file:`generated_dts_board.h` 现在会生成警告，
+  提示改为包含 :file:`devicetree.h`。
 
-  * The Zephyr main repository now includes a Zephyr CMake package.
-    This allows for registering Zephyr in the CMake user package registry and
-    allows for easier integration into Zephyr applications, by using the CMake
-    function, ``find_package(Zephyr ...)``.
-    Registering the Zephyr CMake package in the CMake user package registry
-    removes the need for setting of ``ZEPHYR_BASE``, sourcing ``zephyr-env.sh``,
-    or running ``zephyr-env.cmd``.
-  * A new ``west`` extension command, ``west zephyr-export`` is introduced for easy
-    registration of Zephyr CMake package in the CMake user package registry.
-  * Zephyr Build Configuration CMake package hook.
-    Zephyr offers the possibility of configuring the Zephyr build system through
-    a Zephyr Build Configuration package. A single Zephyr workspace
-    ``ZephyrBuildConfig.cmake`` will be loaded if present in the Zephyr
-    workspace. This allows users to configure the Zephyr build system on a per
-    workspace setup, as an alternative to using a ``.zephyrrc`` system wide file.
+库/子系统
+***********************
 
-* Devicetree
+* LoRa
 
-  * A new :ref:`devicetree_api` was added. This API is not generated, but is
-    still included via ``<devicetree.h>``.
+  * 通过官方 LoRaMac-node 参考实现新增了对 LoRa 的支持。
 
-    See `the Zephyr v2.3 legacy devicetree macro page`_ for more information,
-    including a link to a migration guide to the new API.
+* Logging
 
-    The :ref:`dt-howtos` page has been extended for the new API, and a new
-    :ref:`dt-from-c` API usage guide was also added.
+  * 即时模式改进：更少的中断锁定、更好的 RTT 使用、
+    从线程上下文记录日志。
+  * 改进对缺失 log_strdup 的通知。
 
-Libraries / Subsystems
-**********************
+* mbedTLS 更新至 2.16.4
 
-* Disk
-
-  * Add stm32 sdmmc disk access driver, supports stm32f7 and stm32l4
-
-* Random
-
-  * Removed the ``rand32_timestamp`` driver.
-
-* POSIX subsystem:
-
-  * socketpair() function implemented.
-  * eventfd() function (Linux-like extension) implemented.
-
-* Power management:
-
-  * Add system and device power management support on TI CC13x2/CC26x2.
-
-HALs
+HAL
 ****
 
-* HALs are now moved out of the main tree as external modules and reside in
-  their own standalone repositories.
+* HAL 现在作为外部模块移出主树，
+  并位于它们自己的独立仓库中。
 
-Documentation
+文档
 *************
 
-* New API overview page added.
-* Reference pages have been cleaned up and organized.
-* The Devicetree documentation has been expanded significally.
-* The project roles have been overhauled in the Contribution Guidelines pages.
-* The documentation on driver-specific APIs has been simplified.
-* Documentation for new APIs, boards and samples.
+* settings: 将缺失的 API 子组纳入文档
+* 新板卡和示例的文档。
+* API 文档的改进和清晰度。
 
-Tests and Samples
+测试与示例
 *****************
 
-* Added samples for USB Audio Class.
-* Added sample for using POSIX read()/write() with network sockets.
+* 新增展示 settings 子系统 API 用法的示例
 
-Issue Related Items
+Issue 相关条目
 *******************
 
-These GitHub issues were addressed since the previous 2.2.0 tagged
-release:
+自上次 2.2.0 标记版本以来，解决了以下 GitHub issue：
+
+.. comment  List derived from GitHub Issue query: ...
+   * :github:`issuenumber` - issue title
 
 * :github:`25991` - [net][net.socket.select][imx-rt series] test fails  (k_uptime_get_32() - tstamp <= FUZZ is false)
 * :github:`25990` - tests/net/socket/select failed on sam_e70_xplained board.

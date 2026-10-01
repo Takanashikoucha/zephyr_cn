@@ -1,38 +1,14 @@
 .. _memory_management_services:
 
-Memory
-Management
+内存管理
 #################
 
-这
-个
-section
-cover
-用于
-manage
-memory
-和
-data
-buffers
-的
-services
-包括
-dynamic
-allocation、
-memory
-attributes
-和
-mappings、
-以及
-network
-style
-的
-buffer
-pools。
+本节涵盖用于管理内存和数据缓冲区的服务，包括
+动态分配、内存属性和映射，以及网络风格的缓冲区
+池（buffer pool）。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    mem_mgmt/index.rst
    net_buf/index.rst

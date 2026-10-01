@@ -1,219 +1,37 @@
 .. _bug_reporting:
 
-Bug
-Reporting
+错误报告
 ##############
 
-To
-maintain
-traceability
-and
-relation
-between
-proposals、
-changes、
-features、
-and
-issues
-it
-is
-recommended
-to
-cross
-reference
-source
-code
-commits
-with
-the
-relevant
-GitHub
-issues
-and
-vice
-versa。
-Any
-changes
-that
-originate
-from
-a
-tracked
-feature
-or
-issue
-should
-contain
-a
-reference
-to
-the
-feature
-by
-mentioning
-the
-corresponding
-issue
-or
-pull
-request
-identifiers。
+为了维护提案、更改、特性和 issue 之间的
+可追溯性和关联关系，建议将源代码提交
+与相关的 GitHub issue 进行交叉引用，
+反之亦然。源自被跟踪的特性或 issue 的
+任何更改都应包含对该特性的引用，
+通过提及对应的 issue 或拉取请求标识符来实现。
 
-At
-any
-time
-it
-should
-be
-possible
-to
-establish
-the
-origin
-of
-a
-change
-and
-the
-reason
-behind
-it
-by
-following
-the
-references
-in
-the
-code。
+在任何时候，都应能够通过跟踪代码中的
+引用来确定一个更改的来源及其背后的原因。
 
-Reporting
-a
-regression
-issue
+报告回归问题
 ****************************
 
-It
-could
-happen
-that
-the
-issue
-being
-reported
-is
-identified
-as
-a
-regression
-as
-the
-use
-case
-is
-known
-to
-be
-working
-on
-earlier
-commit
-or
-release。
-In
-this
-case
-providing
-directly
-the
-guilty
-commit
-when
-submitting
-the
-bug
-gains
-a
-lot
-of
-time
-in
-the
-eventual
-bug
-fixing。
+有时，所报告的 issue 会被识别为回归问题，
+因为该用例已知在较早的提交或版本上
+可以正常工作。在这种情况下，在提交错误
+报告时直接提供导致问题的提交，
+可以在最终的错误修复中节省大量时间。
 
-To
-identify
-the
-commit
-causing
-the
-regression
-several
-methods
-could
-be
-used
-but
-tree
-bisecting
-method
-is
-an
-efficient
-one
-that
-doesn't
-require
-deep
-code
-expertise
-and
-can
-be
-used
-by
-every
-one。
+要识别导致回归的提交，可以使用多种方法，
+但代码树二分查找方法是一种高效的方法，
+不需要深入的代码专业知识，每个人都可以使用。
 
-For
-this
-`git
-bisect`_
-is
-the
-recommended
-tool。
+为此，`git bisect`_ 是推荐的工具。
 
-Recommendations
-on
-the
-process:
+流程建议：
 
-*
-Run
-``west
-update``
-on
-each
-bisection
-step。
-*
-Once
-the
-bisection
-is
-over
-and
-a
-culprit
-identified
-verify
-manually
-the
-result。
+* 在每个二分查找步骤中运行 ``west update``。
+* 二分查找结束并识别出肇事提交后，手动验证结果。
 
-.. _git
-   bisect:
-   https://git-scm.com/docs/git
-   bisect
+.. _git bisect:
+   https://git-scm.com/docs/git-bisect

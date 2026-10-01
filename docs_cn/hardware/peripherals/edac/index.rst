@@ -1,51 +1,23 @@
 .. _edac_api:
 
-Error
-Detection
-And
-Correction
-（EDAC）
+错误检测与纠正（EDAC）
 #####################################
 
-Error
-Detection
-And
-Correction
-是
-用
-于
-在
-存储
-或
-读取
-data
-时
-检测
-和
-纠正
-errors
-的
-机制。
+错误检测与纠正（Error Detection And Correction）是一种在存储或读取数据时用于检测和纠正错误的机制。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    ibecc.rst
 
-Configuration
-option
+配置选项
 ********************
 
-相关
-配置
-option：
+相关配置选项：
 
 * :kconfig:option:`CONFIG_EDAC`
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   edac_interface
+.. doxygengroup:: edac_interface

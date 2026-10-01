@@ -1,222 +1,70 @@
 .. _code-flow-and-branches:
 
-Code
-Flow
-and
-Branches
+代码流程与分支
 ######################
 
-Introduction
+简介
 ************
 
-The
-zephyr
-Git
-repository
-has
-three
-types
-of
-branches:
+zephyr Git 仓库有三种类型的分支：
 
 main
-   Which
-   contains
-   the
-   latest
-   state
-   of
-   development
+  包含开发的最新状态
 
-collab
-\*
-   Collaboration
-   branches
-   that
-   are
-   used
-   for
-   shared
-   development
-   of
-   new
-   features
-   to
-   be
-   introduced
-   into
-   the
-   main
-   branch
-   when
-   ready。
-   Creating
-   a
-   new
-   collaboration
-   branch
-   requires
-   a
-   justification
-   and
-   TSC
-   approval。
-   Collaboration
-   branches
-   shall
-   be
-   based
-   off
-   the
-   main
-   branch
-   and
-   any
-   changes
-   developed
-   in
-   the
-   collab
-   branch
-   shall
-   target
-   the
-   main
-   development
-   branch。
-   For
-   released
-   versions
-   of
-   Zephyr
-   the
-   introduction
-   of
-   fixes
-   and
-   new
-   features
-   if
-   approved
-   by
-   the
-   TSC
-   shall
-   be
-   done
-   using
-   backport
-   pull
-   requests。
+collab-\*
+  用于共享开发新特性的协作分支，
+  待就绪后引入 main 分支。创建新的
+  协作分支需要理由和 TSC 批准。
+  协作分支应基于 main 分支，协作分支中
+  开发的任何更改都应面向 main 开发分支。
+  对于已发布的 Zephyr 版本，修复和新特性的
+  引入（如经 TSC 批准）应使用回移拉取请求
+  完成。
 
-vx.y
-branch
-   Branches
-   which
-   track
-   maintenance
-   releases
-   based
-   on
-   a
-   major
-   release
+vx.y-branch
+  跟踪基于某个主版本发布的
+  维护版本发布的分支
 
-Development
-in
-collaboration
-branches
-before
-features
-go
-to
-mainline
-allows
-teams
-to
-work
-independently
-on
-a
-subsystem
-or
-a
-feature
-improves
-efficiency
-and
-turnaround
-time
-and
-encourages
-collaboration
-and
-streamlines
-communication
-between
-developers。
+在特性进入主线之前，在协作分支中进行
+开发允许团队独立地针对某个子系统或
+某个特性进行工作，提高效率并缩短
+周转时间，同时鼓励开发者之间的协作
+并简化沟通。
 
-Changes
-submitted
-to
-a
-collaboration
-branch
-can
-evolve
-and
-improve
-incrementally
-in
-a
-branch
-before
-they
-are
-submitted
-to
-the
-mainline
-tree
-for
-final
-integration。
+提交到协作分支的更改可以在分支中
+逐步演进和改进，之后再提交到主线
+代码树进行最终集成。
 
-By
-dedicating
-an
-isolated
-branch
-to
-complex
-features
-it's
-possible
-to
-initiate
-in
-depth
-discussions
-around
-new
-additions
-before
-integrating
-them
-into
-the
-official
-project。
+通过为复杂特性专门分配一个隔离分支，
+可以在将其集成到正式项目之前，
+围绕新增内容发起深入讨论。
 
-Collaboration
-branches
-are
-ephemeral
-and
-shall
-be
-removed
-once
-the
-collaboration
-work
+协作分支是临时的，协作工作完成后
+应予以移除。请求创建分支时，
+提案应包含以下内容：
+
+* 定义将协作分支的更改合并回 main
+  分支的退出标准。
+* 定义分支预期生命周期的时间表。
+  建议选择某个 Zephyr 版本来设定时间表。
+  延长该时间表需要 TSC 批准。
+
+角色与职责
+**************************
+
+协作分支负责人有以下职责：
+
+- 使用项目提供的基础设施和工具（GitHub、Git）
+- 对协作分支的所有更改都应以
+  GitHub 拉取请求的形式提交。
+- 仅在对 main 分支进行 rebase 时
+  才允许强制推送协作分支。
+- 审查来自团队成员的更改，并在
+  提交更改时向分支负责人请求审查。
+- 保持分支与上游同步，并定期更新。
+- 使用以下方法频繁向上游推送更改：
+
+  - GitHub 拉取请求：例如，当本地分支中
+    尚未进行审查（单人分支）时。
+  - 合并请求：当一组更改已在本地分支完成，
+    并已在协作分支中审查和测试时。

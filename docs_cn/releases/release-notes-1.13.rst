@@ -2,281 +2,277 @@
 
 .. _zephyr_1.13:
 
-Zephyr
-Kernel
-1.13.0
+Zephyr Kernel 1.13.0
 ####################
 
-我们
-pleased
-to
-announce
-Zephyr
-kernel
-version
-1.13.0
-的
-release。
+我们很高兴宣布 Zephyr 内核版本 1.13.0 的发布。
 
-这
-个
-release
-的
-Major
-enhancements
-包括：
+本次发布的主要增强包括：
 
-*
-Extensible
-和
-Pluggable
-的
-Tracing
-Support
-*
-Compartmentalized
-的
-application
-memory
-organization
-*
-Logging
-System
-Overhaul
-*
-Introduce
-system
-calls
-for
-BSD
-socket
-APIs
-*
-Support
-for
-IEEE
-802.1AS
-2011
-generalized
-Precision
-Time
-Protocol
-（gPTP）
-*
-Link
-Layer
-Discovery
-Protocol
-（LLDP）
-TX
-support
-*
-Support
-for
-TLS
-和
-DTLS
-用
-BSD
-socket
-API
-*
-Support
-for
-Link
-Layer
-Multicast
-Name
-Resolution
-（LLMNR）
-*
-Introduced
-reworked
-的
-ADC
-API
-且
-updated
-Nordic、
-NXP、
-Atmel、
-和
-Synopsys
-DesignWare
-drivers
-*
-Support
-OS
-driven
-的
-Power
-Management
-framework
-*
-Basic
-的
-support
-for
-Arm
-TrustZone
-在
-Armv8
-M
-上
+* 可扩展和可插拔的跟踪支持
+* 分区化的应用内存组织
+* 日志系统改造
+* 为 BSD socket API 引入系统调用
+* 支持 IEEE 802.1AS-2011 通用精密时间协议（gPTP）
+* 链路层发现协议（LLDP）TX 支持
+* 使用 BSD socket API 支持 TLS 和 DTLS
+* 支持链路层多播名称解析（LLMNR）
+* 引入重新设计的 ADC API 并更新 Nordic、NXP、Atmel 和
+  Synopsys DesignWare 驱动
+* 支持 OS 驱动的电源管理框架
+* Arm TrustZone 在 Armv8-M 上的基本支持
 
-以下
-sections
-provide
-detailed
-的
-lists
-of
-changes
-by
-component。
+以下各节提供按组件分类的更改详细列表。
 
 Kernel
 ******
 
-*
-Remove
-kernel
-event
-manager
-被
-generic
-的
-tracing
-interface
-replaced
-*
-Enhanced
-的
-Timeout
-和
-Tick
-handling
-在
-kernel
-中
-*
-Compartmentalized
-的
-application
-memory
-organization
-*
-Fix
-errno
-access
-for
-user
-mode
+* 移除内核事件管理器，由通用跟踪接口替换
+* 增强内核中的超时和滴答处理
+* 分区化的应用内存组织
+* 修复用户模式的 errno 访问
 
 Architectures
 *************
 
-*
-arch:
-arc:
-improve
-the
-reset
-code
-*
-arch:
-arc:
-use
-一
-个
-separate
-的
-stack
-for
-exception
-handling
-*
-arch:
-arc:
-refactor
-the
-arc
-stack
-check
-support
+* arch：arc：改进重置代码
+* arch：arc：为异常处理使用单独的栈
+* arch：arc：重构 arc 栈检查支持
+* arch：arm：stm32：在 STM32F7 上启用指令和数据缓存
+* arch：arm：实现 ARMv8-M MPU 驱动
+* irq：修复 irq_lock API 使用
+* arch：arm：定义非安全入口函数的宏 API
+* arch：arm：允许处理器忽略/从故障中恢复
+* arm：nxp：mpu：整合 k64 mpu 区域
+* arm：在 BusFault dump 中打印 NXP MPU 错误信息
+* arch：ARM：更改 cortex-m0 和 cortex-m0plus 使用的 march
+* arch：arm：将 ARM CMSE 与 CMake 集成
+* arch：arm：Cortex-M23 和 Cortex-M33 的基本 Arm TrustZone-M 功能
+* arch：arm：使用 Armv8-M SPLIM 寄存器的内置栈保护
+* arch：arm：在 Secure/Non-Secure Armv8-M 固件中使用 TT 内联函数的 API
+* arch：arm：清理 ARM 和 NXP 的 MPU 代码
+* arch：arm：将零延迟 IRQ 设置为优先级零
+* arch/arm：修复 __pendsv 中的锁定
 
+Boards & SoC Support
+********************
 
-.. note::
+* x86：为 Apollo Lake 添加 SoC 配置
+* x86：添加 UP Squared（Pentium/Celeron）支持
+* arc：支持 Synopsys ARC nSim 指令集模拟器
+* riscv32：riscv-privilege：Microsemi Mi-V 支持
+* 添加以下 Arm 开发板支持：
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-* Added a new, board-specific mesh sample for the nRF52x series that
-  implements the following models:
+  * efr32_slwstk6061a
+  * nrf52_adafruit_feather
+  * nrf52810_pca10040
+  * nrf52840_pca10059
+  * nucleo_f207zg
+  * reel_board
+  * stm32f723e_disco
+  * stm32f746g_disco
+  * stm32f769i_disco
+  * udoo_neo_full_m4
+  * warp7_m4
 
-  - Generic OnOff client and server.
-  - Generic Level client and server.
-  - Generic Power OnOff client and server.
-  - Light Lightness client and server.
-  - Light CTL client and server.
-  - Vendor Model.
-* Controller: Added a TX Power Kconfig option.
-* Controller: Use the newly available nrfx utility functions to access the
+Drivers and Sensors
+*******************
+
+* adc：引入重新设计的 API 并更新 Nordic、NXP、Atmel 和
+  Synopsys DesignWare 驱动
+* audio：添加 TLV320DAC310x 音频 DAC 驱动
+* can：为 STM32L432 添加 can 支持
+* clock_control：添加 STM32F7 系列时钟控制
+* entropy：添加 STM32F7 支持
+* eth：在 mcux 和 gmac 驱动中启用 gPTP 支持
+* eth：为 native_posix 添加混杂模式支持
+* eth：mcux：添加随机化但稳定的 MAC 地址选项
+* gpio：添加 STM32F7 GPIO 支持
+* interrupt_controller：添加 STM32F7 EXTI 支持
+* i2c：添加 STM32F7 支持
+* i2c：添加 i.MX shim 驱动
+* i2c：为 stm32_v2 实现从站支持
+* i2c：添加 EEPROM I2C 从站驱动
+* i2c：为 nrfx TWI 和 TWIM 驱动添加 shim
+* i2s：将 i2s API 暴露给用户模式
+* led：添加 TI LP5562 和 NXP PCA9633 驱动
+* modem：添加 Wistron WNC-M14A2A LTE-M 调制解调器驱动
+* modem：添加调制解调器接收器（tty）驱动
+* pinmux：添加 STM32F7 pinmux 支持
+* pwm：添加 i.MX shim 驱动
+* pwm：为 nrfx PWM HW 驱动添加 shim
+* serial：为 nRF UART 驱动添加电源管理
+* serial：添加 STM32F7 UART 支持
+* serial：允许将任意用户数据传递给 irq 回调
+* serial：为 nRFx 系列添加 UARTE 驱动
+* sensor：添加 adxl372、mma8451q、adt7420 驱动
+* sensor：lis2dh：修复 I2C 突发读写操作
+* rtc：添加 STM32 支持
+* usb：为 STM32F2 和 STM32F7 上的 OTG FS 添加支持
+* usb：为 DesignWare USB 添加高速支持
+* wifi：添加 SimpleLink WiFi 卸载驱动（仅 wifi_mgmt）
+
+Networking
+**********
+
+* 为 BSD socket API 引入系统调用
+* 添加 IPv4 自动配置支持。
+  这添加了对 IPv4 链路本地地址（169.254.*.*）的支持
+* 为 BSD socket API 添加 TLS 和 DTLS 支持。
+  它们通过 setsockopt() API 配置
+* 为以太网网络添加 IEEE 802.1AS-2011 通用精密时间协议（gPTP）支持。
+  创建示例应用以展示如何与 gPTP 代码交互
+* 添加 PTP 时钟驱动支持。
+  该驱动将由支持 gPTP 的以太网驱动使用
+* 添加链路层发现协议（LLDP）TX 支持
+* 添加 Qav 基于信用的整形器算法管理支持
+* 添加通用 TX 时间戳支持
+* 为以太网 L2 驱动添加载波检测支持
+* 添加供应商特定以太网统计支持
+* 为以太网管理接口添加 getter 支持
+* 为网络接口添加混杂模式支持。
+  创建示例应用展示如何使用用户 API 获取所有网络数据包。
+  native_posix 以太网驱动目前支持混杂模式
+* 添加链路层多播名称解析（LLMNR）支持。
+  LLMNR 用于 Microsoft Windows 网络中的本地名称解析
+* 为 net_pkt 添加 API 以将网络数据包预填充到预定义值
+* 为 Atmel GMAC 以太网驱动添加 IEEE 802.1Qav 支持
+* 为 Atmel GMAC 以太网驱动添加硬件 TX 时间戳支持
+* 为 Atmel GMAC 以太网驱动添加多硬件队列支持
+* 为 Atmel GMAC 以太网驱动添加 gPTP 支持
+* 添加 TI SimpleLink WiFi 卸载驱动支持
+* 为 NXP MCUX 以太网驱动添加随机化但稳定的 MAC 地址支持
+* 为基于以太网的网络接口的 net-shell 添加额外打印。
+  打印支持的功能和优先级队列信息
+* 添加并修复 net-shell 中的字符串到整数转换
+* 允许用户将 MAC 地址过滤器配置到以太网设备
+* 在 DHCPv4 中捕获网络接口 ON 和 OFF 事件，
+  如果重新连接则更新地址租约
+* 移除等待新网络缓冲可用时的永久超时
+* 将网络接口 up/down 命令从 net-shell 中继到
+  native_posix 以太网驱动的 Linux 主机
+* 支持 Bluetooth IPSP 的节点无需加入 IPv6 被请求节点多播组
+* 允许为 native_posix 以太网驱动启动外部程序。
+  例如，当创建 zeth 时可以启动 wireshark
+* 网络数据包优先级和流量分类修复和澄清
+* 在适用时使用打包枚举降低 net 中的内存消耗
+* 当 TCP 断开连接时正确通知 net_app 服务器
+* 为网络接口注册 OpenThread 使用的单播和多播 IPv6 地址
+* 为 TI SimpleLink 以太网驱动启用 Fast Connect 策略
+* 修复 ieee802154 模拟器驱动的通道/tx 功率设置
+* 正确处理大型 IPv6 数据包
+* 在 native_posix、NXP mcux 和 Atmel GMAC 以太网驱动中启用 gPTP 支持。
+  native_posix 以太网驱动的 gPTP 支持仅用于测试目的
+* 将网络配置（net_config）库从 net_app 库中拆分。
+  （此更改要求更新应用配置以引用对应的
+  NET_CONFIG_* 选项而非 NET_APP_*）
+* 将所有第 2 层（L2）网络代码移到 subsys/net/l2 目录
+* 在发送 TCP SYN 请求时添加 MSS 选项
+* 通过在我们的接收窗口为 0 时处理零窗口探测来修复 TCP
+* IPv4、IPv6、ICMPv6、ARP 代码重构和清理
+* IPv6 地址生命周期修复
+* IPv6 分片修复
+* 使用 VLAN 时的 ARP 修复
+* 超时持续时间过长的 ARP 请求
+* DHCPv4 修复和超时管理重构
+* TCP 重试、RST 数据包处理和内存泄漏修复
+* IP 地址打印函数增强
+* 修复发送最后一个 chunk 时的 HTTP
+* MQTT 修复
+* LWM2M 清理和修复
+* 修复 Atmel GMAC 以太网驱动中的缓存支持
+* 修复 NXP MCUX 以太网驱动以检测载波丢失事件
+* 将 native API echo-server/echo-client 示例移植到 BSD sockets API，
+  带 TLS/DTLS 支持
+* 在 echo-client 和 echo-server 示例应用中
+  优雅地处理 out-of-buf 情况
+  TLS/DTLS support.
+Bluetooth
+*********
+
+* 使用刷新的 BT_GATT_CHARACTERISTIC 宏实现新的用户友好服务填充
+*********
+* 为 native_posix 开发板添加 Bluetooth 硬件支持，
+  允许开发者使用原生 POSIX 架构配合 Bluetooth
+* 添加解析广播数据的新辅助 API
+* 添加新标志 BT_LE_ADV_OPT_USE_NAME，
+  在广播数据中包含 Bluetooth 设备名称
+* 添加固定 passkey 支持用于绑定过程
+* 添加新的 Bluetooth shell 命令以向控制器发送任意 HCI 命令
+* 添加新功能以支持使用单个控制器的多个本地身份
+* 为 nRF52x 系列添加新的开发板特定 mesh 示例，
+  实现以下模型：
+  controller.
+  - Generic OnOff 客户端和服务器
+  - Generic Level 客户端和服务器
+  - Generic Power OnOff 客户端和服务器
+  - Light Lightness 客户端和服务器
+  - Light CTL 客户端和服务器
+  - Vendor 模型
+* Controller：添加 TX 功率 Kconfig 选项
+* Controller：使用新可用的 nrfx 实用函数访问 nRF5x 硬件
+* Controller：多个 bug 修复
+* Controller：添加对 Nordic Semiconductor 的 nRF52810 SoC 的支持
+* 新的 HCI 驱动 quirks API 以支持需要不常见重置序列的控制器
+* Host：GATT 和 SMP 的多个 bug 修复
+* Mesh：多个 bug 修复
   nRF5x hardware.
-* Controller: Multiple bug fixes.
-* Controller: Added support for the nRF52810 SoC from Nordic Semiconductor.
-* New HCI driver quirks API to support controllers that need uncommon reset
-  sequences.
-* Host: Multiple bug fixes for GATT and SMP.
-* Mesh: Multiple bug fixes.
-
 Build and Infrastructure
 ************************
-* Kconfig: Remove redundant 'default n' properties
-* cmake: replace PROJECT_SOURCE_DIR with ZEPHYR_BASE
-* Kconfig: Switch to improved globbing statements
-
-
+* Kconfig：移除冗余的 "default n" 属性
+* cmake：用 ZEPHYR_BASE 替换 PROJECT_SOURCE_DIR
+* Kconfig：切换到改进的 globbing 语句
+* Mesh: Multiple bug fixes.
 Libraries / Subsystems
 ***********************
-* Tracing: Basic support SEGGER systemview
-* Logging: Introduce a new logging subsystem
-* fs/nvs: Improved nvs for larger blocksizes
-* subsys: console: Refactor code to allow per-UART "tty" wrapper
-
+* Tracing：基本支持 SEGGER systemview
+* Logging：引入新的日志子系统
+* fs/nvs：改进 nvs 以支持更大的 blocksizes
+* subsys：console：重构代码以允许每 UART "tty" 包装器
 
 HALs
 ****
-* ext/hal: stm32cube: STM32L4: Enable legacy CAN API
-* ext: Import Atmel SAMD20 header files from ASF library
-* ext: gecko: Add Silabs Gecko SDK for EFR32FG1P SoCs
-* drivers: add i.MX I2C driver shim
+* ext/hal：stm32cube：STM32L4：启用 legacy CAN API
+* ext：从 ASF 库导入 Atmel SAMD20 头文件
+* ext：gecko：为 EFR32FG1P SoC 添加 Silabs Gecko SDK
+* drivers：添加 i.MX I2C 驱动 shim
+* hal：stm32f2x：为 STM32F2x 系列添加 HAL
+* ext：stm32cube：更新 stm32l4xx cube 版本
+* ext：stm32cube：更新 stm32f7xx cube 版本
+* ext：stm32cube：更新 stm32f4xx cube 版本
+* ext：stm32cube：更新 stm32f3xx cube 版本
+* ext：stm32cube：更新 stm32f1xx cube 版本
+* ext：hal：nordic：将 nrfx 更新到版本 1.1.0
+* net：drivers：wifi：SimpleLink WiFi 卸载驱动（仅 wifi_mgmt）
+* ext/hal/nxp/imx：导入 nxp imx6 freertos bsp
 * hal: stm32f2x: Add HAL for the STM32F2x series
-* ext: stm32cube: update stm32l4xx cube version
-* ext: stm32cube: update stm32f7xx cube version
-* ext: stm32cube: update stm32f4xx cube version
-* ext: stm32cube: update stm32f3xx cube version
-* ext: stm32cube: update stm32f1xx cube version
-* ext: hal: nordic: Update nrfx to version 1.1.0
-* net: drivers: wifi: SimpleLink WiFi Offload Driver (wifi_mgmt only)
-* ext/hal/nxp/imx: Import the nxp imx6 freertos bsp
-
 Documentation
 *************
-* Simplified and more maintainable theme applied to documentation.
-  Latest and previous four releases regenerated and published to
+* 将简化和更易于维护的主题应用于文档。
+  最新和之前四个发布版本重新生成并发布到
   https://docs.zephyrproject.org
-* Updated contributing guidelines
-* General organization cleanup and spell check on docs including content
-  generated from Kconfig files and doxygen API comments.
-* General improvements to documentation following code,
-  implementation changes, and in support of new features, boards, and
-  samples.
-* Documentation generation now supported on Windows host systems
-  (previously only linux doc generation was supported).
-* PDF version of documentation can now be created
-
-
+* 更新贡献指南
+* 文档的一般组织清理和拼写检查，包括从
+  Kconfig 文件和 doxygen API 注释生成的内容
+* 文档的一般改进，跟随代码、
+  实现更改，并支持新功能、开发板和示例
+* 文档生成现在支持 Windows 主机系统
+  （之前仅支持 linux 文档生成）
+* 现在可以创建文档的 PDF 版本
+  https://docs.zephyrproject.org
 Tests and Samples
 *****************
+* 增强基准测试以支持用户空间
+* 改进内核的测试覆盖
+  implementation changes, and in support of new features, boards, and
+Issue Related Items
+*******************
+  (previously only linux doc generation was supported).
+自上次 1.12.0 标记发布以来解决了以下 GitHub issue：
+
+
+.. comment  列表派生自 GitHub Issue 查询：...
+   * :github:`issuenumber` - issue 标题
 * Enhanced benchmarks to support userspace
 * Improve test coverage for the kernel
 

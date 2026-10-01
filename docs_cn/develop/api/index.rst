@@ -1,9 +1,6 @@
 .. _api_status_and_guidelines:
 
-API
-状态
-和
-指南
+API 状态与指南
 #########################
 
 .. toctree::

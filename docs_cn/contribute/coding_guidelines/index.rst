@@ -1,318 +1,304 @@
 .. _coding_guidelines:
 
-Coding
-Guidelines
+编码指南
 #################
 
 
-Main
-rules
+主要规则
 **********
 
-The
-coding
-guideline
-rules
-are
-based
-on
-MISRA
-C
-2012
-and
-are
-a
-**subset**
-of
-MISRA
-C。
-The
-subset
-is
-listed
-in
-the
-table
-below
-with
-a
-summary
-of
-the
-rules
-its
-MISRA
-C
-severity
-and
-the
-equivalent
-rules
-from
-other
-standards
-for
-reference。
+编码指南规则基于 MISRA-C 2012，是 MISRA-C 的一个**子集**。该子集列在下表中，包含规则摘要、其 MISRA-C 严重级别，以及供参考的其他标准中的对应规则。
 
-The
-severity
-and
-other
-references
-in
-the
-table
-below
-are
-for
-informational
-purposes
-only。
-The
-listed
-rules
-are
-all
-required
-for
-Zephyr
-and
-all
-new
-code
-should
-comply
-with
-the
-rules
-listed
-below。
+下表中的严重级别和其他引用仅供参考。所列规则对 Zephyr 均为必需，所有新代码都应遵循下列规则。
 
 
 .. note::
 
-    For
-    existing
-    Zephyr
-    maintainers
-    and
-    collaborators
-    if
-    you
-    are
-    unable
-    to
-    obtain
-    a
-    copy
-    through
-    your
-    employer
-    a
-    limited
-    number
-    of
-    copies
-    will
-    be
-    made
-    available
-    through
-    the
-    project。
-    If
-    you
-    need
-    a
-    copy
-    of
-    MISRA
-    C
-    2012
-    please
-    send
-    email
-    to
-    safety@lists.zephyrproject.org
-    and
-    provide
-    details
-    on
-    reason
-    why
-    you
-    can't
-    obtain
-    one
-    through
-    other
-    options
-    and
-    expected
-    contributions
-    once
-    you
-    have
-    one。
-    The
-    safety
-    committee
-    will
-    review
-    all
-    requests。
+    对于现有的 Zephyr 维护者和协作者，如果你无法通过你的雇主获得一份 MISRA-C 2012 副本，项目将提供有限数量的副本。如果你需要一份 MISRA-C 2012 副本，请发邮件至 safety@lists.zephyrproject.org，并说明你无法通过其他途径获得副本的原因，以及获得副本后预期做出的贡献。安全委员会将审查所有申请。
 
 
-.. list-table::
-   Main
-   rules
-   :header-rows:
-   1
-   :widths:
-   12
-   50
-   15
-   15
+.. list-table:: 主要规则
+    :header-rows: 1
+    :widths: 12 50 15 15
 
-   *
-   -
-   Zephyr
-   rule
-   -
-   Description
-   -
-   MISRA
-   C
-   2012
-   reference
-   -
-   CERT
-   C
-   reference
+    * -  Zephyr 规则
+      -  描述
+      -  MISRA-C 2012 引用
+      -  CERT C 引用
 
-      .. _MisraC_Dir_1_1:
-   *
-   -
-   1
-   -
-   Any
-   implementation
-   defined
-   behaviour
-   on
-   which
-   the
-   output
-   of
-   the
-   program
-   depends
-   shall
-   be
-   documented
-   and
-   understood
+         .. _MisraC_Dir_1_1:
+    * -  1
+      -  程序输出所依赖的任何实现定义行为都应被记录并理解
+      -  `指令 1.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/D_01_01.c>`_
+      -  | `FLP30-C <https://wiki.sei.cmu.edu/confluence/display/c/FLP30-C.+Do+not+use+floating-point+variables+as+loop+counters>`_
+         | `MSC09-C <https://wiki.sei.cmu.edu/confluence/display/c/MSC09-C.+Character+encoding%3A+Use+subset+of+ASCII+for+safety>`_
+         | `EXP11-C <https://wiki.sei.cmu.edu/confluence/display/c/EXP11-C.+Do+not+make+assumptions+regarding+the+layout+of+structures+with+bit-fields>`_
 
+         .. _MisraC_Dir_2_1:
+    * -  2
+      -  所有源文件都应能编译且无任何编译错误
+      -  `指令 2.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/D_02_01.c>`_
+      -  N/A
 
-.. note::
+         .. _MisraC_Dir_3_1:
+    * -  3
+      -  所有代码都应可追溯到已记录的需求
+      -  `指令 3.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/D_03_01.c>`_
+      -  N/A
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+         .. _MisraC_Dir_4_1:
+    * -  4
+      -  应最小化运行期失败
+      -  `指令 4.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/D_04_01.c>`_
+      -  N/A
+
+         .. _MisraC_Dir_4_2:
+    * -  5
+      -  所有汇编语言的使用都应被记录
+      -  `指令 4.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/D_04_02.c>`_
+      -  N/A
+
+         .. _MisraC_Dir_4_4:
+    * -  6
+      -  不应将代码段“注释掉”
+      -  `指令 4.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/D_04_04.c>`_
+      -  `MSC04-C <https://wiki.sei.cmu.edu/confluence/display/c/MSC04-C.+Use+comments+consistently+and+in+a+readable+fashion>`_
+
+         .. _MisraC_Dir_4_5:
+    * -  7
+      -  同一命名空间中可见性重叠的标识符在排版上应无歧义
+      -  `指令 4.5 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/D_04_05.c>`_
+      -  `DCL02-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL02-C.+Use+visually+distinct+identifiers>`_
+
+         .. _MisraC_Dir_4_6:
+    * -  8
+      -  应使用表示大小与符号性的 typedef 替代基本数值类型
+      -  `指令 4.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/D_04_06.c>`_
+      -  N/A
+
+         .. _MisraC_Dir_4_7:
+    * -  9
+      -  如果函数返回错误信息，则应测试该错误信息
+      -  `指令 4.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/D_04_07.c>`_
+      -  N/A
+
+         .. _MisraC_Dir_4_8:
+    * -  10
+      -  如果指向结构体或联合体（union）的指针在翻译单元内从未被解引用，则应隐藏该对象的实现
+      -  | `指令 4.8 示例 1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/D_04_08_1.c>`_
+         | `指令 4.8 示例 2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/D_04_08_2.c>`_
+      -  `DCL12-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL12-C.+Implement+abstract+data+types+using+opaque+types>`_
+
+         .. _MisraC_Dir_4_9:
+    * -  11
+      -  在函数与函数式宏可以互换的地方，应优先使用函数
+      -  `指令 4.9 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/D_04_09.c>`_
+      -  `PRE00-C <https://wiki.sei.cmu.edu/confluence/display/c/PRE00-C.+Prefer+inline+or+static+functions+to+function-like+macros>`_
+
+         .. _MisraC_Dir_4_10:
+    * -  12
+      -  应采取预防措施，防止头文件内容被包含多次
+      -  `指令 4.10 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/D_04_10.c>`_
+      -  `PRE06-C <https://wiki.sei.cmu.edu/confluence/display/c/PRE06-C.+Enclose+header+files+in+an+include+guard>`_
+
+         .. _MisraC_Dir_4_11:
+    * -  13
+      -  应检查传递给库函数的值的有效性
+      -  `指令 4.11 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/D_04_11.c>`_
+      -  N/A
+
+         .. _MisraC_Dir_4_12:
+    * - 14
+      -  不应使用动态内存分配
+      -  `指令 4.12 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/D_04_12.c>`_
+      -  | `API03-C <https://wiki.sei.cmu.edu/confluence/display/c/API03-C.+Create+consistent+interfaces+and+capabilities+across+related+functions>`_
+         | `API04-C <https://wiki.sei.cmu.edu/confluence/display/c/API04-C.+Provide+a+consistent+and+usable+error-checking+mechanism>`_
+         | `STR01-C <https://wiki.sei.cmu.edu/confluence/display/c/STR01-C.+Adopt+and+implement+a+consistent+plan+for+managing+strings>`_
+
+         .. _MisraC_Dir_4_13:
+    * -  15
+      -  设计用于对资源执行操作的函数应按适当的顺序调用
+      -  `指令 4.13 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/D_04_13.c>`_
+      -  N/A
+
+         .. _MisraC_Dir_4_14:
+    * -  16
+      -  应检查从外部来源接收的值的有效性
+      -  `指令 4.14 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/D_04_14.c>`_
+      -  N/A
+
+         .. _MisraC_Rule_1_2:
+    * -  17
+      -  不应使用语言扩展
+      -  `规则 1.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_01_02.c>`_
+      -  `MSC04-C <https://wiki.sei.cmu.edu/confluence/display/c/MSC04-C.+Use+comments+consistently+and+in+a+readable+fashion>`_
+
+         .. _MisraC_Rule_1_3:
+    * -  18
+      -  不应出现未定义行为或关键的未指定行为
+      -  `规则 1.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_01_03.c>`_
+      -  N/A
+
+         .. _MisraC_Rule_2_1:
+    * -  19
+      -  项目中不应包含不可达代码
+      -  | `规则 2.1 示例 1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_02_01_1.c>`_
+         | `规则 2.1 示例 2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_02_01_2.c>`_
+      -  `MSC12-C <https://wiki.sei.cmu.edu/confluence/display/c/MSC12-C.+Detect+and+remove+code+that+has+no+effect+or+is+never+executed>`_
+
+         .. _MisraC_Rule_2_2:
+    * -  20
+      -  不应存在死代码
+      -  `规则 2.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_02_02.c>`_
+      -  | `DCL22-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL22-C.+Use+volatile+for+data+that+cannot+be+cached>`_
+         | `MSC12-C <https://wiki.sei.cmu.edu/confluence/display/c/MSC12-C.+Detect+and+remove+code+that+has+no+effect+or+is+never+executed>`_
+
+         .. _MisraC_Rule_2_3:
+    * -  21
+      -  项目中不应包含未使用的类型声明
+      -  `规则 2.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_02_03.c>`_
+      -  N/A
+
+         .. _MisraC_Rule_2_6:
+    * -  22
+      -  函数中不应包含未使用的标签声明
+      -  `规则 2.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_02_06.c>`_
+      -  N/A
+
+         .. _MisraC_Rule_2_7:
+    * -  23
+      -  函数中不应存在未使用的参数
+      -  `规则 2.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_02_07.c>`_
+      -  N/A
+
+         .. _MisraC_Rule_3_1:
+    * -  24
+      -  注释中不应使用 /* 或 // 字符序列
+      -  `规则 3.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_03_01.c>`_
+      -  `MSC04-C <https://wiki.sei.cmu.edu/confluence/display/c/MSC04-C.+Use+comments+consistently+and+in+a+readable+fashion>`_
+
+         .. _MisraC_Rule_3_2:
+    * -  25
+      -  // 注释中不应使用行拼接
+      -  `规则 3.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_03_02.c>`_
+      -  N/A
+
+         .. _MisraC_Rule_4_1:
+    * -  26
+      -  八进制和十六进制转义序列应被终止
+      -  `规则 4.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_04_01.c>`_
+      -  `MSC09-C <https://wiki.sei.cmu.edu/confluence/display/c/MSC09-C.+Character+encoding%3A+Use+subset+of+ASCII+for+safety>`_
+
+         .. _MisraC_Rule_4_2:
+    * -  27
+      -  不应使用三字符组（trigraph）
+      -  `规则 4.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_04_02.c>`_
+      -  `PRE07-C <https://wiki.sei.cmu.edu/confluence/display/c/PRE07-C.+Avoid+using+repeated+question+marks>`_
+
+         .. _MisraC_Rule_5_1:
+    * -  28
+      -  外部标识符应各不相同
+      -  | `规则 5.1 示例 1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_01_1.c>`_
+         | `规则 5.1 示例 2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_01_2.c>`_
+      -  `DCL23-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL23-C.+Guarantee+that+mutually+visible+identifiers+are+unique>`_
+
+         .. _MisraC_Rule_5_2:
     * -  29
-      -  Identifiers declared in the same scope and name space shall be distinct
-      -  `Rule 5.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_02.c>`_
+      -  同一作用域和命名空间中声明的标识符应各不相同
+      -  `规则 5.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_02.c>`_
       -  `DCL23-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL23-C.+Guarantee+that+mutually+visible+identifiers+are+unique>`_
 
          .. _MisraC_Rule_5_3:
     * -  30
-      -  An identifier declared in an inner scope shall not hide an identifier declared in an outer scope
-      -  `Rule 5.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_03.c>`_
+      -  内层作用域中声明的标识符不应遮蔽外层作用域中声明的标识符
+      -  `规则 5.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_03.c>`_
       -  | `DCL01-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL01-C.+Do+not+reuse+variable+names+in+subscopes>`_
          | `DCL23-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL23-C.+Guarantee+that+mutually+visible+identifiers+are+unique>`_
 
          .. _MisraC_Rule_5_4:
     * -  31
-      -  Macro identifiers shall be distinct
-      -  `Rule 5.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_04.c>`_
+      -  宏标识符应各不相同
+      -  `规则 5.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_04.c>`_
       -  `DCL23-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL23-C.+Guarantee+that+mutually+visible+identifiers+are+unique>`_
 
          .. _MisraC_Rule_5_5:
     * -  32
-      -  Identifiers shall be distinct from macro names
-      -  `Rule 5.5 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_05.c>`_
+      -  标识符应与宏名不同
+      -  `规则 5.5 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_05.c>`_
       -  `DCL23-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL23-C.+Guarantee+that+mutually+visible+identifiers+are+unique>`_
 
          .. _MisraC_Rule_5_6:
     * -  33
-      -  A typedef name shall be a unique identifier
-      -  `Rule 5.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_06.c>`_
+      -  typedef 名应是唯一的标识符
+      -  `规则 5.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_06.c>`_
       -  N/A
 
          .. _MisraC_Rule_5_7:
     * -  34
-      -  A tag name shall be a unique identifier
-      -  `Rule 5.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_07.c>`_
+      -  标签名（tag name）应是唯一的标识符
+      -  `规则 5.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_07.c>`_
       -  N/A
 
          .. _MisraC_Rule_5_8:
     * -  35
-      -  Identifiers that define objects or functions with external linkage shall be unique
-      -  | `Rule 5.8 example 1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_08_1.c>`_
-         | `Rule 5.8 example 2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_08_2.c>`_
+      -  定义具有外部链接的对象或函数的标识符应是唯一的
+      -  | `规则 5.8 示例 1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_08_1.c>`_
+         | `规则 5.8 示例 2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_08_2.c>`_
       -  N/A
 
          .. _MisraC_Rule_5_9:
     * -  36
-      -  Identifiers that define objects or functions with internal linkage should be unique
-      -  | `Rule 5.9 example 1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_09_1.c>`_
-         | `Rule 5.9 example 2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_09_2.c>`_
+      -  定义具有内部链接的对象或函数的标识符应是唯一的
+      -  | `规则 5.9 示例 1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_09_1.c>`_
+         | `规则 5.9 示例 2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_05_09_2.c>`_
       -  N/A
 
          .. _MisraC_Rule_6_1:
     * -  37
-      -  Bit-fields shall only be declared with an appropriate type
-      -  `Rule 6.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_06_01.c>`_
+      -  位域（bit-field）应仅以适当的类型声明
+      -  `规则 6.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_06_01.c>`_
       -  `INT14-C <https://wiki.sei.cmu.edu/confluence/display/c/INT14-C.+Avoid+performing+bitwise+and+arithmetic+operations+on+the+same+data>`_
 
          .. _MisraC_Rule_6_2:
     * -  38
-      -  Single-bit named bit fields shall not be of a signed type
-      -  `Rule 6.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_06_02.c>`_
+      -  单比特命名位域不应为有符号类型
+      -  `规则 6.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_06_02.c>`_
       -  `INT14-C <https://wiki.sei.cmu.edu/confluence/display/c/INT14-C.+Avoid+performing+bitwise+and+arithmetic+operations+on+the+same+data>`_
 
          .. _MisraC_Rule_7_1:
     * -  39
-      -  Octal constants shall not be used
-      -  `Rule 7.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_07_01.c>`_
+      -  不应使用八进制常量
+      -  `规则 7.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_07_01.c>`_
       -  `DCL18-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL18-C.+Do+not+begin+integer+constants+with+0+when+specifying+a+decimal+value>`_
 
          .. _MisraC_Rule_7_2:
     * -  40
-      -  A u or U suffix shall be applied to all integer constants that are represented in an unsigned type
-      -  `Rule 7.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_07_02.c>`_
+      -  所有以无符号类型表示的整数常量都应添加 u 或 U 后缀
+      -  `规则 7.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_07_02.c>`_
       -  N/A
 
          .. _MisraC_Rule_7_3:
     * -  41
-      -  The lowercase character l shall not be used in a literal suffix
-      -  `Rule 7.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_07_03.c>`_
+      -  字面量后缀中不应使用小写字母 l
+      -  `规则 7.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_07_03.c>`_
       -  `DCL16-C <https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152241>`_
 
          .. _MisraC_Rule_7_4:
     * -  42
-      -  A string literal shall not be assigned to an object unless the objects type is pointer to const-qualified char
-      -  `Rule 7.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_07_04.c>`_
+      -  除非对象类型是指向 const 限定 char 的指针，否则不应将字符串字面量赋值给对象
+      -  `规则 7.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_07_04.c>`_
       -  N/A
 
          .. _MisraC_Rule_8_1:
     * -  43
-      -  Types shall be explicitly specified
-      -  `Rule 8.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_01.c>`_
+      -  应显式指定类型
+      -  `规则 8.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_01.c>`_
       -  `DCL31-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL31-C.+Declare+identifiers+before+using+them>`_
 
          .. _MisraC_Rule_8_2:
     * -  44
-      -  Function types shall be in prototype form with named parameters
-      -  `Rule 8.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_02.c>`_
+      -  函数类型应以带命名参数的原型形式出现
+      -  `规则 8.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_02.c>`_
       -  | `DCL07-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL07-C.+Include+the+appropriate+type+information+in+function+declarators>`_
          | `DCL20-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL20-C.+Explicitly+specify+void+when+a+function+accepts+no+arguments>`_
          | `DCL36-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL36-C.+Do+not+declare+an+identifier+with+conflicting+linkage+classifications>`_
@@ -320,96 +306,96 @@ below。
 
          .. _MisraC_Rule_8_3:
     * -  45
-      -  All declarations of an object or function shall use the same names and type qualifiers
-      -  `Rule 8.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_03.c>`_
+      -  对象或函数的所有声明应使用相同的名称和类型限定符
+      -  `规则 8.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_03.c>`_
       -  N/A
 
          .. _MisraC_Rule_8_4:
     * -  46
-      -  A compatible declaration shall be visible when an object or function with external linkage is defined
-      -  `Rule 8.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_04.c>`_
+      -  定义具有外部链接的对象或函数时，应可见一个兼容的声明
+      -  `规则 8.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_04.c>`_
       -  | `DCL36-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL36-C.+Do+not+declare+an+identifier+with+conflicting+linkage+classifications>`_
          | `DCL40-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL40-C.+Do+not+create+incompatible+declarations+of+the+same+function+or+object>`_
 
          .. _MisraC_Rule_8_5:
     * -  47
-      -  An external object or function shall be declared once in one and only one file
-      -  | `Rule 8.5 example 1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_05_1.c>`_
-         | `Rule 8.5 example 2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_05_2.c>`_
+      -  外部对象或函数应恰好在一个文件中声明一次
+      -  | `规则 8.5 示例 1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_05_1.c>`_
+         | `规则 8.5 示例 2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_05_2.c>`_
       -  N/A
 
          .. _MisraC_Rule_8_6:
     * -  48
-      -  An identifier with external linkage shall have exactly one external definition
-      -  | `Rule 8.6 example 1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_06_1.c>`_
-         | `Rule 8.6 example 2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_06_2.c>`_
+      -  具有外部链接的标识符应恰好有一个外部定义
+      -  | `规则 8.6 示例 1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_06_1.c>`_
+         | `规则 8.6 示例 2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_06_2.c>`_
       -  N/A
 
          .. _MisraC_Rule_8_8:
     * -  49
-      -  The static storage class specifier shall be used in all declarations of objects and functions that have internal linkage
-      -  `Rule 8.8 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_08.c>`_
+      -  具有内部链接的对象和函数的所有声明应使用 static 存储类说明符
+      -  `规则 8.8 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_08.c>`_
       -  | `DCL15-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL15-C.+Declare+file-scope+objects+or+functions+that+do+not+need+external+linkage+as+static>`_
          | `DCL36-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL36-C.+Do+not+declare+an+identifier+with+conflicting+linkage+classifications>`_
 
          .. _MisraC_Rule_8_9:
     * -  50
-      -  An object should be defined at block scope if its identifier only appears in a single function
-      -  `Rule 8.9 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_09.c>`_
+      -  如果对象的标识符仅出现在单个函数中，则该对象应在块作用域中定义
+      -  `规则 8.9 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_09.c>`_
       -  `DCL19-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL19-C.+Minimize+the+scope+of+variables+and+functions>`_
 
          .. _MisraC_Rule_8_10:
     * -  51
-      -  An inline function shall be declared with the static storage class
-      -  `Rule 8.10 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_10.c>`_
+      -  内联函数应以 static 存储类声明
+      -  `规则 8.10 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_10.c>`_
       -  N/A
 
          .. _MisraC_Rule_8_12:
     * -  52
-      -  Within an enumerator list, the value of an implicitly-specified enumeration constant shall be unique
-      -  `Rule 8.12 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_12.c>`_
+      -  在枚举器列表中，隐式指定的枚举常量的值应是唯一的
+      -  `规则 8.12 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_12.c>`_
       -  `INT09-C <https://wiki.sei.cmu.edu/confluence/display/c/INT09-C.+Ensure+enumeration+constants+map+to+unique+values>`_
 
          .. _MisraC_Rule_8_14:
     * -  53
-      -  The restrict type qualifier shall not be used
-      -  `Rule 8.14 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_14.c>`_
+      -  不应使用 restrict 类型限定符
+      -  `规则 8.14 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_08_14.c>`_
       -  `EXP43-C <https://wiki.sei.cmu.edu/confluence/display/c/EXP43-C.+Avoid+undefined+behavior+when+using+restrict-qualified+pointers>`_
 
          .. _MisraC_Rule_9_1:
     * -  54
-      -  The value of an object with automatic storage duration shall not be read before it has been set
-      -  `Rule 9.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_09_01.c>`_
+      -  在自动存储期的对象被设置之前，不应读取其值
+      -  `规则 9.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_09_01.c>`_
       -  N/A
 
          .. _MisraC_Rule_9_2:
     * -  55
-      -  The initializer for an aggregate or union shall be enclosed in braces
-      -  `Rule 9.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_09_02.c>`_
+      -  聚合或联合体（union）的初始化器应被花括号括起
+      -  `规则 9.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_09_02.c>`_
       -  N/A
 
          .. _MisraC_Rule_9_3:
     * -  56
-      -  Arrays shall not be partially initialized
-      -  `Rule 9.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_09_03.c>`_
+      -  数组不应被部分初始化
+      -  `规则 9.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_09_03.c>`_
       -  N/A
 
          .. _MisraC_Rule_9_4:
     * -  57
-      -  An element of an object shall not be initialized more than once
-      -  `Rule 9.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_09_04.c>`_
+      -  对象的元素不应被初始化多次
+      -  `规则 9.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_09_04.c>`_
       -  N/A
 
          .. _MisraC_Rule_9_5:
     * -  58
-      -  Where designated initializers are used to initialize an array object the size of the array shall be specified explicitly
-      -  `Rule 9.5 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_09_05.c>`_
+      -  使用指定初始化器初始化数组对象时，应显式指定数组的大小
+      -  `规则 9.5 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_09_05.c>`_
       -  `ARR02-C <https://wiki.sei.cmu.edu/confluence/display/c/ARR02-C.+Explicitly+specify+array+bounds%2C+even+if+implicitly+defined+by+an+initializer>`_
 
          .. _MisraC_Rule_10_1:
     * -  59
-      -  Operands shall not be of an inappropriate essential type
-      -  `Rule 10.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_10_01.c>`_
+      -  操作数不应具有不适当的本质类型
+      -  `规则 10.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_10_01.c>`_
       -  | `INT02-C <https://wiki.sei.cmu.edu/confluence/display/c/INT02-C.+Understand+integer+conversion+rules>`_
          | `INT07-C <https://wiki.sei.cmu.edu/confluence/display/c/INT07-C.+Use+only+explicitly+signed+or+unsigned+char+type+for+numeric+values>`_
          | `INT12-C <https://wiki.sei.cmu.edu/confluence/display/c/INT12-C.+Do+not+make+assumptions+about+the+type+of+a+plain+int+bit-field+when+used+in+an+expression>`_
@@ -419,15 +405,15 @@ below。
 
          .. _MisraC_Rule_10_2:
     * -  60
-      -  Expressions of essentially character type shall not be used inappropriately in addition and subtraction operations
-      -  `Rule 10.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_10_02.c>`_
+      -  本质为字符类型的表达式不应被不当地用于加法和减法运算
+      -  `规则 10.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_10_02.c>`_
       -  | `STR04-C <https://wiki.sei.cmu.edu/confluence/display/c/STR04-C.+Use+plain+char+for+characters+in+the+basic+character+set>`_
          | `STR34-C <https://wiki.sei.cmu.edu/confluence/display/c/STR34-C.+Cast+characters+to+unsigned+char+before+converting+to+larger+integer+sizes>`_
 
          .. _MisraC_Rule_10_3:
     * -  61
-      -  The value of an expression shall not be assigned to an object with a narrower essential type or of a different essential type category
-      -  `Rule 10.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_10_03.c>`_
+      -  表达式的值不应被赋值给本质类型更窄或本质类型类别不同的对象
+      -  `规则 10.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_10_03.c>`_
       -  | `INT02-C <https://wiki.sei.cmu.edu/confluence/display/c/INT02-C.+Understand+integer+conversion+rules>`_
          | `INT07-C <https://wiki.sei.cmu.edu/confluence/display/c/INT07-C.+Use+only+explicitly+signed+or+unsigned+char+type+for+numeric+values>`_
          | `INT31-C <https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data>`_
@@ -436,8 +422,8 @@ below。
 
          .. _MisraC_Rule_10_4:
     * -  62
-      -  Both operands of an operator in which the usual arithmetic conversions are performed shall have the same essential type category
-      -  `Rule 10.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_10_04.c>`_
+      -  执行通常算术转换的运算符的两个操作数应具有相同的本质类型类别
+      -  `规则 10.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_10_04.c>`_
       -  | `INT02-C <https://wiki.sei.cmu.edu/confluence/display/c/INT02-C.+Understand+integer+conversion+rules>`_
          | `INT07-C <https://wiki.sei.cmu.edu/confluence/display/c/INT07-C.+Use+only+explicitly+signed+or+unsigned+char+type+for+numeric+values>`_
          | `INT31-C <https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data>`_
@@ -446,577 +432,564 @@ below。
 
          .. _MisraC_Rule_10_5:
     * -  63
-      -  The value of an expression should not be cast to an inappropriate essential type
-      -  `Rule 10.5 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_10_05.c>`_
+      -  表达式的值不应被转换为不适当的本质类型
+      -  `规则 10.5 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_10_05.c>`_
       -  | `EXP14-C <https://wiki.sei.cmu.edu/confluence/display/c/EXP14-C.+Beware+of+integer+promotion+when+performing+bitwise+operations+on+integer+types+smaller+than+int>`_
          | `INT02-C <https://wiki.sei.cmu.edu/confluence/display/c/INT02-C.+Understand+integer+conversion+rules>`_
 
          .. _MisraC_Rule_10_6:
     * -  64
-      -  The value of a composite expression shall not be assigned to an object with wider essential type
-      -  `Rule 10.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_10_06.c>`_
+      -  复合表达式的值不应被赋值给本质类型更宽的对象
+      -  `规则 10.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_10_06.c>`_
       -  | `INT02-C <https://wiki.sei.cmu.edu/confluence/display/c/INT02-C.+Understand+integer+conversion+rules>`_
          | `INT31-C <https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data>`_
 
          .. _MisraC_Rule_10_7:
     * -  65
-      -  If a composite expression is used as one operand of an operator in which the usual arithmetic conversions are performed then the other operand shall not have wider essential type
-      -  `Rule 10.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_10_07.c>`_
+      -  如果复合表达式被用作执行通常算术转换的运算符的一个操作数，则另一个操作数的本质类型不应更宽
+      -  `规则 10.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_10_07.c>`_
       -  | `INT02-C <https://wiki.sei.cmu.edu/confluence/display/c/INT02-C.+Understand+integer+conversion+rules>`_
          | `INT31-C <https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data>`_
 
          .. _MisraC_Rule_10_8:
     * -  66
-      -  The value of a composite expression shall not be cast to a different essential type category or a wider essential type
-      -  `Rule 10.8 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_10_08.c>`_
+      -  复合表达式的值不应被转换为不同的本质类型类别或更宽的本质类型
+      -  `规则 10.8 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_10_08.c>`_
       -  `INT02-C <https://wiki.sei.cmu.edu/confluence/display/c/INT02-C.+Understand+integer+conversion+rules>`_
 
          .. _MisraC_Rule_11_2:
     * -  67
-      -  Conversions shall not be performed between a pointer to an incomplete type and any other type
-      -  `Rule 11.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_11_02.c>`_
+      -  不应在不完整类型的指针与其他任何类型之间进行转换
+      -  `规则 11.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_11_02.c>`_
       -  `EXP36-C <https://wiki.sei.cmu.edu/confluence/display/c/EXP36-C.+Do+not+cast+pointers+into+more+strictly+aligned+pointer+types>`_
 
          .. _MisraC_Rule_11_6:
     * -  68
-      -  A cast shall not be performed between pointer to void and an arithmetic type
-      -  `Rule 11.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_11_06.c>`_
+      -  不应在 void 指针与算术类型之间进行转换
+      -  `规则 11.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_11_06.c>`_
       -  N/A
 
          .. _MisraC_Rule_11_7:
     * -  69
-      -  A cast shall not be performed between pointer to object and a noninteger arithmetic type
-      -  `Rule 11.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_11_07.c>`_
+      -  不应在对象指针与非整数算术类型之间进行转换
+      -  `规则 11.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_11_07.c>`_
       -  `EXP36-C <https://wiki.sei.cmu.edu/confluence/display/c/EXP36-C.+Do+not+cast+pointers+into+more+strictly+aligned+pointer+types>`_
 
          .. _MisraC_Rule_11_8:
     * -  70
-      -  A cast shall not remove any const or volatile qualification from the type pointed to by a pointer
-      -  `Rule 11.8 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_11_08.c>`_
+      -  转换不应从指针所指向的类型中去除任何 const 或 volatile 限定
+      -  `规则 11.8 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_11_08.c>`_
       -  | `EXP05-C <https://wiki.sei.cmu.edu/confluence/display/c/EXP05-C.+Do+not+cast+away+a+const+qualification>`_
          | `EXP32-C <https://wiki.sei.cmu.edu/confluence/display/c/EXP32-C.+Do+not+access+a+volatile+object+through+a+nonvolatile+reference>`_
 
          .. _MisraC_Rule_11_9:
     * -  71
-      -  The macro NULL shall be the only permitted form of integer null pointer constant
-      -  `Rule 11.9 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_11_09.c>`_
+      -  宏 NULL 应是唯一允许的整数空指针常量形式
+      -  `规则 11.9 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_11_09.c>`_
       -  N/A
 
          .. _MisraC_Rule_12_1:
     * -  72
-      -  The precedence of operators within expressions should be made explicit
-      -  `Rule 12.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_12_01.c>`_
+      -  表达式中运算符的优先级应被显式化
+      -  `规则 12.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_12_01.c>`_
       -  `EXP00-C <https://wiki.sei.cmu.edu/confluence/display/c/EXP00-C.+Use+parentheses+for+precedence+of+operation>`_
 
          .. _MisraC_Rule_12_2:
     * -  73
-      -  The right hand operand of a shift operator shall lie in the range zero to one less than the width in bits of the essential type of the left hand operand
-      -  `Rule 12.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_12_02.c>`_
+      -  移位运算符的右操作数应位于 0 到左操作数本质类型位宽减 1 的范围内
+      -  `规则 12.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_12_02.c>`_
       -  N/A
 
          .. _MisraC_Rule_12_4:
     * -  74
-      -  Evaluation of constant expressions should not lead to unsigned integer wrap-around
-      -  `Rule 12.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_12_04.c>`_
+      -  常量表达式的求值不应导致无符号整数回绕
+      -  `规则 12.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_12_04.c>`_
       -  N/A
 
          .. _MisraC_Rule_12_5:
     * -  75
-      -  The sizeof operator shall not have an operand which is a function parameter declared as “array of type”
-      -  `Rule 12.5 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_12_05.c>`_
+      -  sizeof 运算符的操作数不应是声明为“类型数组”的函数参数
+      -  `规则 12.5 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_12_05.c>`_
       -  N/A
 
          .. _MisraC_Rule_13_1:
     * -  76
-      -  Initializer lists shall not contain persistent side effects
-      -  | `Rule 13.1 example 1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_13_01_1.c>`_
-         | `Rule 13.1 example 2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_13_01_2.c>`_
+      -  初始化器列表不应包含持久的副作用
+      -  | `规则 13.1 示例 1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_13_01_1.c>`_
+         | `规则 13.1 示例 2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_13_01_2.c>`_
       -  N/A
 
          .. _MisraC_Rule_13_2:
     * -  77
-      -  The value of an expression and its persistent side effects shall be the same under all permitted evaluation orders
-      -  `Rule 13.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_13_02.c>`_
+      -  表达式的值及其持久的副作用在所有允许的求值顺序下应相同
+      -  `规则 13.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_13_02.c>`_
       -  `EXP30-C <https://wiki.sei.cmu.edu/confluence/display/c/EXP30-C.+Do+not+depend+on+the+order+of+evaluation+for+side+effects>`_
 
          .. _MisraC_Rule_13_3:
     * -  78
-      -  A full expression containing an increment (++) or decrement (--) operator should have no other potential side effects other than that caused by the increment or decrement operator
-      -  `Rule 13.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_13_03.c>`_
+      -  包含自增（++）或自减（--）运算符的完整表达式不应有其他潜在副作用，除了由自增或自减运算符引起的副作用
+      -  `规则 13.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_13_03.c>`_
       -  N/A
 
          .. _MisraC_Rule_13_4:
     * -  79
-      -  The result of an assignment operator should not be used
-      -  `Rule 13.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_13_04.c>`_
+      -  不应使用赋值运算符的结果
+      -  `规则 13.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_13_04.c>`_
       -  N/A
 
          .. _MisraC_Rule_13_5:
     * -  80
-      -  The right hand operand of a logical && or || operator shall not contain persistent side effects
-      -  | `Rule 13.5 example 1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_13_05_1.c>`_
-         | `Rule 13.5 example 2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_13_05_2.c>`_
+      -  逻辑 && 或 || 运算符的右操作数不应包含持久的副作用
+      -  | `规则 13.5 示例 1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_13_05_1.c>`_
+         | `规则 13.5 示例 2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_13_05_2.c>`_
       -  `EXP10-C <https://wiki.sei.cmu.edu/confluence/display/c/EXP10-C.+Do+not+depend+on+the+order+of+evaluation+of+subexpressions+or+the+order+in+which+side+effects+take+place>`_
 
          .. _MisraC_Rule_13_6:
     * -  81
-      -  The operand of the sizeof operator shall not contain any expression which has potential side effects
-      -  `Rule 13.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_13_06.c>`_
+      -  sizeof 运算符的操作数不应包含任何具有潜在副作用的表达式
+      -  `规则 13.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_13_06.c>`_
       -  N/A
 
          .. _MisraC_Rule_14_1:
     * -  82
-      -  A loop counter shall not have essentially floating type
-      -  `Rule 14.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_14_01.c>`_
+      -  循环计数器不应具有本质浮点类型
+      -  `规则 14.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_14_01.c>`_
       -  `FLP30-C <https://wiki.sei.cmu.edu/confluence/display/c/FLP30-C.+Do+not+use+floating-point+variables+as+loop+counters>`_
 
          .. _MisraC_Rule_14_2:
     * -  83
-      -  A for loop shall be well-formed
-      -  `Rule 14.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_14_02.c>`_
+      -  for 循环应是格式良好的
+      -  `规则 14.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_14_02.c>`_
       -  N/A
 
          .. _MisraC_Rule_14_3:
     * -  84
-      -  Controlling expressions shall not be invariant
-      -  `Rule 14.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_14_03.c>`_
+      -  控制表达式不应是不变的
+      -  `规则 14.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_14_03.c>`_
       -  N/A
 
          .. _MisraC_Rule_14_4:
     * -  85
-      -  The controlling expression of an if statement and the controlling expression of an iteration-statement shall have essentially Boolean type
-      -  `Rule 14.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_14_04.c>`_
+      -  if 语句的控制表达式和迭代语句的控制表达式应具有本质布尔类型
+      -  `规则 14.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_14_04.c>`_
       -  N/A
 
          .. _MisraC_Rule_15_2:
     * -  86
-      -  The goto statement shall jump to a label declared later in the same function
-      -  `Rule 15.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_15_02.c>`_
+      -  goto 语句应跳转到同一函数中更晚声明的标签
+      -  `规则 15.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_15_02.c>`_
       -  N/A
 
          .. _MisraC_Rule_15_3:
     * -  87
-      -  Any label referenced by a goto statement shall be declared in the same block, or in any block enclosing the goto statement
-      -  `Rule 15.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_15_03.c>`_
+      -  goto 语句引用的标签应声明在同一块中，或声明在包围 goto 语句的任何块中
+      -  `规则 15.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_15_03.c>`_
       -  N/A
 
          .. _MisraC_Rule_15_6:
     * -  88
-      -  The body of an iteration-statement or a selection-statement shall be a compound-statement
-      -  `Rule 15.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_15_06.c>`_
+      -  迭代语句或选择语句的语句体应是复合语句
+      -  `规则 15.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_15_06.c>`_
       -  `EXP19-C <https://wiki.sei.cmu.edu/confluence/display/c/EXP19-C.+Use+braces+for+the+body+of+an+if%2C+for%2C+or+while+statement>`_
 
          .. _MisraC_Rule_15_7:
     * -  89
-      -  All if else if constructs shall be terminated with an else statement
-      -  `Rule 15.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_15_07.c>`_
+      -  所有 if else if 结构应以 else 语句结尾
+      -  `规则 15.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_15_07.c>`_
       -  `MSC01-C <https://wiki.sei.cmu.edu/confluence/display/c/MSC01-C.+Strive+for+logical+completeness>`_
 
          .. _MisraC_Rule_16_1:
     * -  90
-      -  All switch statements shall be well-formed
-      -  `Rule 16.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_16_01.c>`_
+      -  所有 switch 语句应是格式良好的
+      -  `规则 16.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_16_01.c>`_
       -  `DCL41-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL41-C.+Do+not+declare+variables+inside+a+switch+statement+before+the+first+case+label>`_
 
          .. _MisraC_Rule_16_2:
     * -  91
-      -  A switch label shall only be used when the most closely-enclosing compound statement is the body of a switch statement
-      -  `Rule 16.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_16_02.c>`_
+      -  仅当最紧密包围的复合语句是 switch 语句的语句体时，才应使用 switch 标签
+      -  `规则 16.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_16_02.c>`_
       -  `MSC20-C <https://wiki.sei.cmu.edu/confluence/display/c/MSC20-C.+Do+not+use+a+switch+statement+to+transfer+control+into+a+complex+block>`_
 
          .. _MisraC_Rule_16_3:
     * -  92
-      -  An unconditional break statement shall terminate every switch-clause
-      -  `Rule 16.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_16_03.c>`_
+      -  无条件 break 语句应终止每个 switch 子句
+      -  `规则 16.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_16_03.c>`_
       -  N/A
 
          .. _MisraC_Rule_16_4:
     * -  93
-      -  Every switch statement shall have a default label
-      -  `Rule 16.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_16_04.c>`_
+      -  每个 switch 语句应有一个 default 标签
+      -  `规则 16.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_16_04.c>`_
       -  N/A
 
          .. _MisraC_Rule_16_5:
     * -  94
-      -  A default label shall appear as either the first or the last switch label of a switch statement
-      -  `Rule 16.5 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_16_05.c>`_
+      -  default 标签应作为 switch 语句的第一个或最后一个 switch 标签出现
+      -  `规则 16.5 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_16_05.c>`_
       -  N/A
 
          .. _MisraC_Rule_16_6:
     * -  95
-      -  Every switch statement shall have at least two switch-clauses
-      -  `Rule 16.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_16_06.c>`_
+      -  每个 switch 语句应至少有两个 switch 子句
+      -  `规则 16.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_16_06.c>`_
       -  N/A
 
          .. _MisraC_Rule_16_7:
     * -  96
-      -  A switch-expression shall not have essentially Boolean type
-      -  `Rule 16.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_16_07.c>`_
+      -  switch 表达式不应具有本质布尔类型
+      -  `规则 16.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_16_07.c>`_
       -  N/A
 
          .. _MisraC_Rule_17_1:
     * -  97
-      -  The features of <stdarg.h> shall not be used
-      -  `Rule 17.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_17_01.c>`_
+      -  不应使用 <stdarg.h> 的功能
+      -  `规则 17.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_17_01.c>`_
       -  | `DCL10-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL10-C.+Maintain+the+contract+between+the+writer+and+caller+of+variadic+functions>`_
          | `DCL11-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL11-C.+Understand+the+type+issues+associated+with+variadic+functions>`_
          | `ERR00-C <https://wiki.sei.cmu.edu/confluence/display/c/ERR00-C.+Adopt+and+implement+a+consistent+and+comprehensive+error-handling+policy>`_
 
          .. _MisraC_Rule_17_2:
     * -  98
-      -  Functions shall not call themselves, either directly or indirectly
-      -  `Rule 17.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_17_02.c>`_
+      -  函数不应直接或间接调用自身
+      -  `规则 17.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_17_02.c>`_
       -  `MEM05-C <https://wiki.sei.cmu.edu/confluence/display/c/MEM05-C.+Avoid+large+stack+allocations>`_
 
          .. _MisraC_Rule_17_3:
     * -  99
-      -  A function shall not be declared implicitly
-      -  `Rule 17.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_17_03.c>`_
+      -  函数不应被隐式声明
+      -  `规则 17.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_17_03.c>`_
       -  | `DCL36-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL36-C.+Do+not+declare+an+identifier+with+conflicting+linkage+classifications>`_
          | `EXP37-C <https://wiki.sei.cmu.edu/confluence/display/c/EXP37-C.+Call+functions+with+the+correct+number+and+type+of+arguments>`_
 
          .. _MisraC_Rule_17_4:
     * -  100
-      -  All exit paths from a function with non-void return type shall have an explicit return statement with an expression
-      -  `Rule 17.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_17_04.c>`_
+      -  具有非 void 返回类型的函数的所有退出路径应具有带表达式的显式 return 语句
+      -  `规则 17.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_17_04.c>`_
       -  N/A
 
          .. _MisraC_Rule_17_5:
     * -  101
-      -  The function argument corresponding to a parameter declared to have an array type shall have an appropriate number of elements
-      -  `Rule 17.5 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_17_05.c>`_
+      -  对应于声明为数组类型的参数的函数实参应具有适当数量的元素
+      -  `规则 17.5 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_17_05.c>`_
       -  N/A
 
          .. _MisraC_Rule_17_6:
     * -  102
-      -  The declaration of an array parameter shall not contain the static keyword between the [ ]
-      -  `Rule 17.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_17_06.c>`_
+      -  数组参数的声明中不应在 [ ] 之间包含 static 关键字
+      -  `规则 17.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_17_06.c>`_
       -  N/A
 
          .. _MisraC_Rule_17_7:
     * -  103
-      -  The value returned by a function having non-void return type shall be used
-      -  `Rule 17.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_17_07.c>`_
+      -  具有非 void 返回类型的函数返回的值应被使用
+      -  `规则 17.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_17_07.c>`_
       -  N/A
 
          .. _MisraC_Rule_18_1:
     * -  104
-      -  A pointer resulting from arithmetic on a pointer operand shall address an element of the same array as that pointer operand
-      -  `Rule 18.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_18_01.c>`_
+      -  对指针操作数执行算术运算所得到的指针应指向与该指针操作数相同的数组中的元素
+      -  `规则 18.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_18_01.c>`_
       -  | `ARR30-C <https://wiki.sei.cmu.edu/confluence/display/c/ARR30-C.+Do+not+form+or+use+out-of-bounds+pointers+or+array+subscripts>`_
          | `ARR39-C <https://wiki.sei.cmu.edu/confluence/display/c/ARR39-C.+Do+not+add+or+subtract+a+scaled+integer+to+a+pointer>`_
          | `EXP08-C <https://wiki.sei.cmu.edu/confluence/display/c/EXP08-C.+Ensure+pointer+arithmetic+is+used+correctly>`_
 
          .. _MisraC_Rule_18_2:
     * -  105
-      -  Subtraction between pointers shall only be applied to pointers that address elements of the same array
-      -  `Rule 18.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_18_02.c>`_
+      -  指针之间的减法运算应仅应用于指向同一数组中元素的指针
+      -  `规则 18.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_18_02.c>`_
       -  | `ARR39-C <https://wiki.sei.cmu.edu/confluence/display/c/ARR39-C.+Do+not+add+or+subtract+a+scaled+integer+to+a+pointer>`_
          | `EXP08-C <https://wiki.sei.cmu.edu/confluence/display/c/EXP08-C.+Ensure+pointer+arithmetic+is+used+correctly>`_
 
          .. _MisraC_Rule_18_3:
     * -  106
-      -  The relational operators >, >=, < and <= shall not be applied to objects of pointer type except where they point into the same object
-      -  `Rule 18.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_18_03.c>`_
+      -  关系运算符 >、>=、< 和 <= 不应应用于指针类型的对象，除非它们指向同一对象
+      -  `规则 18.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_18_03.c>`_
       -  | `ARR39-C <https://wiki.sei.cmu.edu/confluence/display/c/ARR39-C.+Do+not+add+or+subtract+a+scaled+integer+to+a+pointer>`_
          | `EXP08-C <https://wiki.sei.cmu.edu/confluence/display/c/EXP08-C.+Ensure+pointer+arithmetic+is+used+correctly>`_
 
          .. _MisraC_Rule_18_5:
     * -  107
-      -  Declarations should contain no more than two levels of pointer nesting
-      -  `Rule 18.5 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_18_05.c>`_
+      -  声明中不应包含超过两层的指针嵌套
+      -  `规则 18.5 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_18_05.c>`_
       -  N/A
 
          .. _MisraC_Rule_18_6:
     * -  108
-      -  The address of an object with automatic storage shall not be copied to another object that persists after the first object has ceased to exist
-      -  | `Rule 18.6 example 1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_18_06_1.c>`_
-         | `Rule 18.6 example 2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_18_06_2.c>`_
+      -  不应将具有自动存储期的对象的地址复制到在第一个对象停止存在后仍持续存在的另一个对象中
+      -  | `规则 18.6 示例 1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_18_06_1.c>`_
+         | `规则 18.6 示例 2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_18_06_2.c>`_
       -  | `DCL30-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL30-C.+Declare+objects+with+appropriate+storage+durations>`_
          | `MEM30-C <https://wiki.sei.cmu.edu/confluence/display/c/MEM30-C.+Do+not+access+freed+memory>`_
 
          .. _MisraC_Rule_18_8:
     * -  109
-      -  Variable-length array types shall not be used
-      -  `Rule 18.8 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_18_08.c>`_
+      -  不应使用变长数组（VLA）类型
+      -  `规则 18.8 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_18_08.c>`_
       -  N/A
 
          .. _MisraC_Rule_19_1:
     * -  110
-      -  An object shall not be assigned or copied to an overlapping object
-      -  `Rule 19.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_19_01.c>`_
+      -  对象不应被赋值或复制到与之重叠的对象
+      -  `规则 19.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_19_01.c>`_
       -  N/A
 
          .. _MisraC_Rule_20_2:
     * -  111
-      -  The ', or \ characters and the /* or // character sequences shall not occur in a header file name"
-      -  `Rule 20.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_02.c>`_
+      -  头文件名中不应出现 ', 或 \ 字符以及 /* 或 // 字符序列
+      -  `规则 20.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_02.c>`_
       -  N/A
 
          .. _MisraC_Rule_20_3:
     * -  112
-      -  The #include directive shall be followed by either a <filename> or "filename" sequence
-      -  `Rule 20.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_03.c>`_
+      -  #include 指令后应跟随 <filename> 或 "filename" 序列
+      -  `规则 20.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_03.c>`_
       -  N/A
 
          .. _MisraC_Rule_20_4:
     * -  113
-      -  A macro shall not be defined with the same name as a keyword
-      -  `Rule 20.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_04.c>`_
+      -  不应定义与关键字同名的宏
+      -  `规则 20.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_04.c>`_
       -  N/A
 
          .. _MisraC_Rule_20_7:
     * -  114
-      -  Expressions resulting from the expansion of macro parameters shall be enclosed in parentheses
-      -  `Rule 20.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_07.c>`_
+      -  宏参数展开所得到的表达式应被括号括起
+      -  `规则 20.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_07.c>`_
       -  `PRE01-C <https://wiki.sei.cmu.edu/confluence/display/c/PRE01-C.+Use+parentheses+within+macros+around+parameter+names>`_
 
          .. _MisraC_Rule_20_8:
     * -  115
-      -  The controlling expression of a #if or #elif preprocessing directive shall evaluate to 0 or 1
-      -  `Rule 20.8 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_08.c>`_
+      -  #if 或 #elif 预处理指令的控制表达式应求值为 0 或 1
+      -  `规则 20.8 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_08.c>`_
       -  N/A
 
          .. _MisraC_Rule_20_9:
     * -  116
-      -  All identifiers used in the controlling expression of #if or #elif preprocessing directives shall be #defined before evaluation
-      -  `Rule 20.9 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_09.c>`_
+      -  #if 或 #elif 预处理指令控制表达式中使用的所有标识符应在求值前被 #define
+      -  `规则 20.9 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_09.c>`_
       -  N/A
 
          .. _MisraC_Rule_20_11:
     * -  117
-      -  A macro parameter immediately following a # operator shall not immediately be followed by a ## operator
-      -  `Rule 20.11 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_11.c>`_
+      -  紧跟在 # 运算符后面的宏参数不应紧接着被 ## 运算符跟随
+      -  `规则 20.11 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_11.c>`_
       -  N/A
 
          .. _MisraC_Rule_20_12:
     * -  118
-      -  A macro parameter used as an operand to the # or ## operators, which is itself subject to further macro replacement, shall only be used as an operand to these operators
-      -  `Rule 20.12 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_12.c>`_
+      -  作为 # 或 ## 运算符操作数、且本身还要接受进一步宏替换的宏参数，应仅作为这些运算符的操作数使用
+      -  `规则 20.12 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_12.c>`_
       -  N/A
 
          .. _MisraC_Rule_20_13:
     * -  119
-      -  A line whose first token is # shall be a valid preprocessing directive
-      -  `Rule 20.13 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_13.c>`_
+      -  第一个 token 为 # 的行应是有效的预处理指令
+      -  `规则 20.13 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_13.c>`_
       -  N/A
 
          .. _MisraC_Rule_20_14:
     * -  120
-      -  All #else, #elif and #endif preprocessor directives shall reside in the same file as the #if, #ifdef or #ifndef directive to which they are related
-      -  `Rule 20.14 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_14.c>`_
+      -  所有 #else、#elif 和 #endif 预处理指令应位于其相关的 #if、#ifdef 或 #ifndef 指令所在的同一文件中
+      -  `规则 20.14 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_20_14.c>`_
       -  N/A
 
          .. _MisraC_Rule_21_1:
     * -  121
-      -  #define and #undef shall not be used on a reserved identifier or reserved macro name
-      -  `Rule 21.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_01.c>`_
+      -  不应在保留标识符或保留宏名上使用 #define 和 #undef
+      -  `规则 21.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_01.c>`_
       -  `DCL37-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL37-C.+Do+not+declare+or+define+a+reserved+identifier>`_
 
          .. _MisraC_Rule_21_2:
     * -  122
-      -  A reserved identifier or macro name shall not be declared
-      -  `Rule 21.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_02.c>`_
+      -  不应声明保留标识符或保留宏名
+      -  `规则 21.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_02.c>`_
       -  `DCL37-C <https://wiki.sei.cmu.edu/confluence/display/c/DCL37-C.+Do+not+declare+or+define+a+reserved+identifier>`_
 
          .. _MisraC_Rule_21_3:
     * -  123
-      -  The memory allocation and deallocation functions of <stdlib.h> shall not be used
-      -  `Rule 21.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_03.c>`_
+      -  不应使用 <stdlib.h> 的内存分配和释放函数
+      -  `规则 21.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_03.c>`_
       -  | `API03-C <https://wiki.sei.cmu.edu/confluence/display/c/API03-C.+Create+consistent+interfaces+and+capabilities+across+related+functions>`_
          | `API04-C <https://wiki.sei.cmu.edu/confluence/display/c/API04-C.+Provide+a+consistent+and+usable+error-checking+mechanism>`_
          | `MSC24-C <https://wiki.sei.cmu.edu/confluence/display/c/MSC24-C.+Do+not+use+deprecated+or+obsolescent+functions>`_
 
          .. _MisraC_Rule_21_4:
     * -  124
-      -  The standard header file <setjmp.h> shall not be used
-      -  `Rule 21.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_04.c>`_
+      -  不应使用标准头文件 <setjmp.h>
+      -  `规则 21.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_04.c>`_
       -  N/A
 
          .. _MisraC_Rule_21_6:
     * -  125
-      -  The Standard Library input/output functions shall not be used
-      -  `Rule 21.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_06.c>`_
+      -  不应使用标准库输入/输出函数
+      -  `规则 21.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_06.c>`_
       -  N/A
 
          .. _MisraC_Rule_21_7:
     * -  126
-      -  The atof, atoi, atol and atoll functions of <stdlib.h> shall not be used
-      -  `Rule 21.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_07.c>`_
+      -  不应使用 <stdlib.h> 的 atof、atoi、atol 和 atoll 函数
+      -  `规则 21.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_07.c>`_
       -  N/A
 
          .. _MisraC_Rule_21_9:
     * -  127
-      -  The library functions bsearch and qsort of <stdlib.h> shall not be used
-      -  `Rule 21.9 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_09.c>`_
+      -  不应使用 <stdlib.h> 的库函数 bsearch 和 qsort
+      -  `规则 21.9 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_09.c>`_
       -  N/A
 
          .. _MisraC_Rule_21_11:
     * -  128
-      -  The standard header file <tgmath.h> shall not be used
-      -  `Rule 21.11 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_11.c>`_
+      -  不应使用标准头文件 <tgmath.h>
+      -  `规则 21.11 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_11.c>`_
       -  N/A
 
          .. _MisraC_Rule_21_12:
     * -  129
-      -  The exception handling features of <fenv.h> should not be used
-      -  `Rule 21.12 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_12.c>`_
+      -  不应使用 <fenv.h> 的异常处理功能
+      -  `规则 21.12 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_12.c>`_
       -  N/A
 
          .. _MisraC_Rule_21_13:
     * -  130
-      -  Any value passed to a function in <ctype.h> shall be representable as an unsigned char or be the value EOF
-      -  `Rule 21.13 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_13.c>`_
+      -  传递给 <ctype.h> 中函数的任何值应可表示为 unsigned char 或为值 EOF
+      -  `规则 21.13 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_13.c>`_
       -  N/A
 
          .. _MisraC_Rule_21_14:
     * -  131
-      -  The Standard Library function memcmp shall not be used to compare null terminated strings
-      -  `Rule 21.14 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_14.c>`_
+      -  不应使用标准库函数 memcmp 来比较以 null 结尾的字符串
+      -  `规则 21.14 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_14.c>`_
       -  N/A
 
          .. _MisraC_Rule_21_15:
     * -  132
-      -  The pointer arguments to the Standard Library functions memcpy, memmove and memcmp shall be pointers to qualified or unqualified versions of compatible types
-      -  `Rule 21.15 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_15.c>`_
+      -  标准库函数 memcpy、memmove 和 memcmp 的指针实参应指向兼容类型的限定版本或非限定版本
+      -  `规则 21.15 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_15.c>`_
       -  N/A
 
          .. _MisraC_Rule_21_16:
     * -  133
-      -  The pointer arguments to the Standard Library function memcmp shall point to either a pointer type, an essentially signed type, an essentially unsigned type, an essentially Boolean type or an essentially enum type
-      -  `Rule 21.16 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_16.c>`_
+      -  标准库函数 memcmp 的指针实参应指向指针类型、本质有符号类型、本质无符号类型、本质布尔类型或本质枚举类型
+      -  `规则 21.16 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_16.c>`_
       -  N/A
 
          .. _MisraC_Rule_21_17:
     * -  134
-      -  Use of the string handling functions from <string.h> shall not result in accesses beyond the bounds of the objects referenced by their pointer parameters
-      -  `Rule 21.17 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_17.c>`_
+      -  使用 <string.h> 的字符串处理函数不应导致访问超出其指针参数所引用对象的边界
+      -  `规则 21.17 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_17.c>`_
       -  N/A
 
          .. _MisraC_Rule_21_18:
     * -  135
-      -  The size_t argument passed to any function in <string.h> shall have an appropriate value
-      -  `Rule 21.18 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_18.c>`_
+      -  传递给 <string.h> 中任何函数的 size_t 实参应具有适当的值
+      -  `规则 21.18 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_18.c>`_
       -  N/A
 
          .. _MisraC_Rule_21_19:
     * -  136
-      -  The pointers returned by the Standard Library functions localeconv, getenv, setlocale or, strerror shall only be used as if they have pointer to const-qualified type
-      -  `Rule 21.19 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_19.c>`_
+      -  标准库函数 localeconv、getenv、setlocale 或 strerror 返回的指针应仅被当作指向 const 限定类型的指针使用
+      -  `规则 21.19 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_19.c>`_
       -  N/A
 
          .. _MisraC_Rule_21_20:
     * -  137
-      -  The pointer returned by the Standard Library functions asctime, ctime, gmtime, localtime, localeconv, getenv, setlocale or strerror shall not be used following a subsequent call to the same function
-      -  `Rule 21.20 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_20.c>`_
+      -  标准库函数 asctime、ctime、gmtime、localtime、localeconv、getenv、setlocale 或 strerror 返回的指针，在后续再次调用同一函数之后不应被使用
+      -  `规则 21.20 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_21_20.c>`_
       -  N/A
 
          .. _MisraC_Rule_22_1:
     * -  138
-      -  All resources obtained dynamically by means of Standard Library functions shall be explicitly released
-      -  `Rule 22.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_01.c>`_
+      -  通过标准库函数动态获取的所有资源应被显式释放
+      -  `规则 22.1 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_01.c>`_
       -  N/A
 
          .. _MisraC_Rule_22_2:
     * -  139
-      -  A block of memory shall only be freed if it was allocated by means of a Standard Library function
-      -  `Rule 22.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_02.c>`_
+      -  内存块仅当它是通过标准库函数分配的才应被释放
+      -  `规则 22.2 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_02.c>`_
       -  N/A
 
          .. _MisraC_Rule_22_3:
     * -  140
-      -  The same file shall not be open for read and write access at the same time on different streams
-      -  `Rule 22.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_03.c>`_
+      -  同一文件不应同时在不同的流上以读和写方式打开
+      -  `规则 22.3 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_03.c>`_
       -  N/A
 
          .. _MisraC_Rule_22_4:
     * -  141
-      -  There shall be no attempt to write to a stream which has been opened as read-only
-      -  `Rule 22.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_04.c>`_
+      -  不应尝试向以只读方式打开的流写入
+      -  `规则 22.4 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_04.c>`_
       -  N/A
 
          .. _MisraC_Rule_22_5:
     * -  142
-      -  A pointer to a FILE object shall not be dereferenced
-      -  `Rule 22.5 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_05.c>`_
+      -  不应解引用指向 FILE 对象的指针
+      -  `规则 22.5 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_05.c>`_
       -  N/A
 
          .. _MisraC_Rule_22_6:
     * -  143
-      -  The value of a pointer to a FILE shall not be used after the associated stream has been closed
-      -  `Rule 22.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_06.c>`_
+      -  关联的流被关闭之后，不应再使用指向 FILE 的指针的值
+      -  `规则 22.6 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_06.c>`_
       -  N/A
 
          .. _MisraC_Rule_22_7:
     * -  144
-      -  The macro EOF shall only be compared with the unmodified return value from any Standard Library function capable of returning EOF
-      -  `Rule 22.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_07.c>`_
+      -  宏 EOF 应仅与任何能够返回 EOF 的标准库函数未修改的返回值进行比较
+      -  `规则 22.7 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_07.c>`_
       -  N/A
 
          .. _MisraC_Rule_22_8:
     * -  145
-      -  The value of errno shall be set to zero prior to a call to an errno-setting-function
-      -  `Rule 22.8 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_08.c>`_
+      -  在调用会设置 errno 的函数之前，应将 errno 的值设为零
+      -  `规则 22.8 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_08.c>`_
       -  N/A
 
          .. _MisraC_Rule_22_9:
     * -  146
-      -  The value of errno shall be tested against zero after calling an errno-setting-function
-      -  `Rule 22.9 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_09.c>`_
+      -  在调用会设置 errno 的函数之后，应将 errno 的值与零进行比较
+      -  `规则 22.9 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_09.c>`_
       -  N/A
 
          .. _MisraC_Rule_22_10:
     * -  147
-      -  The value of errno shall only be tested when the last function to be called was an errno-setting-function
-      -  `Rule 22.10 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_10.c>`_
+      -  仅当最后调用的函数是会设置 errno 的函数时，才应测试 errno 的值
+      -  `规则 22.10 <https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/Example-Suite/-/blob/master/R_22_10.c>`_
       -  N/A
 
-Additional rules
+附加规则
 ****************
 
-Rule A.1: Conditional Compilation
+规则 A.1：条件编译
 =================================
-Severity
-  Required
+严重级别
+  必需
 
-Description
-  Do not conditionally compile function declarations in header files. Do not
-  conditionally compile structure declarations in header files. You may
-  conditionally exclude fields within structure definitions to avoid wasting
-  memory when the feature they support is not enabled.
+描述
+  不要在头文件中条件编译函数声明。不要在头文件中条件编译结构体声明。你可以在结构体定义中条件性地排除字段，以避免在其支持的特性未启用时浪费内存。
 
-Rationale
-  Excluding declarations from the header based on compile-time options may prevent
-  their documentation from being generated. Their absence also prevents use of
-  ``if (IS_ENABLED(CONFIG_FOO)) {}`` as an alternative to preprocessor
-  conditionals when the code path should change based on the selected options.
+依据
+  基于编译期选项从头文件中排除声明可能会阻止其文档的生成。其缺失还会阻止在代码路径应根据所选选项改变时使用 ``if (IS_ENABLED(CONFIG_FOO)) {}`` 作为预处理器条件编译的替代方案。
 
 .. _coding_guideline_inclusive_language:
 
-Rule A.2: Inclusive Language
+规则 A.2：包容性语言
 ============================
-Severity
-  Required
+严重级别
+  必需
 
-Description
-  Do not introduce new usage of offensive terms listed below. This rule applies
-  but is not limited to source code, comments, documentation, and branch names.
-  Replacement terms may vary by area or subsystem, but should aim to follow
-  updated industry standards when possible.
+描述
+  不要引入下列冒犯性术语的新用法。本规则适用于但不限于源代码、注释、文档和分支名称。替换术语可能因领域或子系统而异，但应尽可能遵循更新后的行业标准。
 
-  Exceptions are allowed for maintaining existing implementations or adding new
-  implementations of industry standard specifications governed externally to the
-  Zephyr Project.
+  对于维护现有实现，或为 Zephyr 项目外部治理的行业标准规范添加新实现，允许例外。
 
-  Existing usage is recommended to change as soon as updated industry standard
-  specifications become available or new terms are publicly announced by the
-  governing body, or immediately if no specifications apply.
+  建议一旦更新后的行业标准规范可用、或治理机构公开宣布新术语，或在不适用任何规范时立即更改现有用法。
 
   .. list-table::
      :header-rows: 1
 
-     * - Offensive Terms
-       - Recommended Replacements
+     * - 冒犯性术语
+       - 建议的替换
 
      * - ``{master,leader} / slave``
        - - ``{primary,main} / {secondary,replica}``
@@ -1037,37 +1010,33 @@ Description
        - * ``coherence``
          * ``confidence``
 
-Rationale
-  Offensive terms do not create an inclusive community environment and therefore
-  violate the Zephyr Project `Code of Conduct`_. This coding rule was inspired by
-  a similar rule in `Linux`_.
+依据
+  冒犯性术语不会营造包容性的社区环境，因此违反了 Zephyr 项目的 `Code of Conduct`_。本编码规则受 `Linux`_ 中类似规则的启发。
 
   .. _Code of Conduct: https://github.com/zephyrproject-rtos/zephyr/blob/main/CODE_OF_CONDUCT.md
   .. _Linux: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=49decddd39e5f6132ccd7d9fdc3d7c470b0061bb
 
-Status
-  Related GitHub Issues and Pull Requests are tagged with the `Inclusive Language Label`_.
+状态
+  相关的 GitHub Issues 和 Pull Requests 带有 `Inclusive Language Label`_ 标签。
 
   .. list-table::
      :header-rows: 1
 
-     * - Area
-       - Selected Replacements
-       - Status
+     * - 领域
+       - 选定的替换
+       - 状态
 
      * - :ref:`Bluetooth <bluetooth_api>`
-       - See `Bluetooth Appropriate Language Mapping Tables`_
+       - 参见 `Bluetooth Appropriate Language Mapping Tables`_
        -
 
      * - CAN
-       - This `CAN in Automation Inclusive Language news post`_ has a list of general
-         recommendations. See `CAN in Automation Inclusive Language`_ for terms to
-         be used in specification document updates.
+       - 这篇 `CAN in Automation Inclusive Language news post`_ 有一般性建议的列表。要用于规范文档更新的术语，参见 `CAN in Automation Inclusive Language`_。
        -
 
      * - eSPI
        - * ``master / slave`` => ``controller / target``
-       - Refer to `eSPI Specification`_ for new terminology
+       - 新术语参见 `eSPI Specification`_
 
      * - gPTP
        - * ``master / slave`` => TBD
@@ -1075,13 +1044,11 @@ Status
 
      * - :ref:`i2c_api`
        - * ``master / slave`` => ``controller / target``
-       - Refer to `I2C Specification`_ for new terminology.
+       - 新术语参见 `I2C Specification`_。
 
      * - :ref:`i2s_api`
        - * ``master / slave`` => ``controller / target``
-       - Refer to `I2S Specification`_ for new terminology. The Zephyr I2S API
-         was migrated to these terms in Zephyr 4.4; the former macro names are
-         retained as deprecated aliases and will be removed in Zephyr 5.0.
+       - 新术语参见 `I2S Specification`_。Zephyr I2S API 已在 Zephyr 4.4 迁移到这些术语；原宏名作为弃用别名保留，并将在 Zephyr 5.0 移除。
 
      * - SMP/AMP
        - * ``master / slave`` => TBD
@@ -1090,11 +1057,7 @@ Status
      * - :ref:`spi_api`
        - * ``master / slave`` => ``controller / peripheral``
          * ``MOSI / MISO / SS`` => ``SDO / SDI / CS``
-       - The Open Source Hardware Association has selected these replacement
-         terms. See `OSHWA Resolution to Redefine SPI Signal Names`_.
-         The Zephyr SPI API and tree were migrated to these terms in v4.5;
-         the former names are retained as compatibility aliases, deprecated
-         since v4.5 and scheduled for removal in v5.0.
+       - 开源硬件协会（Open Source Hardware Association）选定了这些替换术语。参见 `OSHWA Resolution to Redefine SPI Signal Names`_。Zephyr SPI API 和代码树已在 v4.5 迁移到这些术语；原名称作为兼容性别名保留，自 v4.5 起弃用，并计划在 v5.0 移除。
 
      * - :ref:`twister_script`
        - * ``platform_whitelist`` => ``platform_allow``
@@ -1113,49 +1076,31 @@ Status
 
 .. _coding_guideline_libc_usage_restrictions_in_zephyr_kernel:
 
-Rule A.3: Macro name collisions
+规则 A.3：宏名冲突
 ===============================
-Severity
-  Required
+严重级别
+  必需
 
-Description
-  Macros with commonly used names such as ``MIN``, ``MAX``, ``ARRAY_SIZE``, must not be modified or
-  protected to avoid name collisions with other implementations. In particular, they must not be
-  prefixed to place them in a Zephyr-specific namespace, re-defined using ``#undef``, or
-  conditionally excluded from compilation using ``#ifndef``. Instead, if a conflict arises with an
-  existing definition originating from a :ref:`module <modules>`, the module's code itself needs to
-  be modified (ideally upstream, alternatively via a change in Zephyr's own fork).
+描述
+  名为 ``MIN``、``MAX``、``ARRAY_SIZE`` 等常用名称的宏，不得被修改或保护以避免与其他实现发生名称冲突。特别是，不得给它们加前缀以放入 Zephyr 专用命名空间、不得使用 ``#undef`` 重新定义、也不得使用 ``#ifndef`` 条件性地将其排除出编译。相反，如果与源自 :ref:`模块 <modules>` 的现有定义发生冲突，则需要修改该模块自身的代码（理想情况下在上游，或者通过 Zephyr 自己的 fork 中的更改）。
 
-  This rule applies to Zephyr as a project in general, regardless of the time of introduction of the
-  macro or its current name in the tree. If a macro name is commonly used in several other well-known
-  open source projects then the implementation in Zephyr should use that name. While there is a
-  subjective and non-measurable component to what "commonly used" means, the ultimate goal is to offer
-  users familiar macros.
+  本规则总体上适用于 Zephyr 项目，无论宏引入的时间或其当前在代码树中的名称如何。如果宏名在多个其他知名开源项目中常用，则 Zephyr 中的实现应使用该名称。虽然“常用”的含义带有主观且不可测量的成分，但最终目标是为用户提供熟悉的宏。
 
-  Finally, this rule applies to inter-module name collisions as well: in that case both modules, prior
-  to their inclusion, should be modified to use module-specific versions of the macro name that
-  collides.
+  最后，本规则同样适用于模块间的名称冲突：在这种情况下，两个模块在被纳入之前都应被修改，以使用发生冲突的宏名的模块特定版本。
 
-Rationale
-  Zephyr is an RTOS that comes with additional functionality and dependencies in the form of modules.
-  Those modules are typically independent projects that may use macro names that can conflict with
-  other modules or with Zephyr itself. Since, in the context of this documentation, Zephyr is
-  considered the central or main project, it should implement the non-namespaced versions of the
-  macros. Given that Zephyr uses a fork of the corresponding upstream for each module, it is always
-  possible to patch the macro implementation in each module to avoid collisions.
+依据
+  Zephyr 是一个附带以模块形式提供额外功能和依赖项的 RTOS。这些模块通常是独立的项目，可能使用与其他模块或 Zephyr 本身冲突的宏名。由于在本文档的上下文中，Zephyr 被视为中心或主项目，它应实现这些宏的非命名空间版本。鉴于 Zephyr 对每个模块使用对应上游的 fork，因此始终可以修补每个模块中的宏实现以避免冲突。
 
-Rule A.4: C Standard Library Usage Restrictions in Zephyr Kernel
+规则 A.4：Zephyr 内核中 C 标准库使用限制
 ================================================================
-Severity
-  Required
+严重级别
+  必需
 
-Description
-  The use of the C standard library functions and macros in the Zephyr kernel
-  shall be limited to the following functions and macros from the ISO/IEC
-  9899:2011 standard, also known as C11, and their extensions:
+描述
+  Zephyr 内核中使用 C 标准库函数和宏应限于 ISO/IEC 9899:2011 标准（也称为 C11）及其扩展中的以下函数和宏：
 
-  .. csv-table:: List of allowed libc functions and macros in the Zephyr kernel
-     :header: Function,Source
+  .. csv-table:: Zephyr 内核中允许的 libc 函数和宏列表
+     :header: 函数,来源
      :widths: auto
 
      abort(),ISO/IEC 9899:2011
@@ -1228,90 +1173,54 @@ Description
      vsnprintf(),ISO/IEC 9899:2011
      vsprintf(),ISO/IEC 9899:2011
 
-  All of the functions listed above must be implemented by the
-  :ref:`minimal libc <c_library_minimal>` to ensure that the Zephyr kernel can
-  build with the minimal libc.
+  上述列出的所有函数都必须由 :ref:`最小 libc <c_library_minimal>` 实现，以确保 Zephyr 内核能够使用最小 libc 构建。
 
-  In addition, any functions from the above list that are not part of the
-  ISO/IEC 9899:2011 standard must be implemented by the
-  :ref:`common libc <c_library_common>` to ensure their availability across
-  multiple C standard libraries.
+  此外，上述列表中不属于 ISO/IEC 9899:2011 标准的任何函数都必须由 :ref:`通用 libc <c_library_common>` 实现，以确保其在多个 C 标准库中可用。
 
-  Introducing new C standard library functions to the Zephyr kernel is allowed
-  with justification given that the above requirements are satisfied.
+  在满足上述要求的前提下，允许给出理由后将新的 C 标准库函数引入 Zephyr 内核。
 
-  Note that the use of the functions listed above are subject to secure and safe
-  coding practices and it should not be assumed that their use in the Zephyr
-  kernel is unconditionally permitted by being listed in this rule.
+  请注意，上述函数的使用须遵循安全编码实践，不应假定其在 Zephyr 内核中的使用因列于本规则而被无条件允许。
 
-  The "Zephyr kernel" in this context consists of the following components:
+  本上下文中的“Zephyr 内核”由以下组件组成：
 
-  * Kernel (:file:`kernel`)
-  * OS Library (:file:`lib/os`)
-  * Architecture Port (:file:`arch`)
-  * Logging Subsystem (:file:`subsys/logging`)
+  * 内核（:file:`kernel`）
+  * OS 库（:file:`lib/os`）
+  * 架构移植（:file:`arch`）
+  * 日志子系统（:file:`subsys/logging`）
 
-Rationale
-  Zephyr kernel must be able to build with the
-  :ref:`minimal libc <c_library_minimal>`, a limited C standard library
-  implementation that is part of the Zephyr RTOS and maintained by the Zephyr
-  Project, to allow self-contained testing and verification of the kernel and
-  core OS services.
+依据
+  Zephyr 内核必须能够使用 :ref:`最小 libc <c_library_minimal>` 构建，这是一个有限的 C 标准库实现，是 Zephyr RTOS 的一部分并由 Zephyr 项目维护，以便对内核和核心 OS 服务进行自包含的测试和验证。
 
-  In order to ensure that the Zephyr kernel can build with the minimal libc, it
-  is necessary to restrict the use of the C standard library functions and macros
-  in the Zephyr kernel to the functions and macros that are available as part of
-  the minimal libc.
+  为确保 Zephyr 内核能够使用最小 libc 构建，有必要将 Zephyr 内核中 C 标准库函数和宏的使用限制在最小 libc 中可用的函数和宏范围内。
 
-Rule A.5: C Standard Library Usage Restrictions in Zephyr Codebase
+规则 A.5：Zephyr 代码库中 C 标准库使用限制
 ==================================================================
-Severity
-  Required
+严重级别
+  必需
 
-Description
-  The use of the C standard library functions and macros in the Zephyr codebase
-  shall be limited to the functions, excluding the Annex K "Bounds-checking
-  interfaces", from the ISO/IEC 9899:2011 standard, also known as C11, unless
-  exempted by this rule.
+描述
+  Zephyr 代码库中使用 C 标准库函数和宏应限于 ISO/IEC 9899:2011 标准（也称为 C11）中的函数，排除附录 K “边界检查接口”，除非本规则豁免。
 
-  The "Zephyr codebase" in this context refers to all embedded source code files committed
-  to the `main Zephyr repository`_, except the Zephyr kernel as defined by the
-  :ref:`coding_guideline_libc_usage_restrictions_in_zephyr_kernel`.
-  With embedded source code we refer to code which is meant to be executed in embedded
-  targets, and therefore excludes host tooling, and code specific for the
-  :ref:`native <boards_posix>` test targets.
+  本上下文中的“Zephyr 代码库”指提交到 `main Zephyr repository`_ 的所有嵌入式源代码文件，但不包括由 :ref:`coding_guideline_libc_usage_restrictions_in_zephyr_kernel` 定义的 Zephyr 内核。嵌入式源代码指打算在嵌入式目标上执行的代码，因此排除了主机工具，以及 :ref:`native <boards_posix>` 测试目标专用的代码。
 
-  The following non-ISO 9899:2011, hereinafter referred to as non-standard,
-  functions and macros are exempt from this rule and allowed to be used in the
-  Zephyr codebase:
+  以下非 ISO 9899:2011（下文称为非标准）函数和宏被本规则豁免并允许在 Zephyr 代码库中使用：
 
-  .. csv-table:: List of allowed non-standard libc functions
-     :header: Function,Source
+  .. csv-table:: 允许的非标准 libc 函数列表
+     :header: 函数,来源
      :widths: auto
 
      `gmtime_r()`_,POSIX.1-2001
      `strnlen()`_,POSIX.1-2008
      `strtok_r()`_,POSIX.1-2001
 
-  All non-standard functions and macros listed above must be implemented by the
-  :ref:`common libc <c_library_common>` in order to make sure that these
-  functions can be made available when using a C standard library that does not
-  implement these functions.
+  上述列出的所有非标准函数和宏都必须由 :ref:`通用 libc <c_library_common>` 实现，以确保在使用未实现这些函数的 C 标准库时这些函数可以被提供。
 
-  Adding a new non-standard function from common C standard libraries to the
-  above list is allowed with justification, given that the above requirement is
-  satisfied. However, when there exists a standard function that is functionally
-  equivalent, the standard function shall be used.
+  在满足上述要求的前提下，允许给出理由后将通用 C 标准库中的新非标准函数添加到上述列表。但是，当存在功能等效的标准函数时，应使用标准函数。
 
-Rationale
-  Some C standard libraries, such as Newlib and Picolibc, include additional
-  functions and macros that are defined by the standards and de-facto standards
-  that extend the ISO C standard (e.g. POSIX, Linux).
+依据
+  某些 C 标准库（如 Newlib 和 Picolibc）包含由扩展 ISO C 标准（例如 POSIX、Linux）的标准和事实标准定义的额外函数和宏。
 
-  The ISO/IEC 9899:2011 standard does not require C compiler toolchains to
-  include the support for these non-standard functions, and therefore using
-  these functions can lead to compatibility issues with the third-party
-  toolchains that come with their own C standard libraries.
+  ISO/IEC 9899:2011 标准不要求 C 编译器工具链包含对这些非标准函数的支持，因此使用这些函数可能导致携带自身 C 标准库的第三方工具链出现兼容性问题。
 
   .. _main Zephyr repository: https://github.com/zephyrproject-rtos/zephyr
   .. _gmtime_r(): https://pubs.opengroup.org/onlinepubs/9699919799/functions/gmtime_r.html

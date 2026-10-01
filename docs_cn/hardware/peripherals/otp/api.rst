@@ -1,40 +1,21 @@
 .. _otp_api:
 
-OTP
-API
+OTP API
 #######
 
-Overview
+概述
 ********
 
-OTP
-API
-提供
-手段
-provision
-和
-read
-:abbr:`OTP(One
-Time
-Programmable)`
-memory
-devices
+OTP API 提供了对 :abbr:`OTP(一次性可编程)` 内存设备进行配置（写入）和读取的手段。
 
-API
-implementation
-Reference
+API 实现参考
 ****************************
-.. doxygengroup::
-   otp_interface
+.. doxygengroup:: otp_interface
 
-Configuration
-Options
+配置选项
 *********************
 
-OTP
-相关
-配置
-选项：
+OTP 相关配置选项：
 
 * :kconfig:option:`CONFIG_OTP`
 * :kconfig:option:`CONFIG_OTP_PROGRAM`

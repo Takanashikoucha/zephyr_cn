@@ -1,256 +1,86 @@
-TSC
-Working
-Groups
+TSC 工作组
 ******************
 
-Overview
+概览
 ########
 
-The
-TSC
-at
-its
-discretion
-may
-establish
-working
-groups
-or
-subcommittees
-to
-serve
-as
-focused
-teams
-dedicated
-to
-specific
-technical
-areas、
-initiatives、
-or
-tasks。
+TSC 可酌情设立工作组或分委员会，作为专注于特定技术领域、倡议或任务的专门团队。
 
-Membership
+成员
 ##########
 
-Working
-Group
-Membership
-Eligibility
+工作组成员资格
 ++++++++++++++++++++++++++++++++++++
 
--
-Each
-Working
-group
-（WG）
-shall
-determine
-its
-own
-membership
-eligibility
-in
-consultation
-with
-the
-TSC。
--
-Each
-working
-group
-shall
-have
-a
-team
-of
-members
-who
-are
-actively
-involved
-in
-its
-activities
-and
-decision
-making
-processes。
--
-It
-is
-expected
-that
-WG
-membership
-shall
-be
-**open
-to
-all**
-Zephyr
-project
-:ref:`Collaborators
-<collaborator>`
-however
-working
-groups
-may
-impose
-restrictions
-such
-as
-the
-number
-of
-participants
-from
-a
-single
-company。
--
-All
-TSC
-members
-are
-eligible
-to
-join
-a
-working
-group
-as
-members
-part
-of
-the
-responsibilities
-being
-a
-TSC
-member。
--
-The
-minimal
-number
-of
-members
-may
-vary
-depending
-on
-the
-complexity
-of
-the
-tasks
-and
-the
-breadth
-of
-expertise
-required
-to
-address
-them
-effectively。
--
-A
-working
-group
-should
-aim
-to
-have
-at
-least
-five
-to
-seven
-members
-to
-ensure
-diversity
-of
-perspectives、
-collaboration、
-and
-continuity。
--
-The
-structure
-of
-each
-working
-group
-within
-the
-Zephyr
-Project
-should
-be
-designed
-to
-ensure
-effectiveness、
-productivity、
-and
-inclusivity。
-While
-the
-optimal
-size
-of
-a
-working
-group
-can
-vary
-depending
-on
-the
-specific
-context
-and
-scope
-of
-its
-activities。
--
-Participation
-in
-WG
-meetings
-and
-discussions
-is
-open
-to
-all
-project
-:ref:`contributors
-<contributor>`。
+- 每个工作组（WG）应与 TSC 协商确定其自身的成员资格。
+- 每个工作组应有一支积极参与其活动和决策流程的成员团队。
+- 预期工作组成员资格应**向所有** Zephyr 项目 :ref:`协作者 <collaborator>` 开放；然而，工作组可以施加限制，例如来自单一公司的参与者数量。
+- 所有 TSC 成员都有资格作为成员加入工作组，这是 TSC 成员职责的一部分。
+- 最少成员数量可能根据任务的复杂性以及有效处理这些任务所需的专业知识广度而变化。
+- 工作组应争取拥有至少五到七名成员，以确保视角多样性、协作和连续性。
+- Zephyr 项目中每个工作组的结构应设计为确保有效性、生产力和包容性。同时，工作组的最优规模可根据其活动的具体背景和范围而变化。
+- 参与工作组会议和讨论向所有项目 :ref:`贡献者 <contributor>` 开放。
 
-Working
-Group
-Chair
-/
-Co
-chair
+工作组主席/联合主席
+++++++++++++++++++++++++++++++
+
+每个工作组可以选举一名主席，以及可选的一名联合主席，负责主持会议并向 TSC 代表该工作组。
+
+工作组主席/联合主席选举
++++++++++++++++++++++++++++++++++++++++
+
+- 主席和联合主席应由工作组的成员选举产生
+- 工作组的任何成员都有权提名自己担任主席/联合主席职位。
+- 主席/联合主席的任期为一年
+- 如果主席/联合主席在任期结束前从该职位辞职，应举行投票选举新的主席/联合主席。
+
+工作组投票者资格
++++++++++++++++++++++++++++++++
+
+- 选举主席或联合主席的投票向工作组的成员开放。
+- 每家公司仅 1 名工作组成员可在选举中投票。
+- 主席和联合主席应是工作组的成员。
+
+工作组选举确认
+++++++++++++++++++++++++++++++++++++
+
+- 当选的主席（和/或联合主席）提交给 TSC 确认。
+- TSC 决定接受结果或要求重新投票。
+
+咨询角色
+#############
+
+- 工作组在性质上是咨询性的。它们向项目和 TSC 提供建议。
+- 工作组基于大致共识运作。如果工作组无法就提供什么建议达成共识，工作组主席应将该问题提交给 TSC 或相关委员会（安全与保障），在那里可以举行正式投票，或向项目说明工作组无法达成共识。
+- 工作组应跟踪讨论并记录所做的任何投票、决定或建议，并与社区和 TSC 分享结果。
+- 工作组会议和线下讨论应记录在一份独立文档中，包含所有支持性细节，如出席情况、法定人数、待采取的行动和后续步骤。
+- 在工作组内做出的决定不具有约束力，仅在向 TSC 沟通决定和结果后才被视为获得批准。
+- 在沟通或报告任何结果后 1 周内 TSC 未提出任何异议，工作组的决定即被视为得到确认和批准。
+
+TSC 工作组生命周期
+###########################
+
+创建 TSC 工作组
++++++++++++++++++++++++++++++++
+
+要创建一个 TSC 工作组，TSC 成员应向 TSC（通过 TSC 邮件列表）提出一项提案，至少应涵盖以下内容：
+
+- TSC 工作组名称。
+- TSC 工作组目的
+- TSC 工作组预期交付物
+- TSC 工作组初始参与者，其中至少一名 TSC 成员担任发起人。
+- 可选的 TSC 工作组完成定义
+
+更新 TSC 工作组
 ++++++++++++++++++++++++++++
 
-Each
-working
-group
-may
-elect
-a
-Chair
-and
-optionally
-a
-Co
-Chair
-who
-is
+TSC 可以通过 TSC 决议修改一个 TSC 工作组。要请求此类修改，需向 TSC 邮件列表提出请求。
+
+结束 TSC 工作组
++++++++++++++++++++++++++++++++++
+
+TSC 按照 TSC 决议程序决定结束一个 TSC 工作组。提交结束 TSC 工作组的请求应涵盖：
+
+- TSC 工作组名称
+- TSC 工作组交付物
+- 结束 TSC 工作组的动机

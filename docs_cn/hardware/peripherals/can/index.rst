@@ -1,14 +1,10 @@
 .. _can:
 
-Controller
-Area
-Network
-（CAN）
+控制器局域网（CAN）
 #############################
 
 .. toctree::
-   :maxdepth:
-   2
+   :maxdepth: 2
 
    controller.rst
    transceiver.rst

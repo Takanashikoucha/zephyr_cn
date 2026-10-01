@@ -1,269 +1,80 @@
 .. _west-sign:
 
-签署
-二进制
-文件
+签署二进制文件
 ################
 
-``west
-sign``
-:ref:`extension
-<west-extensions>`
-命令
-可以
-用
-来
-用
-外部
-工具
-签署
-Zephyr
-应用
-二进制
-文件
-用于
-bootloader
-消费。
-在
-某些
-配置
-中，
-``west
-sign``
-也
-用
-来
-调用
-外部
-的、
-后
-处理
-工具
-"缝合"
-image
-的
-最终
-组件
-一起。
-运行
-``west
-sign
--h``
-获取
-命令行
-帮助。
+``west sign`` :ref:`extension <west-extensions>` 命令可用于使用外部工具
+为引导加载程序使用而签署 Zephyr 应用二进制文件。在某些配置中，``west sign``
+还用于调用外部的后处理工具，该工具将镜像的最终组件"缝合"在一起。
+运行 ``west sign -h`` 查看命令行帮助。
 
 rimage
 ******
 
-rimage
-配置
-用
-一
-种
-不
-依赖
-Kconfig
-或
-CMake
-但
-依赖
-:ref:`west
-config<west-config>`
-的
-方式，
-类似
-于
+rimage 配置采用一种不依赖 Kconfig 或 CMake 的方法，而是依赖
+:ref:`west config<west-config>`，类似于
 :ref:`west-building-cmake-config`。
 
-签署
-涉及
-多
-个
-"wrapper"
-脚本
-堆叠
-在
-彼此
-之上：
-``west
-flash``
-调用
-``west
-build``
-它
-调用
-``cmake``
-和
-``ninja``
-它
-调用
-``west
-sign``
-它
-调用
-``imgtool``
-或
-`rimage`_。
-只要
-期望
-的
-签署
-参数
-是
-默认
-的
-且
-相当
-静态
-的，
-这些
-间接
-不
-是
-问题。
-另
-一
-方面，
-将
-``imgtool``
-或
-``rimage``
-选项
-通过
-所有
-这些
-层
-传递
-可以
-导致
-层
-不
-抽象
-任何
-东西
-时
-典型
-的
-问题。
-第一，
-这
-通常
-需要
-每
-层
-的
-样板
-代码。
-通过
-所有
-wrappers
-引用
-空白
-或
-其他
-特殊
-字符
-可以
-很
-困难。
-重现
-较低
-的
-``west
-sign``
-命令
-调试
-一些
-构建
-时
-问题
-可以
-非常
-耗时：
-它
-至少
-需要
-启用
-并
-搜索
-verbose
-构建
-日志
-找到
-使用
-了
-哪些
-精确
-的
-选项。
-从
-构建
-日志
-复制
-这些
-选项
-可以
-不可
-靠：
-它
-可能
-因为
-微妙
-的
-环境
-差异
-产生
-不同
-的
-结果。
-最后
-且
-最
-坏：
-新
-的
-签署
-功能
-和
-选项
-不
-可能
-使用
-直到
-在
-每
-层
-添加
-更
-多
-样板
-代码。
+签署涉及一层层叠加在彼此之上的多个"包装"脚本：``west
+flash`` 调用 ``west build``，后者调用 ``cmake`` 和 ``ninja``，
+再调用 ``west sign``，最后调用 ``imgtool`` 或 `rimage`_。
+只要所需的签署参数是默认值且相对稳定，这些间接层就不是问题。
+另一方面，将 ``imgtool`` 或 ``rimage`` 选项穿过所有这些层
+可能会导致层没有抽象任何东西时典型的问题。首先，
+这通常需要在每一层编写样板代码。通过所有包装器传递
+空白或其他特殊字符的引号可能很困难。复现较低层的 ``west sign``
+命令以调试某些构建时问题可能非常耗时：它至少需要启用并搜索
+冗长的构建日志来找出实际使用了哪些确切选项。从
+构建日志中复制这些选项可能不可靠：由于细微的
+环境差异，它可能产生不同的结果。最后也是最糟糕的：在每一层
+添加更多样板代码之前，新的签署功能和选项
+无法使用。
 
-要
-避免
-这些
-问题，
-``rimage``
-参数
-可以
-在
-``west
-config``
-中
-设置。
-这里
-是
-``workspace/.west/config``
-示例：
+为避免这些问题，可以在 ``west config`` 中设置 ``rimage`` 参数。
+下面是一个 ``workspace/.west/config`` 示例：
 
 .. code-block:: ini
 
    [sign]
-   #
-   Not
-   needed
-   when
-   invoked
-   from
-   CMake
+   # Not needed when invoked from CMake
+   tool = rimage
+
+   [rimage]
+   # Quoting is optional and works like in Unix shells
+   # Not needed when rimage can be found in the default PATH
+   path = "/home/me/zworkspace/build-rimage/rimage"
+
+   # Not needed when using the default development key
+   extra-args = -i 4 -k 'keys/key argument with space.pem'
+
+为了支持引号，值会像
+:ref:`west-building-cmake-args` 中一样通过 Python 的 ``shlex.split()`` 解析。
+
+``extra-args`` 会直接传递给 ``rimage`` 命令。上面的
+示例与在命令行 ``--`` 之后追加它们的效果相同，如下所示：
+``west sign --tool rimage -- -i 4 -k 'keys/key argument with space.pem'``。
+如果两者都使用，命令行参数放在最后。
+
+.. _rimage:
+   https://github.com/thesofproject/rimage
+
+
+silabs_commander
+****************
+
+``silabs_commander`` 工具用于为 Silicon Labs
+设备应用签署、MIC 或加密二进制文件。当 ``sign.tool`` 配置设置为
+``silabs_commander`` 时，可以由 ``west sign`` 调用；
+或者当设置了 ``CONFIG_SIWX91X_SIGN_KEY`` 或
+``CONFIG_SIWX91X_MIC_KEY`` 时，可以由 ``west build`` 调用。
+
+如果设置了 ``CONFIG_SIWX91X_SIGN_KEY`` 或 ``CONFIG_SIWX91X_MIC_KEY`` 之一，
+``west flash`` 会自动烧录二进制文件的已签署版本。
+
+``silabs_commander`` 需要在主机上安装 `Simplicity Commander`_。
+在设备上配置密钥的过程在 `UG574 SiWx917 SoC Manufacturing Utility User Guide`_ 中有描述。
+
+.. _Simplicity Commander:
+   https://www.silabs.com/developer-tools/simplicity-studio/simplicity-commander?tab=downloads
+.. _UG574 SiWx917 SoC Manufacturing Utility User Guide:
+   https://www.silabs.com/documents/public/user-guides/ug574-siwx917-soc-manufacturing-utility-user-guide.pdf

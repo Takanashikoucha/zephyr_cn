@@ -1,242 +1,262 @@
 .. _west-zephyr-ext-cmds:
 
-额外
-的
-Zephyr
-extension
-commands
+额外的 Zephyr 扩展命令
 ####################################
 
-本
-页
-记录
-杂项
-:ref:`west-zephyr-extensions`。
+本页记录杂项 :ref:`west-zephyr-extensions`。
 
 .. _west-boards:
 
-列出
-boards：
-``west
-boards``
+列出板卡：``west boards``
 *******************************
 
-``boards``
-命令
-可以
-用
-来
-列出
-Zephyr
-支持
-的
-boards
-而
-不
-需要
-求助
-于
-额外
-的
-信息
-来源。
+``boards`` 命令可用于列出 Zephyr 支持的板卡，
+而无需诉诸额外的信息来源。
 
-它
-可以
-通过
-输入
-运行::
+可以通过键入以下命令运行::
 
-  west
-  boards
+  west boards
 
-这
-个
-命令
-用
-默认
-格式
-列出
-所有
-支持
-的
-boards。
-如果
-你
-偏好
-自己
-指定
-显示
-格式
-你
-可以
-用
-``--format``
-（或
-``-f``）
-标志::
+该命令以默认格式列出所有受支持的板卡。
+如果你希望自己指定显示格式，
+可以使用 ``--format``（或 ``-f``）标志::
 
-  west
-  boards
-  -f
-  "{arch}:{name}"
+  west boards -f "{arch}:{name}"
 
-关于
-格式化
-选项
-的
-额外
-帮助
-可以
-通过
-运行
-找到::
+关于格式选项的更多帮助可以通过运行以下命令获取::
 
-  west
-  boards
-  -h
+  west boards -h
 
 .. _west-completion:
 
-Shell
-completion
-scripts：
-``west
-completion``
+Shell 补全脚本：``west completion``
 *********************************************
 
-``completion``
-extension
-命令
-输出
-shell
-completion
-scripts
-然后
-可以
-直接
-用
-来
-为
-支持
-的
-shells
-启用
-shell
-completion。
+``completion`` 扩展命令输出 shell 补全脚本，
+然后可以直接用于为受支持的 shell 启用补全。
 
-它
-当前
-支持
-以下
-shells：
+它目前支持以下 shell：
 
 - bash
+- zsh
+- fish
+- powershell（仅板卡限定符）
 
+更多说明可在命令的帮助中获取::
+
+  west help completion
+
+.. _west-zephyr-export:
+
+安装 CMake 包：``west zephyr-export``
+*************************************************
+
+该命令将当前 Zephyr 安装注册为
+CMake 用户包注册表中的一个 CMake 配置包。
+
+在 Windows 中，CMake 用户包注册表位于
+``HKEY_CURRENT_USER\Software\Kitware\CMake\Packages``。
+
+在 Linux 和 MacOS 中，CMake 用户包注册表位于
+:file:`~/.cmake/packages`。
+
+你可以在设置 Zephyr 工作区时运行此命令。
+如果你这样做，工作区之外的应用 CMakeLists.txt 文件
+将能够使用以下内容找到 Zephyr 仓库：
+
+.. code-block:: cmake
+
+   find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
+
+详情参见 :zephyr_file:`share/zephyr-package/cmake`。
+
+.. _west-spdx:
+
+软件物料清单：``west spdx``
+*****************************************
+
+该命令为 Zephyr 构建生成一份软件物料清单（SBOM），
+作为一组 `SPDX`_ 文档。
+它记录了进入构建的源文件、它们产生的构建产物，
+以及它们之间的关系。
+在源文件中找到的 ``SPDX-License-Identifier`` 注释
+会被扫描并填入文档中，连同文件哈希值和（尽力而为的）版权声明。
+
+.. _west-spdx-versions:
+
+选择 SPDX 版本
+------------------------
+
+``west spdx`` 可以输出两个主要 SPDX 规范系列中的任一个。
+SPDX 2.3 是默认值；使用 ``--spdx-version`` 选项选择其他版本。
+
+SPDX 2.3 是 2.2 的超集，并添加了诸如
+``PrimaryPackagePurpose`` 之类的字段。
+为兼容尚不理解 SPDX 3 的工具，选择 SPDX 2.x；
+为获取 :ref:`west-spdx-build-profile` 中描述的
+更丰富的机器可读构建来源信息，选择 SPDX 3.0 或更高版本。
 
 .. note::
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+   SPDX 3.1 支持是实验性的：SPDX 3.1 规范仍在开发中。
+
+生成 SPDX 文档
+-------------------------
+
+#. 在你的项目中启用 :kconfig:option:`CONFIG_BUILD_OUTPUT_META`，
+   以便构建记录 ``west spdx`` 所需的信息。
+
+#. 构建你的应用：
+
+   .. code-block:: bash
+
+      west build -d BUILD_DIR [...]
+
+#. 使用此构建目录生成 SPDX 文档：
+
+   .. code-block:: bash
+
+      west spdx -d BUILD_DIR
+
+   这默认生成 SPDX 2.3 标签值文档。
+   若要改为生成 SPDX 2.2 或 3.0 文档，传入 ``--spdx-version``：
+
+   .. code-block:: bash
+
+      west spdx -d BUILD_DIR --spdx-version 3.0
+
+.. note::
+
+   使用 :ref:`sysbuild` 构建时，
+   确保你针对的是你想要生成 SBOM 的实际应用。
+   例如，如果应用名为 ``hello_world``：
+
+   .. code-block:: bash
+
+     west build --sysbuild -d BUILD_DIR
+     west spdx -d BUILD_DIR/hello_world
+
+输出文档
 ----------------
 
-The documents are written to :file:`BUILD_DIR/spdx/` (override with ``-s``). The same set of
-bill-of-materials (BOM) documents is produced regardless of the SPDX version; only the file
-extension differs: ``.spdx`` for the SPDX 2.x tag-value format and ``.jsonld`` for the SPDX 3.0
-JSON-LD format:
+文档写入 :file:`BUILD_DIR/spdx/`（用 ``-s`` 覆盖）。
+无论 SPDX 版本如何，都会生成同一组物料清单（BOM）文档；
+只有文件扩展名不同：
+SPDX 2.x 标签值格式用 ``.spdx``，
+SPDX 3.0 JSON-LD 格式用 ``.jsonld``：
 
-- ``app``: BOM for the application source files used for the build
-- ``zephyr``: BOM for the specific Zephyr source code files used for the build
-- ``build``: BOM for the built output files
-- ``modules-deps``: BOM for modules dependencies. Check :ref:`modules
-  <modules-vulnerability-monitoring>` for more details.
+- ``app``：用于构建的应用源文件的 BOM
+- ``zephyr``：用于构建的特定 Zephyr 源代码文件的 BOM
+- ``build``：构建输出文件的 BOM
+- ``modules-deps``：模块依赖项的 BOM。
+  更多细节请查看 :ref:`modules
+  <modules-vulnerability-monitoring>`。
 
-For SPDX 3.0, every document declares conformance to the Core, Software and Simple Licensing
-profiles, and :file:`build.jsonld` additionally declares the :ref:`Build profile
-<west-spdx-build-profile>` that captures how the artifacts were produced.
+对于 SPDX 3.0，每个文档都声明了对 Core、Software 和 Simple Licensing
+配置文件（profiles）的合规性，
+:file:`build.jsonld` 还额外声明了
+:ref:`Build profile
+<west-spdx-build-profile>`，
+它捕获了产物是如何产生的。
 
-Each file in the bill-of-materials is scanned, so that its hashes (SHA256, SHA1, and MD5)
-can be recorded, along with any detected licenses if an
-``SPDX-License-Identifier`` comment appears in the file.
+物料清单中的每个文件都会被扫描，
+以便记录其哈希值（SHA256、SHA1 和 MD5），
+以及如果文件中出现 ``SPDX-License-Identifier`` 注释时
+检测到的任何许可证。
 
-Copyright notices are extracted using the third-party :command:`reuse` tool from the REUSE group.
-When found, these notices are added to SPDX documents as ``FileCopyrightText`` fields (SPDX 2.x)
-or copyright properties (SPDX 3.0).
+版权声明使用 REUSE 组的第三方 :command:`reuse` 工具提取。
+找到时，这些声明作为 ``FileCopyrightText`` 字段（SPDX 2.x）
+或版权属性（SPDX 3.0）添加到 SPDX 文档中。
 
 .. note::
-   Copyright extraction uses heuristics that may not capture complete notice text, so
-   ``FileCopyrightText`` content is best-effort. This aligns with SPDX specification recommendations.
+   版权提取使用可能无法捕获完整声明文本的启发式方法，
+   因此 ``FileCopyrightText`` 内容是尽力而为的。
+   这与 SPDX 规范的建议一致。
 
-Relationships
+关系
 -------------
 
-SPDX relationships are created to indicate dependencies between CMake build targets, build targets
-that are linked together, and source files that are compiled to generate the built library files.
+创建 SPDX 关系以指示 CMake 构建目标之间的依赖关系、
+相互链接的构建目标，
+以及编译以生成已构建库文件的源文件。
 
-The two specification families express build provenance differently:
+两个规范系列以不同方式表达构建来源：
 
-- In **SPDX 2.x**, each generated artifact carries file-level ``GENERATED_FROM`` relationships
-  pointing back at the source (and, with ``--analyze-includes``, header) files it was compiled from.
+- 在 **SPDX 2.x** 中，每个生成的产物都携带文件级的
+  ``GENERATED_FROM`` 关系，
+  指向其编译来源的源文件（以及使用 ``--analyze-includes`` 时的头文件）。
 
-- In **SPDX 3.0**, that provenance is carried by the :ref:`Build profile <west-spdx-build-profile>`
-  instead, using ``hasInput``/``hasOutput``/``usesTool`` relationships scoped to the ``build``
-  lifecycle.
+- 在 **SPDX 3.0** 中，该来源改由
+  :ref:`Build profile <west-spdx-build-profile>` 承载，
+  使用限定于 ``build`` 生命周期的
+  ``hasInput``/``hasOutput``/``usesTool`` 关系。
 
 .. _west-spdx-build-profile:
 
-Build profile (SPDX 3.0)
+构建配置文件（SPDX 3.0）
 ------------------------
 
-When generating SPDX 3.0 documents, ``west spdx`` populates the `SPDX 3.0 Build profile`_ so the
-SBOM records not just *what* was built but *how* it was built. The information is collected
-automatically from the CMake file-API, and lives in :file:`build.jsonld`.
+生成 SPDX 3.0 文档时，``west spdx`` 填充
+`SPDX 3.0 Build profile`_，
+以便 SBOM 不仅记录*构建了什么*，
+还记录*如何构建*。
+信息自动从 CMake file-API 收集，
+存放在 :file:`build.jsonld` 中。
 
-The profile adds a ``build_Build`` element describing the overall build: its build type, the CMake
-generator and build configuration, and selected environment variables such as ``BOARD`` and
-``ARCH``. The toolchain (CMake, the compilers, assembler, linker and archiver) is recorded as
-``Tool`` elements, each with its path and version. Build-scoped relationships then link the build to
-its inputs (the source packages and compiled files), its outputs (the final image) and the tools it
-used.
+该配置文件添加一个描述整体构建的 ``build_Build`` 元素：
+其构建类型、CMake 生成器和构建配置，
+以及选定的环境变量（如 ``BOARD`` 和 ``ARCH``）。
+工具链（CMake、编译器、汇编器、链接器和打包器）
+作为 ``Tool`` 元素记录，每个元素带有其路径和版本。
+构建范围的关系然后将构建与其输入（源包和编译文件）、
+输出（最终镜像）以及所使用的工具关联起来。
 
-Each intermediate target, such as a static library, also gets its own sub-build capturing the exact
-sources, tools and compile flags that produced its artifact, so any output can be traced back to how
-it was built.
+每个中间目标（如静态库）也会获得自己的子构建，
+捕获产生其产物的确切源文件、工具和编译标志，
+因此任何输出都可以追溯到其构建方式。
 
-Command-line options
+命令行选项
 --------------------
 
-``west spdx`` accepts these additional options:
+``west spdx`` 接受以下额外选项：
 
-- ``-i``, ``--init``: create the CMake file-based API query in a build directory before it is
-  configured. Deprecated, and to be removed in Zephyr 5.0: a build with
-  :kconfig:option:`CONFIG_BUILD_OUTPUT_META` now requests the query itself.
+- ``-i``、``--init``：在构建目录配置之前
+  在其中创建 CMake file-based API 查询。
+  已弃用，并将在 Zephyr 5.0 中移除：
+  带有 :kconfig:option:`CONFIG_BUILD_OUTPUT_META` 的构建
+  现在自身就请求该查询。
 
-- ``-n PREFIX``: a prefix for the Document Namespaces that will be included in
-  the generated SPDX documents. See `SPDX specification clause 6`_ for
-  details. If ``-n`` is omitted, a default namespace will be generated
-  according to the default format described in section 2.5 using a random UUID.
+- ``-n PREFIX``：将包含在生成的 SPDX 文档中的
+  文档命名空间（Document Namespaces）的前缀。
+  详情参见 `SPDX specification clause 6`_。
+  如果省略 ``-n``，将根据第 2.5 节中描述的默认格式
+  使用随机 UUID 生成默认命名空间。
 
-- ``-s SPDX_DIR``: specifies an alternate directory where the SPDX documents
-  should be written instead of :file:`BUILD_DIR/spdx/`.
+- ``-s SPDX_DIR``：指定一个替代目录，
+  SPDX 文档应写入该目录，
+  而不是 :file:`BUILD_DIR/spdx/`。
 
-- ``--spdx-version {2.2,2.3,3.0,3.1}``: specifies which SPDX specification version to use.
-  Defaults to ``2.3``. See :ref:`west-spdx-versions` for the differences between
-  the versions.
+- ``--spdx-version {2.2,2.3,3.0,3.1}``：
+  指定使用哪个 SPDX 规范版本。
+  默认为 ``2.3``。
+  版本之间的差异参见 :ref:`west-spdx-versions`。
 
-- ``--analyze-includes``: in addition to recording the compiled source code
-  files (e.g. ``.c``, ``.S``) in the bills-of-materials, also attempt to
-  determine the specific header files that are included for each ``.c`` file.
+- ``--analyze-includes``：除了记录编译的源代码文件
+  （如 ``.c``、``.S``）在物料清单中，
+  还尝试确定每个 ``.c`` 文件包含的特定头文件。
 
-  This takes longer, as it performs a dry run using the C compiler for each
-  ``.c`` file using the same arguments that were passed to it for the actual
-  build.
+  这需要更长时间，
+  因为它使用与构建时相同参数，
+  对每个 ``.c`` 文件执行 C 编译器的试运行。
 
-- ``--include-sdk``: with ``--analyze-includes``, also create a fourth SPDX
-  document, :file:`sdk.spdx` (or :file:`sdk.jsonld`), which lists header files
-  included from the SDK.
+- ``--include-sdk``：与 ``--analyze-includes`` 一起，
+  还创建第四份 SPDX 文档
+  :file:`sdk.spdx`（或 :file:`sdk.jsonld`），
+  列出从 SDK 包含的头文件。
 
 .. warning::
 
-   The generation of SBOM documents for the ``native_sim`` platform is currently not supported.
+   目前不支持为 ``native_sim`` 平台生成 SBOM 文档。
 
 .. _SPDX: https://spdx.dev/
 
@@ -248,124 +268,129 @@ Command-line options
 
 .. _west-blobs:
 
-Working with binary blobs: ``west blobs``
+处理二进制 blob：``west blobs``
 *****************************************
 
-The ``blobs`` command allows users to interact with :ref:`binary blobs
-<bin-blobs>` declared in one or more :ref:`modules <modules>` via their
-:ref:`module.yml <module-yml>` file.
+``blobs`` 命令允许用户通过其 :ref:`module.yml <module-yml>` 文件
+与一个或多个 :ref:`modules <modules>` 中声明的
+:ref:`binary blobs
+<bin-blobs>` 进行交互。
 
-The ``blobs`` command has three sub-commands, used to list, fetch or clean (i.e.
-delete) the binary blobs themselves.
+``blobs`` 命令有三个子命令，
+用于列出、获取或清理（即删除）二进制 blob 本身。
 
-You can list binary blobs while specifying the format of the output::
+你可以通过指定输出格式来列出二进制 blob::
 
   west blobs list -f '{module}: {type} {path}'
 
-For the full set of variables available in ``-f/--format`` run
-``west blobs -h``.
+要获取 ``-f/--format`` 中可用的完整变量集，
+运行 ``west blobs -h``。
 
-Fetching blobs works in a similar manner::
+获取 blob 的方式类似::
 
   west blobs fetch
 
-Note that, as described in :ref:`the modules section <modules-bin-blobs>`,
-fetched blobs are stored in a :file:`zephyr/blobs/` folder relative to the root
-of the corresponding module repository.
+注意，如 :ref:`modules 章节 <modules-bin-blobs>` 中所述，
+获取的 blob 存储在相对于相应模块仓库根目录的
+:file:`zephyr/blobs/` 文件夹中。
 
-As does deleting them::
+删除它们的方式也类似::
 
   west blobs clean
 
-Additionally the tool allows you to specify the modules you want to list,
-fetch or clean blobs for by typing the module names as a command-line
-parameter.
+此外，该工具允许你通过键入模块名作为命令行参数
+来指定要列出、获取或清理 blob 的模块。
 
-The argument ``--allow-regex`` can be passed ``west blobs fetch`` to restrict
-the specific blobs that are fetched, by passing a regular expression::
+可以向 ``west blobs fetch`` 传入参数 ``--allow-regex``
+来通过传入正则表达式限制获取的特定 blob::
 
   # For example, only download esp32 blobs, skip the other variants
   west blobs fetch hal_espressif --allow-regex 'lib/esp32/.*'
 
-An auto-cache directory can be provided via the ``--auto-cache`` cli argument
-or via the ``blobs.auto-cache`` config option. When enabled, the auto-cache
-directory is automatically populated whenever a blob is missing and downloaded.
+可以通过 ``--auto-cache`` 命令行参数
+或 ``blobs.auto-cache`` 配置选项提供自动缓存目录。
+启用后，每当 blob 缺失并被下载时，
+自动缓存目录会自动填充。
 
-One or more additional cache directories (separated by ``;``) can be provided
-in ``--cache-dirs`` cli argument or ``blobs.cache-dirs`` config option.
+可以在 ``--cache-dirs`` 命令行参数
+或 ``blobs.cache-dirs`` 配置选项中提供
+一个或多个额外的缓存目录（用 ``;`` 分隔）。
 
-``west blobs fetch`` searches all configured cache directories (including the
-auto-cache) for a matching blob filename. Cached files may be stored either
-under their original filename or with a SHA-256 suffix (``<filename>.<sha>``).
-If found, the blob is copied from the cache to the blob path; otherwise
-it is downloaded from its URL(s) to the blob path.
+``west blobs fetch`` 在所有已配置的缓存目录
+（包括自动缓存）中搜索匹配的 blob 文件名。
+缓存文件可以存储在其原始文件名下，
+或带有 SHA-256 后缀（``<filename>.<sha>``）。
+如果找到，blob 从缓存复制到 blob 路径；
+否则从其 URL 下载到 blob 路径。
 
 .. _west-twister:
 
-Twister wrapper: ``west twister``
+Twister 封装器：``west twister``
 *********************************
-This command is a wrapper for :ref:`twister <twister_script>`.
 
-Twister can then be invoked via west as follows::
+该命令是 :ref:`twister <twister_script>` 的封装器。
+
+然后可以通过 west 如下调用 Twister::
 
   west twister -help
   west twister -T tests/ztest/base
 
 .. _west-bindesc:
 
-Working with binary descriptors: ``west bindesc``
+处理二进制描述符：``west bindesc``
 *************************************************
 
-The ``bindesc`` command allows users to read :ref:`binary descriptors<binary_descriptors>`
-of executable files. It currently supports ``.bin``, ``.hex``, ``.elf`` and ``.uf2`` files
-as input.
+``bindesc`` 命令允许用户读取可执行文件的
+:ref:`binary descriptors<binary_descriptors>`。
+它目前支持 ``.bin``、``.hex``、``.elf`` 和 ``.uf2`` 文件作为输入。
 
-You can search for a specific descriptor in an image, for example::
+你可以在镜像中搜索特定描述符，例如::
 
    west bindesc search KERNEL_VERSION_STRING build/zephyr/zephyr.bin
 
-You can search for a custom descriptor by type and ID, for example::
+你可以按类型和 ID 搜索自定义描述符，例如::
 
    west bindesc custom_search STR 0x200 build/zephyr/zephyr.bin
 
-You can dump all of the descriptors in an image using::
+你可以使用以下命令转储镜像中的所有描述符::
 
    west bindesc dump build/zephyr/zephyr.bin
 
-You can extract the descriptor data area of the image to a file using::
+你可以使用以下命令将镜像的描述符数据区域提取到文件::
 
    west bindesc extract
 
-You can list all known standard descriptor names using::
+你可以使用以下命令列出所有已知的标准描述符名称::
 
    west bindesc list
 
-You can print the offset of the descriptors inside the image using::
+你可以使用以下命令打印描述符在镜像中的偏移量::
 
    west bindesc get_offset
 
-Indexing the sources with GNU Global: ``west gtags``
+用 GNU Global 对源代码进行索引：``west gtags``
 ****************************************************
 
-.. important:: You must install the ``gtags`` and ``global`` programs provided
-               by `GNU Global`_ to use this command.
+.. important:: 你必须安装 `GNU Global`_ 提供的
+               ``gtags`` 和 ``global`` 程序才能使用此命令。
 
-The ``west gtags`` command lets you create a GNU Global tags file for the entire
-west workspace::
+``west gtags`` 命令让你为整个 west 工作区
+创建一个 GNU Global tags 文件::
 
   west gtags
 
 .. _GNU Global: https://www.gnu.org/software/global/
 
-This will create a tags file named ``GTAGS`` in the workspace :ref:`topdir
-<west-workspace>` (it will also create other Global-related metadata files
-named ``GPATH`` and ``GRTAGS`` in the same place).
+这将在工作区 :ref:`topdir <west-workspace>` 中
+创建一个名为 ``GTAGS`` 的 tags 文件
+（它还会在同一位置创建其他名为 ``GPATH`` 和 ``GRTAGS`` 的
+Global 相关元数据文件）。
 
-You can then run the ``global`` command anywhere inside the
-workspace to search for symbol locations using this tags file.
+然后你可以在工作区内的任何地方运行 ``global`` 命令，
+使用此 tags 文件搜索符号位置。
 
-For example, to search for definitions of the ``arch_system_halt()`` function,
-starting from the ``zephyr/drivers`` directory::
+例如，从 ``zephyr/drivers`` 目录开始
+搜索 ``arch_system_halt()`` 函数的定义::
 
   $ cd zephyr/drivers
   $ global -x arch_system_halt
@@ -377,42 +402,44 @@ starting from the ``zephyr/drivers`` directory::
   arch_system_halt  126 ../arch/xtensa/core/fatal.c FUNC_NORETURN void arch_system_halt(unsigned int reason)
   arch_system_halt   21 ../kernel/fatal.c FUNC_NORETURN __weak void arch_system_halt(unsigned int reason)
 
-This prints the search symbol, the line it is defined on, a relative path to
-the file it is defined in, and the line itself, for all places where the symbol
-is defined.
+这打印搜索的符号、其定义所在的行、
+其定义所在文件的相对路径，以及该行本身，
+涵盖符号定义的所有位置。
 
-Additional tips:
+额外提示：
 
-- This can also be useful to search for vendor HAL function definitions.
+- 这也有助于搜索供应商 HAL 函数定义。
 
-- See the ``global`` command's manual page for more information on how to use
-  this tool.
+- 更多信息参见 ``global`` 命令的手册页，
+  了解如何使用此工具。
 
-- You should run ``global``, **not** ``west global``. There is no need for a
-  separate ``west global`` command since ``global`` already searches for the
-  ``GTAGS`` file starting from your current working directory. This is why you
-  need to run ``global`` from inside the workspace.
+- 你应该运行 ``global``，而**不是** ``west global``。
+  由于 ``global`` 已经会从你当前的工作目录开始
+  搜索 ``GTAGS`` 文件，因此不需要单独的
+  ``west global`` 命令。这就是为什么你需要
+  从工作区内部运行 ``global``。
 
 .. _west-patch:
 
-Working with patches: ``west patch``
+处理补丁：``west patch``
 ************************************
 
-The ``patch`` command allows users to apply patches to Zephyr or Zephyr modules
-in a controlled manner that makes automation and tracking easier for external applications that
-use the :ref:`T2 star topology <west-t2>`. The :ref:`patches.yml <patches-yml>` file stores
-metadata about patch files and fills-in the gaps between official Zephyr releases, so that users
-can easily see the status of any upstreaming efforts, and determine which patches to drop before
-upgrading to the next Zephyr release.
+``patch`` 命令允许用户以受控的方式向 Zephyr 或 Zephyr 模块
+应用补丁，使得使用 :ref:`T2 star topology <west-t2>` 的
+外部应用更容易进行自动化和跟踪。
+:ref:`patches.yml <patches-yml>` 文件存储
+关于补丁文件的元数据，并填补官方 Zephyr 版本发布之间的空白，
+使用户可以轻松查看任何上游化工作的状态，
+并在升级到下一个 Zephyr 版本之前
+确定要放弃哪些补丁。
 
-There are several sub-commands available to manage patches for Zephyr or other modules in the
-workspace:
+有若干可用的子命令来管理工作区中 Zephyr 或其他模块的补丁：
 
-* ``apply``: apply patches listed in ``patches.yml``
-* ``reverse``: reverse patches listed in ``patches.yml`` that have been previously applied
-* ``clean``: remove all patches that have been applied, and reset to the manifest checkout state
-* ``list``: list all patches in ``patches.yml``
-* ``gh-fetch``: fetch patches from a GitHub pull request
+* ``apply``：应用 ``patches.yml`` 中列出的补丁
+* ``reverse``：反转之前已应用的 ``patches.yml`` 中列出的补丁
+* ``clean``：移除所有已应用的补丁，并重置到 manifest 检出状态
+* ``list``：列出 ``patches.yml`` 中的所有补丁
+* ``gh-fetch``：从 GitHub pull request 获取补丁
 
 .. code-block:: none
 
@@ -430,10 +457,12 @@ workspace:
            │       └── my-zephyr-change.patch
            └── patches.yml
 
-In this example, the :ref:`west manifest <west-manifests>` file, ``west.yml``, would pin to a
-specific Zephyr revision (e.g. ``v4.1.0``) and apply patches against that revision of Zephyr and
-the specific revisions of other modules used in the application. However, this application needs
-two changes in order to meet requirements; one for Zephyr and another for MCUBoot.
+在这个示例中，:ref:`west manifest <west-manifests>` 文件
+``west.yml`` 将固定到特定的 Zephyr 修订版
+（如 ``v4.1.0``），并针对该修订版的 Zephyr
+以及应用中使用的其他模块的特定修订版应用补丁。
+然而，该应用需要两个更改才能满足要求；
+一个用于 Zephyr，另一个用于 MCUBoot。
 
 .. _patches-yml:
 
@@ -465,7 +494,7 @@ two changes in order to meet requirements; one for Zephyr and another for MCUBoo
           A change to mcuboot that has been merged already. We can remove this
           patch when we are ready to upgrade to the next Zephyr release.
 
-Patches can easily be applied in an automated manner. For example:
+补丁可以轻松地以自动化方式应用。例如：
 
 .. code-block:: bash
 
@@ -474,10 +503,13 @@ Patches can easily be applied in an automated manner. For example:
     west update
     west patch apply
 
-When it is time to update to a newer version of Zephyr, the ``west.yml`` file can be updated to
-point at the next Zephyr release, e.g. ``v4.2.0``. Patches that are no longer needed, like
-``my-tweak-for-mcuboot.patch`` in the example above, can be removed from ``patches.yml`` and from
-the external application repository, and then the following commands can be run.
+当需要更新到更新版本的 Zephyr 时，
+可以更新 ``west.yml`` 文件指向下一个 Zephyr 版本，
+如 ``v4.2.0``。
+不再需要的补丁（如上面示例中的
+``my-tweak-for-mcuboot.patch``）
+可以从 ``patches.yml`` 和外部应用仓库中移除，
+然后运行以下命令。
 
 .. code-block:: bash
 
@@ -485,34 +517,38 @@ the external application repository, and then the following commands can be run.
     west update
     west patch apply --roll-back # roll-back all patches if one does not apply cleanly
 
-Optionally, patches can be reversed rather than cleaning all modules. This leaves non-conflicting,
-unrelated edits to modules in place, but removes only the changes made by patches. This is useful
-when developing patches and testing them in an application, but not wanting to clean all patches
-and lose any manual edits made to the module.
+可选地，可以反转补丁而不是清理所有模块。
+这保留了不冲突的、与模块无关的编辑，
+但仅移除由补丁所做的更改。
+这在开发补丁并在应用中测试它们时很有用，
+但不想清理所有补丁并丢失对模块所做的任何手动编辑。
 
 .. code-block:: bash
 
     west patch reverse
 
-If a patch needs to be reworked, remember to update the ``patches.yml`` file with the new SHA256
-checksum.
+如果补丁需要重新制作，
+记得用新的 SHA256 校验和更新 ``patches.yml`` 文件。
 
 .. code-block:: bash
 
     sha256sum zephyr/patches/zephyr/my-zephyr-change.patch
     7d57ca78d5214f422172cc47fed9d0faa6d97a0796c02485bff0bf29455765e9
 
-It is also possible to use ``west patch gh-fetch`` to fetch patches from a GitHub pull request and
-automatically create or update the ``patches.yml`` file. This can be useful when the author already
-has a number of changes captured in existing upstream pull requests.
+还可以使用 ``west patch gh-fetch``
+从 GitHub pull request 获取补丁，
+并自动创建或更新 ``patches.yml`` 文件。
+当作者已经在现有的上游 pull request 中
+捕获了若干更改时，这很有用。
 
 .. code-block:: bash
 
     west patch gh-fetch --owner zephyrproject-rtos --repo zephyr --pull-request <pr-number> \
       --module zephyr --split-commits
 
-The above command will create the directory and file structure below, which includes patches for
-each individual commit associated with the given pull request.
+上面的命令将创建以下目录和文件结构，
+其中包括与给定 pull request 关联的
+每个单独提交的补丁。
 
 .. code-block:: none
 
@@ -523,48 +559,49 @@ each individual commit associated with the given pull request.
     │   └── third-commit-from-pr.patch
     └── patches.yml
 
-Working with the Zephyr SDK: ``west sdk``
+处理 Zephyr SDK：``west sdk``
 *****************************************
 
-The ``west sdk`` command is a Zephyr-specific west command used to list
-and install the Zephyr SDK and its toolchains.
+``west sdk`` 命令是一个 Zephyr 特定的 west 命令，
+用于列出和安装 Zephyr SDK 及其工具链。
 
-Listing SDKs and toolchains
+列出 SDK 和工具链
 ---------------------------
 
-To list installed Zephyr SDKs as well as available SDK releases and
-toolchains, run:
+要列出已安装的 Zephyr SDK 以及可用的 SDK 版本
+和工具链，运行：
 
 .. code-block:: console
 
    west sdk list
 
-This command shows:
+该命令显示：
 
-- Installed SDK versions
-- Available SDK releases
-- Toolchains included in each SDK
+- 已安装的 SDK 版本
+- 可用的 SDK 版本
+- 每个 SDK 中包含的工具链
 
-Installing the Zephyr SDK
+安装 Zephyr SDK
 -------------------------
 
-To install the Zephyr SDK, run:
+要安装 Zephyr SDK，运行：
 
 .. code-block:: console
 
    west sdk install
 
-This command may run in interactive mode and prompt for SDK or
-toolchain selection. When specific toolchains are provided via
-``--toolchains``, the command runs non-interactively, which is
-recommended for automation.
+该命令可能以交互模式运行，
+提示选择 SDK 或工具链。
+当通过 ``--toolchains`` 提供特定工具链时，
+命令以非交互方式运行，这推荐用于自动化。
 
-To install specific toolchains only, use the ``--toolchains`` option:
+要仅安装特定工具链，使用 ``--toolchains`` 选项：
 
 .. code-block:: console
 
    west sdk install --toolchains arm-zephyr-eabi riscv64-zephyr-elf
 
-If you are unsure which toolchains you need, run ``west sdk list`` first
-to see the available options and avoid downloading unnecessary
-toolchains, which can save gigabytes of disk space and download time.
+如果你不确定需要哪些工具链，
+先运行 ``west sdk list`` 查看可用选项，
+避免下载不必要的工具链，
+这可以节省数 GB 的磁盘空间和下载时间。

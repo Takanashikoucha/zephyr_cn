@@ -1,152 +1,26 @@
 .. _network_tracing:
 
-Network
-Tracing
+Network Tracing
 ###############
 
 .. contents::
     :local:
-    :depth:
-    2
+    :depth: 2
 
-User
-可以
-enable
-network
-core
-stack
-和
-socket
-API
-calls
-的
-tracing。
+User 可启用 network core stack 和 socket API calls tracing。
 
-:kconfig:option:`CONFIG_TRACING_NET_CORE`
-option
-control
-core
-network
-stack
-的
-tracing。
-这
-个
-option
-在
-tracing
-和
-networking
-都
-被
-enabled
-时
-default
-下
-被
-enabled。
-System
-将
-start
-collect
-receiving
-和
-sending
-call
-的
-verdicts
-即
-network
-packet
-是否
-被
-successfully
-sent
-或
-received。
-它
-也
-将
-collect
-packet
-sending
-或
-receiving
-的
-timings
-即
-delivery
-network
-packet
-take
-了
-多
-长
-time
-以及
-used
-的
-network
-interface、
-priority
-和
-traffic
-class。
+:kconfig:option:`CONFIG_TRACING_NET_CORE` option 控制 core network
+stack tracing。此 option 在启用 tracing 和 networking 时默认启用。系统将开始收集接收和发送 call
+verdicts 即，network packet 是否成功发送或接收。
+其还将收集 packet 发送或接收 timings 即，交付
+network packet 耗时多久（以及所用
+network interface、priority
+和 traffic class。
 
-:kconfig:option:`CONFIG_TRACING_NET_SOCKETS`
-option
-可
-被
-used
-用于
-track
-system
-中
-BSD
-socket
-call
-的
-usage。
-在
-tracing
-和
-BSD
-socket
-API
-support
-都
-被
-enabled
-时
-它
-被
-enabled。
-System
-将
-start
-collect
-什么
-BSD
-socket
-API
-calls
-被
-made
-以及
-API
-calls
-use
-和
-return
-什么
-parameters。
+:kconfig:option:`CONFIG_TRACING_NET_SOCKETS` option 可用于跟踪
+系统中 BSD socket call 使用。在启用 tracing 和 BSD socket
+API 支持时启用。系统将开始收集进行了哪些 BSD socket
+API calls（以及 API calls 使用并返回哪些 parameters。
 
-参考
-:ref:`tracing
-documentation
-<tracing>`
-获取
-如何
-use
-tracing
-service。
+如何使用 tracing
+service 参见 :ref:`tracing documentation <tracing>`。

@@ -1,110 +1,26 @@
 .. _hwinfo_api:
 
-Hardware
-Information
+硬件信息
 ####################
 
-Overview
+概述
 ********
 
-HW
-Info
-API
-提供
-对
-hardware
-information
-的
-访问
-如
-device
-identifiers
-和
-reset
-cause
-flags。
+硬件信息 API 提供对硬件信息（如设备标识符和复位原因标志）的访问。
 
-Reset
-cause
-flags
-可以
-用
-来
-确定
-device
-为什么
-被
-reset；
-例如
-因为
-watchdog
-timeout
-或
-因为
-power
-cycling。
-不同
-的
-devices
-支持
-不同
-的
-flags
-子集。
-用
-:c:func:`hwinfo_get_supported_reset_cause`
-获取
-该
-device
-支持
-的
-flags。
+复位原因标志可用于确定设备为何被复位；例如由于看门狗超时或电源循环。不同设备支持不同的标志子集。使用 :c:func:`hwinfo_get_supported_reset_cause` 获取该设备支持的标志。
 
-大多数
-implementations
-是
-SoC
-特定
-的
-从
-vendor
-registers
-或
-memory
-读取
-identifiers。
-通用
-的
-:dtcompatible:`zephyr,hwinfo-nvmem`
-backend
-从
-NVMEM
-cells
-获取
-device
-ID
-并
-可选
-地
-获取
-EUI-64
-（参考
-:ref:`nvmem`）。
+大多数实现是 SoC 特定的，从厂商寄存器或内存读取标识符。通用 :dtcompatible:`zephyr,hwinfo-nvmem` 后端从 NVMEM 单元获取设备 ID，以及可选的 EUI-64（参见 :ref:`nvmem`）。
 
-Configuration
-Options
+配置选项
 *********************
 
-相关
-配置
-选项：
+相关配置选项：
 
 * :kconfig:option:`CONFIG_HWINFO`
 * :kconfig:option:`CONFIG_HWINFO_NVMEM`
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   hwinfo_interface
+.. doxygengroup:: hwinfo_interface

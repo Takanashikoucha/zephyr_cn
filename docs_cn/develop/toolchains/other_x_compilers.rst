@@ -1,230 +1,44 @@
 .. _other_x_compilers:
 
-其他
-交叉
-编译器
-######################
+其他交叉编译器
+###############
 
-这
-个
-工具链
-variant
-借
-自
-Linux
-kernel
-构建
-系统
-的
-机制
-用
-``CROSS_COMPILE``
-环境
-变量
-设置
-基于
-GNU
-的
-交叉
-工具链。
+这种工具链变体借鉴自 Linux 内核构建系统的机制：使用 ``CROSS_COMPILE`` 环境变量来配置基于 GNU 的交叉工具链。
 
-这样
-的
-"其他
-交叉
-编译器"
-示例
-是
-你
-的
-Linux
-发行版
-打包
-的
-交叉
-工具链、
-你
-自己
-编译
-的、
-或
-你
-从
-网络
-下载
-的。
-与
-:ref:`toolchains`
-中
-特别
-列出
-的
-工具链
-不同，
-Zephyr
-构建
-系统
-可能
-没有
-与
-它们
-测试
-过，
-并
-不
-官方
-支持
-它们。
-（不过，
-工具链
-设置
-机制
-本身
-是
-支持
-的。）
+此类"其他交叉编译器"的例子包括：你的 Linux 发行版打包的交叉工具链、你自己编译的、或从网上下载的。与 :ref:`toolchains` 中明确列出的工具链不同，Zephyr 构建系统可能未针对这些工具链进行过测试，也不官方支持它们。（尽管如此，工具链配置机制本身是受支持的。）
 
-遵循
-这些
-步骤
-使用
-这
-些
-工具链
-之一。
+按照以下步骤使用其中一种工具链。
 
-#. 安装
-   适合
-   你
-   的
-   主机
-   和
-   目标
-   系统
-   的
-   交叉
-   编译器。
+#. 安装适合你的主机和目标系统的交叉编译器。
 
-   例如，
-   你
-   可能
-   在
-   Debian
-   基于
-   的
-   Linux
-   系统
-   上
-   安装
-   ``gcc-arm-none-eabi``
-   包，
-   或
-   在
-   Fedora
-   或
-   Red
-   Hat
-   上
-   ``arm-none-eabi-newlib``：
+   例如，你可以在基于 Debian 的 Linux 系统上安装 ``gcc-arm-none-eabi`` 包，或在 Fedora 或 Red Hat 上安装 ``arm-none-eabi-newlib``：
 
    .. code-block:: console
 
-      #
-      On
-      Debian
-      or
-      Ubuntu
-      sudo
-      apt-get
-      install
-      gcc-arm-none-eabi
-      #
-      On
-      Fedora
-      or
-      Red
-      Hat
-      sudo
-      dnf
-      install
-      arm-none-eabi-newlib
+      # On Debian or Ubuntu
+      sudo apt-get install gcc-arm-none-eabi
+      # On Fedora or Red Hat
+      sudo dnf install arm-none-eabi-newlib
 
-#. :ref:`Set
-   these
-   environment
-   variables
-   <env_vars>`：
+#. :ref:`设置这些环境变量 <env_vars>`：
 
-   - 设置
-     :envvar:`ZEPHYR_TOOLCHAIN_VARIANT`
-     为
-     ``cross-compile``。
-   - 设置
-     ``CROSS_COMPILE``
-     为
-     你
-     的
-     工具链
-     二进制
-     文件
-     有
-     的
-     共同
-     路径
-     前缀，
-     例如
-     包含
-     编译器
-     二进制
-     文件
-     的
-     目录
-     路径
-     加
-     目标
-     三元组
-     和
-     尾
-     随
-     破折号。
+   - 将 :envvar:`ZEPHYR_TOOLCHAIN_VARIANT` 设置为 ``cross-compile``。
+   - 将 ``CROSS_COMPILE`` 设置为你的工具链二进制文件的共同路径前缀，例如包含编译器二进制文件的目录路径加上目标三元组和尾随连字符。
 
-#. 要
-   检查
-   你
-   在
-   当前
-   环境
-   中
-   正确
-   设置
-   了
-   这些
-   变量，
-   遵循
-   这些
-   示例
-   shell
-   会话
-   （``CROSS_COMPILE``
-   值
-   在
-   你
-   的
-   系统
-   上
-   可能
-   不同）：
+#. 要检查你是否在当前环境中正确设置了这些变量，请参照以下示例 shell 会话（``CROSS_COMPILE`` 的值在你的系统上可能不同）：
 
    .. code-block:: console
 
-      #
-      Linux,
-      macOS:
-      $
-      echo
-      $ZEPHYR_TOOLCHAIN_VARIANT
+      # Linux, macOS:
+      $ echo $ZEPHYR_TOOLCHAIN_VARIANT
       cross-compile
-      $
-      echo
-      $CROSS_COMPILE
+      $ echo $CROSS_COMPILE
       /usr/bin/arm-none-eabi-
+
+   你也可以将 ``CROSS_COMPILE`` 设置为 CMake 变量。
+
+使用此选项时，你的所有工具链二进制文件必须位于同一目录中，并具有共同的文件名前缀。``CROSS_COMPILE`` 变量设置为目录与文件名前缀的拼接。
+
+在上面 Debian 示例中，``gcc-arm-none-eabi`` 包在 ``/usr/bin/`` 目录中安装 ``arm-none-eabi-gcc`` 和 ``arm-none-eabi-ld`` 等二进制文件，因此共同前缀是 ``/usr/bin/arm-none-eabi-``（包括尾随连字符 ``-``）。
+
+如果你的工具链安装在 ``/opt/mytoolchain/bin`` 且二进制文件名称基于目标三元组 ``myarch-none-elf``，``CROSS_COMPILE`` 将设置为 ``/opt/mytoolchain/bin/myarch-none-elf-``。

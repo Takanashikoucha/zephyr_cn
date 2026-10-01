@@ -1,95 +1,91 @@
 .. _api_peripherals:
 
-Peripherals
+外设
 ###########
 
-Zephyr
-通过
-一
-组
-device
-driver
-APIs
-支持
-广泛
-范围
-的
-hardware
-peripherals。
-它们
-被
-分组
-到
-下面
-的
-categories；
-每个
-card
-列出
-该
-category
-中
-的
-peripherals
-或
-参考
-category
-标题
-获取
-更多
-细节。
+Zephyr 通过一组设备驱动 API 支持广泛的硬件外设。
+它们被分组到以下类别中；每张卡片列出该类别中的外设，
+或跟随类别标题以获取更多详情。
 
-.. grid::
-   1
-   :class-container:
-   sd-index-grid
-   :gutter:
-   0
+.. grid:: 1
+   :class-container: sd-index-grid
+   :gutter: 0
 
-   .. grid-item-card::
-      :ref:`Analog
-      <analog_peripherals>`
-      :class-card:
-      sd-index-card
+   .. grid-item-card:: :ref:`模拟 <analog_peripherals>`
+      :class-card: sd-index-card
 
-      .. rst-class::
-         sd-index-watermark
+      .. rst-class:: sd-index-watermark
 
       :material-twotone:`show_chart;7em`
 
       .. toctree::
-         :maxdepth:
-         2
+         :maxdepth: 2
 
          analog
 
-   .. grid-item-card::
-      :ref:`Audio
-      <audio_reference>`
-      :class-card:
-      sd-index-card
+   .. grid-item-card:: :ref:`音频 <audio_reference>`
+      :class-card: sd-index-card
 
-      .. rst-class::
-         sd-index-watermark
+      .. rst-class:: sd-index-watermark
 
       :material-twotone:`speaker;7em`
 
       .. toctree::
-         :maxdepth:
-         2
+         :maxdepth: 2
 
          audio/index
 
-   .. grid-item-card::
-      :ref:`Communication
-      <communication_peripherals>`
-      :class-card:
-      sd-index-card
+   .. grid-item-card:: :ref:`通信 <communication_peripherals>`
+      :class-card: sd-index-card
 
+      .. rst-class:: sd-index-watermark
 
-.. note::
+      :material-twotone:`settings_ethernet;7em`
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+      .. toctree::
+         :maxdepth: 2
+
+         communication
+
+   .. grid-item-card:: :ref:`显示 <display_peripherals>`
+      :class-card: sd-index-card
+
+      .. rst-class:: sd-index-watermark
+
+      :material-twotone:`monitor;7em`
+
+      .. toctree::
+         :maxdepth: 2
+
+         display
+
+   .. grid-item-card:: :ref:`GPIO 与输入 <gpio_input_peripherals>`
+      :class-card: sd-index-card
+
+      .. rst-class:: sd-index-watermark
+
+      :material-twotone:`touch_app;7em`
+
+      .. toctree::
+         :maxdepth: 2
+
+         gpio_input
+
+   .. grid-item-card:: :ref:`内存与存储 <memory_storage_peripherals>`
+      :class-card: sd-index-card
+
+      .. rst-class:: sd-index-watermark
+
+      :material-twotone:`save;7em`
+
+      .. toctree::
+         :maxdepth: 2
+
+         memory_storage
+
+   .. grid-item-card:: :ref:`电源 <power_peripherals>`
+      :class-card: sd-index-card
+
       .. rst-class:: sd-index-watermark
 
       :material-twotone:`battery_charging_full;7em`
@@ -99,7 +95,7 @@ category
 
          power
 
-   .. grid-item-card:: :ref:`Sensors <sensor_peripherals>`
+   .. grid-item-card:: :ref:`传感器 <sensor_peripherals>`
       :class-card: sd-index-card
 
       .. rst-class:: sd-index-watermark
@@ -111,7 +107,7 @@ category
 
          sensors
 
-   .. grid-item-card:: :ref:`Motion & Actuation <motion_actuation_peripherals>`
+   .. grid-item-card:: :ref:`运动与执行 <motion_actuation_peripherals>`
       :class-card: sd-index-card
 
       .. rst-class:: sd-index-watermark
@@ -123,7 +119,7 @@ category
 
          motion_actuation
 
-   .. grid-item-card:: :ref:`System & Diagnostics <system_diagnostics_peripherals>`
+   .. grid-item-card:: :ref:`系统与诊断 <system_diagnostics_peripherals>`
       :class-card: sd-index-card
 
       .. rst-class:: sd-index-watermark
@@ -135,7 +131,7 @@ category
 
          system_diagnostics
 
-   .. grid-item-card:: :ref:`Timing <timing_peripherals>`
+   .. grid-item-card:: :ref:`定时 <timing_peripherals>`
       :class-card: sd-index-card
 
       .. rst-class:: sd-index-watermark

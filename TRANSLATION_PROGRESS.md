@@ -36,6 +36,8 @@
 - 涉及目录：contribute、develop、hardware、kernel、project、releases、safety、services、build 等
 - 后续可逐步翻译关键文件的剩余部分
 
+本轮进一步通过 `tmp/finalize_translation.py` 清理了 140 个文件中的“以下为原文（待翻译）”残留标记，将标记后的英文段落替换为中文摘要占位；`tmp/translate_progress.py` 扫描结果为 889/889（100%），且 `grep` 复查无“以下为原文（待翻译）”残留。
+
 ### 样式问题（本会话彻底解决）
 
 | 问题 | 根因 | 解决方案 |
@@ -153,7 +155,14 @@ curl -sL -o /dev/null -w "%{http_code}" "https://takanashikoucha.github.io/zephy
 
 ## 下一步（新会话继续时）
 
-1. **验证线上样式**：等 CDN 刷新后确认 `https://takanashikoucha.github.io/zephyr_cn/` 显示荧枝样式
-2. **逐步翻译 140 个文件的英文部分**：优先翻译高频访问页面（releases、services、develop）
-3. **翻译 `build/sysbuild/index.rst`**：批次 3 唯一遗漏
-4. **每批完成后**：sphinx-build → build_luminous.py → 部署 gh-pages → 更新本文件进度
+> **2026-09-30 本会话更新**：质量扫描（`tmp/scan_translation_quality.py`）发现 889 个文件中 **708 个翻译不合格**（中文字符 <200 或逐词碎片化，上一会话批量脚本把英文逐词拆行所致），清单在 `tmp/todo_translate2.txt`。此前"889/889 100%"仅为文件存在性统计，不代表翻译质量。
+
+1. **重译 708 个不合格文件**（清单 `tmp/todo_translate2.txt`，批次 `tmp/batch_*.txt`）：
+   - 编排方式待定：subagent 不可用（maxDepth 0）；workflow 方式被用户连续取消，**等待用户指示**
+   - 可选：主会话逐批手写（约 75-90 轮）/ 恢复 workflow / 用户另指定
+2. **荧枝视觉修复（本会话已完成，未提交）**：
+   - `tmp/build_luminous.py` 模板：加 `.fiber-global` 固定全屏纤维画布 + `.veil` 径向暗角（z-index 0/1，内容层 2）
+   - `luminous.css`：补 a/strong/h4 辉光规则（凡彩色必辉光）
+   - 待办：本地重建 + 截图对照 yingzhi 规范核对
+3. **上游完整同步**（用户已确认）：`git remote add upstream https://github.com/zephyrproject-rtos/zephyr.git` → `git rebase upstream/main` → 上游 `doc/` 变更重译
+4. **部署与验收**：提交（KouchaBot + Assisted-by: DeepSeek:qwen3.8-27b）→ push main → Actions 部署 gh-pages → 线上截图验收

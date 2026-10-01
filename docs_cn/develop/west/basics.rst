@@ -3,714 +3,150 @@
 基础
 ######
 
-本
-页
-介绍
-west
-的
-基础
-概念
-并
-提供
-进一步
-阅读
-的
-参考。
+本页介绍 West 的基本概念，并提供进一步阅读的参考。
 
-West
-的
-内置
-命令
-允许
-你
-在
-共同
-的
-:term:`workspace
-<west
-workspace>`
-目录
-下
-与
-:term:`projects
-<west
-project>`
-（Git
-仓库）
-工作。
+West 的内置命令允许你在同一个 :term:`工作区 <west workspace>` 目录下操作 :term:`项目 <west project>`（Git 仓库）。
 
-West
-按
-以下
-方式
-工作：
-``west
-init``
-命令
-创建
-:term:`west
-workspace`，
-并
-clone
-:term:`manifest
-repo
-<west
-manifest
-repository>`，
-而
-``west
-update``
-命令
-最初
-clone
-并
-随后
-更新
-manifest
-中
-列出
-的
-:term:`projects
-<west
-project>`
-在
-workspace
-中。
+West 的工作方式如下：``west init`` 命令创建 :term:`West 工作区 <west workspace>` 并克隆 :term:`清单仓库 <west manifest repository>`；而 ``west update`` 命令负责最初克隆、之后更新工作区中清单里列出的 :term:`项目 <west project>`。
 
-示例
-workspace
+示例工作区
 *****************
 
-如果
-你
-遵循
-了
-:ref:`getting_started`，
-你
-的
-本地
-:term:`west
-workspace`，
-在
-这
-种
-情况
-下
-是
-命名
-为
-:file:`zephyrproject`
-的
-文件夹
-以及
-它
-所有
-的
-子
-文件夹，
-看起来
-像
-这样：
+如果你已按照 :ref:`getting_started`（入门指南）操作，你的本地 :term:`West 工作区 <west workspace>`——在本例中即名为 :file:`zephyrproject` 的文件夹及其所有子文件夹——看起来像这样：
 
 .. code-block:: none
 
-   zephyrproject/
-                 #
-                 west
-                 topdir
-   ├──
-   .west/
-                     #
-                     marks
-                     the
-                     location
-                     of
-                     the
-                     topdir
+   zephyrproject/                 # west topdir
+   ├── .west/                     # marks the location of the topdir
+   │   └── config                 # per-workspace local configuration file
    │
-   └──
-   config
-                 #
-                 per-workspace
-                 local
-                 configuration
-                 file
+   │   # The manifest repository, never modified by west after creation:
+   ├── zephyr/                    # .git/ repo
+   │   ├── west.yml               # manifest file
+   │   └── [... other files ...]
    │
-   │
-   #
-   The
-   manifest
-   repository,
-   never
-   modified
-   by
-   west
-   after
-   creation:
-   ├──
-   zephyr/
-                    #
-                    .git/
-                    repo
-   │
-   ├──
-   west.yml
-               #
-               manifest
-               file
-   │
-   └──
-   [...]
-   other
-   files
-   ...
-   │
-   │
-   #
-   Projects
-   managed
-   by
-   west:
-   ├──
-   modules/
-   │
-   └──
-   lib/
-   │
-   └──
-   zcbor/
-             #
-             .git/
-             project
-   ├──
-   tools/
-   │
-   └──
-   net-tools/
-             #
-             .git/
-             project
-   └──
-   [...]
-   other
-   projects
-   ...
+   │   # Projects managed by west:
+   ├── modules/
+   │   └── lib/
+   │       └── zcbor/             # .git/ project
+   ├── tools/
+   │   └── net-tools/             # .git/ project
+   └── [ ... other projects ...]
 
 .. _west-workspace:
 
-Workspace
-概念
+工作区概念
 ******************
 
-以下
-是
-你
-应该
-理解
-的
-关于
-这
-个
-结构
-的
-基础
-概念。
-额外
-细节
-在
-:ref:`west-workspaces`
-中。
+以下是关于该结构你需要理解的基本概念。更多细节见 :ref:`west-workspaces`。
 
-topdir
-   上面，
-   :file:`zephyrproject`
-   是
-   workspace
-   顶层
-   目录
-   的
-   名称，
-   或
-   *topdir*。
-   （:file:`zephyrproject`
-   名称
-   只
-   是
-   一
-   个
-   示例
-   --
-   它
-   可以
-   是
-   任何
-   东西，
-   如
-   ``z``、
-   ``my-zephyr-workspace``
-   等。）
+topdir（顶层目录）
+  如上例所示，:file:`zephyrproject` 是工作区顶层目录的名称，即 *topdir*（:file:`zephyrproject` 只是一个示例名——它可以是任何名字，如 ``z``、``my-zephyr-workspace`` 等）。
 
-   你
-   通常
-   用
-   :ref:`west
-   init
-   <west-init-basics>`
-   创建
-   topdir
-   和
-   几
-   个
-   其他
-   文件
-   和
-   目录。
+  你通常使用 :ref:`west init <west-init-basics>` 命令创建 topdir 以及若干其他文件和目录。
 
-.west
-目录
-   topdir
-   包含
-   :file:`.west`
-   目录。
-   当
-   west
-   需要
-   找到
-   topdir
-   时，
-   它
-   搜索
-   :file:`.west`，
-   并
-   使用
-   其
-   父
-   目录。
-   搜索
-   从
-   当前
-   工作
-   目录
-   开始
-   （如果
-   那
-   失败
-   则
-   从
-   :envvar:`ZEPHYR_BASE`
-   环境
-   变量
-   中
-   的
-   位置
-   重新
-   开始
-   作为
-   回退）。
+.west 目录
+  topdir 中包含 :file:`.west` 目录。当 West 需要定位 topdir 时，它会查找 :file:`.west` 目录并采用其父目录。查找从当前工作目录开始（若失败，则回退到从 :envvar:`ZEPHYR_BASE` 环境变量指定的位置重新开始查找）。
 
-配置
-文件
-   文件
-   :file:`.west/config`
-   是
-   workspace
-   的
-   :ref:`local
-   configuration
-   file
-   <west-config>`。
+配置文件
+  文件 :file:`.west/config` 就是工作区的 :ref:`本地配置文件 <west-config>`。
 
-manifest
-仓库
-   每个
-   west
-   workspace
-   包含
-   精确
-   一
-   个
-   *manifest
-   仓库*，
-   它
-   是
-   一
-   个
-   包含
-   *manifest
-   文件*
-   的
-   Git
-   仓库。
-   manifest
-   仓库
-   的
-   位置
-   由
-   本地
-   配置
-   文件
-   中
-   的
-   :ref:`manifest.path
-   configuration
-   option
-   <west-config-index>`
-   给出。
+清单仓库
+  每个 West 工作区都恰好包含一个 *清单仓库*，它是一个包含 *清单文件* 的 Git 仓库。清单仓库的位置由本地配置文件中的 :ref:`manifest.path 配置选项 <west-config-index>` 指定。
 
-   对
-   上游
-   Zephyr，
-   :file:`zephyr`
-   是
-   manifest
-   仓库，
-   但
-   你
-   可以
-   配置
-   west
-   使用
-   workspace
-   中
-   任何
-   Git
-   仓库
-   作为
-   manifest
-   仓库。
-   唯一
-   的
-   要求
-   是
-   它
-   包含
-   一
-   个
-   有效
-   的
-   manifest
-   文件。
-   参考
-   :ref:`west-topologies`
-   获取
-   其他
-   选项
-   的
-   信息，
-   以及
-   :ref:`west-manifests`
-   获取
-   manifest
-   文件
-   格式
-   的
-   细节。
+  对于上游 Zephyr，:file:`zephyr` 就是清单仓库；但你可以配置 West 使用工作区中的任何 Git 仓库作为清单仓库，唯一要求是该仓库包含一个有效的清单文件。其他选项见 :ref:`west-topologies`，清单文件格式的细节见 :ref:`west-manifests`。
 
-manifest
-文件
-   manifest
-   文件
-   是
-   一
-   个
-   YAML
-   文件
-   定义
-   *projects*，
-   它们
-   是
-   workspace
-   中
-   由
-   west
-   管理
-   的
-   额外
-   Git
-   仓库。
-   manifest
-   文件
-   默认
-   命名
-   为
-   :file:`west.yml`；
-   这
-   可以
-   用
-   ``manifest.file``
-   本地
-   配置
-   选项
-   覆盖。
+清单文件
+  清单文件是一个 YAML 文件，用于定义 *项目*，即工作区中由 West 管理的其余 Git 仓库。清单文件默认命名为 :file:`west.yml`，可通过 ``manifest.file`` 本地配置选项覆盖。
 
-   你
-   用
-   :ref:`west
-   update
-   <west-update-basics>`
-   命令
-   根据
-   manifest
-   文件
-   的
-   内容
-   更新
-   workspace
-   的
-   projects。
+  使用 :ref:`west update <west-update-basics>` 命令，可以依据清单文件的内容更新工作区中的各个项目。
 
-projects
-   Projects
-   是
-   由
-   west
-   管理
-   的
-   Git
-   仓库。
-   Projects
-   在
-   manifest
-   文件
-   中
-   定义
-   并
-   可以
-   位于
-   workspace
-   内部
-   任何
-   地方。
-   在
-   上面
-   的
-   示例
-   workspace
-   中，
-   ``zcbor``
-   和
-   ``net-tools``
-   是
-   projects。
+项目
+  项目是由 West 管理的 Git 仓库。项目在清单文件中定义，可以位于工作区内的任何位置。在上面的示例工作区中，``zcbor`` 和 ``net-tools`` 就是项目。
 
-   默认
-   情况
-   下，
-   Zephyr
-   :ref:`build
-   system
-   <build_overview>`
-   用
-   west
-   获取
-   workspace
-   中
-   所有
-   projects
-   的
-   位置，
-   因此
-   它们
-   包含
-   的
-   任何
-   代码
-   可以
-   用
-   作
-   :ref:`modules`。
-   注意
-   然而
-   modules
-   和
-   projects
-   :ref:`are
-   conceptually
-   different
-   <modules-vs-projects>`。
+  默认情况下，Zephyr :ref:`构建系统 <build_overview>` 使用 West 获取工作区中所有项目的位置，因此它们包含的任何代码都可以作为 :ref:`modules`（模块）使用。但请注意，模块和项目 :ref:`在概念上并不相同 <modules-vs-projects>`。
 
-extensions
-   west
-   知道
-   的
-   任何
-   仓库
-   （manifest
-   仓库
-   或
-   任何
-   project
-   仓库）
-   可以
-   定义
-   :ref:`west-extensions`。
-   Extensions
-   是
-   额外
-   的
-   west
-   命令
-   你
-   可以
-   在
-   使用
-   那
-   个
-   workspace
-   时
-   运行。
+扩展
+  任何 West 已知的仓库（无论是清单仓库还是任何项目仓库）都可以定义 :ref:`west-extensions`（West 扩展）。扩展就是使用该工作区时可以运行的额外 West 命令。
 
-   zephyr
-   仓库
-   用
-   这
-   个
-   功能
-   提供
-   Zephyr
-   特定
-   的
-   命令
-   如
-   :ref:`west
-   build
-   <west-building>`。
-   将
-   这些
-   定义
-   为
-   extensions
-   保持
-   west
-   核心
-   对
-   任何
-   workspace
-   的
-   Zephyr
-   版本
-   等
-   细节
-   无
-   知。
+  zephyr 仓库利用该特性提供 Zephyr 专属命令，例如 :ref:`west build <west-building>`。将这些命令定义为扩展，使 West 核心无需了解任何工作区所用 Zephyr 版本的具体细节。
 
-ignored
-文件
-   workspace
-   可以
-   包含
-   额外
-   的
-   Git
-   仓库
-   或
-   其他
-   不
-   由
-   west
-   管理
-   的
-   文件
-   和
-   目录。
-   West
-   基本
-   忽略
-   workspace
-   中
-   除
-   :file:`.west`、
-   manifest
-   仓库
-   和
-   manifest
-   文件
-   中
-   指定
-   的
-   projects
-   外
-   的
-   任何
-   东西。
+被忽略的文件
+  工作区中还可以包含 West 不管理的其他 Git 仓库或文件和目录。除了 :file:`.west`、清单仓库以及清单文件中指定的项目之外，West 基本上忽略工作区中的所有内容。
 
-west
-init
-和
-west
-update
+west init 和 west update
 *************************
 
-两
-个
-最
-重要
-的
-workspace
-相关
-命令
-是
-``west
-init``
-和
-``west
-update``。
+两个最重要的工作区相关命令是 ``west init`` 和 ``west update``。
 
 .. _west-init-basics:
 
-``west
-init``
-基础
+``west init`` 基础
 --------------------
 
-这
-个
-命令
-创建
-一
-个
-west
-workspace。
+该命令用于创建 West 工作区。
 
 .. important::
 
-   West
-   不
-   在
-   ``west
-   init``
-   运行
-   后
-   更改
-   你
-   的
-   manifest
-   仓库
-   内容。
-   用
-   普通
-   Git
-   命令
-   拉取
-   新
-   版本
-   等。
+   ``west init`` 运行后，West 不会修改清单仓库的内容。请使用普通的 Git 命令来拉取新版本等。
 
-你
-通常
-运行
-它
-一
-次，
-像
-这样：
+你通常只需运行一次，例如：
 
 .. code-block:: shell
 
-   west
-   init
-   -m
-   https://github.com/zephyrproject-rtos/zephyr
-   --mr
-   v2.5.0
-   zephyrproject
+   west init -m https://github.com/zephyrproject-rtos/zephyr --mr v2.5.0 zephyrproject
+
+该命令将：
+
+#. 创建顶层目录 :file:`zephyrproject`，并在其中创建 :file:`.west` 和 :file:`.west/config`
+#. 从 https://github.com/zephyrproject-rtos/zephyr 克隆清单仓库，放入 :file:`zephyrproject/zephyr`
+#. 在本地 zephyr 克隆中检出 ``v2.5.0`` git 标签
+#. 在 :file:`.west/config` 中设置 ``manifest.path`` 为 ``zephyr``
+#. 设置 ``manifest.file`` 为 ``west.yml``
+
+此时你的工作区已几乎就绪；只需再运行 ``west update`` 将其余项目克隆到工作区中即可。
+
+更多细节见 :ref:`west-init`。
+
+.. _west-update-basics:
+
+``west update`` 基础
+----------------------
+
+该命令确保你的工作区中包含与清单文件中各项目相匹配的 Git 仓库。
+
+.. important::
+
+   每当你检出清单仓库中的不同版本（revision）时，都应运行 ``west update``，以确保工作区包含新版本所期望的项目仓库。
+
+``west update`` 命令通过以下步骤读取清单文件的内容：
+
+#. 找到顶层目录。在上面的 ``west init`` 示例中，即找到 :file:`zephyrproject`。
+#. 加载顶层目录中的 :file:`.west/config`，读取 ``manifest.path``（如 ``zephyr``）和 ``manifest.file``（如 ``west.yml``）选项。
+#. 加载由这些选项指定的清单文件（如 :file:`zephyrproject/zephyr/west.yml`）。
+
+随后，它依据清单文件决定缺失的项目应放置在何处、从哪些 URL 克隆，以及应在本地检出哪些 Git 版本。已存在的项目仓库会就地更新：拉取（fetch）并检出清单文件中对应的 Git 版本。
+
+更多细节见 :ref:`west-update`。
+
+其他内置命令
+***********************
+
+见 :ref:`west-built-in-cmds`。
+
+.. _west-zephyr-extensions:
+
+Zephyr 扩展命令
+*****************
+
+关于 Zephyr 扩展命令的信息，参见以下页面：
+
+- :ref:`west-build-flash-debug`
+- :ref:`west-sign`
+- :ref:`west-zephyr-ext-cmds`
+- :ref:`west-shell-completion`
+
+故障排查
+***************
+
+见 :ref:`west-troubleshooting`。

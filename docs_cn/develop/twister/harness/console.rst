@@ -3,201 +3,79 @@
 Console
 #######
 
-``console``
-harness
-告诉
-Twister
-解析
-测试
-的
-文本
-输出
-用于
-测试
-的
-YAML
-文件
-中
-定义
-的
-regex。
+``console`` 测试框架（harness）指示 Twister 解析测试的文本输出，以匹配测试 YAML 文件中定义的正则表达式。
 
-以下
-选项
-当前
-支持：
+当前支持的选项如下：
 
-type:
-<one_line|multi_line>
-(required)
-    取决于
-    要
-    匹配
-    的
-    regex
-    字符串
+type: <one_line|multi_line>（必需）
+    取决于要匹配的正则表达式字符串
 
-regex:
-<list
-of
-regular
-expressions>
-(required)
-    带
-    正则
-    表达式
-    的
-    字符串
-    与
-    测试
-    的
-    输出
-    匹配
-    以
-    确认
-    测试
-    按
-    预期
-    运行。
+regex: <list of regular expressions>（必需）
+    包含正则表达式的字符串列表，用于与测试输出进行匹配，
+    以确认测试按预期运行。
 
-ordered:
-<True|False>
-(default
-False)
-    按
-    有序
-    或
-    随机
-    方式
-    检查
-    正则
-    表达式
-    字符串
+ordered: <True|False>（默认 False）
+    按顺序或随机方式检查正则表达式字符串
 
-record:
-<recording
-options>
-(optional)
-  regex:
-  <list
-  of
-  regular
-  expressions>
-  (required)
-  带
-  命名
-  子
-  组
-  的
-  正则
-  表达式
-  匹配
-  测试
-  实例
-  输出
-  行
-  中
-  找到
-  的
-  数据
-  字段
-  提供
-  一些
-  自定义
-  数据
-  用于
-  进一步
-  分析。
-  这些
-  records
-  将
-  写入
-  构建
-  目录
-  ``recording.csv``
-  文件
-  以及
-  ``twister.json``
-  中
-  测试
-  套件
-  对象
-  的
-  ``recording``
-  属性。
+record: <recording options>（可选）
+  regex: <list of regular expressions>（必需）
+    带命名子组的正则表达式，用于匹配测试实例输出行中找到的数据字段，
+    这些数据字段提供某些自定义数据以供进一步分析。
+    这些记录将写入构建目录的 ``recording.csv`` 文件，
+    以及 ``twister.json`` 中测试套件对象的 ``recording`` 属性。
 
-  给出
-  多
-  个
-  正则
-  表达式
-  时，
-  每个
-  都
-  将
-  应用
-  到
-  每个
-  输出
-  行
-  产生
-  要么
-  从
-  同一
-  输出
-  行
-  的
-  多
-  个
-  不同
-  records，
-  或
-  从
-  不同
-  行
-  的
-  不同
-  records，
-  或
-  从
-  不同
-  行
-  的
-  类似
-  records。
+    给定多个正则表达式时，每个表达式都将应用到每个输出行，
+    产生来自同一输出行的若干不同记录，或来自不同行的不同记录，
+    或来自不同行的相似记录。
 
-  .CSV
-  文件
-  将
-  有
-  与
-  所有
-  records
-  中
-  检测
-  到
-  的
-  字段
-  同样
-  多
-  的
-  列；
-  缺失
-  值
-  用
-  空
-  字符串
-  填充。
+    .CSV 文件的列数与所有记录中检测到的字段数相同；缺失值以空字符串填充。
 
-  例如，
-  要
-  提取
-  三
-  个
-  数据
-  字段
-  ``metric``、
-  ``cycles``、
-  ``nanoseconds``：
+    例如，要提取三个数据字段 ``metric``、``cycles``、``nanoseconds``：
 
-  .. code-block:: yaml
+    .. code-block:: yaml
+
+      record:
+        regex:
+          - "(?P<metric>.*):(?P<cycles>.*) cycles, (?P<nanoseconds>.*) ns"
+
+  merge: <True|False>（默认 False）
+    允许在测试实例中仅保留一条记录，包含由正则表达式提取的所有数据字段。
+    同名字段将放入按其在记录中出现顺序排列的列表中。
+    此类多值字段的值数量可能因正则表达式规则和测试输出而异。
+
+  as_json: <list of regex subgroup names>（可选）
+    由正则表达式提取到命名子组的数据字段，
+    将被额外解析为 JSON 编码字符串，
+    并写入 ``twister.json`` 作为嵌套的 ``recording`` 对象属性。
+    对应的 ``recording.csv`` 列将原样包含 JSON 字符串。
+
+    使用此选项，测试日志可以传达从测试镜像传递的分层数据结构，
+    以供汇总结果、跟踪、统计等进一步分析。
+
+    例如，此配置：
+
+    .. code-block:: yaml
+
+      record:
+        regex: "RECORD:(?P<type>.*):DATA:(?P<metrics>.*)"
+        as_json: [metrics]
+
+    匹配到测试日志字符串：
+
+    .. code-block:: none
+
+      RECORD:jitter_drift:DATA:{"rollovers":0, "mean_us":1000.0}
+
+    将在 ``twister.json`` 中报告为：
+
+    .. code-block:: json
+
+      "recording":[
+          {
+                "type":"jitter_drift",
+                "metrics":{
+                    "rollovers":0,
+                    "mean_us":1000.0
+                }
+          }
+      ]

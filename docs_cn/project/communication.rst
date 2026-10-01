@@ -1,104 +1,20 @@
 .. _communication-and-collaboration:
 
-Communication
-and
-Collaboration
+沟通与协作
 ###############################
 
-The
-`Zephyr
-Discord
-Server
-<https://chat.zephyrproject.org>`_
-is
-the
-primary
-chat
-forum
-used
-by
-Zephyr
-developers、
-contributors、
-and
-users。
+`Zephyr Discord 服务器 <https://chat.zephyrproject.org>`_
+是 Zephyr 开发者、贡献者和用户使用的
+主要聊天论坛。
 
-The
-`Zephyr
-project
-mailing
-lists
+`Zephyr 项目邮件列表
 <https://lists.zephyrproject.org/g/main/subgroups>`_
-are
-used
-as
-an
-additional
-communication
-tool
-by
-project
-members、
-contributors、
-and
-the
-community。
-There
-are
-specialized
-mailing
-lists
-for
-specific
-interests。
-Several
-lists
-are
-public
-and
-open。
-Mailing
-lists
-are
-always
-available
-for
-use
-in
-situations
-where
-Discord
-is
-unavailable
-or
-an
-unsuitable
-forum。
+由项目成员、贡献者和社区用作额外的
+沟通工具。有针对特定兴趣的专业邮件列表。
+若干列表是公开的且开放的。在 Discord
+不可用或不适合作为论坛的情况下，
+邮件列表始终可用。
 
-In
-general
-bug
-reports
-and
-other
-issues
-should
-be
-reported
-as
-`GitHub
-Issues
-<https://github.com/zephyrproject-rtos/zephyr/issues>`_
-and
-not
-broadcasted
-to
-the
-mailing
-list。
-The
-same
-applies
-to
-code
-reviews。
+一般来说，错误报告和其他问题应报告为
+`GitHub Issues <https://github.com/zephyrproject-rtos/zephyr/issues>`_，
+而不是广播到邮件列表。代码审查同理。

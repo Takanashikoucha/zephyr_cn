@@ -1,171 +1,63 @@
 .. _comparator_api:
 
-Comparator
+比较器
 ##########
 
-Overview
+概述
 ********
 
-Analog
-comparator
-比较
-连接
-到
-其
-negative
-和
-positive
-inputs
-的
-两
-个
-analog
-signals
-的
-voltages。
-如果
-positive
-input
-的
-voltage
-高
-于
-negative
-input，
-comparator
-的
-output
-将
-是
-high
-否则
-将
-是
-low。
+模拟比较器比较连接到其负输入与正输入的两个模拟信号的电压。如果正输入的电压高于负输入，比较器的输出为高；否则为低。
 
-Comparators
-通常
-可以
-设置
-一
-个
-在
-output
-变化
-时
-触发
-的
-trigger。
-这
-个
-trigger
-可以
-调用
-一
-个
-callback
-或
-其
-status
-可以
-被
-polled。
+比较器通常可以设置一个在输出变化时触发的触发器。该触发器可以调用回调，也可以轮询其状态。
 
-相关
-配置
-选项：
+相关配置选项：
 
 * :kconfig:option:`CONFIG_COMPARATOR`
 
-Configuration
+配置
 *************
 
-Embedded
-comparators
-通常
-可以
-在
-runtime
-配置。
-当
-启用
-时
-必须
-用
-devicetree
-提供
-初始
-configuration。
-在
-runtime，
-comparators
-可以
-用
-device
-driver
-特定
-APIs
-更新
-其
-configuration。
-Configuration
-在
-comparator
-被
-resumed
-时
-被
-应用。
+嵌入式比较器通常可以在运行时配置。启用时，必须通过设备树提供初始配置。在运行时，比较器可以使用设备驱动特定的 API 更新其配置。配置将在比较器恢复（resume）时生效。
 
-Power
-management
+电源管理
 ****************
 
-Comparators
-用
-power
-management
-启用。
-当
-resumed
-时
-comparator
-将
-主动
-比较
-其
-inputs，
-产生
-output
-并
-检测
-edges。
-当
-suspended
-时
-comparator
-将
-是
-inactive
-的。
+比较器通过电源管理来启用。恢复（resume）时，比较器会主动比较其输入，产生输出并检测边沿；挂起（suspend）时，比较器处于非活动状态。
 
-Comparator
-shell
+比较器 shell
 ****************
 
-Comparator
-shell
-为
-:ref:`shell
-<shell_api>`
-模块
-提供
-一
-个
-带
-一
-组
-subcommands
-的
-``comp``
-命令。
+比较器 shell 为 :ref:`shell <shell_api>` 模块提供带有子命令集的 ``comp`` 命令。
+
+``comp`` shell 命令提供以下子命令：
+
+* ``get_output`` 参见 :c:func:`comparator_get_output`
+* ``set_trigger`` 参见 :c:func:`comparator_set_trigger`
+* ``await_trigger`` 用以下流程等待触发：
+
+  * 用 :c:func:`comparator_set_trigger_callback` 设置触发回调
+  * 等待回调，或在默认或可选提供的超时后超时
+  * 用 :c:func:`comparator_set_trigger_callback` 清除触发回调
+* ``trigger_is_pending`` 参见 :c:func:`comparator_trigger_is_pending`
+
+相关配置选项：
+
+* :kconfig:option:`CONFIG_SHELL`
+* :kconfig:option:`CONFIG_COMPARATOR_SHELL`
+* :kconfig:option:`CONFIG_COMPARATOR_SHELL_AWAIT_TRIGGER_DEFAULT_TIMEOUT`
+* :kconfig:option:`CONFIG_COMPARATOR_SHELL_AWAIT_TRIGGER_MAX_TIMEOUT`
+
+.. note::
+   电源管理 shell 可以可选地与比较器 shell 一起启用。
+
+   相关配置选项：
+
+   * :kconfig:option:`CONFIG_PM_DEVICE`
+   * :kconfig:option:`CONFIG_PM_DEVICE_SHELL`
+
+API 参考
+*************
+
+.. doxygengroup:: comparator_interface
+
+.. doxygengroup:: comparator_fake

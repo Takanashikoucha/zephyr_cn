@@ -2,295 +2,289 @@
 
 .. _zephyr_1.12:
 
-Zephyr
-Kernel
-1.12.0
+Zephyr Kernel 1.12.0
 ####################
 
-我们
-pleased
-to
-announce
-Zephyr
-kernel
-version
-1.12.0
-的
-release。
+我们很高兴宣布 Zephyr 内核版本 1.12.0 的发布。
 
-这
-个
-release
-的
-Major
-enhancements
-包括：
+本次发布的主要增强包括：
 
--
-Asymmetric
-multiprocessing
-（AMP）
-通过
-OpenAMP
-的
-integration
--
-Persistent
-storage
-support
-for
-Bluetooth
-Low
-Energy
-包括
-Mesh
--
-802.1Q
--
-Virtual
-Local
-Area
-Network
-（VLAN）
-traffic
-在
-Ethernet
-network
-上
--
-Support
-multiple
-concurrent
-的
-filesystem
-devices、
-partitions、
-和
-FS
-types
--
-Ethernet
-network
-management
-interface
--
-Networking
-traffic
-prioritization
-在
-per
-connection
-的
-basis
-上
--
-Support
-for
-Ethernet
-statistical
-counters
--
-Support
-for
-TAP
-net
-device
-在
-native
-POSIX
-port
-上
--
-Command
-line
-的
-Zephyr
-meta
-tool
-"west"
--
-SPI
-slave
-support
--
-Runtime
-的
-non
-volatile
-的
-configuration
-data
-storage
-system
-（settings）
+- 通过 OpenAMP 集成实现非对称多处理（AMP）
+- 包括 Mesh 在内的 Bluetooth Low Energy 持久存储支持
+- 以太网网络上的 802.1Q - 虚拟局域网（VLAN）流量
+- 支持多个并发文件系统设备、分区和 FS 类型
+- 以太网网络管理接口
+- 按连接基础的网络流量优先级
+- 支持以太网统计计数器
+- 支持原生 POSIX 端口上的 TAP 网络设备
+- 命令行 Zephyr 元工具 "west"
+- SPI 从站支持
+- 运行时非易失性配置数据存储系统（settings）
 
 
-以下
-sections
-provide
-detailed
-的
-lists
-of
-changes
-by
-component。
+以下各节提供按组件分类的更改详细列表。
 
-Security
-Vulnerability
-Related
+Security Vulnerability Related
 ******************************
 
-*
-Suitably
-sized
-的
-k_malloc()
-request
-可以
-result
-在
-比
-requested
-的
-buffer
-更
-small
-的
-buffer。
-Use
-该
-buffer
-可以
-result
-在
-writes
-到
-unallocated
-的
-memory。
-Proper
-的
-overflow
-checks
-被
-added
-用于
-fix
-这
-个
-issue
-在
-k_malloc
-和
-k_calloc
-中。
+* 适当大小的 k_malloc() 请求可能导致小于请求的缓冲。
+  使用该缓冲可能导致写入未分配内存。
+  已添加适当的溢出检查以修复 k_malloc 和 k_calloc 中的此问题
+  issue in k_malloc and k_calloc.
 
-   *
-   kernel:
-   mempool:
-   Check
-   for
-   overflow
-   in
-   k_malloc()
-   *
-   kernel:
-   mempool:
-   Always
-   check
-   for
-   overflow
-   in
-   k_calloc()
-   *
-   tests:
-   mempool:
-   Add
-   overflow
-   checks
+  * kernel：mempool：在 k_malloc() 中检查溢出
+  * kernel：mempool：始终在 k_calloc() 中检查溢出
+  * tests：mempool：添加溢出检查
 
 Kernel
 ******
 
+* 添加 k_thread_foreach API
+* kernel/sched：修复抢占逻辑
+* kernel/sched：修复 SMP 调度
+* kernel/sched：不抢占协作线程
+* kernel：调度器重写
+* kernel：修复粗糙的等待队列 API
+* kernel/mempool：处理瞬态故障条件
+* kernel：处理早期 entropy 问题
+* kernel：最早截止期优先调度策略
+* kernel：添加 "meta IRQ" 线程优先级
+* kernel：引入初始栈随机化
+* k_poll：暴露给用户模式
+* k_queue：允许通过分配器进行用户模式访问
+* mempool：添加 malloc 语义的 API
+* userspace：添加动态内核对象支持
 
-.. note::
+Architectures
+*************
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-* Old bt_storage API removed from the codebase
-* Rewrote the HCI SPI driver to comply with the new API
-* Added BLE support for the standard entropy driver via an ISR-friendly call
-* Multiple BLE Mesh bugfixes and improvements
-* Added option to use the identity address for advertising even when using
+* arch：arc：重构 arc 栈检查支持
+* arch：arc：添加 STACK_SENTINEL 支持
+* arch：arc：优化 _SysFatalErrorHandler
+* arch：arc：irq_load 中的 bug 修复
+* arch：arc：异常处理中的 bug 修复和优化
+* arch：arm：修复零中断延迟优先级级别
+* arch：arm：重构默认 _FaultDump 以提供致命错误代码
+* arch：arm：为测试目标（Non-Secure）定义并实现 API
+* arch：arm：线程内置栈保护实现
+* arch：arm：lpc：为 lpc54114 soc 添加 Cortex-M0+ 支持
+* arch：arm：Cortex-M23 的安全故障处理
+* arch：arm：Cortex-M33A 的 SecureFault 处理
+* arch：arm：更改 __swap 处理方法
+* arm_mpu：减少各种 soc 的启动 MPU 区域
+* arm：userspace：修复初始用户 sp 位置
+* arm：userspace：重新设计系统调用参数
+* arm：syscalls：修复一些寄存器问题
+* dts：nios2-qemu：添加设备树支持
+* dts：nios2f：添加设备树支持
+* dts：x86：从 dts 而非 Kconfig 派生 RAM 和 ROM 大小
+* dts：xtensa：为 xtensa 添加设备树支持
+* newlib：修复 MPU 设备的堆用户模式访问
+* nxp_imx/mcimx7_m4：添加 i.MX7 Cortex M4 核心支持
+* x86：minnowboard：启用用户空间模式
+* arch：x86：在致命错误时展开栈
+* xtensa：为 Xtensa 提供 XCC 编译器支持
+
+Boards
+******
+
+* 添加以下 Arm 开发板支持：
+
+  * 96b_argonkey
+  * adafruit_feather_m0_basic_proto
+  * colibri_imx7d_m4
+  * dragino_lsn50
+  * lpcxpresso54114_m0
+  * nrf51_ble400
+  * nrf52_pca20020
+  * nucleo_f070rb
+  * nucleo_f446re
+  * nucleo_l053r8
+  * nucleo_l073rzA
+  * olimex_stm32_h407
+  * stm32f0_disco
+
+* 添加以下 RISC-V 开发板支持：
+
+  * hifive1
+
+* 添加以下 Xtensa 开发板支持：
+
+  * intel_s1000_crb
+
+* arc：为所有 ARC SoC 添加设备树支持
+* arm：将 lpcxpresso54114 重命名为 lpcxpresso54114_m4
+* nios2：为 qemu_nios2 和 altera_max10 添加设备树支持
+* 继续为设备驱动添加 dts 支持（gpio、spi、i2c、sensors、usb）
+
+Drivers and Sensors
+*******************
+
+* can：为 STM32 SoC 添加 CAN 驱动支持
+* display：添加 ILI9340 LCD 显示驱动
+* dma：为 Nios-II MSGDMA 核心添加 dma 驱动
+* dma：引入 Intel CAVS DMA
+* ethernet：为原生 posix arch 添加以太网驱动
+* gpio：添加 i.MX GPIO 支持
+* gpio：添加 SX1509B 驱动
+* gpio：为 SAM 系列添加 GPIO
+* gpio：为 stm32l0x 添加 GPIO 驱动
+* i2s：引入 CAVS I2S
+* ieee802154：为 KW41Z 驱动添加 OpenThread 修改
+* interrupts：引入 CAVS 中断逻辑
+* interrupts：引入 Designware 中断控制器
+* ipm：为 LPC SoC 添加 mcux ipm 驱动
+* led：为 TI LP3943 添加新的公共 API 和驱动支持
+* pinmux：为 stm32l0x 添加 pinmux 驱动
+* rtc：为 Kinetis SoC 添加 mcux RTC 驱动
+* sensor：为 lsm6dsl 驱动添加 sensorhub 支持
+* sensor：为 lsm6dsl 添加触发器支持
+* serial：添加 i.MX UART 接口支持
+* spi：为 nrfx SPIS 和 SPIM 驱动添加 shim
+* spi：将 mcux shim 驱动更新到新 SPI API
+* spi：将传感器和无线电驱动更新到新 SPI API
+* usb：为 Kinetis USBFSOTG 控制器添加 usb 设备驱动
+* usb：为 stml072/73、stm32f070/72 添加 usb 支持
+* usb：在 intel_s1000 上启用 usb2.0
+* usb：添加 nRF52840 USB 设备控制器驱动
+* watchdog：为 Kinetis SoC 添加 mcux 看门狗驱动
+* watchdog：为 NRF SoC 添加 nrfx 看门狗驱动
+* wifi：添加 winc1500 WiFi 驱动
+
+Networking
+**********
+
+* 最小服务器端 websocket 支持
+* 为 syslog 添加网络支持
+* 减少 net_pkt RAM 使用
+* TCP 代码重构。TCP 代码现在位于 tcp.c 中的一个位置
+* 在 recvfrom() socket 调用中支持 MSG_DONTWAIT 和 MSG_PEEK
+* 在 sendto() socket 调用中支持 MSG_DONTWAIT
+* 添加 freeaddrinfo() API 支持
+* 允许 getaddrinfo() API 中的空服务
+* 为 net_context 添加 PRIORITY 支持。其工作方式与
+  BSD sockets API 中的 SO_PRIORITY 相同
+* 为 Rx 和 Tx 路径添加网络流量分类支持。
+  这允许对传入或传出网络流量进行优先级排序。
+  Rx 和 Tx 均可有最多 8 个网络队列
+* 为 net-shell 添加网络接口 up/down 命令
+* 为 native_posix 开发板创建以太网驱动。
+  在为 native_posix 开发板编译时，如果网络处于活动状态，驱动会自动启用
+* 支持网络数据包校验和计算卸载。
+  这可用于基于以太网的开发板
+* 添加以太网虚拟局域网（VLAN）支持。
+  以下以太网驱动支持 VLAN：frdm_k64f、sam_e70_explained、native_posix 和 qemu
+* 允许按网络接口收集网络统计
+* 为以太网子系统添加网络管理支持
+* 为以太网网络驱动添加网络能力支持。
+  这用于管理目的
+* 允许收集以太网统计。
+  目前仅 native_posix 以太网驱动支持此功能
+* 为 KW41Z 驱动添加 OpenThread 支持
+* 添加初始 WiFi 管理 API 定义
+* 添加用于控制 WiFi 设备的 shell 模块
+* 为 WiFi 卸载设备添加专用 net mgmt 钩子
+* 在发送 IPv4 数据包时使用正确的 IPv4 源地址
+* 为 IEEE 802.15.4 驱动 API 添加能量检测扫描支持
+* 添加过滤源短 IEEE 802.15.4 地址的支持
+* 添加 RPL 边界路由器示例应用
+* LWM2M 代码重构
+* LWM2M OPTIONAL 资源修复
+* LWM2M 源端口修复
+* LWM2M 资源使用增强
+* 修复网络管理事件顺序
+* 修复 ENC28J70 以太网驱动
+* CoAP 示例应用修复
+* 网络超时修复
+* ICMPv6 错误检查修复
+* Net-app API 端口号修复
+* WPAN USB 驱动和示例应用修复
+* BSD socket 示例应用修复
+* 在具有多个网络接口时修复 net-shell 中的 IPv4 echo-request（ping）
+  interfaces.
+* 修复某些配置中的 IPv6 编译错误
+
+Bluetooth
+*********
+
+* 基于 settings 的 BLE（包括 CCC）和 Mesh 持久存储功能
+  Mesh
+* 避免闪存磨损的 Mesh 特定优化
+* 添加从应用设置身份地址的新 API
+* 从代码库移除旧 bt_storage API
+* 重写 HCI SPI 驱动以符合新 API
+* 通过 ISR 友好调用为 BLE 添加标准 entropy 驱动支持
+* 多个 BLE Mesh bug 修复和改进
+* 添加选项，即使使用隐私也使用身份地址进行广播
   privacy
-* Added support for L2CAP dynamically allocated PSM values
-* GATT CCC handling fixes
-* GATT attribute declaration macros reworked for clarity
-* Fixed handlng of connection cancellation in the controller
-* Fixed a potential assertion failure in the controller related to white list
+* 添加对 L2CAP 动态分配 PSM 值的支持
+* GATT CCC 处理修复
+* 为清晰度重新设计 GATT 属性声明宏
+* 修复控制器中的连接取消处理
+* 修复控制器中与白名单处理相关的潜在断言失败
   handling
 
 Build and Infrastructure
 ************************
 
-* build: use git version and hash for boot banner
-* kconfig: Drop support for CONFIG_TOOLCHAIN_VARIANT
-* kconfig: Remove the C Kconfig implementation
-* scripts: kconfig: Add a Python menuconfig implementation
-* scripts: west: introduce common runner configuration
-* scripts: debug, debugserver and flash scripts for intel_s1000
-* xtensa: provide XCC compiler support for Xtensa
+* build：使用 git 版本和哈希用于启动横幅
+* kconfig：放弃 CONFIG_TOOLCHAIN_VARIANT 支持
+* kconfig：移除 C Kconfig 实现
+* scripts：kconfig：添加 Python menuconfig 实现
+* scripts：west：引入通用 runner 配置
+* scripts：intel_s1000 的 debug、debugserver 和 flash 脚本
+* xtensa：为 Xtensa 提供 XCC 编译器支持
 
 Libraries / Subsystems
 ***********************
 
-* subsys/disk: Added support for multiple disk interfaces
-* subsys/fs: Added support for multiple instances of filesystem
-* subsys/fs: Added Virtual File system Switch (VFS) support
-* lib/posix: Added POSIX Mutex support
-* lib/posix: Added POSIX semaphore support
-* crypto: Updated mbedTLS to 2.9.0
-* Imported libmetal and OpenAMP for IPC
+* subsys/disk：添加多磁盘接口支持
+* subsys/fs：添加多文件系统实例支持
+* subsys/fs：添加虚拟文件系统切换（VFS）支持
+* lib/posix：添加 POSIX Mutex 支持
+* lib/posix：添加 POSIX 信号量支持
+* crypto：将 mbedTLS 更新到 2.9.0
+* 导入 libmetal 和 OpenAMP 用于 IPC
 
 HALs
 ****
 
-* altera: Add modular Scatter-Gather DMA HAL driver
-* atmel: Added winc1500 driver from Atmel
-* cmsis: Update ARM CMSIS headers to version 5.3.0
-* nordic: Import SVD files for nRF5 SoCs
-* nordic: Update nrfx to version 1.0.0
-* nxp: imported i.MX7 FreeRTOS HAL
-* nxp: Added dual core startup code for lpc54114 based on mcux 2.3.0
-* stm32l0x: Add HAL for the STM32L0x series
+* altera：添加模块化 Scatter-Gather DMA HAL 驱动
+* atmel：添加 Atmel 的 winc1500 驱动
+* cmsis：将 ARM CMSIS 头文件更新到版本 5.3.0
+* nordic：为 nRF5 SoC 导入 SVD 文件
+* nordic：将 nrfx 更新到版本 1.0.0
+* nxp：导入 i.MX7 FreeRTOS HAL
+* nxp：为基于 mcux 2.3.0 的 lpc54114 添加双核启动代码
+* stm32l0x：为 STM32L0x 系列添加 HAL
 
 Documentation
 *************
 
-* Added description for kernel test cases through extensive doxygen comments
-* Discovered some API docs were missing, and fixed
-* Documentation added covering system calls and userspace, kernel, and
-  threading APIs, POSIX compatibility, VLANs, network traffic
-  classification, and the sanitycheck script used by CI.
-* Documented writing guidelines and local doc generation process
-* Improved Sphinx search results output (removed markup)
-* Improved configuration options auto-generated documentation
-* Significantly reduced local doc regeneration time
+* 通过大量 doxygen 注释为内核测试用例添加描述
+* 发现一些 API 文档缺失，已修复
+* 添加涵盖系统调用和用户空间、内核和
+  线程 API、POSIX 兼容性、VLAN、网络流量
+  分类以及 CI 使用的 sanitycheck 脚本的文档
+* 记录编写指南和本地文档生成过程
+* 改进 Sphinx 搜索结果输出（移除标记）
+* 改进配置选项自动生成文档
+* 显著减少本地文档重新生成时间
 
 Tests and Samples
 *****************
-* Added test for POSIX mutex
-* Added Apple iBeacon sample application
-* Enhanced threads test suite
-* Added tests for memory domain
+* 添加 POSIX mutex 测试
+* 添加 Apple iBeacon 示例应用
+* 增强线程测试套件
+* 添加内存域测试
 
 Issue Related Items
 *******************
 
-These GitHub issues were closed since the previous 1.11.0 tagged release:
+自上次 1.11.0 标记发布以来关闭了以下 GitHub issue：
 
-.. comment  List derived from GitHub Issue query: ...
-   * :github:`issuenumber` - issue title
+.. comment  列表派生自 GitHub Issue 查询：...
+   * :github:`issuenumber` - issue 标题
 
 * :github:`1420` - LXR for Zephyr
 * :github:`1582` - USB: Add support for MS OS Descriptors

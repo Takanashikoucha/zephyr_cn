@@ -3,34 +3,8 @@
 Ctest
 #####
 
-ctest_args:
-<list
-of
-arguments>
-(default
-empty)
-    指定
-    要
-    传递
-    给
-    ``ctest``
-    的
-    额外
-    参数
-    列表
-    例如：
-    ``ctest_args:
-    ['--repeat
-    until-pass:5']``。
-    注意
-    ``--ctest-args``
-    可以
-    传递
-    多
-    次
-    向
-    ctest
-    传递
-    多
-    个
-    参数。
+ctest_args: <list of arguments>（默认空）
+    指定传递给 ``ctest`` 的额外参数列表，例如：
+    ``ctest_args: ['--repeat until-pass:5']``。
+    注意 ``--ctest-args`` 可多次传递，
+    以向 ctest 传递多个参数。

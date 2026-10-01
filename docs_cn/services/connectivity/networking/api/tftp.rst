@@ -3,40 +3,11 @@
 TFTP
 ####
 
-Zephyr
-提供
-一
-个
-简单
-的
-TFTP
-client
-library
-它
-可
-用
-:kconfig:option:`CONFIG_TFTP_LIB`
-Kconfig
-option
-enable。
+Zephyr 提供简单 TFTP client library（可用 :kconfig:option:`CONFIG_TFTP_LIB` Kconfig option 启用。
 
-参考
-:zephyr:code-sample:`TFTP
-client
-sample
-application
-<tftp-client>`
-获取
-关于
-library
-usage
-的
-更多
-information。
+library 使用更多信息参见 :zephyr:code-sample:`TFTP client sample application <tftp-client>`。
 
-API
-Reference
+API Reference
 *************
 
-.. doxygengroup::
-   tftp_client
+.. doxygengroup:: tftp_client

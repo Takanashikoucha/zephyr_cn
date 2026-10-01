@@ -1,322 +1,192 @@
 .. _safety_overview:
 
-Zephyr
-Safety
-Overview
+Zephyr 安全概述
 ########################
 
-Introduction
+简介
 ************
 
-This
-document
-is
-the
-safety
-documentation
-providing
-an
-overview
-over
-the
-safety
-relevant
-activities
-and
-what
-the
-Zephyr
-Project
-and
-the
-Zephyr
-Safety
-Working
-Group
-/
-Committee
-try
-to
-achieve。
+本文档是安全文档，概述了与安全相关的活动，以及 Zephyr 项目和 Zephyr 安全工作组/委员会试图达成的目标。
 
-This
-overview
-is
-provided
-for
-people
-who
-are
-interested
-in
-the
-functional
-safety
-development
-part
-of
-the
-Zephyr
-RTOS
-and
-project
-members
-who
-want
-to
-contribute
-to
-the
-safety
-aspects
-of
-the
-project。
+本概述面向对 Zephyr RTOS 功能安全开发部分感兴趣的人员，以及希望为项目安全方面做出贡献的项目成员。
 
-Overview
+概述
 ********
 
-In
-this
-section
-we
-give
-the
-reader
-an
-overview
-of
-what
-the
-general
-goal
-of
-the
-safety
-certification
-is、
-what
-standard
-we
-aim
-to
-achieve
-and
-what
-quality
-standards
-and
-processes
-need
-to
-be
-implemented
-to
-reach
-such
-a
-safety
-certification。
+在本节中，我们向读者概述安全认证的总体目标是什么、我们旨在达成什么标准，以及需要实施哪些质量标准和流程才能达到这样的安全认证。
 
-Safety
-Document
-update
+安全文档更新
 **********************
 
-This
-document
-is
-a
-living
-document
-and
-may
-evolve
-over
-time
-as
-new
-requirements、
-guidelines、
-or
-processes
-are
-introduced。
+本文档是一份活文档，随着新需求、指南或流程的引入，可能会随时间演进。
 
-#.
-Changes
-will
-be
-submitted
-from
-the
-interested
-party(ies)
-via
-pull
-requests
-to
-the
-Zephyr
-documentation
-repository。
+#. 变更将由相关方通过拉取请求（pull request）提交到 Zephyr 文档仓库。
 
-#.
-The
-Zephyr
-Safety
-Committee
-will
-review
-these
-changes
-and
-provide
-feedback
-or
-acceptance
-of
-the
-changes。
+#. Zephyr 安全委员会将审查这些变更，并提供反馈或接受这些变更。
 
-#.
-Once
-accepted
-these
-changes
-will
-become
-part
-of
-the
-document。
+#. 一旦被接受，这些变更将成为文档的一部分。
 
 .. _general_safety_scope:
 
-General
-safety
-scope
+总体安全范围
 ********************
 
+安全委员会的总体范围是为 `IEC 61508 <https://en.wikipedia.org/wiki/IEC_61508>`__ 标准以及有限源码范围的安全完整性等级（SIL）3 / 系统性能力（SC）3 达成认证（见认证范围待定）。由于代码库是预先存在的，我们采用 IEC 61508 标准定义的路径 3s/1s 方法。
+
+路径 3s
+   *评估不合规开发。这基本上就是针对现有源码的路径 1s。*
+
+路径 1s
+   *合规开发。符合本标准中关于避免和控制软件系统性故障的要求。*
+
+IEC 61508 标准概述
+================================
+
+IEC 61508 标准是电气、电子和可编程电子安全相关系统的功能安全领域广受认可的国际标准。以下是该标准一些关键安全方面的概述：
+
+#. **危害与风险分析**：IEC 61508 标准要求对与系统相关的潜在危害和风险进行彻底分析，以确定将风险降低到可接受水平所需的安全措施级别。
+
+#. **安全完整性等级（SIL）**：该标准引入了安全完整性等级（SIL）的概念，用于对每个安全功能所需的风险降低级别进行分类。SIL 越高，所需的风险降低级别就越高。
+
+#. **系统设计**：IEC 61508 标准要求对系统设计采取系统化的方法，包括识别安全需求、制定安全计划，以及使用适当的安全技术和措施，以确保系统达到所需的 SIL。
+
+#. **验证与确认**：该标准要求对安全相关系统进行严格的测试和评估，以确保其满足指定的 SIL 和其他安全要求。这包括系统设计的验证、系统功能的确认，以及系统的持续监控和维护。
+
+#. **文档与可追溯性**：IEC 61508 标准要求全面的文档流程，以确保安全相关系统的所有方面都得到充分记录，并且从安全需求到最终系统设计和实现具有完整的可追溯性。
+
+总体而言，IEC 61508 标准为安全相关系统的设计、开发和实施提供了一个框架，旨在降低事故风险并提升整体安全性。通过遵循该标准，组织可以确保其安全相关系统按照最高的安全完整性级别进行设计和实施。
+
+为什么选择 IEC 61508？
+==============
+选择 IEC 61508 标准是因为它作为基础性功能安全标准，适用于各个行业领域。它提供了一个稳健的框架，可作为不同行业特定标准的基础。这使得 IEC 61508 对 Zephyr 特别相关，因为该操作系统的通用性使其能够有效地应用于广泛的行业领域。
+
+下图说明了 IEC 61508 标准与其他相关标准之间的关系：
+
+.. figure:: images/IEC-61508-basis.svg
+   :align: center
+   :alt: IEC 61508 与其他标准的关系
+   :figclass: align-center
+
+   IEC 61508 与其他标准的关系
+
+质量
+*******
+
+质量是整个行业对软件的强制性期望。项目的代码库必须达成各种软件质量目标，才能从安全角度被视为可审计的代码库，并可用于认证目的。但软件质量并非由功能安全标准带来的额外要求。功能安全将质量视为既有前提条件，因此无论功能安全目标如何，任何项目都应追求"质量受控"状态。以下列表描述了为达成可审计代码库需要达到的质量目标：
+
+1. 基本软件质量标准
+
+   a. :ref:`coding_guidelines`（包括：静态代码分析、编码风格等）
+   b. :ref:`safety_requirements` 和需求跟踪
+   c. 测试覆盖率
+
+2. 软件架构设计原则
+
+   a. 分层架构模型
+   b. 封装的组件
+   c. 封装的单一功能（如果在安全方面不适用且不可管理）
+
+基本软件质量标准 - 安全视角
+==============================================
+
+在本章中，安全委员会描述了为什么需要将上述列出的质量目标作为前提条件，以及从安全角度需要做什么才能达成可审计的代码库。总体而言，可以说所有这些与安全相关的质量措施都用于在代码开发过程中最小化错误率。
+
+编码指南
+-----------------
+
+编码指南是工业软件产品共同理解和统一规则集及开发风格的基础。对于安全而言，编码指南至关重要，除统一规则集外还有另一重目的。还必须证明开发者遵循统一的开发风格，以防止在软件开发过程中出现**系统性错误**，从而最小化完整软件系统的整体**错误率**。
+
+此外，**IEC 61508 标准**也设定了使用编码标准/指南以降低错误可能性的前提条件和推荐。
+
+项目 TSC 与项目安全委员会同意采用分阶段、渐进的方法来遵循一组编码规则（即编码指南），以提升代码库的质量和一致性。以下是商定的阶段：
+
+阶段 I（已完成）
+  编码指南规则可供遵循和引用，但尚未强制执行。规则尚未在 CI 中强制执行，评审者/批准者不能因违规而阻止拉取请求。
+
+阶段 II
+  评审者/批准者可以因代码库中拉取请求违反编码指南而阻止拉取请求。
+
+  开始在代码库的有限范围内强制执行。最初，这将是安全认证范围。对于可轻松应用于整个代码库的规则，不应将合规性限制在初始范围内。此步骤需要工具、CI 配置和强制执行策略。
+
+阶段 III
+  重新审视编码指南规则，并基于先前阶段的经验，对选定的规则进行改进/迭代。
+
+阶段 IV
+   将强制执行扩展到更广泛的代码库。可对代码库的某些领域给予例外，但需提供正当理由。例外需经 TSC 批准。
 
 .. note::
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+    编码指南规则可随时通过提交 GH issue/RFC 删除/更改。
+
+.. important::
+
+    **当前阶段：**
+    完成**阶段 II** 的先决条件目前正在研究中：
+    工具正在评估中，CI 配置和`强制执行策略
+    <https://github.com/zephyrproject-rtos/zephyr/issues/58903>`__正在制定中。
+
+需求与需求跟踪
+-------------------------------------
+
+需求与需求管理不仅对软件开发很重要，从安全角度来看也非常重要。一方面，它在技术层面详细规定和描述了软件应该做什么；另一方面，它是验证所描述功能是否按预期实现的重要且必要的工具。为此，使用将需求向下追溯到代码级的方法。借助需求管理与跟踪，现在可以验证功能是否经过测试并正确实现，从而最小化系统性错误率。
+
+此外，IEC 61508 标准高度推荐（这对认证而言几乎是必备项）需求与需求跟踪。
+
+测试覆盖率
 -------------
 
-A high test coverage, in turn, is evidence of safety that the code conforms precisely to what it
-was developed for and does not execute any unforeseen instructions. If the entire code is tested
-and has a high (ideally 100%) test coverage, it has the additional advantage of quickly detecting
-faulty changes and further minimizing the error rate. However, it must be noted that different
-requirements apply to safety for test coverage, and various metrics must be considered, which are
-prescribed by the IEC 61508 standard for the SIL 3 / SC3 target. The following must be fulfilled,
-among other things:
+高测试覆盖率反过来是代码精确符合其开发目的、不执行任何未预期指令的安全证据。如果整个代码都经过测试且具有高（理想为 100%）测试覆盖率，则具有快速检测有缺陷的变更并进一步最小化错误率的额外优势。但必须指出，测试覆盖率对安全有不同的要求，必须考虑各种指标，这些指标由 IEC 61508 标准针对 SIL 3 / SC3 目标规定。除其他外，必须满足：
 
-* Structural test coverage (entry points) 100%
-* Structural test coverage (statements) 100%
-* Structural test coverage (branches) 100%
+* 结构化测试覆盖率（入口点）100%
+* 结构化测试覆盖率（语句）100%
+* 结构化测试覆盖率（分支）100%
 
-If the 100% cannot be reached (e.g. statement coverage of defensive code) that part needs to be
-described and justified in the documentation.
+如果无法达到 100%（例如防御性代码的语句覆盖率），则该部分需要在文档中描述并给出正当理由。
 
-Software architecture design principles
+软件架构设计原则
 =======================================
 
-To create and maintain a structured software product it is also necessary to consider individual
-software architecture designs and implement them in accordance with safety standards because some
-designs and implementations are not reasonable in safety, so that the overall software and code
-base can be used as auditable code. However, most of these software architecture designs have
-already been implemented in the Zephyr project and need to be verified by the Safety Committee /
-Safety Working Group and the safety architect.
+为创建和维护结构化的软件产品，还需要考虑各自的软件架构设计，并按照安全标准实施，因为某些设计和实现在安全方面不合理，以便整体软件和代码库可作为可审计代码使用。然而，这些软件架构设计中的大部分已在 Zephyr 项目中实现，需要由安全委员会/安全工作组和安全架构师进行验证。
 
-Layered architecture model
+分层架构模型
 --------------------------
 
-The **IEC 61508 standard** strongly recommends a modular approach to software architecture. This
-approach has been pursued in the Zephyr project from the beginning with its layered architecture.
-The idea behind this architecture is to organize modules or components with similar functionality
-into layers. As a result, each layer can be assigned a specific role in the system. This model has
-the advantage in safety that interfaces between different components and layers can be shown at a
-very high level, and thus it can be determined which functionalities are safety-relevant and can be
-limited. Furthermore, various analyses and documentations can be built on top of this architecture,
-which are important for certification and the responsible certification body.
+**IEC 61508 标准**强烈推荐对软件架构采用模块化方法。Zephyr 项目从一开始就以其分层架构遵循了这一方法。该架构背后的思想是将具有相似功能的模块或组件组织到层中。因此，可以为每层分配系统中的特定角色。该模型在安全方面的优势在于，不同组件和层之间的接口可以以非常高的层次展示，从而可以确定哪些功能与安全相关并加以限制。此外，可以在此架构之上构建各种分析和文档，这对认证和负责认证的机构很重要。
 
-Encapsulated components
+封装的组件
 -----------------------
 
-Encapsulated components are an essential part of the architecture design for safety at this point.
-The most important aspect is the separation of safety-relevant components from non-safety-relevant
-components, including their associated interfaces. This ensures that the components have no
-**repercussions** on other components.
+封装的组件目前是安全架构设计的重要组成部分。最重要的方面是将安全相关组件与非安全相关组件（包括其关联接口）分离。这确保组件对其他组件没有**连带影响**。
 
-Encapsulated single functionality (if not reasonable and manageable in safety)
+封装的单一功能（如果在安全方面不合理且不可管理）
 ------------------------------------------------------------------------------
 
-Another requirement for the overall system and software environment is that individual
-functionalities can be disabled within components. This is because if a function is absolutely
-unacceptable for safety (e.g. complete dynamic memory management), then these individual
-functionalities should be able to be turned off. The Zephyr Project already offers such a
-possibility through the use of Kconfig and its flexible configurability.
+对整体系统和软件环境的另一项要求是组件内的单个功能可以被禁用。这是因为如果某个功能对安全绝对不可接受（例如完整的动态内存管理），则应能关闭这些单个功能。Zephyr 项目已通过使用 Kconfig 及其灵活的可配置性提供了这样的可能性。
 
-Processes and workflow
+流程与工作流
 **********************
 
 .. figure:: images/zephyr-safety-process.svg
    :align: center
-   :alt: Safety process and workflow overview
+   :alt: 安全流程与工作流概述
    :figclass: align-center
 
-   Safety process and workflow overview
+   安全流程与工作流概述
 
-The diagram describes the rough process defined by the Safety Committee to ensure safety in the
-development of the Zephyr project. To ensure understanding, a few points need to be highlighted and
-some details explained regarding the role of the safety architect and the role of the safety
-committee in the whole process. The diagram only describes the paths that are possible when a
-change is related to safety.
+该图描述了安全委员会为确保 Zephyr 项目开发安全而定义的粗略流程。为确保理解，需要突出几个要点，并就安全架构师的角色和安全委员会在整个流程中的角色解释一些细节。该图仅描述了当变更与安全相关时可能的路径。
 
-#. On the main branch, the safety scope of the project should be identified, which typically
-   represents a small subset of the entire code base. This subset should then be made auditable
-   during normal development on “main”, which means that special attention is paid to quality goals
-   (`Quality`_) and safety processes within this scope. The Safety Architect works alongside the
-   Technical Steering Committee (TSC) in this area, monitoring the development process to ensure
-   that the architecture meets the safety requirements.
+#. 在主分支上，应识别项目的安全范围，这通常代表整个代码库的一个小子集。然后，该子集应在 "main" 上的正常开发期间变得可审计，这意味着在该范围内特别关注质量目标（`Quality`_）和安全流程。安全架构师在该领域与技术指导委员会（TSC）协同工作，监控开发过程，以确保架构满足安全要求。
 
-#. At this point, the safety architect plays an increasingly important role. For PRs/issues that
-   fall within the safety scope, the safety architect should ideally be involved in the discussions
-   and decisions of minor changes in the safety scope to be able to react to safety-relevant
-   changes that are not conformant. If a pull request or issue introduces a significant and
-   influential change or improvement that requires extended discussion or decision-making, the
-   safety architect should bring it to the attention of the Safety Committee or the Technical
-   Steering Committee (TSC) as appropriate, so that they can make a decision on the best course of
-   action.
+#. 在此阶段，安全架构师扮演着越来越重要的角色。对于属于安全范围的 PR/issue，安全架构师理想情况下应参与安全范围内小变更的讨论和决策，以便对不符合要求的安全相关变更作出反应。如果拉取请求或 issue 引入了需要扩展讨论或决策的重大且有影响力的变更或改进，安全架构师应将其提请安全委员会或技术指导委员会（TSC）注意，以便他们能决定最佳行动方案。
 
-#. This section describes the certification side. At this point, the code base has to be in an
-   "auditable" state, and ideally no further changes should be necessary or made to the code base.
-   There is still a path from the main branch to this area. This is needed in case a serious bug or
-   important change is found or implemented on the main branch in the safety scope, after the LTS
-   and the auditable branch were created. In this case, the Safety Committee, together with the
-   safety architect, must decide whether this bug fix or change should be integrated into the LTS
-   so that the bug fix or change could also be integrated into the auditable branch. This
-   integration can take three forms: First either as only a code change or second as only an update
-   to the safety documentation or third as both.
+#. 本节描述认证侧。在此阶段，代码库必须处于"可审计"状态，理想情况下不应再需要对代码库进行变更。从主分支到该区域仍有一条路径。这在 LTS 和可审计分支创建后，主分支安全范围内发现或实施了严重 bug 或重要变更时需要。在此情况下，安全委员会必须与安全架构师一起决定该 bug 修复或变更是否应集成到 LTS 中，以便该 bug 修复或变更也能集成到可审计分支中。此集成可采取三种形式：第一，仅作为代码变更；第二，仅作为安全文档更新；第三，两者兼有。
 
-#. This describes the necessary safety process required for certification itself. Here, the final
-   analyses, tests, and documents are created and conducted which must be created and conducted
-   during the certification, and which are prescribed by the certifying authority and the standard
-   being certified. If the certification body approves everything at this stage and the safety
-   process is completed, a safety release can be created and published.
+#. 这描述了认证本身所需的安全流程。在此处，创建并执行认证期间必须创建和执行的最终分析、测试和文档，这些由认证机构和被认证的标准规定。如果认证机构在此阶段批准所有内容且安全流程完成，则可以创建并发布安全版本。
 
-#. This transition from the auditable branch to the main branch should only occur in exceptional
-   circumstances, specifically when something has been identified during the certification process
-   that needs to be quickly adapted on the “auditable” branch in order to obtain certification. In
-   order to prevent this issue from arising again during the next certification, there needs to be
-   a path to merge these changes back into the main branch so that they are not lost, and to have
-   them ready for the next certification if necessary.
+#. 从可审计分支到主分支的过渡只应在特殊情况发生时进行，具体是在认证过程中发现了需要在"可审计"分支上快速适应的内容以获得认证时。为防止该问题在下次认证期间再次出现，需要有一条路径将这些变更合并回主分支，以便它们不会丢失，并在必要时为下次认证做好准备。
 
 .. important::
-   Safety should not block the project and minimize the room to grow in any way.
+   安全不应以任何方式阻碍项目或最小化成长空间。
 
 .. important::
-   **TODO:** Find and define ways, guidelines and processes which minimally impact the daily work
-   of the maintainers, reviewers and contributors and also the safety architect itself.
-   But which are also suitable for safety.
+   **TODO：** 寻找并定义对维护者、评审者和贡献者的日常工作影响最小的方式、指南和流程，同时也要适合安全架构师本身。

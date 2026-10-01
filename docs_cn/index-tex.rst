@@ -1,25 +1,17 @@
 :orphan:
 
 ..
-   Zephyr
-   Project
-   documentation
-   main
-   file
+    Zephyr 项目文档主文件
 
 .. _zephyr-home-tex:
 
-Zephyr
-Project
-Documentation
+Zephyr 项目文档
 ############################
 
 
 .. toctree::
-   :maxdepth:
-   1
-   :caption:
-   Contents
+   :maxdepth: 1
+   :caption: 目录
 
    introduction/index.rst
    develop/index.rst

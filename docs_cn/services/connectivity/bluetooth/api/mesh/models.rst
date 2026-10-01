@@ -1,4 +1,6 @@
-.. _bluetooth_mesh_models:
+.. _bluetooth
+mesh
+models:
 
 Mesh
 models
@@ -8,75 +10,120 @@ Foundation
 models
 *****************
 
+The
 Bluetooth
 Mesh
 specification
-定义
+defines
 foundation
 models
+that
+can
+be
+used
+by
 network
 administrators
-可以
-用
-它们
-配置
-和
+to
+configure
+and
 diagnose
 mesh
-nodes。
+nodes.
 
-.. toctree::
-   :maxdepth:
-   1
+..
+toctree::
+:
+maxdepth:
+1
 
-   brg_cfg_cli
-   brg_cfg_srv
-   cfg_cli
-   cfg_srv
-   health_cli
-   health_srv
-   lcd_cli
-   lcd_srv
-   od_cli
-   od_srv
-   op_agg_cli
-   op_agg_srv
-   priv_beacon_cli
-   priv_beacon_srv
-   rpr_cli
-   rpr_srv
-   sar_cfg_cli
-   sar_cfg_srv
-   srpl_cli
-   srpl_srv
+brg
+cfg
+cli
+brg
+cfg
+srv
+cfg
+cli
+cfg
+srv
+health
+cli
+health
+srv
+lcd
+cli
+lcd
+srv
+od
+cli
+od
+srv
+op
+agg
+cli
+op
+agg
+srv
+priv
+beacon
+cli
+priv
+beacon
+srv
+rpr
+cli
+rpr
+srv
+sar
+cfg
+cli
+sar
+cfg
+srv
+srpl
+cli
+srpl
+srv
 
 Model
 specification
 models
 **************************
 
-除了
-Bluetooth
-Mesh
-specification
-中
-定义
-的
+In
+addition
+to
+the
 foundation
 models
+defined
+in
+the
+Bluetooth
+Mesh
+specification、
+the
 Bluetooth
 Mesh
 Model
 Specification
-定义
-了
-多
-个
-models
-其中
-一些
-在
-Zephyr
-中
-被
-implemented：
+defines
+several
+models、
+some
+of
+which
+are
+implemented
+in
+Zephyr:
+
+..
+toctree::
+:
+maxdepth:
+1
+
+blob
+dfu

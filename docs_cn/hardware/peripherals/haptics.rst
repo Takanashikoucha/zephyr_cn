@@ -1,93 +1,20 @@
 .. _haptics_api:
 
-Haptics
+触觉反馈
 #######
 
-Overview
+概述
 ********
 
-Haptics
-API
-允许
-控制
-haptic
-driver
-devices
-用于
-执行
-haptic
-feedback
-events。
+触觉反馈 API 允许控制触觉驱动设备，以执行触觉反馈事件。
 
-在
-haptic
-feedback
-event
-期间
-haptic
-device
-向
-actuator
-驱动
-一
-个
-signal。
-Haptic
-event
-signal
-的
-source
-根据
-haptic
-device
-的
-capability
-变化。
+在触觉反馈事件期间，触觉设备向执行器驱动信号。触觉事件信号的来源根据触觉设备的能力而变化。
 
-Haptic
-signal
-sources
-的
-一些
-示例
-是
-analog
-signals、
-preprogrammed
-（ROM）
-wavetables、
-synthesized
-（RAM）
-wavetables、
-和
-digital
-audio
-streams。
+触觉信号来源的一些示例是模拟信号、预编程（ROM）波形表、合成（RAM）波形表，以及数字音频流。
 
-此外，
-haptic
-driver
-devices
-通常
-提供
-controls
-调整
-和
-tuning
-drive
-signal
-以
-满足
-它们
-各自
-actuators
-的
-electrical
-requirements。
+此外，触觉驱动设备通常提供用于调整和调谐驱动信号以满足其各自执行器电气要求的控制。
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   haptics_interface
+.. doxygengroup:: haptics_interface

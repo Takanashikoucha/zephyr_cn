@@ -1,200 +1,68 @@
 .. _gcc:
 
-GCC
-静态
-分析
-支持
+GCC 静态分析支持
 ###########################
 
-静态
-分析
-在
-`GCC
-<https://gcc.gnu.org/>`__
-10
-中
-引入
-并
-用
-选项
-``-fanalyzer``
-启用。
-这个
-选项
-执行
-比
-传统
-警告
-更
-昂贵
-和
-彻底
-的
-代码
-分析。
+静态分析是在 `GCC <https://gcc.gnu.org/>`__ 10 中引入的，
+通过选项 ``-fanalyzer`` 启用。
+该选项执行的代码分析比传统警告昂贵得多，也更彻底。
 
-运行
-GCC
-静态
-分析
+运行 GCC 静态分析
 ***********************
 
-要
-运行
-GCC
-静态
-分析，
-:ref:`west
-build
-<west-building>`
-应该
-被
-调用
-带
-``-DZEPHYR_SCA_VARIANT=gcc``
-参数，
-例如
+要运行 GCC 静态分析，
+:ref:`west build <west-building>` 应带上 ``-DZEPHYR_SCA_VARIANT=gcc`` 参数调用，例如：
 
 .. zephyr-app-commands::
-   :zephyr-app:
-   samples/userspace/hello_world_user
-   :board:
-   qemu_x86
-   :gen-args:
-   -DZEPHYR_SCA_VARIANT=gcc
-   :goals:
-   build
+   :zephyr-app: samples/userspace/hello_world_user
+   :board: qemu_x86
+   :gen-args: -DZEPHYR_SCA_VARIANT=gcc
+   :goals: build
    :compact:
 
-配置
-GCC
-静态
-分析器
+配置 GCC 静态分析器
 *******************************
 
-GCC
-静态
-分析器
-可以
-用
-特定
-选项
-控制。
+GCC 静态分析器可以通过特定选项进行控制。
 
-* `控制
-  分析器
-  的
-  选项
-  <https://gcc.gnu.org/onlinedocs/gcc/Static-Analyzer-Options.html>`__
-* `控制
-  诊断
-  消息
-  格式
-  的
-  选项
-  <https://gcc.gnu.org/onlinedocs/gcc/Diagnostic-Message-Formatting-Options.html>`__
+* `控制分析器的选项 <https://gcc.gnu.org/onlinedocs/gcc/Static-Analyzer-Options.html>`__
+
+* `控制诊断消息格式的选项 <https://gcc.gnu.org/onlinedocs/gcc/Diagnostic-Message-Formatting-Options.html>`__
 
 .. list-table::
-   :header-rows:
-   1
+   :header-rows: 1
 
    * - 参数
      - 描述
    * - ``GCC_SCA_OPTS``
-     - 分号
-       分隔
-       的
-       GCC
-       分析器
-       选项
-       列表。
+     - GCC 分析器选项的分号分隔列表。
 
-这些
-参数
-可以
-在
-命令行
-传递，
-或
-设置
-为
-环境变量。
+这些参数可以在命令行上传递，也可以作为环境变量设置。
 
 .. zephyr-app-commands::
-   :zephyr-app:
-   samples/hello_world
-   :board:
-   stm32h573i_dk
-   :gen-args:
-   -DZEPHYR_SCA_VARIANT=gcc
-   -DGCC_SCA_OPTS="-fdiagnostics-format=json;-fanalyzer-verbosity=3"
-   :goals:
-   build
+   :zephyr-app: samples/hello_world
+   :board: stm32h573i_dk
+   :gen-args: -DZEPHYR_SCA_VARIANT=gcc -DGCC_SCA_OPTS="-fdiagnostics-format=json;-fanalyzer-verbosity=3"
+   :goals: build
    :compact:
 
 .. note::
 
-   GCC
-   静态
-   分析器
-   正在
-   积极
-   开发
-   中，
-   每
-   个
-   新
-   版本
-   带
-   新
-   选项。
-   这
-   `页
-   <https://gcc.gnu.org/wiki/StaticAnalyzer>`__
-   给出
-   每
-   个
-   新
-   版本
-   引入
-   的
-   选项
-   和
-   修复
-   的
-   概览。
+   GCC 静态分析器正处于活跃开发中，每个新版本都会引入新的选项。
+   这个`页面 <https://gcc.gnu.org/wiki/StaticAnalyzer>`__
+   概述了分析器每个新版本引入的选项和修复。
 
-
-分析器
-最新
-版本
+分析器的最新版本
 ******************************
 
-由于
-Zephyr
-工具链
-可能
-不
-包括
-GCC
-静态
-分析器
-的
-最新
-版本，
-你
-可能
-需要
-安装
-一个
-较
-新
-的
-GCC
-版本
-来
-获取
-最新
-的
-分析器
-选项。
+由于 Zephyr 工具链可能不包含最新版本的 GCC 静态分析器，
+GCC 静态分析也可以使用更新的
+`GNU Arm 嵌入式工具链 <https://docs.zephyrproject.org/latest/develop/toolchains/gnu_arm_embedded.html>`__
+来运行，以利用最新的分析器版本。
+
+.. zephyr-app-commands::
+   :zephyr-app: samples/hello_world
+   :board: stm32h573i_dk
+   :gen-args: -DZEPHYR_SCA_VARIANT=gcc -DZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb -DGNUARMEMB_TOOLCHAIN_PATH=...
+   :goals: build
+   :compact:

@@ -1,40 +1,21 @@
 .. _psi5_api:
 
-Peripheral
-Sensor
-Interface
-（PSI5）
+外设传感器接口（PSI5）
 ##################################
 
-Overview
+概述
 ********
 
-PSI5
-API
-提供
-与
-Peripheral
-Sensor
-Interface
-（PSI5）
-devices
-通信
-的
-functionality。
+PSI5 API 提供与外设传感器接口（PSI5）设备通信的功能。
 
-Configuration
-Options
+配置选项
 *********************
 
-相关
-配置
-选项：
+相关配置选项：
 
 * :kconfig:option:`CONFIG_PSI5`
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   psi5_interface
+.. doxygengroup:: psi5_interface

@@ -1,13 +1,10 @@
 .. _dev_tools:
 
-工具
-和
-IDE
+工具和 IDE
 ##############
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    clion.rst
    coccinelle.rst

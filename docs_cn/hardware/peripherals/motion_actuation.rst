@@ -1,22 +1,12 @@
 .. _motion_actuation_peripherals:
 
-Motion
-&
-Actuation
+运动与执行
 ##################
 
-PWM、
-stepper
-motors、
-haptics、
-buzzers
-和
-其他
-actuators。
+PWM、步进电机、触觉反馈、蜂鸣器及其他执行器。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    haptics.rst
    pwm.rst

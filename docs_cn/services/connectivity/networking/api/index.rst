@@ -1,72 +1,17 @@
 .. _networking_api:
 
-Networking
-APIs
+Networking APIs
 ###############
 
-Zephyr
-提供
-support
-standard
-的
-BSD
-socket
-APIs
-（defined
-in
-:zephyr_file:`include/zephyr/net/socket.h`）
-供
-applications
-use。
-参考
-:ref:`BSD
-socket
-API
-<bsd_sockets_interface>`
-获取
-更多
-details。
+Zephyr 为 applications 使用提供支持标准 BSD socket APIs（定义在 :zephyr_file:`include/zephyr/net/socket.h`）。更多细节参见 :ref:`BSD socket API <bsd_sockets_interface>`。
 
-除了
-standard
-API
-Zephyr
-提供
-一
-组
-custom
-的
-networking
-APIs
-和
-libraries
-供
-application
-use。
-参考
-下面
-的
-list
-获取
-details。
+标准 API 之外（Zephyr 提供一组 custom networking APIs 和 libraries 供 application 使用。更多细节参见以下列表。
 
 .. note::
-   在
-   :zephyr_file:`include/zephyr/net/net_context.h`
-   中
-   的
-   legacy
-   connectivity
-   API
-   不
-   应该
-   被
-   applications
-   used。
+   :zephyr_file:`include/zephyr/net/net_context.h` 中的 legacy connectivity API 不应被 applications 使用。
 
 .. toctree::
-   :maxdepth:
-   2
+   :maxdepth: 2
 
    apis.rst
    buf_mgmt.rst

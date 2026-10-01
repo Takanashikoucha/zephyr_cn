@@ -1,52 +1,50 @@
-.. _index:
+..
+    Zephyr 项目文档主文件
 
-Zephyr 中文文档
-###############
+.. _zephyr-home:
 
-欢迎来到 Zephyr 实时操作系统的中文文档。
+Zephyr 项目文档
+############################
 
-本仓库是 Zephyr RTOS 的中文文档与源代码阅读指南，帮助你：
+.. raw:: html
 
-- **理解 Zephyr 架构**：从内核到子系统的完整技术文档
-- **阅读源代码**：系统化的源码导读，带你走读关键代码
-- **上手开发**：从入门到进阶的完整开发指南
+   <script>
+     function openVersionSelector() {
+       // Open the mobile menu if visible
+       var mobileMenu = document.querySelector('[data-toggle="wy-nav-top"]');
+       if (mobileMenu && mobileMenu.offsetParent !== null) {
+         mobileMenu.click();
+       }
+       // Open the version selector
+       var versionSelector = document.querySelector('[data-toggle="rst-current-version"]');
+       if (versionSelector) {
+         versionSelector.click();
+       }
+     }
+   </script>
 
-.. toctree::
-   :maxdepth: 2
-   :caption: 文档目录
+.. only:: release
 
-   introduction/index
-   kernel/index
-   develop/index
-   build/index
-   hardware/index
-
-.. toctree::
-   :maxdepth: 1
-   :caption: 源码阅读指南
-
-   源码阅读指南
-
-.. note::
-
-   本仓库的文档基于 Zephyr 官方英文文档翻译与改编，
-   源代码阅读指南为原创内容。
-   上游英文文档请访问 https://docs.zephyrproject.org/
-
-
-.. note::
-
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-.. only:: development
-
-   .. admonition:: Welcome to Zephyr Project Documentation for the ``main`` tree (|version|).
+   .. admonition:: 欢迎使用 Zephyr 项目文档（|version| 版本）。
       :class: welcome
 
       .. raw:: html
 
          <p>
-           Use the <a href="#" onclick="openVersionSelector(); return false;">version selector</a>
-           for the documentation of previously released versions.
+           使用<a href="#" onclick="openVersionSelector(); return false;">版本选择器</a>
+           查看 Zephyr 其他版本的文档。
+         </p>
+
+.. only:: development
+
+   .. admonition:: 欢迎使用 Zephyr 项目 ``main`` 分支（|version|）文档。
+      :class: welcome
+
+      .. raw:: html
+
+         <p>
+           使用<a href="#" onclick="openVersionSelector(); return false;">版本选择器</a>
+           查看之前发布版本的文档。
          </p>
 
 .. raw:: html

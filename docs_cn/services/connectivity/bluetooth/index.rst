@@ -3,60 +3,12 @@
 Bluetooth
 #########
 
-这
-section
-包含
-关于
-Zephyr
-OS
-的
-Bluetooth
-stack
-的
-information。
-你
-可以
-用
-这
-些
-information
-理解
-layers
-operation
-背后
-的
-principles
-以及
-它们
-如何
-被
-implemented。
+此 section 包含有关 Zephyr OS 的 Bluetooth stack 的信息。您可以使用这些信息了解各层运行原理及其实现方式。
 
-Zephyr
-包含
-完整
-的
-Bluetooth
-Low
-Energy
-stack
-从
-application
-到
-radio
-hardware
-以及
-Classical
-Bluetooth
-（BR/EDR）
-Host
-layer
-的
-部分。
+Zephyr 包含从 application 到 radio hardware 的完整 Bluetooth Low Energy stack（以及 Classical Bluetooth（BR/EDR）Host layer 的部分。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    features.rst
    bluetooth-qual.rst

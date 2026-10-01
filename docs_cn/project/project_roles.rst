@@ -1,351 +1,240 @@
 .. _project_roles:
 
-TSC
-Project
-Roles
+TSC 项目角色
 *****************
 
-Project
-Roles
+项目角色
 #############
 
-You
-can
-participate
-in
-the
-Zephyr
-Project
-as
-a
-*Contributor*、
-*Collaborator*、
-or
-*Maintainer*。
+你可以作为*贡献者*（Contributor）、*协作者*（Collaborator）或*维护者*（Maintainer）参与 Zephyr 项目。
 
-**Contributor**:
-Any
-community
-member
-who
-contributes
-code、
-documentation、
-or
-other
-assets
-to
-the
-project。
+**贡献者**：向项目贡献代码、文档或其他资产的任何社区成员。
 
-**Collaborator**:
-An
-active
-Contributor
-who
-is
-involved
-in
-one
-or
-more
-areas
-of
-the
-project。
+**协作者**：参与项目一个或多个领域的活跃贡献者。
 
-**Maintainer**:
-A
-lead
-Collaborator
-responsible
-for
-a
-specific
-area
-or
-subsystem
-within
-the
-project。
-Maintainers
-also
-serve
-as
-representatives
-for
-their
-area
-on
-the
-Technical
-Steering
-Committee
-（TSC）
-as
-needed。
+**维护者**：负责项目内特定领域或子系统的资深协作者。维护者还根据需要作为其领域在技术指导委员会（TSC）上的代表。
 
-Areas
-in
-this
-context
-refer
-to
-specific
-subsystems、
-components、
-or
-modules
-within
-the
-Zephyr
-Project
-codebase。
-Examples
-of
-areas
-include
-but
-are
-not
-limited
-to
-networking、
-file
-systems、
-device
-drivers、
-architecture
-support、
-and
-board
-support
-packages
-（boards
-and
-SoC
-definitions）。
+此处的"领域"指 Zephyr 项目代码库中的特定子系统、组件或模块。领域的示例包括但不限于网络、文件系统、设备驱动、架构支持，以及开发板支持包（开发板和 SoC 定义）。
 
-Areas
-in
-the
-project
-should
-at
-least
-have
-one
-Maintainer
-and
-may
-have
-multiple
-Collaborators。
-Depending
-on
-the
-size
-and
-complexity
-of
-the
-area
-there
-may
-be
-multiple
-Maintainers
-as
-well
-however
-the
-number
-of
-maintainers
-should
-be
-kept
-to
-a
-practical
-minimum
-to
-ensure
-effective
-management
-and
-decision
-making。
+项目中的每个领域应至少有一个维护者，可以有多个协作者。根据领域的大小和复杂度，也可以有多个维护者，但维护者数量应保持在一个实用的最小值，以确保有效的管理和决策。
 
 .. _contributor:
 
-Contributor
+贡献者
 +++++++++++
 
-A
-*Contributor*
-is
-a
-developer
-who
-wishes
-to
-contribute
-to
-the
-project
-at
-any
-level。
+*贡献者*是希望在任何层面为项目做出贡献的开发者。
 
-Contributors
-are
-granted
-the
-following
-rights
-and
-responsibilities:
+贡献者被授予以下权利和职责：
 
-*
-Right
-to
-contribute
-code、
-documentation、
-translations、
-artwork、
-etc。
+* 贡献代码、文档、翻译、美术作品等的权利
+* 报告缺陷（错误）和增强建议的权利
+* 参与审查他人贡献过程的权利
+* 参与特性开发过程的权利
+* 遵守已做出决策的责任。欢迎提供新的相关信息以重新打开决策。
+* 对自己贡献所引入的 issue 和错误的责任。
+* 尊重社区规则的责任。
+* 在参与讨论和审查贡献时提供建设性建议的责任。
+* 遵循项目行为准则（Code of Conduct）的责任
+  (https://github.com/zephyrproject-rtos/zephyr/blob/main/CODE_OF_CONDUCT.md)
 
 
-.. note::
+Zephyr 贡献者徽章
+------------------------
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-* Right to close any stale changes after <N> months of no activity
-* Responsibility to take directions from the TSC and follow them.
-* Responsibility to coordinate code merges with maintainers.
-* Responsibility to merge all contributions regardless of their
-  origin and area if they have been approved by the respective
-  maintainers and follow the merge criteria of a change.
-* Responsibility to keep the Zephyr code base in a working and passing state
-  (as per CI)
+当你对 Zephyr 项目的第一个贡献被合并时，你就有资格申领你的 Zephyr 贡献者徽章。这个数字徽章可以展示在你的网站、博客、社交媒体个人资料等。它将帮助你展示对 Zephyr 项目的参与，并帮助提高项目的知名度。
 
-Joining the Release Engineering team
+你可以通过填写 `Zephyr 贡献者徽章表单`_ 来申请你的贡献者徽章。
 
-* Maintainers highly involved in the project may be nominated
-  by a TSC voting member to join the Release Engineering team.
-  Nominees may become members of the team by approval of the
-  existing TSC voting members.
-* To ensure a functional Release Engineering team the TSC shall
-  periodically review the team’s followed processes,
-  the appropriate size, and the membership
-  composition (ensure, for example, that team members are
-  geographically distributed across multiple locations and
-  time-zones).
+.. _collaborator:
+
+协作者
+++++++++++++
+
+*协作者*是同时参与 Zephyr 源代码维护的贡献者。在做出决策时，他们的意见权重更大，完全按功绩制（meritocratic）方式。
+
+你通过展示对项目的持续参与成为协作者，这包括在一段时间内对项目做出重要贡献，并参与至少一个领域的开发和审查。
+
+要申请成为协作者，请提交一个拉取请求，将自己添加到 :ref:`maintainers_file` 中某个领域的 ``collaborators`` 部分，并通知该领域的维护者。该添加需要经该领域的维护者批准。
+
+协作者除贡献者列出的权利和职责外，还有以下权利和职责：
+
+* 与该领域的维护者一起，参与设定该领域短期和中长期目标的权利
+* 参与特性开发过程的责任
+* 在合理时间内审查相关代码更改的责任
+* 确保代码质量达到预期水平的责任
+* 参与社区讨论的责任
+* 在适当时指导新贡献者的责任
+* 在发生时参与质量验证和发布过程的责任
+
+协作者对拉取请求提出的更改请求应由原始提交者处理。如果所请求的更改不遵循 :ref:`期望 <reviewer-expectations>` 和项目的指南，或在存在分歧的情况下，推进审查过程并解决任何分歧是负责人的责任。
+
+协作者对拉取请求的批准计入合并 PR 所需的最小批准数。可能适用其他合并标准。
 
 
-Release Manager
-+++++++++++++++
+.. _maintainer:
 
-A *Maintainer* responsible for driving a specific release to
-completion following the milestones and the roadmap of the
-project for this specific release.
+维护者
+++++++++++
 
-* TSC has to approve a release manager.
+*维护者*是同时负责了解、指导并预判某个 Zephyr 源代码领域需求的协作者。
 
-A Release Manager is a member of the Release Engineering team and has
-the rights and responsibilities of that team in addition to
-the following:
+个人可以通过展示随时间持续的、有意义的贡献，成为某个领域的维护者。这包括：
 
-* Right to manage and coordinate all code merges after the
-  code freeze milestone (M3, see `program management overview <https://wiki.zephyrproject.org/Program-Management>`_.)
-* Responsibility to drive and coordinate the triaging process
-  for the release
-* Responsibility to create the release notes of the release
-* Responsibility to notify all stakeholders of the project,
-  including the community at large about the status of the
-  release in a timely manner.
-* Responsibility to coordinate with QA and validation and
-  verify changes either directly or through QA before major
-  changes and major milestones.
+- 向该领域做出重要的技术贡献。
+- 积极参与开发过程，包括代码审查和设计讨论。
+- 熟悉该领域的架构、约束和演变。
 
-Roles / Permissions
+当作为某个新领域或子系统的原始作者将其引入项目，并展示出公认的专长和对该领域的长期承诺时，也可以授予维护者身份。
+
+在所有情况下，维护者身份既反映技术所有权，也反映与支持该领域的社区的持续参与。
+
+要申请成为维护者，请提交一个拉取请求，将自己添加到 :ref:`maintainers_file` 中某个领域的 ``maintainers`` 部分，并通知该领域的现有维护者。该添加需要经该领域的维护者批准。
+
+通常只有一个维护者，但根据领域情况，也可能有多个维护者分担责任。
+
+维护者除贡献者和协作者列出的权利和职责外，还有以下权利和职责：
+
+* 设定相关子系统或所参与领域的整体架构的权利
+* 与协作者和提交者一起，在相关子系统或所参与领域做出决策的权利。参见 :ref:`pr_technical_escalation`。
+* 向 TSC 传达相关子系统或领域方向的责任
+* 确保项目所有贡献在合理时间内被审查的责任
+* 执行行为准则的责任。作为社区中的领导者，维护者应成为维护项目行为准则、为每个人营造欢迎和包容环境的榜样。
+* 对其代码领域中静态分析问题进行分诊的责任。参见 :ref:`static_analysis`。
+
+维护者对拉取请求的批准计入合并 PR 所需的最小批准数。可能适用其他合并标准。
+
+
+团队与支持性活动
+###############################
+
+负责人
+++++++
+
+*负责人*（Assignee）是拉取请求中所更改领域的维护者之一。
+
+负责人基于被更改的代码自动设置。其他维护者或发布工程团队可以在无法自动设置时，或另一个负责人更合适时设置负责人，在后一种情况下需在评论中记录更改的动机。
+
+* 将拉取请求驱动到可合并状态的责任
+* 驳回过时的、不相关的、或不遵循 :ref:`期望 <reviewer-expectations>` 的审查意见，并向额外的维护者、开发者和贡献者寻求审查的权利
+* 在 issue 或所请求的更改得到处理之前，阻止拉取请求被合并的权利
+* 如果自己是代码的原始提交者，重新分配拉取请求的责任
+* 向受影响子系统的维护者征求批准
+* 驱动 :ref:`pr_technical_escalation` 过程的责任
+
+静态分析审计团队
+++++++++++++++++++++++++++
+
+静态分析审计团队与发布工程团队密切合作，确保在发布周期期间发现的静态分析缺陷得到适当处理。该团队有以下权利和职责：
+
+* 回退任何不遵循项目期望的静态分析工具（例如 Coverity）中的分诊的权利
+* 向代码负责人通报不当分类的责任
+* 如果某些问题未得到负责的代码负责人充分处理，向 TSC 发出警报的责任
+
+加入静态分析审计团队
+
+* 高度参与项目并在静态分析方面有一定专业知识的贡献者。
+
+
+.. _release-engineering-team:
+
+发布工程团队
+++++++++++++++++++++++++
+
+一个由活跃维护者组成、参与多个领域的团队。
+
+* 发布工程团队的成员预期根据既定的节奏和选拔流程担任发布经理角色。
+* 节奏和选拔流程由发布工程团队定义，并经 TSC 批准。
+* 该团队直接向 TSC 报告。
+
+发布工程团队有以下权利和职责：
+
+* 遵循项目规则，将代码更改合并到 Zephyr 代码树的权利
+* 回退任何已破坏代码库的更改的权利
+* 在 <N> 个月无活动后关闭任何过时更改的权利
+* 接受 TSC 的指导并遵循它的责任
+* 与维护者协调代码合并的责任
+* 如果贡献已获相应维护者批准并遵循更改的合并标准，则合并所有贡献（无论其来源和领域）的责任
+* 保持 Zephyr 代码库处于可工作并通过（CI）状态的责任
+
+加入发布工程团队
+
+* 高度参与项目的维护者可以由 TSC 投票成员提名加入发布工程团队。被提名人可以经现有 TSC 投票成员批准成为团队成员。
+* 为确保发布工程团队有效运作，TSC 应定期审查团队遵循的流程、适当的规模以及成员构成（例如，确保团队成员地理上分布在多个地点和时区）。
+
+
+发布经理
++++++++++++++++++++++
+
+一个负责按照项目针对该特定发布的里程碑和路线图，驱动特定发布完成的*维护者*。
+
+* TSC 必须批准发布经理。
+
+发布经理是发布工程团队的成员，除该团队的权利和职责外，还有以下权利和职责：
+
+* 在代码冻结里程碑（M3，参见 `项目管理概述 <https://wiki.zephyrproject.org/Program-Management>`_）之后，管理和协调所有代码合并的权利
+* 驱动并协调该发布的分诊过程的责任
+* 编写该发布发布说明的责任
+* 及时通知项目所有干系人（包括整个社区）发布状态的责任
+* 与 QA（质量保证）和验证协调，并在重大更改和重大里程碑之前直接或通过 QA 验证更改的责任
+
+角色 / 权限
 +++++++++++++++++++
 
-.. table:: Project Roles vs GitHub Permissions
+.. table:: 项目角色与 GitHub 权限对照表
     :widths: 20 20 10 10 10 10 10
     :align: center
 
     ================ =================== =========== ================ =========== =========== ============
-          ..             ..               **Admin**  **Merge Rights**   Member      Owner     Collaborator
+           ..             ..               **Admin**  **Merge Rights**   Member      Owner     Collaborator
     ---------------- ------------------- ----------- ---------------- ----------- ----------- ------------
-    Main Roles       Contributor                                                                 x
+    主要角色       Contributor                                                                 x
     ---------------- ------------------- ----------- ---------------- ----------- ----------- ------------
         ..           Collaborator                                       x
     ---------------- ------------------- ----------- ---------------- ----------- ----------- ------------
         ..           Maintainer                                         x
-    Supportive Roles QA/Validation                                      x                        x
+    ---------------- ------------------- ----------- ---------------- ----------- ----------- ------------
+    支持性角色 QA/Validation                                      x                        x
         ..           DevOps                   **x**
         ..           System Admin             **x**                                      x
         ..           Release Engineering                 **x**          x
 
     ================ =================== =========== ================ =========== =========== ============
 
-Role Retirement
+角色退休
 ###############
 
-Individuals approved by the TSC or representatives of the TSC to fill a project
-role who are no longer actively fulfilling the rights and responsibilities
-associated with their role may be requested by the TSC to retire from that role.
+经 TSC 或 TSC 代表批准担任某个项目角色、但不再积极履行与其角色相关的权利和职责的个人，可能被 TSC 要求从该角色退休。
 
-Retirements of inactive maintainers or collaborators are reflected by removing the
-individual's GitHub user name from the relevant sections of the
-:ref:`maintainers_file` in the Zephyr repository and may be initiated by the
-TSC, representatives of the TSC or by the individuals themselves. Maintainers
-may also initiate the removal of inactive collaborators in their area.
+不活跃的维护者或协作者的退休，反映为从 Zephyr 仓库 :ref:`maintainers_file` 的相关部分移除该个人的 GitHub 用户名。该操作可由 TSC、TSC 代表或该个人本人发起。维护者也可以发起移除其领域中不活跃的协作者。
 
-A maintainer may object to being retired, and request a decision by the TSC.
+维护者可以反对退休，并请求 TSC 做出决定。
 
 .. _maintainers_file:
 
-MAINTAINERS File
+MAINTAINERS 文件
 ################
 
-The following guidelines apply to the structure, scope, and maintenance of the
-MAINTAINERS file.
+以下指南适用于 MAINTAINERS 文件的结构、范围和日常维护。
 
-- The MAINTAINERS file shall have designated individuals responsible for the
-  accuracy, structure, and upkeep of the file, in accordance with the Zephyr
-  Project Charter. These individuals shall be appointed by the TSC.
-- The granularity of maintainership should remain practical and manageable.
-- The TSC, in collaboration with existing maintainers and contributors, should
-  actively identify and encourage contributors to step up as maintainers for
-  orphaned areas of the codebase and should facilitate the assignment of
-  maintainers to those components.
-- Unmaintained areas shall be clearly marked as such in the MAINTAINERS file.
-- Updates to the MAINTAINERS file should:
+- MAINTAINERS 文件应有指定的人员负责该文件的准确性、结构和维护，符合 Zephyr 项目章程。这些人员由 TSC 任命。
+- 维护者职责的粒度应保持实用且可管理。
+- TSC 应与现有维护者和贡献者合作，主动识别并鼓励贡献者成为代码库中无人维护（孤儿）领域的维护者，并促进向这些组件分配维护者。
+- 无人维护的领域应在 MAINTAINERS 文件中明确标记。
+- MAINTAINERS 文件的更新应：
 
-  - Generally be included as standalone commits when introducing new files or
-    directories.
-  - Major changes, including the addition of new areas and new maintainers,
-    should be submitted as separate pull requests, requiring approval by the
-    MAINTAINERS file’s maintainers. Such activities might be the result of splitting
-    existing large areas into smaller ones or merging smaller areas.
+  - 在引入新文件或新目录时，通常作为独立的提交包含。
+  - 重大更改（包括添加新领域和新维护者）应作为单独的拉取请求提交，需要 MAINTAINERS 文件维护者的批准。此类活动可能是将现有大领域拆分为较小领域，或合并较小领域的结果。
 
-Guidelines for assigning maintainers to different areas of the codebase:
+向代码库不同领域分配维护者的指南：
 
-Architectures, core components, subsystems, samples, and tests:
-  Each area shall have an explicitly assigned maintainer.
+架构、核心组件、子系统、示例和测试：
+  每个领域应有明确分配的维护者。
 
-Boards (including related samples and tests) and SoCs (including DTS definitions)
-  Each board and SoC should have an explicitly assigned maintainer through a
-  platform area covering the boards, SoCs, and their related components and
-  drivers.
+开发板（包括相关示例和测试）和 SoC（包括 DTS 定义）
+  每块开发板和每个 SoC 应通过一个平台领域明确分配维护者，该平台领域覆盖开发板、SoC 及其相关组件和驱动。
 
-Drivers / Backends
-  The area of the API level shall have a maintainer and specific driver
-  implementations or backends shall also be covered through a platform area covering
-  the driver implementation. The driver area or the subsystem maintainers are
-  assigned in case of changes to driver instances or backends.
+驱动 / 后端
+  API 层面的领域应有维护者，特定的驱动实现或后端也应通过覆盖该驱动实现的平台领域来覆盖。在驱动实例或后端发生更改时，分配驱动领域或子系统的维护者。
 
 .. _Zephyr Contributor Badge form: https://forms.gle/oCw9iAPLhUsHTapc8

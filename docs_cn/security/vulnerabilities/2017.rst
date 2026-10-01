@@ -1,4 +1,5 @@
-.. _vulnerabilities_2017:
+.. _vulnerabilities
+2017:
 
 CVE
 2017
@@ -11,7 +12,7 @@ CVE
 Buffer
 overflow
 in
-:code:`getaddrinfo()`。
+:code:`getaddrinfo()`.
 
 -
 `Zephyr
@@ -28,7 +29,8 @@ ZEPSEC
 fix
 for
 1.11.0
-<https://github.com/zephyrproject-rtos/zephyr/pull/6158>`_
+<https://github.com/zephyrproject
+rtos/zephyr/pull/6158>`_
 
 :cve:`2017
 14201`
@@ -47,7 +49,7 @@ to
 misuse
 of
 stack
-variables。
+variables.
 
 Use
 After
@@ -68,12 +70,12 @@ to
 cause
 denial
 of
-service
+service、
 and
 possibly
 remote
 code
-execution。
+execution.
 
 This
 has
@@ -81,7 +83,7 @@ been
 fixed
 in
 release
-v1.14.0。
+v1.14.0.
 
 -
 `Zephyr
@@ -98,7 +100,8 @@ ZEPSEC
 fix
 for
 v1.14.0
-<https://github.com/zephyrproject-rtos/zephyr/pull/13260>`_
+<https://github.com/zephyrproject
+rtos/zephyr/pull/13260>`_
 
 :cve:`2017
 14202`
@@ -116,4 +119,65 @@ overruns
 resulting
 in
 unpredictable
-behavior。
+behavior.
+
+Improper
+Restriction
+of
+Operations
+within
+the
+Bounds
+of
+a
+Memory
+Buffer
+vulnerability
+in
+the
+shell
+component
+of
+Zephyr
+allows
+a
+serial
+or
+telnet
+connected
+user
+to
+cause
+a
+crash、
+possibly
+with
+arbitrary
+code
+execution.
+
+This
+has
+been
+fixed
+in
+release
+v1.14.0.
+
+-
+`Zephyr
+project
+bug
+tracker
+ZEPSEC
+18
+<https://zephyrprojectsec.atlassian.net/browse/ZEPSEC
+18>`_
+
+-
+`PR13048
+fix
+for
+v1.14.0
+<https://github.com/zephyrproject
+rtos/zephyr/pull/13048>`_

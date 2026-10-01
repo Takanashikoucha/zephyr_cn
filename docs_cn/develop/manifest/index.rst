@@ -2,284 +2,49 @@
 
 .. _west_projects_index:
 
-West
-项目
-索引
-###################
+West 项目索引
+#############
 
-这
-页
-充当
-与
-:ref:`West
-<west>`
-元
-工具
-兼容
-的
-项目
-（模块）
-的
-索引。
+本页作为与 :ref:`West <west>` 元工具兼容的项目（模块）的索引。
 
-它
-主要
-列出
-Zephyr
-默认
-:zephyr_file:`manifest
-文件
-<west.yml>`
-中
-声明
-的
-组件。
-关于
-这些
-导入
-组件
-的
-贡献
-和
-审查
-过程
-的
-更多
-信息
-见
-:ref:`external-contributions`。
+它主要列出 Zephyr 默认 :zephyr_file:`清单文件 <west.yml>` 中声明的组件。参见 :ref:`external-contributions` 获取关于这些导入组件的贡献和审查流程的更多信息。
 
-它
-也
-维护
-一个
-:ref:`外部
-项目
-<west_external_projects>`
-注册
-表，
-这些
-项目
-在
-Zephyr
-项目
-之外
-维护，
-可以
-轻松
-集成
-到
-Zephyr
-工作区。
+它还维护一个 :ref:`外部项目 <west_external_projects>` 的注册表，这些项目在 Zephyr 项目外部维护，可以轻松集成到 Zephyr 工作区中。
 
-活跃
-项目/
-模块
-+++++++++++++++++++++++
+活跃项目/模块
++++++++++++++++
 
-下面
-的
-项目
-默认
-启用
-并
-在
-你
-调用
-:command:`west
-update`
-时
-下载。
-下面
-列出
-的
-许多
-项目
-或
-模块
-是
-构建
-通用
-Zephyr
-应用
-所
-必需
-的
-并
-包括
-Zephyr
-可用
-的
-许多
-平台
-的
-硬件
-支持。
+下面的项目默认启用，当你调用 :command:`west update` 时将被下载。下面列出的许多项目或模块是构建通用 Zephyr 应用所必需的，其中包括 Zephyr 中许多可用平台的硬件支持。
 
-要
-禁用
-任何
-活跃
-模块，
-例如
-特定
-HAL，
-使用
-以下
-命令::
+要禁用任何活跃模块，例如特定的 HAL，使用以下命令::
 
-        west
-        config
-        manifest.project-filter
-        --
-        -hal_FOO
-        west
-        update
+        west config manifest.project-filter -- -hal_FOO
+        west update
 
 .. manifest-projects-table::
-   :filter:
-   active
+   :filter: active
 
-不
-活跃
-和
-可选
-项目/
-模块
+非活跃和可选项目/模块
 ++++++++++++++++++++++++++++++++++++++
 
-下面
-的
-项目
-是
-可选
-的
-并
-在
-你
-调用
-:command:`west
-update`
-时
-不
-会
-下载。
-你
-可以
-添加
-下面
-列出
-的
-任何
-项目
-或
-模块
-并
-用
-它们
-编写
-应用
-代码
-并
-用
-添加
-的
-功能
-扩展
-你
-的
-工作区。
+下面的项目是可选的，当你调用 :command:`west update` 时不会被下载。你可以添加下面列出的任何项目或模块，并使用它们编写应用代码，用添加的功能扩展你的工作区。
 
-要
-启用
-下面
-的
-任何
-模块，
-使用
-以下
-命令::
+要启用下面的任何模块，使用以下命令::
 
-        west
-        config
-        manifest.project-filter
-        --
-        +nanopb
-        west
-        update
+        west config manifest.project-filter -- +nanopb
+        west update
 
 .. manifest-projects-table::
-   :filter:
-   inactive
+   :filter: inactive
 
 .. _west_external_projects:
 
-外部
-项目/
-模块
+外部项目/模块
 ++++++++++++++++++++++++
 
-下面
-列出
-的
-项目
-是
-外部
-的
-并
-不
-直接
-导入
-到
-默认
-manifest。
-要
-使用
-下面
-的
-任何
-项目，
-你
-需要
-定义
-你
-自己
-的
-manifest
-文件
-包括
-它们。
-见
-:ref:`west-manifest-import`
-获取
-推荐
-的
-做
-这
-的
-方式
-同时
-仍
-继承
-Zephyr
-:file:`west.yml`
-的
-必需
-模块。
+下面列出的项目是外部项目，不直接导入到默认清单中。要使用下面的任何项目，你需要定义一个包含它们的自己的清单文件。参见 :ref:`west-manifest-import` 获取关于推荐方式的更多信息，同时仍从 Zephyr 的 :file:`west.yml` 继承必需的模块。
 
-用
-:zephyr_file:`专用
-模板
-文件
-<doc/develop/manifest/external/external.rst.tmpl>`
-贡献
-新
-外部
-模块
-到
-下面
-的
-列表：
+使用 :zephyr_file:`专用模板文件 <doc/develop/manifest/external/external.rst.tmpl>` 为下面的列表贡献新的外部模块：
 
 .. toctree::
    :titlesonly:

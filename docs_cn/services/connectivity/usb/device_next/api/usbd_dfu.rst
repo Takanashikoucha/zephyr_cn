@@ -1,26 +1,11 @@
 .. _usbd_dfu:
 
-USB
-DFU
-device
-API
+USB DFU device API
 ##################
 
-USB
-DFU
-device
-specific
-的
-API
-它
-defined
-在
-:zephyr_file:`include/zephyr/usb/class/usbd_dfu.h`
-中。
+USB DFU device 特定 API（定义在 :zephyr_file:`include/zephyr/usb/class/usbd_dfu.h`。
 
-API
-Reference
+API Reference
 *************
 
-.. doxygengroup::
-   usbd_dfu
+.. doxygengroup:: usbd_dfu

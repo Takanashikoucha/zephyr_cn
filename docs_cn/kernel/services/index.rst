@@ -1,134 +1,111 @@
 .. _kernel_api:
 
 内核服务
-########
+###############
 
-Zephyr 内核位于每个 Zephyr 应用的核心。
-它提供低开销、高性能的多线程执行环境，
-并拥有丰富的可用功能。Zephyr 生态系统的其余部分——
-包括设备驱动、网络栈和应用特定代码——
-利用内核功能构建完整应用。
+Zephyr 内核是每个 Zephyr 应用的核心。它提供一个低开销、高性能的多线程执行环境，并拥有丰富的可用功能。Zephyr 生态系统的其余部分——包括设备驱动、网络协议栈和应用特定代码——利用内核的功能来构建完整的应用。
 
-内核的可配置特性允许你仅纳入应用所需的功能，
-使其非常适合内存有限的系统（低至 2 KB！）
-或具有简单多线程需求的系统
-（如一组中断处理程序和单个后台任务）。
-此类系统的示例包括：嵌入式传感器集线器、环境传感器、
-简单 LED 可穿戴设备和商店库存标签。
+内核的可配置特性允许你仅纳入应用所需的功能，这使得它非常适合内存非常有限（少至 2 KB！）或仅具有简单多线程需求（例如一组中断处理程序和单个后台任务）的系统。此类系统的示例包括：嵌入式传感器集线器、环境传感器、简单 LED 可穿戴设备和商店库存标签。
 
-需要更多内存（50 到 900 KB）、多个通信设备
-（如 Wi-Fi 和蓝牙低功耗）和复杂多线程的应用，
-也可以使用 Zephyr 内核开发。
-此类系统的示例包括：健身可穿戴设备、智能手表和物联网无线网关。
+需要更多内存（50 到 900 KB）、多个通信设备（如 Wi-Fi 和蓝牙低功耗）以及复杂多线程的应用，也可以使用 Zephyr 内核开发。此类系统的示例包括：健身可穿戴设备、智能手表和物联网无线网关。
 
 调度、中断和同步
-******************
+*******************************************
 
-以下页面涵盖与线程调度和同步相关的基本内核服务。
-
-.. toctree::
-   :maxdepth: 1
-
-   threads/index
-   scheduling/index
-   threads/system_threads
-   threads/workqueue
-   threads/nothread
-   interrupts
-   polling
-   synchronization/semaphores
-   synchronization/locks
-   synchronization/kpoll
-   synchronization/condvars
-   synchronization/futex
-
-线程
-****
+这些页面涵盖与线程调度和同步相关的基本内核服务。
 
 .. toctree::
-   :maxdepth: 1
+    :maxdepth: 1
 
-   threads/index
+    threads/index.rst
+    scheduling/index.rst
+    threads/system_threads.rst
+    threads/workqueue.rst
+    threads/nothread.rst
+    interrupts.rst
+    polling.rst
+    synchronization/semaphores.rst
+    synchronization/mutexes.rst
+    synchronization/condvar.rst
+    synchronization/events.rst
+    synchronization/spinlocks.rst
+    smp/smp.rst
 
-调度
-****
-
-.. toctree::
-   :maxdepth: 1
-
-   scheduling/index
-
-同步
-****
-
-.. toctree::
-   :maxdepth: 1
-
-   synchronization/index
-
-内存分配
-********
-
-.. toctree::
-   :maxdepth: 1
-
-   memory_allocation/index
+.. _kernel_data_passing_api:
 
 数据传递
-********
+************
+
+这些页面涵盖可用于在线程和 ISR 之间传递数据的内核对象。
+
+下表汇总了它们的高层特性。
+
+===============   ==============      ===================    ================    =================   =================  ==============  ===============================
+对象                双向？              数据结构               数据项大小          数据对齐              ISR 可以接收？     ISR 可以发送？    溢出处理
+===============   ==============      ===================    ================    =================   =================  ==============  ===============================
+FIFO              否                  队列                   任意 [#f1]_         4 B [#f2]_           是 [#f3]_          是              不适用
+LIFO              否                  队列                   任意 [#f1]_         4 B [#f2]_           是 [#f3]_          是              不适用
+栈                否                  数组                   字                  字                  是 [#f3]_          是              未定义行为
+消息队列          否                  环形缓冲区             任意 [#f6]_         2 的幂              是 [#f3]_          是              使线程挂起或返回 -errno
+邮箱              是                  队列                   任意 [#f1]_         任意                  否                  否              不适用
+管道              否                  环形缓冲区 [#f4]_     任意                  任意                  是 [#f5]_          是 [#f5]_       使线程挂起或返回 -errno
+===============   ==============      ===================    ================    =================   =================  ==============  ===============================
+
+.. rubric:: 脚注
+
+.. [#f1] 调用者在数据元素自身中为队列开销分配空间。
+
+.. [#f2] 通过 :c:func:`k_fifo_alloc_put()` 和 :c:func:`k_lifo_alloc_put()` 添加的对象没有对齐约束，但会使用来自调用线程资源池的临时内存。
+
+.. [#f3] 只有将 K_NO_WAIT 作为超时参数传递时，ISR 才可以接收。
+
+.. [#f4] 可选的。
+
+.. [#f5] 只有将 K_NO_WAIT 作为超时参数传递时，ISR 才可以发送和/或接收。
+
+.. [#f6] 数据项大小必须是数据对齐的整数倍。
 
 .. toctree::
-   :maxdepth: 1
+    :maxdepth: 1
 
-   data_passing/index
-
-
-.. note::
-
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-.. [#f6] Data item size must be a multiple of the data alignment.
-
-.. toctree::
-   :maxdepth: 1
-
-   data_passing/queues.rst
-   data_passing/fifos.rst
-   data_passing/lifos.rst
-   data_passing/stacks.rst
-   data_passing/message_queues.rst
-   data_passing/mailboxes.rst
-   data_passing/pipes.rst
+    data_passing/queues.rst
+    data_passing/fifos.rst
+    data_passing/lifos.rst
+    data_passing/stacks.rst
+    data_passing/message_queues.rst
+    data_passing/mailboxes.rst
+    data_passing/pipes.rst
 
 .. _kernel_memory_management_api:
 
-Memory Management
+内存管理
 *****************
 
-See :ref:`memory_management_api`.
+参见 :ref:`memory_management_api`。
 
-Timing
+计时
 ******
 
-These pages cover timing related services.
+这些页面涵盖与计时相关的服务。
 
 .. toctree::
-   :maxdepth: 1
+    :maxdepth: 1
 
-   timing/clocks.rst
-   timing/timers.rst
-   timing/system_timer_drivers.rst
+    timing/clocks.rst
+    timing/timers.rst
+    timing/system_timer_drivers.rst
 
-Other
+其他
 *****
 
-These pages cover other kernel services.
+这些页面涵盖其他内核服务。
 
 .. toctree::
-   :maxdepth: 1
+    :maxdepth: 1
 
-   other/atomic.rst
-   other/float.rst
-   other/version.rst
-   other/assert.rst
-   other/fatal.rst
-   other/thread_local_storage.rst
+    other/atomic.rst
+    other/float.rst
+    other/version.rst
+    other/assert.rst
+    other/fatal.rst
+    other/thread_local_storage.rst

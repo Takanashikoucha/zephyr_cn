@@ -1,19 +1,12 @@
 .. _gpio_input_peripherals:
 
-GPIO
-&
-Input
+GPIO 与输入设备
 ############
 
-General-purpose
-I/O
-和
-input
-devices。
+通用输入输出（GPIO）与输入设备。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    gpio.rst
    ps2.rst

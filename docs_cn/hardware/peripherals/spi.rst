@@ -1,119 +1,25 @@
 .. _spi_api:
 
-Serial
-Peripheral
-Interface
-（SPI）
-Bus
+串行外设接口（SPI）总线
 #####################################
 
-Overview
+概述
 ********
 
-Terminology
-============
+术语
+===========
 
-Zephyr
-SPI
-API
-使用
-由
-:ref:`coding_guideline_inclusive_language`
-选择
-的
-inclusive
-terminology
-遵循
-`OSHWA
-resolution
-to
-redefine
-SPI
-signal
-names`_：
+Zephyr SPI API 使用 :ref:`coding_guideline_inclusive_language` 选择的包容性术语，遵循 `OSHWA 重新定义 SPI 信号名称的决议`_：
 
-* 驱动
-  clock
-  的
-  device
-  是
-  *controller*
-  它
-  寻址
-  的
-  devices
-  是
-  *peripherals*
-  （参考
-  :c:macro:`SPI_OP_MODE_CONTROLLER`
-  和
-  :c:macro:`SPI_OP_MODE_PERIPHERAL`）。
-* Data
-  signals
-  从
-  每个
-  device
-  自己
-  的
-  perspective
-  命名：
-  *SDO*
-  （Serial
-  Data
-  Out）
-  和
-  *SDI*
-  （Serial
-  Data
-  In）
-  以及
-  *CS*
-  （Chip
-  Select）
-  用于
-  select
-  line。
+* 驱动时钟的设备是*控制器*，它寻址的设备是*外设*（参见 :c:macro:`SPI_OP_MODE_CONTROLLER` 和 :c:macro:`SPI_OP_MODE_PERIPHERAL`）。
+* 数据信号从每个设备自身视角命名：*SDO*（串行数据输出）和 *SDI*（串行数据输入），选择线用 *CS*（片选）。
 
-之前
-的
-master/slave
-和
-MOSI/MISO
-names
-仍
-可
-用
-作为
-compatibility
-aliases。
-它们
-自
-Zephyr
-v4.5
-起
-被
-deprecated
-并
-将
-在
-Zephyr
-v5.0
-中
-被
-移除。
+前主/从和 MOSI/MISO 名称仍可作为兼容性别名使用。它们自 Zephyr v4.5 起弃用，将在 Zephyr v5.0 中移除。
 
-.. _OSHWA
-   resolution
-   to
-   redefine
-   SPI
-   signal
-   names:
-   https://oshwa.org/resources/a-resolution-to-redefine-spi-signal-names/
+.. _OSHWA resolution to redefine SPI signal names:
+    https://oshwa.org/resources/a-resolution-to-redefine-spi-signal-names/
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   spi_interface
+.. doxygengroup:: spi_interface

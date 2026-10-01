@@ -1,4 +1,5 @@
-.. _bluetooth_services:
+.. _bluetooth
+services:
 
 Bluetooth
 standard
@@ -9,45 +10,51 @@ Battery
 Service
 ***************
 
-.. doxygengroup::
-   bt_bas
+..
+doxygengroup::
+bt_bas
 
 Current
 Time
 Service
 ********************
 
-.. doxygengroup::
-   bt_cts
+..
+doxygengroup::
+bt_cts
 
 Elapsed
 Time
 Service
 ********************
 
-.. doxygengroup::
-   bt_ets
+..
+doxygengroup::
+bt_ets
 
 Heart
 Rate
 Service
 ******************
 
-.. doxygengroup::
-   bt_hrs
+..
+doxygengroup::
+bt_hrs
 
 Immediate
 Alert
 Service
 ***********************
 
-.. doxygengroup::
-   bt_ias
+..
+doxygengroup::
+bt_ias
 
 Object
 Transfer
 Service
 ***********************
 
-.. doxygengroup::
-   bt_ots
+..
+doxygengroup::
+bt_ots

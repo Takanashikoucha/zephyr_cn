@@ -1,19 +1,12 @@
 .. _toolchains:
 
-工具链
+Toolchains
 ##########
 
-如何
-设置
-Zephyr
-开发
-工具链
-的
-指南。
+Zephyr 开发中如何配置工具链的指南。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    zephyr_sdk.rst
 

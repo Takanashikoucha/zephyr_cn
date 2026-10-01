@@ -1,176 +1,115 @@
 .. _pr_lifecycle_policy:
 
-Pull
-Request
-Lifecycle
-Policy
+Pull Request 生命周期策略
 #############################
 
-This
-policy
-keeps
-the
-open
-pull
-request
-list
-focused
-on
-contributions
-that
-are
-actively
-progressing
-and
-have
-a
-realistic
-path
-to
-merge。
+本策略使开放的 pull request 列表专注于正在积极推进、且具有现实合并路径的贡献。
 
-Goals
+目标
 *****
 
-*
-Keep
-open
-pull
-requests
-manageable
-for
-contributors
-and
-maintainers。
-*
-Prioritize
-review
-bandwidth
-for
-changes
-that
-are
-moving
-forward。
-*
-Provide
-clear
-expectations
-for
-draft
-pull
-requests
-and
-inactive
-pull
-requests。
+* 使开放的 pull request 对贡献者和维护者而言易于管理。
+* 为正在推进的更改优先分配审查带宽。
+* 为草稿 pull request 和不活跃的 pull request 提供明确的预期。
 
-Scope
+范围
 *****
 
-This
-policy
-applies
-to
-all
-pull
-requests
-in
-the
-repository
-including
-draft
-pull
-requests。
+本策略适用于仓库中所有的 pull request，包括草稿 pull request。
 
-Definitions
+定义
 ***********
 
-Active
-pull
-request
-   A
-   pull
-   request
-   with
-   meaningful
-   progress
-   such
-   as
-   commits、
-   review
-   responses、
-   or
-   updates
-   addressing
-   requested
-   changes。
+活跃的 pull request
+   具有有意义进展的 pull request，例如新的 commit、审查回复，或针对所要求更改的更新。
 
-Draft
-pull
-request
-   A
-   pull
-   request
-   opened
-   for
-   work
-   in
-   progress
-   and
-   early
-   feedback。
+草稿 pull request
+   为进行中的工作和早期反馈而打开的 pull request。
 
-Stalled
-pull
-request
-   A
-   pull
-   request
-   without
-   meaningful
-   activity
-   inside
-   the
-   inactivity
-   window。
+停滞的 pull request
+   在不活跃窗口内没有有意义活动的 pull request。
 
-Closed
-inactive
-pull
-request
-   A
-   pull
-   request
-   closed
-   due
-   to
-   inactivity、
-   supersession、
-   or
-   no
-   clear
-   merge
-   path。
+已关闭的不活跃 pull request
+   因不活跃、被取代或没有明确合并路径而被关闭的 pull request。
 
-Draft
-Pull
-Request
-Expectations
+草稿 pull request 的预期
 *******************************
 
-*
-Draft
-pull
-requests
-should
-include
-a
-clear
-problem
-statement、
-current
-status、
-and
-known
-gaps。
+* 草稿 pull request 应包含明确的问题陈述、当前状态和已知差距。
+* 草稿 pull request 应在 30 天内转为可审查状态。
+* 如果草稿 pull request 连续 30 天不活跃，它可能被标记为过时（stale），并发布提醒。
+* 如果在过时通知后额外 7 天内仍无有意义的进展，该 pull request 可能被关闭。
+
+可审查 pull request 的预期
+******************************************
+
+* 作者应在 21 天内回复审查反馈。
+* 如果可审查的 pull request 连续 30 天没有有意义的活动，它可能被标记为过时。
+* 如果在过时通知后 7 天内没有有意义的更新，该 pull request 可能被关闭。
+* 如果 pull request 存在未解决的阻塞性反馈超过 45 天，且未提供具体计划，它可能被关闭。
+
+什么算有意义的活动
+**********************************
+
+有意义的活动示例包括：
+
+* 针对审查反馈提交的新 commit。
+* 具体的技术回复和后续更新。
+* 对 pull request 产生实质性影响的重大修订更新。
+
+通常不算有意义活动的示例包括：
+
+* 仅催促而无技术更新的评论。
+* 无实质性更改的琐碎 rebase。
+
+例外
+**********
+
+以下 pull request 可豁免自动不活跃关闭：
+
+* 安全关键的修复。
+* 发布阻塞项。
+* 明确在等待外部依赖、且带有链接跟踪项的 pull request。
+
+豁免的 pull request 仍需至少每 30 天更新一次状态。
+
+被取代的 pull request
+************************
+
+当工作被另一个 pull request 取代时：
+
+* 将旧的 pull request 以"被取代"为由关闭。
+* 链接到替代的 pull request。
+* 添加简短的总结评论以保留上下文。
+
+重新打开已关闭的不活跃 pull request
+***************************************
+
+因不活跃而关闭 pull request 是保持开放列表可管理的一项管理步骤，并非对贡献的拒绝。
+
+已关闭的不活跃 pull request 在以下情况下可被重新打开：
+
+* 作者发布了更新的计划。
+* 此前的阻塞性反馈已被处理。
+* 维护者确认审查可以继续。
+
+鼓励贡献者在能够提供有意义更新时随时重新打开。
+
+职责
+****************
+
+预期贡献者做到：
+
+* 保持 pull request 描述为最新。
+* 及时回复审查评论。
+* 一旦可以审查，即将草稿 pull request 转为可审查状态。
+
+参见 :ref:`贡献者预期 <contributor-expectations>` 文档获取更多指导。
+
+预期维护者做到：
+
+* 一致地应用过时标记和关闭决定。
+* 提供明确的阻塞性反馈。
+* 以明确的理由和重新打开路径关闭。
+
+参见 :ref:`维护者职责 <maintainer>` 文档获取更多指导。

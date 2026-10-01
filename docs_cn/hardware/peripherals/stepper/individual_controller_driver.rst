@@ -1,118 +1,41 @@
 .. _stepper-individual-controller-driver:
 
-Individual
-Stepper
-Motion
-Controller
-and
-Driver
+独立步进电机运动控制器和驱动
 ###############################################
 
-下面
-是
-带
-dedicated
-stepper
-motion
-controller
-的
-stepper
-driver
-的
-device
-tree
-configuration
-示例：
+以下是带专用步进电机运动控制器的步进电机驱动的设备树配置示例：
 
 .. code-block:: dts
 
-    /
-    {
-        aliases
-        {
-            stepper_driver
-            =
-            &tmc2209
-            stepper_ctrl
-            =
-            &step_dir_motion_control;
+    / {
+        aliases {
+            stepper_driver = &tmc2209
+            stepper_ctrl = &step_dir_motion_control;
         };
 
-        tmc2209:
-        tmc2209
-        {
-            compatible
-            =
-            "adi,tmc2209";
-            enable-gpios
-            =
-            <&gpioa
-            6
-            GPIO_ACTIVE_HIGH>;
-            m0-gpios
-            =
-            <&gpiob
-            0
-            GPIO_ACTIVE_HIGH>;
-            m1-gpios
-            =
-            <&gpioa
-            7
-            GPIO_ACTIVE_HIGH>;
+        tmc2209: tmc2209 {
+            compatible = "adi,tmc2209";
+            enable-gpios = <&gpioa 6 GPIO_ACTIVE_HIGH>;
+            m0-gpios = <&gpiob 0 GPIO_ACTIVE_HIGH>;
+            m1-gpios = <&gpioa 7 GPIO_ACTIVE_HIGH>;
         };
 
-        step_dir_motion_control:
-        step-dir-motion-control
-        {
-            compatible
-            =
-            "zephyr,gpio-step-dir-stepper-ctrl";
-            step-gpios
-            =
-            <&gpioa
-            9
-            GPIO_ACTIVE_HIGH>;
-            dir-gpios
-            =
-            <&gpioc
-            7
-            GPIO_ACTIVE_HIGH>;
+        step_dir_motion_control: step-dir-motion-control {
+            compatible = "zephyr,gpio-step-dir-stepper-ctrl";
+            step-gpios = <&gpioa 9 GPIO_ACTIVE_HIGH>;
+            dir-gpios = <&gpioc 7 GPIO_ACTIVE_HIGH>;
             invert-direction;
-            stepper-driver
-            =
-            <&tmc2209>;
+            stepper-driver = <&tmc2209>;
         };
     };
 
-在
-上述
-configurations
-之后
-stepper
-driver
-subsystem
-可以
-在
-application
-code
-中
-如下
-使用：
+按照上述配置，步进电机驱动子系统可以在应用代码中如下使用：
 
 .. code-block:: c
 
-   static
-   const
-   struct
-   device
-   *stepper_driver
-   =
-   DEVICE_DT_GET(DT_ALIAS(stepper_driver));
-   static
-   const
-   struct
-   device
-   *stepper_ctrl
-   =
-   DEVICE_DT_GET(DT_ALIAS(stepper_ctrl));
-   ...
+    static const struct device *stepper_driver = DEVICE_DT_GET(DT_ALIAS(stepper_driver));
+    static const struct device *stepper_ctrl = DEVICE_DT_GET(DT_ALIAS(stepper_ctrl));
+    ...
+    stepper_ctrl_move_to(stepper_ctrl, 200);
+    stepper_ctrl_stop(stepper_ctrl);
+    stepper_disable(stepper_driver);

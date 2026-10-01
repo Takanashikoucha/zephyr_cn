@@ -1,91 +1,21 @@
 .. _api_lifecycle:
 
-API
-生命周期
+API 生命周期
 #############
 
-使用
-Zephyr
-API
-的
-开发者
-需要
-知道
-他们
-可以
-信任
-给定
-API
-在
-未来
-发布
-中
-不
-会
-更改
-的
-时间
-有多长。
-同时，
-维护
-和
-扩展
-Zephyr
-API
-的
-开发者
-需要
-能够
-引入
-尚
-未
-完全
-验证
-的
-新
-API，
-并
-在
-旧
-API
-不
-再
-最优
-或
-不
-被
-底层
-平台
-支持
-时
-可能
-退休
-它们。
+使用 Zephyr API 的开发者需要知道一个给定的 API 在未来版本中不会发生变化的可信期限。
+与此同时，负责维护和扩展 Zephyr API 的开发者需要能够引入尚未完全验证的新 API，
+并在旧 API 不再最优或不再被底层平台支持时将其淘汰。
 
 
 .. figure:: api_lifecycle.png
-   :align: center
-   :alt: API
-   生命周期
-   :figclass: align-center
+    :align: center
+    :alt: API Life Cycle
+    :figclass: align-center
 
-   API
-   生命周期
+    API Life Cycle
 
-所有
-API
-及
-其
-成熟度
-级别
-的
-最新
-表格
-可以
-在
-:ref:`api_overview`
-页面
-找到。
+所有 API 及其成熟度的最新列表可在 :ref:`api_overview` 页面中查阅。
 
 
 .. _api_lifecycle_experimental:
@@ -93,1383 +23,214 @@ API
 实验性
 *************
 
-实验性
-API
-表示
-功能
-最近
-引入，
-可能
-在
-未来
-版本
-中
-更改
-或
-被
-移除。
-试用
-它
-并
-通过
-`开发者
-邮件
-列表
-<https://lists.zephyrproject.org/g/devel>`_
-向
-社区
-提供
-反馈。
+实验性 API 表示该功能最近引入，可能在未来版本中发生变更或被移除。
+请试用它，并通过 `Developer mailing list <https://lists.zephyrproject.org/g/devel>`_ 向社区提供反馈。
 
-以下
-要求
-适用
-于
-所有
-新
-API：
+以下要求适用于所有新 API：
 
-- API
-  的
-  文档
-  （使用）
-  解释
-  其
-  设计
-  和
-  假设、
-  如何
-  使用、
-  当前
-  实现
-  限制、
-  以及
-  未来
-  潜力
-  （如果
-  合适）。
-- API
-  引入
-  应该
-  伴随
-  至少
-  一个
-  所述
-  API
-  的
-  实现
-  （对于
-  外设
-  API，
-  这
-  对应
-  一个
-  驱动）
-- 至少
-  一个
-  使用
-  新
-  API
-  的
-  示例
-  （可能
-  只
-  在
-  单个
-  开发板
-  上
-  构建）
+- API 的文档（用法说明），解释其设计和假设、如何使用、当前实现的局限性，
+  以及（如适用）未来的潜力。
+- API 的引入应伴随至少一个该 API 的实现（对于外设 API，这对应一个驱动）。
+- 至少一个使用新 API 的示例（可能仅能在单块开发板上构建）。
 
-引入
-新
-的
-实验性
-API
-时，
-在
-API
-定义
-的
-头
-文件
-中
-标记
-API
-版本。
-实验性
-API
-应该
-有
-一个
-次要
-版本
-到
-一
-（0.1.z）
-的
-版本。
-（见
-:ref:`api_overview`）
+在引入新的实验性 API 时，应在定义该 API 的头文件中标记 API 版本。
+实验性 API 的版本号中，次版本号应不超过 1（0.1.z）。（参见 :ref:`api_overview`）
 
-外设
-API
-（硬件
-相关）
+外设 API（硬件相关）
 ==================================
 
-引入
-新
-外设
-或
-驱动
-子系统
-的
-API
-（带
-文档
-的
-公共
-头
-文件）
-时，
-API
-的
-审查
-被
-强制
-执行
-并
-由
-架构
-工作
-组
-驱动，
-它
-由
-来自
-不同
-厂商
-的
-代表
-组成。
+在为新外设或驱动子系统引入 API（带文档的公共头文件）时，
+必须对 API 进行审查，该审查由来自不同厂商的代表组成的架构工作组推动。
 
-当
-API
-在
-不同
-硬件
-平台
-上
-有
-至少
-两个
-实现
-时，
-它
-应该
-被
-提升
-为
-``unstable``。
+当 API 在至少两个不同的硬件平台上拥有两个实现时，
+应将其提升为 ``unstable``。
 
 .. _api_lifecycle_unstable:
 
 不稳定
 ********
 
-API
-正在
-稳定
-的
-过程
-中，
-但
-还
-没有
-足够
-的
-真实
-世界
-测试
-来
-被
-认为
-稳定。
-API
-被
-认为
-在
-性质
-上
-通用
-并
-可以
-在
-不同
-硬件
-平台
-上
-使用。
+API 正在趋于稳定，但尚未经过足够的实际测试以被视为稳定。
+API 在性质上被认为是通用的，可以在不同的硬件平台上使用。
 
-当
-API
-状态
-更改
-为
-不稳定
-API
-时，
-在
-API
-定义
-的
-头
-文件
-中
-标记
-API
-版本。
-不稳定
-API
-应该
-有
-一个
-次要
-版本
-大于
-一
-（0.y.z
-|
-y
->
-1）
-的
-版本。
-（见
-:ref:`api_overview`）
+当 API 状态变更为不稳定 API 时，应在定义该 API 的头文件中标记 API 版本。
+不稳定 API 的版本号中，次版本号应大于 1（0.y.z | y > 1）。（参见 :ref:`api_overview`）
 
 .. note::
 
-   更改
-   不
-   会
-   被
-   公告。
+   变更将不会提前公告。
 
-外设
-API
-（硬件
-相关）
+外设 API（硬件相关）
 ==================================
 
-当
-API
-在
-不同
-硬件
-平台
-上
-有
-至少
-两个
-实现
-时，
-它
-应该
-从
-``experimental``
-提升
-为
-``unstable``。
+当 API 在至少两个不同的硬件平台上拥有两个实现时，
+应将其从 ``experimental`` 提升为 ``unstable``。
 
-硬件
-无关
-API
+硬件无关 API
 =======================
 
-对于
-硬件
-无关
-API，
-需要
-多个
-应用
-使用
-它
-来
-将
-API
-从
-``experimental``
-提升
-为
-``unstable``。
+对于硬件无关 API，需要多个应用程序在使用它之后，
+才能将其从 ``experimental`` 提升为 ``unstable``。
 
 .. _api_lifecycle_stable:
 
 稳定
 *******
 
-API
-已
-被
-证明
-令人
-满意，
-但
-底层
-代码
-中
-的
-清理
-可能
-导致
-小
-更改。
-如果
-合理，
-将
-保持
-向后
-兼容性。
+API 已被证明令人满意，但底层代码的清理可能导致小的变更。
+在合理的情况下，将保持向后兼容性。
 
-API
-在
-满足
-以下
-要求
-后
-可以
-被
-声明
-为
-``stable``：
+API 在满足以下要求后可被声明为 ``stable``：
 
-- 新
-  API
-  的
-  测试
-  用例
-  覆盖
-  率
-  100%
-- 代码
-  中
-  完整
-  的
-  文档。
-  所有
-  公共
-  接口
-  应该
-  被
-  文档化
-  并
-  在
-  在线
-  文档
-  中
-  可用。
-- API
-  已
-  被
-  使用
-  并
-  在
-  至少
-  2
-  个
-  开发
-  发布
-  中
-  可用
-- 稳定
-  API
-  可以
-  随时
-  获得
-  向后
-  兼容
-  的
-  更新、
-  bug
-  修复
-  和
-  安全
-  修复
+- 新 API 的测试用例，覆盖率 100%。
+- 代码中的完整文档。所有公共接口都应被文档化并可在在线文档中查阅。
+- API 已在使用中，并已在至少 2 个开发版本中可用。
+- 稳定 API 可以随时获得向后兼容的更新、缺陷修复和安全修复。
 
-要
-声明
-API
-为
-``stable``，
-需要
-遵循
-以下
-步骤：
+为了将 API 声明为 ``stable``，需要遵循以下步骤：
 
-#. 必须
-   打开
-   一个
-   Pull
-   Request
-   更改
-   :ref:`api_overview`
-   表格
-   中
-   对应
-   的
-   条目
-#. 必须
-   向
-   ``devel``
-   邮件
-   列表
-   发送
-   邮件
-   公告
-   API
-   升级
-   请求
-#. Pull
-   Request
-   必须
-   被
-   提交
-   在
-   下一
-   `Zephyr
-   架构
-   会议`_
-   中
-   讨论，
-   除
-   非
-   有
-   异议，
-   Pull
-   Request
-   将
-   被
-   合并
+#. 必须提交一个 Pull Request，更改 :ref:`api_overview` 表格中对应的条目。
+#. 必须向 ``devel`` 邮件列表发送一封邮件，公告该 API 升级请求。
+#. 该 Pull Request 必须提交到下一次 `Zephyr Architecture meeting`_ 讨论，
+   若无异议，该 Pull Request 将被合并。
 
-
-当
-API
-状态
-更改
-为
-稳定
-API
-时，
-在
-API
-定义
-的
-头
-文件
-中
-标记
-API
-版本。
-稳定
-API
-应该
-有
-一个
-主要
-版本
-等于
-一
-或
-更大
-（x.y.z
-|
-x
->=
-1）
-的
-版本。
-（见
-:ref:`api_overview`）
+当 API 状态变更为稳定 API 时，应在定义该 API 的头文件中标记 API 版本。
+稳定 API 的版本号中，主版本号应大于或等于 1（x.y.z | x >= 1）。（参见 :ref:`api_overview`）
 
 .. _breaking_api_changes:
 
-引入
-破坏性
-API
-更改
-================
+引入破坏性 API 变更
+================================
 
-如
-上面
-所述
-的
-稳定
-API
-努力
-在
-其
-生命周期
-中
-保持
-向后
-兼容。
-不过
-有
-一些
-情况
-满足
-这个
-目标
-会
-阻止
-技术
-进步，
-或
-在
-不
-给
-API
-及
-其
-实现
-的
-维护
-带来
-不合理
-负担
-的
-情况
-下
-根本
-不可
-行。
+如前所述，稳定 API 在其整个生命周期中力求保持向后兼容。
+然而，在某些情况下，实现这一目标会阻碍技术进步，
+或者在不给 API 及其实现的维护带来不合理负担的情况下根本不可行。
 
-破坏性
-API
-更改
-定义
-为
-一个
-强制
-用户
-修改
-其
-现有
-代码
-以
-保持
-应用
-当前
-行为
-的
-更改。
-应用
-重新
-编译
-的
-需要
-（不
-更改
-应用
-本身）
-不
-被
-认为
-是
-破坏性
-API
-更改。
+破坏性 API 变更被定义为：迫使用户修改现有代码以维持其应用程序当前行为的变更。
+仅需要重新编译应用程序（而不修改应用程序本身）不被视为破坏性 API 变更。
 
-为了
-限制
-和
-控制
-引入
-破坏
-向后
-兼容性
-承诺
-的
-更改，
-每当
-认为
-需要
-这样
-的
-更改
-以
-在
-项目
-中
-接受
-它
-时，
-必须
-遵循
-以下
-步骤：
+为了限制和控制引入破坏向后兼容承诺的变更，
+每当认为此类变更有必要时，必须遵循以下步骤才能被项目接受：
 
-#. 必须
-   在
-   GitHub
-   上
-   打开
-   一个
-   :ref:`RFC
-   issue
-   <rfcs>`，
-   包含
-   以下
-   内容：
+#. 必须在 GitHub 上打开一个 :ref:`RFC issue <rfcs>`，包含以下内容：
 
    .. code-block:: none
 
       Title:     RFC: Breaking API Change: <subsystem>
       Contents:  - Problem Description:
-                  - Background information on why the change is required
-                - Proposed Change (detailed):
-                  - Brief description of the API change
-                - Detailed RFC:
-                  - Function call changes
-                  - Device Tree changes (source and bindings)
-                  - Kconfig option changes
-                - Dependencies:
-                  - Impact to users of the API, including the steps required
-                    to adapt out-of-tree users of the API to the change
+                   - Background information on why the change is required
+                 - Proposed Change (detailed):
+                   - Brief description of the API change
+                 - Detailed RFC:
+                   - Function call changes
+                   - Device Tree changes (source and bindings)
+                   - Kconfig option changes
+                 - Dependencies:
+                   - Impact to users of the API, including the steps required
+                     to adapt out-of-tree users of the API to the change
 
-   RFC
-   issue
-   可以
-   链接
-   到
-   包含
-   这些
-   更改
-   代码
-   形式
-   的
-   Pull
-   Request
-   替代
-   更改
-   的
-   书面
-   描述。
-#. RFC
-   issue
-   必须
-   用
-   GitHub
-   ``Breaking
-   API
-   Change``
-   标签
-   标记
-#. RFC
-   issue
-   必须
-   被
-   提交
-   在
-   下一
-   `Zephyr
-   架构
-   会议`_
-   中
-   讨论
-#. 必须
-   向
-   ``devel``
-   邮件
-   列表
-   发送
-   邮件，
-   主题
-   与
-   RFC
-   issue
-   标题
-   相同
-   并
-   链接
-   到
-   RFC
-   issue
+   RFC issue 可以链接到一个包含这些代码形式变更的 Pull Request，
+   以替代对变更的书面描述。
+#. 该 RFC issue 必须被标记为 GitHub 的 ``Breaking API Change`` 标签。
+#. 该 RFC issue 必须提交到下一次 `Zephyr Architecture meeting`_ 讨论。
+#. 必须向 ``devel`` 邮件列表发送一封邮件，主题与 RFC issue 标题相同，
+   并链接到该 RFC issue。
 
-RFC
-然后
-将
-通过
-issue
-评论
-接收
-反馈
-并
-也
-将
-在
-Zephyr
-架构
-会议
-中
-讨论，
-利益
-相关者
-和
-社区
-整体
-将
-有
-机会
-详细
-讨论
-它。
+随后，该 RFC 将通过 issue 评论获得反馈，
+并将在 Zephyr 架构会议上讨论，利益相关者和整个社区将有机会详细讨论。
 
-最后，
-如果
-没有
-作为
-第一步
-的
-一部分
-完成，
-必须
-在
-GitHub
-上
-打开
-一个
-Pull
-Request。
-由
-提出
-更改
-的
-人
-决定
-是
-同时
-引入
-RFC
-和
-Pull
-Request
-还是
-等待
-直到
-RFC
-收集
-到
-足够
-共识
-使
-实现
-可以
-有
-信心
-地
-推进
-它
-将
-被
-接受。
-Pull
-Request
-必须
-包括
-以下：
+最后，如果尚未在第一步中完成，必须在 GitHub 上提交一个 Pull Request。
+由提出变更的人决定是同时引入 RFC 和 Pull Request，
+还是等到 RFC 获得足够共识后再推进实施，
+以确信该变更将被接受。
+该 Pull Request 必须包含以下内容：
 
-- 与
-  RFC
-  issue
-  匹配
-  的
-  标题
-- 链接
-  到
-  RFC
-  issue
-- API
-  的
-  实际
-  更改
+- 与 RFC issue 匹配的标题。
+- 指向 RFC issue 的链接。
+- 对 API 的实际变更：
 
-  - API
-    头
-    文件
-    的
-    更改
-  - API
-    实现
-    的
-    更改
-  - 相关
-    API
-    文档
-    的
-    更改
-  - 设备
-    树
-    源
-    和
-    绑定
-    的
-    更改
+  - API 头文件的变更
+  - API 实现的变更
+  - 相关 API 文档的变更
+  - 设备树源文件和绑定的变更
 
-- 适应
-  API
-  树
-  内
-  用户
-  到
-  更改
-  所需
-  的
-  更改。
-  根据
-  这个
-  任务
-  的
-  范围，
-  这
-  可能
-  需要
-  对应
-  维护者
-  的
-  额外
-  帮助
-- 在
-  下一
-  个
-  即将
-  发布
-  的
-  发布
-  说明
-  的
-  "API
-  Changes"
-  章节
-  中
-  的
-  条目
-- 标签
-  ``API``、``Breaking
-  API
-  Change``
-  和
-  ``Release
-  Notes``，
-  以及
-  任何
-  其他
-  适用
-  的
-  标签
-- 如果
-  RFC
-  还
-  没
-  在
-  `Zephyr
-  架构
-  会议`_
-  中
-  讨论
-  并
-  达成
-  一致，
-  标签
-  ``Architecture
-  Review``
+- 将树内 API 用户适配到该变更所需的修改。
+  根据该任务的范围，可能需要相应维护者的额外帮助。
+- 在下一个即将发布的版本的发布说明的 "API Changes" 部分中添加条目。
+- ``API``、``Breaking API Change`` 和 ``Release Notes`` 标签，
+  以及其他适用的标签。
+- 如果该 RFC 尚未在 `Zephyr Architecture meeting`_ 中讨论并达成一致，
+  还需添加 ``Architecture Review`` 标签。
 
-上面
-的
-步骤
-完成
-后，
-提案
-的
-结果
-将
-取决于
-对应
-子系统
-维护者
-对
-实际
-Pull
-Request
-的
-批准。
-与
-任何
-其他
-Pull
-Request
-一样，
-作者
-可以
-请求
-它
-被
-讨论
-甚至
-最终
-在
-`Zephyr
-TSC
-会议`_
-中
-投票。
+完成上述步骤后，提案的结果将取决于相应子系统维护者
+对实际 Pull Request 的批准。与其他任何 Pull Request 一样，
+作者可以请求在 `Zephyr TSC meeting`_ 中讨论，甚至最终进行投票。
 
-如果
-Pull
-Request
-被
-合并，
-必须
-向
-``devel``
-和
-``user``
-邮件
-列表
-发送
-邮件
-告知
-它们
-更改。
+如果该 Pull Request 被合并，则必须向 ``devel`` 和 ``user`` 邮件列表
+发送邮件，通知他们该变更。
 
-API
-版本
-应该
-被
-更改
-以
-信号
-向后
-不
-兼容
-更改。
-这
-通过
-递增
-主要
-版本
-（X.y.z
-|
-X
->
-1）
-实现。
-它
-可以
-也
-包括
-次要
-和
-补丁
-级
-更改。
-主要
-版本
-递增
-时
-补丁
-和
-次要
-版本
-必须
-重置
-为
-0。
-（见
-:ref:`api_overview`）
+API 版本号应被更改以标记向后不兼容的变更。
+这通过递增主版本号（X.y.z | X > 1）来实现。
+它也可以包含次版本号和补丁级别的变更。
+当主版本号递增时，补丁版本号和次版本号必须重置为 0。（参见 :ref:`api_overview`）
 
 .. note::
 
-   破坏性
-   API
-   更改
-   将
-   在
-   迁移
-   指南
-   中
-   列出
-   并
-   描述。
+   破坏性 API 变更将在迁移指南中列出并描述。
 
-已
-弃用
+Deprecated
 ***********
 
 .. note::
 
-   不稳定
-   API
-   可以
-   随时
-   不
-   经过
-   弃用
-   就
-   被
-   移除。
-   API
-   的
-   弃用
-   和
-   移除
-   将
-   在
-   发布
-   说明
-   的
-   "API
-   Changes"
-   章节
-   中
-   公告。
+   不稳定 API 可以在任何时间不经弃用直接移除。
+   API 的弃用和移除将在发布说明的 "API Changes" 部分中公告。
 
-以下
-是
-弃用
-现有
-API
-的
-要求：
+弃用现有 API 的以下要求：
 
-- 弃用
-  时间
-  （稳定
-  API）：
-  2
-  个
-  发布
-  API
-  需要
-  在
-  至少
-  两个
-  完整
-  发布
-  中
-  被
-  标记
-  为
-  已
-  弃用。
-  例如，
-  如果
-  API
-  首先
-  在
-  发布
-  4.0
-  中
-  被
-  弃用，
-  它
-  最早
-  在
-  4.2
-  中
-  准备
-  被
-  移除。
-  可能
-  有
-  特殊
-  情况，
-  由
-  架构
-  工作
-  组
-  决定，
-  API
-  更早
-  被
-  弃用。
-- 弃用
-  时
-  需要
-  什么：
+- 弃用时间（稳定 API）：2 个发布版本。
+  API 需要在至少两个完整版本中被标记为已弃用。
+  例如，如果某个 API 在 4.0 版本中首次被弃用，
+  那么它最早在 4.2 版本中可以被移除。
+  可能存在特殊情形，由架构工作组决定提前弃用某个 API。
+- 弃用时需要做的：
 
-  - 标记
-    为
-    已
-    弃用。
-    这
-    可以
-    通过
-    使用
-    编译器
-    本身
-    （函数
-    声明
-    用
-    ``__deprecated``
-    宏
-    定义
-    用
-    ``__DEPRECATED_MACRO``）
-    或
-    引入
-    一个
-    Kconfig
-    选项
-    （通常
-    一个
-    包含
-    ``DEPRECATED``
-    词
-    的
-    选项）
-    来
-    做，
-    当
-    启用
-    时
-    将
-    API
-    恢复
-    到
-    其
-    之前
-    形式
-  - 文档化
-    弃用
-  - 将
-    弃用
-    包括
-    在
-    下一
-    个
-    即将
-    发布
-    的
-    发布
-    说明
-    的
-    "API
-    Changes"
-    中
-  - 使用
-    已
-    弃用
-    API
-    的
-    代码
-    需要
-    被
-    修改
-    以
-    移除
-    对
-    所述
-    API
-    的
-    使用
-  - 更改
-    需要
-    是
-    原子
-    的
-    和
-    可
-    bisect
-    的
-  - 在
-    对应
-    发布
-    `GitHub
-    issue
-    <https://github.com/zephyrproject-rtos/zephyr/labels/deprecation_tracker>`_
-    中
-    添加
-    条目
-    跟踪
-    已
-    弃用
-    API
-    的
-    移除。
-    在
-    这个
-    示例
-    中
-    对应
-    4.2
-    发布
-    的
-    那个。
+  - 标记为已弃用。这可以通过编译器本身实现
+    （函数声明使用 ``__deprecated``，宏定义使用 ``__DEPRECATED_MACRO``），
+    或者通过引入一个 Kconfig 选项（通常包含 ``DEPRECATED`` 字样）来实现，
+    启用该选项可将 API 恢复为其先前的形式。
+  - 记录该弃用。
+  - 在下一个即将发布的版本的发布说明的 "API Changes" 部分中包含该弃用。
+  - 使用已弃用 API 的代码需要被修改以移除对该 API 的使用。
+  - 变更需要是原子的且可二分查找的。
+  - 在相应版本的 `GitHub issue <https://github.com/zephyrproject-rtos/zephyr/labels/deprecation_tracker>`_
+    中添加条目，跟踪已弃用 API 的移除。
+    在此示例中，即对应 4.2 版本的那个。
 
-在
-弃用
-等待
-期
-间，
-API
-将
-处于
-``deprecated``
-状态。
-Zephyr
-维护者
-将
-在
-``docs.zephyrproject.org``
-上
-跟踪
-已
-弃用
-API
-的
-使用
-并
-支持
-开发者
-迁移
-其
-代码。
-Zephyr
-将
-继续
-提供
-警告：
+在弃用等待期间，API 将处于 ``deprecated`` 状态。
+Zephyr 维护者将在 ``docs.zephyrproject.org`` 上跟踪已弃用 API 的使用情况，
+并支持开发者迁移其代码。Zephyr 将继续提供以下警告：
 
-- API
-  文档
-  将
-  告知
-  用户
-  API
-  已
-  弃用。
-- 构建
-  时
-  尝试
-  使用
-  已
-  弃用
-  API
-  将
-  向
-  控制台
-  记录
-  警告。
+- API 文档将告知用户该 API 已弃用。
+- 构建时尝试使用已弃用 API 将向控制台记录一条警告。
 
 
-已
-退休
+Retired
 *******
 
-在
-这个
-阶段，
-API
-被
-移除。
+在此阶段，API 被移除。
 
-目标
-移除
-日期
-是
-弃用
-被
-公告
-后
-2
-个
-发布。
-Zephyr
-维护者
-将
-决定
-何时
-实际
-移除
-API：
-这
-将
-取决于
-多少
-开发者
-成功
-从
-已
-弃用
-API
-迁移，
-以及
-API
-需要
-被
-移除
-的
-紧迫
-程度。
+目标移除日期是弃用公告后 2 个发布版本。
+Zephyr 维护者将决定何时实际移除该 API：
+这将取决于多少开发者已成功从已弃用 API 迁移，
+以及移除该 API 的紧迫程度。
 
-如果
-移除
-API
-可以，
-它
-将
-被
-移除。
-维护者
-将
-移除
-对应
-的
-文档，
-并
-用
-通常
-的
-方式
-沟通
-移除：
-发布
-说明、
-邮件
-列表、
-Github
-issues
-和
-pull-requests。
+如果移除该 API 是可行的，它将被移除。
+维护者将移除对应的文档，并以通常的方式通知该移除：
+发布说明、邮件列表、GitHub issues 和 pull-requests。
 
-如果
-移除
-API
-不
-可以，
-维护者
-将
-继续
-支持
-迁移
-并
-更新
-路线图
-以
-目标
-在
-下一
-发布
-中
-移除
-API。
+如果移除该 API 不可行，维护者将继续支持迁移，
+并更新路线图，目标是移除该 API 在下一个发布版本中移除。
 
-.. _`Zephyr
-   TSC
-   会议`: https://github.com/zephyrproject-rtos/zephyr/wiki/Zephyr-Committee-and-Working-Group-Meetings#technical-steering-committee-tsc
-.. _`Zephyr
-   架构
-   会议`: https://github.com/zephyrproject-rtos/zephyr/wiki/Architecture-Working-Group
+.. _`Zephyr TSC meeting`: https://github.com/zephyrproject-rtos/zephyr/wiki/Zephyr-Committee-and-Working-Group-Meetings#technical-steering-committee-tsc
+.. _`Zephyr Architecture meeting`: https://github.com/zephyrproject-rtos/zephyr/wiki/Architecture-Working-Group

@@ -1,17 +1,13 @@
 .. _adc_api:
 
-Analog-to-Digital
-Converter
-（ADC）
+模数转换器（ADC）
 #################################
 
-Overview
+概述
 ********
 
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   adc_interface
+.. doxygengroup:: adc_interface

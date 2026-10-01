@@ -1,450 +1,80 @@
 .. _language_rust:
 
-Rust
-语言
-支持
+Rust 语言支持
 #####################
 
-Rust
-是
-一种
-现代
-系统
-编程
-语言，
-设计
-用于
-提供
-内存
-安全、
-并发
-和
-性能
-而
-不
-牺牲
-低
-层
-控制。
-它
-通过
-独特
-的
-所有权
-模型
-在
-编译
-时
-消除
-常见
-bug
-如
-空
-指针
-解引用
-和
-数据
-竞争
-来
-实现
-这。
+Rust 是一种现代系统编程语言，旨在在不牺牲底层控制能力的前提下提供内存安全、并发和性能。它通过独特的所有权模型，在编译时消除空指针解引用和数据竞争等常见缺陷。
 
-Rust
-对
-安全
-和
-正确性
-的
-强调
-使
-它
-特别
-适合
-嵌入式
-系统
-和
-可靠性
-关键
-的
-环境。
-此外，
-Rust
-提供
-强大
-的
-抽象
-而
-不
-有
-运行
-时
-或
-垃圾
-收集器，
-允许
-开发者
-有
-信心
-和
-效率
-地
-编写
-既
-高
-层
-代码
-又
-低
-层
-硬件
-交互。
+Rust 对安全性和正确性的强调使其特别适合嵌入式系统以及可靠性至关重要的环境。此外，Rust 提供强大的抽象，且不依赖运行时或垃圾回收器，使开发者能够自信且高效地编写高层代码和底层硬件交互代码。
 
-这些
-属性
-使
-Rust
-成为
-Zephyr
-上
-项目
-的
-强
-选择，
-那里
-资源
-约束
-和
-系统
-稳定性
-至
-关
-重要。
+这些特性使 Rust 成为 Zephyr 上项目的有力选择，因为在这些项目中资源约束和系统稳定性至关重要。
 
-启用
-Rust
-支持
+启用 Rust 支持
 *********************
 
-要
-在
-Zephyr
-应用
-中
-启用
-Rust
-支持，
-需要
-做
-几
-件
-事情：
+要在 Zephyr 应用中启用 Rust 支持，需要完成以下几项工作：
 
-1.  由于
-   Rust
-   当前
-   是
-   一个
-   可选
-   模块，
-   模块
-   需要
-   被
-   启用。
-   最
-   简单
-   的
-   方式
-   用
-   west：
+1.  由于 Rust 目前是一个可选模块，因此需要启用该模块。最简单的方法是通过 west：
 
-   .. code-block:: shell
+    .. code-block:: shell
 
-      west
-      config
-      manifest.project-filter
-      +zephyr-lang-rust
-      west
-      update
+       west config manifest.project-filter +zephyr-lang-rust
+       west update
 
-   这
-   应该
-   导致
-   Rust
-   语言
-   支持
-   被
-   放
-   在
-   你
-   的
-   Zephyr
-   工作区
-   的
-   :samp:`modules/lang/rust`
-   中。
+    执行后，Rust 语言支持会被放置在你的 Zephyr 工作区的 :samp:`modules/lang/rust` 目录中。
 
-2.  通过
-   :file:`prj.conf`
-   中
-   的
-   :kconfig:option:`CONFIG_RUST`
-   启用
-   Rust
-   支持。
-   最
-   简单
-   的
-   方式
-   （以及
-   下一
-   步
-   的
-   CMake
-   设置）
-   是
-   从
-   :module_file:`modules/lang/rust/samples
-   <zephyr-lang-rust:samples>`
-   中
-   的
-   一个
-   示例
-   开始。
+2.  通过 :file:`prj.conf` 中的 :kconfig:option:`CONFIG_RUST` 启用 Rust 支持。最简单的方法（同时也用于完成下一步的 CMake 配置）是从 :module_file:`modules/lang/rust/samples <zephyr-lang-rust:samples>` 中的某个示例开始。
 
-3.  配置
-   应用
-   的
-   :file:`CMakeLists.txt`
-   文件
-   支持
-   Rust。
-   再次
-   这
-   最
-   简单
-   从
-   示例
-   复制，
-   但
-   这
-   会
-   看起来
-   像：
+3.  配置应用的 :file:`CMakeLists.txt` 文件以支持 Rust。这同样最适合从示例中复制，内容大致如下：
 
-   .. code-block:: cmake
+    .. code-block:: cmake
 
-      cmake_minimum_required(VERSION
-      3.28.0)
+       cmake_minimum_required(VERSION 3.28.0)
 
-      find_package(Zephyr
-      REQUIRED
-      HINTS
-      $ENV{ZEPHYR_BASE})
+       find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 
-      project(my_app)
-      rust_cargo_application()
+       project(my_app)
+       rust_cargo_application()
 
-4.  创建
-   一个
-   :file:`Cargo.toml`
-   描述
-   如何
-   构建
-   Rust
-   应用。
-   从
-   Hello
-   World
-   示例：
+4.  创建一个 :file:`Cargo.toml` 文件，用于描述如何构建 Rust 应用。以下来自 Hello World 示例：
 
-   .. code-block:: toml
+    .. code-block:: toml
 
-      [package]
-      #
-      这
-      当前
-      必须
-      是
-      rustapp。
-      name
-      =
-      "rustapp"
-      version
-      =
-      "0.1.0"
-      edition
-      =
-      "2021"
-      description
-      =
-      "我的
-      应用
-      的
-      描述"
-      license
-      =
-      "Apache-2.0
-      or
-      MIT"
+       [package]
+       # This must be rustapp for now.
+       name = "rustapp"
+       version = "0.1.0"
+       edition = "2021"
+       description = "The description of my app"
+       license = "Apache-2.0 or MIT"
 
-      [lib]
-      crate-type
-      =
-      ["staticlib"]
+       [lib]
+       crate-type = ["staticlib"]
 
-      [dependencies]
-      zephyr
-      =
-      "0.1.0"
-      log
-      =
-      "0.4.22"
+       [dependencies]
+       zephyr = "0.1.0"
+       log = "0.4.22"
 
-   唯一
-   需要
-   的
-   依赖
-   是
-   ``zephyr``，
-   它
-   提供
-   用于
-   与
-   Zephyr
-   接口
-   的
-   zephyr
-   crate。
+    唯一必需的依赖项是 ``zephyr``，它提供用于与 Zephyr 交互的 zephyr crate。
 
-5.  像
-   任何
-   其他
-   Zephyr
-   应用
-   一样
-   构建。
-   只有
-   少数
-   目标
-   当前
-   支持
-   Rust
-   （这些
-   可以
-   在
-   :module_file:`modules/lang/rust/etc/platforms.txt
-   <zephyr-lang-rust:etc/platforms.txt>`
-   文件
-   中
-   看到）。
+5.  像构建其他 Zephyr 应用一样构建应用。目前只有少数目标支持 Rust（这些目标可以在 :module_file:`modules/lang/rust/etc/platforms.txt <zephyr-lang-rust:etc/platforms.txt>` 文件中查看）。
 
-API
-文档
+API 文档
 *****************
 
-模块
-中
-最新
-版本
-的
-`API
-文档`_
-保持
-在
-gh-pages
-上。
+模块中最新版本的 `API Documentation`_ 托管在 gh-pages 上。
 
-.. _`API
-   文档`:
+.. _`API Documentation`:
    https://zephyrproject-rtos.github.io/zephyr-lang-rust/nostd/zephyr/index.html
 
-这个
-文档
-为
-通用
-目标
-生成，
-所有
-功能
-启用。
-一旦
-你
-有
-一个
-可
-构建
-的
-应用，
-你
-可以
-专门
-为
-你的
-目标
-生成
-文档：
+该文档针对通用目标生成，并启用所有功能。一旦你拥有一个可构建的应用，就可以专门针对你的目标生成文档：
 
 .. code-block:: shell
 
-   west
-   build
-   -t
-   rustdoc
+   west build -t rustdoc
 
    ...
 
-   Generated
-   /my/path/app/zephyr/build/doc/rust/target/riscv32i-unknown-none-elf/doc/rustapp/index.html
+   Generated /my/path/app/zephyr/build/doc/rust/target/riscv32i-unknown-none-elf/doc/rustapp/index.html
 
-最后
-打印
-的
-路径
-可以
-在
-浏览器
-中
-打开。
-这个
-顶层
-文档
-将
-是
-关于
-你
-的
-应用
-本身。
-在
-左
-侧
-栏
-找
-'zephyr'
-crate，
-这
-将
-带
-你
-到
-Zephyr
-的
-文档。
-这个
-页面
-也
-将
-为
-你
-的
-应用
-使用
-的
-任何
-依赖
-（直接
-或
-间接）
-生成
-本地
-文档。
+最后打印出的路径可以在浏览器中打开。顶层文档对应的是你的应用本身。在左侧栏找到 “zephyr” crate，即可进入 Zephyr 的文档。该页面还会为你的应用直接或间接使用的所有依赖项生成本地文档。

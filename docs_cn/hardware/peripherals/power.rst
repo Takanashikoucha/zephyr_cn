@@ -1,20 +1,12 @@
 .. _power_peripherals:
 
-Power
+电源
 #####
 
-Power
-management、
-charging、
-regulators、
-reset、
-和
-wake-up
-controllers。
+电源管理、充电、电压调节器、复位与唤醒控制器。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    bc12.rst
    charger.rst

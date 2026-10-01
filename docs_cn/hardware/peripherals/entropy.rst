@@ -1,49 +1,14 @@
 .. _entropy_api:
 
-Entropy
+熵源
 #######
 
-Overview
+概述
 ********
 
-Entropy
-API
-提供
-函数
-从
-platform
-上
-存在
-的
-entropy
-hardware
-获取
-entropy
-values。
-Entropy
-APIs
-被
-提供
-用于
-random
-subsystem
-和
-cryptographic
-services
-使用。
-它们
-不
-适合
-用
-作
-random
-number
-generation
-functions。
+熵源 API 提供从平台上的熵源硬件获取熵值的函数。熵源 API 供随机数子系统和加密服务使用，不适合直接作为随机数生成函数使用。
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   entropy_interface
+.. doxygengroup:: entropy_interface

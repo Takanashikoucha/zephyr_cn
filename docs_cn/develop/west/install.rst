@@ -1,175 +1,120 @@
 .. _west-install:
 
-安装
-west
+安装 west
 ###############
 
-West
-用
-Python
-3
-编写
-并
-通过
-`PyPI`_
-分发。
-用
-:file:`pip3`
-安装
-或
-升级
-west：
+West 使用 Python 3 编写，并通过 `PyPI`_ 分发。
+使用 :file:`pip3` 安装或升级 west：
 
-在
-Linux
-上::
+在 Linux 上::
 
-   pip3
-   install
-   --user
-   -U
-   west
+  pip3 install --user -U west
 
-在
-Windows
-和
-macOS
-上::
+在 Windows 和 macOS 上::
 
-   pip3
-   install
-   -U
-   west
+  pip3 install -U west
 
 .. note::
-   参考
-   :ref:`python-pip`
-   获取
-   关于
-   使用
-   ``--user``
-   开关
-   的
-   额外
-   说明。
+   关于使用 ``--user`` 开关的更多说明，参见 :ref:`python-pip`。
 
-之后，
-你
-可以
-运行
-``pip3
-show
--f
-west``
-获取
-west
-二进制
-文件
-和
-相关
-文件
-安装
-到
-哪里
-的
-信息。
+之后，你可以运行 ``pip3 show -f west`` 查看 west 可执行文件
+及相关文件被安装到了哪里。
 
-一旦
-west
-安装
-完成，
-你
-可以
-用
-它
-:ref:`clone
-the
-Zephyr
-repositories
-<clone-zephyr>`。
+west 安装完成后，你可以用它来 :ref:`克隆 Zephyr 仓库 <clone-zephyr>`。
 
 .. _west-struct:
 
 结构
 *********
 
-West
-的
-代码
-通过
-PyPI
-分发
-在
-命名
-为
-``west``
-的
-Python
-包
-中。
-这
-个
-分发
-包括
-一
-个
-启动器
-可执行
-文件，
-也
-命名
-为
-``west``
-（在
-Windows
-上
-``west.exe``）。
+West 的代码以名为 ``west`` 的 Python 包形式通过 PyPI 分发。
+该发行版包含一个名为 ``west``（Windows 上为 ``west.exe``）
+的启动器可执行文件。
 
-当
-west
-安装
-时，
-启动器
-被
-:file:`pip3`
-放置
-在
-用户
-文件
-系统
-的
-某
-处
-（精确
-哪里
-取决于
-操作系统，
-但
-应该
-在
-``PATH``
-:ref:`environment
-variable
-<env_vars>`
-上）。
-这
-个
-启动器
-是
-运行
-内置
-命令
-（如
-``west
-init``、
-``west
-update``）
-和
-发现
-的
-任何
-扩展
-的
-命令行
-入口
-点。
+west 安装时，:file:`pip3` 会把启动器放到用户文件系统的某个位置
+（具体位置取决于操作系统，但应位于
+``PATH`` :ref:`环境变量 <env_vars>` 上）。
+这个启动器是运行内置命令（如 ``west init``、``west update``）
+以及工作区中发现的任何扩展的命令行入口。
+
+除了命令行接口，你还可以直接使用 west 的 Python API。
+详情参见 :ref:`west-apis`。
+
+.. _west-shell-completion:
+
+启用 shell 补全
+*************************
+
+West 目前支持以下 shell 的补全：
+
+* bash
+* zsh
+* fish
+* powershell（仅支持板级限定符）
+
+要启用 shell 补全，你需要获取对应的补全脚本并将其加载（source）。
+补全脚本的使用方法如下：
+
+.. tabs::
+
+  .. group-tab:: bash
+
+    *一次性设置*：
+
+    .. code-block:: bash
+
+      source <(west completion bash)
+
+    *永久设置*：
+
+    .. code-block:: bash
+
+      west completion bash > ~/west-completion.bash; printf '\n%s\n' "source ~/west-completion.bash" >> ~/.bashrc
+
+  .. group-tab:: zsh
+
+    *一次性设置*：
+
+    .. code-block:: zsh
+
+      source <(west completion zsh)
+
+    *永久设置*：
+
+    .. code-block:: zsh
+
+      west completion zsh > "${fpath[1]}/_west"
+
+  .. group-tab:: fish
+
+    *一次性设置*：
+
+    .. code-block:: fish
+
+      west completion fish | source
+
+    *永久设置*：
+
+    .. code-block:: fish
+
+      west completion fish > $HOME/.config/fish/completions/west.fish
+
+  .. group-tab:: powershell
+
+    *一次性设置*：
+
+    .. code-block:: powershell
+
+      west completion powershell | Out-String | Invoke-Expression
+
+    *永久设置*：
+
+    .. code-block:: powershell
+
+      Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+      New-item -type file -force $PROFILE
+      west completion powershell > $HOME/west-completion.ps1
+      (Add-Content -Path $PROFILE -Value ". '{$HOME/west-completion.ps1}'")
+
+.. _PyPI:
+   https://pypi.org/project/west/

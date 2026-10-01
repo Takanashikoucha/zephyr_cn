@@ -1,13 +1,10 @@
 .. _arch:
 
-Architecture
-相关
-Guides
+架构相关指南
 ###########################
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    arc-support-status.rst
    arm_cortex_m.rst

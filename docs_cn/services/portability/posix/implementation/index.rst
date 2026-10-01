@@ -1,327 +1,59 @@
 .. _posix_details:
 
-Implementation
-Details
+实现细节
 ######################
 
-在
-many
-ways
-Zephyr
-provide
-support
-像
-任何
-POSIX
-OS
-API
-bindings
-在
-C
-programming
-language
-中
-provided
-POSIX
-headers
-在
-standard
-的
-include
-path
-中
-available
-当
-被
-configured
-时。
+在许多方面，Zephyr 提供的支持与任何 POSIX 操作系统类似；API 绑定以 C 编程语言提供，在配置后，POSIX 头文件可在标准包含路径中使用。
 
-与
-其他
-multi
-purpose
-的
-POSIX
-operating
-systems
-不同
+与其他多用途 POSIX 操作系统不同：
 
--
-Zephyr
-不
-是
-"一
-个
-POSIX
-OS"。
-Zephyr
-kernel
-不
-围绕
-POSIX
-standard
-designed
-且
-POSIX
-support
-是
-一
-个
-opt
-in
-的
-feature
--
-Zephyr
-apps
-不
-被
-separately
-linked
-也
-不
-作为
-subprocesses
-execute
--
-Zephyr、
-libraries、
-和
-application
-code
-被
-compiled
-并
-linked
-together
-run
-similarly
-于
-单
-个
-process
-的
-application
-在
-单
-个
-（可能
-virtual
-的）
-address
-space
-中
--
-Zephyr
-不
-provide
-POSIX
-shell、
-compiler、
-utilities
-且
-不
-是
-self
-hosting
-的。
+- Zephyr 不是"一个 POSIX 操作系统"。Zephyr 内核并非围绕 POSIX 标准设计，POSIX 支持是一个可选（opt-in）特性
+- Zephyr 应用不会单独链接，也不作为子进程执行
+- Zephyr、库和应用代码被一起编译和链接，运行方式类似于单进程应用，运行在单个（可能是虚拟的）地址空间中
+- Zephyr 不提供 POSIX shell、编译器、实用工具，也不是自托管的。
 
 .. note::
-   与
-   Linux
-   kernel
-   或
-   FreeBSD
-   不同
-   Zephyr
-   不
-   maintain
-   一
-   个
-   static
-   的
-   system
-   call
-   numbers
-   table
-   对
-   每个
-   supported
-   的
-   architecture
-   相反
-   它
-   在
-   build
-   time
-   dynamically
-   generate
-   system
-   calls。
-   参考
-   :ref:`System
-   Calls
-   <syscalls>`
-   获取
-   更多
-   information。
+   与 Linux 内核或 FreeBSD 不同，Zephyr 不为每个支持的架构维护系统调用编号的静态表，而是在构建时动态生成系统调用。更多信息参见 :ref:`System Calls <syscalls>`。
 
-Design
+设计
 ======
 
-作为
-一
-个
-library
-Zephyr
-的
-POSIX
-API
-implementation
-make
-effort
-成为
-一
-个
-thin
-的
-abstraction
-layer
-在
-application、
-middleware、
-和
-Zephyr
-kernel
-之间。
+作为库，Zephyr 的 POSIX API 实现力求成为应用、中间件与 Zephyr 内核之间的一层薄抽象层。
 
-Some
-general
-的
-design
-considerations：
+一些通用的设计考虑：
 
--
-POSIX
-interface
-和
-implementations
-应该
-是
-Zephyr
-的
-POSIX
-library
-的
-一
-part
-而
-不
-是
-在
-其他地方
-除非
-POSIX
-API
-implementation
-和
-某
-个
-其他
-feature
-both
-require
-它。
-一
-个
-implementation
-应该
-保持
-POSIX
-implementation
-一
-part
-的
-example
-是
-``getopt()``。
-Implementation
-应该
-是
-separate
-libraries
-一
-part
-的
-examples
-是
-multithreading
-和
-networking。
+- POSIX 接口和实现应当是 Zephyr POSIX 库的一部分，而不是放在其他地方，除非该特性同时被 POSIX API 实现和某个其他特性所必需。一个实现应当保留在 POSIX 实现中的例子是 ``getopt()``。实现应当属于独立库的例子是多线程和网络。
 
--
-当
-POSIX
-API
-和
-另
-一
-个
-Zephyr
-subsystem
-both
-rely
-on
-一
-个
-feature
-时
-该
-feature
-的
-implementation
-应该
-作为
-一
-个
-separate
-的
-Zephyr
-library
-它
-可以
-被
-POSIX
-API
-和
-另
-一
-个
-library
-或
-subsystem
-used。
-这
-reduced
-code
-中
-dependency
-cycles
-的
-likelihood。
-当
-practical
-时
-该
-rule
-应该
-expand
-到
-include
-macros。
-在
-下面
-的
-example
-中
-``libposix``
+- 当 POSIX API 和另一个 Zephyr 子系统都依赖某个特性时，该特性的实现应作为一个独立的 Zephyr 库，可被 POSIX API 和另一个库或子系统使用。这会降低代码中出现依赖循环的可能性。在可行的情况下，该规则应扩展到包含宏。在下面的例子中，``libposix`` 依赖 ``libzfoo`` 来实现 Zephyr 中某个功能"foo"。如果 ``libzfoo`` 也依赖 ``libposix``，那么就会形成依赖循环。可以通过相互依赖 ``libcommon`` 来消除该循环。
+
+.. graphviz::
+   :caption: POSIX 与另一个 Zephyr 库之间的依赖循环
+
+   digraph {
+       node [shape=rect, style=rounded];
+       rankdir=LR;
+
+       libposix [fillcolor="#d5e8d4"];
+       libzfoo [fillcolor="#dae8fc"];
+
+       libposix -> libzfoo;
+       libzfoo -> libposix;
+   }
+
+.. graphviz::
+   :caption: POSIX 与其他 Zephyr 库之间的相互依赖
+
+   digraph {
+       node [shape=rect, style=rounded];
+       rankdir=LR;
+
+       libposix [fillcolor="#d5e8d4"];
+       libzfoo [fillcolor="#dae8fc"];
+       libcommon [fillcolor="#f8cecc"];
+
+       libposix -> libzfoo;
+       libposix -> libcommon;
+       libzfoo -> libcommon;
+   }
+
+- POSIX API 调用应作为常规可调用的 C 函数提供；如果实现的一部分需要 Zephyr :ref:`System Call <syscalls>`，那么该系统调用的声明和实现应隐藏在 POSIX API 之后。

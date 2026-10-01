@@ -1,21 +1,12 @@
 .. _sensor_peripherals:
 
-Sensors
+传感器
 #######
 
-Environmental
-和
-motion
-sensors、
-GNSS、
-biometrics、
-和
-sensor
-interfaces。
+环境与运动传感器、GNSS、生物特征识别及传感器接口。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    sensor/index.rst
    gnss.rst

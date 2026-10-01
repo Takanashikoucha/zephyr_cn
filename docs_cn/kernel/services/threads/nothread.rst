@@ -87,29 +87,24 @@
 考虑增强以添加对原本未实现
 在线程禁用时工作的现有能力的支持。
 
-Flash
+闪存（Flash）
 =====
 
-预期 :ref:`flash_api` 对所有 SoC flash 外设
-驱动程序正常工作。总线访问的设备（如串行存储器）
-可能不受支持。
+预期 :ref:`flash_api` 对所有 SoC 闪存外设驱动程序正常工作。总线访问的设备（如串行存储器）可能不受支持。
 
 *支持的驱动程序列表/表格将放在此处*
 
-GPIO
+通用输入输出（GPIO）
 ====
 
-预期 :ref:`gpio_api` 对所有 SoC GPIO 外设
-驱动程序正常工作。总线访问的设备（如 GPIO 扩展器）
-可能不受支持。
+预期 :ref:`gpio_api` 对所有 SoC GPIO 外设驱动程序正常工作。总线访问的设备（如 GPIO 扩展器）可能不受支持。
 
 *支持的驱动程序列表/表格将放在此处*
 
-UART
+通用异步收发器（UART）
 ====
 
-预期 :ref:`uart_api` 的子集对所有 SoC UART
-外设驱动程序正常工作。
+预期 :ref:`uart_api` 的子集对所有 SoC UART 外设驱动程序正常工作。
 
 * 选择 :kconfig:option:`CONFIG_UART_INTERRUPT_DRIVEN` 的应用
   可能正常工作，取决于驱动程序实现。

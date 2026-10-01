@@ -1,31 +1,24 @@
-.. _develop:
+.. _developing_with_zephyr:
 
-开发指南
-########
-
-本章节提供 Zephyr 开发指南，
-涵盖从入门到进阶的完整开发流程。
+使用 Zephyr 开发
+################
 
 .. toctree::
    :maxdepth: 1
-   :caption: 入门
 
-   getting_started/index
-
-.. toctree::
-   :maxdepth: 1
-   :caption: 工具
-
-   tools/index
+   getting_started/index.rst
+   beyond-GSG.rst
+   env_vars.rst
+   application/index.rst
+   debug/index.rst
+   api/index.rst
+   languages/index.rst
+   optimizations/index
+   flash_debug/index
+   modules.rst
    west/index
-
-.. toctree::
-   :maxdepth: 1
-   :caption: 测试
-
+   twister/index
    test/index
-
-.. note::
-
-   本章节为 Zephyr 开发指南的中文翻译。
-   完整内容请参见上游英文文档 https://docs.zephyrproject.org/latest/develop/
+   sca/index
+   toolchains/index
+   tools/index

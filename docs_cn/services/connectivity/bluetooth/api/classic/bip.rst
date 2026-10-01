@@ -1,15 +1,10 @@
 .. _bt_bip:
 
-Basic
-Imaging
-Profile
-（BIP）
+基本成像配置文件（BIP）
 ###########################
 
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   bt_bip
+.. doxygengroup:: bt_bip

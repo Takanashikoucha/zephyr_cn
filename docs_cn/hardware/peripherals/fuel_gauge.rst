@@ -1,184 +1,42 @@
 .. _fuel_gauge_api:
 
-Fuel
-Gauge
+电量计
 ##########
 
-Fuel
-gauge
-subsystem
-暴露
-一
-个
-API
-统一
-访问
-battery
-fuel
-gauge
-devices。
+电量计子系统提供一个 API，用于统一访问电池电量计设备。
 
-Basic
-Operation
+基本操作
 ***************
 
-Properties
+属性
 ==========
 
-根本
-上，
-property
-是
-fuel
-gauge
-device
-可以
-测量
-的
-quantity。
+从根本上说，属性是电量计设备可以测量的量。
 
-Fuel
-gauges
-通常
-支持
-多
-个
-properties，
-如
-battery-pack
-的
-temperature
-readings
-或
-present-time
-current/voltage。
+电量计通常支持多个属性，例如电池组的温度读数或实时电流/电压。
 
-Properties
-由
-client
-用
-:c:func:`fuel_gauge_get_prop`
-一
-个
-一
-个
-获取
-或
-用
-:c:func:`fuel_gauge_get_props`
-批量
-获取。
-Buffer
-properties
-如
-device
-name
-用
-:c:func:`fuel_gauge_get_buffer_prop`
-获取。
+属性由客户端使用 :c:func:`fuel_gauge_get_prop` 逐个获取，或使用 :c:func:`fuel_gauge_get_props` 批量获取。缓冲区属性（例如设备名称）使用 :c:func:`fuel_gauge_get_buffer_prop` 获取。
 
-Properties
-由
-client
-用
-:c:func:`fuel_gauge_set_prop`
-一
-个
-一
-个
-设置
-或
-用
-:c:func:`fuel_gauge_set_props`
-批量
-设置。
-Buffer
-properties
-如
-battery
-configuration
-image
-用
-:c:func:`fuel_gauge_set_buffer_prop`
-设置。
+属性由客户端使用 :c:func:`fuel_gauge_set_prop` 逐个设置，或使用 :c:func:`fuel_gauge_set_props` 批量设置。缓冲区属性（例如电池配置镜像）使用 :c:func:`fuel_gauge_set_buffer_prop` 设置。
 
 
-Battery
-Cutoff
-=================
+电池截止
+==============
 
-许多
-嵌入
-在
-battery
-packs
-中
-的
-fuel
-gauges
-暴露
-一
-个
-register
-address
-当
-用
-特定
-payload
-写
-入
-时
-将
-执行
-battery
-cutoff。
-这
-个
-battery
-cutoff
-通常
-被
-称为
-ship、
-shelf、
-或
-sleep
-mode
-因为
-其
-在
-设备
-被
-存储
-或
-运输
-时
-减少
-battery
-drain
-的
-实用性。
+许多嵌入电池包中的电量计暴露一个寄存器地址，向该地址写入特定数据时会执行电池截止。该电池截止通常被称为出货模式、搁置模式或睡眠模式，因为它在设备存储或运输期间减少电池消耗方面非常实用。
 
-Fuel
-gauge
-API
-用
-:c:func:`fuel_gauge_battery_cutoff`
-函数
-暴露
-battery
-cutoff。
+电量计 API 通过 :c:func:`fuel_gauge_battery_cutoff` 函数提供电池截止功能。
 
-Caching
+缓存
 =======
 
-Fuel
-Gauge
-API
-显式
-不
-为
-其
-clients
-提供
-caching。
+电量计 API 明确不为其客户端提供缓存。
+
+
+.. _fuel_gauge_api_reference:
+
+API 参考
+*************
+
+.. doxygengroup:: fuel_gauge_interface
+.. doxygengroup:: fuel_gauge_emulator_backend

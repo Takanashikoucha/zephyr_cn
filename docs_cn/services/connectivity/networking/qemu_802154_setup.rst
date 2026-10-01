@@ -1,150 +1,76 @@
 .. _networking_with_ieee802154_qemu:
 
-Networking
-with
-QEMU
-and
-IEEE
-802.15.4
+Networking with QEMU and IEEE 802.15.4
 ######################################
 
 .. contents::
     :local:
-    :depth:
-    2
+    :depth: 2
 
-这
-个
-page
-describe
-如何
-set
-up
-一
-个
-virtual
-network
-在
-两
-个
-QEMUs
-之间
-它们
-通过
-UART
-connect
-在一起
-并
-在
-它们
-之间
-run
-IEEE
-802.15.4
-link
-layer。
-注意
-这
-只
-在
-Linux
-host
-中
-work。
+此页面描述如何在两个通过 UART 连接并运行 IEEE 802.15.4 link layer
+的 QEMU 之间设置虚拟 network。注意这仅在 Linux host 中工作。
 
-Basic
-Setup
+Basic Setup
 ***********
 
-对于
-下面
-的
-steps
-你
-将
-需要
-两
-个
-terminal
-windows：
+以下步骤需两个 terminal windows：
 
-*
-Terminal
-#1
-是
-带
-``echo-server``
-Zephyr
-sample
-application
-的
-terminal
-window。
-*
-Terminal
-#2
-是
-带
-``echo-client``
-Zephyr
-sample
-application
-的
-terminal
-window。
+* Terminal #1 为 ``echo-server`` Zephyr sample application 的 terminal window。
+* Terminal #2 为 ``echo-client`` Zephyr sample application 的 terminal window。
 
-如果
-你
-想
-capture
-transferred
-的
-network
-data
-你
-必须
-compile
-``tools/net-tools``
-directory
-中
-的
-``monitor_15_4``
-program。
+若要捕获传输的 network data（须编译
+``tools/net-tools`` directory 中的 ``monitor_15_4`` program。
 
-Open
-一
-个
-terminal
-window
-并
-type：
+打开 terminal window 并输入：
 
-.. code-block::
-   console
+.. code-block:: console
 
-   cd
-   $ZEPHYR_BASE/../tools/net-tools
-   make
-   monitor_15_4
+   cd $ZEPHYR_BASE/../tools/net-tools
+   make monitor_15_4
 
 
-Step
-1
--
-Compile
-and
-start
-echo-server
+Step 1 - Compile and start echo-server
 ======================================
 
-在
-terminal
-#1
-中
-type：
+Terminal #1 中输入：
 
 .. zephyr-app-commands::
-   :zephyr-app:
-   samples/net/sockets/echo_server
-   :host-os:
-   unix
+   :zephyr-app: samples/net/sockets/echo_server
+   :host-os: unix
+   :board: qemu_x86
+   :build-dir: server
+   :gen-args: -DEXTRA_CONF_FILE=overlay-qemu_802154.conf
+   :goals: server
+   :compact:
+
+若要捕获两个 QEMU 间的 network traffic（输入：
+
+.. zephyr-app-commands::
+   :zephyr-app: samples/net/sockets/echo_server
+   :host-os: unix
+   :board: qemu_x86
+   :build-dir: server
+   :gen-args: -G'Unix Makefiles' -DEXTRA_CONF_FILE=overlay-qemu_802154.conf -DPCAP=capture.pcap
+   :goals: server
+   :compact:
+
+注意若 command line 中设置 packet capture
+option（``server`` target 须用 ``make``。``build/server/capture.pcap`` file 将包含
+传输的 data。
+
+Step 2 - Compile and start echo-client
+======================================
+
+Terminal #2 中输入：
+
+.. zephyr-app-commands::
+   :zephyr-app: samples/net/sockets/echo_client
+   :host-os: unix
+   :board: qemu_x86
+   :build-dir: client
+   :gen-args: -DEXTRA_CONF_FILE=overlay-qemu_802154.conf
+   :goals: client
+   :compact:
+
+应看到 data 在两个 QEMU 间传递。
+按 :kbd:`CTRL+A` :kbd:`x` 退出 QEMU。

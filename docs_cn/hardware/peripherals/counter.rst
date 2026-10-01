@@ -1,15 +1,13 @@
 .. _counter_api:
 
-Counter
+计数器
 #######
 
-Overview
+概述
 ********
 
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   counter_interface
+.. doxygengroup:: counter_interface

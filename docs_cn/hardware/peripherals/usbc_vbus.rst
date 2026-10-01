@@ -1,65 +1,28 @@
 .. _usbc_vbus_api:
 
-USB-C
-VBUS
+USB-C VBUS
 ##########
 
-Overview
+概述
 ********
 
-USB-C
-VBUS
-是
-USB
-Type-C
-connection
-中
-从
-Source
-向
-Sink
-device
-供应
-power
-的
-line。
+USB-C VBUS 是 USB Type-C 连接中从供电端（Source）向受电端（Sink）设备输送电力的线路。
 
 .. _usbc-vbus-api:
 
-USB-C
-VBUS
-API
-=============
+USB-C VBUS 接口
+===============
 
-USB-C
-VBUS
-device
-driver
-呈现
-一
-个
-用
-来
-control
-和
-measure
-VBUS
-的
-API。
+USB-C VBUS 设备驱动程序提供了一组用于控制和测量 VBUS 的接口（API）。
 
-Configuration
-Options
+配置选项
 *********************
 
-相关
-配置
-选项：
+相关配置选项：
 
 * :kconfig:option:`CONFIG_USBC_VBUS_DRIVER`
 
-API
-Reference
+接口参考
 *************
 
-.. doxygengroup::
-   usbc_vbus_api
+.. doxygengroup:: usbc_vbus_api

@@ -1,241 +1,44 @@
 .. _cpu_load:
 
-CPU
-load
+CPU load
 ########
 
-CPU
-load
-module
-track
-CPU
-spend
-在
-idle
-state
-之外
-的
-time
-fraction。
-有
-两
-个
+CPU load module 跟踪 CPU 在 idle state 外花费时间的比例。两个
+measurement backends 可用（用 ``CPU_LOAD_BACKEND`` Kconfig choice 选择：
+
+Scheduler runtime statistics
+   :kconfig:option:`CONFIG_CPU_LOAD_BACKEND_RUNTIME_STATS` 从 scheduler
+   每 CPU runtime statistics 推导 load。其跨 architectures 可移植（且支持多个 CPUs。
+
+Architecture idle hooks
+   :kconfig:option:`CONFIG_CPU_LOAD_BACKEND_IDLE_HOOK` 用 architecture
+   idle hooks 测量 load（其在 CPU 进入 idle 前后被调用。其 overhead 低于
+   runtime-statistics backend（且可
+   用 :ref:`counter_api` device 获得更高 precision
+   （counter path 仅单 CPU）。其在发出 idle
+   hooks 的任何 architecture 上可用（:kconfig:option:`CONFIG_ARCH_HAS_CPU_IDLE_HOOKS`）。与 :ref:`thread_analyzer` 相比
+   其更准确（因为其也考虑 interrupt context 中花费的时间。
+   此 backend 不依赖 tracing subsystem。
+
+Load 用 :c:func:`cpu_load_get 为当前 CPU 或 :c:func:`cpu_load_get_cpu`
+为特定 CPU 获取。两者返回 per mille (0...1000) 的 load（且可重置
 measurement
-backends
-available
-用
-``CPU_LOAD_BACKEND``
-Kconfig
-choice
-selected：
+window。用 :c:macro:`CPU_LOAD_PERMILLE_TO_PERCENT` 将值转为整 percent。
 
-Scheduler
-runtime
-statistics
-   :kconfig:option:`CONFIG_CPU_LOAD_BACKEND_RUNTIME_STATS`
-   从
-   scheduler
-   per
-   CPU
-   的
-   runtime
-   statistics
-   derive
-   load。
-   它
-   在
-   architectures
-   之间
-   portable
-   并
-   support
-   多
-   个
-   CPUs。
+Load 也可用 logging message 周期性报告。Period 用
+:kconfig:option:`CONFIG_CPU_LOAD_LOG_PERIODICALLY` 配置。
 
-Architecture
-idle
-hooks
-   :kconfig:option:`CONFIG_CPU_LOAD_BACKEND_IDLE_HOOK`
-   用
-   architecture
-   idle
-   hooks
-   measure
-   load
-   它们
-   在
-   CPU
-   go
-   to
-   idle
-   前后
-   被
-   called。
-   它
-   的
-   overhead
-   比
-   runtime
-   statistics
-   backend
-   低
-   并
-   可以
-   use
-   :ref:`counter_api`
-   device
-   用于
-   higher
-   precision
-   （counter
-   path
-   是
-   single
-   CPU
-   only
-   的）。
-   它
-   在
-   任何
-   emit
-   idle
-   hooks
-   的
-   architecture
-   上
-   available
-   （:kconfig:option:`CONFIG_ARCH_HAS_CPU_IDLE_HOOKS`）。
-   与
-   :ref:`thread_analyzer`
-   相比
-   它
-   更
-   accurate
-   因为
-   它
-   也
-   take
-   into
-   account
-   spend
-   在
-   interrupt
-   context
-   中
-   的
-   time。
-   这
-   个
-   backend
-   不
-   depend
-   on
-   tracing
-   subsystem。
+示例参见 :zephyr:code-sample:`cpu_freq_on_demand` sample。
 
-Load
-用
-:c:func:`cpu_load_get`
-为
-current
-的
-CPU
-或
-:c:func:`cpu_load_get_cpu`
-为
-特定
-的
-CPU
-retrieved。
-两
-个
-都
-return
-load
-在
-per
-mille
-（0...1000）
-中
-并
-可以
-reset
-measurement
-window。
-用
-:c:macro:`CPU_LOAD_PERMILLE_TO_PERCENT`
-将
-value
-convert
-到
-whole
-percent。
-
-Load
-也
-可以
-被
-periodically
-reported
-用
-一
-个
-logging
-message。
-Period
-用
-:kconfig:option:`CONFIG_CPU_LOAD_LOG_PERIODICALLY`
-configured。
-
-参考
-:zephyr:code-sample:`cpu_freq_on_demand`
-sample
-获取
-一
-个
-example。
-
-Use
-一
-个
-counter
-device
+Using a counter device
 **********************
 
-Idle
-hook
-backend
-default
-下
-use
-:c:func:`k_cycle_get_32`。
-当
-需要
-higher
-precision
-时
-一
-个
-:ref:`counter_api`
-device
-可以
-被
-used
-通过
-enable
-:kconfig:option:`CONFIG_CPU_LOAD_USE_COUNTER`
-并
-在
-devicetree
-中
-set
-chosen
-的
-node。
+Idle-hook backend 默认用 :c:func:`k_cycle_get_32`。需更高 precision 时
+可启用 :kconfig:option:`CONFIG_CPU_LOAD_USE_COUNTER`（并在
+devicetree 中设置 chosen node 用 :ref:`counter_api` device。
 
-.. code-block::
-   devicetree
+.. code-block:: devicetree
 
-   chosen
-   {
+   chosen {
+     zephyr,cpu-load-counter = &counter_device;
+   };

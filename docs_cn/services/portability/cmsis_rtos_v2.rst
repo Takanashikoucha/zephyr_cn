@@ -1,181 +1,80 @@
 .. _cmsis_rtos_v2:
 
-CMSIS
-RTOS
-v2
+CMSIS RTOS v2
 ##########################
 
-Cortex
-M
-Software
-Interface
-Standard
-（CMSIS）
-RTOS
-是
-ARM
-Cortex
-M
-processor
-series
-的
-一
-个
-vendor
-independent
-的
-hardware
-abstraction
-layer
-它
-define
-generic
-的
-tool
-interfaces。
-虽然
-它
-original
-只
-为
-ARM
-Cortex
-M
-microcontrollers
-defined
-它
-可以
-easily
-被
-extended
-到
-其他
-microcontrollers
-使
-它
-generic。
-关于
-CMSIS
-RTOS
-v2
-的
-更多
-information
-请参考
-`CMSIS
-RTOS2
-Documentation
-<https://arm-software.github.io/CMSIS_6/latest/RTOS2/index.html>`_。
+Cortex-M 软件接口标准（CMSIS）RTOS 是面向 ARM Cortex-M 处理器系列的厂商无关硬件抽象层，
+定义了通用工具接口。它最初仅针对 ARM Cortex-M 微控制器定义，但可以很容易地扩展到其他
+微控制器，从而使其具有通用性。有关 CMSIS RTOS v2 的更多信息，请参阅
+`CMSIS-RTOS2 文档 <https://arm-software.github.io/CMSIS_6/latest/RTOS2/index.html>`_。
 
-Features
-not
-supported
-in
-Zephyr
-implementation
+Zephyr 实现中不支持的特性
 ***********************************************
 
-Kernel
-   ``osKernelGetState``、
-   ``osKernelSuspend``、
-   ``osKernelResume``、
-   ``osKernelInitialize``
-   和
-   ``osKernelStart``
-   不
-   被
-   supported。
+内核
+    ``osKernelGetState``、``osKernelSuspend``、``osKernelResume``、``osKernelInitialize``
+    和 ``osKernelStart`` 均不支持。
 
-Mutex
-   ``osMutexPrioInherit``
-   default
-   下
-   被
-   supported
-   并
-   不
-   可
-   configurable
-   你
-   不
-   可以
-   select/unselect
-   这
-   个
-   attribute。
+互斥锁
+    ``osMutexPrioInherit`` 默认受支持且不可配置，
+    您无法选择/取消选择该属性。
 
-   ``osMutexRecursive``
-   也
-   default
-   下
-   被
-   supported。
-   如果
-   这
-   个
-   attribute
-   不
-   被
-   set
-   当
-   相同
-   的
-   thread
-   尝试
-   第二次
-   acquire
-   它
-   时
-   一
-   个
-   error
-   被
-   thrown。
+    ``osMutexRecursive`` 同样默认受支持。如果未设置该属性，
+    同一线程第二次尝试获取它时将抛出错误。
 
-   ``osMutexRobust``
-   在
-   Zephyr
-   中
-   不
-   被
-   supported。
+    ``osMutexRobust`` 在 Zephyr 中不受支持。
 
-Return
-values
-not
-supported
-in
-the
-Zephyr
-implementation
+Zephyr 实现中不支持的返回值
 ********************************************************
 
-``osKernelUnlock``、
-``osKernelLock``、
-``osKernelRestoreLock``
-   ``osError``
-   （Unspecified
-   error）
-   不
-   被
-   supported。
+``osKernelUnlock``、``osKernelLock``、``osKernelRestoreLock``
+    ``osError``（未指定的错误）不受支持。
 
 ``osSemaphoreDelete``
-   ``osErrorResource``
-   （由
-   parameter
-   semaphore_id
-   specified
-   的
-   semaphore
-   在
-   invalid
-   的
-   semaphore
-   state
-   中）
-   不
-   被
-   supported。
+    ``osErrorResource``（由参数 semaphore_id 指定的信号量
+    处于无效的信号量状态）不受支持。
 
 ``osMutexDelete``
+    ``osErrorResource``（由参数 mutex_id 指定的互斥锁
+    处于无效的互斥锁状态）不受支持。
+
+``osTimerDelete``
+    ``osErrorResource``（由参数 timer_id 指定的定时器
+    处于无效的定时器状态）不受支持。
+
+``osMessageQueueReset``
+    ``osErrorResource``（由参数 msgq_id 指定的消息队列
+    处于无效的消息队列状态）不受支持。
+
+``osMessageQueueDelete``
+    ``osErrorResource``（由参数 msgq_id 指定的消息队列
+    处于无效的消息队列状态）不受支持。
+
+``osMemoryPoolFree``
+    ``osErrorResource``（由参数 mp_id 指定的内存池
+    处于无效的内存池状态）不受支持。
+
+``osMemoryPoolDelete``
+    ``osErrorResource``（由参数 mp_id 指定的内存池
+    处于无效的内存池状态）不受支持。
+
+``osEventFlagsSet``、``osEventFlagsClear``
+    ``osFlagsErrorUnknown``（未指定的错误）
+    和 osFlagsErrorResource（由参数 ef_id 指定的事件标志对象
+    尚未准备好使用）不受支持。
+
+``osEventFlagsDelete``
+    ``osErrorParameter``（参数 ef_id 的值
+    不正确）不受支持。
+
+``osThreadFlagsSet``
+    ``osFlagsErrorUnknown``（未指定的错误）
+    和 ``osFlagsErrorResource``（由参数 thread_id 指定的线程
+    未处于可接收标志的活跃状态）不受支持。
+
+``osThreadFlagsClear``
+    ``osFlagsErrorResource``（正在运行的线程未处于
+    可接收标志的活跃状态）不受支持。
+
+``osDelayUntil``
+    ``osParameter``（时间无法处理）不受支持。

@@ -5,12 +5,10 @@ Ethernet
 
 .. contents::
     :local:
-    :depth:
-    2
+    :depth: 2
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    mac_config.rst
    vlan.rst
@@ -20,107 +18,28 @@ Ethernet
 Overview
 ********
 
-Ethernet
-是
-一
-个
-commonly
-used
-在
-local
-area
-networks
-（LAN）
-中
-的
-networking
-technology。
-参考
-这
-个
-`Ethernet
-Wikipedia
-article
-<https://en.wikipedia.org/wiki/Ethernet>`_
-获取
-更多
-information。
+Ethernet 是常用于 local area networks（LAN）的 networking technology。更多信息参见此 `Ethernet Wikipedia article <https://en.wikipedia.org/wiki/Ethernet>`_。
 
-Zephyr
-support
-以下
-Ethernet
-features：
+Zephyr 支持以下 Ethernet features：
 
-*
-10、
-100
-和
-1000
-Mbit/sec
-links
-*
-Auto
-negotiation
-*
-Half/full
-duplex
-*
-Promiscuous
-mode
-*
-TX
-和
-RX
-checksum
-offloading
-*
-MAC
-address
-filtering
-*
-:ref:`MAC
-address
-configuration
-<mac_address_config>`
-*
-:ref:`Virtual
-LANs
-<vlan_interface>`
-*
-:ref:`Priority
-queues
-<traffic-class-support>`
-*
-:ref:`IEEE
-802.1AS
-（gPTP）
-<gptp_interface>`
-*
-:ref:`IEEE
-802.1Qav
-（credit
-based
-shaping）
-<8021Qav>`
-*
-:ref:`LLDP
-（Link
-Layer
-Discovery
-Protocol）
-<lldp_interface>`
+* 10、100 和 1000 Mbit/sec links
+* Auto negotiation
+* Half/full duplex
+* Promiscuous mode
+* TX 和 RX checksum offloading
+* MAC address filtering
+* :ref:`MAC address configuration <mac_address_config>`
+* :ref:`Virtual LANs <vlan_interface>`
+* :ref:`Priority queues <traffic-class-support>`
+* :ref:`IEEE 802.1AS（gPTP）<gptp_interface>`
+* :ref:`IEEE 802.1Qav（credit based shaping）<8021Qav>`
+* :ref:`LLDP（Link Layer Discovery Protocol）<lldp_interface>`
 
-不
-是
-所有
-的
-Ethernet
-device
-drivers
-support
-所有
-这些
-features。
-你
-可以
+并非所有 Ethernet device drivers 支持所有这些 features。您可用 ``net iface`` net-shell command 查看支持什么。它将打印当前支持的 Ethernet features。
+
+API Reference
+*************
+
+.. doxygengroup:: ethernet
+
+.. doxygengroup:: ethernet_mii

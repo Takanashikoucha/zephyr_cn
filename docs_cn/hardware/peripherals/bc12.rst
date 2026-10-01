@@ -1,230 +1,71 @@
 .. _usb_bc12_api:
 
-BC1.2
-Devices
-（Experimental）
+BC1.2 设备（实验性）
 #######################################
 
-Battery
-Charging
-specification，
-当前
-在
-revision
-1.2，
-通常
-被
-简
-称为
-BC1.2。
-BC1.2
-定义
-USB
-devices
-汲取
-超过
-USB
-2.0
-specification
-限制
-0.5A、
-2.5W
-电流
-的
-限制
-和
-detection
-mechanisms。
+电池充电规范目前处于 1.2 修订版，通常简称为 BC1.2。BC1.2 定义了限制和检测机制，使 USB 设备能够汲取超过 USB 2.0 规范限值 0.5A、2.5W 的电流。
 
-BC1.2
-specification
-用
-Charging
-Port
-术语
-指
-在
-USB
-connection
-上
-提供
-VBUS
-的
-device
-并
-用
-Portable
-Device
-术语
-指
-从
-USB
-connection
-汲取
-电流
-的
-device。
+BC1.2 规范用"充电端口"（Charging Port）一词指在 USB 连接上提供 VBUS 的设备，用"便携设备"（Portable Device）一词指从 USB 连接汲取电流的设备。
 
-注意
-`BC1.2
-Specification`_
-用
-缩写
-PD
-指
-Portable
-Device。
-这
-不
-应该
-与
-USB-C
-Power
-Delivery
-混淆，
-它
-也
-用
-缩写
-PD。
+注意 `BC1.2 规范`_ 使用缩写 PD 指便携设备（Portable Device）。这不应与 USB-C 电源传输（Power Delivery）混淆，后者同样使用缩写 PD。
 
-在
-许多
-devices
-上，
-BC1.2
-是
-fallback
-mechanism
-用
-于
-在
-attached
-type-C
-partner
-不
-支持
-Power
-Delivery
-时
-确定
-连接
-到
-USB
-type
-C
-ports
-的
-charger
-capability。
+在许多设备上，当所连接的 USB Type-C 对端器件不支持电源传输（Power Delivery）时，BC1.2 是确定 USB Type-C 端口上所连接充电器能力的回退机制。
 
-`BC1.2
-Specification`_
-中
-的
-关键
-参数
-包括：
+`BC1.2 规范`_ 中的关键参数包括：
 
-============================================================
-========
-===========
-Parameter
-                                                     Symbol
-    Range
-============================================================
-========
-===========
-Allowed
-PD
-（portable
-device）
-Current
-Draw
-from
-Charging
-Port
-  IDEV_CHG
-  1.5
-  A
-Charging
-Downstream
-Port
-Rated
-Current
-                        ICDP
-      1.5
-  -
-  5.0
-  A
-Maximum
-Configured
-Current
-when
-connected
-to
-a
-SDP
-            ICFG_MAX
-  500
-  mA
-Dedicated
-Charging
-Port
-Rated
-Current
-                         IDCP
-      1.5
-  -
-  5.0
-  A
-Suspend
-current
-                                               ISUSP
-     2.5
-  mA
-Unit
-load
-current
-                                             IUNIT
-     100
-  mA
-============================================================
-========
-===========
+============================================================  ========  ===========
+参数                                                      符号      范围
+============================================================  ========  ===========
+允许从充电端口汲取的 PD（便携设备）电流                   IDEV_CHG  1.5 A
+充电下游端口额定电流                                    ICDP      1.5 - 5.0 A
+连接 SDP 时的最大配置电流                               ICFG_MAX  500 mA
+专用充电端口额定电流                                    IDCP      1.5 - 5.0 A
+挂起电流                                                ISUSP     2.5 mA
+单位负载电流                                            IUNIT     100 mA
+============================================================  ========  ===========
 
-虽然
-ICDP
-和
-IDCP
-rated
-currents
-高达
-5.0
-A，
-BC1.2
-current
-被
-IDEV_CHG
-参数
-限制。
-所以
-在
-Zephyr
-实现
-中
-使用
-portable-device
-mode
-时
-BC1.2
-支持
-被
-cap
-在
-1.5
-A。
+虽然 ICDP 和 IDCP 的额定电流最高可达 5.0 A，但 BC1.2 电流受 IDEV_CHG 参数限制。因此，在 Zephyr 实现中使用便携设备模式时，BC1.2 支持的上限为 1.5 A。
 
-.. _BC1.2
-   Specification:
-   https://www.usb.org/document-library/battery-charging-v12-spec-and-adopters-agreement
+.. _BC1.2 规范: https://www.usb.org/document-library/battery-charging-v12-spec-and-adopters-agreement
+
+基本操作
+***************
+
+BC1.2 设备驱动只提供两个 API：``bc12_set_role()`` 和 ``bc12_set_result_cb()``。
+
+应用调用 ``bc12_set_role()``，将 BC1.2 设备切换到断开、便携设备或充电端口模式。
+
+对于断开状态，BC1.2 驱动会关闭检测芯片的电源。下电操作因厂商而异。
+
+当以下两个条件同时成立时，应用调用 ``bc12_set_role()`` 并将类型设置为 BC12_PORTABLE_DEVICE：
+
+* 应用将该端口配置为上游端口，即 USB 设备端口。
+* 应用在 USB 连接上检测到 VBUS。
+
+对于便携设备模式，BC1.2 驱动会开启检测芯片的电源并开始充电器检测。充电器检测完成后，BC1.2 驱动会通知通过 ``bc12_set_result_cb()`` 注册的回调。默认情况下，BC1.2 驱动将电流钳制在 1.5A，以符合 BC1.2 规范。
+
+为符合 USB 2.0 规范，当驱动检测到 SDP（标准下游端口）充电对端器件，或 BC1.2 检测失败时，
+驱动将可用电流报告为 ISUSP（2.5 mA）。当所连接的 USB 主机恢复 USB 总线时，
+应用可将汲取电流提高到 IUNIT（100 mA）；当 USB 主机配置该 USB 设备时，
+可将汲取电流提高到 ICFG_MAX（500 mA）。
+
+当 USB 端口被配置为下游端口（即 USB 主机端口）时，应用使用充电端口模式。
+对于充电端口模式，BC1.2 驱动会开启检测芯片的电源，
+并配置由设备树（devicetree）属性指定的充电器类型。
+如果驱动支持插拔（plug 和 unplug）事件检测，BC1.2 驱动会通知通过
+``bc12_set_result_cb()`` 注册的回调，以指示便携设备对端器件的当前连接状态。
+
+配置选项
+*********************
+
+相关配置选项：
+
+* :kconfig:option:`CONFIG_USB_BC12`
+
+.. _bc12_api_reference:
+
+API 参考
+*************
+
+.. doxygengroup:: b12_interface
+.. doxygengroup:: b12_emulator_backend

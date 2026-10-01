@@ -1,217 +1,107 @@
 .. _psa_crypto:
 
-PSA
-Crypto
+PSA Crypto
 ##########
 
-Overview
+概述
 ********
 
-PSA
-（Platform
-Security
-Architecture）
-Crypto
-API
-offer
-一
-个
-portable
-的
-programming
-interface
-用于
-cryptographic
-operations
-和
-key
-storage
-跨
-广泛
-的
-hardware。
-它
-被
-designed
-为
-user
-friendly
-同时
-仍
-provide
-access
-到
-对
-modern
-cryptography
-essential
-的
-low
-level
-primitives。
+PSA（Platform Security Architecture，平台安全架构）Crypto API 提供了一种可移植的编程接口，用于在广泛硬件上进行密码运算和密钥存储。它的设计兼顾易用性，同时提供对现代密码学所需的底层原语的访问。
 
-它
-由
-Arm
-created
-和
-maintained。
-Arm
-develop
-PSA
-作为
-一
-个
-comprehensive
-的
-security
-framework
-用于
-address
-connected
-devices
-不断
-increasing
-的
-security
-needs。
+该 API 由 Arm 创建并维护。Arm 开发 PSA 作为一个全面的安全框架，以应对联网设备日益增长的安全需求。
 
-在
-Zephyr
-中
-PSA
-Crypto
-API
-用
-Mbed
-TLS
-implemented
-它
-是
-一
-个
-open
-source
-的
-cryptographic
-library
-它
-provide
-underlying
-的
-cryptographic
-functions。
+在 Zephyr 中，PSA Crypto API 使用 Mbed TLS 实现，这是一个开源密码库，提供底层的密码函数。
 
-Design
-Goals
+设计目标
 ************
 
-这
-个
-interface
-suitable
-用于
-广泛
-的
-devices：
-从
-用
-built
-in
-的
-key
-process
-data
-的
-special
-purpose
-的
-cryptographic
-processors
-到
-run
-custom
-application
-code
-的
-constrained
-devices
-如
-microcontrollers
-以及
-multi
-application
-的
-devices
-如
-servers。
-它
-follow
-cryptographic
-agility
-的
-principle。
+该接口适用于广泛的设备：从使用内置密钥处理数据的专用密码处理器，到运行自定义应用代码的受限设备（如微控制器），再到多应用设备（如服务器）。它遵循密码敏捷性原则。
 
-Algorithm
-Flexibility
-   PSA
-   Crypto
-   API
-   support
-   广泛
-   的
-   cryptographic
-   algorithms
-   允许
-   developers
-   根据
-   需要
-   在
-   不同
-   的
-   cryptographic
-   methods
-   之间
-   switch。
-   这
-   个
-   flexibility
-   对
-   于
-   随着
-   新
-   algorithms
-   emerge
-   和
-   现有
-   的
-   变
-   obsolete
-   时
-   维持
-   security
-   是
-   crucial
-   的。
+算法灵活性
+  PSA Crypto API 支持广泛的密码算法，允许开发者根据需要切换不同的密码方法。这种灵活性对于在算法不断演进（新算法出现、旧算法过时）的过程中维持安全性至关重要。
 
-Key
-Management
-   PSA
-   Crypto
-   API
-   包括
-   robust
-   的
-   key
-   management
-   features
-   它们
-   support
-   cryptographic
-   keys
-   的
-   creation、
-   storage、
-   和
-   use
-   在
+密钥管理
+  PSA Crypto API 包含健壮的密钥管理功能，支持以安全且灵活的方式创建、存储和使用密码密钥。它使用不透明（opaque）的密钥标识符，允许在不暴露密钥材料的情况下轻松替换和更新密钥。
+
+实现独立性
+  PSA Crypto API 对底层密码库进行了抽象，意味着可以在不影响应用代码的情况下更换具体的实现。这种抽象通过允许按需使用不同的密码库或硬件加速器来支持密码敏捷性。
+
+面向未来
+  通过遵循密码敏捷性，PSA Crypto 确保应用能够快速适应新的密码标准与实践，增强长期安全性与合规性。
+
+应用示例
+************************
+
+网络安全（TLS）
+  该 API 提供建立 TLS 连接所需的所有密码原语。
+
+安全存储
+  该 API 提供与存储加密相关的所有原语，支持基于块或基于文件的加密，主加密密钥存储在密钥库中。
+
+网络凭据
+  该 API 在密钥库中提供网络凭据管理，例如基于 X.509 的身份验证或企业网络中的预共享密钥。
+
+设备配对
+  该 API 支持密钥协商协议，这类协议通常用于通过无线通道安全配对设备。例如，NFC 令牌或蓝牙设备在首次使用时可能使用密钥协商协议进行配对。
+
+安全启动
+  该 API 提供在安全或可信启动过程中进行固件完整性与真实性验证时使用的原语。
+
+证明（Attestation）
+  该 API 提供在证明活动中使用的原语。证明是指设备使用设备私钥对一段字节数组进行签名并将结果返回给调用者的能力。其用例从设备状态证明到生成密钥对并证明该密钥对在安全密钥库内生成不等。该 API 提供对证明中常用算法的访问。
+
+出厂配置
+  大多数物联网设备在出厂配置过程中（或部署到现场后）会获得唯一身份。该 API 提供将代表该身份的密钥写入设备所需的接口。
+
+使用注意事项
+********************
+
+始终检查错误
+  PSA Crypto API 中的大多数函数可能返回错误。所有可能失败的函数返回类型均为 ``psa_status_t``。少数函数不会失败，因此返回 void 或其他类型。
+
+  如果发生错误，除非另有说明，输出参数的内容未定义且不得使用。
+
+  常见错误原因包括：
+
+  * 在密钥存储和处理与应用处于不同环境的实现中，所有需要访问密码处理环境的函数都可能因两个环境之间的通信错误而失败。
+
+  * 如果某算法使用与应用处理器在逻辑上分离的硬件加速器实现，即使应用处理器正常运行，加速器也可能失败。
+
+  * 大多数函数可能因资源不足而失败。但某些实现保证特定函数始终有足够内存。
+
+  * 所有访问持久密钥的函数都可能因存储故障而失败。
+
+  * 所有需要随机性的函数都可能因熵不足而失败。建议实现在执行 ``psa_crypto_init()`` 期间用足够的熵为随机数生成器播种。但某些安全标准要求定期从硬件随机数生成器重新播种，而该操作可能失败。
+
+共享内存与并发
+  某些环境允许应用多线程运行，某些环境则不允许。在某些环境中，应用可以与不同的安全上下文共享内存。在多线程应用或共享内存的环境中，应用必须谨慎编写以避免数据损坏或泄露。本规范要求应用遵守某些约束。
+
+  一般而言，PSA Crypto API 允许对任一对象使用一个写入者或任意数量的并发读取者。换言之，如果两个或更多调用并发访问同一对象，则仅当所有调用都只是读取该对象而不修改它时，行为才是明确定义的。读取访问包括通过输入参数读取内存以及使用密钥读取密钥库内容。更多详情参见 `并发调用
+  <https://arm-software.github.io/psa-api/crypto/1.2/overview/conventions.html#concurrent-calls>`_。
+
+  如果应用与另一安全上下文共享内存，可以将共享内存块作为输入缓冲区或输出缓冲区传递，但不能作为非缓冲区参数传递。更多详情参见
+  `参数稳定性 <https://arm-software.github.io/psa-api/crypto/1.2/overview/conventions.html#stability-of-parameters>`_。
+
+使用后的清理
+  为降低系统被攻破时的影响，建议应用在不再使用敏感数据时将其从内存中擦除。这样，只有当前正在使用的数据可能被泄露，历史数据不会受到损害。
+
+  擦除敏感数据包括：
+
+  * 清除栈或堆上的临时缓冲区。
+
+  * 中止不会完成的操作。
+
+  * 销毁不再使用的密钥。
+
+参考资料
+**********
+
+* `PSA Crypto`_
+
+.. _PSA Crypto:
+   https://arm-software.github.io/psa-api/crypto/
+
+* `Mbed TLS`_
+
+.. _Mbed TLS:
+   https://www.trustedfirmware.org/projects/mbed-tls/

@@ -1,22 +1,12 @@
 .. _memory_storage_peripherals:
 
-Memory
-&
-Storage
+内存与存储
 ################
 
-Non-volatile
-memory、
-flash
-storage、
-EEPROM
-和
-memory
-controllers。
+非易失性存储器、闪存存储、EEPROM 与内存控制器。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    flash.rst
    eeprom/index.rst

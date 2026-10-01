@@ -1,129 +1,26 @@
 .. _sparse:
 
-Sparse
-支持
+Sparse 支持
 ##############
 
-`Sparse
-<https://www.kernel.org/doc/html/latest/dev-tools/sparse.html>`__
-是
-一个
-静态
-代码
-分析
-工具。
-除了
-执行
-常见
-的
-代码
-分析
-任务
-外，
-它
-还
-支持
-``address_space``
-属性，
-允许
-在
-C
-代码
-中
-引入
-不同
-的
-地址
-空间
-并
-随后
-验证
-指向
-不同
-地址
-空间
-的
-指针
-不
-会
-混淆。
-此外
-它
-支持
-``force``
-属性，
-应该
-用
-来
-在
-不同
-地址
-空间
-之间
-转换
-指针。
-目前
-Zephyr
-引入
-单一
-的
-自定义
-地址
-空间
-``__cache``
-用
-来
-识别
-Xtensa
-架构
-上
-从
-缓存
-地址
-范围
-的
-指针。
-这
-帮助
-识别
-缓存
-和
-非缓存
-地址
-被
-混淆
-的
-情况。
+`Sparse <https://www.kernel.org/doc/html/latest/dev-tools/sparse.html>`__
+是一款静态代码分析工具。
+除了执行常见的代码分析任务外，它还支持一个
+``address_space`` 属性，允许在 C 代码中引入不同的地址
+空间，随后验证指向不同地址空间的指针
+不会相互混淆。此外它还支持一个 ``force``
+属性，应使用它来在不同地址空间
+之间转换指针。目前 Zephyr 引入了一个自定义地址空间
+``__cache``，用于标识 Xtensa 架构上来自缓存地址范围的指针。
+这有助于识别缓存地址与非缓存地址
+被混淆的情况。
 
-用
-sparse
-运行
+使用 Sparse 运行
 *******************
 
-要
-运行
-sparse
-验证
-构建
-:ref:`west
-build
-<west-building>`
-应该
-被
-调用
-带
-``-DZEPHYR_SCA_VARIANT=sparse``
-参数，
-例如
+要运行 sparse 验证构建，应使用 ``-DZEPHYR_SCA_VARIANT=sparse`` 参数
+调用 :ref:`west build <west-building>`，例如：
 
 .. code-block:: shell
 
-   west
-   build
-   -d
-   hello
-   -b
-   intel_adsp/cavs25
-   zephyr/samples/hello_world
-   --
-   -DZEPHYR_SCA_VARIANT=sparse
+    west build -d hello -b intel_adsp/cavs25 zephyr/samples/hello_world -- -DZEPHYR_SCA_VARIANT=sparse

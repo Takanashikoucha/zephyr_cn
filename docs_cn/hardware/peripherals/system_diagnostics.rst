@@ -1,20 +1,12 @@
 .. _system_diagnostics_peripherals:
 
-System
-&
-Diagnostics
-####################
+系统与诊断
+###########
 
-System
-information、
-synchronization、
-DMA、
-和
-diagnostics。
+系统信息、同步、DMA 和诊断。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    hwinfo.rst
    hwspinlock.rst

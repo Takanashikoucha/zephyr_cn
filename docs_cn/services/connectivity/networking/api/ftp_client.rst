@@ -1,135 +1,32 @@
 .. _ftp_client_interface:
 
-FTP
-client
+FTP client
 ##########
 
 .. contents::
    :local:
-   :depth:
-   2
+   :depth: 2
 
 Overview
 ********
 
-FTP
-client
-library
-可
-用
-来
-download
-或
-upload
-files
-到
-FTP
-server。
+FTP client library 可用于向 FTP server 下载或上传 files。
 
-FTP
-client
-library
-用
-两
-个
-separate
-的
-callback
-functions
-:c:member:`ftp_client.ctrl_callback`
-和
-:c:member:`ftp_client.data_callback`
-report
-FTP
-control
-message
-和
-download
-data。
-Library
-可
-被
-configured
-自动
-send
-KEEPALIVE
-message
-到
-server
-通过
-一
-个
-timer
-如果
-:kconfig:option:`CONFIG_FTP_CLIENT_KEEPALIVE_TIME`
-不
-是
-zero。
-KEEPALIVE
-message
-被
-periodically
-sent
-在
-:kconfig:option:`CONFIG_FTP_CLIENT_KEEPALIVE_TIME`
-value
-indicated
-的
-time
-interval
-completion
-时。
+FTP client library 用两个单独的 callback functions :c:member:`ftp_client.ctrl_callback` 和 :c:member:`ftp_client.data_callback` 报告 FTP control message 和 download data。若 :kconfig:option:`CONFIG_FTP_CLIENT_KEEPALIVE_TIME` 非零（库可配置为通过 timer 自动向 server 发送 KEEPALIVE message。KEEPALIVE message 按 :kconfig:option:`CONFIG_FTP_CLIENT_KEEPALIVE_TIME` 值指示的 time interval 完成时周期性发送。
 
 Protocols
 *********
 
-Library
-根据
-:rfc:`959`
-specification
-implemented。
+库按 :rfc:`959` specification 实现。
 
 Limitations
 ***********
 
-Library
-当前
-只
-implement
-一
-个
-minimal
-的
-commands
-set。
-不过
-新
-command
-support
-可
-轻松
-added。
+库当前仅实现最小 commands 集。然而（新 command 支持可轻松添加。
 
-由于
-FTP
-servers
-的
-implementation
-差异
-library
-可能
-需要
-customization
-才能
-与
-特定
-的
-server
-work。
+由于 FTP servers 实现差异（库可能需要定制以与特定 server 工作。
 
-API
-Reference
+API Reference
 *************
 
-.. doxygengroup::
-   ftp_client
+.. doxygengroup:: ftp_client

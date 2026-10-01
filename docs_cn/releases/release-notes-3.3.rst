@@ -2,229 +2,240 @@
 
 .. _zephyr_3.3:
 
-Zephyr
-3.3.0
+Zephyr 3.3.0
 ############
 
-我们
-pleased
-to
-announce
-Zephyr
-version
-3.3.0
-的
-release。
+我们很高兴地宣布 Zephyr 版本 3.3.0 的发布。
 
-这
-个
-release
-的
-Major
-enhancements
-包括：
+本次发布的主要增强功能包括：
 
-*
-Introduced
-:ref:`Fuel
-Gauge
-<fuel_gauge_api>`
-subsystem
-for
-battery
-level
-monitoring。
-*
-Introduced
-:ref:`USB
-C
-<usbc_api>`
-device
-stack
-带
-PD
-（power
-delivery）
-support。
-*
-Introduced
-:ref:`DSP
-（digital
-signal
-processing）
-<zdsp_api>`
-subsystem
-带
-CMSIS
-DSP
-作为
-default
-的
-backend。
-*
-Added
-Picolibc
-support
-for
-all
-architectures
-当
-use
-Zephyr
-SDK
-时。
+* 引入了 :ref:`Fuel Gauge <fuel_gauge_api>` 子系统，用于电池电量
+  监控。
+* 引入了 :ref:`USB-C <usbc_api>` 设备栈，支持 PD（电源传输）。
+* 引入了 :ref:`DSP（数字信号处理）<zdsp_api>` 子系统，
+  以 CMSIS-DSP 作为默认后端。
+* 使用 Zephyr SDK 时，所有架构均支持 Picolibc。
 
-以下
-sections
-provide
-detailed
-的
-lists
-of
-changes
-by
-component。
+以下各节按组件提供详细的变更列表。
 
-Security
-Vulnerability
-Related
+安全漏洞相关
 ******************************
 
-以下
-的
-CVEs
-被
-这
-个
-release
-addressed:
+本次发布解决了以下 CVE：
 
-More
-detailed
-的
-information
-可以
-found
-在:
+更详细的信息可参见：
 https://docs.zephyrproject.org/latest/security/vulnerabilities.html
 
-*
-CVE
-2023
-0359:
-Under
-embargo
-until
-2023
-04
-20
+* CVE-2023-0359：截至 2023-04-20 处于保密期
 
-*
-CVE
-2023
-0779:
-Under
-embargo
-until
-2023
-04
-22
+* CVE-2023-0779：截至 2023-04-22 处于保密期
 
 
-API
-Changes
+API 变更
 ***********
 
-*
-Emulator
-creation
-APIs
-被
-changed
-用于
-better
-match
-:c:macro:`DEVICE_DT_DEFINE`。
-它
-也
-include
-一
-个
-new
-的
-backend
-API
-pointer
-用于
-allow
-sensors
-share
-common
-的
-APIs
-for
-more
-generic
-的
-tests。
+* 仿真器创建 API 已更改，以更好地匹配
+  :c:macro:`DEVICE_DT_DEFINE`。
+  它还包括一个新的后端 API 指针，
+  以允许传感器共享通用 API，用于更通用的测试。
 
+本次发布中的变更
+=======================
 
-.. note::
+* 选择 :kconfig:option:`CONFIG_NEWLIB_LIBC` 时，
+  不再默认选择 Newlib nano 变体。
+  现在必须显式选择 :kconfig:option:`CONFIG_NEWLIB_LIBC_NANO`
+  才能使用 nano 变体。
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-* Removed deprecated GPIO flags used for setting debounce, drive strength and
-  voltage level. All drivers now use vendor-specific flags as needed.
+* 蓝牙：为 bt_le_per_adv_sync_transfer_subscribe 新增额外选项，
+  以允许禁用同步报告，并启用同步报告过滤。
+  这两个选项是互斥的。
 
-* Removed deprecated ``UTIL_LISTIFY`` helper macro.
+* 蓝牙：新增 :kconfig:option:`CONFIG_BT_PER_ADV_SYNC_TRANSFER_RECEIVER`
+  和 :kconfig:option:`CONFIG_BT_PER_ADV_SYNC_TRANSFER_SENDER`，
+  以启用 PAST 实现，而不是
+  :kconfig:option:`CONFIG_BT_CONN`。
+* Flashdisk：:kconfig:option:`CONFIG_DISK_FLASH_VOLUME_NAME`、
+  :kconfig:option:`CONFIG_DISK_FLASH_DEV_NAME`、
+  :kconfig:option:`CONFIG_DISK_FLASH_START`、
+  :kconfig:option:`CONFIG_DISK_FLASH_MAX_RW_SIZE`、
+  :kconfig:option:`CONFIG_DISK_ERASE_BLOCK_SIZE`、
+  :kconfig:option:`CONFIG_DISK_FLASH_ERASE_ALIGNMENT`、
+  :kconfig:option:`CONFIG_DISK_VOLUME_SIZE` 和
+  :kconfig:option:`CONFIG_DISK_FLASH_SECTOR_SIZE` Kconfig 选项已移除，
+  建议改用新的 :dtcompatible:`zephyr,flash-disk` 设备树绑定。
 
-* Removed deprecated ``pwm_pin*`` family of functions from the PWM API.
+* 之前位于 ``<zephyr/drivers/regulator/consumer.h>`` 中的
+  调节器 API 现在是 ``<zephyr/drivers/regulator.h>`` 的一部分。
 
-* Removed deprecated ``nvs_init`` function from the NVS filesystem API.
+* 从本次发布开始，将不再创建带 ``zephyr-`` 前缀的标签。
+  该项目将继续使用 ``v`` 标签，例如 ``v3.3.0``。
 
-* Removed deprecated ``DT_CHOSEN_*_LABEL`` helper macros.
+* 蓝牙：弃用蓝牙日志子系统，建议改用 Zephyr
+  标准日志系统。要为蓝牙子系统中的特定模块启用调试，
+  请启用 `CONFIG_BT_(模块名)_LOG_LEVEL_DBG`，
+  而不是 `CONFIG_BT_DEBUG_(模块名)`。
 
-* Removed deprecated property ``enable-pin-remap`` from  :dtcompatible: `st,stm32-usb`:.
-  ``remap-pa11-pa12`` from :dtcompatible: `st-stm32-pinctrl`: should now be used.
+* MCUmgr img_mgmt 现在要求在上传映像时
+  使用完整的 sha256 哈希来跟踪进度，
+  其中 sha256 哈希是被上传整个文件的哈希
+  （与获取映像状态时使用的哈希不同）。
+  使用截断的哈希或非 sha256 哈希仍然有效，
+  但会导致客户端软件出现问题
+  和 Zephyr/MCUmgr 未来更新（如映像验证）中的故障。
 
-Deprecated in this release
+* MCUmgr 处理程序不再需要由应用代码注册，
+  处理程序只需使用一个定义，该定义将在启动时
+  调用提供的注册函数。如果应用注册了它，
+  则应移除这些注册，以防止多次注册
+  相同的处理程序。
+
+* MCUmgr 蓝牙和 UDP 传输不再需要由
+  应用代码注册，这些现在将在启动时
+  自动注册（此功能可以通过设置
+  :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_UDP_AUTOMATIC_INIT`
+  为 UDP 传输禁用）。
+  如果应用注册了传输，则应移除这些注册，
+  以防止多次注册相同的传输。
+
+* MCUmgr 传输 Kconfig 已从 ``select`` 更改为 ``depends on``，
+  这意味着对于使用蓝牙传输的应用，
+  现在需要启用以下内容：
+
+  * :kconfig:option:`CONFIG_BT`
+  * :kconfig:option:`CONFIG_BT_PERIPHERAL`
+
+  对于 CDC 或串行传输：
+
+  * :kconfig:option:`CONFIG_CONSOLE`
+
+  对于 shell 传输：
+
+  * :kconfig:option:`CONFIG_SHELL`
+  * :kconfig:option:`CONFIG_SHELL_BACKEND_SERIAL`
+
+  对于 UDP 传输：
+
+  * :kconfig:option:`CONFIG_NETWORKING`
+  * :kconfig:option:`CONFIG_NET_UDP`
+
+* MCUmgr fs_mgmt 哈希/校验和函数、类型和变量名
+  已更改为带 ``fs_mgmt_`` 前缀，
+  以与其他 zephyr 和 MCUmgr API 保持一致。
+
+* Zephyr 脚本中 Python 的 argparse 参数解析器用法
+  已更新为禁用缩写，
+  任何未来的 python 脚本或 python 代码更新
+  都必须通过使用 ``allow_abbrev=False``
+  来禁用允许缩写
+  当设置 ``ArgumentParser()`` 时。
+
+  如果树外脚本或命令依赖于
+  其之前的行为，这可能会导致其失败，
+  这些需要更新才能使
+  构建工作。例如，如果脚本参数有 ``--reset-type``
+  并且树外脚本通过传递 ``--reset`` 使用它，
+  则需要更新为使用完整的参数名， ``--reset-type``。
+
+* 重写 CAN API 以利用标志位域，
+  而不是离散的结构体成员
+  用于指示标准/扩展 CAN ID、远程传输请求
+  （RTR），并新增对 CAN-FD 格式帧过滤的支持。
+
+* 新增 :ref:`Zephyr 消息总线（Zbus）<zbus>` 子系统；
+  一个面向消息的总线，
+  启用线程之间一对一、一对多和多对多通信。
+
+* zTest 现在支持通过
+  :kconfig:option:`CONFIG_ZTEST_SUMMARY` 控制测试摘要打印。
+  此 Kconfig 可设置为 ``n`` 以获得
+  更简洁的测试输出。
+
+* 仿真器现在支持后端 API 指针，
+  允许单一类设备提供类似的仿真功能。
+  这可用于为设备类编写单个测试，
+  并使用不同芯片测试各种板级。
+
+本次发布中移除的 API
+============================
+
+* 移除 :kconfig:option:`CONFIG_COUNTER_RTC_STM32_LSE_DRIVE*`
+  现在应使用 LSE 时钟的 ``driving_capability`` 属性
+  配置它
+
+* 移除 :kconfig:option:`CONFIG_COUNTER_RTC_STM32_LSE_BYPASS`
+  现在应使用 LSE 时钟的新 ``lse_bypass`` 属性
+  配置它
+
+* 移除 :kconfig:option:`CONFIG_COUNTER_RTC_STM32_BACKUP_DOMAIN_RESET`。
+  其目的是控制板级复位时计数器值的复位。
+  它已被移除，因为其范围太广
+  （完整的备份 RAM 复位）。
+  由 :kconfig:option:`CONFIG_COUNTER_RTC_STM32_SAVE_VALUE_BETWEEN_RESETS` 替换，
+  该选项也允许控制计数器值的复位，
+  但逻辑相反。
+
+* 移除已弃用的 tinycbor 模块，
+  使用此模块的代码应更新为
+  使用 zcbor 作为替代。
+
+* 移除已弃用的 GPIO 标志，
+  用于设置去抖动、驱动强度和电压电平。
+  所有驱动现在根据需要使用供应商特定标志。
+
+* 移除已弃用的 ``UTIL_LISTIFY`` 辅助宏。
+
+* 从 PWM API 移除已弃用的 ``pwm_pin*`` 函数族。
+
+* 从 NVS 文件系统 API 移除已弃用的 ``nvs_init`` 函数。
+
+* 移除已弃用的 ``DT_CHOSEN_*_LABEL`` 辅助宏。
+
+* 从 :dtcompatible:`st,stm32-usb` 移除已弃用的属性 ``enable-pin-remap``。
+  现在应使用 :dtcompatible:`st-stm32-pinctrl` 的 ``remap-pa11-pa12``。
+
+本次发布中弃用
 ==========================
 
-* ``xtools`` toolchain variant is now deprecated. When using a
-  custom toolchain built with Crosstool-NG, the
-  :ref:`cross-compile toolchain variant <other_x_compilers>` should be used instead.
+* ``xtools`` 工具链变体现在已弃用。
+  当使用使用 Crosstool-NG 构建的
+  自定义工具链时，
+  应改用 :ref:`交叉编译工具链变体 <other_x_compilers>`。
 
-* C++ library Kconfig options have been renamed to improve consistency. See
-  below for the list of deprecated Kconfig options and their replacements:
+* C++ 库 Kconfig 选项已重命名，
+  以改进一致性。
+  有关已弃用的 Kconfig 选项及其替换项的列表，
+  请参见下文：
 
   .. table::
      :align: center
 
      +----------------------------------------+------------------------------------------------+
-     | Deprecated                             | Replacement                                    |
+     | 已弃用                             | 替换项                                    |
      +========================================+================================================+
-     | :kconfig:option:`CONFIG_CPLUSPLUS`     | :kconfig:option:`CONFIG_CPP`                   |
+     | CONFIG_LIB_CPLUSPLUS                     | CONFIG_CPP                                  |
      +----------------------------------------+------------------------------------------------+
-     | :kconfig:option:`CONFIG_EXCEPTIONS`    | :kconfig:option:`CONFIG_CPP_EXCEPTIONS`        |
+     | CONFIG_LIB_CPLUSPLUS_NEW                 | CONFIG_CPP_NEW                              |
      +----------------------------------------+------------------------------------------------+
-     | :kconfig:option:`CONFIG_RTTI`          | :kconfig:option:`CONFIG_CPP_RTTI`              |
-     +----------------------------------------+------------------------------------------------+
-     | :kconfig:option:`CONFIG_LIB_CPLUSPLUS` | :kconfig:option:`CONFIG_LIBCPP_IMPLEMENTATION` |
+     | CONFIG_LIB_CPLUSPLUS_NEWALLOC            | CONFIG_CPP_NEWALLOC                         |
      +----------------------------------------+------------------------------------------------+
 
-* MCUmgr subsystem, specifically the SMP transport API, is dropping `zephyr_`
-  prefix, deprecating prefixed functions and callback type definitions with the
-  prefix and replacing them with prefix-less variants.
-  The :c:struct:`zephyr_smp_transport` type, representing transport object,
-  is now replaced with :c:struct:`smp_transport`, and the later one is used,
-  instead of the former one, by all prefix-less functions.
+* MCUmgr 子系统，特别是 SMP 传输 API，
+  正在弃用 `zephyr_` 前缀，
+  弃用带前缀的函数和回调类型定义，
+  并将其替换为无前缀的变体。
+  表示传输对象的 :c:struct:`zephyr_smp_transport` 类型
+  现在已被 :c:struct:`smp_transport` 替换，
+  后者被所有无前缀函数使用，
+  而不是前者。
 
-  Deprecated functions and their replacements:
+  已弃用的函数及其替换项：
 
   .. table::
      :align: center
 
      +-------------------------------------+---------------------------------------+
-     | Deprecated                          | Drop in replacement                   |
+     | 已弃用                          | 直接替换项                   |
      +=====================================+=======================================+
      | :c:func:`zephyr_smp_transport_init` | :c:func:`smp_transport_init`          |
      +-------------------------------------+---------------------------------------+
@@ -235,13 +246,13 @@ Deprecated in this release
      | :c:func:`zephyr_smp_free_buf`       | :c:func:`smp_free_buf`                |
      +-------------------------------------+---------------------------------------+
 
-  Deprecated callback types and their replacements:
+  已弃用的回调类型及其替换项：
 
   .. table::
      :align: center
 
      +---------------------------------------------+---------------------------------------+
-     | Deprecated                                  | Drop in replacement                   |
+     | 已弃用                                  | 直接替换项                   |
      +=============================================+=======================================+
      | :c:func:`zephyr_smp_transport_out_fn`       | :c:func:`smp_transport_out_fn`        |
      +---------------------------------------------+---------------------------------------+
@@ -252,264 +263,289 @@ Deprecated in this release
      | :c:func:`zephyr_smp_transport_ud_free_fn`   | :c:func:`smp_transport_ud_free_fn`    |
      +---------------------------------------------+---------------------------------------+
 
-  NOTE: Only functions are marked as ``__deprecated``, type definitions are not.
+  注意：仅函数被标记为 ``__deprecated``，
+  类型定义则没有。
 
-* STM32 Ethernet Mac address Kconfig related symbols (:kconfig:option:`CONFIG_ETH_STM32_HAL_RANDOM_MAC`,
-  :kconfig:option:`CONFIG_ETH_STM32_HAL_MAC4`, ...) have been deprecated in favor
-  of the use of zephyr generic device tree ``local-mac-address`` and ``zephyr,random-mac-address``
-  properties.
+* STM32 以太网 MAC 地址 Kconfig 相关符号
+  （:kconfig:option:`CONFIG_ETH_STM32_HAL_RANDOM_MAC`、
+  :kconfig:option:`CONFIG_ETH_STM32_HAL_MAC4`、...）
+  已弃用，建议改用 zephyr 通用设备树
+  ``local-mac-address`` 和 ``zephyr,random-mac-address`` 属性。
 
-* STM32 RTC source clock should now be configured using devicetree.
-  Related Kconfig :kconfig:option:`CONFIG_COUNTER_RTC_STM32_CLOCK_LSI` and
-  :kconfig:option:`CONFIG_COUNTER_RTC_STM32_CLOCK_LSE` options are now
-  deprecated.
+* STM32 RTC 源时钟现在应使用设备树配置。
+  相关的 Kconfig :kconfig:option:`CONFIG_COUNTER_RTC_STM32_CLOCK_LSI` 和
+  :kconfig:option:`CONFIG_COUNTER_RTC_STM32_CLOCK_LSE` 选项现在
+  已弃用。
 
-* STM32 Interrupt controller Kconfig symbols such as :kconfig:option:`CONFIG_EXTI_STM32_EXTI0_IRQ_PRI`
-  are removed. Related IRQ priorities should now be configured in device tree.
+* STM32 中断控制器 Kconfig 符号，
+  例如 :kconfig:option:`CONFIG_EXTI_STM32_EXTI0_IRQ_PRI`，
+  已被移除。相关的 IRQ 优先级现在应在设备树中配置。
 
-* `PWM_STM32_COMPLEMENTARY` deprecated in favor of `STM32_PWM_COMPLEMENTARY`.
+* `PWM_STM32_COMPLEMENTARY` 已弃用，
+  建议改用 `STM32_PWM_COMPLEMENTARY`。
 
-* File backend for settings APIs and Kconfig options were deprecated:
+* 设置 API 的文件后端和 Kconfig 选项已弃用：
 
-  :c:func:`settings_mount_fs_backend` in favor of :c:func:`settings_mount_file_backend`
+  :c:func:`settings_mount_fs_backend` 建议改用 :c:func:`settings_mount_file_backend`
 
-  :kconfig:option:`CONFIG_SETTINGS_FS` in favor of :kconfig:option:`CONFIG_SETTINGS_FILE`
+  :kconfig:option:`CONFIG_SETTINGS_FS` 建议改用 :kconfig:option:`CONFIG_SETTINGS_FILE`
 
-  :kconfig:option:`CONFIG_SETTINGS_FS_DIR` in favor of creating all parent
-  directories from :kconfig:option:`CONFIG_SETTINGS_FILE_PATH`
+  :kconfig:option:`CONFIG_SETTINGS_FS_DIR` 建议改用从
+  :kconfig:option:`CONFIG_SETTINGS_FILE_PATH` 创建所有父目录
 
-  :kconfig:option:`CONFIG_SETTINGS_FS_FILE` in favor of :kconfig:option:`CONFIG_SETTINGS_FILE_PATH`
+  :kconfig:option:`CONFIG_SETTINGS_FS_FILE` 建议改用 :kconfig:option:`CONFIG_SETTINGS_FILE_PATH`
 
-  :kconfig:option:`CONFIG_SETTINGS_FS_MAX_LINES` in favor of :kconfig:option:`CONFIG_SETTINGS_FILE_MAX_LINES`
+  :kconfig:option:`CONFIG_SETTINGS_FS_MAX_LINES` 建议改用 :kconfig:option:`CONFIG_SETTINGS_FILE_MAX_LINES`
 
-* PCIe APIs :c:func:`pcie_probe` and :c:func:`pcie_bdf_lookup` have been
-  deprecated in favor of a centralized scan of available PCIe devices.
+* PCIe API :c:func:`pcie_probe` 和 :c:func:`pcie_bdf_lookup` 已弃用，
+  建议改用对可用 PCIe 设备的集中扫描。
 
 * POSIX API
 
-    * Deprecated :c:macro:`PTHREAD_COND_DEFINE`, :c:macro:`PTHREAD_MUTEX_DEFINE` in favour of the
-      standard :c:macro:`PTHREAD_COND_INITIALIZER` and :c:macro:`PTHREAD_MUTEX_INITIALIZER`.
-    * Deprecated ``<fcntl.h>``, ``<sys/stat.h>`` header files in the minimal libc in favour of
-      ``<zephyr/posix/fcntl.h>`` and ``<zephyr/posix/sys/stat.h>``.
+    * 弃用 :c:macro:`PTHREAD_COND_DEFINE`、:c:macro:`PTHREAD_MUTEX_DEFINE`，
+      建议改用标准的 :c:macro:`PTHREAD_COND_INITIALIZER` 和
+      :c:macro:`PTHREAD_MUTEX_INITIALIZER`。
+    * 在 minimal libc 中弃用 ``<fcntl.h>``、``<sys/stat.h>`` 头文件，
+      建议改用 ``<zephyr/posix/fcntl.h>`` 和 ``<zephyr/posix/sys/stat.h>``。
 
-* SPI DT :c:func:`spi_is_ready` function has been deprecated in favor of :c:func:`spi_is_ready_dt`.
+* SPI DT :c:func:`spi_is_ready` 函数已弃用，
+  建议改用 :c:func:`spi_is_ready_dt`。
 
-* LwM2M APIs using string references as LwM2M paths has been deprecated in favor of functions
-  using :c:struct:`lwm2m_path_obj` instead.
+* 使用字符串引用作为 LwM2M 路径的 LwM2M API 已弃用，
+  建议改用使用 :c:struct:`lwm2m_path_obj` 的函数。
 
-Stable API changes in this release
+本次发布中的稳定 API 变更
 ==================================
 
-* MCUmgr events have been reworked to use a single, unified callback system.
-  This allows better customisation of the callbacks with a lower flash size.
-  Applications using the existing callback system will need to be upgraded to
-  use the new API by following the :ref:`migration guide <mcumgr_cb_migration>`
+* MCUmgr 事件已重新设计，
+  以使用单一、统一的回调系统。
+  这允许以较小的闪存大小更好地定制回调。
+  使用现有回调系统的应用需要升级
+  以使用新 API，
+  请遵循 :ref:`迁移指南 <mcumgr_cb_migration>`
 
-* :c:func:`net_pkt_get_frag`, :c:func:`net_pkt_get_reserve_tx_data` and
-  :c:func:`net_pkt_get_reserve_rx_data` functions are now requiring to specify
-  the minimum fragment length to allocate, so that they work correctly also in
-  case :kconfig:option:`CONFIG_NET_BUF_VARIABLE_DATA_SIZE` is enabled.
-  Applications using this APIs will need to be updated to provide the expected
-  fragment length.
+* :c:func:`net_pkt_get_frag`、:c:func:`net_pkt_get_reserve_tx_data` 和
+  :c:func:`net_pkt_get_reserve_rx_data` 函数现在要求
+  指定要分配的最小分片长度，
+  以便它们在启用 :kconfig:option:`CONFIG_NET_BUF_VARIABLE_DATA_SIZE`
+  的情况下也能正确工作。
+  使用这些 API 的应用需要更新
+  以提供预期的分片长度。
 
-* Marked the Controller Area Network (CAN) controller driver API as stable.
+* 将控制器局域网（CAN）控制器驱动 API 标记为稳定。
 
-New APIs in this release
+本次发布中的新 API
 ========================
 
-Kernel
+内核
 ******
 
-* Added an "EARLY" init level that runs immediately on entry to z_cstart()
+* 新增 "EARLY" 初始化级别，
+  在 z_cstart() 入口处立即运行
 
-* Refactored the internal CPU count API to allow for runtime changes
+* 重构内部 CPU 计数 API，
+  以允许运行时更改
 
-* Added support for defining application main() in C++ code
+* 新增支持在 C++ 代码中定义应用 main()
 
-* Fixed a race condition on SMP when pending threads where a second CPU
-  could attempt to run a thread before the pending thread had finished
-  the context switch.
+* 修复 SMP 上的竞态条件，
+  当挂起线程时，
+  第二个 CPU 可能在挂起线程完成
+  上下文切换之前尝试运行该线程。
 
-Architectures
+架构
 *************
 
 * ARC
 
-  * Fixed & reworked interrupt management (enabling / disabling) for the SMP systems
-  * Added TLS (thread-local storage) for ARC MWDT toolchain
-  * Fixed & rework irq_offload implementation
-  * Fixed multiple logging & cbprintf issues for ARCv3 64bit
-  * Added XIP support with MWDT toolchain
-  * Improved DSP support, add DSP and AGU context save / restore
-  * Added XY memory support for ARC DSP targets
-  * Added architectures-specific DSP tests
-  * Added additional compile-time checks for unsupported configuration: ARC_FIRQ + ARC_HAS_SECURE
-  * Added support for using ``__auto_type`` type for ARC MWDT toolchain
-  * Added support for using ``_Generic`` and ``__fallthrough`` keywords for ARC MWDT toolchain
-  * Bumped minimal required ARC MWDT version to 2022.09
-  * Fixed & reworked inclusion of C/C++ headers for ARC MWDT toolchain which cased build issue with
-    C++
+  * 修复并重新设计 SMP 系统的中断管理
+    （启用/禁用）
+  * 为 ARC MWDT 工具链新增 TLS（线程本地存储）
+  * 修复并重新设计 irq_offload 实现
+  * 修复 ARCv3 64 位的多个日志和 cbprintf 问题
+  * 为 MWDT 工具链新增 XIP 支持
+  * 改进 DSP 支持，
+    新增 DSP 和 AGU 上下文保存/恢复
+  * 为 ARC DSP 目标新增 XY 内存支持
+  * 新增架构特定的 DSP 测试
+  * 为不支持的配置新增额外的编译时检查：
+    ARC_FIRQ + ARC_HAS_SECURE
+  * 为 ARC MWDT 工具链新增使用 ``__auto_type`` 类型的支持
+  * 为 ARC MWDT 工具链新增使用 ``_Generic`` 和 ``__fallthrough`` 关键字的支持
+  * 将 ARC MWDT 最低版本提升到 2022.09
+  * 修复并重新设计 ARC MWDT 工具链的 C/C++ 头文件包含，
+    该问题导致了 C++ 构建问题
 
 * ARM
 
-  * More precise 'reason' codes are now returned in the fault handler.
-  * Cache functions now use proper ``sys_*`` functions.
-  * Renamed default RAM region from ``SRAM`` to ``RAM``.
+  * 故障处理程序现在返回更精确的 "reason" 代码。
+  * 缓存函数现在使用适当的 ``sys_*`` 函数。
+  * 将默认 RAM 区域从 ``SRAM`` 重命名为 ``RAM``。
 
 * ARM64
 
-  * Implemented ASID support for ARM64 MMU
+  * 为 ARM64 MMU 实现 ASID 支持
 
 * RISC-V
 
-  * Converted :kconfig:option:`CONFIG_MP_NUM_CPUS` to
-    :kconfig:option:`CONFIG_MP_MAX_NUM_CPUS`.
+  * 将 :kconfig:option:`CONFIG_MP_NUM_CPUS` 转换为
+    :kconfig:option:`CONFIG_MP_MAX_NUM_CPUS`。
 
-  * Added support for hardware register stacking/unstacking during ISRs and
-    exceptions.
+  * 新增在 ISR 和异常期间
+    硬件寄存器压栈/出栈的支持。
 
-  * Added support for overriding :c:func:`arch_irq_lock`,
-    :c:func:`arch_irq_unlock` and :c:func:`arch_irq_unlocked`.
+  * 新增覆盖 :c:func:`arch_irq_lock`、
+    :c:func:`arch_irq_unlock` 和 :c:func:`arch_irq_unlocked` 的支持。
 
-  * Zephyr CPU number is now decoupled from the hart ID.
+  * Zephyr CPU 编号现在与 hart ID 解耦。
 
-  * Secondary boot code is no longer included when
-    :kconfig:option:`CONFIG_MP_MAX_NUM_CPUS` equals ``1``.
+  * 当 :kconfig:option:`CONFIG_MP_MAX_NUM_CPUS` 等于 ``1`` 时，
+    不再包含二级引导代码。
 
-  * IPIs are no longer hardcoded to :c:func:`z_sched_ipi`.
+  * IPI 不再硬编码为 :c:func:`z_sched_ipi`。
 
-  * Implemented an on-demand context switching algorithm for thread FPU
-    accesses.
+  * 为线程 FPU 访问
+    实现按需上下文切换算法。
 
-  * Enabled booting from non-zero indexed RISC-V harts with
-    :kconfig:option:`CONFIG_RV_BOOT_HART`.
+  * 通过 :kconfig:option:`CONFIG_RV_BOOT_HART`
+    启用从非零索引的 RISC-V hart 引导。
 
-  * Hart IDs are now mapped to Zephyr CPUs with the devicetree.
+  * Hart ID 现在通过设备树映射到 Zephyr CPU。
 
-  * Added a workaround for ``MTVAL`` not updating properly on QEMU-based
-    platforms.
+  * 为 ``MTVAL`` 在基于 QEMU 的平台上
+    未正确更新新增变通方法。
 
-Bluetooth
+蓝牙
 *********
 
-* Audio
+* 音频
 
-  * Refactored the handling of extended and periodic advertising in the BAP
-    broadcast source.
-  * Implemented the Common Audio Profile initiator role.
-  * Added support for Broadcast source subgroup and BIS codec configuration.
-  * Renamed the CSI and VCP functionality to use the "P" postfix for profile
-    instead of "S" for service.
-  * Added a broadcast source metadata update function.
-  * Added (un)binding of audio ISO structs to Audio Streams.
-  * Added support for encrypted broadcast.
-  * Added the ability to change the supported contexts in PACS.
-  * Improved stream coupling for CIS as the unicast client
-  * Added broadcast source metadata update function
-  * Added packing to unicast group create
-  * Added packing field to broadcast source
-  * Renamed BASS and BASS client to BAP Scan Delegator and BPA Broadcast Assistant
-  * Added support for multiple subgroups for BAP broadcast sink
-  * Replaced capabilities API with PACS
+  * 重构 BAP 广播源中扩展和周期性广播的处理。
+  * 实现通用音频配置（CAP）发起方角色。
+  * 新增对广播源子组和 BIS 编解码器配置的支持。
+  * 将 CSI 和 VCP 功能重命名为使用 "P" 后缀
+    表示配置，而不是使用 "S" 表示服务。
+  * 新增广播源元数据更新函数。
+  * 新增音频 ISO 结构体与音频流的（解）绑定。
+  * 新增对加密广播的支持。
+  * 新增更改 PACS 中支持上下文的能力。
+  * 改进作为单播客户端的 CIS 的流耦合
+  * 新增广播源元数据更新函数
+  * 为单播组创建新增打包
+  * 为广播源新增打包字段
+  * 将 BASS 和 BASS 客户端重命名为
+    BAP 扫描委托方和 BPA 广播助手
+  * 新增对 BAP 广播接收端多个子组的支持
+  * 用 PACS 替换 capabilities API
 
-* Host
+* 主机
 
-  * Added a new ``BT_CONN_INTERVAL_TO_US`` utility macro.
-  * Made the HCI fragmentation logic asynchronous, thus fixing a long-standing
-    potential deadlock between data and control procedures.
-  * Added the local advertising address to :c:func:`bt_le_ext_adv_get_info`.
-  * Improved the implementation of :c:func:`bt_disable` to handle additional
-    edge cases.
-  * Removed all Bluetooth-specific logging macros and functionality, switching
-    instead to the OS-wide ones.
-  * Added a new :c:func:`bt_le_per_adv_sync_lookup_index` function.
-  * Fixed missing calls to bt_le_per_adv_sync_cb.term when deleting a periodic
-    advertising sync object.
-  * Added local advertising address to bt_le_ext_adv_info.
-  * Added the printing of function names by default when logging.
-  * Changed the policy for advertising restart after disconnection, which is now
-    done only for connections in the peripheral role.
-  * Added a guard to prevent bonding to the same device more than once.
-  * Refactored crypto functionality from SMP into its own folder, and added the
-    h8 crypto function.
-  * Changed the behavior when receiving an L2CAP K-frame larger than the MPS,
-    disconnecting instead of truncating it.
-  * Added a new :kconfig:option:`BT_ID_ALLOW_UNAUTH_OVERWRITE` that allows
-    unauthorized bond overrides with multiple identities.
-  * Added support for the object calculate checksum feature in OTS.
-  * Changed back the semantics of :kconfig:option:`BT_PRIVACY` to refer to local
-    RPA address generation.
-  * Modified the SMP behavior when outside a pairing procedure. The stack no
-    longer sends unnecessary Pairing Failed PDUs in that state.
+  * 新增 ``BT_CONN_INTERVAL_TO_US`` 工具宏。
+  * 将 HCI 分片逻辑改为异步，
+    从而修复了数据和控制过程之间
+    长期存在的潜在死锁。
+  * 将本地广播地址添加到 :c:func:`bt_le_ext_adv_get_info`。
+  * 改进 :c:func:`bt_disable` 的实现，
+    以处理额外的边缘情况。
+  * 移除所有蓝牙特定的日志宏和功能，
+    改用操作系统范围的日志。
+  * 新增 :c:func:`bt_le_per_adv_sync_lookup_index` 函数。
+  * 修复删除周期性广播同步对象时
+    对 bt_le_per_adv_sync_cb.term 的缺失调用。
+  * 将本地广播地址添加到 bt_le_ext_adv_info。
+  * 新增默认在日志中打印函数名。
+  * 更改断开连接后广播重启的策略，
+    现在仅针对外围设备角色的连接执行。
+  * 新增保护，防止与同一设备绑定多次。
+  * 将加密功能从 SMP 重构到其自己的文件夹，
+    并新增 h8 加密函数。
+  * 更改接收大于 MPS 的 L2CAP K 帧时的行为，
+    断开连接而不是截断它。
+  * 新增 :kconfig:option:`BT_ID_ALLOW_UNAUTH_OVERWRITE`，
+    允许多身份下未授权的绑定覆盖。
+  * 新增对 OTS 中对象计算校验和功能的支持。
+  * 将 :kconfig:option:`BT_PRIVACY` 的语义改回
+    指本地 RPA 地址生成。
+  * 修改配对过程之外的 SMP 行为。
+    栈在该状态下不再发送不必要的
+    配对失败 PDU。
 
-  * ISO: Changed ISO seq_num to 16-bit
+  * ISO：将 ISO seq_num 更改为 16 位
 
 * Mesh
 
-  * Changed the default advertiser to be extended advertiser.
-  * Made the provisioning feature set dynamic.
-  * Made the maximum number of simultaneous Bluetooth connections that the mesh
-    stack can use configurable via :kconfig:option:`BT_MESH_MAX_CONN`.
-  * Changed the advertising duration calculation to avoid imprecise estimations.
-  * Added the :kconfig:option:`BT_MESH_FRIEND_ADV_LATENCY` Kconfig option.
+  * 将默认广播器更改为扩展广播器。
+  * 使配置功能集动态化。
+  * 使 mesh 栈可使用的
+    最大同时蓝牙连接数
+    可通过 :kconfig:option:`BT_MESH_MAX_CONN` 配置。
+  * 更改广播持续时间计算，
+    以避免不精确的估算。
+  * 新增 :kconfig:option:`BT_MESH_FRIEND_ADV_LATENCY` Kconfig 选项。
 
-* Controller
+* 控制器
 
-  * Implemented the Read/Write Connection Accept Timeout HCI commands.
-  * Implemented the Sleep Clock Accuracy Update procedure.
-  * Implemented additional ISO-related HCI commands.
-  * Implemented ISO-AL SDU buffering and PDU release timeout.
-  * Added support for handling fragmented AD without chaining PDUs.
-  * Added support for multiple memory pools for advertising PDUs
-  * Added support for retrying the automatic peripheral connection parameter
-    update.
-  * Added support for deferring anchor points moves using an external hook.
-  * Added a new ``LL_ASSERT_MSG`` macro for verbose assertions.
-  * Added long control PDU support.
-  * Added support for Broadcast ISO encryption.
-  * Added support for central CIS/CIG, including ULL and Nordic LLL.
-  * Added support for peripheral CIS/CIG in the Nordic LLL.
-  * Added the :kconfig:option:`BT_CTLR_SLOT_RESERVATION_UPDATE` Kconfig option.
-  * Integrated ISOAL for ISO broadcast.
+  * 实现读/写连接接受超时 HCI 命令。
+  * 实现睡眠时钟精度更新过程。
+  * 实现额外的 ISO 相关 HCI 命令。
+  * 实现 ISO-AL SDU 缓冲和 PDU 释放超时。
+  * 新增处理不带 PDU 链接的分片 AD 的支持。
+  * 新增对广播 PDU 的多个内存池的支持
+  * 新增重试自动外围设备连接参数更新的支持。
+  * 新增使用外部钩子延迟锚点移动的支持。
+  * 新增用于详细断言的 ``LL_ASSERT_MSG`` 宏。
+  * 新增长控制 PDU 支持。
+  * 新增对广播 ISO 加密的支持。
+  * 新增对中心 CIS/CIG 的支持，
+    包括 ULL 和 Nordic LLL。
+  * 新增在 Nordic LLL 中
+    外围设备 CIS/CIG 的支持。
+  * 新增 :kconfig:option:`BT_CTLR_SLOT_RESERVATION_UPDATE` Kconfig 选项。
+  * 为 ISO 广播集成 ISOAL。
 
-Boards & SoC Support
+板级与 SoC 支持
 ********************
 
-* Added support for these SoC series:
+* 新增对这些 SoC 系列的支持：
 
-  * Atmel SAMC20, SAMC21
+  * Atmel SAMC20、SAMC21
   * Atmel SAME70Q19
   * GigaDevice GD32L23X
   * GigaDevice GD32A50X
   * NXP S32Z2/E2
 
-* Made these changes in other SoC series:
+* 在其他 SoC 系列中进行了以下更改：
 
-  * STM32F1: USB Prescaler configuration is now expected to be done using
-    :dtcompatible: `st,stm32f1-pll-clock`: ``usbpre``
-    or :dtcompatible: `st,stm32f105-pll-clock`: ``otgfspre`` properties.
-  * STM32F7/L4: Now supports configuring MCO.
-  * STM32G0: Now supports FDCAN
-  * STM32G4: Now supports power management (STOP0 and STOP1 low power modes).
-  * STM32H7: Now supports PLL2, USB OTG HS and ULPI PHY.
-  * STM32L5: Now supports RTC based :ref:`counter_api`.
-  * STM32U5: Now supports :ref:`crypto_api` through AES device.
-  * STM32F7/L4: Now supports configuring MCO.
+  * STM32F1：USB 预分频器配置
+    现在应使用 :dtcompatible:`st,stm32f1-pll-clock` 的 ``usbpre``
+    或 :dtcompatible:`st,stm32f105-pll-clock` 的 ``otgfspre`` 属性
+    完成。
+  * STM32F7/L4：现在支持配置 MCO。
+  * STM32G0：现在支持 FDCAN
+  * STM32G4：现在支持电源管理
+    （STOP0 和 STOP1 低功耗模式）。
+  * STM32H7：现在支持 PLL2、USB OTG HS 和 ULPI PHY。
+  * STM32L5：现在支持基于 RTC 的 :ref:`counter_api`。
+  * STM32U5：现在支持通过 AES 设备的 :ref:`crypto_api`。
+  * STM32F7/L4：现在支持配置 MCO。
 
-* Changes for ARC boards:
+* ARC 板级的更改：
 
-  * Multiple fixes to ``mdb-hw`` and ``mdb-nsim`` west runners to improve usability
-  * Added ``nsim_em11d`` board with DSP features (XY DSP with AGU and XY memory)
-  * Fixed cy8c95xx I2C GPIO port init on HSDK board
-  * Added SPI flash support on EM starter kit board
-  * Multiple fixes for nSIM platform - configuration: adding of missing HW features or
-    configurations sync
-  * Improved creg_gpio platform driver - add pin_configure API
-  * Added separate QEMU config ``qemu_arc_hs_xip`` for XIP testing
-  * Added ``nsim_hs_sram``, ``nsim_hs_flash_xip`` nSIM platforms to verify various memory models
-  * nSIM board documentation overhaul
+  * 对 ``mdb-hw`` 和 ``mdb-nsim`` west runner 的
+    多个修复，以改进可用性
+  * 新增具有 DSP 功能的 ``nsim_em11d`` 板级
+    （具有 AGU 和 XY 内存的 XY DSP）
+  * 修复 HSDK 板级上 cy8c95xx I2C GPIO 端口初始化
+  * 为 EM starter kit 板级新增 SPI 闪存支持
+  * 对 nSIM 平台的多个修复 - 配置：
+    添加缺失的 HW 功能或配置同步
+  * 改进 creg_gpio 平台驱动 - 新增 pin_configure API
+  * 为 XIP 测试新增单独的 QEMU 配置 ``qemu_arc_hs_xip``
+  * 新增 ``nsim_hs_sram``、``nsim_hs_flash_xip`` nSIM 平台，
+    以验证各种内存模型
+  * 全面修订 nSIM 板级文档
 
-* Added support for these ARM boards:
+* 新增对这些 ARM 板级的支持：
 
   * Adafruit ItsyBitsy nRF52840 Express
   * Adafruit KB2040
@@ -519,37 +555,38 @@ Boards & SoC Support
   * nRF5340 Audio DK
   * Sparkfun pro micro RP2040
   * Arduino Portenta H7
-  * SECO JUNO SBC-D23 (STM32F302)
+  * SECO JUNO SBC-D23（STM32F302）
   * ST Nucleo G070RB
   * ST Nucleo L4A6ZG
-  * NXP X-S32Z27X-DC (DC2)
+  * NXP X-S32Z27X-DC（DC2）
 
-* Added support for these ARM64 boards:
+* 新增对这些 ARM64 板级的支持：
 
-  * i.MX93 (Cortex-A) EVK board
-  * Khadas Edge-V board
+  * i.MX93（Cortex-A）EVK 板级
+  * Khadas Edge-V 板级
   * QEMU Virt KVM
 
-* Added support for these X86 boards:
+* 新增对这些 X86 板级的支持：
 
   * Intel Raptor Lake CRB
 
-* Added support for these RISC-V boards:
+* 新增对这些 RISC-V 板级的支持：
 
-  * Added LCD support for ``longan_nano`` board.
+  * 为 ``longan_nano`` 板级新增 LCD 支持。
 
-* Made these changes in ARM boards:
+* 在 ARM 板级中进行了以下更改：
 
-  * sam4s_xplained: Enabled PWM
-  * sam_e70_xplained: Added DMA devicetree entries for SPI
-  * sam_v71_xult: Added DMA devicetree entries for SPI
-  * tdk_robokit1: Added DMA devicetree entries for SPI
+  * sam4s_xplained：启用 PWM
+  * sam_e70_xplained：为 SPI 新增 DMA 设备树条目
+  * sam_v71_xult：为 SPI 新增 DMA 设备树条目
+  * tdk_robokit1：为 SPI 新增 DMA 设备树条目
 
-  * The scratch partition has been removed for the following Nordic boards and
-    flash used by this area re-assigned to other partitions to free up space
-    and rely upon the swap-using-move algorithm in MCUboot (which does not
-    suffer from the same faults or stuck image issues as swap-using-scratch
-    does):
+  * 已移除以下 Nordic 板级的 scratch 分区，
+    并将该区域使用的闪存重新分配给其他分区，
+    以释放空间并依赖 MCUboot 中的
+    swap-using-move 算法
+    （该算法不会受到与 swap-using-scratch
+    相同的故障或映像卡住问题的影响）：
     ``nrf21540dk_nrf52840``
     ``nrf51dk_nrf51422``
     ``nrf51dongle_nrf51422``
@@ -564,28 +601,35 @@ Boards & SoC Support
     ``nrf9160dk_nrf52840``
     ``nrf9160dk_nrf9160``
 
-    Note that MCUboot and MCUboot image updates from pre-Zephyr 3.3 might be
-    incompatible with Zephyr 3.3 onwards and vice versa.
+    请注意，Zephyr 3.3 之前的 MCUboot 和 MCUboot 映像更新
+    可能与 Zephyr 3.3 及之后的版本不兼容，
+    反之亦然。
 
-  * The default console for the ``nrf52840dongle_nrf52840`` board has been
-    changed from physical UART (which is not connected to anything on the
-    board) to use USB CDC instead.
-  * Forced configuration of FPU was removed from following boards:
+  * ``nrf52840dongle_nrf52840`` 板级的默认控制台
+    已从物理 UART（该板级上未连接到任何设备）
+    更改为使用 USB CDC。
+  * 已从以下板级移除强制配置 FPU：
     ``stm32373c_eval``
     ``stm32f3_disco``
 
-  * On STM32 boards, configuration of USB, SDMMC and entropy devices that generally
-    expect a 48MHz clock is now done using device tree. When available, HSI48 is enabled
-    and configured as domain clock for these devices, otherwise PLL_Q output or MSI is used.
-    On some boards, previous PLL SAI configuration has been changed to above options,
-    since PLL SAI cannot yet be configured using device tree.
+  * 在 STM32 板级上，
+    通常期望 48MHz 时钟的 USB、SDMMC 和熵设备配置
+    现在使用设备树完成。
+    当可用时，启用 HSI48 并将其配置为
+    这些设备的域时钟，
+    否则使用 PLL_Q 输出或 MSI。
+    在某些板级上，
+    之前的 PLL SAI 配置已更改为上述选项，
+    因为 PLL SAI 还不能使用设备树配置。
 
-* Made these changes in other boards:
+* 在其他板级中进行了以下更改：
 
-  * The nrf52_bsim (natively simulated nRF52 device with BabbleSim) now models
-    a nRF52833 instead of a nRF52832 device
+  * nrf52_bsim（原生仿真的 nRF52 设备，
+    带有 BabbleSim）
+    现在模拟 nRF52833，
+    而不是 nRF52832 设备
 
-* Added support for these following shields:
+* 新增对以下扩展板的支持：
 
   * Adafruit PCA9685
   * nPM6001 EK
@@ -593,271 +637,347 @@ Boards & SoC Support
   * Semtech SX1262MB2DAS
   * Sparkfun MAX3421E
 
-Build system and infrastructure
+构建与基础设施
 *******************************
 
-* Code relocation
+* 代码重定位
 
-  * ``zephyr_code_relocate`` API has changed to accept a list of files to
-    relocate and a location to place the files.
+  * ``zephyr_code_relocate`` API 已更改，
+    以接受要重定位的文件列表
+    和放置文件的位置。
 
 * Sysbuild
 
-  * Issue with duplicate sysbuild image name causing an infinite cmake loop
-    has been fixed.
+  * 修复了重复的 sysbuild 映像名称
+    导致无限 cmake 循环的问题。
 
-  * Issue with board revision not being passed to sysbuild images has been
-    fixed.
+  * 修复了板级修订版本
+    未传递给 sysbuild 映像的问题。
 
-  * Application specific configurations of sysbuild controlled images.
+  * sysbuild 控制映像的应用特定配置。
 
-* Userspace
+* 用户空间
 
-  * Userspace option to disable using the ``relax`` linker option has been
-    added.
+  * 新增用户空间选项，
+    用于禁用使用 ``relax`` 链接器选项。
 
-* Tools
+* 工具
 
-  * Static code analyser (SCA) tool support has been added.
+  * 新增静态代码分析器（SCA）工具支持。
 
-Drivers and Sensors
+驱动与传感器
 *******************
 
 * ADC
 
-  * STM32: Now Supports sequencing multiple channels into a single read.
-  * Fixed a problem in :c:macro:`ADC_CHANNEL_CFG_DT` that forced users to add
-    artificial ``input-positive`` property in nodes related to ADC drivers that
-    do not use configurable analog inputs when such drivers were used together
-    with an ADC driver that uses such input configuration.
-  * Added driver for TI CC13xx/CC26xx family.
-  * Added driver for Infineon XMC4xxx family.
-  * Added driver for ESP32 SoCs.
+  * STM32：现在支持将多个通道
+    顺序化为单个读取。
+  * 修复 :c:macro:`ADC_CHANNEL_CFG_DT` 中的问题，
+    该问题强制用户在与使用
+    可配置模拟输入的 ADC 驱动一起使用
+    不使用此类输入配置的 ADC 驱动相关节点中
+    添加人为的 ``input-positive`` 属性。
+  * 新增 TI CC13xx/CC26xx 系列的驱动。
+  * 新增 Infineon XMC4xxx 系列的驱动。
+  * 新增 ESP32 SoC 的驱动。
 
-* Battery-backed RAM
+* 电池备份 RAM
 
-  * STM32: Added driver to enable support for backup registers from RTC.
+  * STM32：新增驱动，
+    以启用对来自 RTC 的备份寄存器的支持。
 
 * CAN
 
-  * Added RX overflow counter statistics support (STM32 bxCAN, Renesas R-Car,
-    and NXP FlexCAN).
-  * Added support for TWAI on ESP32-C3.
-  * Added support for multiple MCP2515 driver instances.
-  * Added Kvaser PCIcan driver and support for using it under QEMU.
-  * Made the fake CAN test driver generally available.
-  * Added support for compiling the Native Posix Linux CAN driver against Linux
-    kernel headers prior to v5.14.
-  * Removed the CONFIG_CAN_HAS_RX_TIMESTAMP and CONFIG_CAN_HAS_CANFD Kconfig
-    helper symbols.
+  * 新增 RX 溢出计数器统计支持
+    （STM32 bxCAN、Renesas R-Car 和 NXP FlexCAN）。
+  * 新增对 ESP32-C3 上 TWAI 的支持。
+  * 新增对多个 MCP2515 驱动实例的支持。
+  * 新增 Kvaser PCIcan 驱动
+    以及在 QEMU 下使用它的支持。
+  * 使伪 CAN 测试驱动普遍可用。
+  * 新增支持将 Native Posix Linux CAN 驱动
+    编译到 v5.14 之前的 Linux 内核头文件。
+  * 移除 CONFIG_CAN_HAS_RX_TIMESTAMP 和
+    CONFIG_CAN_HAS_CANFD Kconfig 辅助符号。
 
-* Clock control
+* 时钟控制
 
-  * STM32: HSI48 can now be configured using device tree.
+  * STM32：HSI48 现在可以使用设备树配置。
 
-* Counter
+* 计数器
 
-  * STM32 RTC based counter domain clock (LSE/SLI) should now be configured using device tree.
-  * Added Timer based driver for GigaDevice GD32 SoCs.
-  * Added NXP S32 System Timer Module driver.
+  * STM32 基于 RTC 的计数器域时钟（LSE/SLI）
+    现在应使用设备树配置。
+  * 为 GigaDevice GD32 SoC 新增基于定时器的驱动。
+  * 新增 NXP S32 系统定时器模块驱动。
 
 * DAC
 
-  * Added support for GigaDevice GD32 SoCs.
-  * Added support for Espressif ESP32 SoCs.
+  * 新增对 GigaDevice GD32 SoC 的支持。
+  * 新增对 Espressif ESP32 SoC 的支持。
 
 * DFU
 
-  * Removed :c:macro:`BOOT_TRAILER_IMG_STATUS_OFFS` in favor a two new functions;
-    :c:func:`boot_get_area_trailer_status_offset` and :c:func:`boot_get_trailer_status_offset`
+  * 移除 :c:macro:`BOOT_TRAILER_IMG_STATUS_OFFS`，
+    建议改用两个新函数；
+    :c:func:`boot_get_area_trailer_status_offset` 和
+    :c:func:`boot_get_trailer_status_offset`
 
-* Disk
+* 磁盘
 
-  * STM32 SD host controller clocks are now configured via devicetree.
-  * Zephyr flash disks are now configured using the :dtcompatible:`zephyr,flash-disk`
-    devicetree binding
-  * Flash disks can be marked as read only by setting the ``read-only`` property
-    on the linked flash device partition.
+  * STM32 SD 主机控制器时钟
+    现在通过设备树配置。
+  * Zephyr 闪存磁盘现在使用
+    :dtcompatible:`zephyr,flash-disk` 设备树绑定
+    配置
+  * 通过在链接的闪存设备分区上
+    设置 ``read-only`` 属性，
+    可以将闪存磁盘标记为只读。
 
 * DMA
 
-  * Adjusted incorrect dma1 clock source for GD32 gd32vf103 SoC.
-  * Atmel SAM: Added support to select fixed or increment address mode when using
-    peripherals to memory or memory to peripheral transfers.
-  * STM32 DMA variable scope cleanups
-  * Intel GPDMA linked list transfer descriptors appropriately aligned to 64 byte addresses
-  * Intel GPDMA fixed bug in transfer configuration to initialize cfg_hi and cfg_lo
-  * STM32 DMA Support for the STM32MP1 series
-  * SAM XDMAC fixes to enable usage with SPI DMA transfers
-  * Intel GPDMA fixed to return errors on dma stop
-  * Intel GPDMA disabled interrupts when unneeded
-  * Intel GPDMA fixed for register/ip ownership
-  * STM32U5 GPDMA bug fix for busy flag
-  * STM32U5 Suspend and resume features added
-  * Intel GPDMA Report total bytes read/written (linear link position) in dma status
-  * DMA API get attribute function added, added attributes for scatter/gather blocks available
-    to Intel HDA and Intel GPDMA drivers.
-  * Intel GPDMA Power management functionality added
-  * Intel HDA Power management functionality added
-  * GD32 Slot used for peripheral selection
-  * GD32 memory to memory support added
-  * ESP32C3 GDMA driver added
-  * Intel HDA underrun/overrun (xrun) handling and reporting added
-  * Intel GPDMA underrun/overrun (xrun) handling nad reporting added
-  * DMA API start/stop are defined to be repeatable callable with test cases added.
-    STM32 DMA, Intel HDA, and Intel GPDMA all comply with the contract after patches.
-  * NXP EDMA Unused mutex removed
+  * 调整 GD32 gd32vf103 SoC 的
+    不正确的 dma1 时钟源。
+  * Atmel SAM：新增支持，
+    用于在使用外设到内存
+    或内存到外设传输时
+    选择固定或递增地址模式。
+  * STM32 DMA 变量作用域清理
+  * Intel GPDMA 链接列表传输描述符
+    适当对齐到 64 字节地址
+  * Intel GPDMA 修复传输配置中的 bug，
+    以初始化 cfg_hi 和 cfg_lo
+  * STM32 DMA 对 STM32MP1 系列的支持
+  * SAM XDMAC 修复，
+    以启用与 SPI DMA 传输一起使用
+  * Intel GPDMA 修复，
+    以便在 dma stop 时返回错误
+  * Intel GPDMA 在不需要时禁用中断
+  * Intel GPDMA 修复寄存器/ip 所有权
+  * STM32U5 GPDMA 修复忙标志 bug
+  * STM32U5 新增挂起和恢复功能
+  * Intel GPDMA 在 dma 状态中
+    报告读取/写入的总字节数
+    （线性链接位置）
+  * 新增 DMA API get attribute 函数，
+    为 Intel HDA 和 Intel GPDMA 驱动
+    新增可用的散列/聚集块属性。
+  * Intel GPDMA 新增电源管理功能
+  * Intel HDA 新增电源管理功能
+  * GD32 使用插槽选择外设
+  * GD32 新增内存到内存支持
+  * 新增 ESP32C3 GDMA 驱动
+  * 新增 Intel HDA 欠载/过载（xrun）处理和报告
+  * 新增 Intel GPDMA 欠载/过载（xrun）处理和报告
+  * DMA API start/stop 被定义为可重复调用，
+    并新增测试用例。
+    STM32 DMA、Intel HDA 和 Intel GPDMA
+    在补丁后都符合该约定。
+  * 移除 NXP EDMA 未使用的互斥锁
 
 * EEPROM
 
-  * Added fake EEPROM driver for testing purposes.
+  * 为测试目的新增伪 EEPROM 驱动。
 
-* Ethernet
+* 以太网
 
-  * STM32: Default Mac address configuration is now uid based. Optionally, user can
-    configure it to be random or provide its own address using device tree.
-  * STM32: Added support for STM32Cube HAL Ethernet API V2 on F4/F7/H7. By default disabled,
-    it can be enabled with :kconfig:option:`CONFIG_ETH_STM32_HAL_API_V2`.
-  * STM32: Added ethernet support on STM32F107 devices.
-  * STM32: Now supports multicast hash filtering in the MAC. It can be enabled using
-    :kconfig:option:`CONFIG_ETH_STM32_MULTICAST_FILTER`.
-  * STM32: Now supports statistics logging through :kconfig:option:`CONFIG_NET_STATISTICS_ETHERNET`.
-    Requires use of HAL Ethernet API V2.
+  * STM32：默认 MAC 地址配置
+    现在基于 uid。
+    可选地，用户可以使用设备树
+    将其配置为随机或提供自己的地址。
+  * STM32：在 F4/F7/H7 上
+    新增对 STM32Cube HAL 以太网 API V2 的支持。
+    默认禁用，
+    可以通过 :kconfig:option:`CONFIG_ETH_STM32_HAL_API_V2` 启用。
+  * STM32：在 STM32F107 设备上
+    新增以太网支持。
+  * STM32：现在支持
+    MAC 中的多播哈希过滤。
+    可以使用 :kconfig:option:`CONFIG_ETH_STM32_MULTICAST_FILTER` 启用。
+  * STM32：现在支持
+    通过 :kconfig:option:`CONFIG_NET_STATISTICS_ETHERNET`
+    记录统计信息。
+    需要使用 HAL 以太网 API V2。
 
-* Flash
+* 闪存
 
-  * Flash: Moved CONFIG_FLASH_FLEXSPI_XIP into the SOC level due to the flexspi clock initialization occurring in the SOC level.
+  * 闪存：由于 flexspi 时钟初始化
+    发生在 SOC 级别，
+    将 CONFIG_FLASH_FLEXSPI_XIP
+    移至 SOC 级别。
 
-  * NRF: Added CONFIG_SOC_FLASH_NRF_TIMEOUT_MULTIPLIER to allow tweaking the timeout of flash operations.
+  * NRF：新增 CONFIG_SOC_FLASH_NRF_TIMEOUT_MULTIPLIER，
+    用于调整闪存操作的超时时间。
 
-  * spi_nor: Added property mxicy,mx25r-power-mode to jedec,spi-nor binding for controlling low power/high performance mode on Macronix MX25R* Ultra Low Power flash devices.
+  * spi_nor：为 Macronix MX25R* 超低功耗闪存设备
+    在 jedec,spi-nor 绑定中
+    新增属性 mxicy,mx25r-power-mode，
+    用于控制低功耗/高性能模式。
 
-  * spi_nor: Added check if the flash is busy during init. This used to cause
-    the flash device to be unavailable until the system was restarted. The fix
-    waits for the flash to become ready before continuing. In cases where a
-    full flash erase was started before a restart, this might result in several
-    minutes of waiting time (depending on flash size and erase speed).
+  * spi_nor：新增检查闪存在初始化期间是否忙。这曾导致闪存设备在系统重启前不可用。该修复在继续之前等待闪存就绪。在重启前开始完整闪存擦除的情况下，这可能导致几分钟的等待时间（取决于闪存大小和擦除速度）。
 
-  * rpi_pico: Added a flash driver for the Raspberry Pi Pico platform.
+  * rpi_pico：为 Raspberry Pi Pico 平台
+    新增闪存驱动。
 
-  * STM32 OSPI: sfdp-bfp table and jedec-id can now be read from device tree and override
-    the flash content if required.
+  * STM32 OSPI：sfdp-bfp 表和 jedec-id
+    现在可以从设备树读取，
+    并在需要时覆盖闪存内容。
 
-  * STM32 OSPI: Now supports DMA transfer on STM32U5.
+  * STM32 OSPI：现在在 STM32U5 上
+    支持 DMA 传输。
 
-  * STM32: Flash driver was revisited to simplify reuse of driver for new series, taking
-    advantage of device tree compatibles.
+  * STM32：重新审视闪存驱动，
+    以简化新系列的驱动复用，
+    利用设备树 compatibles。
 
 * FPGA
 
-  * Added preliminary support for the Lattice iCE40.
-  * Added Qomu board sample.
+  * 为 Lattice iCE40
+    新增初步支持。
+  * 新增 Qomu 板级示例。
 
 * GPIO
 
-  * Atmel SAM: Added support to configure Open-Drain pins
-  * Added driver for nPM6001 PMIC GPIOs
-  * Added NXP S32 GPIO (SIUL2) driver
+  * Atmel SAM：新增支持，
+    用于配置开漏引脚
+  * 新增 nPM6001 PMIC GPIO 的驱动
+  * 新增 NXP S32 GPIO（SIUL2）驱动
 
 * hwinfo
 
-  * Added hwinfo_get_device_id for ESP32-C3
-  * Added reset cause for iwdg and wwdg for STM32H7 and MP1
+  * 为 ESP32-C3
+    新增 hwinfo_get_device_id
+  * 为 STM32H7 和 MP1
+    为 iwdg 和 wwdg 新增复位原因
 
 * I2C
 
-  * SAM0 Fixed spurious trailing data by moving stop condition from thread into ISR
-  * I2C Shell command adds ability to configure bus speed through `i2c speed`
-  * ITE usage of instruction local memory support
-  * NPCX bus recovery on transaction timeout
-  * ITE log status of registers on transfer failure
-  * ESP32 enabled configuring a hardware timeout to account for longer durations of clock stretching
-  * ITE fixed bug where an operation was done outside of the driver mutex
-  * NRFX TWIM Made transfer timeout configurable
-  * DW Bug fix for clearing FIFO on initialization
-  * NPCX simplified smb bank register usage
-  * NXP LPI2C enabled target mode
-  * NXP FlexComm Added semaphore for shared usage of bus
-  * I2C Added support for dumping messages in the log for all transactions, reads and writes
-  * STM32: Slave configuration now supports 10-bit addressing.
-  * STM32: Now support power management. 3 modes supported: :kconfig:option:`CONFIG_PM`,
-    :kconfig:option:`CONFIG_PM_DEVICE`, :kconfig:option:`CONFIG_PM_DEVICE_RUNTIME`.
-  * STM32: Domain clock can now be configured using device tree
+  * SAM0 通过将停止条件
+    从线程移到 ISR
+    修复了虚假的尾部数据
+  * I2C Shell 命令
+    新增通过 `i2c speed`
+    配置总线速度的能力
+  * ITE 支持指令本地内存
+  * NPCX 在事务超时时
+    总线恢复
+  * ITE 在传输失败时
+    记录寄存器状态
+  * ESP32 启用配置硬件超时，
+    以考虑更长时间的时钟拉伸
+  * ITE 修复 bug，
+    该 bug 导致操作
+    在驱动互斥锁之外执行
+  * NRFX TWIM 使传输超时
+    可配置
+  * DW 修复初始化时
+    清除 FIFO 的 bug
+  * NPCX 简化 smb bank 寄存器使用
+  * NXP LPI2C 启用目标模式
+  * NXP FlexComm 为共享总线使用
+    新增信号量
+  * I2C 新增支持，
+    用于在日志中
+    转储所有事务、读取和写入的消息
+  * STM32：从机配置
+    现在支持 10 位寻址。
+  * STM32：现在支持电源管理。
+    支持 3 种模式：:kconfig:option:`CONFIG_PM`、
+    :kconfig:option:`CONFIG_PM_DEVICE`、
+    :kconfig:option:`CONFIG_PM_DEVICE_RUNTIME`。
+  * STM32：域时钟
+    现在可以使用设备树配置
 
 * I3C
 
-  * Added a new target device API :c:func:`i3c_target_tx_write` to
-    explicit write to TX FIFO.
+  * 新增新的目标设备 API :c:func:`i3c_target_tx_write`，
+    用于显式写入 TX FIFO。
 
-  * GETMRL and GETMWL are both optional in :c:func:`i3c_device_basic_info_get` as
-    MRL and MWL are optional according to I3C specification.
+  * 根据 I3C 规范，
+  * GETMRL 和 GETMWL
+    在 :c:func:`i3c_device_basic_info_get` 中
+    都是可选的，
+    因为 MRL 和 MWL 是可选的。
 
-  * Added a new driver to support Cadence I3C controller.
+  * 新增新的驱动，
+    用于支持 Cadence I3C 控制器。
 
-* Interrupt Controller
+* 中断控制器
 
-  * STM32: Driver configuration and initialization is now based on device tree
-  * Added NXP S32 External Interrupt Controller (SIUL2) driver.
+  * STM32：驱动配置和初始化
+    现在基于设备树
+  * 新增 NXP S32 外部中断控制器（SIUL2）驱动。
 
 * IPM
 
-  * ipm_stm32_ipcc: fixed an issue where interrupt mask is not cleaned correctly,
-    resulting in infinite TXF interrupts.
+  * ipm_stm32_ipcc：修复问题，
+    该问题导致中断掩码
+    未正确清理，
+    从而导致无限 TXF 中断。
 
 * MBOX
 
-  * Added NXP S32 Message Receive Unit (MRU) driver.
+  * 新增 NXP S32 消息接收单元（MRU）驱动。
 
 * PCIE
 
-  * Support for accessing I/O BARs, which was previously removed, is back.
+  * 之前移除的对 I/O BAR 的访问支持
+    已恢复。
 
-  * Added new API :c:func:`pcie_scan` to scan for devices.
+  * 新增新的 API :c:func:`pcie_scan`，
+    用于扫描设备。
 
-    * This iterates through the buses and devices which are expected to
-      exist. The old method was to try all possible combination of buses
-      and devices to determine if there is a device there.
-      :c:func:`pci_init` and :c:func:`pcie_bdf_lookup` have been updated to
-      use this new API.
+    * 这将遍历
+      预期存在的总线和设备。
+      旧方法是尝试
+      总线和设备的所有可能组合，
+      以确定是否存在设备。
+      :c:func:`pci_init` 和 :c:func:`pcie_bdf_lookup`
+      已更新为使用此新 API。
 
-    * :c:func:`pcie_scan` also introduces a callback mechanism for when
-      a new device has been discovered.
+    * :c:func:`pcie_scan` 还引入了
+      发现新设备时的回调机制。
 
-* Pin control
+* 引脚控制
 
-  * Common pin control properties are now defined at root level in a single
-    file: :zephyr_file:`dts/bindings/pinctrl/pincfg-node.yaml`. Pin control
-    bindings are expected to include it at the level they need. For example,
-    drivers using the grouping representation approach need to include it at
-    grandchild level, while drivers using the node approach need to include it
-    at the child level. This change will only impact out-of-tree pin control
-    drivers, since all in-tree drivers have been updated.
-  * Added NXP S32 SIUL2 driver
-  * Added Nuvoton NuMicro driver
-  * Added Silabs Gecko driver
-  * Added support for i.MX93 in the i.MX driver
-  * Added support for GD32L23x/GD32A50x in the Gigadevice driver
+  * 通用引脚控制属性
+    现在在单个文件的根级别定义：
+    :zephyr_file:`dts/bindings/pinctrl/pincfg-node.yaml`。
+    引脚控制绑定
+    预期在需要的级别包含它。例如，使用分组表示方法的驱动需要在孙级别包含它，而使用节点方法的驱动需要在子级别包含它。此更改只会影响树外引脚控制驱动，因为所有树内驱动都已更新。
+  * 新增 NXP S32 SIUL2 驱动
+  * 新增 Nuvoton NuMicro 驱动
+  * 新增 Silabs Gecko 驱动
+  * 在 i.MX 驱动中
+    新增对 i.MX93 的支持
+  * 在 Gigadevice 驱动中
+    新增对 GD32L23x/GD32A50x 的支持
 
 * PWM
 
-  * Atmel SAM: Added support to select pin polarity
-  * Added driver for NXP PCA9685 LED controller
+  * Atmel SAM：新增支持，
+    用于选择引脚极性
+  * 新增 NXP PCA9685 LED 控制器的驱动
 
-* Regulators
+* 调节器
 
-  * Completed an API overhaul so that devices like PMICs can be supported. The
-    API now offers a clear and concise API that allows to perform the following
-    operations:
+  * 完成 API 全面修订，
+    以支持 PMIC 等设备。
+    API 现在提供清晰简洁的 API，
+    允许执行以下操作：
 
-      - Enable/disable regulator output (reference counted)
-      - List supported voltages
-      - Get/set operating voltage
-      - Get/set maximum current
-      - Get/set operating mode
-      - Obtain errors, e.g. overcurrent.
+      - 启用/禁用调节器输出
+        （引用计数）
+      - 列出支持的电压
+      - 获取/设置工作电压
+      - 获取/设置最大电流
+      - 获取/设置工作模式
+      - 获取错误，例如过电流。
 
-    The devicetree part maintains compatibility with Linux bindings, for example,
-    the following properties are well supported:
+    设备树部分
+    保持与 Linux 绑定的兼容性，
+    例如，
+    以下属性得到很好的支持：
 
       - ``regulator-boot-on``
       - ``regulator-always-on``
@@ -868,335 +988,563 @@ Drivers and Sensors
       - ``regulator-allowed-modes``
       - ``regulator-initial-mode``
 
-    A common driver class layer takes care of the common functionality so that
-    driver implementations are kept simple. For example, allowed voltage ranges
-    are verified before calling into the driver.
+    通用驱动类层
+    处理通用功能，
+    以使驱动实现保持简洁。
+    例如，
+    在调用驱动之前
+    验证允许的电压范围。
 
-    An experimental parent API to configure DVS (Dynamic Voltage Scaling) has
-    also been introduced.
+    还引入了
+    用于配置 DVS（动态电压缩放）的
+    实验性父 API。
 
-  * Refactored NXP PCA9420 driver to align with the new API.
-  * Added support for nPM6001 PMIC (LDO and BUCK converters).
-  * Added support for nPM1100 PMIC (allows to dynamically change its mode).
-  * Added a new test that allows to verify regulator output voltage using the
-    ADC API.
-  * Added a new test that checks API behavior provided we have a well-behaved
-    driver.
+  * 重构 NXP PCA9420 驱动，
+    以与新 API 保持一致。
+  * 新增对 nPM6001 PMIC 的支持
+    （LDO 和 BUCK 转换器）。
+  * 新增对 nPM1100 PMIC 的支持
+    （允许动态更改其模式）。
+  * 新增新的测试，
+    允许使用 ADC API
+    验证调节器输出电压。
+  * 新增新的测试，
+    检查 API 行为，
+    假设我们有行为良好的驱动。
 
-* Reset
+* 复位
 
-  * STM32: STM32 reset driver is now available. Devices reset line configuration should
-    be done using device tree.
+  * STM32：STM32 复位驱动
+    现在可用。
+    设备复位线配置
+    应使用设备树完成。
 
 * SDHC
 
-  * i.MX RT USDHC:
+  * i.MX RT USDHC：
 
-    - Support HS400 and HS200 mode. This mode is used with eMMC devices,
-      and will enable high speed operation for those cards.
-    - Support DMA operation on SOCs that do not support non-cacheable memory,
-      such as the RT595. DMA will enable higher performance SD modes,
-      such as HS400 and SDR104, to reliably transfer data using the
-      SD host controller
+    - 支持 HS400 和 HS200 模式。
+      该模式用于 eMMC 设备，
+      并将为这些卡
+      启用高速操作。
+    - 在不支持非缓存内存的
+      SoC（如 RT595）上
+      支持 DMA 操作。
+      DMA 将启用
+      更高性能的 SD 模式，
+      例如 HS400 和 SDR104，
+      以可靠地使用
+      SD 主机控制器传输数据
 
-* Sensor
+* 传感器
 
-  * Refactored all drivers to use :c:macro:`SENSOR_DEVICE_DT_INST_DEFINE` to
-    enable a new sensor info iterable section and shell command. See
-    :kconfig:option:`CONFIG_SENSOR_INFO`.
-  * Refactored all sensor devicetree bindings to inherit new base sensor device
-    properties in :zephyr_file:`dts/bindings/sensor/sensor-device.yaml`.
-  * Added sensor attribute support to the shell.
-  * Added ESP32 and RaspberryPi Pico die temperature sensor drivers.
-  * Added TDK InvenSense ICM42688 six axis IMU driver.
-  * Added TDK InvenSense ICP10125 pressure and temperature sensor driver.
-  * Added AMS AS5600 magnetic angle sensor driver.
-  * Added AMS AS621x temperature sensor driver.
-  * Added HZ-Grow R502A fingerprint sensor driver.
-  * Enhanced FXOS8700, FXAS21002, and BMI270 drivers to support SPI in addition
-    to I2C.
-  * Enhanced ST LIS2DW12 driver to support free fall detection.
-  * rpi_pico: Added die temperature sensor driver.
-  * STM32 family Quadrature Decoder driver was added. Only enabled on STM32F4 for now.
+  * 重构所有驱动，
+    以使用 :c:macro:`SENSOR_DEVICE_DT_INST_DEFINE`
+    启用新的传感器信息可迭代部分
+    和 shell 命令。
+    参见 :kconfig:option:`CONFIG_SENSOR_INFO`。
+  * 重构所有传感器设备树绑定，
+    以继承 :zephyr_file:`dts/bindings/sensor/sensor-device.yaml`
+    中的新基础传感器设备属性。
+  * 为 shell 新增传感器属性支持。
+  * 新增 ESP32 和 RaspberryPi Pico
+    裸片温度传感器驱动。
+  * 新增 TDK InvenSense ICM42688
+    六轴 IMU 驱动。
+  * 新增 TDK InvenSense ICP10125
+    压力和温度传感器驱动。
+  * 新增 AMS AS5600
+    磁角度传感器驱动。
+  * 新增 AMS AS621x
+    温度传感器驱动。
+  * 新增 HZ-Grow R502A
+    指纹传感器驱动。
+  * 增强 FXOS8700、FXAS21002 和 BMI270 驱动，
+    以在 I2C 之外
+    支持 SPI。
+  * 增强 ST LIS2DW12 驱动，
+    以支持自由落体检测。
+  * rpi_pico：新增裸片温度传感器驱动。
+  * 新增 STM32 系列
+    正交解码器驱动。
+    目前仅在 STM32F4 上启用。
 
-* Serial
+* 串行
 
-  * Atmel SAM: UART/USART: Added support to configure driver at runtime
-  * STM32: DMA now supported on STM32U5 series.
+  * Atmel SAM：UART/USART：
+    新增支持，
+    用于在运行时配置驱动
+  * STM32：DMA
+    现在在 STM32U5 系列上
+    受支持。
 
-  * uart_altera_jtag: added support for Nios-V UART.
+  * uart_altera_jtag：
+    新增 Nios-V UART 支持。
 
-  * uart_esp32: added support asynchronous operation.
+  * uart_esp32：
+    新增异步操作支持。
 
-  * uart_gecko: added support for pinctrl.
+  * uart_gecko：
+    新增 pinctrl 支持。
 
-  * uart_mchp_xec: now supports UART on MEC15xx SoC.
+  * uart_mchp_xec：
+    现在在 MEC15xx SoC 上
+    支持 UART。
 
-  * uart_mcux_flexcomm: added support for runtime configuration.
+  * uart_mcux_flexcomm：
+    新增运行时配置支持。
 
-  * uart_mcux_lpuart: added support for RS-485.
+  * uart_mcux_lpuart：
+    新增 RS-485 支持。
 
-  * uart_numicro: uses pinctrl to configure UART pins.
+  * uart_numicro：
+    使用 pinctrl
+    配置 UART 引脚。
 
-  * uart_pl011: added support for pinctrl.
+  * uart_pl011：
+    新增 pinctrl 支持。
 
-  * uart_rpi_pico: added support for runtime configuration.
+  * uart_rpi_pico：
+    新增运行时配置支持。
 
-  * uart_xmc4xxx: added support for interrupt so it can now be interrupt driven.
-    Also added support for FIFO.
+  * uart_xmc4xxx：
+    新增中断支持，
+    因此现在可以
+    由中断驱动。
+    还新增 FIFO 支持。
 
-  * New UART drivers are added:
+  * 新增 UART 驱动：
 
-    * Cadence IP6528 UART.
+    * Cadence IP6528 UART。
 
-    * NXP S32 LINFlexD UART.
+    * NXP S32 LINFlexD UART。
 
-    * OpenTitan UART.
+    * OpenTitan UART。
 
-    * QuickLogic USBserialport_S3B.
+    * QuickLogic USBserialport_S3B。
 
 * SPI
 
-  * Added dma support for GD32 driver.
-  * Atmel SAM:
+  * 为 GD32 驱动
+    新增 dma 支持。
+  * Atmel SAM：
 
-    * Added support to transfers using DMA.
-    * Added support to loopback mode for testing purposes.
+    * 新增使用 DMA
+      进行传输的支持。
+    * 为测试目的
+      新增回环模式支持。
 
-  * Added NXP S32 SPI driver.
+  * 新增 NXP S32 SPI 驱动。
 
-* Timer
+* 定时器
 
-  * Corrected CPU numbering on SMP RISC-V systems using the mtime device
+  * 修正使用 mtime 设备的
+    SMP RISC-V 系统上的
+    CPU 编号
 
-  * Added support for OpenTitan's privileged timer device to riscv_machine_timer
+  * 为 riscv_machine_timer
+    新增对 OpenTitan 特权定时器设备的
+    支持
 
-  * Refactored SYS_CLOCK_EXISTS such that it always matches the
-    existence of a timer device in kconfig
+  * 重构 SYS_CLOCK_EXISTS，
+    使其始终与
+    kconfig 中定时器设备的存在
+    匹配
 
-  * Significant rework to nrf_rtc_timer with multiple fixes
+  * 对 nrf_rtc_timer
+    进行大量重新设计，
+    包括多个修复
 
-  * Fixed prescaler correction in stm32_lptim driver and fix race with auto-reload
+  * 修复 stm32_lptim 驱动中的
+    预分频器校正
+    以及自动重载的竞态条件
 
 * USB
 
-  * STM32F1: Clock bus configuration is not done automatically by driver anymore.
-    It is user's responsibility to configure the proper bus prescaler using clock_control
-    device tree node to achieve a 48MHz bus clock. Note that, in most cases, core clock
-    is 72MHz and default prescaler configuration is set to achieve 48MHz USB bus clock.
-    Prescaler only needs to be configured manually when core clock is already 48MHz.
-  * STM32 (non F1): Clock bus configuration is now expected to be done in device tree
-    using ``clocks`` node property. When a dedicated HSI 48MHz clock is available on target,
-    is it configured by default as the USB bus clock, but user has the ability to select
-    another 48MHz clock source. When no HSI48 is available, a specific 48MHz bus clock
-    source should be configured by user.
-  * STM32: Now supports :c:func:`usb_dc_detach` and :c:func:`usb_dc_wakeup_request`.
-  * STM32: Vbus sensing is now supported and determined based on the presence of the
-    hardware detection pin(s) in the device tree. E.g: pinctrl-0 = <&usb_otg_fs_vbus_pa9 ...>;
-  * RPi Pico: fixed buffer status handling, fixed infinite unhandled irq retriggers,
-    fixed DATA PID toggle and control transfer handling.
-  * NXP: Enabled high speed support, fixed endpoint buffer write operation.
-  * nRF USBD: Removed HAL driver uninit on detach, fixed endpoints disable on
-    USB stack disable.
-  * Added new experimental USB device controller (UDC) API and implementation
-    for nRF USBD, Kinetis USBFSOTG, and virtual controllers.
-  * Added new experimental USB host controller (UDC) API and implementation
-    for MAX3421E and virtual controllers.
+  * STM32F1：
+    时钟总线配置
+    不再由驱动自动完成。
+    用户有责任
+    使用 clock_control 设备树节点
+    配置适当的总线预分频器，
+    以实现 48MHz 总线时钟。
+    请注意，在大多数情况下，
+    核心时钟为 72MHz，
+    默认预分频器配置
+    设置为实现 48MHz USB 总线时钟。
+    仅当核心时钟
+    已经为 48MHz 时，
+    才需要手动配置预分频器。
+  * STM32（非 F1）：
+    时钟总线配置
+    现在预期在设备树中
+    使用 ``clocks`` 节点属性完成。
+    当目标上有
+    专用的 HSI 48MHz 时钟时，
+    默认将其配置为
+    USB 总线时钟，
+    但用户可以选择
+    另一个 48MHz 时钟源。
+    当没有 HSI48 可用时，
+    用户应配置
+    特定的 48MHz 总线时钟源。
+  * STM32：
+    现在支持 :c:func:`usb_dc_detach`
+    和 :c:func:`usb_dc_wakeup_request`。
+  * STM32：Vbus 检测现在受支持，并根据设备树中硬件检测引脚的存在确定。例如：pinctrl-0 = <&usb_otg_fs_vbus_pa9 ...>;
+  * RPi Pico：
+    修复缓冲区状态处理，
+    修复无限未处理 irq 重新触发，
+    修复 DATA PID 切换
+    和控制传输处理。
+  * NXP：
+    启用高速支持，
+    修复端点缓冲区写操作。
+  * nRF USBD：
+    移除 detach 时的
+    HAL 驱动 uninit，
+    修复 USB 栈禁用时
+    端点禁用。
+  * 为 nRF USBD、Kinetis USBFSOTG
+    和虚拟控制器
+    新增新的实验性
+    USB 设备控制器（UDC）API
+    和实现
+  * 为 MAX3421E 和虚拟控制器
+    新增新的实验性
+    USB 主机控制器（UDC）API
+    和实现
 
-* Watchdog
+* 看门狗
 
-  * Added driver for nPM6001 PMIC Watchdog.
-  * Added free watchdog driver for GigaDevice GD32 SoCs.
-  * Added window watchdog driver for GigaDevice GD32 SoCs.
-  * Added NXP S32 Software Watchdog Timer driver.
+  * 为 nPM6001 PMIC
+    新增看门狗驱动。
+  * 为 GigaDevice GD32 SoC
+    新增自由看门狗驱动。
+  * 为 GigaDevice GD32 SoC
+    新增窗口看门狗驱动。
+  * 新增 NXP S32
+    软件看门狗定时器驱动。
 
-Networking
+网络
 **********
 
-* CoAP:
+* CoAP：
 
-  * Implemented insertion of a CoAP option at arbitrary position.
+  * 实现在任意位置
+    插入 CoAP 选项。
 
-* Ethernet:
+* 以太网：
 
-  * Fixed AF_PACKET/SOCK_RAW/IPPROTO_RAW sockets on top of Ethernet L2.
-  * Added support for setting Ethernet MAC address with net shell.
-  * Added check for return values of the driver start/stop routines when
-    bringing Ethernet interface up.
-  * Added ``unknown_protocol`` statistic for packets with unrecognized protocol
-    field, instead of using ``error`` for this purpose.
-  * Added NXP S32 NETC Ethernet driver.
+  * 修复以太网 L2 之上的
+    AF_PACKET/SOCK_RAW/IPPROTO_RAW 套接字。
+  * 新增使用 net shell
+    设置以太网 MAC 地址的支持。
+  * 新增检查，
+    用于在启用以太网接口时
+    检查驱动启动/停止例程的
+    返回值。
+  * 为具有未识别协议字段的
+    数据包新增 ``unknown_protocol`` 统计，
+    而不是为此目的
+    使用 ``error``。
+  * 新增 NXP S32 NETC
+    以太网驱动。
 
-* HTTP:
+* HTTP：
 
-  * Reworked HTTP headers: moved methods to a separate header, added status
-    response codes header and grouped HTTP headers in a subdirectory.
-  * Used :c:func:`zsock_poll` for HTTP timeout instead of a delayed work.
+  * 重新设计 HTTP 头：
+    将方法移至单独的头部，
+    新增状态响应代码头部，
+    并将 HTTP 头
+    分组到子目录中。
+  * 使用 :c:func:`zsock_poll`
+    处理 HTTP 超时，
+    而不是延迟工作。
 
-* ICMPv4:
+* ICMPv4：
 
-  * Added support to autogenerate Echo Request payload.
+  * 新增支持，
+    用于自动生成
+    Echo Request 负载。
 
-* ICMPv6:
+* ICMPv6：
 
-  * Added support to autogenerate Echo Request payload.
-  * Fixed stats counting for ND packets.
+  * 新增支持，
+    用于自动生成
+    Echo Request 负载。
+  * 修复 ND 包的
+    统计计数。
 
-* IEEE802154:
+* IEEE802154：
 
-  * Improved short address support.
-  * Improved IEEE802154 context thread safety.
-  * Decoupled IEEE802154 parameters from :c:struct:`net_pkt` into
-    :c:struct:`net_pkt_cb_ieee802154`.
-  * Multiple other minor fixes/improvements.
+  * 改进短地址支持。
+  * 改进 IEEE802154
+    上下文线程安全性。
+  * 将 IEEE802154 参数
+    从 :c:struct:`net_pkt`
+    解耦到
+    :c:struct:`net_pkt_cb_ieee802154`。
+  * 多个其他小修复/改进。
 
-* IPv4:
+* IPv4：
 
-  * IPv4 packet fragmentation support has been added, this allows large packets
-    to be split up before sending or reassembled during receive for packets that
-    are larger than the network device MTU. This is disabled by default but can
-    be enabled with :kconfig:option:`CONFIG_NET_IPV4_FRAGMENT`.
-  * Added support for setting/reading DSCP/ECN fields.
-  * Fixed packet leak in IPv4 address auto-configuration procedure.
-  * Added support for configuring IPv4 addresses with ``net ipv4`` shell
-    command.
-  * Zephyr now adds IGMP all systems 224.0.0.1 address to all IPv4 network
-    interfaces by default.
+  * 新增 IPv4 包分片支持，
+    这允许在发送之前
+    拆分大包，
+    或在接收期间
+    重组大于
+    网络设备 MTU 的包。
+    这默认禁用，
+    但可以通过
+    :kconfig:option:`CONFIG_NET_IPV4_FRAGMENT`
+    启用。
+  * 新增设置/读取
+    DSCP/ECN 字段的支持。
+  * 修复 IPv4 地址
+    自动配置过程中的
+    包泄漏。
+  * 新增使用 ``net ipv4`` shell 命令
+    配置 IPv4 地址的支持。
+  * Zephyr 现在默认
+    将 IGMP 所有系统 224.0.0.1 地址
+    添加到所有 IPv4 网络接口。
 
-* IPv6:
+* IPv6：
 
-  * Made it possible to add route to router's link local address.
-  * Added support for setting/reading DSCP/ECN fields.
-  * Improved test coverage for IPv6 fragmentation.
-  * Added support for configuring IPv6 addresses with ``net ipv6`` shell
-    command.
-  * Added support for configuring IPv6 routes with ``net route`` shell
-    command.
+  * 使能够
+    将路由添加到
+    路由器的链路本地地址。
+  * 新增设置/读取
+    DSCP/ECN 字段的支持。
+  * 改进 IPv6 分片的
+    测试覆盖范围。
+  * 新增使用 ``net ipv6`` shell 命令
+    配置 IPv6 地址的支持。
+  * 新增使用 ``net route`` shell 命令
+    配置 IPv6 路由的支持。
 
-* LwM2M:
+* LwM2M：
 
-  * Renamed ``LWM2M_RD_CLIENT_EVENT_REG_UPDATE_FAILURE`` to
-    :c:macro:`LWM2M_RD_CLIENT_EVENT_REG_TIMEOUT`. This event is now used in case
-    of registration timeout.
-  * Added new LwM2M APIs for historical data storage for LwM2M resource.
-  * Updated LwM2M APIs to use ``const`` pointers when possible.
-  * Added shell command to lock/unlock LwM2M registry.
-  * Added shell command to enable historical data cache for a resource.
-  * Switched to use ``zsock_*`` functions internally.
-  * Added uCIFI LPWAN (ID 3412) object implementation.
-  * Added BinaryAppDataContainer (ID 19) object implementation.
-  * Deprecated :kconfig:option:`CONFIG_LWM2M_RD_CLIENT_SUPPORT`, as it's now
-    considered as an integral part of the LwM2M library.
-  * Added support for SenML Object Link data type.
-  * Fixed a bug causing incorrect ordering of the observation paths.
-  * Deprecated string based LwM2M APIs. LwM2M APIs now use
-    :c:struct:`lwm2m_obj_path` to represent object/resource paths.
-  * Refactored ``lwm2m_client`` sample by splitting specific functionalities
-    into separate modules.
-  * Multiple other minor fixes within the LwM2M library.
+  * 将 ``LWM2M_RD_CLIENT_EVENT_REG_UPDATE_FAILURE``
+    重命名为
+    :c:macro:`LWM2M_RD_CLIENT_EVENT_REG_TIMEOUT`。
+    该事件现在用于
+    注册超时的情况。
+  * 为 LwM2M 资源
+    新增用于历史数据存储的
+    新 LwM2M API。
+  * 更新 LwM2M API，
+    在可能的情况下
+    使用 ``const`` 指针。
+  * 新增 shell 命令，
+    用于锁定/解锁
+    LwM2M 注册表。
+  * 新增 shell 命令，
+    用于为资源
+    启用历史数据缓存。
+  * 切换到
+    内部使用 ``zsock_*`` 函数。
+  * 新增 uCIFI LPWAN（ID 3412）
+    对象实现。
+  * 新增 BinaryAppDataContainer（ID 19）
+    对象实现。
+  * 弃用 :kconfig:option:`CONFIG_LWM2M_RD_CLIENT_SUPPORT`，
+    因为它现在被视为
+    LwM2M 库的
+    不可分割的一部分。
+  * 新增对
+    SenML 对象链接
+    数据类型的支持。
+  * 修复导致
+    观察路径顺序
+    不正确的 bug。
+  * 弃用基于字符串的
+    LwM2M API。
+    LwM2M API 现在使用
+    :c:struct:`lwm2m_obj_path`
+    表示对象/资源路径。
+  * 通过拆分特定功能
+    到单独的模块
+    重构 ``lwm2m_client`` 示例。
+  * LwM2M 库中的
+    多个其他小修复。
 
-* Misc:
+* 其他：
 
-  * Updated various networking test suites to use the new ztest API.
-  * Added redirect support for ``big_http_download`` sample and updated the
-    server URL for TLS variant.
-  * Fixed memory leak in ``net udp`` shell command.
-  * Fixed cloning of LL address for :c:struct:`net_pkt`.
-  * Added support for QoS and payload size setting in ``net ping`` shell
-    command.
-  * Added support for aborting ``net ping`` shell command.
-  * Introduced carrier and dormant management on network interfaces. Separated
-    interface administrative state from operational state.
-  * Improved DHCPv4 behavior with multiple DHCPv4 servers in the network.
-  * Fixed net_mgmt event size calculation.
-  * Added :kconfig:option:`CONFIG_NET_LOOPBACK_MTU` option to configure loopback
-    interface MTU.
-  * Reimplemented the IP/UDP/TCP checksum calculation to speed up the
-    processing.
-  * Removed :kconfig:option:`CONFIG_NET_CONFIG_SETTINGS` use from test cases to
-    improve test execution on real platforms.
-  * Added MQTT-SN library and sample.
-  * Fixed variable buffer length configuration
-    (:kconfig:option:`CONFIG_NET_BUF_VARIABLE_DATA_SIZE`).
-  * Fixed IGMPv2 membership report destination address.
-  * Added mutex protection for the connection list handling.
-  * Separated user data pointer from FIFO reserved space in
-    :c:struct:`net_context`.
-  * Added input validation for ``net pkt`` shell command.
+  * 更新各种网络测试套件，
+    以使用新的 ztest API。
+  * 为 ``big_http_download`` 示例
+    新增重定向支持，
+    并更新 TLS 变体的
+    服务器 URL。
+  * 修复 ``net udp`` shell 命令中的
+    内存泄漏。
+  * 修复 :c:struct:`net_pkt` 的
+    LL 地址克隆。
+  * 新增支持，
+    用于在 ``net ping`` shell 命令中
+    设置 QoS 和负载大小。
+  * 新增支持，
+    用于中止 ``net ping`` shell 命令。
+  * 在网络接口上
+    引入载波和休眠管理。
+    将接口管理状态
+    与操作状态分离。
+  * 改进网络中
+    多个 DHCPv4 服务器时
+    DHCPv4 的行为。
+  * 修复 net_mgmt
+    事件大小计算。
+  * 新增 :kconfig:option:`CONFIG_NET_LOOPBACK_MTU` 选项，
+    用于配置回环接口 MTU。
+  * 重新实现 IP/UDP/TCP 校验和计算，
+    以加快处理速度。
+  * 从测试用例中
+    移除 :kconfig:option:`CONFIG_NET_CONFIG_SETTINGS` 的使用，
+    以改进在真实平台上的
+    测试执行。
+  * 新增 MQTT-SN 库和示例。
+  * 修改变量缓冲区长度配置
+    （:kconfig:option:`CONFIG_NET_BUF_VARIABLE_DATA_SIZE`）。
+  * 修复 IGMPv2 成员报告
+    目标地址。
+  * 为连接列表处理
+    新增互斥锁保护。
+  * 在 :c:struct:`net_context` 中
+    将用户数据指针
+    与 FIFO 保留空间分离。
+  * 为 ``net pkt`` shell 命令
+    新增输入验证。
 
-* OpenThread:
+* OpenThread：
 
-  * Implemented PSA support for ECDSA API.
-  * Fixed :c:func:`otPlatRadioSetMacKey` when asserts are disabled.
-  * Deprecated :c:func:`openthread_set_state_changed_cb` in favour of more
-    generic :c:func:`openthread_state_changed_cb_register`.
-  * Implemented diagnostic GPIO commands.
+  * 为 ECDSA API
+    实现 PSA 支持。
+  * 在禁用断言时
+    修复 :c:func:`otPlatRadioSetMacKey`。
+  * 弃用 :c:func:`openthread_set_state_changed_cb`，
+    建议改用更通用的
+    :c:func:`openthread_state_changed_cb_register`。
+  * 实现诊断 GPIO 命令。
 
-* SNTP:
+* SNTP：
 
-  * Switched to use ``zsock_*`` functions internally.
-  * Fixed the library operation with IPv4 disabled.
+  * 切换到
+    内部使用 ``zsock_*`` 函数。
+  * 修复在
+    IPv4 禁用时
+    库的操作。
 
-* Sockets:
+* 套接字：
 
-  * Fixed a possible memory leak on failed TLS socket creation.
+  * 修复在
+    TLS 套接字创建失败时
+    可能的内存泄漏。
 
-* TCP:
+* TCP：
 
-  * Extended the default TCP out-of-order receive queue timeout to 2 seconds.
-  * Reimplemented TCP ref counting, to prevent situation, where TCP connection
-    context could be released prematurely.
+  * 将默认 TCP
+    乱序接收队列超时
+    扩展到 2 秒。
+  * 重新实现 TCP 引用计数，
+    以防止 TCP 连接上下文
+    被过早释放的情况。
 
-* Websockets:
+* Websockets：
 
-  * Reimplemented websocket receive routine to fix several issues.
-  * Implemented proper websocket close procedure.
-  * Fixed a bug where websocket would overwrite the mutex used by underlying TCP
-    socket.
+  * 重新实现 websocket
+    接收例程，
+    以修复多个问题。
+  * 实现适当的
+    websocket 关闭过程。
+  * 修复 bug，
+    该 bug 导致 websocket
+    覆盖底层 TCP 套接字
+    使用的互斥锁。
 
-* Wi-Fi:
+* Wi-Fi：
 
-  * Added support for power save configuration.
-  * Added support for regulatory domain configuration.
-  * Added support for power save timeout configuration.
+  * 新增对
+    省电配置的支持。
+  * 新增对
+    监管域配置的支持。
+  * 新增对
+    省电超时配置的支持。
 
 * zperf
 
-  * Added option to set QoS for zperf.
-  * Fixed out of order/lost packets statistics.
-  * Defined a public API for the library to allow throughput measurement without shell enabled.
-  * Added an option for asynchronous upload.
+  * 新增选项，
+    用于为 zperf
+    设置 QoS。
+  * 修复
+    乱序/丢失包统计。
+  * 为库
+    定义公共 API，
+    以允许
+    在未启用 shell 的情况下
+    测量吞吐量。
+  * 新增
+    异步上传选项。
 
 USB
 ***
 
-* New experimental USB support:
+* 新的实验性 USB 支持：
 
-  * Added new USB device stack (device_next), class implementation for CDC ACM and
-    BT HCI USB transport layer.
-  * Added initial support for USB host
+  * 新增 USB 设备栈
+    （device_next）、
+    CDC ACM 和
+    BT HCI USB 传输层的
+    类实现。
+  * 新增对
+    USB 主机的
+    初步支持
 
-* USB device stack (device):
+* USB 设备栈（device）：
 
-  * Removed transfer cancellation on bus suspend.
-  * Reworked disabling all endpoints on stack disable to allow re-enabling USB
-    device stack.
-  * Revised endpoint enable/disable on alternate setting.
-  * Improved USB DFU support with WinUSB on Windows.
-  * Added check to prevent recursive logging loop and allowed to send more than
-    one byte using poll out in CDC ACM class implementation.
-  * Corrected IAD and interface descriptors, removed unnecessary CDC descriptors,
-    and fixed packet reception in RNDIS ethernet implementation.
-  * Implemented cache synchronization after write operations in USB MSC class.
+  * 移除
+    总线挂起时的
+    传输取消。
+  * 重新设计
+    在栈禁用时
+    禁用所有端点，
+    以允许
+    重新启用 USB 设备栈。
+  * 修订
+    在替代设置上
+    端点启用/禁用。
+  * 改进
+    Windows 上
+    使用 WinUSB 的
+    USB DFU 支持。
+  * 新增检查，
+    以防止
+    递归日志循环，
+    并允许
+    在 CDC ACM 类实现中
+    使用 poll out
+    发送超过一个字节。
+  * 更正
+    IAD 和接口描述符，
+    移除
+    不必要的 CDC 描述符，
+    并修复
+    RNDIS 以太网实现中的
+    包接收。
+  * 在 USB MSC 类中
+    实现
+    写操作后的
+    缓存同步。
 
 
-Devicetree
+设备树
 **********
 
 API
 ===
 
-New general-purpose macros:
+新的通用宏：
 
 - :c:macro:`DT_FOREACH_PROP_ELEM_SEP_VARGS`
 - :c:macro:`DT_FOREACH_PROP_ELEM_SEP`
@@ -1208,63 +1556,65 @@ New general-purpose macros:
 - :c:macro:`DT_NODE_MODEL_HAS_IDX`
 - :c:macro:`DT_NODE_MODEL_OR`
 
-New special-purpose macros introduced for the GPIO hogs feature (see
-:zephyr_file:`drivers/gpio/gpio_hogs.c`):
+为 GPIO hogs 功能
+引入的新专用宏
+（参见 :zephyr_file:`drivers/gpio/gpio_hogs.c`）：
 
 - :c:macro:`DT_GPIO_HOG_FLAGS_BY_IDX`
 - :c:macro:`DT_GPIO_HOG_PIN_BY_IDX`
 - :c:macro:`DT_NUM_GPIO_HOGS`
 
-The following deprecated macros were removed:
+移除的
+以下已弃用宏：
 
 - ``DT_CHOSEN_ZEPHYR_ENTROPY_LABEL``
 - ``DT_CHOSEN_ZEPHYR_FLASH_CONTROLLER_LABEL``
 
-Bindings
+绑定
 ========
 
-New bindings:
+新的绑定：
 
-  - Generic or vendor-independent:
+  - 通用或供应商无关：
 
     - :dtcompatible:`usb-c-connector`
     - :dtcompatible:`usb-ulpi-phy`
 
-  - AMS AG (ams):
+  - AMS AG（ams）：
 
     - :dtcompatible:`ams,as5600`
     - :dtcompatible:`ams,as6212`
 
-  - Synopsys, Inc. (formerly ARC International PLC) (arc):
+  - Synopsys, Inc.（前身为 ARC International PLC）（arc）：
 
     - :dtcompatible:`arc,xccm`
     - :dtcompatible:`arc,yccm`
 
-  - ARM Ltd. (arm):
+  - ARM Ltd.（arm）：
 
     - :dtcompatible:`arm,cortex-a55`
     - :dtcompatible:`arm,ethos-u`
 
-  - ASPEED Technology Inc. (aspeed):
+  - ASPEED Technology Inc.（aspeed）：
 
     - :dtcompatible:`aspeed,ast10x0-reset`
 
-  - Atmel Corporation (atmel):
+  - Atmel Corporation（atmel）：
 
     - :dtcompatible:`atmel,samc2x-gclk`
     - :dtcompatible:`atmel,samc2x-mclk`
 
-  - Bosch Sensortec GmbH (bosch):
+  - Bosch Sensortec GmbH（bosch）：
 
     - :dtcompatible:`bosch,bmi270`
     - :dtcompatible:`bosch,bmi270`
 
-  - Cadence Design Systems Inc. (cdns):
+  - Cadence Design Systems Inc.（cdns）：
 
     - :dtcompatible:`cdns,i3c`
     - :dtcompatible:`cdns,uart`
 
-  - Espressif Systems (espressif):
+  - Espressif Systems（espressif）：
 
     - :dtcompatible:`espressif,esp32-adc`
     - :dtcompatible:`espressif,esp32-dac`
@@ -1273,25 +1623,30 @@ New bindings:
     - :dtcompatible:`espressif,esp32-mdio`
     - :dtcompatible:`espressif,esp32-temp`
 
-  - GigaDevice Semiconductor (gd):
+  - GigaDevice Semiconductor（gd）：
 
-    - :dtcompatible:`gd,gd322-dma` has new helper macros to easily setup the ``dma-cells`` property.
+    - :dtcompatible:`gd,gd322-dma`
+      具有
+      新的辅助宏，
+      用于
+      轻松设置
+      ``dma-cells`` 属性。
     - :dtcompatible:`gd,gd32-dma-v1`
     - :dtcompatible:`gd,gd32-fwdgt`
     - :dtcompatible:`gd,gd32-wwdgt`
 
-  - Hangzhou Grow Technology Co., Ltd. (hzgrow):
+  - Hangzhou Grow Technology Co., Ltd.（hzgrow）：
 
     - :dtcompatible:`hzgrow,r502a`
 
-  - Infineon Technologies (infineon):
+  - Infineon Technologies（infineon）：
 
     - :dtcompatible:`infineon,xmc4xxx-adc`
     - :dtcompatible:`infineon,xmc4xxx-flash-controller`
     - :dtcompatible:`infineon,xmc4xxx-intc`
     - :dtcompatible:`infineon,xmc4xxx-nv-flash`
 
-  - Intel Corporation (intel):
+  - Intel Corporation（intel）：
 
     - :dtcompatible:`intel,adsp-communication-widget`
     - :dtcompatible:`intel,adsp-dfpmcch`
@@ -1301,1306 +1656,6 @@ New bindings:
     - :dtcompatible:`intel,adsp-timer`
     - :dtcompatible:`intel,hda-dai`
     - :dtcompatible:`intel,raptor-lake`
-
-  - InvenSense Inc. (invensense):
-
-    - :dtcompatible:`invensense,icm42688`
-    - :dtcompatible:`invensense,icp10125`
-
-  - ITE Tech. Inc. (ite):
-
-    - :dtcompatible:`ite,it8xxx2-espi`
-    - :dtcompatible:`ite,it8xxx2-gpiokscan`
-    - :dtcompatible:`ite,it8xxx2-ilm`
-    - :dtcompatible:`ite,it8xxx2-shi`
-    - :dtcompatible:`ite,it8xxx2-usbpd`
-
-  - Kvaser (kvaser):
-
-    - :dtcompatible:`kvaser,pcican`
-
-  - Lattice Semiconductor (lattice):
-
-    - :dtcompatible:`lattice,ice40-fpga`
-
-  - lowRISC Community Interest Company (lowrisc):
-
-    - :dtcompatible:`lowrisc,machine-timer`
-    - :dtcompatible:`lowrisc,opentitan-uart`
-
-  - Maxim Integrated Products (maxim):
-
-    - :dtcompatible:`maxim,max3421e_spi`
-
-  - Microchip Technology Inc. (microchip):
-
-    - :dtcompatible:`microchip,xec-bbled`
-    - :dtcompatible:`microchip,xec-ecs`
-    - :dtcompatible:`microchip,xec-espi-saf-v2`
-    - :dtcompatible:`microchip,xec-qmspi-full-duplex`
-
-  - Nordic Semiconductor (nordic):
-
-    - :dtcompatible:`nordic,npm1100`
-    - :dtcompatible:`nordic,npm6001`
-    - :dtcompatible:`nordic,npm6001-gpio`
-    - :dtcompatible:`nordic,npm6001-regulator`
-    - :dtcompatible:`nordic,npm6001-wdt`
-
-  - Nuvoton Technology Corporation (nuvoton):
-
-    - :dtcompatible:`nuvoton,npcx-kscan`
-    - :dtcompatible:`nuvoton,npcx-sha`
-    - :dtcompatible:`nuvoton,npcx-shi`
-    - :dtcompatible:`nuvoton,numicro-gpio`
-    - :dtcompatible:`nuvoton,numicro-pinctrl`
-
-  - NXP Semiconductors (nxp):
-
-    - :dtcompatible:`nxp,css-v2`
-    - :dtcompatible:`nxp,fxas21002`
-    - :dtcompatible:`nxp,fxos8700`
-    - :dtcompatible:`nxp,imx-flexspi-aps6408l`
-    - :dtcompatible:`nxp,imx-flexspi-s27ks0641`
-    - :dtcompatible:`nxp,imx-mu-rev2`
-    - :dtcompatible:`nxp,imx93-pinctrl`
-    - :dtcompatible:`nxp,mcux-qdec`
-    - :dtcompatible:`nxp,mcux-xbar`
-    - :dtcompatible:`nxp,pca9420`
-    - :dtcompatible:`nxp,pca9685-pwm`
-    - :dtcompatible:`nxp,pcf8574`
-    - :dtcompatible:`nxp,pdcfg-power`
-    - :dtcompatible:`nxp,s32-gpio`
-    - :dtcompatible:`nxp,s32-linflexd`
-    - :dtcompatible:`nxp,s32-mru`
-    - :dtcompatible:`nxp,s32-netc-emdio`
-    - :dtcompatible:`nxp,s32-netc-psi`
-    - :dtcompatible:`nxp,s32-netc-vsi`
-    - :dtcompatible:`nxp,s32-siul2-eirq`
-    - :dtcompatible:`nxp,s32-spi`
-    - :dtcompatible:`nxp,s32-swt`
-    - :dtcompatible:`nxp,s32-sys-timer`
-    - :dtcompatible:`nxp,s32ze-pinctrl`
-
-  - OpenThread (openthread):
-
-    - :dtcompatible:`openthread,config`
-
-  - QuickLogic Corp. (quicklogic):
-
-    - :dtcompatible:`quicklogic,usbserialport-s3b`
-
-  - Raspberry Pi Foundation (raspberrypi):
-
-    - :dtcompatible:`raspberrypi,pico-flash-controller`
-    - :dtcompatible:`raspberrypi,pico-temp`
-
-  - Richtek Technology Corporation (richtek):
-
-    - :dtcompatible:`richtek,rt1718s`
-    - :dtcompatible:`richtek,rt1718s-gpio-port`
-
-  - Smart Battery System (sbs):
-
-    - :dtcompatible:`sbs,sbs-gauge-new-api`
-
-  - Silicon Laboratories (silabs):
-
-    - :dtcompatible:`silabs,gecko-pinctrl`
-    - :dtcompatible:`silabs,gecko-stimer`
-
-  - Synopsys, Inc. (snps):
-
-    - :dtcompatible:`snps,ethernet-cyclonev`
-
-  - SparkFun Electronics (sparkfun):
-
-    - :dtcompatible:`sparkfun,pro-micro-gpio`
-
-  - STMicroelectronics (st):
-
-    - :dtcompatible:`st,stm32-bbram`
-    - :dtcompatible:`st,stm32-qdec`
-    - :dtcompatible:`st,stm32-rcc-rctl`
-    - :dtcompatible:`st,stm32wb-rf`
-
-  - Texas Instruments (ti):
-
-    - :dtcompatible:`ti,cc13xx-cc26xx-adc`
-    - :dtcompatible:`ti,cc13xx-cc26xx-watchdog`
-    - :dtcompatible:`ti,tca6424a`
-
-  - A stand-in for a real vendor which can be used in examples and tests (vnd):
-
-    - :dtcompatible:`vnd,emul-tester`
-
-  - Zephyr-specific binding (zephyr):
-
-    - :dtcompatible:`zephyr,ec-host-cmd-periph-espi`
-    - :dtcompatible:`zephyr,fake-can`
-    - :dtcompatible:`zephyr,fake-eeprom`
-    - :dtcompatible:`zephyr,fake-regulator`
-    - :dtcompatible:`zephyr,flash-disk`
-    - :dtcompatible:`zephyr,gpio-emul-sdl`
-    - :dtcompatible:`zephyr,gpio-keys`
-    - :dtcompatible:`zephyr,ipc-icmsg-me-follower`
-    - :dtcompatible:`zephyr,ipc-icmsg-me-initiator`
-    - :dtcompatible:`zephyr,mmc-disk`
-    - :dtcompatible:`zephyr,psa-crypto-rng`
-    - :dtcompatible:`zephyr,udc-virtual`
-    - :dtcompatible:`zephyr,uhc-virtual`
-    - :dtcompatible:`zephyr,usb-c-vbus-adc`
-
-Removed bindings:
-
-  - Generic or vendor-independent:
-
-    - ``regulator-pmic``
-
-  - Intel Corporation (intel):
-
-    - ``intel,adsp-lps``
-
-  - NXP Semiconductors (nxp):
-
-    - ``nxp,imx-flexspi-hyperram``
-
-  - STMicroelectronics (st):
-
-    - ``st,stm32f0-flash-controller``
-    - ``st,stm32f3-flash-controller``
-    - ``st,stm32l0-flash-controller``
-    - ``st,stm32l1-flash-controller``
-    - ``st,stm32u5-flash-controller``
-
-Modified bindings:
-
-  - Generic or vendor-independent:
-
-    - All sensor devices now have a ``friendly-name`` property,
-      which is a human-readable string describing the sensor.
-      See :zephyr_file:`dts/bindings/sensor/sensor-device.yaml`
-      for more information.
-
-    - All DMA controller devices have had their ``dma-buf-alignment``
-      properties renamed to ``dma-buf-addr-alignment``.
-
-      Additionally, all DMA controller devices have new
-      ``dma-buf-size-alignment`` and ``dma-copy-alignment`` properties.
-
-      See :zephyr_file:`dts/bindings/dma/dma-controller.yaml` for
-      more information.
-
-    - :dtcompatible:`ns16550`:
-
-        - new property: ``vendor-id``
-        - new property: ``device-id``
-        - property ``reg`` is no longer required
-
-    - :dtcompatible:`pci-host-ecam-generic`:
-
-        - new property: ``interrupt-map-mask``
-        - new property: ``interrupt-map``
-        - new property: ``bus-range``
-
-    - :dtcompatible:`regulator-fixed`:
-
-        - removed property: ``supply-gpios``
-        - removed property: ``vin-supply``
-
-    - :dtcompatible:`gpio-keys`:
-
-        - new property: ``debounce-interval-ms``
-
-  - Altera Corp. (altr):
-
-    - :dtcompatible:`altr,jtag-uart`:
-
-        - new property: ``write-fifo-depth``
-
-  - ARM Ltd. (arm):
-
-    - :dtcompatible:`arm,pl011`:
-
-        - new property: ``pinctrl-0``
-        - new property: ``pinctrl-1``
-        - new property: ``pinctrl-2``
-        - new property: ``pinctrl-3``
-        - new property: ``pinctrl-4``
-        - new property: ``pinctrl-names``
-
-  - Atmel Corporation (atmel):
-
-    - :dtcompatible:`atmel,sam-pwm`:
-
-        - specifier cells for space "pwm" are now named: ['channel', 'period', 'flags'] (old value: ['channel', 'period'])
-        - property ``#pwm-cells`` const value changed from 2 to 3
-
-    - :dtcompatible:`atmel,sam-spi`:
-
-        - new property: ``loopback``
-
-  - Espressif Systems (espressif):
-
-    - :dtcompatible:`espressif,esp32-twai`:
-
-        - property ``clkout-divider`` enum value changed from [1, 2, 4, 6, 8, 10, 12, 14] to None
-
-    - :dtcompatible:`espressif,esp32-i2c`:
-
-        - new property: ``scl-timeout-us``
-
-    - :dtcompatible:`espressif,esp32-spi`:
-
-        - new property: ``dma-enabled``
-        - new property: ``dma-clk``
-        - new property: ``dma-host``
-        - removed property: ``dma``
-
-  - GigaDevice Semiconductor (gd):
-
-    - :dtcompatible:`gd,gd32-dma`:
-
-        - specifier cells for space "dma" are now named: ['channel', 'config'] (old value: ['channel'])
-        - new property: ``gd,mem2mem``
-        - removed property: ``resets``
-        - removed property: ``reset-names``
-        - property ``#dma-cells`` const value changed from 1 to 2
-
-  - ILI Technology Corporation (ILITEK) (ilitek):
-
-    - :dtcompatible:`ilitek,ili9341` (on spi bus):
-
-        - property ``disctrl`` default value changed from [10, 130, 39] to [10, 130, 39, 4]
-
-  - Infineon Technologies (infineon):
-
-    - :dtcompatible:`infineon,xmc4xxx-uart`:
-
-        - new property: ``fifo-start-offset``
-        - new property: ``fifo-tx-size``
-        - new property: ``fifo-rx-size``
-
-  - Intel Corporation (intel):
-
-    - :dtcompatible:`intel,adsp-power-domain`:
-
-        - removed property: ``lps``
-
-    - :dtcompatible:`intel,e1000`:
-
-        - new property: ``vendor-id``
-        - new property: ``device-id``
-        - property ``reg`` is no longer required
-
-    - :dtcompatible:`intel,dai-dmic`:
-
-        - new property: ``fifo``
-        - property ``shim`` type changed from array to int
-
-  - ITE Tech. Inc. (ite):
-
-    - :dtcompatible:`ite,it8xxx2-pinctrl-func`:
-
-        - new property: ``pp-od-mask``
-        - new property: ``pullup-mask``
-        - new property: ``gpio-group``
-        - property ``volt-sel-mask`` is no longer required
-        - property ``func4-gcr`` is no longer required
-        - property ``func3-en-mask`` is no longer required
-        - property ``func3-gcr`` is no longer required
-        - property ``func4-en-mask`` is no longer required
-        - property ``volt-sel`` is no longer required
-
-  - JEDEC Solid State Technology Association (jedec):
-
-    - :dtcompatible:`jedec,spi-nor` (on spi bus):
-
-        - new property: ``mxicy,mx25r-power-mode``
-
-  - Microchip Technology Inc. (microchip):
-
-    - :dtcompatible:`microchip,xec-uart`:
-
-        - new property: ``wakerx-gpios``
-
-    - :dtcompatible:`microchip,xec-pcr`:
-
-        - new property: ``clk32kmon-period-min``
-        - new property: ``clk32kmon-period-max``
-        - new property: ``clk32kmon-duty-cycle-var-max``
-        - new property: ``clk32kmon-valid-min``
-        - new property: ``xtal-enable-delay-ms``
-        - new property: ``pll-lock-timeout-ms``
-        - new property: ``clkmon-bypass``
-        - new property: ``internal-osc-disable``
-        - new property: ``pinctrl-0``
-        - new property: ``pinctrl-names``
-        - new property: ``pinctrl-1``
-        - new property: ``pinctrl-2``
-        - new property: ``pinctrl-3``
-        - new property: ``pinctrl-4``
-        - property ``interrupts`` is no longer required
-
-    - :dtcompatible:`microchip,xec-qmspi-ldma`:
-
-        - new property: ``port-sel``
-        - new property: ``chip-select``
-        - removed property: ``port_sel``
-        - removed property: ``chip_select``
-        - property ``lines`` enum value changed from None to [1, 2, 4]
-
-  - Nordic Semiconductor (nordic):
-
-    - :dtcompatible:`nordic,nrf21540-fem`:
-
-        - new property: ``supply-voltage-mv``
-
-    - :dtcompatible:`nordic,qspi-nor` (on qspi bus):
-
-        - new property: ``mxicy,mx25r-power-mode``
-
-  - Nuvoton Technology Corporation (nuvoton):
-
-    - :dtcompatible:`nuvoton,numicro-uart`:
-
-        - new property: ``pinctrl-0``
-        - new property: ``pinctrl-1``
-        - new property: ``pinctrl-2``
-        - new property: ``pinctrl-3``
-        - new property: ``pinctrl-4``
-        - new property: ``pinctrl-names``
-
-    - :dtcompatible:`nuvoton,adc-cmp`:
-
-        - new property: ``status``
-        - new property: ``compatible``
-        - new property: ``reg``
-        - new property: ``reg-names``
-        - new property: ``interrupts``
-        - new property: ``interrupts-extended``
-        - new property: ``interrupt-names``
-        - new property: ``interrupt-parent``
-        - new property: ``label``
-        - new property: ``clocks``
-        - new property: ``clock-names``
-        - new property: ``#address-cells``
-        - new property: ``#size-cells``
-        - new property: ``dmas``
-        - new property: ``dma-names``
-        - new property: ``io-channel-names``
-        - new property: ``mboxes``
-        - new property: ``mbox-names``
-        - new property: ``wakeup-source``
-        - new property: ``power-domain``
-
-  - NXP Semiconductors (nxp):
-
-    - :dtcompatible:`nxp,kinetis-lpuart`:
-
-        - new property: ``nxp,rs485-mode``
-        - new property: ``nxp,rs485-de-active-low``
-
-    - :dtcompatible:`nxp,fxas21002` (on i2c bus):
-
-        - new property: ``reset-gpios``
-
-    - :dtcompatible:`nxp,imx-pwm`:
-
-        - specifier cells for space "pwm" are now named: ['channel', 'period', 'flags'] (old value: ['channel', 'period'])
-        - new property: ``nxp,prescaler``
-        - new property: ``nxp,reload``
-        - property ``#pwm-cells`` const value changed from 2 to 3
-
-    - :dtcompatible:`nxp,imx-usdhc`:
-
-        - new property: ``mmc-hs200-1_8v``
-        - new property: ``mmc-hs400-1_8v``
-
-    - :dtcompatible:`nxp,lpc-sdif`:
-
-        - new property: ``mmc-hs200-1_8v``
-        - new property: ``mmc-hs400-1_8v``
-
-  - QEMU, a generic and open source machine emulator and virtualizer (qemu):
-
-    - :dtcompatible:`qemu,ivshmem`:
-
-        - new property: ``vendor-id``
-        - new property: ``device-id``
-
-  - Renesas Electronics Corporation (renesas):
-
-    - :dtcompatible:`renesas,smartbond-uart`:
-
-        - property ``current-speed`` enum value changed from [1200, 2400, 4800, 9600, 14400, 19200, 28800, 38400, 57600, 115200, 230400, 460800, 921600, 1000000] to [4800, 9600, 14400, 19200, 28800, 38400, 57600, 115200, 230400, 500000, 921600, 1000000, 2000000]
-
-  - Silicon Laboratories (silabs):
-
-    - :dtcompatible:`silabs,gecko-usart`:
-
-        - new property: ``pinctrl-0``
-        - new property: ``pinctrl-1``
-        - new property: ``pinctrl-2``
-        - new property: ``pinctrl-3``
-        - new property: ``pinctrl-4``
-        - new property: ``pinctrl-names``
-        - property ``location-rx`` is no longer required
-        - property ``location-tx`` is no longer required
-        - property ``peripheral-id`` is no longer required
-
-    - :dtcompatible:`silabs,gecko-gpio-port`:
-
-        - property ``peripheral-id`` is no longer required
-
-    - :dtcompatible:`silabs,gecko-spi-usart`:
-
-        - new property: ``pinctrl-0``
-        - new property: ``pinctrl-1``
-        - new property: ``pinctrl-2``
-        - new property: ``pinctrl-3``
-        - new property: ``pinctrl-4``
-        - new property: ``pinctrl-names``
-        - property ``location-clk`` is no longer required
-        - property ``location-rx`` is no longer required
-        - property ``location-tx`` is no longer required
-        - property ``peripheral-id`` is no longer required
-
-  - Sitronix Technology Corporation (sitronix):
-
-    - :dtcompatible:`sitronix,st7735r` (on spi bus):
-
-        - new property: ``rgb-is-inverted``
-
-  - Synopsys, Inc. (snps):
-
-    - :dtcompatible:`snps,designware-i2c`:
-
-        - new property: ``vendor-id``
-        - new property: ``device-id``
-        - property ``reg`` is no longer required
-
-  - STMicroelectronics (st):
-
-    - :dtcompatible:`st,stm32-adc`:
-
-        - the ``has-temp-channel``, ``has-vref-channel`` and
-          ``has-vbat-channel`` properties were respectively replaced by
-          ``temp-channel``, ``vref-channel`` and ``vbat-channel``
-
-    - :dtcompatible:`st,stm32-ethernet`:
-
-        - the built-in driver for this compatible now supports the
-          ``local-mac-address`` and ``zephyr,random-mac-address`` properties
-          for setting MAC addresses, and the associated Kconfig options
-          (``CONFIG_ETH_STM32_HAL_RANDOM_MAC``,
-          ``CONFIG_ETH_STM32_HAL_USER_STATIC_MAC``) are now deprecated
-
-    - :dtcompatible:`st,stm32-qspi-nor` (on qspi bus):
-
-        - new property: ``reset-cmd``
-        - new property: ``reset-cmd-wait``
-
-    - :dtcompatible:`st,stm32-uart`:
-
-        - new property: ``resets``
-        - new property: ``tx-rx-swap``
-        - new property: ``reset-names``
-
-    - :dtcompatible:`st,stm32-usart`:
-
-        - new property: ``resets``
-        - new property: ``tx-rx-swap``
-        - new property: ``reset-names``
-
-    - :dtcompatible:`st,stm32-lpuart`:
-
-        - new property: ``resets``
-        - new property: ``tx-rx-swap``
-        - new property: ``reset-names``
-
-    - :dtcompatible:`st,stm32-exti`:
-
-        - new property: ``num-lines``
-        - new property: ``line-ranges``
-        - new property: ``interrupt-controller``
-        - new property: ``#interrupt-cells``
-        - property ``interrupts`` is now required
-        - property ``interrupt-names`` is now required
-
-    - :dtcompatible:`st,stm32-ospi`:
-
-        - property ``clock-names`` is now required
-
-    - :dtcompatible:`st,stm32f105-pll2-clock`:
-
-        - new property: ``otgfspre``
-
-    - :dtcompatible:`st,stm32f105-pll-clock`:
-
-        - new property: ``otgfspre``
-
-    - :dtcompatible:`st,stm32f100-pll-clock`:
-
-        - new property: ``otgfspre``
-
-    - :dtcompatible:`st,stm32f1-pll-clock`:
-
-        - property ``usbpre`` type changed from int to boolean
-
-    - :dtcompatible:`st,stm32-lse-clock`:
-
-        - new property: ``lse-bypass``
-
-    - :dtcompatible:`st,lis2dh12` (on i2c bus):
-
-        - new property: ``anym-no-latch``
-        - new property: ``anym-mode``
-
-    - :dtcompatible:`st,lsm6dso` (on i2c bus):
-
-        - new property: ``drdy-pulsed``
-
-    - :dtcompatible:`st,lis2dh` (on i2c bus):
-
-        - new property: ``anym-no-latch``
-        - new property: ``anym-mode``
-
-    - :dtcompatible:`st,lsm303agr-accel` (on spi bus):
-
-        - new property: ``anym-no-latch``
-        - new property: ``anym-mode``
-
-    - :dtcompatible:`st,lis3dh` (on i2c bus):
-
-        - new property: ``anym-no-latch``
-        - new property: ``anym-mode``
-
-    - :dtcompatible:`st,lsm6dso` (on spi bus):
-
-        - new property: ``drdy-pulsed``
-
-    - :dtcompatible:`st,lis2dw12` (on spi bus):
-
-        - new property: ``odr``
-        - new property: ``ff-duration``
-        - new property: ``ff-threshold``
-
-    - :dtcompatible:`st,lsm6dso32` (on spi bus):
-
-        - new property: ``drdy-pulsed``
-
-    - :dtcompatible:`st,lsm303dlhc-accel` (on i2c bus):
-
-        - new property: ``anym-no-latch``
-        - new property: ``anym-mode``
-
-    - :dtcompatible:`st,lis2dh` (on spi bus):
-
-        - new property: ``anym-no-latch``
-        - new property: ``anym-mode``
-
-    - :dtcompatible:`st,lis2dw12` (on i2c bus):
-
-        - new property: ``odr``
-        - new property: ``ff-duration``
-        - new property: ``ff-threshold``
-
-    - :dtcompatible:`st,lsm303agr-accel` (on i2c bus):
-
-        - new property: ``anym-no-latch``
-        - new property: ``anym-mode``
-
-    - :dtcompatible:`st,lsm6dso32` (on i2c bus):
-
-        - new property: ``drdy-pulsed``
-
-    - :dtcompatible:`st,stm32-sdmmc`:
-
-        - new property: ``resets``
-        - new property: ``reset-names``
-
-    - :dtcompatible:`st,stm32-ucpd`:
-
-        - new property: ``dead-battery``
-        - new property: ``pinctrl-0``
-        - new property: ``pinctrl-names``
-        - new property: ``pinctrl-1``
-        - new property: ``pinctrl-2``
-        - new property: ``pinctrl-3``
-        - new property: ``pinctrl-4``
-
-    - :dtcompatible:`st,stm32-timers`:
-
-        - new property: ``resets``
-        - new property: ``reset-names``
-
-    - :dtcompatible:`st,stm32-lptim`:
-
-        - new property: ``st,static-prescaler``
-        - new property: ``reset-names``
-
-    - :dtcompatible:`st,stm32-usb`:
-
-        - removed property: ``enable-pin-remap``
-
-  - Texas Instruments (ti):
-
-    - :dtcompatible:`ti,ina230` (on i2c bus):
-
-        - new property: ``current-lsb-microamps``
-        - new property: ``rshunt-milliohms``
-        - new property: ``alert-gpios``
-        - removed property: ``irq-gpios``
-        - removed property: ``current-lsb``
-        - removed property: ``rshunt``
-
-    - :dtcompatible:`ti,ina237` (on i2c bus):
-
-        - new property: ``current-lsb-microamps``
-        - new property: ``rshunt-milliohms``
-        - new property: ``alert-gpios``
-        - removed property: ``irq-gpios``
-        - removed property: ``current-lsb``
-        - removed property: ``rshunt``
-
-  - A stand-in for a real vendor which can be used in examples and tests (vnd):
-
-    - :dtcompatible:`vnd,pinctrl`:
-
-        - new property: ``bias-disable``
-        - new property: ``bias-high-impedance``
-        - new property: ``bias-bus-hold``
-        - new property: ``bias-pull-up``
-        - new property: ``bias-pull-down``
-        - new property: ``bias-pull-pin-default``
-        - new property: ``drive-push-pull``
-        - new property: ``drive-open-drain``
-        - new property: ``drive-open-source``
-        - new property: ``drive-strength``
-        - new property: ``drive-strength-microamp``
-        - new property: ``input-enable``
-        - new property: ``input-disable``
-        - new property: ``input-schmitt-enable``
-        - new property: ``input-schmitt-disable``
-        - new property: ``input-debounce``
-        - new property: ``power-source``
-        - new property: ``low-power-enable``
-        - new property: ``low-power-disable``
-        - new property: ``output-disable``
-        - new property: ``output-enable``
-        - new property: ``output-low``
-        - new property: ``output-high``
-        - new property: ``sleep-hardware-state``
-        - new property: ``slew-rate``
-        - new property: ``skew-delay``
-
-  - Zephyr-specific binding (zephyr):
-
-    - :dtcompatible:`zephyr,cdc-acm-uart` (on usb bus):
-
-        - new property: ``tx-fifo-size``
-        - new property: ``rx-fifo-size``
-
-    - :dtcompatible:`zephyr,sdhc-spi-slot` (on spi bus):
-
-        - bus list changed from [] to ['sd']
-
-Other
-=====
-
-Shields
-
-  * In order to avoid name conflicts with devices that may be defined at
-    board level, it is advised, specifically for shields devicetree descriptions,
-    to provide a device nodelabel in the form ``<device>_<shield>``. In-tree shields
-    have been updated to follow this recommendation.
-
-* Others
-
-  * STM32F1 SoCs
-
-    * Added new pinctrl definitions for STM32F1xx PWM input. In PWM capture mode
-      STM32F1xx pins have to be configured as input and not as alternate.
-      The new names takes the form tim1_ch1_pwm_in_pa8 for example.
-
-    * Renamed pinctrl definitions for STM32F1xx PWM output to differentiate them
-      from newly created inputs. The new names takes the form tim1_ch1_pwm_out_pa8
-      instead of tim1_ch1_pwm_pa8.
-
-Libraries / Subsystems
-**********************
-
-* C Library
-
-  * Newlib nano variant is no longer selected by default when
-    :kconfig:option:`CONFIG_NEWLIB_LIBC` is selected.
-    :kconfig:option:`CONFIG_NEWLIB_LIBC_NANO` must now be explicitly selected
-    in order to use the nano variant.
-  * Picolibc now supports all architectures supported by Zephyr.
-  * Added C11 ``aligned_alloc`` support to the minimal libc.
-
-* C++ Library
-
-  * C++ support in Zephyr is no longer considered a "subsystem" because it
-    mainly consists of the C++ ABI runtime library and the C++ standard
-    library, which are "libraries" that are dissimilar to the existing Zephyr
-    subsystems. C++ support components are now located in ``lib/cpp`` as
-    "C++ library."
-  * C++ ABI runtime library components such as global constructor/destructor
-    and initialiser handlers, that were previously located under
-    ``subsys/cpp``, have been moved to ``lib/cpp/abi`` in order to provide a
-    clear separation between the C++ ABI runtime library and the C++ standard
-    library.
-  * C++ minimal library components have been moved to ``lib/cpp/minimal``.
-  * C++ tests have been moved to ``tests/lib/cpp``.
-  * C++ samples have been moved to ``samples/cpp``.
-  * :kconfig:option:`CONFIG_CPLUSPLUS` has been renamed to
-    :kconfig:option:`CONFIG_CPP`.
-  * :kconfig:option:`CONFIG_EXCEPTIONS` has been renamed to
-    :kconfig:option:`CONFIG_CPP_EXCEPTIONS`.
-  * :kconfig:option:`CONFIG_RTTI` has been renamed to
-    :kconfig:option:`CONFIG_CPP_RTTI`.
-  * :kconfig:option:`CONFIG_LIB_CPLUSPLUS` is deprecated. A toolchain-specific
-    C++ standard library Kconfig option from
-    :kconfig:option:`CONFIG_LIBCPP_IMPLEMENTATION` should be selected instead.
-  * Zephyr subsystems and modules that require the features from the full C++
-    standard library (e.g. Standard Template Library) can now select
-    :kconfig:option:`CONFIG_REQUIRES_FULL_LIBC`, which automatically selects
-    a compatible C++ standard library.
-  * Introduced :kconfig:option:`CONFIG_CPP_MAIN` to support defining ``main()``
-    function in a C++ source file. Enabling this option makes the Zephyr kernel
-    invoke ``int main(void)``, which is required by the ISO C++ standards, as
-    opposed to the Zephyr default ``void main(void)``.
-  * Added no-throwing implementation of new operator to the C++ minimal
-    library.
-  * Added support for new operator with alignment request (C++17) to the C++
-    minimal library.
-  * Added GNU C++ standard library support with Picolibc when using a suitably
-    configured toolchain (e.g. the upcoming Zephyr SDK 0.16.0 release).
-
-* Cache
-
-  * Introduced new Cache API
-  * ``CONFIG_HAS_ARCH_CACHE`` has been renamed to
-    :kconfig:option:`CONFIG_ARCH_CACHE`
-  * ``CONFIG_HAS_EXTERNAL_CACHE`` has been renamed to
-    :kconfig:option:`CONFIG_EXTERNAL_CACHE`
-
-* DSP
-
-  * Introduced DSP (digital signal processing) subsystem with CMSIS-DSP as the
-    default backend.
-  * CMSIS-DSP now supports all architectures supported by Zephyr.
-
-* File systems
-
-  * Added new API call `fs_mkfs`.
-  * Added new sample `samples/subsys/fs/format`.
-  * FAT FS driver has been updated to version 0.15 w/patch1.
-  * Added the option to disable CRC checking in :ref:`fcb_api` by enabling the
-    Kconfig option :kconfig:option:`CONFIG_FCB_ALLOW_FIXED_ENDMARKER`
-    and setting the `FCB_FLAGS_CRC_DISABLED` flag in the :c:struct:`fcb` struct.
-
-* IPC
-
-  * Added :c:func:`ipc_rpmsg_deinit`, :c:func:`ipc_service_close_instance` and
-    :c:func:`ipc_static_vrings_deinit`  functions
-  * Added deregister API support for icmsg backend
-  * Added a multi-endpoint feature to icmsg backend
-  * Added no-copy features to icmsg backend
-
-* ISO-TP
-
-  * Rewrote the ISO-TP API to not reuse definitions from the CAN controller API.
-
-* Logging
-
-  * Added support for logging on multiple domains.
-  * :kconfig:option:`CONFIG_LOG_PRINTK` is now by default enabled which means that
-    when logging is enabled then printk is by directed to the logging subsystem.
-  * Added option to use custom logging header.
-
-* Management
-
-  * MCUmgr functionality deprecated in 3.1 has been removed:
-    CONFIG_FS_MGMT_UL_CHUNK_SIZE, CONFIG_IMG_MGMT_UL_CHUNK_SIZE,
-    CONFIG_OS_MGMT_ECHO_LENGTH
-  * MCUmgr fs_mgmt issue with erasing a file prior to writing the first block
-    of data has been worked around by only truncating/deleting the file data
-    if the file exists. This can help work around an issue whereby logging is
-    enabled and the command is sent on the same UART as the logging system, in
-    which a filesystem error was emitted.
-  * A MCUmgr bug when using the smp_svr sample with Bluetooth transport that
-    could have caused a stack overflow has been fixed.
-  * A MCUmgr issue with Bluetooth transport that could cause a deadlock of the
-    mcumgr thread if the remote device disconnected before the output message
-    was sent has been fixed.
-  * A MCUmgr img_mgmt bug whereby the state of an image upload could persist
-    when it was no longer valid (e.g. after an image erase command) has been
-    fixed.
-  * MCUmgr fs_mgmt command has been added that allows querying/listing the
-    supported hash/checksum types.
-  * MCUmgr Bluetooth transport will now clear unprocessed commands sent if a
-    remote device disconnects instead of processing them.
-  * A new MCUmgr transport function pointer has been added which needs
-    registering in ``smp_transport_init`` for removing invalid packets for
-    connection-orientated transports. If this is unimplemented, the function
-    pointer can be set to NULL.
-  * MCUmgr command handler definitions have changed, the ``mgmt_ctxt`` struct
-    has been replaced with the ``smp_streamer`` struct, the zcbor objects need
-    to replace ``cnbe`` object access with ``writer`` and ``cnbd`` object
-    access with ``reader`` to successfully build.
-  * MCUmgr callback system has been reworked with a unified singular interface
-    which supports status passing to the handler (:ref:`mcumgr_callbacks`).
-  * MCUmgr subsystem directory structure has been flattened and contents of the
-    lib subdirectory has been redistributed into following directories:
-
-    .. table::
-       :align: center
-
-       +----------------+-------------------------------------------+
-       | Subdirectory   | MCUmgr area                               |
-       +================+===========================================+
-       | mgmt           | MCUmgr management functions, group        |
-       |                | registration, and so on;                  |
-       +----------------+-------------------------------------------+
-       | smp            | Simple Management Protocol processing;    |
-       +----------------+-------------------------------------------+
-       | transport      | Transport support and transport API;      |
-       +----------------+-------------------------------------------+
-       | grp            | Command groups, formerly lib/cmd;         |
-       |                | each group, which has Zephyr built in     |
-       |                | support has its own directory here;       |
-       +----------------+-------------------------------------------+
-       | util           | Utilities used by various subareas of     |
-       |                | MCUmgr.                                   |
-       +----------------+-------------------------------------------+
-
-    Public API interfaces for above areas are now exported through zephyr_interface,
-    and headers for them reside in ``zephyr/mgmt/mcumgr/<mcumgr_subarea>/``.
-    For example to access mgmt API include ``<zephyr/mgmt/mcumgr/mgmt/mgmt.h>``.
-
-    Private headers for above areas can be accessed, when required, using paths:
-    ``mgmt/mcumgr/mgmt/<mcumgr_subarea>/``.
-  * MCUmgr os_mgmt info command has been added that allows querying details on
-    the kernel and application, allowing application-level extensibility
-    see :ref:`mcumgr_os_application_info` for details.
-
-  * MCUMgr :kconfig:option:`CONFIG_APP_LINK_WITH_MCUMGR` has been removed as
-    it has not been doing anything.
-
-  * MCUmgr Kconfig option names have been standardised. Script
-    :zephyr_file:`scripts/utils/migrate_mcumgr_kconfigs.py` has been provided
-    to make transition to new Kconfig options easier.
-    Below table provides information on old names and new equivalents:
-
-    .. table::
-       :align: center
-
-       +------------------------------------------------+-------------------------------------------------------+
-       | Old Kconfig option name                        | New Kconfig option name                               |
-       +================================================+=======================================================+
-       | MCUMGR_SMP_WORKQUEUE_STACK_SIZE                | MCUMGR_TRANSPORT_WORKQUEUE_STACK_SIZE                 |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_WORKQUEUE_THREAD_PRIO               | MCUMGR_TRANSPORT_WORKQUEUE_THREAD_PRIO                |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MGMT_MAX_MAIN_MAP_ENTRIES                      | MCUMGR_SMP_CBOR_MAX_MAIN_MAP_ENTRIES                  |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MGMT_MIN_DECODING_LEVELS                       | MCUMGR_SMP_CBOR_MIN_DECODING_LEVELS                   |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MGMT_MIN_DECODING_LEVEL_1                      | MCUMGR_SMP_CBOR_MIN_DECODING_LEVEL_1                  |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MGMT_MIN_DECODING_LEVEL_2                      | MCUMGR_SMP_CBOR_MIN_DECODING_LEVEL_2                  |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MGMT_MIN_DECODING_LEVEL_3                      | MCUMGR_SMP_CBOR_MIN_DECODING_LEVEL_3                  |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MGMT_MIN_DECODING_LEVEL_4                      | MCUMGR_SMP_CBOR_MIN_DECODING_LEVEL_4                  |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MGMT_MIN_DECODING_LEVEL_5                      | MCUMGR_SMP_CBOR_MIN_DECODING_LEVEL_5                  |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MGMT_MAX_DECODING_LEVELS                       | MCUMGR_SMP_CBOR_MAX_DECODING_LEVELS                   |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_CMD_FS_MGMT                             | MCUMGR_GRP_FS                                         |
-       +------------------------------------------------+-------------------------------------------------------+
-       | FS_MGMT_MAX_FILE_SIZE_64KB                     | MCUMGR_GRP_FS_MAX_FILE_SIZE_64KB                      |
-       +------------------------------------------------+-------------------------------------------------------+
-       | FS_MGMT_MAX_FILE_SIZE_4GB                      | MCUMGR_GRP_FS_MAX_FILE_SIZE_4GB                       |
-       +------------------------------------------------+-------------------------------------------------------+
-       | FS_MGMT_MAX_OFFSET_LEN                         | MCUMGR_GRP_FS_MAX_OFFSET_LEN                          |
-       +------------------------------------------------+-------------------------------------------------------+
-       | FS_MGMT_DL_CHUNK_SIZE_LIMIT                    | MCUMGR_GRP_FS_DL_CHUNK_SIZE_LIMIT                     |
-       +------------------------------------------------+-------------------------------------------------------+
-       | FS_MGMT_DL_CHUNK_SIZE                          | MCUMGR_GRP_FS_DL_CHUNK_SIZE                           |
-       +------------------------------------------------+-------------------------------------------------------+
-       | FS_MGMT_FILE_STATUS                            | MCUMGR_GRP_FS_FILE_STATUS                             |
-       +------------------------------------------------+-------------------------------------------------------+
-       | FS_MGMT_CHECKSUM_HASH                          | MCUMGR_GRP_FS_CHECKSUM_HASH                           |
-       +------------------------------------------------+-------------------------------------------------------+
-       | FS_MGMT_CHECKSUM_HASH_CHUNK_SIZE               | MCUMGR_GRP_FS_CHECKSUM_HASH_CHUNK_SIZE                |
-       +------------------------------------------------+-------------------------------------------------------+
-       | FS_MGMT_CHECKSUM_IEEE_CRC32                    | MCUMGR_GRP_FS_CHECKSUM_IEEE_CRC32                     |
-       +------------------------------------------------+-------------------------------------------------------+
-       | FS_MGMT_HASH_SHA256                            | MCUMGR_GRP_FS_HASH_SHA256                             |
-       +------------------------------------------------+-------------------------------------------------------+
-       | FS_MGMT_FILE_ACCESS_HOOK                       | MCUMGR_GRP_FS_FILE_ACCESS_HOOK                        |
-       +------------------------------------------------+-------------------------------------------------------+
-       | FS_MGMT_PATH_SIZE                              | MCUMGR_GRP_FS_PATH_LEN                                |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_CMD_IMG_MGMT                            | MCUMGR_GRP_IMG                                        |
-       +------------------------------------------------+-------------------------------------------------------+
-       | IMG_MGMT_USE_HEAP_FOR_FLASH_IMG_CONTEXT        | MCUMGR_GRP_IMG_USE_HEAP_FOR_FLASH_IMG_CONTEXT         |
-       +------------------------------------------------+-------------------------------------------------------+
-       | IMG_MGMT_UPDATABLE_IMAGE_NUMBER                | MCUMGR_GRP_IMG_UPDATABLE_IMAGE_NUMBER                 |
-       +------------------------------------------------+-------------------------------------------------------+
-       | IMG_MGMT_VERBOSE_ERR                           | MCUMGR_GRP_IMG_VERBOSE_ERR                            |
-       +------------------------------------------------+-------------------------------------------------------+
-       | IMG_MGMT_DUMMY_HDR                             | MCUMGR_GRP_IMG_DUMMY_HDR                              |
-       +------------------------------------------------+-------------------------------------------------------+
-       | IMG_MGMT_DIRECT_IMAGE_UPLOAD                   | MCUMGR_GRP_IMG_DIRECT_UPLOAD                          |
-       +------------------------------------------------+-------------------------------------------------------+
-       | IMG_MGMT_REJECT_DIRECT_XIP_MISMATCHED_SLOT     | MCUMGR_GRP_IMG_REJECT_DIRECT_XIP_MISMATCHED_SLOT      |
-       +------------------------------------------------+-------------------------------------------------------+
-       | IMG_MGMT_FRUGAL_LIST                           | MCUMGR_GRP_IMG_FRUGAL_LIST                            |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_CMD_OS_MGMT                             | MCUMGR_GRP_OS                                         |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_GRP_OS_OS_RESET_HOOK                    | MCUMGR_GRP_OS_RESET_HOOK                              |
-       +------------------------------------------------+-------------------------------------------------------+
-       | OS_MGMT_RESET_MS                               | MCUMGR_GRP_OS_RESET_MS                                |
-       +------------------------------------------------+-------------------------------------------------------+
-       | OS_MGMT_TASKSTAT                               | MCUMGR_GRP_OS_TASKSTAT                                |
-       +------------------------------------------------+-------------------------------------------------------+
-       | OS_MGMT_TASKSTAT_ONLY_SUPPORTED_STATS          | MCUMGR_GRP_OS_TASKSTAT_ONLY_SUPPORTED_STATS           |
-       +------------------------------------------------+-------------------------------------------------------+
-       | OS_MGMT_TASKSTAT_MAX_NUM_THREADS               | MCUMGR_GRP_OS_TASKSTAT_MAX_NUM_THREADS                |
-       +------------------------------------------------+-------------------------------------------------------+
-       | OS_MGMT_TASKSTAT_THREAD_NAME_LEN               | MCUMGR_GRP_OS_TASKSTAT_THREAD_NAME_LEN                |
-       +------------------------------------------------+-------------------------------------------------------+
-       | OS_MGMT_TASKSTAT_SIGNED_PRIORITY               | MCUMGR_GRP_OS_TASKSTAT_SIGNED_PRIORITY                |
-       +------------------------------------------------+-------------------------------------------------------+
-       | OS_MGMT_TASKSTAT_STACK_INFO                    | MCUMGR_GRP_OS_TASKSTAT_STACK_INFO                     |
-       +------------------------------------------------+-------------------------------------------------------+
-       | OS_MGMT_ECHO                                   | MCUMGR_GRP_OS_ECHO                                    |
-       +------------------------------------------------+-------------------------------------------------------+
-       | OS_MGMT_MCUMGR_PARAMS                          | MCUMGR_GRP_OS_MCUMGR_PARAMS                           |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_CMD_SHELL_MGMT                          | MCUMGR_GRP_SHELL                                      |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_CMD_SHELL_MGMT_LEGACY_RC_RETURN_CODE    | MCUMGR_GRP_SHELL_LEGACY_RC_RETURN_CODE                |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_CMD_STAT_MGMT                           | MCUMGR_GRP_STAT                                       |
-       +------------------------------------------------+-------------------------------------------------------+
-       | STAT_MGMT_MAX_NAME_LEN                         | MCUMGR_GRP_STAT_MAX_NAME_LEN                          |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_GRP_ZEPHYR_BASIC                        | MCUMGR_GRP_ZBASIC                                     |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_GRP_BASIC_CMD_STORAGE_ERASE             | MCUMGR_GRP_ZBASIC_STORAGE_ERASE                       |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MGMT_VERBOSE_ERR_RESPONSE                      | MCUMGR_SMP_VERBOSE_ERR_RESPONSE                       |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_REASSEMBLY                          | MCUMGR_TRANSPORT_REASSEMBLY                           |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_BUF_COUNT                               | MCUMGR_TRANSPORT_NETBUF_COUNT                         |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_BUF_SIZE                                | MCUMGR_TRANSPORT_NETBUF_SIZE                          |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_BUF_USER_DATA_SIZE                      | MCUMGR_TRANSPORT_NETBUF_USER_DATA_SIZE                |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_BT                                  | MCUMGR_TRANSPORT_BT                                   |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_REASSEMBLY_BT                       | MCUMGR_TRANSPORT_BT_REASSEMBLY                        |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_REASSEMBLY_UNIT_TESTS               | MCUMGR_TRANSPORT_REASSEMBLY_UNIT_TESTS                |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_BT_AUTHEN                           | MCUMGR_TRANSPORT_BT_AUTHEN                            |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_BT_CONN_PARAM_CONTROL               | MCUMGR_TRANSPORT_BT_CONN_PARAM_CONTROL                |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_BT_CONN_PARAM_CONTROL_MIN_INT       | MCUMGR_TRANSPORT_BT_CONN_PARAM_CONTROL_MIN_INT        |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_BT_CONN_PARAM_CONTROL_MAX_INT       | MCUMGR_TRANSPORT_BT_CONN_PARAM_CONTROL_MAX_INT        |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_BT_CONN_PARAM_CONTROL_LATENCY       | MCUMGR_TRANSPORT_BT_CONN_PARAM_CONTROL_LATENCY        |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_BT_CONN_PARAM_CONTROL_TIMEOUT       | MCUMGR_TRANSPORT_BT_CONN_PARAM_CONTROL_TIMEOUT        |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_BT_CONN_PARAM_CONTROL_RESTORE_TIME  | MCUMGR_TRANSPORT_BT_CONN_PARAM_CONTROL_RESTORE_TIME   |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_BT_CONN_PARAM_CONTROL_RETRY_TIME    | MCUMGR_TRANSPORT_BT_CONN_PARAM_CONTROL_RETRY_TIME     |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_DUMMY                               | MCUMGR_TRANSPORT_DUMMY                                |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_DUMMY_RX_BUF_SIZE                   | MCUMGR_TRANSPORT_DUMMY_RX_BUF_SIZE                    |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_SHELL                               | MCUMGR_TRANSPORT_SHELL                                |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_SHELL_MTU                           | MCUMGR_TRANSPORT_SHELL_MTU                            |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_SHELL_RX_BUF_COUNT                  | MCUMGR_TRANSPORT_SHELL_RX_BUF_COUNT                   |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_UART                                | MCUMGR_TRANSPORT_UART                                 |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_UART_ASYNC                          | MCUMGR_TRANSPORT_UART_ASYNC                           |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_UART_ASYNC_BUFS                     | MCUMGR_TRANSPORT_UART_ASYNC_BUFS                      |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_UART_ASYNC_BUF_SIZE                 | MCUMGR_TRANSPORT_UART_ASYNC_BUF_SIZE                  |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_UART_MTU                            | MCUMGR_TRANSPORT_UART_MTU                             |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_UDP                                 | MCUMGR_TRANSPORT_UDP                                  |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_UDP_IPV4                            | MCUMGR_TRANSPORT_UDP_IPV4                             |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_UDP_IPV6                            | MCUMGR_TRANSPORT_UDP_IPV6                             |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_UDP_PORT                            | MCUMGR_TRANSPORT_UDP_PORT                             |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_UDP_STACK_SIZE                      | MCUMGR_TRANSPORT_UDP_STACK_SIZE                       |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_UDP_THREAD_PRIO                     | MCUMGR_TRANSPORT_UDP_THREAD_PRIO                      |
-       +------------------------------------------------+-------------------------------------------------------+
-       | MCUMGR_SMP_UDP_MTU                             | MCUMGR_TRANSPORT_UDP_MTU                              |
-       +------------------------------------------------+-------------------------------------------------------+
-
-  * MCUmgr responses where ``rc`` (result code) is 0 (no error) will no longer
-    be present in responses and in cases where there is only an ``rc`` result,
-    the resultant response will now be an empty CBOR map. The old behaviour can
-    be restored by enabling
-    :kconfig:option:`CONFIG_MCUMGR_SMP_LEGACY_RC_BEHAVIOUR`.
-
-  * MCUmgr now has log outputting on most errors from the included fs, img,
-    os, shell, stat and zephyr_basic group commands. The level of logging can be
-    controlled by adjusting: :kconfig:option:`CONFIG_MCUMGR_GRP_FS_LOG_LEVEL`,
-    :kconfig:option:`CONFIG_MCUMGR_GRP_IMG_LOG_LEVEL`,
-    :kconfig:option:`CONFIG_MCUMGR_GRP_OS_LOG_LEVEL`,
-    :kconfig:option:`CONFIG_MCUMGR_GRP_SHELL_LOG_LEVEL`,
-    :kconfig:option:`CONFIG_MCUMGR_GRP_STAT_LOG_LEVEL` and
-    :kconfig:option:`CONFIG_MCUMGR_GRP_ZBASIC_LOG_LEVEL`.
-
-  * MCUmgr img_mgmt has a new field which is sent in the final packet (if
-    :kconfig:option:`CONFIG_IMG_ENABLE_IMAGE_CHECK` is enabled) named ``match``
-    which is a boolean and is true if the uploaded data matches the supplied
-    hash, or false otherwise.
-
-  * MCUmgr img_mgmt will now skip receiving data if the provided hash already
-    matches the hash of the data present (if
-    :kconfig:option:`CONFIG_IMG_ENABLE_IMAGE_CHECK` is enabled) and finish the
-    upload operation request instantly.
-
-  * MCUmgr img_mgmt structs are now packed, which fixes a fault issue on
-    processors that do not support unaligned memory access.
-
-  * If MCUmgr is used with the shell transport and ``printk()`` functionality
-    is used, there can be an issue whereby the ``printk()`` calls output during
-    a MCUmgr frame receive, this has been fixed by default in zephyr by routing
-    ``printk()`` calls to the logging system, For user applications,
-    :kconfig:option:`CONFIG_LOG_PRINTK` should be enabled to include this fix.
-
-  * A bug when MCUmgr shell transport is used (issue was observed over USB CDC
-    but could also occur with UART) whereby the default shell receive ring
-    buffer is insufficient has been fixed by making the default size 256 bytes
-    instead of 64 when the shell MCUmgr transport is selected.
-
-  * UpdateHub:
-
-    * The integrity check was reworked to allow use by other libraries. Since
-      then UpdateHub uses mbedTLS library as default crypto library.
-    * Added a new Storage Abstraction to isolate both flash operations and
-      MCUboot internals.
-    * The UpdateHub User API was moved as a Zephyr public API and the userspace
-      now is available. This added :c:func:`updatehub_confirm` and
-      :c:func:`updatehub_reboot` functions.
-
-* LwM2M
-
-  * The ``lwm2m_senml_cbor_*`` files have been regenerated using zcbor 0.6.0.
-
-* POSIX API
-
-  * Harmonized posix type definitions across the minimal libc, newlib and picolibc.
-
-    * Abstract ``pthread_t``, ``pthread_key_t``, ``pthread_cond_t``,
-      ``pthread_mutex_t``, as ``uint32_t``.
-    * Defined :c:macro:`PTHREAD_KEY_INITIALIZER`, :c:macro:`PTHREAD_COND_INITIALIZER`,
-      :c:macro:`PTHREAD_MUTEX_INITIALIZER` to align with POSIX 1003.1.
-
-  * Allowed non-prefixed standard include paths with :kconfig:option:`CONFIG_POSIX_API`.
-
-    * I.e. ``#include <unistd.h>`` instead of ``#include <zephyr/posix/unistd.h>``.
-    * Primarily to ease integration with external libraries.
-    * Internal Zephyr code should continue to use prefixed header paths.
-
-  * Enabled ``eventfd()``, ``getopt()`` by default with :kconfig:option:`CONFIG_POSIX_API`.
-  * Moved / renamed header files to align with POSIX specifications.
-
-    * E.g. move ``fcntl.h``, ``sys/stat.h`` from the minimal libc into the
-      ``include/zephyr/posix`` directory. Rename ``posix_sched.h`` to ``sched.h``.
-    * Move :c:macro:`O_ACCMODE`, :c:macro:`O_RDONLY`, :c:macro:`O_WRONLY`,
-      :c:macro:`O_WRONLY`, to ``fcntl.h``.
-
-  * Added :kconfig:option:`CONFIG_TIMER_CREATE_WAIT`, :kconfig:option:`CONFIG_MAX_PTHREAD_KEY_COUNT`,
-    :kconfig:option:`CONFIG_MAX_PTHREAD_COND_COUNT`, :kconfig:option:`CONFIG_MAX_PTHREAD_MUTEX_COUNT`.
-  * Defined :c:macro:`SEEK_SET`, :c:macro:`SEEK_CUR`, :c:macro:`SEEK_END`.
-
-* SD Subsystem
-
-  * Added support for eMMC protocol in Zephyr.
-
-    - Speed modes up to HS400 are supported using 1.8v operation.
-    - Additional protocol tests have been added to verify eMMC functionality.
-    - Disk subsystem tests have been updated to function with eMMC.
-
-  * Card and host combinations that cannot utilize UHS (ultra high speed) mode
-    will now use 4 bit bus width when possible. This will greatly improve
-    performance for these systems.
-
-* Settings
-
-  * Replaced all :c:func:`k_panic` invocations within settings backend
-    initialization with returning / propagating error codes.
-
-* Shell
-
-  * New features:
-
-    * SHELL_AUTOSTART configuration option. When SHELL_AUTOSTART is set to n, the shell is not
-      started after boot but can be enabled later from the application code.
-    * Added support for setting the help description for each entry in a dictionary.
-
-  * Bugfix:
-
-    * Updated to clear command buffer when leaving bypass mode to prevent undefined behaviour
-      on consecutive shell operations.
-    * Set RX size default to 256 if shell MCUmgr is enabled.
-    * Fixed log message queue size for all backends.
-
-  * Documentation:
-
-    * Added information explaining commands execution.
-
-* Utilities
-
-  * Added the linear range API to map values in a linear range to a range index
-    :zephyr_file:`include/zephyr/sys/linear_range.h`.
-
-
-* Zbus
-
-  * Added the :ref:`zbus` to Zephyr.
-
-    * Channel-centric multi-paradigm (message-passing and publish-subscribe) communication message bus.
-    * Virtual Distributed Event Dispatcher.
-    * Observers can be listeners (synchronous) and subscribers (asynchronous).
-    * One-to-one, one-to-many, and many-to-many communications.
-    * Persistent messages distributed by shared-memory approach.
-    * Delivery guarantee only for listeners.
-    * Uses mutex to control channels access.
-    * Added the following samples:
-
-      * :zephyr:code-sample:`zbus-hello-world`
-      * :zephyr:code-sample:`zbus-work-queue`
-      * :zephyr:code-sample:`zbus-dyn-channel`
-      * :zephyr:code-sample:`zbus-uart-bridge`
-      * :zephyr:code-sample:`zbus-remote-mock`
-      * :zephyr:code-sample:`zbus-runtime-obs-registration`
-      * :zephyr:code-sample:`zbus-benchmark`
-
-    * Added zbus channels APIs:
-
-      * :c:func:`zbus_chan_pub`
-      * :c:func:`zbus_chan_read`
-      * :c:func:`zbus_chan_notify`
-      * :c:func:`zbus_chan_claim`
-      * :c:func:`zbus_chan_finish`
-      * :c:func:`zbus_chan_name`
-      * :c:func:`zbus_chan_msg`
-      * :c:func:`zbus_chan_const_msg`
-      * :c:func:`zbus_chan_msg_size`
-      * :c:func:`zbus_chan_user_data`
-      * :c:func:`zbus_chan_add_obs`
-      * :c:func:`zbus_chan_rm_obs`
-      * :c:func:`zbus_runtime_obs_pool`
-      * :c:func:`zbus_obs_set_enable`
-      * :c:func:`zbus_obs_name`
-      * :c:func:`zbus_sub_wait`
-      * :c:func:`zbus_iterate_over_channels`
-      * :c:func:`zbus_iterate_over_observers`
-
-    * Added the related configuration options:
-
-      * :kconfig:option:`CONFIG_ZBUS_CHANNEL_NAME`
-      * :kconfig:option:`CONFIG_ZBUS_OBSERVER_NAME`
-      * :kconfig:option:`CONFIG_ZBUS_STRUCTS_ITERABLE_ACCESS`
-      * :kconfig:option:`CONFIG_ZBUS_RUNTIME_OBSERVERS_POOL_SIZE`
-
-HALs
-****
-
-* Atmel
-
-  * sam0: Added support for SAMC20/21.
-  * sam4l: Added ``US_MR_CHRL_{n}_BIT`` Register Aliases for USART Driver.
-
-* GigaDevice
-
-  * Added support for gd32l23x.
-  * Added support for gd32a50x.
-
-* Nordic
-
-  * Updated nrfx to version 2.10.0.
-
-* STM32
-
-  * stm32cube: updated stm32h7 to cube version V1.11.0.
-  * stm32cube: updated stm32l5 to cube version V1.5.0.
-  * stm32cube: updated stm32wl to cube version V1.3.0.
-
-* Espressif
-
-  * Added Ethernet driver support
-  * Added light-sleep and deep-sleep support over PM interface
-  * Added ADC and DAC driver support
-  * Added GDMA driver support
-
-Storage
-*******
-
-* Flash Map API drops ``fa_device_id`` from :c:struct:`flash_area`, as it
-  is no longer needed by MCUboot, and has not been populated for a long
-  time now.
-
-Trusted Firmware-M
-******************
-
-* Updated to TF-M 1.7.0 (and MbedTLS 3.2.1).
-* Initial attestation service has been disabled by default due to license
-  issues with the QCBOR dependency. To enable it, set the path for QCBOR via
-  ``CONFIG_TFM_QCBOR_PATH`` or set the path to ``DOWNLOAD``.
-* Firmware update sample removed pending update to 1.0 FWU service.
-* psa_crypto sample removed pending resolution of PSA API conflicts w/MbedTLS.
-
-zcbor
-*****
-
-Upgraded zcbor to 0.6.0. Among other things, this brings in a few convenient
-changes for Zephyr:
-
-* In the zcbor codebase, the ``ARRAY_SIZE`` macro has been renamed to
-  ``ZCBOR_ARRAY_SIZE`` to not collide with Zephyr's :c:macro:`ARRAY_SIZE` macro.
-* The zcbor codebase now better supports being used in C++ code.
-
-The entire release notes can be found at
-https://github.com/zephyrproject-rtos/zcbor/blob/0.6.0/RELEASE_NOTES.md
-
-Documentation
-*************
-
-* Upgraded to Doxygen 1.9.6.
-* It is now possible to link to Kconfig search results.
-
 Issue Related Items
 *******************
 
@@ -2851,16 +1906,16 @@ Addressed issues
 
 * :github:`54873` - doc: Remove Google Analytics tracking code from generated documentation.
 * :github:`54858` - espressif blobs does not follow zephyr requirements
-* :github:`54872` - west flash --elf-file is not flashing using .elf file, but using zephyr.hex to flash
+* :github:`54872` - west 刷写 --elf-file  不 刷写 使用 .elf 文件 但 使用 zephyr.hex 到 刷写
 * :github:`54813` - Bluetooth: host: Implicit sc_indicate declaration when Service Changed is disabled
 * :github:`54804` - Warning (simple_bus_reg): /soc/can: missing or empty reg/ranges property
 * :github:`54786` - doc: Version selector should link to latest LTS version instead of 2.7.0
 * :github:`54782` - nrf_rtc_timer may not properly handle a timeout that is set in specific conditions
 * :github:`54770` - Bluetooth: GATT: CCC and CF values written by privacy-disabled peer before bonding may be lost
-* :github:`54763` - doc: Copyright notice should be updated to 2015-2023
+* :github:`54763` - doc: Copyright 通知   更新 到 2015-2023
 * :github:`54760` - net_lwm2m_engine: fcntl(F_GETFL) failed (-22) on es-wifi
 * :github:`54730` - intel_adsp_ace15_mtpm: cpp.main.minimal test failing
-* :github:`54718` - The rf2xx driver uses a wrong bit mask on TRAC_STATUS
+* :github:`54718` -  rf2xx 驱动 使用  错误 bit mask 在...上 TRAC_STATUS
 * :github:`54710` - Sending NODE_RX_TYPE_CIS_ESTABLISHED messes up LLCP
 * :github:`54703` - boards: thingy53: Inconsistent method of setting USB related log level
 * :github:`54702` - boards: thingy53: USB remote wakeup is not correctly disabled
@@ -2873,10 +1928,10 @@ Addressed issues
 * :github:`54642` - Bluetooth: Controller: Assertion on disconnecting CIS and assertion on synchronizing to first encrypted BIS
 * :github:`54614` - Cannot flash b_l4s5i_iot01a samples/hello_world
 * :github:`54613` - Bluetooth: Unable to enable PAST as advertiser without periodic sync support
-* :github:`54605` - native_posix_64 platform broken in Twister
+* :github:`54605` - native_posix_64 平台 损坏 在...中 Twister
 * :github:`54597` - SRAM2 wrong on certain stm32h7 SOC (system crashes during startup)
 * :github:`54580` - samples/subsys/task_wdt fails with timeout on s32z270dc2_r52 boards
-* :github:`54575` - Automatic termination with return code from a native_posix main function
+* :github:`54575` - Automatic termination 带 return 代码 从  native_posix 主 函数
 * :github:`54574` - USB RNDIS Reception and Descriptor Issue(s)
 * :github:`54573` - gpio_hogs test uses an incorrect GPIO spec handle
 * :github:`54572` - QEMU networking breakage (Updating nrf-sdk 2.1->2.2 , implies zephyr 3.1 -> 3.2)
@@ -2884,15 +1939,15 @@ Addressed issues
 * :github:`54567` - Assertion in z_add_timeout() fails in drivers.uart.uart_mix_poll_async_api test
 * :github:`54563` - Variable uninitialised in flash_stm32_page_layout
 * :github:`54558` - LPTIM Kconfig-related build failures for nucleo_g431rb
-* :github:`54557` - sample.drivers.flash.shell fails to build for adafruit_kb2040
-* :github:`54556` - sample.display.lvgl.gui fails to build for stm32f429i_disc1
-* :github:`54545` - boards: rpi_pico: Bad MPU settings
+* :github:`54557` - sample.drivers.flash.shell 失败 到 构建 用于 adafruit_kb2040
+* :github:`54556` - sample.display.lvgl.gui 失败 到 构建 用于 stm32f429i_disc1
+* :github:`54545` - 板 rpi_pico: 坏 MPU 设置
 * :github:`54544` - Bluetooth: controller: HCI/CCO/BI-45-C setHostFeatureBit failing
 * :github:`54540` - psa_crypto variants of drivers/entropy/api and crypto/rand32 tests fail to build for nrf9160dk_nrf9160_ns and nrf5340dk_nrf5340_cpuapp_ns
 * :github:`54537` - logging.add.async build fails on mtpm with xcc-clang
 * :github:`54534` - PSoC6/Cat1 add binary blob for Cortex-M0+ core
 * :github:`54533` - tests/drivers/can/timing fails on nucleo_f746zg
-* :github:`54529` - Bluetooth: shell: Missing help messages and parameters
+* :github:`54529` - Bluetooth: shell 缺失 help 消息 和 参数
 * :github:`54528` - log switch_format, mipi_syst tests failing on intel_adsp_ace15_mtpm
 * :github:`54522` - Can we embrace GNU Build IDs?
 * :github:`54516` - twister: Quarantine verify works incorrectly with integration mode
@@ -2902,17 +1957,17 @@ Addressed issues
 * :github:`54493` - samples/drivers/counter/alarm/ fails on nucleo_f746zg
 * :github:`54492` - west: twister return code ignored by west
 * :github:`54484` - Intel CAVS25: tests/boards/intel_adsp/ssp/ fails
-* :github:`54472` - How to enable a node in main.
+* :github:`54472` - 如何 到 启用  node 在...中 主
 * :github:`54469` - nsim_sem and nsim_em7d_v22 failed in zdsp.basicmath test
-* :github:`54462` - usb_dc_rpi_pico driver enables some interrupts it doesn't handle
+* :github:`54462` - usb_dc_rpi_pico 驱动 启用 一些 中断 它 doesn't handle
 * :github:`54461` - SAM spi bus inoperable when interrupted on fast path
-* :github:`54457` - DHCPv4 starts even when interface is not operationally up
-* :github:`54455` - Many tests have wrong component and are wrongly categorized
+* :github:`54457` - DHCPv4 启动 甚至 当...时 接口  不 operationally 上
+* :github:`54455` - 许多 测试  错误 component 和  wrongly 分类
 * :github:`54454` - Twister summary in some cases provides an irrelevant example
-* :github:`54450` - nuvoton_pfm_m487 failed to build due to missing M48x-pinctrl.h
+* :github:`54450` - nuvoton_pfm_m487 失败 到 构建 due 到 缺失 M48x-pinctrl.h
 * :github:`54440` - tests/net/lib/lwm2m/lwm2m_registry/subsys.net.lib.lwm2m.lwm2m_registry fails to build w/toolchains that don't support newlib
 * :github:`54438` - question: why lwm2m_rd_client_stop might block
-* :github:`54431` - adafruit kb2040 board configuration is invalid and lack flash controller
+* :github:`54431` - adafruit kb2040 板 配置  无效 和 lack 刷写 controller
 * :github:`54428` - esp32 invalid flash dependencies
 * :github:`54427` - stm32 uart driver ``LOG_`` msg crashes when entering sleep mode
 * :github:`54422` - modules: openthread: multiple definition in openthread config
@@ -2920,11 +1975,11 @@ Addressed issues
 * :github:`54414` - stm32u5 dma driver does not support repeated start-stop
 * :github:`54412` - [hci_uart] nrf52840 & BlueZ 5.55 - start / stop scanning breaks
 * :github:`54410` - [BUG] TLB driver fails to unmap L2 HPSRAM region when assertions are enabled
-* :github:`54409` - ETH MAC config for STM32H7X and STM32_HAL_API_V2 too late and fails
+* :github:`54409` - ETH MAC 配置 用于 STM32H7X 和 STM32_HAL_API_V2 太 晚 和 失败
 * :github:`54405` - Nominate @Vge0rge as contributor
 * :github:`54401` - Uninitialized has_param struct sometimes causes BSIM "has.sh" test to fail
 * :github:`54399` - Intel CAVS18: tests/subsys/zbus/user_data/user_data.channel_user_data FAILED
-* :github:`54397` - Test posix_header fails on some STM32 Nucleo boards
+* :github:`54397` - 测试 posix_header 失败 在...上 一些 STM32 Nucleo 板
 * :github:`54395` - mgmt: mcumgr: img_grp: Upload inspect fails when using swap using scratch
 * :github:`54393` - Bluetooth: Controller: Starting a second BIG causes them to overlap and have twice the interval
 * :github:`54387` - soc: arm: st_stm32: Incorrect SRAM devicetree definition for the STM32L471xx
@@ -2949,9 +2004,9 @@ Addressed issues
 * :github:`54318` - boards: nucleo_g474re: openocd runner is not stable enough for intensive testing
 * :github:`54316` - RTT is not working correctly on STM32U5 series
 * :github:`54315` - Problem seen with touch screen on RT1170 when running the LVGL sample
-* :github:`54310` - Using NOCOPY code relocation generates a warning flag
+* :github:`54310` - 使用 NOCOPY 代码 relocation 生成  警告 flag
 * :github:`54287` - modem: hl7800: PSM hibernate draws excessive current
-* :github:`54274` - newlib: Document CONFIG_NEWLIB_LIBC_NANO default change
+* :github:`54274` - newlib: 记录 CONFIG_NEWLIB_LIBC_NANO 默认 更改
 * :github:`54258` - boards: arm: twr_ke18f: LPTMR always enabled, resulting in low system timer resolution
 * :github:`54254` - tests: canbus: isotp: conformance: test fails with CONFIG_SYS_CLOCK_TICKS_PER_SEC=100
 * :github:`54253` - v3.3.0-rc1: stm32: IPv6 neighbour solicitation packets are not received without CONFIG_ETH_STM32_MULTICAST_FILTER
@@ -2959,19 +2014,19 @@ Addressed issues
 * :github:`54246` - Sample:subsys/ipc/rpmsg_server:The two cores cannot communicate in nRF5340
 * :github:`54241` - The cy8c95xx I2C GPIO expander support was broken in #47841
 * :github:`54236` - b_u585i_iot02a_ns: Can't build TFM enabled samples (TF-M 1.7.0)
-* :github:`54230` - STM32H7: Kernel crash with BCM4=0
+* :github:`54230` - STM32H7: 内核 崩溃 带 BCM4=0
 * :github:`54225` - Intel CAVS: tests/lib/c_lib/ fails
-* :github:`54224` - Issues with picolibc on xtensa platforms
+* :github:`54224` - 问题 带 picolibc 在...上 xtensa 平台
 * :github:`54223` - Intel CAVS: tests/kernel/common/kernel.common.picolibc fails
 * :github:`54214` - Display framebuffer allocation
-* :github:`54210` - tests: drivers: udc drivers.udc fails
+* :github:`54210` - 测试 驱动 udc drivers.udc 失败
 * :github:`54209` - USB C PD dead battery support
 * :github:`54208` - Various RISC-V FPU context switching issues
 * :github:`54205` - Regression: RiscV FPU regs not saved in multithreaded applications
 * :github:`54202` - decawave_dwm1001_dev: i2c broken due to pinctrl_nrf fix
 * :github:`54190` - RP2040 cannot be compiled with C11 enabled
 * :github:`54173` - Bluetooth: GATT: Change awareness of bonded GATT Client is not maintained on reconnection after reboot
-* :github:`54172` - Bluetooth: GATT: Written value of gatt_cf_cfg data may be dropped on power down
+* :github:`54172` - Bluetooth: GATT: 写入 值 的 gatt_cf_cfg 数据   dropped 在...上 power 下
 * :github:`54148` - qemu_x86_tiny places picolibc text outside of pinned.text
 * :github:`54140` - BUS FAULT when running nmap towards echo_async sample
 * :github:`54139` - Bluetooth: Audio: race hazard bt_audio_discover() callback vs unicast_client_ase_cp_discover()
@@ -2984,7 +2039,7 @@ Addressed issues
 * :github:`54086` - test:rio:frdm_k64f: rio user_space test fails with zephyr-v3.2.0-3842-g7ffc20082023
 * :github:`54078` - No activity on can_tx when running the ISO-TP sample
 * :github:`54072` - Bluetooth: Host: Periodic scanner does not differentiate between partial and incomplete data
-* :github:`54065` - How To Change C++ Version Compilation Option For Freestanding Application?
+* :github:`54065` - 如何 到 更改 C++ 版本 Compilation 选项 用于 Freestanding Application?
 * :github:`54053` - CI:frdm_k64f: kernel.common.stack_protection test failure
 * :github:`54034` - QSPI: Unable to build the project when introduced DMA into external flash interfacing
 * :github:`54017` - Modules: TF-M: Resolve QCBOR issues with TF-M 1.7.0
@@ -3008,7 +2063,7 @@ Addressed issues
 * :github:`53885` - Ethernet TCP Client Issue description with iperf/zperf
 * :github:`53876` - The handle of att indication violates the spec
 * :github:`53862` - Switching from USB to UART
-* :github:`53859` - RFC: Board porting guide: Do not assume OS or default ports for board files
+* :github:`53859` - RFC: 板 移植 guide:  不 assume OS 或 默认 移植 用于 板 文件
 * :github:`53808` - Improve PLLI2S VCO precision
 * :github:`53805` - peripheral_dis compilation reports RAM overflow for BBC microbit
 * :github:`53799` - Info request: SMP hash definition
@@ -3017,33 +2072,33 @@ Addressed issues
 * :github:`53781` - Allow resetting STM32 peripherals through RCC peripheral reset register
 * :github:`53777` - mgmt: mcumgr: Change transport selects to depends on
 * :github:`53773` - drivers: ethernet: stm32: Completion of enabling the multicast hash filter
-* :github:`53756` - esp32 - Wrong value for the default cpu freq -> crash on assert
+* :github:`53756` - esp32 - 错误 值 用于  默认 CPU freq -> 崩溃 在...上 assert
 * :github:`53753` - [DOC] Mismatch of driver sample overview
 * :github:`53744` - ztest: assert() functions does not always retuns
-* :github:`53723` - device tree macro: GPIO_DT_SPEC_INST_GET_BY_IDX_OR does not work
+* :github:`53723` - 设备 tree 宏 GPIO_DT_SPEC_INST_GET_BY_IDX_OR  不 工作
 * :github:`53720` - Bluetooth: Controller: Incorrect address type for PA sync established
 * :github:`53715` - mec15xxevb_assy6853: broken UART console output
 * :github:`53707` - fs: fcb: Add option to disable CRC for FCB entries
 * :github:`53697` - Can not run the usb mass storage demo on NXP mimxrt595_evk_cm33
 * :github:`53696` - sysbuild should not parse the board revision conf
-* :github:`53689` - boards: nrf52840dongle_nrf52840 is missing storage partition definition
+* :github:`53689` - 板 nrf52840dongle_nrf52840  缺失 存储 划分 定义
 * :github:`53676` - net: lwm2m: inconsistent path string handling throughout the codebase
 * :github:`53673` - samples: posix: gettimeofday does not build on native_posix
 * :github:`53663` - Error while trying to flash nucleo_f446re: TARGET: stm32f4x.cpu - Not halted
 * :github:`53656` - twister: samples: Bogus yaml for code_relocation sample
-* :github:`53654` - SPI2 not working on STM32L412
+* :github:`53654` - SPI2 不 工作 在...上 STM32L412
 * :github:`53652` - samples: mgmt: mcumgr: fs overlay does not work
 * :github:`53642` - Display driver sample seems to mix up RGB565 and BGR565
-* :github:`53636` - cdc_acm fails on lpcxpresso55s69 board
+* :github:`53636` - cdc_acm 失败 在...上 lpcxpresso55s69 板
 * :github:`53630` - net: ieee802154_6lo: REGRESSION: L2 MAC byte swapping results in wrong IPHC decompression
 * :github:`53617` - unicast_audio_client and unicast_audio_server example assert
-* :github:`53612` - file system (LFS?): failure to expand file with truncate
-* :github:`53610` - k_malloc and settings
+* :github:`53612` - 文件 系统 (LFS?): 失败 到 扩展 文件 带 truncate
+* :github:`53610` - k_malloc 和 设置
 * :github:`53604` - testsuite: Broken Kconfig prevents building tests for nrf52840dk_nrf52840 platform
 * :github:`53584` - STM32F1 PWM Input Capture Issue
 * :github:`53579` - add_compile_definitions does not "propagate upwards" as supposed to when using west
 * :github:`53568` - Kconfig search has white on white text
-* :github:`53566` - Use fixup commits during code review
+* :github:`53566` - 使用 fixup commits 期间 代码 审查
 * :github:`53559` - mgmt: mcumgr: explore why UART interface is so slow (possible go application fault)
 * :github:`53556` - Cannot add multiple out-of-the-tree secure partitions
 * :github:`53549` - mgmt: mcumgr: callbacks: Callbacks events for a single group should be able to be combined
@@ -3055,7 +2110,7 @@ Addressed issues
 * :github:`53495` - RFC: treewide: python: argparse default configuration allows shortened command arguments
 * :github:`53490` - Peridic current spike using tickless Zephyr
 * :github:`53488` - Missing UUID for PBA and TMAS
-* :github:`53487` - west: flash: stm32cubeprogrammer: Reset command line argument is wrong
+* :github:`53487` - west: 刷写 stm32cubeprogrammer: 复位 命令 line 参数  错误
 * :github:`53474` - Sysbuild cmake enters infinite loop if 2 images are added to a build with the same name
 * :github:`53470` - Unable to build using Arduino Zero
 * :github:`53468` - STM32 single-wire UART not working when poll-out more than 1 char
@@ -3068,30 +2123,30 @@ Addressed issues
 * :github:`53437` - WaveShare xnucleo_f411re: Error: ``** Unable to reset target **``
 * :github:`53433` - flash content erase in bootloader region at run time
 * :github:`53430` - drivers: display: otm8009a: import 3rd-party source
-* :github:`53425` - Do we have support for rtc subsecond calculation in zephyr.
+* :github:`53425` -  我们  支持 用于 rtc subsecond calculation 在...中 zephyr.
 * :github:`53424` - Reopen issue #49390
 * :github:`53423` - [bisected] logging.log_msg_no_overflow is failing on qemu_riscv64
 * :github:`53421` - cpp: defined popcount macro prevents use of std::popcount
 * :github:`53419` - net: stats: DHCP packets are not counted as part of UDP counters
 * :github:`53417` - CAN-FD / MCAN driver: Possible variable overflow for some MCUs
-* :github:`53407` - Support of regex
-* :github:`53385` - SWD not working on STM32F405
+* :github:`53407` - 支持 的 regex
+* :github:`53385` - SWD 不 工作 在...上 STM32F405
 * :github:`53366` - net: ethernet: provide a way to get ethernet config
-* :github:`53361` - Adding I2C devices SX1509B to Devicetree with the same address on different busses generates FATAL ERROR.
-* :github:`53360` - kernel: k_msgq: add peek_more function
+* :github:`53361` - 增加 I2C 设备 SX1509B 到 Devicetree 带  相同 地址 在...上 不同 busses 生成 FATAL ERROR.
+* :github:`53360` - 内核 k_msgq: 增加 peek_more 函数
 * :github:`53347` - WINC1500 socket recv fail
 * :github:`53340` - net: lwm2m: add BinaryAppDataContainer object (19)
 * :github:`53335` - Undeclared constants in devicetree_generated.h
 * :github:`53326` - usb: device: usb_dfu: k_mutex is being called from isr
 * :github:`53315` - Fix possible underflow in tcp flags parse.
-* :github:`53306` - scripts: utils: migrate_mcumgr_kconfigs.py: Missing options
+* :github:`53306` - 脚本 utils: migrate_mcumgr_kconfigs.py: 缺失 选项
 * :github:`53301` - Bluetooth: Controller: Cannot recreate CIG
 * :github:`53294` - samples: mgmt: mcumgr: smp_svr: UDP file can be removed
 * :github:`53293` - mgmt: mcumgr: CONFIG_MCUMGR_GRP_IMG_REJECT_DIRECT_XIP_MISMATCHED_SLOT causes a build failure
 * :github:`53285` - SNTP & DATE_TIME & SERVER ADDRESS configuration and behavior
 * :github:`53280` - Bluetooth: security level failure with multiple links
 * :github:`53276` - doc: mgmt: mcumgr: fix "some unspecified" error
-* :github:`53271` - modules: segger: KConfigs are broken
+* :github:`53271` - 模块 segger: KConfigs  损坏
 * :github:`53259` - RFC: API Change: dma: callback status
 * :github:`53254` - Bluetooth: bt_conn_foreach() reports unstable conn ref before the connection is completed
 * :github:`53247` - ATT timeout followed by a segmentation fault
@@ -3114,12 +2169,12 @@ Addressed issues
 * :github:`53129` - Build fails on ESP32 when enabling websocket client API
 * :github:`53103` - Zephyr shell on litex : number higher than 10 are printed as repeated hex
 * :github:`53101` - esp32: The startup code hangs after reboot via sys_reboot(...)
-* :github:`53094` - Extend Zperf command
+* :github:`53094` - 扩展 Zperf 命令
 * :github:`53093` - ARM: Ability to query CFSR on exception
 * :github:`53059` - Bluetooth: peripheral GATT notification call takes a lot of time
 * :github:`53049` - Bluetooth: LL assertion fail with peripherals connect/disconnect rounds
 * :github:`53048` - Bluetooth: legacy advertising doesn't resume if CONFIG_BT_EXT_ADV=y
-* :github:`53046` - Bluetooth: Failed to set security level for the second connection
+* :github:`53046` - Bluetooth: 失败 到 设置 security level 用于  第二 连接
 * :github:`53043` - Bluetooth: Peripheral misses notifications from Central after setting security level
 * :github:`53033` - tests-ci : libraries: encoding: jwt test Failed
 * :github:`53034` - tests-ci : os: mgmt: info_net test No Console Output(Timeout)
@@ -3129,25 +2184,25 @@ Addressed issues
 * :github:`53038` - tests-ci : net: socket: mgmt test No Console Output(Timeout)
 * :github:`53039` - tests-ci : net: socket: af_packet.ipproto_raw test No Console Output(Timeout)
 * :github:`53040` - tests-ci : net: ipv4: fragment test No Console Output(Timeout)
-* :github:`53019` - random: Zephyr enables TEST_RANDOM_GENERATOR when it should not
+* :github:`53019` - random: Zephyr 启用 TEST_RANDOM_GENERATOR 当...时 它  不
 * :github:`53012` - stm32u5: timer api: lptim: k_msleep is twice long as expected
-* :github:`53010` - timers: large drift if hardware timer has a low resolution
+* :github:`53010` - 定时器 大 drift 如果 硬件 定时器   低 resolution
 * :github:`53007` - Bluetooth: Notification callback is called with incorrect connection reference
-* :github:`53002` - Incorrect hardware reset cause sets for watchdog reset on stm32h743zi
+* :github:`53002` - 不正确 硬件 复位 cause 设置 用于 watchdog 复位 在...上 stm32h743zi
 * :github:`52996` - kconfig: Use of multiple fragment files with OVERLAY_CONFIG not taking effect
-* :github:`52995` - Add triage permissions for dianazig
+* :github:`52995` - 增加 triage 权限 用于 dianazig
 * :github:`52983` - Bluetooth: Audio: BT_CODEC_LC3_CONFIG_DATA fails to compile with _frame_blocks_per_sdu > 1
-* :github:`52981` - LOG_MODE_MINIMAL do not work with USB_CDC for nRF52840
+* :github:`52981` - LOG_MODE_MINIMAL  不 工作 带 USB_CDC 用于 nRF52840
 * :github:`52975` - posix: clock: current method of capturing elapsed time leads to loss in seconds
 * :github:`52970` - samples/net/wifi example does not work with ESP32
 * :github:`52962` - Bluetooth non-functional on nRF5340 target
-* :github:`52935` - Missing Libraries
-* :github:`52931` - Filesystem Write Fails with Some SD-Cards
+* :github:`52935` - 缺失 库
+* :github:`52931` - Filesystem 写入 失败 带 一些 SD-Cards
 * :github:`52925` - Using #define LOG_LEVEL 0 does not filter out logs
 * :github:`52920` - qemu_cortex_r5: tests/ztest/base
 * :github:`52918` - qemu_cortex_r5` CI fails
 * :github:`52914` - drivers: adc: ADC_CONFIGURABLE_INPUTS confict between 2 ADCs
-* :github:`52913` - twister build fails but returns exit code of 0
+* :github:`52913` - twister 构建 失败 但 returns 退出 代码 的 0
 * :github:`52909` - usb: usb don't work after switch from Zephyr 2.7.3 to 3.2.99 on i.MX RT1020
 * :github:`52898` - mgmt: mcumgr: replace cmake functions without zephyr prefix to have zephyr prefix
 * :github:`52882` - Sample applications that enable USB and error if it fails are incompatible with boards like thingy53 with auto-USB init (i.e. USB CDC for logging)
@@ -3156,26 +2211,26 @@ Addressed issues
 * :github:`52870` - ESP32-C3 System clock resolution improvements
 * :github:`52857` - Adafruit WINC1500 Wifi Shield doesn't work on nRF528XX
 * :github:`52855` - Improve artifact generation for split build/test operation of twister
-* :github:`52854` - twister build fails but returns exit code of 0
+* :github:`52854` - twister 构建 失败 但 returns 退出 代码 的 0
 * :github:`52838` - Bluetooth: audio：invalid ase state transition
 * :github:`52833` - Bluetooth Controller assertion on sys_reboot() with active connections (lll_preempt_calc: Actual EVENT_OVERHEAD_START_US)
 * :github:`52829` - kernel/sched: Fix SMP race on pend
 * :github:`52818` - samples: subsys: usb: shell: sample.usbd.shell  fails - no output from console
-* :github:`52817` - tests: drivers: udc: dirvers.udc fails
+* :github:`52817` - 测试 驱动 udc: dirvers.udc 失败
 * :github:`52813` - stm32h7: dsi: ltdc: clock: PLL3: clock not set up correctly or side effect
 * :github:`52812` - Various problems with pipes (Not unblocking, Data Access Violation, unblocking wrong thread...)
 * :github:`52805` - Code crashing due to ADC Sync operation (STM32F4)
 * :github:`52803` - Kconfig: STM32F4 UF2 family ID
-* :github:`52795` - Remove deprecated tinycbor module
+* :github:`52795` - 移除 已弃用 tinycbor 模块
 * :github:`52794` - Possible regression for printk() output of i2c sensor data on amg88xx sample
 * :github:`52788` - Re-enable LVGL support for M0 processors.
-* :github:`52784` - NRF_DRIVE_S0D1 option is not always set in the nordic,nrf-twi and nordic,nrf-twim nodes, when using shield?
-* :github:`52779` - Error While adding the mcuboot folder in repo.
+* :github:`52784` - NRF_DRIVE_S0D1 选项  不 总是 设置 在...中  nordic,nrf-twi 和 nordic,nrf-twim nodes, 当...时 使用 shield?
+* :github:`52779` - 错误 在...期间 增加  mcuboot folder 在...中 repo.
 * :github:`52776` - ite: eSPI driver: espi_it8xxx2_send_vwire() is not setting valid flag along with respective virtual wire when invoked from app code.
 * :github:`52754` - tests/drivers/bbram: Refactor to use a common prj.conf
 * :github:`52749` - posix: getopt: cannot use getopt() in a standard way
 * :github:`52739` - Newlib defines POSIX primitives when -std=gnu
-* :github:`52721` - Minimal logging does not work if printk and boot banner are disabled
+* :github:`52721` - Minimal 日志记录  不 工作 如果 printk 和 引导 banner  禁用
 * :github:`52718` - Simplify handling of fragments in ``net_buf``
 * :github:`52709` - samples: subsys: nvs: sample.nvs.basic does not complete within twister default timeout
 * :github:`52708` - samples: drivers: watchdog: sample.drivers.watchdog loops endlessly
@@ -3186,7 +2241,7 @@ Addressed issues
 * :github:`52675` - I2C: STM32F0 can't switch to HSI clock by default and change timing
 * :github:`52673` - mcux: flexcan: forever waiting semaphore in can_send()
 * :github:`52670` - tests: subsys: usb: device: usb.device hangs
-* :github:`52652` - drivers: sensors: bmi08x config file
+* :github:`52652` - 驱动 sensors: bmi08x 配置 文件
 * :github:`52641` - armv7: mpu: RASR size field incorrectly initialized
 * :github:`52632` - MQTT over WebSockets: After hours of running time receiving published messages is strongly delayed
 * :github:`52628` - spi: NXP MCUX LPSPI driver does not correctly change baud rate once configured
@@ -3195,15 +2250,15 @@ Addressed issues
 * :github:`52614` - Empty "west build --test-item" doesn't report warnings/errors
 * :github:`52602` - tests: subsys: settings: file_littlefs: system.settings.file_littlefs.raw fails
 * :github:`52598` - esp32c3 Unable to do any timing faster than 1ms
-* :github:`52595` - Twister: unable to run tests on real hardware
+* :github:`52595` - Twister: unable 到 运行 测试 在...上 real 硬件
 * :github:`52588` - ESP32c3 SPI driver DMA mode limited to 64 byte chunks
-* :github:`52566` - Error while build esp32 samples/hello_world
+* :github:`52566` - 错误 在...期间 构建 esp32 samples/hello_world
 * :github:`52563` - spi_transceive with DMA for STM32 does not work for devices with 16 bit words.
 * :github:`52561` - fsl_flexcan missing flags
 * :github:`52559` - Compiler cannot include C++ headers when both PICOLIBC and LIB_CPLUSPLUS options are set
 * :github:`52556` - adc driver sample was failing with STM32 nucleo_f429zi board
-* :github:`52548` - Late device driver initialization
-* :github:`52539` - Broken linker script for the esp32 platform
+* :github:`52548` - 晚 设备 驱动 initialization
+* :github:`52539` - 损坏 linker 脚本 用于  esp32 平台
 * :github:`52534` - Missing include to src/core/lv_theme.h in src/themes/mono/lv_theme_mono.h
 * :github:`52528` - Zephyr support for Nordic devices Thingy with TFLM
 * :github:`52527` - net: lwm2m: wrong SenML CBOR object link encoding
@@ -3214,7 +2269,7 @@ Addressed issues
 * :github:`52493` - net: lwm2m: add 32 bits floating point support
 * :github:`52486` - Losing connection with JLink on STM32H743IIK6 with Zephyr 2.7.2
 * :github:`52479` - incorrect canopennode SDO CRC
-* :github:`52472` - Set compiler options only for a custom/external module
+* :github:`52472` - 设置 compiler 选项 仅 用于  custom/external 模块
 * :github:`52464` - LE Audio: Unicast Client failing to create the CIG
 * :github:`52462` - uart: stm32: UART clock source not initialized
 * :github:`52457` - compilation error with "west build -b lpcxpresso54114_m4 samples/subsys/ipc/openamp/ "
@@ -3222,49 +2277,49 @@ Addressed issues
 * :github:`52452` - drivers: pwm: loopback test fails on frdm_k64f
 * :github:`52449` - net: ip: igmp: IGMP v2 membership reports are sent to 224.0.0.2 instead of the group being reported
 * :github:`52448` - esp32: subsys: settings: not working properly on esp_wrover_kit
-* :github:`52443` - Concerns with maintaining separate kernel device drivers for fuel-gauge and charger ICs
-* :github:`52415` - tests: kernel: timer: timer_behavior: kernel.timer.timer fails
+* :github:`52443` - Concerns 带 维护 分离 内核 设备 驱动 用于 fuel-gauge 和 charger ICs
+* :github:`52415` - 测试 内核 定时器 timer_behavior: kernel.timer.timer 失败
 * :github:`52412` - doc: mgmt: mcumgr: Clarify that hash in img_mgmt is a full sha256 hash and required
-* :github:`52409` - STM32H7: ethernet: Device fails to receive any IP packets over ethernet after receiving UDP/IP multicast at a constant rate for some time
+* :github:`52409` - STM32H7: ethernet: 设备 失败 到 接收 任何 IP 包 over ethernet 在...之后 接收 UDP/IP multicast 在  常量 rate 用于 一些 时间
 * :github:`52407` - tests: subsys: mgmt: mcumgr: Test needed that enables all features/Kconfigs
 * :github:`52404` - mgmt: mcumgr: Callback include file has file name typo
 * :github:`52401` - mgmt: mcumgr: Leftover files after directory update
 * :github:`52399` - cmake error
-* :github:`52393` - Controller: ACL packets NACKed after Data Length Update
-* :github:`52376` - Cannot build apps with main in a .cpp file
+* :github:`52393` - Controller: ACL 包 NACKed 在...之后 数据 长度 更新
+* :github:`52376` - Cannot 构建 apps 带 主 在...中  .cpp 文件
 * :github:`52366` - LE Audio: Missing released callback for streams on ACL disconnect
 * :github:`52360` - samples/net/sockets/socketpair does not run as expected
 * :github:`52353` - bug: sysbuild lost board reversion here
 * :github:`52352` - Questions about newlib library
 * :github:`52351` - Bluetooth: Controller: ISOAL ASSERT failure
 * :github:`52344` - Software-based Debounced GPIO
-* :github:`52339` - usb: USB device re-enabling does not work on Nordic devices (regression)
-* :github:`52327` - websocket: websocket_recv_msg breaks when there is no data after header
+* :github:`52339` - usb: USB 设备 re-enabling  不 工作 在...上 Nordic 设备 回归问题
+* :github:`52327` - websocket: websocket_recv_msg 损坏 当...时 there  不 数据 在...之后 头文件
 * :github:`52324` - Bluetooth Mesh example seems broken on v3.2.99 - worked ok with v3.1.99
 * :github:`52317` - drivers: wifi: eswifi: Offload sockets accessing invalid net_context, resulting in errors in FLASH_SR and blocking flash use
-* :github:`52309` - SAM0 flash driver with page emulated enabled will not write data at 0 block
+* :github:`52309` - SAM0 刷写 驱动 带 page emulated 启用  不 写入 数据 在 0 block
 * :github:`52308` - pip3 is unable to build wheel for cmsis-pack-manager as part of the requirements.txt on Fedora 37.
 * :github:`52307` - Linker Error using CONSOLE_GETCHAR and CONSOLE_GETLINE
-* :github:`52301` - Zephyr-Hello World is not working
+* :github:`52301` - Zephyr-Hello World  不 工作
 * :github:`52298` - CI fail multiple times due to download package from http://azure.archive.ubuntu.com/ubuntu failed.
-* :github:`52296` - Regulator shell does not build due to missing atoi define
-* :github:`52291` - boards: thingy53: Enable USB-CDC by default
+* :github:`52296` - Regulator shell  不 构建 due 到 缺失 atoi define
+* :github:`52291` - 板 thingy53: 启用 USB-CDC 由 默认
 * :github:`52284` - unable to malloc during  tests/lib/cmsis_dsp/transform.cf64
 * :github:`52280` - boards: thingy53 non-secure (thingy53_nrf5340_cpuapp_ns) does not build
 * :github:`52276` - stm32: ST Kit B-L4S5I-IOT01A Octospi flash support
 * :github:`52267` - http client includes chunking data in response body when making a non-chunked request and server responds with chunked data
-* :github:`52262` - west flash --file
+* :github:`52262` - west 刷写 文件
 * :github:`52242` - Fatal exception LoadProhibited from mcuboot when enabling newlib in wifi sample (esp32)
-* :github:`52235` - counter_basic_api test fails to build on STM32 platforms
+* :github:`52235` - counter_basic_api 测试 失败 到 构建 在...上 STM32 平台
 * :github:`52228` - Bluetooth: L2CAP: receive a K-frame with payload longer than MPS if Enhanced ATT enabled
 * :github:`52219` - jlink runner doesn't flash bin file if a hex file is present
 * :github:`52218` - ADC read locked forever with CONFIG_DEBUG_OPTIMISATION=y on STM32U5
 * :github:`52216` - spi_transceive with DMA on a STM32 slave returns value incorrect
 * :github:`52211` - MCUX based QDEC driver
-* :github:`52196` - Calling ``bt_le_ext_adv_stop()`` can causes failures in connections when support for multiple connections are enabled
+* :github:`52196` - Calling ``bt_le_ext_adv_stop()``  causes 失败 在...中 连接 当...时 支持 用于 multiple 连接  启用
 * :github:`52195` - Bluetooth: GATT: add_subscriptions not respecting encryption
-* :github:`52190` - [lpcxpresso55s28] flash range starts from Secure address which is not compatible with latest Jlink(v7.82a)
-* :github:`52189` - Flash file system not working on stm32h735g_disco
+* :github:`52190` - [lpcxpresso55s28] 刷写 range 启动 从 保护 地址 哪个  不 compatible 带 最新 Jlink(v7.82a)
+* :github:`52189` - 刷写 文件 系统 不 工作 在...上 stm32h735g_disco
 * :github:`52181` - ADC Channel SCAN mode for STM32U5
 * :github:`52171` - Bluetooth: BR/EDR: Inappropriate l2cap channel state set/get
 * :github:`52169` - Mesh provisioning static OOB incorrect zero padding
@@ -3272,7 +2327,7 @@ Addressed issues
 * :github:`52154` - mgmt: mcumgr: Add Kconfig to automatically register handlers and mcumgr functionality
 * :github:`52139` - ppp modem doesn't send NET_EVENT_L4_CONNECTED event
 * :github:`52131` - tests-ci : kernel: timer: starve test No Console Output(Timeout)
-* :github:`52125` - Timer accuracy issue with STM32U5 board
+* :github:`52125` - 定时器 accuracy 问题 带 STM32U5 板
 * :github:`52114` - Can't make JerryScript Work with Zephyr
 * :github:`52113` - Binary blobs in ``hal_telink`` submodules
 * :github:`52111` - Incompatible LTO version of liblt_9518_zephyr.a
@@ -3280,13 +2335,13 @@ Addressed issues
 * :github:`52101` - ``bt_gatt_notify`` function does not notify data larger than 20 bytes
 * :github:`52099` - mgmt: mcumgr: Rename fs_mgmt hash/checksum functions
 * :github:`52095` - dfu/mcuboot: dfu/mcuboot.h used BOOT_MAX_ALIGN and BOOT_MAGIC_SZ but does not include ``bootutil/bootutil_public.h``
-* :github:`52094` - STM32MP157 Debugging method use wrong GDB port when execute command ``west debug``
+* :github:`52094` - STM32MP157 调试 method 使用 错误 GDB 移植 当...时 执行 命令 ``west 调试
 * :github:`52085` - can: SAM M_CAN regression
 * :github:`52079` - TLS handshake failure (after client-hello) with big_http_download sample
 * :github:`52073` - ESP32-C3 UART1 not available after zephyr update to v3.2.99
-* :github:`52065` - west: debugserver command does not work
-* :github:`52059` - Bluetooth: conn:  in multi role configuration incorrect address is set after advertising resume
-* :github:`52057` - tests: kernel: timer: starve: kernel.timer.starve hangs
+* :github:`52065` - west: debugserver 命令  不 工作
+* :github:`52059` - Bluetooth: conn: 在...中 multi role 配置 不正确 地址  设置 在...之后 advertising 恢复
+* :github:`52057` - 测试 内核 定时器 starve: kernel.timer.starve 挂起
 * :github:`52056` - Bluetooth: Missing LL data length update callback on Central and Peripheral sides
 * :github:`52055` - Bluetooth: Controller: Broadcast scheduling issues
 * :github:`52049` - Update mps2_an521_remote for compatibility with mps2_an521_ns
@@ -3304,18 +2359,18 @@ Addressed issues
 * :github:`51931` - Failing unit test re. missing PERIPHERAL_ISO_SUPPORT KConfig selection
 * :github:`51893` - LSM303dlhc sensor example not compiling for nRF52840
 * :github:`51874` - Zephyr 3.1 bosch,bme280 device is in the final DTS and accessible, but DT_HAS_BOSCH_BME280_ENABLED=n
-* :github:`51873` - sensor: bmp388: missing if check around i2c device ready function
+* :github:`51873` - sensor: bmp388: 缺失 如果 检查 around i2c 设备 就绪 函数
 * :github:`51872` - Race condition in workqueue can lead to work items being lost
-* :github:`51870` - Nucleo_h743zi fails to format storage flash partition
+* :github:`51870` - Nucleo_h743zi 失败 到 format 存储 刷写 划分
 * :github:`51855` - openocd: targeting wrong serial port / device
 * :github:`51829` - qemu_x86: upgrading to q35 breaks networking samples.
 * :github:`51827` - picolibc heap lock recursion mismatch
-* :github:`51821` - native_posix: Cmake must be run at least twice to find ${CMAKE_STRIP}
+* :github:`51821` - native_posix: Cmake   运行 在 最少 twice 到 查找 ${CMAKE_STRIP}
 * :github:`51815` - Bluetooth: bt_disable in loop with babblesim gatt test causes Zephyr link layer assert
 * :github:`51798` - mgmt: mcumgr: image upload, then image erase, then image upload does not restart upload from start
-* :github:`51797` - West espressif install not working
+* :github:`51797` - West espressif 安装 不 工作
 * :github:`51796` - LE Audio: Improve stream coupling for CIS as the unicast client
-* :github:`51788` - Questionable test code in ipv6_fragment test
+* :github:`51788` - Questionable 测试 代码 在...中 ipv6_fragment 测试
 * :github:`51785` - drivers/clock_control: stm32: Can support configure stm32_h7 PLL2 ?
 * :github:`51780` - windows-curses Python package in requirements.txt can't install if using Python 3.11
 * :github:`51778` - stm32l562e-dk: Broken TF-M psa-crypto sample
@@ -3326,7 +2381,7 @@ Addressed issues
 * :github:`51728` - soc: xtensa: esp32_net: Remove binary blobs from source tree
 * :github:`51720` - USB mass sample not working for FAT FS
 * :github:`51714` - Bluetooth: Application with buffer that cannot unref it in disconnect handler leads to advertising issues
-* :github:`51713` - drivers: flash: spi_nor: init fails when flash is busy
+* :github:`51713` - 驱动 刷写 spi_nor: init 失败 当...时 刷写  busy
 * :github:`51711` - Esp32-WROVER Unable to include the header file ``esp32-pinctrl.h``
 * :github:`51693` - Bluetooth: Controller: Transmits packets longer than configured max len
 * :github:`51687` - tests-ci : net: socket: tcp.preempt test Failed
@@ -3351,8 +2406,8 @@ Addressed issues
 * :github:`51600` - Bluetooth assert on flash erase using mcumgr
 * :github:`51594` - mgmt: mcumgr: bt: thread freezes if device disconnects
 * :github:`51588` - Doc:  Broken link in the "Electronut Labs Papyr" documentation page
-* :github:`51566` - broken network once lwM2M is resumed after pause
-* :github:`51559` - lwm2m tests are failing
+* :github:`51566` - 损坏 网络 once lwM2M  恢复 在...之后 暂停
+* :github:`51559` - lwm2m 测试  失败
 * :github:`51549` - Memory report generation breaks if app and Zephyr is located on different Windows drives
 * :github:`51546` - The blinky_pwm sample does not work on raspberry pi pico
 * :github:`51544` - drivers/pwm/pwm_sam.c - update period and duty cycle issue (workaround + suggestions for fix)
@@ -3361,49 +2416,49 @@ Addressed issues
 * :github:`51521` - subsys: bluetooth: shell: gatt.c build fails with CONFIG_DEBUG_OPTIMIZATIONS and CONFIG_BT_SHELL=y
 * :github:`51520` - samples: compression lz4 fails on small-ram stm32 platforms
 * :github:`51508` - openocd: can't flash STM32H7 board using STLink V3
-* :github:`51506` - it8xxx2_evb: Test suite after watchdog test will display fail in the daily test
+* :github:`51506` - it8xxx2_evb: 测试 suite 在...之后 watchdog 测试  display 失败 在...中  daily 测试
 * :github:`51505` - drivers: modem: gsm: gsm_ppp_stop() does not change gsm->state
 * :github:`51488` - lis2dw12 function latch is misunderstood with drdy latch
 * :github:`51480` - tests-ci : drivers: watchdog test Build failure of mimxrt1064_evk
-* :github:`51476` - Please add documentation or sample how to use TLS_SESSION_CACHE socket option
+* :github:`51476` - Please 增加 documentation 或 sample 如何 到 使用 TLS_SESSION_CACHE 套接字 选项
 * :github:`51475` - Twister: Mistake timeout as skipped
 * :github:`51474` - driver: stm32: usb: add detach function support
-* :github:`51471` - Network protocol MQTT: When qos=1, there is a bug in the subscription and publication
-* :github:`51470` - tests-ci : drivers: mipi_dsi: api test Build failure
+* :github:`51471` - 网络 协议 MQTT: 当...时 qos=1, there   缺陷 在...中  subscription 和 publication
+* :github:`51470` - tests-ci : 驱动 mipi_dsi: API 测试 构建 失败
 * :github:`51469` - Intel CAVS: Failed in tests/kernel/spinlock
 * :github:`51468` - mps3_an547:tests/lib/cmsis_dsp/filtering bus fault
 * :github:`51464` - samples: drivers: peci: Code doesn't build for npcx7m6fb_evb board
-* :github:`51458` - Only one instance of mcp2515
+* :github:`51458` - 仅 一个 instance 的 mcp2515
 * :github:`51454` - Cmake error for Zephyr Sample Code in Visual Studio
 * :github:`51446` - The PR #50334 breaks twister execution on various HW boards
 * :github:`51437` - LoRaWan problem with uplink messages sent as a response to class C downlink
 * :github:`51438` - tests-ci : net: http:  test Build failure
 * :github:`51436` - tests-ci : drivers: drivers.watchdog: nxp-imxrt11xx series : watchdog build failure
 * :github:`51435` - tests-ci : drivers: hwinfo: api test Failed
-* :github:`51432` - Bluetooth: ISO: Remove checks for and change seq_num to uint16_t
+* :github:`51432` - Bluetooth: ISO: 移除 检查 用于 和 更改 seq_num 到 uint16_t
 * :github:`51424` - tests: net: socket: tls: v4 dtls sendmsg test is testing v6
 * :github:`51421` - tests: net: socket: tls: net.socket.tls region ``FLASH`` overflowed
 * :github:`51418` - Intel CAVS: Assertion failed in tests/subsys/logging/log_links
-* :github:`51406` - Blinky not executing on Windows
+* :github:`51406` - Blinky 不 执行 在...上 Windows
 * :github:`51376` - Silabs WFX200 Binary Blob
 * :github:`51375` - tests/lib/devicetree/devices/libraries.devicetree.devices: build failure (bl5340_dvk_cpuapp)
 * :github:`51371` - hal: nxp: ARRAY_SIZE collision
 * :github:`51370` - Driver error precision LPS22HH
-* :github:`51368` - tests: tests/subsys/cpp/cxx/cpp.main.picolibc: build failure
+* :github:`51368` - 测试 tests/subsys/cpp/cxx/cpp.main.picolibc: 构建 失败
 * :github:`51364` - ESP32 WIFI: when allocating system_heap to PSRAM(extern ram), wifi station can't connet to ap(indicate that ap not found)
 * :github:`51360` - I2C master read failure when 10-bit addressing is used with i2c_ll_stm32_v1
 * :github:`51351` - I2C: ESP32 driver does not support longer clock stretching
 * :github:`51349` - Turn power domains on/off directly
 * :github:`51343` - qemu_x86_tiny doesn't place libc-hooks data in z_libc_partition
 * :github:`51331` - lvgl: LV_FONT_CUSTOM_DECLARE does not work as string
-* :github:`51323` - kernel: tests: Evaluate "platform_allow" usage in kernel tests.
-* :github:`51322` - tests: kernel: timer: timer_behavior: kernel.timer.timer fails
-* :github:`51318` - x86_64: Thread Local Storage pointer not setup before first thread started
+* :github:`51323` - 内核 测试 Evaluate "platform_allow" usage 在...中 内核 测试
+* :github:`51322` - 测试 内核 定时器 timer_behavior: kernel.timer.timer 失败
+* :github:`51318` - x86_64: 线程 Local 存储 pointer 不 设置 在...之前 第一 线程 启动
 * :github:`51301` - CI: mps3_an547: test failures
 * :github:`51297` - Bluetooth: Implement H8 function from cryptographic toolbox
 * :github:`51294` - ztest: Broken tests in main branch due to API-breaking change ``ZTEST_FAIL_ON_ASSUME``
 * :github:`51290` - samples: application_development: external_lib: does not work on windows
-* :github:`51276` - CAN driver for ESP32 (TWAI) does not enable the transceiver
+* :github:`51276` - CAN 驱动 用于 ESP32 (TWAI)  不 启用  transceiver
 * :github:`51265` - net: ip: cloning of net_pkt produces dangling ll address pointers and may flip overwrite flag
 * :github:`51264` - drivers: ieee802154: nrf: wrapped pkt attribute access
 * :github:`51263` - drivers: ieee802154: IEEE 802.15.4 L2 does not announce (but uses) promisc mode
@@ -3413,23 +2468,23 @@ Addressed issues
 * :github:`51234` - it8xxx2_evb: The testcase tests/kernel/sleep/failed to run.
 * :github:`51233` - up_squared: samples/boards/up_squared/gpio_counter run failed
 * :github:`51228` - Bluetooth: Privacy in scan roles not updating RPA on timeout
-* :github:`51223` - Problem when using fatfs example in a out_of_tree_driver with the file ff.h
-* :github:`51214` - enc28j60 appears to be unable to correctly determine network state
+* :github:`51223` - 问题 当...时 使用 fatfs example 在...中  out_of_tree_driver 带  文件 ff.h
+* :github:`51214` - enc28j60 appears 到  unable 到 correctly 确定 网络 状态
 * :github:`51208` - Bluetooth: Host: ``bt_le_oob_get_local`` gives incorrect address
-* :github:`51202` - twister: Integration errors not reported nor counted in the console output but present in the reports.
-* :github:`51194` - samples/subsys/lorawan building failed
-* :github:`51185` - tests/drivers/counter/counter_basic_api fails to build on mimxrt685_evk_cm33
+* :github:`51202` - twister: Integration 错误 不 reported 也不 counted 在...中  控制台 output 但 当前 在...中  reports.
+* :github:`51194` - samples/subsys/lorawan 构建 失败
+* :github:`51185` - tests/drivers/counter/counter_basic_api 失败 到 构建 在...上 mimxrt685_evk_cm33
 * :github:`51177` - Change SPI configuration (bitrate) with MCUXpresso SPI driver fails
 * :github:`51174` - Bluetooth: l2cap needs check rx.mps when le_recv
 * :github:`51168` - ITERABLE_SECTION_ROM stores data in RAM instead of ROM
-* :github:`51165` - tools/fiptool/fiptool: Permission denied
-* :github:`51156` - esp32 wifi: how to use ap mode and ap+station mode?
+* :github:`51165` - tools/fiptool/fiptool: 权限 拒绝
+* :github:`51156` - esp32 wifi: 如何 到 使用 ap 模式 和 ap+station 模式
 * :github:`51153` - modem: ppp: extract access technology when MODEM_CELL_INFO is enabled
 * :github:`51149` - Esp32 wifi compilation error
 * :github:`51146` - Running test: drivers:  disk: disk_access with  RAM disk  fails
 * :github:`51144` - PR #51017 Broke GPIO builds for LPC11u6x platforms
-* :github:`51142` - TestPlan generation not picking up tests missing ``test_`` prefix
-* :github:`51138` - Testing tests/lib/cmsis_dsp/ fails on some stm32 boards
+* :github:`51142` - TestPlan generation 不 挑选 上 测试 缺失 测试 prefix
+* :github:`51138` - 测试 tests/lib/cmsis_dsp/ 失败 在...上 一些 stm32 板
 * :github:`51126` - Bluetooh: host: df: wrong size of a HCI command for connectionless CTE enable in AoD mode
 * :github:`51117` - tests: kernel: workq: work: kernel.work.api fails test_1cpu_drain_wait
 * :github:`51108` - Ethernet: Error frames are displayed when DHCP is suspended for a long time: <inf> net_dhcpv4: Received: 192.168.1.119
@@ -3444,10 +2499,10 @@ Addressed issues
 * :github:`51062` - lora_recv_async receives empty buffer after multiple receptions on sx12xx
 * :github:`51060` - 10-bit addressing not supported by I2C slave driver for STM32 target
 * :github:`51057` - Retrieve gpios used by a device (pinctrl)
-* :github:`51048` - Firmware Upgrade Issue with Mcumgr On STM32H743 controller
-* :github:`51025` - mbedtls: build warnings
-* :github:`51021` - openthread: build warnings
-* :github:`51019` - NVS should allow overwriting existing index even if there's no room to keep the old value
+* :github:`51048` - 固件 升级 问题 带 Mcumgr 在...上 STM32H743 controller
+* :github:`51025` - mbedtls: 构建 警告
+* :github:`51021` - openthread: 构建 警告
+* :github:`51019` - NVS  允许 overwriting existing index 甚至 如果 there's 不 room 到 保持  旧 值
 * :github:`51016` - mgmt: mcumgr: Add dummy shell buffer size Kconfig entry to shell mgmt
 * :github:`51015` - Build Error for ST Nucleo F103RB
 * :github:`51010` - Unable to communicate with LIS2DS12 on 52840DK or custom board
@@ -3458,30 +2513,30 @@ Addressed issues
 * :github:`50976` - JSON array encoding fails on array of objects
 * :github:`50974` - DHCP (IPv4) NAK not respected when in renewing state
 * :github:`50973` - DHCP (IPv4) seemingly dies by trying to assign an IP of 0.0.0.0
-* :github:`50970` - SAME54_xpro network driver not attached
+* :github:`50970` - SAME54_xpro 网络 驱动 不 attached
 * :github:`50953` - LE Audio: Add support for setting ISO data path for broadcast sink
 * :github:`50948` - SSD1306+lvgl sample fails to display
 * :github:`50947` - stm32 static IPv4 networking in smp_svr sample application does not seem to work until a ping is received
 * :github:`50940` - logging.log_output_ts64 fails on qemu_arc_hs5x
-* :github:`50937` - Error when building for esp32c3_devkitm
+* :github:`50937` - 错误 当...时 构建 用于 esp32c3_devkitm
 * :github:`50923` - RFC: Stable API change: Rework and improve mcumgr callback system
 * :github:`50895` - ADC Voltage Reference issue with STM32U5 MCU
 * :github:`50874` - Cant disable bluetooth for BLE peripheral after connection with Central
-* :github:`50872` - Error while installing python dependecies
-* :github:`50868` - DHCP never binds if a NAK is received during the requesting state
+* :github:`50872` - 错误 在...期间 安装 python dependecies
+* :github:`50868` - DHCP 从不 binds 如果  NAK  接收 期间  requesting 状态
 * :github:`50853` - STM32F7 series can't run at frequencies higher than 180MHz
-* :github:`50844` - zcbor module apis which are used for mcu boot functionality are not building in cpp file against v3.1.0
+* :github:`50844` - zcbor 模块 API 哪个  使用 用于 mcu 引导 functionality  不 构建 在...中 cpp 文件 against v3.1.0
 * :github:`50812` - MCUmgr udp sample fails with shell - BUS FAULT
 * :github:`50801` - JSON parser fails on multidimensional arrays
 * :github:`50789` - west: runners: blackmagicprobe: Doesn't work on windows due to wrong path separator
 * :github:`50786` - Bluetooth: Host: Extended advertising reports may block the host
 * :github:`50784` - LE Audio: Missing Media Proxy checks for callbacks
-* :github:`50783` - LE Audio: Reject ISO data if the stream is not in the streaming state
-* :github:`50782` - LE Audio: The MPL shell module should not use opcodes
+* :github:`50783` - LE Audio: 拒绝 ISO 数据 如果  stream  不 在...中  streaming 状态
+* :github:`50782` - LE Audio:  MPL shell 模块  不 使用 opcodes
 * :github:`50781` - LE Audio: ``mpl init`` causes warnings when adding objects
 * :github:`50780` - LE Audio: Bidirectional handling of 2 audio streams as the unicast server when streams are configured separately not working as intended
 * :github:`50778` - LE Audio: Audio shell: Unicast server cannot execute commands for the default_stream
-* :github:`50776` - CAN Drivers allow sending FD frames without device being set to FD mode
+* :github:`50776` - CAN 驱动 允许 发送 FD frames 没有 设备  设置 到 FD 模式
 * :github:`50768` - storage: DT ``fixed-partition`` with ``status = "okay"`` requires flash driver
 * :github:`50746` - Stale kernel memory pool API references
 * :github:`50744` - net: ipv6: Allow on creating incomplete neighbor entries and routes in case of receiving Router Advertisement
@@ -3491,12 +2546,12 @@ Addressed issues
 * :github:`50684` - After enabling  CONFIG_SPI_STM32_DMA in project config file for STM32MP157-dk2 Zephyr throwing error
 * :github:`50665` - MEC15xx/MEC1501: UART and special purpose pins missing pinctrl configuration
 * :github:`50658` - Bluetooth: BLE stack notifications blocks host side for too long (``drivers/bluetooth/hci/spi.c`` and ``hci_spi``)
-* :github:`50656` - Wrong definition of bank size for intel memory management driver.
+* :github:`50656` - 错误 定义 的 bank 大小 用于 intel 内存 management 驱动
 * :github:`50655` - STM32WB55 Bus Fault when connecting then disconnecting then connecting then disconnecting then connecting
-* :github:`50620` - fifo test fails with CONFIG_CMAKE_LINKER_GENERATOR enabled on qemu_cortex_a9
+* :github:`50620` - fifo 测试 失败 带 CONFIG_CMAKE_LINKER_GENERATOR 启用 在...上 qemu_cortex_a9
 * :github:`50614` - Zephyr if got the ip is "10.xxx.xxx.xxx" when join in the switchboard, then the device may can not visit the outer net, also unable to Ping.
 * :github:`50603` - Upgrade to loramac-node 4.7.0 when it is released to fix async LoRa reception on SX1276
-* :github:`50596` - Documentation: Broken links in the previous release documentation
+* :github:`50596` - Documentation: 损坏 链接 在...中  上一个 发布 documentation
 * :github:`50592` - mgmt: mcumgr: Remove code/functions deprecated in zephyr 3.1 release
 * :github:`50590` - openocd: Can't flash on various STM32 boards
 * :github:`50587` - Regression in Link Layer Control Procedure (LLCP)
@@ -3514,28 +2569,28 @@ Addressed issues
 * :github:`50426` - STM32: using SPI after STOP2 sleep causes application to hang
 * :github:`50404` - Intel CAVS: tests/subsys/logging/log_immediate failed.
 * :github:`50389` - Allow twister to be called directly from west
-* :github:`50381` - BLE: Connection slows down massively when connecting to a second device
+* :github:`50381` - BLE: 连接 slows 下 massively 当...时 connecting 到  第二 设备
 * :github:`50354` - ztest_new: _zassert_base : return without post processing
 * :github:`50345` - Network traffic occurs before Bluetooth NET L2 (IPSP) link setup complete
 * :github:`50284` - Generated linker scripts break when ZEPHYR_BASE and ZEPHYR_MODULES share structure that contains symlinks
 * :github:`50256` - I2C on SAMC21 sends out stop condition incorrectly
 * :github:`50193` - Impossible to connect with a peripheral with BLE and zephyr 2.7.99, BT_HCI_ERR_UNKNOWN_CONN_ID error
-* :github:`50192` - nrf_qspi_nor driver might crash if power management is enabled
-* :github:`50188` - Avoid using extra net buffer for L2 header
-* :github:`50149` - tests: drivers: flash fails on nucleo_l152re because of wrong erase flash size
+* :github:`50192` - nrf_qspi_nor 驱动  崩溃 如果 power management  启用
+* :github:`50188` - Avoid 使用 额外 net 缓冲区 用于 L2 头文件
+* :github:`50149` - 测试 驱动 刷写 失败 在...上 nucleo_l152re 因为 的 错误 erase 刷写 大小
 * :github:`50139` - net: ipv4: Add DSCP/ToS based QoS support
 * :github:`50070` - LoRa: Support on RFM95 LoRa module combined with a nRF52 board
 * :github:`50040` - shields: Settle on nodelabels naming scheme
-* :github:`50028` - flash_stm32_ospi Write enable failed when building with TF-M
+* :github:`50028` - flash_stm32_ospi 写入 启用 失败 当...时 构建 带 TF-M
 * :github:`49996` - tests: drivers: clock_control: nrf_lf_clock_start and nrf_onoff_and_bt fails
 * :github:`49963` - Random crash on the L475 due to work->handler set to NULL
 * :github:`49962` - RFC: Stable API Change:  SMP (Simple Management Protocol) transport API within MCUMgr drops ``zephyr_`` prefix in functions and type definitions and drop zst parameter from zephyr_smp_transport_out_fn
 * :github:`49917` - http_client_req() sometimes hangs when peer disconnects
 * :github:`49871` - zperf: Add support to stop/start download
 * :github:`49870` - stm32 enables HSI48 clock with device tree
-* :github:`49844` - shell: Add abort support
-* :github:`49843` - net: shell: Extend ping command
-* :github:`49821` - USB DFU implementation does not work with WinUSB because of missing device reset API
+* :github:`49844` - shell 增加 中止 支持
+* :github:`49843` - net: shell 扩展 ping 命令
+* :github:`49821` - USB DFU implementation  不 工作 带 WinUSB 因为 的 缺失 设备 复位 API
 * :github:`49811` - DHCP cannot obtain IP, when CONFIG_NET_VLAN is enabled
 * :github:`49783` - net: ipv4: packet fragmentation support
 * :github:`49746` - twister: extra test results
@@ -3546,7 +2601,7 @@ Addressed issues
 * :github:`49621` - STM32WB55 BLE Extended Advertising support
 * :github:`49620` - Add picolibc documentation
 * :github:`49614` - acrn_ehl_crb: The testcase tests/kernel/sched/schedule_api failed to run.
-* :github:`49611` - ehl_crb: Failed to run timer testcases
+* :github:`49611` - ehl_crb: 失败 到 运行 定时器 testcases
 * :github:`49588` - Json parser is incorrect with undefined parameter
 * :github:`49584` - STM32WB55 Failed read remote feature, remote version and LE set PHY
 * :github:`49530` - Bluetooth: Audio: Invalid behavior testing
@@ -3557,55 +2612,55 @@ Addressed issues
 * :github:`49313` - nRF51822 sometimes hard fault on connect
 * :github:`49298` - cc3220sf: add a launchpad_connector.dtsi
 * :github:`49266` - Bluetooth: Host doesn't seem to handle INCOMPLETE per adv reports
-* :github:`49234` - option to configure coverage data heap size
+* :github:`49234` - 选项 到 配置 coverage 数据 堆 大小
 * :github:`49228` - ti: cc13xx_cc26xx: ADC support
 * :github:`49210` - BL5340 board cannot build bluetooth applications
 * :github:`49208` - drivers: modem: bg9x: not supporting UDP
 * :github:`49148` - Asynchronous UART API triggers Zephyr assertion on STM32WB55
-* :github:`49112` - lack of support for lpsram cache
-* :github:`49069` - log: cdc_acm: hard fault message does not output
+* :github:`49112` - lack 的 支持 用于 lpsram 缓存
+* :github:`49069` - 日志 cdc_acm: hard 故障 消息  不 output
 * :github:`49066` - Mcumgr img_mgmt_impl_upload_inspect() can cause unaligned memory access hard fault.
 * :github:`49054` - STM32H7 apps are broken in C++ mode due to HAL include craziness
 * :github:`49032` - espi saf testing disabled
-* :github:`49026` - Add a CI check on image file sizes (specifically around boards)
-* :github:`49021` - uart async api does not provide all received data
+* :github:`49026` - 增加  CI 检查 在...上 image 文件 大小 (specifically around 板
+* :github:`49021` - uart async API  不 提供 所有 接收 数据
 * :github:`48954` - several NXP devicetree bindings are missing
 * :github:`48953` - 'intel,sha' is missing binding and usage
-* :github:`48886` - Documenting the process for treewide changes
+* :github:`48886` - 记录  进程 用于 treewide 更改
 * :github:`48857` - samples: Bluetooth: Buffer size mismatch in samples/bluetooth/hci_usb for nRF5340
 * :github:`48850` - Bluetooth: LLCP: possible access to released control procedure context
 * :github:`48726` - net: tests/net/ieee802154/l2/net.ieee802154.l2 failed on reel board
-* :github:`48625` - GSM_PPP api keeps sending commands to muxed AT channel
+* :github:`48625` - GSM_PPP API 保持 发送 命令 到 muxed AT 通道
 * :github:`48616` - RFC: Change to clang-format coding style rules re binary operators
 * :github:`48609` - drivers: gpio: expose gpio_utils.h to external GPIO drivers
 * :github:`48603` - LoRa driver asynchronous receive callback clears data before the callback.
 * :github:`48520` - clang-format: #include reorder due to default: SortIncludesOptions != SI_Never
 * :github:`48505` - BLE stack can get stuck in connected state despite connection failure
-* :github:`48473` - Setting CONFIG_GSM_MUX_INITIATOR=n results in a compile error
+* :github:`48473` - 设置 CONFIG_GSM_MUX_INITIATOR=n results 在...中  编译 错误
 * :github:`48468` - GSM Mux does not transmit all queued data when uart_fifo_fill is called
-* :github:`48394` - vsnprintfcb writes to ``*str`` if it is NULL
+* :github:`48394` - vsnprintfcb 写入 到 ``*str`` 如果 它  NULL
 * :github:`48390` - [Intel Cavs] Boot failures on low optimization levels
 * :github:`48317` - drivers: fpga: include driver for Lattice iCE40 parts
 * :github:`48304` - bt_disable() does not work properly on nRF52
 * :github:`48299` - SHT3XD_CMD_WRITE_TH_LOW_SET should be SHT3XD_CMD_WRITE_TH_LOW_CLEAR
 * :github:`48150` - Sensor Subsystem: data types
 * :github:`48148` - Sensor Subsystem: Base sensor DTS bindings
-* :github:`48147` - ztest: before/after functions may run on different threads, which may cause potential issues.
+* :github:`48147` - ztest: before/after 函数  运行 在...上 不同 线程 哪个  cause potential 问题
 * :github:`48037` - Grove LCD Sample Not Working
 * :github:`48018` - ztest: static threads are not re-launched for repeated test suite execution.
 * :github:`47988` - JSON parser not consistent on extra data
 * :github:`47877` - ECSPI support for NXP i.MX devices
 * :github:`47872` - Differentiating Samples, Tests & Demos
-* :github:`47833` - Intel CAVS: cavstool.py fails to extract complete log from winstream buffer when logging is frequent
+* :github:`47833` - Intel CAVS: cavstool.py 失败 到 提取 完成 日志 从 winstream 缓冲区 当...时 日志记录  frequent
 * :github:`47830` - Intel CAVS: Build failure due to #47713 PR
 * :github:`47817` - samples/modules/nanopb/sample.modules.nanopb fails with protobuf > 3.19.0
 * :github:`47611` - ci: workflows: compliance: Add commit title to an error msg
-* :github:`47607` - Settings with FCB backend does not pass test on stm32h743
+* :github:`47607` - 设置 带 FCB backend  不 pass 测试 在...上 stm32h743
 * :github:`47576` - undefined reference to ``__device_dts_ord_20`` When building with board hifive_unmatched on flash_shell samples
 * :github:`47500` - twister: cmake: Failure of "--build-only -M" combined with "--test-only" for --device-testing
 * :github:`47477` - qemu_leon3: tests/kernel/fpu_sharing/generic/ failed when migrating to new ztest API
 * :github:`47329` - Newlib nano variant footprint reduction
-* :github:`47326` - drivers: WINC1500: issues with buffer allocation when using sockets
+* :github:`47326` - 驱动 WINC1500: 问题 带 缓冲区 allocation 当...时 使用 套接字
 * :github:`47324` - drivers: modem: gsm_ppp: support common gpios
 * :github:`47315` - LE Audio: CAP Initiator skeleton Implementation
 * :github:`47299` - LE Audio: Advertising (service) data for one or more services/roles
@@ -3614,15 +2669,15 @@ Addressed issues
 * :github:`47243` - LE Audio: Add support for stream specific codec configurations for broadcast source
 * :github:`47242` - LE Audio: Add subgroup support for broadcast source
 * :github:`47092` - driver: nrf: uarte: new dirver breaks our implementation for uart.
-* :github:`47040` - tests: drivers: gpio_basic_api and gpio_api_1pin: convert to new ztest API
+* :github:`47040` - 测试 驱动 gpio_basic_api 和 gpio_api_1pin: 转换 到 新 ztest API
 * :github:`47014` - can: iso-tp: implementation test failed with twister on nucleo_g474re
 * :github:`46988` - samples: net: openthread: coprocessor: RCP is missing required capabilities: tx-security tx-timing
 * :github:`46986` - Logging (deferred v2) with a lot of output causes MPU fault
 * :github:`46897` - tests: posix: fs: improve tests to take better advantage of new ztest features
-* :github:`46844` - Timer drivers likely have off-by-one in rapidly-presented timeouts
+* :github:`46844` - 定时器 驱动 可能  off-by-one 在...中 rapidly-presented timeouts
 * :github:`46824` - Prevent new uses of old ztest API
 * :github:`46598` - Logging with RTT backend on STM32WB strange behavier
-* :github:`46596` - STM32F74X RMII interface does not work
+* :github:`46596` - STM32F74X RMII 接口  不 工作
 * :github:`46491` - Zephyr SDK 0.15.0 Checklist
 * :github:`46446` - lvgl: Using sw_rotate with SSD1306 shield causes memory fault
 * :github:`46351` - net: tcp: Implement fast-retransmit
@@ -3635,7 +2690,7 @@ Addressed issues
 * :github:`45921` - Runtime memory usage
 * :github:`45910` - [RFC] Zbus: a message bus system
 * :github:`45891` - mgmt/mcumgr/lib: Refactoring of callback subsystem in image management (DFU)
-* :github:`45814` - Armclang build fails due to missing source file
+* :github:`45814` - Armclang 构建 失败 due 到 缺失 源码 文件
 * :github:`45756` - Add overlay-bt-minimal.conf for smp_svr sample application
 * :github:`45697` - RING_BUF_DECLARE broken for C++
 * :github:`45625` - LE Audio: Update CSIP API with new naming scheme
@@ -3645,11 +2700,11 @@ Addressed issues
 * :github:`45218` - rddrone_fmuk66: I2C configuration incorrect
 * :github:`45094` - stm32: Add USB HS device support to STM32H747
 * :github:`44908` - Support ESP32 ADC
-* :github:`44861` - WiFi support for STM32 boards
+* :github:`44861` - WiFi 支持 用于 STM32 板
 * :github:`44410` - drivers: modem: shell: ``modem send`` doesn't honor line ending in modem cmd handler
 * :github:`44399` - Zephyr RTOS support for Litex SoC with 64 bit rocket cpu.
 * :github:`44377` - ISO Broadcast/Receive sample not working with coded PHY
-* :github:`44324` - Compile error in byteorder.h
+* :github:`44324` - 编译 错误 在...中 byteorder.h
 * :github:`44318` - boards: arm: rpi_pico: Enable CONFIG_ARM_MPU=y for raspberry pi pico board
 * :github:`44281` - Bluetooth: Use hardware encryption for encryption
 * :github:`44164` - Implement the equivalent of PR #44102 in LLCP
@@ -3663,11 +2718,11 @@ Addressed issues
 * :github:`43647` - Bluetooth: LE multirole: connection as central is not totally unreferenced on disconnection
 * :github:`43604` - Checkpatch: Support in-code ignore tags
 * :github:`43411` - STM32 SPI DMA issue
-* :github:`43330` - usb_dc_nrfx.c starts usbd_work_queue with no name
+* :github:`43330` - usb_dc_nrfx.c 启动 usbd_work_queue 带 不 名称
 * :github:`43308` - driver: serial: stm32: uart will lost data when use dma mode[async mode]
 * :github:`43294` - LoRaWAN stack & user ChannelsMask
 * :github:`43286` - Zephyr 3.1 Release Checklist
-* :github:`42998` - Should board.dts enable peripherals by default?
+* :github:`42998` -  board.dts 启用 peripherals 由 默认
 * :github:`42910` - Bluetooth: Controller: CIS Data path setup: HCI ISO Data
 * :github:`42908` - Bluetooth: Controller: CIG: LE Remove CIG
 * :github:`42907` - Bluetooth: Controller: CIG: Disconnect: ACL disconnection leading to CIS Disconnection complete
@@ -3686,31 +2741,31 @@ Addressed issues
 * :github:`42432` - i2c: unable to configure SAMD51 i2c clock frequency for standard (100 KHz) speeds
 * :github:`42420` - mgmt/mcumgr/lib: Async image erase command with status check
 * :github:`42374` - STM32L5: Entropy : Power Management not working due to entropy driver & stop mode
-* :github:`42361` - OpenOCD flashing not working on cc1352r1_launchxl/cc26x2r1_launchxl
+* :github:`42361` - OpenOCD 刷写 不 工作 在...上 cc1352r1_launchxl/cc26x2r1_launchxl
 * :github:`41956` - Bluetooth: Controller: BIG: Synchronized receiver encryption support
 * :github:`41955` - Bluetooth: Controller: BIG: Broadcaster encryption support
 * :github:`41830` - CONF_FILE, OVERLAY_CONFIG parsing expands ``${ZEPHYR_<whatever>_MODULE_DIR}``
 * :github:`41823` - Bluetooth: Controller: llcp: Remote request are dropped due to lack of free proc_ctx
 * :github:`41822` - BLE IPSP sample cannot handle large ICMPv6 Echo Request
-* :github:`41784` - virtio device driver
-* :github:`41771` - tests: drivers: adc: Test doesn't build for mec172xevb_assy6906
+* :github:`41784` - virtio 设备 驱动
+* :github:`41771` - 测试 驱动 adc: 测试 doesn't 构建 用于 mec172xevb_assy6906
 * :github:`41765` - assert.h should not include non libc headers
 * :github:`41694` - undefined reference to ``_open``
 * :github:`41622` - Infinite mutual recursion when SMP and ATOMIC_OPERATIONS_C are set
 * :github:`41606` - stm32u5: Re-implement VCO input and EPOD configuration
 * :github:`41581` - STM32 subghzspi fails pinctrl setup
-* :github:`41380` - stm32h7: Ethernet: Migrate driver to the new eth HAL api
+* :github:`41380` - stm32h7: Ethernet: 迁移 驱动 到  新 eth HAL API
 * :github:`41213` - LE Audio: Update GA services to use the multi-instance macro
 * :github:`41212` - LE Audio: Store of bonded data
 * :github:`41209` - LE Audio: MCS support for multiple instances
 * :github:`41073` - twister: no way to specify arguments for the binary zephyr.exe
-* :github:`40982` - Build system: West: Add a warning when used repository does not match manifest
+* :github:`40982` - 构建 系统 West: 增加  警告 当...时 使用 repository  不 匹配 manifest
 * :github:`40972` - Power management support for MEC172x
-* :github:`40944` - BUILTIN_STACK_CHECKER and MPU_STACK_GUARD with a thread using the FPU will fault the bulltin stack checker
+* :github:`40944` - BUILTIN_STACK_CHECKER 和 MPU_STACK_GUARD 带  线程 使用  FPU  故障  bulltin 栈 checker
 * :github:`40928` - mgmt/mcumgr/lib: Check image consistency after writing last chunk
-* :github:`40924` - mgmt/mcumgr/lib: Do not re-upload image, by default, to the secondary slot
+* :github:`40924` - mgmt/mcumgr/lib:  不 re-upload image, 由 默认 到  次 slot
 * :github:`40868` - Add a pre and post initialization among CONFIG_APPLICATION_INIT_PRIORITY
-* :github:`40850` - Add Zephyr logging support to mgmt/mcumgr/lib
+* :github:`40850` - 增加 Zephyr 日志记录 支持 到 mgmt/mcumgr/lib
 * :github:`40833` - driver: i2c: TCA9546a: Have compilation fails when driver init priority missmatch
 * :github:`40642` - Why does CMake wrongly believe the rimage target is changing?
 * :github:`40582` - how the zephyr supportting with running cadence hifi4 lx7,reset_vectorXEA2.s ?
@@ -3718,31 +2773,31 @@ Addressed issues
 * :github:`40560` - Callbacks lack context information...
 * :github:`39740` - Road from pinmux to pinctrl
 * :github:`39712` - bq274xx sensor - Fails to compile when CONFIG_PM_DEVICE enabled
-* :github:`39598` - use of __noinit with ecc memory hangs system
-* :github:`39520` - Add support for the BlueNRG-LP SoC
-* :github:`39431` - arduino_nano_33_ble_sense: Add More Devices to the Device Tree
+* :github:`39598` - 使用 的 __noinit 带 ecc 内存 挂起 系统
+* :github:`39520` - 增加 支持 用于  BlueNRG-LP SoC
+* :github:`39431` - arduino_nano_33_ble_sense: 增加 更多 设备 到  设备 Tree
 * :github:`39331` - ti: cc13xx_cc26xx: watchdog timer driver
 * :github:`39234` - Add support for the Sensririon SCD30 CO2 sensor
-* :github:`39194` - Process: investigate GitHub code review replacements
+* :github:`39194` - 进程 调查 GitHub 代码 审查 replacements
 * :github:`39037` - CivetWeb samples fail to build with CONFIG_NEWLIB_LIBC
 * :github:`39025` - Bluetooth: Periodic Advertising, Filter Accept List, Resolving list related variable name abbreviations
-* :github:`38947` - Issue with SMP commands sent over the UART
+* :github:`38947` - 问题 带 SMP 命令 发送 over  UART
 * :github:`38880` - ARC: ARCv2: qemu_arc_em / qemu_arc_hs don't work with XIP disabled
 * :github:`38668` - ESP32S I2S
 * :github:`38570` - Process: binary blobs in Zephyr
-* :github:`38450` - Python script for checking PR errors
+* :github:`38450` - Python 脚本 用于 检查 PR 错误
 * :github:`38346` - twister command line parameter clean up and optimizate twister documents
 * :github:`38291` - Make Zephyr modules compatible with PlatformIO libdeps
 * :github:`38251` - cmake: DTC_OVERLAY_FILE flags cancel board <board>.overlay files
-* :github:`38041` - Logging-related tests fails on qemu_arc_hs6x
+* :github:`38041` - Logging-related 测试 失败 在...上 qemu_arc_hs6x
 * :github:`37855` - STM32 - kconfigs to determine if peripheral is available
-* :github:`37346` - STM32WL LoRa increased the current in "suspend_to_idle" state
-* :github:`37056` - Clarify device power states
+* :github:`37346` - STM32WL LoRa 增加  当前 在...中 "suspend_to_idle" 状态
+* :github:`37056` - 澄清 设备 power 状态
 * :github:`36953` - <err> lorawan: MlmeConfirm failed : Tx timeout
 * :github:`36951` - twister: report information about tests instability
 * :github:`36882` - MCUMGR: fs upload fail for first time file upload
 * :github:`36724` - The road to a stable Controller Area Network driver API
-* :github:`36601` - Add input support to audio_codec
+* :github:`36601` - 增加 input 支持 到 audio_codec
 * :github:`36553` - LoRaWAN Sample: ``join accept`` but "Join failed"
 * :github:`36544` - RFC: API Change: Bluetooth: Read Multiple
 * :github:`36343` - Bluetooth: Mesh: Modularizing the proxy feature
@@ -3750,14 +2805,14 @@ Addressed issues
 * :github:`36297` - Move BSS section to the end of image
 * :github:`35986` - POSIX: multiple definition of posix_types
 * :github:`35812` - ESP32 Factory app partition is not bootable
-* :github:`35316` - log_panic() hangs kernel
+* :github:`35316` - log_panic() 挂起 内核
 * :github:`35238` - ieee802.15.4 support for stm32wb55
-* :github:`35237` - build: Enhance twister to follow all module.yml in module list
+* :github:`35237` - 构建 增强 twister 到 遵循 所有 module.yml 在...中 模块 list
 * :github:`35177` - example-application: Add example library & tests
 * :github:`34949` - console Bluetooth LE backend
 * :github:`34597` - Mismatch between ``ot ping`` and ``net ping``
 * :github:`34536` - Simple event-driven framework
-* :github:`34324` - RTT is not working on STM32
+* :github:`34324` - RTT  不 工作 在...上 STM32
 * :github:`34269` - LOG_MODE_MINIMAL BUILD error
 * :github:`34049` - Nordic nrf9160 switching between drivers and peripherals
 * :github:`33876` - Lora sender sample build error for esp32
@@ -3766,8 +2821,8 @@ Addressed issues
 * :github:`32756` - Enable mcumgr shell management to send responses to UART other than assigned to shell
 * :github:`32733` - RS-485 support
 * :github:`32339` - reimplement tests/kernel/timer/timer_api
-* :github:`32288` - Enhance the ADC functionality on the STM32 devices to all available ADC channels
-* :github:`32213` - Universal error code type
+* :github:`32288` - 增强  ADC functionality 在...上  STM32 设备 到 所有 available ADC 通道
+* :github:`32213` - Universal 错误 代码 类型
 * :github:`31959` - BLE firmware update STM32WB stuck in loop waiting for CPU2
 * :github:`31298` - tests/kernel/gen_isr_table failed on hsdk and nsim_hs_smp sometimes
 * :github:`30391` - Unit Testing in Zephyr
@@ -3775,43 +2830,43 @@ Addressed issues
 * :github:`30212` - Disk rewrites same flash page multiple times.
 * :github:`30159` - Clean code related to dts fixup files
 * :github:`30042` - usbd: support more than one configuration descriptors
-* :github:`30023` - Device model: add debug helpers for when device_get_binding() fails
+* :github:`30023` - 设备 model: 增加 调试 helpers 用于 当...时 device_get_binding() 失败
 * :github:`29986` - Add support for a single node having multiple bus types
-* :github:`29832` - Redundant error check of function  uart_irq_update() in ``tests/drivers/uart/uart_basic_api/src/test_uart_fifo.c``
+* :github:`29832` - Redundant 错误 检查 的 函数 uart_irq_update() 在...中 ``tests/drivers/uart/uart_basic_api/src/test_uart_fifo.c``
 * :github:`29495` - SD card slow write SPI/Fatfs/stm32
 * :github:`29160` - arm: Always include arch/arm/include
-* :github:`29136` - usb: add USB device stack shell support
-* :github:`29135` - usb: allow the instances of a USB class to be enabled and disabled at runtime
-* :github:`29134` - usb: allow more extensive settings of the device descriptor
-* :github:`29133` - usb: USB device stack should store and validate the device state
-* :github:`29132` - usb: USB device stack should track and check the state of control transfers
+* :github:`29136` - usb: 增加 USB 设备 栈 shell 支持
+* :github:`29135` - usb: 允许  instances 的  USB class 到  启用 和 禁用 在 runtime
+* :github:`29134` - usb: 允许 更多 extensive 设置 的  设备 descriptor
+* :github:`29133` - usb: USB 设备 栈  存储 和 验证  设备 状态
+* :github:`29132` - usb: USB 设备 栈  track 和 检查  状态 的 control transfers
 * :github:`29087` - Moving (some) boards to their own repo/module
-* :github:`28998` - net: if: extend list of admin/operational states of network interface
+* :github:`28998` - net: 如果 扩展 list 的 admin/operational 状态 的 网络 接口
 * :github:`28872` - Support ESP32 as Bluetooth controller
 * :github:`28864` - sanitycheck: Make sanitycheck test specifiacation compatible
-* :github:`28617` - enable CONFIG_TEST for all samples
+* :github:`28617` - 启用 CONFIG_TEST 用于 所有 samples
 * :github:`27819` - Memory Management for MMU-based devices for LTS2
-* :github:`27258` - Ring buffer does not allow to partially put/get data
-* :github:`26796` - Interrupts on Cortex-M do not work with CONFIG_MULTITHREADING=n
+* :github:`27258` - Ring 缓冲区  不 允许 到 partially put/get 数据
+* :github:`26796` - 中断 在...上 Cortex-M  不 工作 带 CONFIG_MULTITHREADING=n
 * :github:`26392` - e1000 ethernet driver needs to be converted to DTS
 * :github:`26109` - devicetree: overloaded DT_REG_ADDR() and DT_REG_SIZE() for PCI devices
 * :github:`25917` - Bluetooth: Deadlock with TX of ACL data and HCI commands (command blocked by data)
 * :github:`25417` - net: socket: socketpair: check for ISR context
 * :github:`25407` - No tests/samples covering socket read()/write() calls
-* :github:`25055` - Redundant flash shell commands
-* :github:`24653` - device_pm: clarify and document usage
+* :github:`25055` - Redundant 刷写 shell 命令
+* :github:`24653` - device_pm: 澄清 和 记录 usage
 * :github:`23887` - drivers: modem: question: Should modem stack include headers to put into zephyr/include?
-* :github:`23165` - macOS setup fails to build for lack of "elftools" Python package
+* :github:`23165` - macOS 设置 失败 到 构建 用于 lack 的 "elftools" Python 打包
 * :github:`23161` - I2C and sensor deinitialization
 * :github:`23072` - #ifdef __cplusplus missing in tracking_cpu_stats.h
 * :github:`22049` - Bluetooth: IRK handling issue when using multiple local identities
-* :github:`21995` - Bluetooth: controller: split: Porting of connection event length
+* :github:`21995` - Bluetooth: controller: 拆分 移植 的 连接 event 长度
 * :github:`21724` - dts: edtlib: handle child-binding or child-child-binding as 'normal' binding with compatible
 * :github:`21446` - samples: add SPI slave
 * :github:`21239` - devicetree: Generation of the child-bindigs items as a common static initializer
 * :github:`20707` - Define GATT service at run-time
-* :github:`20262` - dt-binding for timers
-* :github:`19713` - usb: investigate if Network Buffer can be used in USB device stack and USB drivers
+* :github:`20262` - dt-binding 用于 定时器
+* :github:`19713` - usb: 调查 如果 网络 缓冲区   使用 在...中 USB 设备 栈 和 USB 驱动
 * :github:`19496` - insufficient test case coverage for log subsystem
 * :github:`19356` - LwM2M sample reorganization: split out LwM2M source into object-based .c files
 * :github:`19259` - doc: two-column tricks for HTML breaks PDF
@@ -3819,12 +2874,12 @@ Addressed issues
 * :github:`19152` - MK22F51212 MPU defines missing
 * :github:`18892` - POSIX subsys: transition to #include_next for header consistency
 * :github:`17171` - Insufficient code coverage for lib/os/fdtable.c
-* :github:`16961` - Modules: add a SHA1 check to avoid updating module in the past
+* :github:`16961` - 模块 增加  SHA1 检查 到 avoid 更新 模块 在...中  过去
 * :github:`16942` - Missing test case coverage for include/misc/byteorder.h functions
 * :github:`16851` - west flash error on zephyr v1.14.99
-* :github:`16444` - drivers/flash/flash_simulator: Support for required read alignment
+* :github:`16444` - drivers/flash/flash_simulator: 支持 用于 必需 读取 alignment
 * :github:`16088` - Verify POSIX PSE51 API requirements
-* :github:`15453` - Kconfig should enforce that at most one Console driver is enabled at a time
+* :github:`15453` - Kconfig  enforce  在 最多 一个 控制台 驱动  启用 在  时间
 * :github:`15181` - ztest issues
 * :github:`14753` - nrf52840_pca10056: Leading spurious 0x00 byte in UART output
 * :github:`14577` - Address latency/performance in nRF51 timer ISR
@@ -3836,6 +2891,6 @@ Addressed issues
 * :github:`9045` - A resource-saving programming model
 * :github:`6198` - unit test: Add unit test example which appends source files to SOURCES list
 * :github:`5697` - Driver API review/cleanup/rework
-* :github:`3849` - Reduce the overall memory usage of the LwM2M library
+* :github:`3849` - 减少  overall 内存 usage 的  LwM2M 库
 * :github:`2837` - Ability to use hardware-based block ciphers
 * :github:`2647` - Better cache APIs needed.

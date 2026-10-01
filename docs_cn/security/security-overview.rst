@@ -1,711 +1,344 @@
 .. _security-overview:
 
-Zephyr
-Security
-Overview
+Zephyr 安全概述
 ########################
 
-Introduction
+简介
 ************
 
-This
-document
-outlines
-the
-steps
-of
-the
-Zephyr
-Security
-Subcommittee
-towards
-a
-defined
-security
-process
-that
-helps
-developers
-build
-more
-secure
-software
-while
-addressing
-security
-compliance
-requirements。
-It
-presents
-the
-key
-ideas
-of
-the
-security
-process
-and
-outlines
-which
-documents
-need
-to
-be
-created。
-After
-the
-process
-is
-implemented
-and
-all
-supporting
-documents
-are
-created
-this
-document
-is
-a
-top
-level
-overview
-and
-entry
-point。
+本文档概述了 Zephyr 安全小组委员会迈向定义的安全流程的步骤，该流程帮助开发者构建更安全的软件，同时处理安全合规要求。它介绍了安全流程的关键思想，并概述了需要创建哪些文档。在流程实施且所有支持文档创建后，本文档是顶层概述和入口。
 
-Overview
-and
-Scope
+概述与范围
 ==================
 
-We
-begin
-with
-an
-overview
-of
-the
-Zephyr
-development
-process
-which
-mainly
-focuses
-on
-security
-functionality。
+我们从 Zephyr 开发流程的概述开始，该流程主要聚焦于安全功能。
 
-In
-subsequent
-sections
-the
-individual
-parts
-of
-the
-process
-are
-treated
-in
-detail。
-As
-depicted
-in
-Figure
-1
-these
-main
-steps
-are:
+在后续章节中，流程的各个部分将被详细处理。如图 1 所示，这些主要步骤是：
 
-1.
-**Secure
-Development**:
-Defines
-the
-system
-architecture
-and
-development
-process
-that
-ensures
-adherence
-to
-relevant
-coding
-principles
-and
-quality
-assurance
-procedures。
+1. **安全开发**：定义确保遵循相关编码原则和质量保证程序的系统架构和开发流程。
 
-2.
-**Secure
-Design**:
-Defines
-security
-procedures
-and
-implement
-measures
-to
-enforce
-them。
-A
-security
-architecture
-of
-the
-system
-and
-relevant
-sub
-modules
-is
-created
-threats
-are
-identified
-and
-countermeasures
-designed。
-Their
-correct
-implementation
-and
-the
-validity
-of
-the
-threat
-models
-are
-checked
-by
-code
-reviews。
-Finally
-a
-process
-shall
-be
-defined
-for
-reporting、
-classifying、
-and
-mitigating
-security
-issues。
+2. **安全设计**：定义安全程序并实施措施以强制执行它们。创建系统和相关子模块的安全架构，识别威胁，并设计对策。其正确实施和威胁模型的有效性由代码评审检查。最后，应定义用于报告、分类和缓解安全问题的流程。
 
-3.
-**Security
-Certification**:
-Defines
-the
-certifiable
-part
-of
-the
-Zephyr
-RTOS。
-This
-includes
-an
-evaluation
-target、
-its
-assets、
-and
-how
-these
-assets
-are
-protected。
-Certification
-claims
-shall
-be
+3. **安全认证**：定义 Zephyr RTOS 的可认证部分。这包括评估目标、其资产，以及这些资产如何被保护。认证声明应被确定并以适当证据支持。
 
+.. figure:: media/security-process-steps.png
 
-.. note::
+   图 1. 安全流程步骤
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
--  Root of trust
--  Reduction of attack surface
+目标受众
+=================
 
-Some of these categories are interconnected and rely on multiple pieces
-to be in place to produce a full solution for the application.
+本文档是 Zephyr 安全小组委员会和 Zephyr 技术指导委员会开发安全流程的指南。它为（安全）工程师和架构师提供 Zephyr 安全流程的概述。
 
-Secure Development Process
+术语
+============
+
+在本文档中，关键字 "MUST"（必须）、"MUST NOT"（必须不）、"REQUIRED"（必需）、"SHALL"（应）、"SHALL NOT"（不应）、"SHOULD"（应该）、"SHOULD NOT"（不应该）、"RECOMMENDED"（推荐）、"MAY"（可以）和 "OPTIONAL"（可选）应按 [RFC2119]_ 中描述的方式解释。
+
+这些词被用于定义绝对要求（或禁止）、高度推荐的要求，以及真正可选的要求。如 RFC-2119 中所述，"这些术语经常被用于指定具有安全影响的行为。不实施 MUST 或 SHOULD，或做规范说 MUST NOT 或 SHOULD NOT 的事情，对安全的影响可能非常微妙。文档作者应花时间阐述不遵循推荐或要求的安全影响，因为大多数实施者将没有产生规范的经验与讨论的好处。"
+
+安全文档更新
+========================
+
+本文档是一份活文档。随着新需求、功能和变更被识别，它们将通过以下流程添加到本文档：
+
+1. 变更将由相关方通过拉取请求提交到 Zephyr 文档仓库。
+
+2. Zephyr 安全小组委员会将审查这些变更并提供反馈或接受这些变更。
+
+3. 一旦被接受，这些变更将成为文档的一部分。
+
+当前安全定义
+***************************
+
+本节回顾当前 Zephyr RTOS 内安全开发的状态。当前，重点放在功能安全和代码质量保证上，尽管额外的安全功能已被规划。
+
+当前实施的三个主要安全措施是：
+
+-  **安全功能**聚焦于密码算法和协议。对密码硬件的支持已为未来发布规划。Zephyr 运行时架构是单体二进制文件，消除了对动态加载器的需求，从而减少暴露的攻击面。
+
+-  **质量保证**由使用开发流程驱动，该流程要求所有代码在被提交到公共仓库前必须经过评审。此外，复用经过验证的构建模块（如网络协议栈）提高整体质量水平并保证稳定的 API。静态代码分析提供额外的质量检查。
+
+-  **执行保护**包括线程分离、栈和内存保护，当前在上游 Zephyr RTOS 中从版本 1.9.0（栈保护）开始可用。内存保护和线程分离在版本 1.10.0 为 X86 添加，在版本 1.11.0 为 ARM 和 ARC 添加。
+
+这些主题在以下子章节中被更详细地讨论。
+
+安全功能
+======================
+
+Zephyr 中的安全功能主要取决于密码算法的包含和其单体系统设计。
+
+密码功能通过 PSA Crypto 提供，以 Mbed TLS 作为底层实现。应用程序利用 PSA Crypto API，确保对密码操作的标准化和安全方法。Mbed TLS 作为 PSA Crypto 的实现，支持广泛的密码算法，使其适合各种应用需求。
+
+针对硬件和软件中供应商特定密码 IP 的 API 已被规划，包括以安全访问模块（SAM）、可信平台模块（TPM）和可信执行环境（TEE）形式的密钥安全存储。
+
+安全架构基于单体设计，其中 Zephyr 内核和所有应用程序被编译成单个静态二进制文件。系统调用被实现为函数调用，无需上下文切换。静态链接消除了动态加载恶意代码的可能性。
+
+额外的保护功能在后续发布中可用。提供栈保护机制以保护免受栈溢出。此外，应用程序可以利用线程分离功能将系统拆分为特权和非特权执行环境。内存保护功能提供划分系统资源（内存、外设地址空间等）并将资源分配给单个线程或线程组的能力。栈、线程执行级别和内存保护约束在上下文切换时被强制执行。
+
+质量保证
+=================
+
+Zephyr 项目使用自动化质量保证流程。目标是拥有包括强制代码评审、功能和 issue 管理/跟踪，以及静态代码分析的完整流程。
+
+代码评审在被负责子系统的维护者检查到仓库前被记录和使用投票系统强制执行。代码评审的主要目标是：
+
+-  验证实现的正确功能
+
+-  提高贡献源代码的可读性和可维护性
+
+-  确保字符串和内存函数的适当使用
+
+-  验证用户输入
+
+-  审查安全相关代码的潜在问题
+
+当前的编码原则主要聚焦于编码风格和约定。功能正确性由构建系统和评审者的经验确保。特别是对于安全相关代码，需要开发具体和详细的指南并与开发者对齐（见：:ref:`secure code`）。
+
+静态代码分析定期在 Zephyr 代码树上运行，见 :ref:`static_analysis`。
+
+bug 和 issue 跟踪与管理使用 Github 执行。"survivability"（生存性）一词被创造以涵盖主动安全任务，如安全 issue 分类和管理。被识别为漏洞的 issue 在 Github 安全通告内被管理。
+
+由静态分析确定的 issue 在被关闭为非 issue 前应有更严格的评审（至少另一位受过安全流程教育的人需要同意非 issue 才能关闭）。
+
+已成立一个安全小组委员会以更详细地开发安全流程；本文档是该流程的一部分。
+
+执行保护
+====================
+
+执行保护被支持并可分类为以下任务：
+
+-  **内存分离**：内存将被划分为区域并基于该内存区域的所有者分配属性。线程将仅能访问它们控制的区域。
+
+-  **栈保护**：栈守卫将提供检测和捕获栈溢出的机制。单个线程应仅能访问其自身的栈。
+
+-  **线程分离**：单个线程应仅能访问其自身的内存资源。当线程被调度时，仅该线程拥有的内存资源将可访问。程序流保护和其他篡改抵抗措施等主题当前不在范围内。
+
+系统级安全（生态系统，...）
+======================================
+
+系统级安全涵盖广泛的类别。这些的一些例子会是：
+
+-  安全/可信启动
+-  空中（OTA）更新
+-  外部通信
+-  设备认证
+-  板载资源的访问控制
+
+   -  闪存更新
+   -  安全存储
+   -  外设
+
+-  信任根
+-  攻击面减少
+
+这些类别中的一些是相互关联的，并依赖多个部分就位以为应用产生完整的解决方案。
+
+安全开发流程
 **************************
 
-The development of secure code shall adhere to certain criteria. These
-include coding guidelines and development processes that can be roughly
-separated into two categories related to software quality and related to
-software security. Furthermore, a system architecture document shall be
-created and kept up-to-date with future development.
+安全代码的开发应遵循某些标准。这些包括编码指南和开发流程，可大致分离为与软件质量相关和与软件安全相关的两个类别。此外，应创建系统架构文档并随未来开发保持最新。
 
-System Architecture
+系统架构
 ===================
 
 .. figure:: media/security-zephyr-system-architecture.png
 
-   Figure 2: Zephyr System Architecture
+   图 2: Zephyr 系统架构
 
-A high-level schematic of the Zephyr system architecture is given in
-Figure 2. It separates the architecture into an OS part (*kernel + OS
-Services*) and a user-specific part (*Application Services*). The OS
-part itself contains low-level, platform specific drivers and the
-generic implementation of I/O APIs, file systems, kernel-specific
-functions, and the cryptographic library.
+Zephyr 系统架构的高层示意图在图 2 中给出。它将架构分离为 OS 部分（*内核 + OS 服务*）和用户特定部分（*应用服务*）。OS 部分本身包含低层、平台特定的驱动和 I/O API、文件系统、内核特定功能和密码库的通用实现。
 
-A document describing the system architecture and design choices shall
-be created and kept up to date with future development. This document
-shall include the base architecture of the Zephyr OS and an overview of
-important submodules. For each of the modules, a dedicated architecture
-document shall be created and evaluated against the implementation.
-These documents shall serve as an entry point to new developers and as a
-basis for the security architecture. Please refer to the
-:ref:`Zephyr subsystem documentation <os_services>` for
-detailed information.
+描述系统架构和设计选择的文档应被创建并随未来开发保持最新。该文档应包括 Zephyr OS 的基础架构和重要子模块的概述。对于每个模块，应创建专门的架构文档并对照实现评估。这些文档应作为新开发者的入口点和安全架构的基础。请参见 :ref:`Zephyr 子系统文档 <os_services>` 获取详细信息。
 
-Secure Coding
+安全编码
 =============
 
-Designing an open software system such as Zephyr to be secure requires
-adhering to a defined set of design standards. These standards are
-included in the Zephyr Project documentation, specifically in its
-:ref:`secure code` section. In [SALT75]_, the following, widely
-accepted principles for protection mechanisms are defined to prevent
-security violations and limit their impact:
+将 Zephyr 这样的开放软件系统设计为安全的，需要遵循一组定义的设计标准。这些标准包括在 Zephyr 项目文档中，特别是其 :ref:`secure code` 章节中。在 [SALT75]_ 中，定义了以下广泛接受的保护机制原则，以防止安全违规并限制其影响：
 
--  **Open design** as a design principle incorporates the maxim that
-   protection mechanisms cannot be kept secret on any system in
-   widespread use. Instead of relying on secret, custom-tailored
-   security measures, publicly accepted cryptographic algorithms and
-   well established cryptographic libraries shall be used.
+-  **开放设计**作为设计原则纳入了这样的至理名言：保护机制在任何广泛使用的系统中都无法保密。相反于依赖秘密的、量身定制的安全措施，应使用公开接受的密码算法和成熟的密码库。
 
--  **Economy of mechanism** specifies that the underlying design of a
-   system shall be kept as simple and small as possible. In the
-   context of the Zephyr project, this can be realized, e.g., by
-   modular code [PAUL09]_ and abstracted APIs.
+-  **机制经济性**规定系统的底层设计应尽可能简单和精简。在 Zephyr 项目的上下文中，这可以通过模块化代码 [PAUL09]_ 和抽象 API 实现。
 
--  **Complete mediation** requires that each access to every object and
-   process needs to be authenticated first. Mechanisms to store
-   access conditions shall be avoided if possible.
+-  **完全中介**要求对每个对象和每个进程的每次访问都必须先经过认证。应尽可能避免存储访问条件的机制。
 
--  **Fail-safe defaults** defines that access is restricted by default
-   and permitted only in specific conditions defined by the system
-   protection scheme, e.g., after successful authentication.
-   Furthermore, default settings for services shall be chosen in a
-   way to provide maximum security. This corresponds to the "Secure
-   by Default" paradigm [MS12]_.
+-  **故障安全默认值**定义访问默认受限，仅在系统保护方案定义的特定条件下才被允许，例如成功认证后。此外，服务的默认设置应选择以提供最大安全性的方式。这对应于"默认安全"范式 [MS12]_。
 
--  **Separation of privilege** is the principle that two conditions or
-   more need to be satisfied before access is granted. In the
-   context of the Zephyr project, this could encompass split keys
-   [PAUL09]_.
+-  **权限分离**是这样一项原则：在授予访问之前需要满足两个或更多条件。在 Zephyr 项目的上下文中，这可能包括分割密钥 [PAUL09]_。
 
--  **Least privilege** describes an access model in which each user,
-   program and thread shall have the smallest possible
-   subset of permissions in the system required to perform their
-   task. This positive security model aims to minimize the attack
-   surface of the system.
+-  **最小权限**描述了一种访问模型，其中每个用户、程序和线程应拥有执行其任务所需的系统中最小可能的权限子集。该正向安全模型旨在最小化系统的攻击面。
 
--  **Least common mechanism** specifies that mechanisms common to more
-   than one user or process shall not be shared if not strictly
-   required. The example given in [SALT75]_ is a function that should
-   be implemented as a shared library executed by each user and not
-   as a supervisor procedure shared by all users.
+-  **最小公共机制**规定，供多个用户或进程共用的机制，除非严格必需，否则不应共享。[SALT75]_ 中给出的例子是一个应实现为每个用户执行的共享库的函数，而非所有用户共享的监视过程。
 
--  **Psychological acceptability** requires that security features are
-   easy to use by the developers in order to ensure its usage and
-   the correctness of its application.
+-  **心理可接受性**要求安全特性对开发者易于使用，以确保其使用及其应用的正确性。
 
-In addition to these general principles, the following points are
-specific to the development of a secure RTOS:
+除这些一般原则外，以下要点特定于安全 RTOS 的开发：
 
--  **Complementary Security/Defense in Depth:** do not rely on a single
-   threat mitigation approach. In case of the complementary security
-   approach, parts of the threat mitigation are performed by the
-   underlying platform. In case such mechanisms are not provided by
-   the platform, or are not trusted, a defense in depth [MS12]_
-   paradigm shall be used.
+-  **互补安全/纵深防御**：不要依赖单一威胁缓解方法。在互补安全方法的情况下，威胁缓解的部分由底层平台执行。如果平台未提供此类机制，或不可信，应使用纵深防御 [MS12]_ 范式。
 
--  **Less commonly used services off by default**: to reduce the
-   exposure of the system to potential attacks, features or services
-   shall not be enabled by default if they are only rarely used (a
-   threshold of 80% is given in [MS12]_). For the Zephyr project,
-   this can be realized using the configuration management. Each
-   functionality and module shall be represented as a configuration
-   option and needs to be explicitly enabled. Then, all features,
-   protocols, and drivers not required for a particular use case can
-   be disabled. The user shall be notified if low-level options and
-   APIs are enabled but not used by the application.
+-  **不常用服务默认关闭**：为减少系统对潜在攻击的暴露，如果功能或服务仅很少使用，则不应默认启用（[MS12]_ 给出 80% 的阈值）。对于 Zephyr 项目，这可以使用配置管理实现。每个功能和模块应表示为配置选项并需要显式启用。然后，对特定用例不需要的所有功能、协议和驱动都可以禁用。如果启用了低层选项和 API 但应用未使用，应通知用户。
 
--  **Change management:** to guarantee a traceability of changes to the
-   system, each change shall follow a specified process including a
-   change request, impact analysis, ratification, implementation,
-   and validation phase. In each stage, appropriate documentation
-   shall be provided. All commits shall be related to a bug report
-   or change request in the issue tracker. Commits without a valid
-   reference shall be denied.
+-  **变更管理**：为保证对系统变更的可追溯性，每个变更应遵循指定流程，包括变更请求、影响分析、批准、实施和验证阶段。在每个阶段，应提供适当文档。所有提交应关联到问题跟踪器中的 bug 报告或变更请求。没有有效引用的提交应被拒绝。
 
-Based on these design principles and commonly accepted best practices, a
-secure development guide shall be developed, published, and implemented
-into the Zephyr development process. Further details on this are given
-in the `Secure Design`_ section.
+基于这些设计原则和广泛接受的最佳实践，应开发、发布并将安全开发指南实施到 Zephyr 开发流程中。关于这的更多细节在 `安全设计`_ 章节中给出。
 
-Quality Assurance
+质量保证
 =================
 
-The quality assurance part encompasses the following criteria:
+质量保证部分涵盖以下标准：
 
--  **Adherence to the Coding Conventions** with respect to coding style,
-   naming schemes of modules, functions, variables, and so forth.
-   This increases the readability of the Zephyr code base and eases
-   the code review. These coding conventions are enforced by
-   automated scripts prior to check-in.
+-  **遵循编码约定**关于编码风格、模块、函数、变量等的命名方案。这提高 Zephyr 代码库的可读性并简化代码评审。这些编码约定在检查前由自动化脚本强制执行。
 
--  **Adherence to Deployment Guidelines** is required to ensure
-   consistent releases with a well-documented feature set and a
-   trackable list of security issues.
+-  **遵循部署指南**是必需的，以确保一致的发布具有文档完善的功能集和可跟踪的安全 issue 列表。
 
--  **Code Reviews** ensure the functional correctness of the code base
-   and shall be performed on each proposed code change prior to
-   check-in. Code reviews shall be performed by at least one
-   independent reviewer other than the author(s) of the code change.
-   These reviews shall be performed by the subsystem maintainers and
-   developers on a functional level and are to be distinguished from
-   security reviews as laid out in the `Secure Design`_ section.
-   Refer to the :ref:`development_model` documentation for more information.
+-  **代码评审**确保代码库的功能正确性，应在每个提议的代码变更检查前执行。代码评审应至少由一位独立于代码变更作者的评审者执行。这些评审应由子系统维护者和开发者在功能级别执行，并应与 `安全设计`_ 章节中列出的安全评审区分开来。参见 :ref:`development_model` 文档获取更多信息。
 
--  **Static Code Analysis** tools efficiently detect common coding
-   mistakes in large code bases. All code shall be analyzed using an
-   appropriate tool prior to merges into the main repository. This
-   is not per individual commit, but is to be run on some interval
-   on specific branches. It is mandatory to remove all findings or
-   waive potential false-positives before each release.
-   Waivers shall be documented centrally and
-   in the form of a comment inside the source code itself. The
-   documentation shall include the employed tool and its version,
-   the date of the analysis, the branch and parent revision number,
-   the reason for the waiver, the author of the respective code, and
-   the approver(s) of the waiver. This shall as a minimum run on the
-   main release branch and on the security branch. It shall be
-   ensured that each release has zero issues with regard to static
-   code analysis (including waivers).
-   Refer to the :ref:`development_model` documentation for more information.
+-  **静态代码分析**工具高效检测大型代码库中的常见编码错误。所有代码应在合并到主仓库前使用适当工具分析。这不是针对每个单独提交，而是应在特定分支上按某些间隔运行。在每个发布前必须移除所有发现或豁免潜在误报。豁免应集中记录并以源代码本身内注释的形式记录。文档应包括使用的工具及其版本、分析日期、分支和父修订号、豁免原因、相应代码的作者，以及豁免的批准者。这应至少在主流发布分支和安全分支上运行。应确保每个发布在静态代码分析（包括豁免）方面有零 issue。参见 :ref:`development_model` 文档获取更多信息。
 
+-  **复杂度分析**应作为开发流程的一部分执行，并评估如圈复杂度等指标。主要目标是保持代码尽可能简单。
 
--  **Complexity Analyses** shall be performed as part of the development
-   process and metrics such as cyclomatic complexity shall be
-   evaluated. The main goal is to keep the code as simple as
-   possible.
+-  **自动化**：评审流程和编码规则遵循检查是预提交检查的强制部分。为确保一致应用，它们应作为预提交程序的一部分自动化。在从子系统合并大量代码前，除评审流程和编码规则遵循外，必须已运行所有静态代码分析并解决 issue。
 
--  **Automation:** the review process and checks for coding rule
-   adherence are a mandatory part of the precommit checks. To
-   ensure consistent application, they shall be automated as part of
-   the precommit procedure. Prior to merging large pieces of code
-   in from subsystems, in addition to review process and coding rule
-   adherence, all static code analysis must have been run and issues
-   resolved.
-
-Release and Lifecycle Management
+发布与生命周期管理
 ================================
 
-Lifecycle management contains several aspects:
+生命周期管理包含多个方面：
 
--  **Device management** encompasses the possibility to update the
-   operating system and/or security related sub-systems of Zephyr
-   enabled devices in the field.
+-  **设备管理**涵盖在现场更新运行 Zephyr 的设备的操作系统和/或安全相关子系统的可能性。
 
--  **Lifecycle management:** system stages shall be defined and
-   documented along with the transactions between the stages in a
-   system state diagram. For security reasons, this shall include
-   locking of the device in case an attack has been detected, and a
-   termination if the end of life is reached.
+-  **生命周期管理**：应定义并记录系统阶段及阶段之间的事务，在系统状态图中。出于安全原因，这应包括在检测到攻击时锁定设备，以及在达到生命周期终点时终止。
 
--  **Release management** describes the process of defining the release
-   cycle, documenting releases, and maintaining a record of known
-   vulnerabilities and mitigations. Especially for certification
-   purposes the integrity of the release needs to be ensured in a
-   way that later manipulation (e.g., inserting of backdoors, etc.)
-   can be easily detected.
+-  **发布管理**描述定义发布周期、记录发布和维护已知漏洞和缓解措施记录的流程。特别是对于认证目的，需要以可轻松检测后续操纵（例如，插入后门等）的方式确保发布的完整性。
 
--  **Rights management and NDAs:** if required by the chosen
-   certification, the confidentiality and integrity of the system
-   needs to be ensured by an appropriate rights management (e.g.,
-   separate source code repository) and non-disclosure agreements
-   between the relevant parties. In case of a repository shared
-   between several parties, measures shall be taken that no
-   malicious code is checked in.
+-  **权限管理和 NDA**：如果所选认证要求，需要通过适当的权限管理（例如，单独的源代码仓库）和相关方之间的保密协议确保系统的机密性和完整性。在多方共享的仓库情况下，应采取措施确保没有恶意代码被检查进来。
 
-These points shall be evaluated with respect to their impact on the
-development process employed for the Zephyr project.
+这些要点应对照其对 Zephyr 项目使用的开发流程的影响评估。
 
-Secure Design
+安全设计
 *************
 
-In order to obtain a certifiable system or product, the security process
-needs to be clearly defined and its application needs to be monitored
-and driven. This process includes the development of security related
-modules in all of its stages and the management of reported security
-issues. Furthermore, threat models need to be created for currently
-known and future attack vectors, and their impact on the system needs to
-be investigated and mitigated. Please refer to the
-:ref:`secure code` outlined in the Zephyr project documentation
-for detailed information.
+为获得可认证的系统或产品，安全流程需要被清晰定义，且其应用需要被监控和驱动。该流程包括在所有阶段开发安全相关模块和管理报告的安全 issue。此外，需要为当前已知和未来攻击向量创建威胁模型，并调查和缓解其对系统的影响。请参见 Zephyr 项目文档中概述的 :ref:`secure code` 获取详细信息。
 
-The software security process includes:
+软件安全流程包括：
 
--  **Adherence to the Secure Development Coding** is mandatory to
-   avoid that individual components breach the system security and
-   to minimize the vulnerability of individual modules. While this
-   can be partially achieved by automated tests, it is inevitable to
-   investigate the correct implementation of security features such
-   as countermeasures manually in security-critical modules.
+-  **遵循安全开发编码**是强制的，以避免单个组件破坏系统安全并最小化单个模块的脆弱性。虽然这可以部分通过自动化测试实现，但在安全关键模块中手动调查安全功能（如对策）的正确实施是不可避免的。
 
--  **Security Reviews** shall be performed by a security architect in
-   preparation of each security-targeted release and each time a
-   security-related module of the Zephyr project is changed. This
-   process includes the validation of the effectiveness of
-   implemented security measures, the adherence to the global
-   security strategy and architecture, and the preparation of audits
-   towards a security certification if required.
+-  **安全评审**应由安全架构师在每个安全目标发布的准备阶段以及每次 Zephyr 项目的安全相关模块被更改时执行。该流程包括验证已实施安全措施的有效性、遵循全局安全策略和架构，以及在需要时准备面向安全认证的审计。
 
--  **Security Issue Management** encompasses the evaluation of potential
-   system vulnerabilities and their mitigation as described in
-   :ref:`Security Issue Management <reporting>`.
+-  **安全问题管理**涵盖评估潜在系统漏洞及其缓解，如 :ref:`Security Issue Management <reporting>` 中描述的。
 
-These criteria and tasks need to be integrated into the development
-process for secure software and shall be automated wherever possible. On
-system level, and for each security related module of the secure branch
-of Zephyr, a directly responsible security architect shall be defined to
-guide the secure development process.
+这些标准和任务需要被整合到安全软件的开发流程中，并应在可能的地方自动化。在系统级别，且对于 Zephyr 安全分支的每个安全相关模块，应定义直接负责的安全架构师以指导安全开发流程。
 
-Security Architecture
+安全架构
 =====================
 
-The general guidelines above shall be accompanied by an architectural
-security design on system- and module-level. The high level
-considerations include
+上述一般指南应辅以系统级和模块级的架构安全设计。高层考虑包括
 
--  The identification of **security and compliance requirements**
+-  识别**安全和合规要求**
 
--  **Functional security** such as the use of cryptographic functions
-   whenever applicable
+-  **功能安全**如在任何适用的情况下使用密码功能
 
--  Design of **countermeasures** against known attack vectors
+-  设计针对已知攻击向量的**对策**
 
--  Recording of security relevant **auditable events**
+-  记录安全相关的**可审计事件**
 
--  Support for **Trusted Platform Modules (TPM)** and
-   **Trusted Execution Environments (TEE)**
+-  支持**可信平台模块（TPM）**和**可信执行环境（TEE）**
 
--  Mechanisms to allow for **in-the-field** **updates** of devices using
-   Zephyr
+-  允许使用 Zephyr 的设备**现场更新**的机制
 
--  Task scheduler and separation
+-  任务调度器和分离
 
-The security architecture development is based on assets derived from
-the structural overview of the overall system architecture. Based on
-this, the individual steps include:
+安全架构开发基于从整体系统架构的结构概述派生的资产。基于此，各个步骤包括：
 
-1. **Identification of assets** such as user data, authentication and
-   encryption keys, key generation data (obtained from RNG),
-   security relevant status information.
+1. **识别资产**如用户数据、认证和加密密钥、密钥生成数据（从 RNG 获取）、安全相关状态信息。
 
-2. **Identification of threats** against the assets such as breaches of
-   confidentiality, manipulation of user data, etc.
+2. **识别威胁**针对资产的威胁，如机密性泄露、用户数据篡改等。
 
-3. **Definition of requirements** regarding security and protection of
-   the assets, e.g., countermeasures or memory protection schemes.
+3. **定义需求**关于资产的安全和保护，例如，对策或内存保护方案。
 
-The security architecture shall be harmonized with the existing system
-architecture and implementation to determine potential deviations and
-mitigate existing weaknesses. Newly developed sub-modules that are
-integrated into the secure branch of the Zephyr project shall provide
-individual documents describing their security architecture.
-Additionally, their impact on the system level security shall be
-considered and documented.
+安全架构应与现有系统架构和实现协调，以确定潜在偏差并缓解现有弱点。新开发的并集成到 Zephyr 项目安全分支的子模块应提供描述其安全架构的单独文档。此外，其对系统级安全的影响应被考虑和记录。
 
-Security Vulnerability Reporting
+安全漏洞报告
 ================================
 
-Please see :ref:`reporting` for information on reporting security
-vulnerabilities.
+请参见 :ref:`reporting` 获取关于报告安全漏洞的信息。
 
-Threat Modeling and Mitigation
+威胁建模与缓解
 ==============================
 
-The modeling of security threats against the Zephyr RTOS is required for
-the development of an accurate security architecture and for most
-certification schemes. The first step of this process is the definition
-of assets to be protected by the system. The next step then models how
-these assets are protected by the system and which threats against them
-are present. After a threat has been identified, a corresponding threat
-model is created. This model contains the asset and system
-vulnerabilities, as well as the description of the potential exploits of
-these vulnerabilities. Additionally, the impact on the asset, the module
-it resides in, and the overall system is to be estimated. This threat
-model is then considered in the module and system security architecture
-and appropriate countermeasures are defined to mitigate the threat or
-limit the impact of exploits.
+对 Zephyr RTOS 的安全威胁建模对于开发准确的安全架构和大多数认证方案是必需的。该流程的第一步是定义要由系统保护的资产。下一步则建模这些资产如何被系统保护以及针对它们存在哪些威胁。在识别威胁后，创建相应的威胁模型。该模型包含资产和系统漏洞，以及这些漏洞的潜在利用的描述。此外，应估计对资产、其所在模块和整体系统的影响。该威胁模型然后在模块和系统安全架构中被考虑，并定义适当的对策以缓解威胁或限制利用的影响。
 
-In short, the threat modeling process can be separated into these steps
-(adapted from [OWASP]_):
+简而言之，威胁建模流程可以分离为这些步骤（改编自 [OWASP]_）：
 
-1. Definition of assets
+1. 定义资产
 
-2. Application decomposition and creation of appropriate data flow
-   diagrams (DFDs)
+2. 应用分解和创建适当的数据流图（DFD）
 
-3. Threat identification and categorization using the [STRIDE09]_ and
-   [CVSS]_ approaches
+3. 使用 [STRIDE09]_ 和 [CVSS]_ 方法进行威胁识别和分类
 
-4. Determination of countermeasures and other mitigation approaches
+4. 确定对策和其他缓解方法
 
-This procedure shall be carried out during the design phase of modules
-and before major changes of the module or system architecture.
-Additionally, new models shall be created, or existing ones shall be
-updated whenever new vulnerabilities or exploits are discovered. During
-security reviews, the threat models and the mitigation techniques shall
-be evaluated by the responsible security architect.
+该程序应在模块的设计阶段和模块或系统架构的重大变更前执行。此外，每当发现新漏洞或利用时，应创建新模型或更新现有模型。在安全评审期间，威胁模型和缓解技术应由负责的安全架构师评估。
 
-From these threat models and mitigation techniques tests shall be
-derived that prove the effectiveness of the countermeasures. These tests
-shall be integrated into the continuous integration workflow to ensure
-that the security is not impaired by regressions.
+从这些威胁模型和缓解技术应派生测试以证明对策的有效性。这些测试应被整合到持续集成工作流中以确保安全不被回归损害。
 
-Vulnerability Analyses
+漏洞分析
 ======================
 
-In order to find weak spots in the software implementation,
-vulnerability analyses (VA) shall be performed. Of special interest are
-investigations on cryptographic algorithms, critical OS tasks, and
-connectivity protocols.
+为找到软件实现中的弱点，应执行漏洞分析（VA）。特别值得关注的是对密码算法、关键 OS 任务和连接协议的调查。
 
-On a pure software level, this encompasses
+在纯软件级别，这涵盖
 
--  **Penetration testing** of the RTOS on a particular hardware
-   platform, which involves testing the respective Zephyr OS
-   configuration and hardware as one system.
+-  在特定硬件平台上对 RTOS 的**渗透测试**，涉及将相应的 Zephyr OS 配置和硬件作为一个系统测试。
 
--  **Side channel attacks** (timing invariance, power invariance, etc.)
-   should be considered. For instance, ensuring **timing
-   invariance** of the cryptographic algorithms and modules is
-   required to reduce the attack surface. This applies to both the
-   software implementations and when using cryptographic hardware.
+-  应考虑**侧信道攻击**（时序不变性、功耗不变性等）。例如，确保密码算法和模块的**时序不变性**是必需的，以减少攻击面。这适用于软件实现和使用密码硬件时。
 
--  **Fuzzing tests** shall be performed on both exposed APIs and
-   protocols.
+-  应对暴露的 API 和协议执行**模糊测试**。
 
-The list given above serves primarily illustration purposes. For each
-module and for the complete Zephyr system (in general on a particular
-hardware platform), a suitable VA plan shall be created and executed.
-The findings of these analyses shall be considered in the security issue
-management process, and learnings shall be formulated as guidelines and
-incorporated into the secure coding guide.
+上述列表主要起说明作用。对于每个模块和完整的 Zephyr 系统（通常在特定硬件平台上），应创建并执行适当的 VA 计划。这些分析的发现应在安全问题管理流程中被考虑，且经验应被制定为指南并纳入安全编码指南。
 
-If possible (as in case of fuzzing analyses), these tests shall be
-integrated into the continuous integration process.
+如果可能（如模糊分析的情况下），这些测试应被整合到持续集成流程中。
 
-Security Certification
+安全认证
 **********************
 
-One goal of creating a secure branch of the Zephyr RTOS is to create a
-certifiable system or certifiable submodules thereof. The certification
-scope and scheme are yet to be decided. However, many certifications such
-as Common Criteria [CCITSE12]_ require evidence that the evaluation
-claims are indeed fulfilled, so a general certification process is
-outlined in the following. Based on the final choices for the
-certification scheme and evaluation level, this process needs to be
-refined.
+创建 Zephyr RTOS 安全分支的一个目标是创建可认证的系统或其可认证子模块。认证范围和方案尚待决定。然而，许多认证（如 Common Criteria [CCITSE12]_）要求证据证明评估声明确实被满足，因此以下概述了一般认证流程。基于认证方案和评估级别的最终选择，该流程需要被细化。
 
-Generic Certification Process
+通用认证流程
 =============================
 
-In general, the steps towards a certification or precertification
-(compare [MICR16]_) are:
+通常，迈向认证或预认证（参见 [MICR16]_）的步骤是：
 
-1. The **definition of assets** to be protected within the Zephyr RTOS.
-   Potential candidates are confidential information such as
-   cryptographic keys, user data such as communication logs, and
-   potentially IP of the vendor or manufacturer.
+1. **定义资产**要在 Zephyr RTOS 内保护的资产。潜在候选是机密信息（如密码密钥）、用户数据（如通信日志），以及可能的供应商或制造商的 IP。
 
-2. Developing a **threat model** and **security architecture** to
-   protect the assets against exploits of vulnerabilities of the
-   system. As a complete threat model includes the overall product
-   including the hardware platform, this might be realized by a
-   split model containing a precertified secure branch of Zephyr
-   which the vendor could use to certify their Zephyr-enabled
-   product.
+2. 开发**威胁模型**和**安全架构**以保护资产免受系统漏洞的利用。由于完整的威胁模型包括包括硬件平台的整体产品，这可能通过包含预认证的 Zephyr 安全分支的拆分模型实现，供应商可以使用该分支认证其 Zephyr 启用的产品。
 
-3. Formulating an **evaluation target** that includes the
-   **certification claims** on the security of the assets to be
-   evaluated and certified, as well as assumptions on the operating
-   conditions.
+3. 制定**评估目标**包括对要评估和认证的资产安全的**认证声明**，以及对运行条件的假设。
 
-4. Providing **proof** that the claims are fulfilled. This includes
-   consistent documentation of the security development process,
-   etc.
+4. 提供**证明**声明被满足。这包括安全开发流程的一致文档等。
 
-These steps are partially covered in previous sections as well. In
-contrast to these sections, the certification process only requires to
-consider those components that shall be covered by the certification.
-The security architecture, for example, considers assets on system level
-and might include items not relevant for the certification.
+这些步骤在之前的章节中也被部分涵盖。与这些章节相反，认证流程仅要求考虑应被认证涵盖的那些组件。例如，安全架构考虑系统级资产并可能包括对认证不相关的项目。
 
-Certification Options
+认证选项
 =====================
 
-For the security certification as such, the following options can be
-pursued:
+对于安全认证本身，可以追求以下选项：
 
-1. **Abstract precertification of Zephyr as a pure software system:**
-   this option requires assumptions on the underlying hardware
-   platform and the final application running on top of Zephyr. If
-   these assumptions are met by the hardware and the application, a
-   full certification can be more easily achieved. This option is
-   the most flexible approach but puts the largest burden on the
-   product vendor.
+1. **将 Zephyr 作为纯软件系统的抽象预认证**：该选项需要对底层硬件平台和运行在 Zephyr 之上的最终应用的假设。如果硬件和应用满足这些假设，完整认证可以更容易地达成。该选项是最灵活的方法，但对产品供应商施加最大负担。
 
-2. **Certification of Zephyr on specific hardware platform without a
-   specific application in mind:** this scenario describes the
-   enablement of a secure platform running the Zephyr RTOS. The
-   hardware manufacturer certifies the platform under defined
-   assumptions on the application. If these are met, the final
-   product can be certified with little effort.
+2. **在特定硬件平台上认证 Zephyr，没有特定应用**：该场景描述启用运行 Zephyr RTOS 的安全平台。硬件制造商在对应用的定义假设下认证平台。如果这些被满足，最终产品可以以很少的努力认证。
 
-3. **Certification of an actual product:** in this case, a full product
-   including a specific hardware, the Zephyr RTOS, and an
-   application is certified.
+3. **认证实际产品**：在此情况下，包括特定硬件、Zephyr RTOS 和应用的完整产品被认证。
 
-In all three cases, the certification scheme (e.g., FIPS 140-2 [NIST02]_
-or Common Criteria [CCITSE12]_), the scope of the certification
-(main-stream Zephyr, security branch, or certain modules), and the
-certification/assurance level need to be determined.
+在三种情况下，认证方案（例如，FIPS 140-2 [NIST02]_ 或 Common Criteria [CCITSE12]_）、认证范围（主 Zephyr、安全分支或某些模块）和认证/保证级别需要被确定。
 
-In case of partial certifications (options 1 and 2), assumptions on
-hardware and/or software are required for certifications. These can
-include [GHS10]_
+在部分认证（选项 1 和 2）的情况下，认证需要对硬件和/或软件的假设。这些可以包括 [GHS10]_
 
--  **Appropriate physical security** of the hardware platform and its
-   environment.
+-  硬件平台及其环境的**适当物理安全**。
 
--  **Sufficient protection of storage and timing channels**  on
-   the hardware platform itself and all connected devices. (No mentioning of
-   remote connections.)
+-  硬件平台本身和所有连接设备上的**存储和时序通道充分保护**（不提及远程连接）。
 
--  Only **trusted/assured applications** running on the device
+-  仅在设备上运行**可信/保证的应用**
 
--  The device and its software stack is configured and operated by
-   **properly trained and trusted individuals** with no malicious
-   intent.
+-  设备及其软件栈由**适当培训和可信的个人**配置和操作，没有恶意意图。
 
-These assumptions shall be part of the security claim and evaluation
-target documents.
+这些假设应是安全声明和评估目标文档的一部分。

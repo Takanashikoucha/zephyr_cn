@@ -1,180 +1,108 @@
 .. _lora_api:
 .. _lorawan_api:
 
-LoRa
-and
-LoRaWAN
+LoRa and LoRaWAN
 ################
 
 Overview
 ********
 
-LoRa
-（abbrev.
-for
-Long
-Range）
-是
-`Semtech
-Corporation`_
-开发
-的
-proprietary
-的
-low
-power
-wireless
-communication
-protocol。
+LoRa（Long Range 缩写）是 `Semtech Corporation`_ 开发的专有低功耗无线 communication protocol。
 
-LoRa
-act
-作为
-physical
-layer
-（PHY）
-based
-on
-chirp
-spread
-spectrum
-（CSS）
-modulation
-technique。
+LoRa 基于 chirp spread spectrum（CSS）modulation 技术作为 physical layer（PHY）。
 
-LoRaWAN
-（for
-Long
-Range
-Wide
-Area
-Network）
-define
-了
-LoRa
-PHY
-上面
-的
-networking
-layer。
+LoRaWAN（Long Range Wide Area Network）在 LoRa PHY 上定义 networking layer。
 
-Zephyr
-提供
-LoRa
-的
-APIs
-用于
-直接
-通过
-wireless
-interface
-send
-raw
-data
-packets
-同时
-也
-提供
-LoRaWAN
-的
-APIs
-用于
-connect
-end
-device
-到
-internet
-通过
-一
-个
-gateway。
+Zephyr 提供 LoRa APIs 以直接通过 wireless interface 发送 raw data packets（以及 LoRaWAN APIs 以通过 gateway 将 end device 连接到 internet。
 
-Zephyr
-提供
-两
-个
-LoRaWAN
-backend
-implementations：
+Zephyr 提供两个 LoRaWAN backend 实现：
 
-*
-**LoRaMac-node**
-（default）：
-Based
-on
-Semtech
-的
-`LoRaMac-node
-library`_
-作为
-Zephyr
-module
-included。
-Support
-所有
-由
-LoRaWAN
-specification
-defined
-的
-regions。
-通过
-:kconfig:option:`CONFIG_LORA_MODULE_BACKEND_LORAMAC_NODE`
-selected。
+* **LoRaMac-node**（默认）：基于 Semtech 的 `LoRaMac-node library`_（包含为 Zephyr module。支持 LoRaWAN specification 定义的所有 regions。用 :kconfig:option:`CONFIG_LORA_MODULE_BACKEND_LORAMAC_NODE` 选择。
 
-*
-**Native**：
-一
-个
-Zephyr
-idiomatic
-的
-LoRaWAN
-1.0.x
-Class
-A
-implementation
-直接
-与
-LoRa
-radio
-driver
-talk
-而
-没有
-external
-dependencies。
-当前
-support
-EU868
-region。
-通过
-:kconfig:option:`CONFIG_LORA_MODULE_BACKEND_NATIVE`
-selected。
+* **Native**：Zephyr-idiomatic 的 LoRaWAN 1.0.x Class A 实现（直接与 LoRa radio driver 通信而无外部依赖。当前支持 EU868 region。用 :kconfig:option:`CONFIG_LORA_MODULE_BACKEND_NATIVE` 选择。
 
 .. note::
 
-        ``LoRaMac-node``
-        已
-        被
-        Semtech
-        deprecated
-        以
-        支持
-        `LoRa
-        Basics
-        Modem`_。
-        将
-        Zephyr
-        API's
-        port
-到
-        使用
-        ``LoRa
-        Basics
-        Modem``
-        作为
-        backend
-        正在
-        进行
-        中。
+        Semtech 已弃用 ``LoRaMac-node`` 以改用 `LoRa Basics Modem`_。将 Zephyr APIs 移植为使用 ``LoRa Basics Modem`` 作为 backend 正在进行中。
+
+        当前（仅 SX1261、SX1262、SX1272 和 SX1276 chipsets 通过 :kconfig:option:`CONFIG_LORA_MODULE_BACKEND_LORA_BASICS_MODEM` 支持基础 LoRa API。
+
+
+LoRaWAN specification 由 `LoRa Alliance`_ 发布。
+
+.. _`Semtech Corporation`: https://www.semtech.com/
+
+.. _`LoRaMac-node library`: https://github.com/Lora-net/LoRaMac-node
+
+.. _`LoRa Basics Modem`: https://github.com/Lora-net/SWL2001
+
+.. _`LoRa Alliance`: https://lora-alliance.org/
+
+Configuration Options
+*********************
+
+LoRa PHY
+========
+
+相关 configuration options 可在 :zephyr_file:`drivers/lora/Kconfig` 下找到。
+
+* :kconfig:option:`CONFIG_LORA`
+
+* :kconfig:option:`CONFIG_LORA_SHELL`
+
+* :kconfig:option:`CONFIG_LORA_INIT_PRIORITY`
+
+LoRaWAN
+=======
+
+相关 configuration options 可在 :zephyr_file:`subsys/lorawan/Kconfig` 下找到。
+
+* :kconfig:option:`CONFIG_LORAWAN`
+
+* :kconfig:option:`CONFIG_LORAWAN_SYSTEM_MAX_RX_ERROR`
+
+* :kconfig:option:`CONFIG_LORAWAN_REGION_AS923`
+
+* :kconfig:option:`CONFIG_LORAWAN_REGION_AU915`
+
+* :kconfig:option:`CONFIG_LORAWAN_REGION_CN470`
+
+* :kconfig:option:`CONFIG_LORAWAN_REGION_CN779`
+
+* :kconfig:option:`CONFIG_LORAWAN_REGION_EU433`
+
+* :kconfig:option:`CONFIG_LORAWAN_REGION_EU868`
+
+* :kconfig:option:`CONFIG_LORAWAN_REGION_KR920`
+
+* :kconfig:option:`CONFIG_LORAWAN_REGION_IN865`
+
+* :kconfig:option:`CONFIG_LORAWAN_REGION_US915`
+
+* :kconfig:option:`CONFIG_LORAWAN_REGION_RU864`
+
+Native Backend
+--------------
+
+Native backend 用 :kconfig:option:`CONFIG_LORA_MODULE_BACKEND_NATIVE` 选择（且 :zephyr_file:`subsys/lorawan/native/Kconfig` 下有额外 options：
+
+* :kconfig:option:`CONFIG_LORAWAN_NATIVE_ENGINE_STACK_SIZE`
+
+* :kconfig:option:`CONFIG_LORAWAN_NATIVE_ENGINE_PRIORITY`
+
+* :kconfig:option:`CONFIG_LORAWAN_NATIVE_PUBLIC_NETWORK`
+
+* :kconfig:option:`CONFIG_LORAWAN_NATIVE_DUTY_CYCLE`
+
+API Reference
+*************
+
+LoRa PHY
+========
+
+.. doxygengroup:: lora_interface
+
+LoRaWAN
+=======
+
+.. doxygengroup:: lorawan_api

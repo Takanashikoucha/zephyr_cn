@@ -1,46 +1,39 @@
 .. _io_services:
 
-Input
-/
-Output
+Input / Output
 ##############
 
-这
-个
+此
 section
-cover
-用于
-在
+涵盖
 runtime
 与
 outside
 world
-interact
+交互
 的
 services：
 从
 input
 devices
-read、
-write
-到
-console、
+读取、
+向
+console
+写入、
 format
-output、
-以及
+output（并
 在
 application
 code
 和
 hardware
-之间
-efficiently
-move
+间
+高效
+移动
 data。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    console.rst
    input/index.rst

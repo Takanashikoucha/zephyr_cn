@@ -2,152 +2,41 @@
 
 .. _page-not-found:
 
-Sorry
-Page
-Not
-Found
+抱歉，未找到页面
 #####################
 
-.. image::
-   images/Zephyr
-   Kite
-   in
-   tree.png
-   :align:
-   right
+.. image:: images/Zephyr-Kite-in-tree.png
+   :align: right
 
-.. raw::
-   html
+.. raw:: html
 
    <noscript>
-   Sorry
-   the
-   page
-   you
-   requested
-   was
-   not
-   found
-   on
-   this
-   site.
+   Sorry, the page you requested was not found on this site.
    </noscript>
-   <script
-   type="text/javaScript">
+   <script type="text/javaScript">
    <!--
-   var
-   strReferrer=document.referrer;
-   if
-   (strReferrer.length
-   >
-   0)
-   {
-      document.write("<p>Sorry
-   the
-   page
-   you
-   requested:
-   "
-   +
-      "<a
-   href=\""
-   +
-   strReferrer
-   +
-   "\">"
-   +
-      strReferrer
-   +
-   "</a>
-   was
-   not
-   found
-   on
-   this
-   site.</p>");
-   }
-   else
-   {
-      document.write("<p>Sorry
-   the
-   page
-   you
-   requested
-   was
-   not
-   found
-   on
-   this
-   site.</p>")
+   var strReferrer=document.referrer;
+   if (strReferrer.length > 0) {
+      document.write("<p>Sorry, the page you requested: " +
+      "<a href=\"" + strReferrer + "\">" +
+      strReferrer + "</a> was not found on this site.</p>");
+   } else {
+      document.write("<p>Sorry, the page you requested was not found on this site.</p>")
    }
    //-->
    </script>
 
-Please
-check
-the
-url
-for
-misspellings。
+请检查 URL 是否有拼写错误。
 
-It's
-also
-possible
-we've
-removed
-or
-renamed
-the
-page
-you're
-looking
-for。
+也有可能我们已经删除或重命名了您正在查找的页面。
 
-Please
-try
-using
-the
-navigation
-links
-on
-the
-left
-of
-this
-page
-to
-navigate
-the
-major
-sections
-of
-our
-site
-or
-use
-the
-search
-box。
+请尝试使用本页左侧的导航链接浏览网站的主要章节，或使用搜索框。
 
-If
-you
-got
-this
-error
-by
-following
-a
-link
-please
-let
-us
-know
-by
-creating
-an
-issue
-on
-`GitHub`_。
+如果您是通过点击某个链接到达此页面的，请通过创建
+`GitHub`_ issue 告知我们。
 
-.. _GitHub:
-   https://github.com/zephyrproject-rtos/zephyr/issues
+.. _GitHub: https://github.com/zephyrproject-rtos/zephyr/issues
+
+.. raw:: html
+
+   <div style='clear:both'></div>

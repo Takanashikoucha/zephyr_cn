@@ -3,34 +3,27 @@
 Frameworks
 ##########
 
-这
-个
+此
 section
-cover
-high
-level
-的
-frameworks
-和
-libraries
-它们
-help
+涵盖
+帮助
 structure
 application
 logic、
-在
 runtime
-load
+加载
 code、
 stream
-media、
-和
+media 和
 model
-sensors。
+sensors 的
+high-level
+frameworks
+和
+libraries。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    llext/index.rst
    mpipe/index.rst

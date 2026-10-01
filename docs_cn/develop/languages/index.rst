@@ -1,7 +1,6 @@
 .. _language_support:
 
-语言
-支持
+语言支持
 ################
 
 .. toctree::

@@ -1,24 +1,11 @@
 .. _usbd_hid_device:
 
-HID
-device
-API
+HID device API
 ##############
 
-HID
-device
-specific
-的
-API
-它
-defined
-在
-:zephyr_file:`include/zephyr/usb/class/usbd_hid.h`
-中。
+HID device 特定 API（定义在 :zephyr_file:`include/zephyr/usb/class/usbd_hid.h`。
 
-API
-Reference
+API Reference
 *************
 
-.. doxygengroup::
-   usbd_hid_device
+.. doxygengroup:: usbd_hid_device

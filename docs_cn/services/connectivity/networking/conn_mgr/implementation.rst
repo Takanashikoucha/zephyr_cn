@@ -1,7 +1,6 @@
 .. _conn_mgr_impl:
 
-Connectivity
-Implementations
+Connectivity Implementations
 ############################
 
 .. _conn_mgr_impl_overview:
@@ -9,474 +8,228 @@ Implementations
 Overview
 ========
 
-Connectivity
-implementations
-是
-technology
-specific
-的
-modules
-它们
-允许
-特定
-的
-Zephyr
-ifaces
-support
-:ref:`Connectivity
-Control
-<conn_mgr_control>`。
-它们
-负责
-将
-generic
-的
-:ref:`connectivity
-control
-API
-<conn_mgr_control_api>`
-calls
-translate
-到
-hardware
-specific
-的
-operations。
-它们
-也
-负责
-implement
-standardized
-的
-:ref:`persistence
-and
-timeout
-<conn_mgr_control_persistence_timeouts>`
-behaviors。
+Connectivity implementations 为 technology-specific modules（允许特定 Zephyr ifaces 支持 :ref:`Connectivity Control <conn_mgr_control>`。其负责将 generic :ref:`connectivity control API <conn_mgr_control_api>` calls 翻译为 hardware-specific operations。其还负责实现标准化的 :ref:`persistence 和 timeout <conn_mgr_control_persistence_timeouts>` behaviors。
 
-参考
-:ref:`implementation
-guidelines
-<conn_mgr_impl_guidelines>`
-获取
-关于
-write
-conformant
-的
-connectivity
-implementations
-的
-details。
+编写符合规范的 connectivity implementations 的细节参见 :ref:`implementation guidelines <conn_mgr_impl_guidelines>`。
 
 .. _conn_mgr_impl_architecture:
 
 Architecture
 ============
 
-:ref:`implementation
-API
-<conn_mgr_impl_api>`
-允许
-connectivity
-implementations
-在
-build
-time
-用
-:c:macro:`CONN_MGR_CONN_DEFINE`
-被
-:ref:`defined
-<conn_mgr_impl_defining>`。
+:ref:`implementation API <conn_mgr_impl_api>` 允许在 build time 用 :c:macro:`CONN_MGR_CONN_DEFINE` :ref:`定义 <conn_mgr_impl_defining>` connectivity implementations。
 
-这
-create
-一
-个
-:c:struct:`conn_mgr_conn_impl`
-struct
-的
-static
-instance
-它
-然后
-store
-对
-passed
-in
-的
-:c:struct:`conn_mgr_conn_api`
-struct
-（应该
-被
-populated
-with
-implementation
-callbacks）
-的
-reference。
+这创建 :c:struct:`conn_mgr_conn_impl` struct 的静态 instance（然后存储对传入 :c:struct:`conn_mgr_conn_api` struct（应填充 implementation callbacks）的引用。
 
-一
-旦
-defined
-你
-可以
-用
-name
-reference
-implementations
-并
-用
-:c:macro:`CONN_MGR_BIND_CONN`
-bind
-它们
-到
-任何
-unbound
-的
-iface。
-注意
-不要
-accidentally
-bind
-两
-个
-connectivity
-implementations
-到
-单
-个
-iface。
+定义后（可按名称引用 implementations（并用 :c:macro:`CONN_MGR_BIND_CONN` 绑定到任何 unbound iface。确保不意外将两个 connectivity implementations 绑定到单个 iface。
 
-一
-旦
-iface
-被
-bound
-:ref:`connectivity
-control
-API
-<conn_mgr_control_api>`
-functions
-可以
-在
-iface
-上
-被
-called
-它们
-将
-被
-translate
-到
-:c:struct:`conn_mgr_conn_api`
-中
-对应
-的
-implementation
-functions。
+Iface 绑定后（可在 iface 上调用 :ref:`connectivity control API <conn_mgr_control_api>` functions（其将翻译为 :c:struct:`conn_mgr_conn_api` 中对应的 implementation functions。
 
-Bind
-一
-个
-iface
-不
-直接
-modify
-它
-的
-:c:struct:`iface
-struct
-<net_if>`。
+绑定 iface 不直接修改其 :c:struct:`iface struct <net_if>`。
 
-相反
-一
-个
-:c:struct:`conn_mgr_conn_binding`
-的
-instance
-被
-created
-并
-appended
-到
-internal
-的
-:ref:`iterable
-section
-<iterable_sections_api>`。
+相反（创建 :c:struct:`conn_mgr_conn_binding` 的 instance（并追加到内部 :ref:`iterable section <iterable_sections_api>`。
 
-这
-个
-binding
-structure
-将
-contain
-对
-bound
-的
-iface、
-它
-bound
-到
-的
-connectivity
-implementation
-以及
-per
-iface
-的
-:ref:`context
-pointer
-<conn_mgr_impl_ctx>`
-的
-pointer
-的
-references。
+此 binding structure 将包含对绑定的 iface（其绑定的 connectivity implementation（以及指向 per-iface :ref:`context pointer <conn_mgr_impl_ctx>` 的 pointer。
 
-这
-个
-iterable
-section
-然后
-可以
-被
-iterated
-over
-用于
-find
-out
-什么
-（如果
-有
-）
-connectivity
-implementation
-被
-bound
-到
-给定
-的
-iface。
-这
-个
-search
-process
-被
-:ref:`connectivity
-control
-API
-<conn_mgr_control_api>`
-中
-大多数
-的
-functions
-used。
-因此
-这些
-functions
-应该
-被
-sparingly
-called
-因为
-它们
-相对
-较高
-的
-search
-cost。
+然后可遍历此 iterable section 以查明（若有）已绑定到给定 iface 的 connectivity implementation。此搜索过程由 :ref:`connectivity control API <conn_mgr_control_api>` 中大多数 functions 使用。因此（由于其相对较高的搜索成本（应谨慎调用这些 functions。
 
+单个 connectivity implementation 可绑定到多个 ifaces。更多细节参见 :ref:`conn_mgr_impl_guidelines_no_instancing`。
+
+.. _conn_mgr_integration_diagram_detailed:
+
+.. figure:: figures/integration_diagram_detailed.svg
+    :alt: A detailed view of how Connection Manager integrates with Zephyr and the application.
+    :figclass: align-center
+
+    A detailed view of how Connection Manager integrates with Zephyr and the application.
+
+    简化版本参见 :ref:`here <conn_mgr_integration_diagram_simple>`。
+
+.. _conn_mgr_impl_ctx:
+
+Context Pointer
+===============
+
+由于单个 connectivity implementation 可由若干 Zephyr ifaces 共享（每个 binding 实例化（:ref:`configurable type <conn_mgr_impl_declaring>`）唯一于该 binding 的 context container。然后每个 binding 用对该 container 的引用实例化（implementations 然后可用其访问 per-iface state 信息。
+
+参见 :ref:`conn_mgr_impl_guidelines_binding_access` 和 :ref:`conn_mgr_impl_guidelines_no_instancing`。
+
+.. _conn_mgr_impl_defining:
+
+Defining an implementation
+==========================
+
+Connectivity implementation 可按如下定义：
+
+.. code-block:: c
+
+   /* Create the API implementation functions */
+   int my_connect_impl(struct conn_mgr_conn_binding *const binding) {
+           /* Cause your underlying technology to associate */
+   }
+   int my_disconnect_impl(struct conn_mgr_conn_binding *const binding) {
+           /* Cause your underlying technology to disassociate */
+   }
+   void my_init_impl(struct conn_mgr_conn_binding *const binding) {
+           /* Perform any required initialization for your underlying technology */
+   }
+
+   /* Declare the API struct */
+   static struct conn_mgr_conn_api my_impl_api = {
+           .connect = my_connect_impl,
+           .disconnect = my_disconnect_impl,
+           .init = my_init_impl,
+           /* ... so on */
+   };
+
+   /* Define the implementation (named MY_CONNECTIVITY_IMPL) */
+   CONN_MGR_CONN_DEFINE(MY_CONNECTIVITY_IMPL, &my_impl_api);
+
+.. note::
+   除非还 :ref:`declare the context pointer type <conn_mgr_impl_declaring_ctx>`（否则此不工作。
+
+.. _conn_mgr_impl_declaring:
+
+Declaring an implementation publicly
+====================================
+
+定义后（可通过如下声明（在 header file 中）使 connectivity implementation 对其他 compilation units 可用：
+
+.. code-block:: c
+   :caption: ``my_connectivity_header.h``
+
+   CONN_MGR_CONN_DECLARE_PUBLIC(MY_CONNECTIVITY_IMPL);
+
+包含此声明的 header file 须包含在需引用 implementation 的任何 compilation units 中。
+
+.. _conn_mgr_impl_declaring_ctx:
+
+Declaring a context type
+========================
+
+为使 :c:macro:`CONN_MGR_CONN_DEFINE` 工作（须声明对应的 context pointer type。这是因为所有 connectivity bindings 包含其关联 context pointer type 的 :ref:`conn_mgr_impl_ctx`。
+
+若使用 :c:macro:`CONN_MGR_CONN_DECLARE_PUBLIC`（在声明旁声明此 type：
+
+.. code-block:: c
+   :caption: ``my_connectivity_impl.h``
+
+   #define MY_CONNECTIVITY_IMPL_CTX_TYPE struct my_context_type *
+   CONN_MGR_CONN_DECLARE_PUBLIC(MY_CONNECTIVITY_IMPL);
+
+然后（确保在调用 :c:macro:`CONN_MGR_CONN_DEFINE` 前包含 header file：
+
+.. code-block:: c
+   :caption: ``my_connectivity_impl.c``
+
+   #include "my_connectivity_impl.h"
+
+   CONN_MGR_CONN_DEFINE(MY_CONNECTIVITY_IMPL, &my_impl_api);
+
+否则（仅须在 :c:macro:`CONN_MGR_CONN_DEFINE` 调用前声明 context pointer type 即可：
+
+.. code-block:: c
+
+   #define MY_CONNECTIVITY_IMPL_CTX_TYPE struct my_context_type *
+   CONN_MGR_CONN_DEFINE(MY_CONNECTIVITY_IMPL, &my_impl_api);
 
 .. note::
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-.. _conn_mgr_impl_guidelines_non_blocking:
+   命名很重要。
+   Context pointer type 声明须用与 implementation 声明相同的 name（但加 ``_CTX_TYPE``。
 
-*Remain non-blocking*
----------------------
+   前例中（context type 名为 ``MY_CONNECTIVITY_IMPL_CTX_TYPE``（因为 ``MY_CONNECTIVITY_IMPL`` 用作 connectivity implementation name。
 
-All connectivity implementation callbacks should be non-blocking.
+若 connectivity implementation 不需 context pointer（仅将 type 声明为 void：
 
-For instance, calls to :c:member:`conn_mgr_conn_api.connect` should initiate a connection process and return immediately.
+.. code-block:: c
 
-One exception is :c:member:`conn_mgr_conn_api.init`, whose implementations are permitted to block.
+   #define MY_CONNECTIVITY_IMPL_CTX_TYPE void *
 
-However, bear in mind that blocking during this callback will delay system init, so still consider offloading time-consuming tasks to a background thread.
+.. _conn_mgr_impl_binding:
 
-.. _conn_mgr_impl_guidelines_immediate_api_readiness:
+Binding an iface to an implementation
+=====================================
 
-*Make API immediately ready*
-----------------------------
+已定义的 connectivity implementation 可在 iface 的 device 定义后任何位置调用 :c:macro:`CONN_MGR_BIND_CONN` 绑定到 iface：
 
-Connectivity implementations must be ready to receive API calls immediately after :c:member:`conn_mgr_conn_api.init`.
+.. code-block:: c
 
-For instance, a call to :c:member:`conn_mgr_conn_api.connect` must eventually lead to an association attempt, even if called immediately after :c:member:`conn_mgr_conn_api.init`.
+	/* Define an iface */
+	NET_DEVICE_INIT(my_iface,
+		/* ... the specifics here don't matter ... */
+	);
 
-If the underlying technology cannot be made ready for connect commands immediately when :c:member:`conn_mgr_conn_api.init` is called, calls to :c:member:`conn_mgr_conn_api.connect` must be queued in a non-blocking fashion, and then executed later when ready.
+	/* Now bind MY_CONNECTIVITY_IMPL to that iface --
+	 * the name used should match with the above
+	 */
+	CONN_MGR_BIND_CONN(my_iface, MY_CONNECTIVITY_IMPL);
 
-.. _conn_mgr_impl_guidelines_context_pointer:
+.. _conn_mgr_impl_guidelines:
 
-*Do not store state information outside the context pointer*
-------------------------------------------------------------
+Connectivity implementation guidelines
+======================================
 
-Connection Manager provides a context pointer to each binding.
+而非集中实现所有 features（Connection Manager 依赖每个 connectivity implementation 单独实现许多 behaviors 和 features。
 
-Connectivity implementations should store all state information in this context pointer.
+此 approach 允许 Connection Manager 保持精简（并允许每个 connectivity implementation 为这些 behaviors 选择最适合自身的 approach。然而（其依赖信任（所有 connectivity implementations 将忠实实现被委托给它们的 features。
 
-The only exception is connectivity implementations that are meant to be bound to only a single iface.
-Such implementations may use statically declared state instead.
+为保持所有 connectivity implementations 之间的一致性（编写自己的 implementation 时遵循以下 guidelines：
 
-See also :ref:`conn_mgr_impl_guidelines_no_instancing`.
+.. _conn_mgr_impl_guidelines_timeout_persistence:
 
-.. _conn_mgr_impl_guidelines_iface_access:
+*完全实现 timeout 和 persistence 行为*
+----------------------------------------
 
-*Access ifaces only through binding structs*
---------------------------------------------
+每个 connectivity implementation 须完整实现 :ref:`persistence 和 timeout <conn_mgr_control_persistence_timeouts>` behaviors。Connection Manager 不提供默认实现（也不回退到任何默认行为。
 
-Do not use statically declared ifaces or externally acquire references to ifaces.
+*Persistence*
 
-For example, do not use :c:func:`net_if_get_default` under the assumption that the bound iface will be the default iface.
+Persistence 须实现为在 connection loss 后自动触发新的 connection attempt。Implementation 须负责决定何时触发新的 connection attempt（以及是否触发。
 
-Instead, always use the :c:member:`iface pointer <conn_mgr_conn_binding.iface>` provided by the relevant :c:struct:`binding struct <conn_mgr_conn_binding>`.
-See also :ref:`conn_mgr_impl_guidelines_binding_access`.
+*Timeout*
 
-.. _conn_mgr_impl_guidelines_bindings_optional:
-
-*Make implementations optional at compile-time*
------------------------------------------------
-
-Connectivity implementations should provide a Kconfig option to enable or disable the implementation without affecting bound iface availability.
-
-In other words, it should be possible to configure builds that include Connectivity Manager, as well as the iface that would have been bound to the implementation, but not the implementation itself, nor its binding.
+Timeout 须实现为在指定时长后放弃 connection attempt。Implementation 须负责决定 timeout 何时过期（以及过期后做什么。
 
 .. _conn_mgr_impl_guidelines_no_instancing:
 
-*Do not instance implementations*
----------------------------------
+*不要为每个 iface 实例化 implementation*
+----------------------------------------
 
-Do not declare a separate connectivity implementation for every iface you are going to bind to.
-
-Instead, bind one global connectivity implementation to all of your ifaces, and use the context pointer to store state relevant to individual ifaces.
-
-See also :ref:`conn_mgr_impl_guidelines_binding_access` and :ref:`conn_mgr_impl_guidelines_iface_access`.
+单个 connectivity implementation 实例可（且应）绑定到多个 ifaces。不要为每个 iface 创建新 implementation 实例。
 
 .. _conn_mgr_impl_guidelines_binding_access:
 
-*Do not access bindings without locking them*
----------------------------------------------
+*通过 binding 访问 per-iface 状态*
+----------------------------------------
 
-Bindings may be accessed and modified at random by multiple threads, so modifying or reading from a binding without first :c:func:`locking it <conn_mgr_binding_lock>` may lead to unpredictable behavior.
+Per-iface 状态须通过 binding 的 context pointer 访问。不要使用全局状态或 static variables 存储 per-iface 状态。
 
-This applies to all descendents of the binding, including anything in the :ref:`context container <conn_mgr_impl_ctx>`.
+.. _conn_mgr_impl_guidelines_retry_threshold:
 
-Make sure to :c:func:`unlock <conn_mgr_binding_unlock>` the binding when you are done accessing it.
+*Retry 阈值*
+------------
 
-.. note::
+Implementation 须定义何为 connection attempt 失败。连续 sub-attempts 失败达到阈值后（应视为 connection attempt 整体失败。
 
-   A possible exception to this rule is if the resource in question is inherently thread-safe.
-
-   However, be careful taking advantage of this exception.
-   It may still be possible to create a race condition, for instance when accessing multiple thread-safe resources simultaneously.
-
-   Therefore, it is recommended to simply always lock the binding, whether or not the resource being accessed is inherently thread-safe.
-
-.. _conn_mgr_impl_guidelines_support_builtins:
-
-*Do not disable built-in features*
-----------------------------------
-
-Do not attempt to prevent the use of built-in features (such as :ref:`conn_mgr_control_persistence_timeouts` or :ref:`conn_mgr_control_automations`).
-
-All connectivity implementations must fully support these features.
-Implementations must not attempt to force certain features to be always enabled or always disabled.
-
-.. _conn_mgr_impl_guidelines_trigger_events:
-
-*Trigger connectivity control events*
--------------------------------------
-
-Connectivity control :ref:`network management <net_mgmt_interface>` events are not triggered automatically by Connection Manager.
-
-Connectivity implementations must trigger these events themselves.
-
-Trigger :c:macro:`NET_EVENT_CONN_CMD_IF_TIMEOUT` when a connection :ref:`timeout <conn_mgr_control_timeouts>` occurs.
-See :ref:`conn_mgr_control_events_timeout` for details.
-
-Trigger :c:macro:`NET_EVENT_CONN_IF_FATAL_ERROR` when a fatal (non-recoverable) connection error occurs.
-See :ref:`conn_mgr_control_events_fatal_error` for details.
-
-See :ref:`net_mgmt_interface` for details on firing network management events.
-
-.. _conn_mgr_impl_timeout_persistence:
-
-Implementing timeouts and persistence
-=====================================
-
-First, see :ref:`conn_mgr_control_persistence_timeouts` for a high-level description of the expected behavior of timeouts and persistence.
-
-Connectivity implementations must fully conform to that description, regardless of the behavior of the underlying connectivity technology.
-
-Sometimes this means writing extra logic in the connectivity implementation to fake certain behaviors.
-The following sections discuss various common edge-cases and nuances and how to handle them.
-
-.. _conn_mgr_impl_tp_inherent_persistence:
-
-*Inherently persistent technologies*
-------------------------------------
-
-If the underlying technology automatically attempts to reconnect or retry connection after connection loss or failure, the connectivity implementation must manually cancel such attempts when they are in conflict with timeout or persistence settings.
-
-For example:
-
-  * If the underlying technology automatically attempts to reconnect after losing connection, and persistence is disabled for the iface, the connectivity implementation should immediately cancel this reconnection attempt.
-  * If a connection attempt times out on an iface whose underlying technology does not have a built-in timeout, the connectivity implementation must simulate a timeout by cancelling the connection attempt manually.
-
-.. _conn_mgr_impl_tp_inherent_nonpersistence:
-
-*Technologiess that give up on connection attempts*
----------------------------------------------------
-
-If the underlying technology has no mechanism to retry connection attempts, or would give up on them before the user-configured timeout, or would not reconnect after connection loss, the connectivity implementation must manually re-request connection to counteract these deviances.
-
-* If your underlying technology is not persistent, you must manually trigger reconnect attempts when persistence is enabled.
-* If your underlying technology does not support a timeout, you must manually cancel connection attempts if the timeout is enabled.
-* If your underlying technology forces a timeout, you must manually trigger a new connection attempts if that timeout is shorter than the Connection Manager timeout.
-
-.. _conn_mgr_impl_tp_assoc_retry:
-
-*Technologies with association retry*
--------------------------------------
-
-Many underlying technologies do not usually associate in a single attempt.
-
-Instead, these underlying technologies may need to make multiple back-to-back association attempts in a row, usually with a small delay.
-
-In these situations, the connectivity implementation should treat this series of back-to-back association sub-attempts as a single unified connection attempt.
-
-For instance, after a sub-attempt failure, persistence being disabled should not prevent further sub-attempts, since they all count as one single overall connection attempt.
-See also :ref:`conn_mgr_impl_tp_persistence_during_connect`.
-
-At which point a series of failed sub-attempts should be considered a failure of the connection attempt as a whole is up to each implementation to decide.
-
-If the connection attempt crosses this threshold, but the configured timeout has not yet elapsed, or there is no timeout, sub-attempts should continue.
+若 connection attempt 超过此阈值（但配置的 timeout 尚未过期（或无 timeout（sub-attempts 应继续。
 
 .. _conn_mgr_impl_tp_persistence_during_connect:
 
-*Persistence during connection attempts*
+*Connection attempts 期间的 persistence*
 ----------------------------------------
 
-Persistence should not affect any aspect of implementation behavior during a connection attempt.
-Persistence should only affect whether or not connection attempts are automatically triggered after a connection loss.
+Persistence 不应影响 connection attempt 期间 implementation 行为的任何方面。Persistence 应仅影响 connection loss 后是否自动触发 connection attempts。
 
-The configured timeout should fully determine whether connection retry should be performed.
+配置的 timeout 应完全决定是否应执行 connection retry。
 
 .. _conn_mgr_impl_api:
 
 Implementation API
 ==================
 
-Include header file :file:`include/zephyr/net/conn_mgr_connectivity_impl.h` to access these.
+包含 header file :file:`include/zephyr/net/conn_mgr_connectivity_impl.h` 以访问这些。
 
-Only for use by connectivity implementations.
+仅供 connectivity implementations 使用。
 
 .. doxygengroup:: conn_mgr_connectivity_impl

@@ -1,124 +1,25 @@
 .. _naming_conventions:
 
-Naming
-conventions
+命名约定
 ##################
 
-This
-section
-describes
-the
-naming
-conventions
-adopted
-by
-the
-Zephyr
-Project
-for
-each
-individual
-programming
-language
-or
-tool
-used
-in
-it。
+本节描述 Zephyr 项目为每种所使用的
+编程语言或工具采用的命名约定。
 
-C
-Code
-naming
-conventions
+C 代码命名约定
 *************************
 
-The
-naming
-conventions
-in
-this
-section
-apply
-to
-C
-source
-and
-header
-files
-as
-stated
-in
-each
-individual
-sub
-section。
+本节的命名约定适用于 C 源文件和头文件，如各子节中所述。
 
-Public
-symbol
-prefixes
+公共符号前缀
 ======================
 
-All
-:term:`public
-APIs
-<public
-API>`
-introduced
-to
-Zephyr
-must
-be
-prefixed
-according
-to
-the
-area
-or
-subsystem
-they
-belong
-to。
-Examples
-of
-area
-or
-subsystem
-prefixes
-are
-provided
-below
-for
-reference。
+所有引入 Zephyr 的 :term:`公共 API <public API>`
+必须根据其所属的领域或子系统添加前缀。
+下面提供了领域或子系统前缀的示例以供参考。
 
-*
-``k_``
-for
-the
-kernel
-*
-``sys_``
-for
-system
-wide
-code
-and
-features
-*
-``net_``
-for
-the
-networking
-subsystem
-*
-``bt_``
-for
-the
-Bluetooth
-subsystem
-*
-``i2c_``
-for
-the
-I2C
-controller
-subsystem
+* 内核使用 ``k_``
+* 系统级代码和功能使用 ``sys_``
+* 网络子系统使用 ``net_``
+* 蓝牙子系统使用 ``bt_``
+* I2C 控制器子系统使用 ``i2c_``

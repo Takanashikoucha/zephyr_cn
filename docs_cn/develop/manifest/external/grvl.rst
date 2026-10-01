@@ -6,13 +6,9 @@ grvl
 简介
 ****
 
-`Graphics Rendering Visual Library`_（grvl）是一个面向基于 Zephyr 的
-MCU 的轻量级 GUI 库，提供既适合资源受限设备、又具备现代响应式用户体验
-的可移植方案。
+`Graphics Rendering Visual Library`_（grvl）是一个面向基于 Zephyr 的 MCU 的轻量级 GUI 库，提供既适合资源受限设备、又具备现代响应式用户体验的可移植方案。
 
-内部实现上，grvl 链接一个名为 `tinyxml`_ 的标准 XML 库，用于解析
-GUI 配置（代替代码）。UI 交互可使用集成的 `Duktape`_ JavaScript
-引擎以 JavaScript 脚本化。
+内部实现上，grvl 链接一个名为 `tinyxml`_ 的标准 XML 库，用于解析 GUI 配置（代替代码）。UI 交互可使用集成的 `Duktape`_ JavaScript 引擎以 JavaScript 脚本化。
 
 grvl 特性：
 
@@ -37,10 +33,7 @@ Duktape 采用 MIT 许可。
 在 Zephyr 中使用
 ****************
 
-要将 grvl 作为 Zephyr :ref:`module <modules>` 使用，在 Zephyr 子
-manifest（例如 ``zephyr/submanifests/grvl.yaml``）中添加以下条目，
-然后运行 ``west update``，或者将其作为 West 项目添加到项目的
-``west.yaml`` manifest：
+要将 grvl 作为 Zephyr :ref:`module <modules>` 使用，在 Zephyr 子 manifest（例如 ``zephyr/submanifests/grvl.yaml``）中添加以下条目，然后运行 ``west update``，或者将其作为 West 项目添加到项目的 ``west.yaml`` manifest：
 
 .. code-block:: yaml
 
@@ -76,4 +69,4 @@ manifest（例如 ``zephyr/submanifests/grvl.yaml``）中添加以下条目，
    https://github.com/antmicro/grvl-zephyr-calendar-demo
 
 .. _grvl 博客文章:
-  https://antmicro.com/blog/2025/12/grvl-a-lightweight-gui-library-for-zephyr-based-mcus
+   https://antmicro.com/blog/2025/12/grvl-a-lightweight-gui-library-for-zephyr-based-mcus

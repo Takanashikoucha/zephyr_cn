@@ -1,238 +1,188 @@
 .. _external-contributions:
 
-Contributing
-External
-Components
+贡献外部组件
 ################################
 
-In
-some
-cases
-it
-is
-desirable
-to
-leverage
-existing
-external
-source
-code
-in
-order
-to
-avoid
-re
-implementing
-basic
-functionality
-or
-features
-that
-are
-readily
-available
-in
-other
-open
-source
-projects。
+在某些情况下，利用现有的外部源代码可以避免重新实现其他开源项目中现成的基础功能或特性。
 
-This
-section
-describes
-the
-circumstances
-under
-which
-external
-source
-code
-can
-be
-imported
-into
-Zephyr
-and
-the
-process
-that
-governs
-the
-inclusion。
+本节描述外部源代码可以被导入 Zephyr 的情况，以及管理纳入过程的流程。
 
-There
-are
-three
-main
-factors
-that
-will
-be
-considered
-during
-the
-inclusion
-process
-in
-order
-to
-determine
-whether
-it
-will
-be
-accepted。
-These
-will
-be
-described
-in
-the
-following
-sections。
+纳入过程中将考虑三个主要因素，以确定是否接受。
 
-Note
-that
-most
-of
-this
-page
-deals
-with
-external
-components
-that
-end
-up
-being
-compiled
-and
-linked
-into
-the
-final
-image
-and
-programmed
-into
-the
-target
-hardware。
-For
-external
-tooling
-that
-is
-only
-used
-during
-compilation
-code
-analysis
-testing
-or
-simulation
-please
-refer
-to
-the
-:ref:`external-tooling`
-section
-at
-the
-end
-of
-the
-page。
+这些因素将在以下各节中描述。
 
-Software
-License
+请注意，本页的大部分内容涉及最终被编译并链接到最终镜像中、并烧录到目标硬件中的外部组件。对于仅在编译、代码分析、测试或仿真期间使用的外部工具，请参阅页面末尾的 :ref:`external-tooling` 节。
+
+软件许可证
 ****************
 
 .. note::
 
-   External
-   source
-   code
-   licensed
-   under
-   the
-   Apache
-   2.0
-   license
-   is
-   not
-   subject
-   to
-   this
-   section。
+    以 Apache-2.0 许可证授权的外部源代码不受本节约束。
 
-Integrating
-code
-into
-the
-Zephyr
-Project
-from
-other
-projects
-that
-use
-a
-license
-other
-than
-the
-Apache
-2.0
-license
-needs
-to
-be
-fully
-understood
-in
-context
-and
-approved
-by
-the
-`Zephyr
-governing
-board`_
-as
-described
-in
-the
-`Zephyr
-project
-charter`_。
-The
-board
-will
-automatically
-reject
-licenses
-that
-have
-not
-been
-approved
-by
-the
-`Open
-Source
-Initiative
-（OSI）`_。
-See
-the
-:ref:`external-src-process`
-section
-for
-more
-details。
+从使用 Apache 2.0 许可证以外的许可证的其他项目中集成代码到 Zephyr 项目，需要在上下文中被完全理解，并由 `Zephyr 治理委员会`_ 批准，如 `Zephyr 项目章程`_ 中所述。
 
-.. _Zephyr
-   governing
-   board:
-   https://www.zephyrproject.org/governance/
+委员会将自动拒绝未经 `开源促进会 (OSI)`_ 批准的许可证。有关更多细节，参见 :ref:`external-src-process` 节。
+
+.. _Zephyr governing board:
+    https://www.zephyrproject.org/governance/
+
+.. _Zephyr project charter:
+    https://www.zephyrproject.org/wp-content/uploads/2023/08/LF-Zephyr-Charter-2023.08.21.pdf
+
+.. _Open Source Initiative (OSI):
+    https://opensource.org/licenses/alphabetical
+
+通过仔细审查潜在的贡献，同时对贡献的代码执行 :ref:`DCO`，我们确保 Zephyr 社区能够使用 Zephyr 项目开发产品。
+
+这消除了对专利或版权问题的担心。
+
+价值
+*****
+
+与任何其他常规贡献一样，包含外部代码的贡献需要评估其价值。
+
+然而，对于来自现有项目的代码，必须回答额外的问题才能接受该贡献。更具体地说，以下将由技术指导委员会在外部源代码被接受到项目中之前仔细考虑和评估：
+
+- 这是向项目引入该功能的最优方式吗？内部实现的成本和维护外部开发的代码库的成本都需要评估。
+- 外部项目是否正在积极维护？这对于涉及安全或密码学的源代码尤为重要。
+- 是否考虑了所提议特定实现的替代方案？是否有其他开源项目实现了相同的功能？
+
+集成方式
+*******************
+
+有两种方式将外部源代码集成到 Zephyr 项目中，必须仔细考虑为每个特定情况选择合适的方式。
+
+集成到主树
+============================
+
+将外部源代码集成到项目的第一种方式是简单地将源代码文件导入主 ``zephyr`` 仓库。这自动意味着导入的源代码成为"主线"代码库的一部分，进而要求：
+
+- 代码按 Zephyr :ref:`coding_style` 格式化
+- 代码遵循项目的 :ref:`coding_guidelines`
+- 代码与主树中其余代码一样接受相同的检查和验证要求，包括静态分析
+- 如果尚未包含，所有文件都包含 SPDX 标签
+- 如果源代码不是 Apache 2.0 授权的，在仓库根目录的 :zephyr_file:`REUSE.toml` 文件中添加描述该组件的 ``[[annotations]]`` 条目。这是 :ref:`许可证页面 <zephyr_licensing>` 的生成来源。
+
+这种集成方式适用于小型和大型外部代码库，但通常更常用于前者。
+
+作为模块集成
+=======================
+
+将外部源代码集成到项目中的第二种方式是将第三方开源项目的全部或部分导入单独的仓库，然后以 :ref:`module <modules>` 的形式包含它。采用这种方式，代码被视为在外部开发，因此不自动受上一节要求的约束。
+
+集成到主清单文件（west.yaml）
+---------------------------------------------
+
+将外部代码集成到主 :file:`west.yml` 清单文件仅限于被 Zephyr 子系统（库）、平台、驱动（HAL）或测试或构建 Zephyr 组件所需的工具使用的代码。
+
+此组中模块的集成由 Zephyr 项目 CI 验证，并验证与每个 Zephyr 版本配合工作。
+
+集成的模块不会在没有详细迁移计划的情况下从树中移除。
+
+作为可选模块集成
+---------------------------------
+
+没有传入依赖的独立或松散集成的模块/项目应设为可选并保持独立。
+
+直接为用户以及通过 Zephyr 子系统或平台提供价值的可选项目应添加到默认被过滤的可选清单文件中（:file:`submanifests/optional.yml`）。
+
+此类可选项目可能在其自己的仓库中包含示例和测试。
+
+不应在 Zephyr 代码树（Git 仓库）中添加任何直接依赖，所有示例或测试代码应作为模块的一部分维护。
+
+.. note::
+
+    这适用于所有新的可选模块。在 Zephyr Git 仓库中有示例和测试代码的现有可选模块将随时间逐步过渡出去。
+
+作为外部模块集成
+---------------------------------
+
+类似于可选模块，但以预定义模板在文档中作为条目添加到 Zephyr 项目中。此类型的模块存在于 Zephyr 项目清单之外，文档指导用户和开发者如何集成功能。
+
+持续维护
+*******************
+
+无论集成方式如何，集成到 Zephyr 中的外部源代码都需要定期的持续维护。
+
+因此，提议集成外部源代码的提交者必须承诺在可预见的未来维护此类代码的集成。这可能需要在 :file:`MAINTAINERS.yml` 中添加条目作为流程的一部分。
+
+.. _external-src-process:
+
+提交和审查流程
+*****************************
+
+在外部源代码可以被包含在项目中之前，它必须经过技术指导委员会（TSC）审查和接受，在某些情况下还要经过 Zephyr 董事会审查。
+
+外部源代码集成的请求必须通过在 Zephyr 项目 GitHub 上的 issue 跟踪系统中创建新 issue 来提出。
+
+该 issue 必须包含关于源代码及其如何集成到项目中的详细信息。
+
+按照以下步骤开始提交流程：
+
+#. 确保详细阅读 :ref:`external-contributions` 节，以便了解 TSC 和董事会用于批准或拒绝请求的标准
+#. 使用 :github:`New External Source Code Issue <new?assignees=&labels=RFC&template=007_ext-source.yml>` 打开一个 issue
+#. 填写所有必需部分，确保提供足够的细节供 TSC 评估请求的价值。可选地，你还可以创建一个 Pull Request 来演示外部源代码的集成并从 issue 链接到它
+#. 等待 TSC 的反馈，回应作为 GitHub issue 评论添加的任何额外问题
+
+如果经过 TSC 考虑后，结论是集成外部源代码是最佳解决方案，且外部源代码以 Apache-2.0 许可证授权，提交流程即完成。
+
+外部源代码可以被集成。
+
+然而，如果外部源代码使用 Apache-2.0 以外的许可证，则必须遵循以下额外步骤：
+
+#. TSC 主席将提交流程早期创建的 GitHub issue 链接转发给 Zephyr 董事会以进一步审查
+
+#. Zephyr 董事会有两周时间审查和提问：
+
+   - 如果没有异议，事项即关闭。在两周期限届满前董事会一致批准可以加速批准
+
+   - 如果董事会成员提出无法通过电子邮件解决的异议，董事会将开会讨论是否推翻 TSC 批准或确定可以解决异议的其他方法
+
+#. 在 Zephyr TSC 和董事会批准后，提交流程即完成
+
+下面的流程图展示了流程的概览：
+
+.. figure:: media/ext-src-flowchart.svg
+   :align: center
+
+   提交流程
+
+.. _external-tooling:
+
+贡献外部工具
+*****************************
+
+本节专门讨论外部工具在 Zephyr 项目中的包含，其中工具被定义为辅助编译、测试或仿真过程但绝不成为编译并链接到最终镜像中的代码一部分的软件。
+
+在此上下文中，"包含"意味着成为 Zephyr 默认发行版的一部分，要么直接在主树的 :file:`scripts/` 文件夹下，要么作为主 :file:`west.yml` 清单中的 west 项目间接包含。
+
+因此，本节不适用于工具链、模拟器或其他第三方工具，这些工具仍可能被 Zephyr 构建系统或文档引用而无需包含在 Zephyr 中。
+
+工具组件必须以 `Open Source Initiative (OSI)`_ 批准的许可证发布。
+
+与常规外部组件一样，从另一个项目导入的工具可以集成到主树中或作为 :ref:`west project <west-workspace>`。
+
+请注意，在这种情况下，相应的 west 项目将不是 :ref:`module <modules>`，因为工具不使用 Zephyr 构建系统也不需要由其处理。有关差异的更多信息，请参阅 :ref:`modules-vs-projects`。
+
+如果工具集成到主树中，应放在 :file:`scripts/` 文件夹下。
+
+如果工具作为 west 项目集成，则项目仓库可以托管在 zephyrproject-rtos GitHub 组织之外，前提是项目通过主 :file:`west.yml` 清单中的 ``group-filter:`` 字段设为可选。有关可选项目的更多信息可在 :ref:`本节 <west-manifest-groups>` 中找到。
+
+TSC 必须批准引入新外部工具组件的每个 Pull Request。
+
+这将由 TSC 代表通过逐案分析提议的添加来完成。
+
+关于主清单的额外考虑
+*************************************************
+
+通常，对 `主清单文件`_ 的 ``projects:`` 部分的任何添加或删除都需要 TSC 批准。
+
+这包括但不限于：
+
+- 添加和删除组和组过滤器
+- 添加和删除项目
+- 添加和删除 ``import`` 语句
+
+.. _main manifest file:
+    https://github.com/zephyrproject-rtos/zephyr/blob/main/west.yml

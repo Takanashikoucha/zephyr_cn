@@ -1,450 +1,406 @@
 .. _arm_cortex_m_developer_guide:
 
-Arm
-Cortex-M
-Developer
-Guide
+Arm Cortex-M 开发者指南
 ############################
 
-Overview
+概述
 ********
 
-本
-页
-包含
-关于
-Arm
-Cortex-M
-architecture
-在
-Zephyr
-RTOS
-中
-移植
-状态
-的
-详细
-信息
-并
-描述
-开发
-基于
-Arm
-Cortex-M
-platforms
-的
-Zephyr
-应用
-时
-的
-关键
-方面。
+本页包含关于 Zephyr RTOS 中 Arm Cortex-M 架构移植状态的详细信息，
+并描述了为基于 Arm Cortex-M 的平台开发 Zephyr 应用时的关键方面。
 
-Key
-supported
-features
+关键支持特性
 **********************
 
-下面
-的
-表
-总结
-不同
-Arm
-Cortex-M
-implementation
-variants
-中
-关键
-OS
-功能
-的
-状态。
+下表总结了不同 Arm Cortex-M 实现变体中关键操作系统特性的状态。
 
 
 +---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
-|
-                                 |
-                                   |
-**Processor
-families**
-                                                                      |
-            |
+|                                 |                                   | **处理器系列**                                                                      |            |
 +---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
-|
-Architecture
-variant
-            |
-                                   |
-Arm
-v6-M
-                  |
-Arm
-v7-M
-                    |
-Arm
-v8-M
-             |
-Arm
-v8.1-M
-              |
+| 架构变体                        |                                   | Arm v6-M                  | Arm v7-M                    | Arm v8-M             | Arm v8.1-M              |
 +---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
-|
-                                 |
-                                   |
-**M0/M1**
-       |
-**M0+**
-|
-**M3**
-|
-   **M4**
-  |
-**M7**
-|
-**M23**
-|
-   **M33**
-  |
-  **M55**
-   |
-  **M85**
-   |
+|                                 |                                   | **M0/M1**       | **M0+** | **M3** |   **M4**  | **M7** | **M23** |   **M33**  |  **M55**   |  **M85**   |
 +---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
-|
-**OS
-Features**
-                 |
-                                   |
-                                                                                             |
-            |
+| **操作系统特性**                |                                   |                                                                                             |            |
 +---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
-|
-Programmable
-fault
-              |
-                                   |
-                 |
-         |
-        |
-           |
-        |
-         |
-            |
-            |
-            |
-|
-IRQ
-priorities
-                  |
-                                   |
-        N
-        |
-   N
-     |
-   Y
-    |
-    Y
-      |
-    Y
-   |
-    N
-    |
-     Y
-      |
-   Y
-        |
-   Y
-        |
+| 可编程故障                      |                                   |                 |         |        |           |        |         |            |            |            |
+| 中断优先级                      |                                   |        N        |   N     |   Y    |    Y      |    Y   |    N    |     Y      |   Y        |   Y        |
 +---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
-|
-Single-thread
-kernel
-support
-    |
-                                   |
-        Y
-        |
-   Y
-     |
-   Y
-    |
-    Y
-      |
-    Y
-   |
-    Y
-    |
-     Y
-      |
-   Y
-        |
-   Y
-        |
+| 单线程内核支持                  |                                   |        Y        |   Y     |   Y    |    Y      |    Y   |    Y    |     Y      |   Y        |   Y        |
 +---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
-|
-Thread
-local
-storage
-support
-    |
-                                   |
-        Y
-        |
-   Y
-     |
-   Y
-    |
-    Y
-      |
-    Y
-   |
-    Y
-    |
-     Y
-      |
-   Y
-        |
-   Y
-        |
+| 线程本地存储支持                |                                   |        Y        |   Y     |   Y    |    Y      |    Y   |    Y    |     Y      |   Y        |   Y        |
 +---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
-|
-**Interrupt
-handling**
-          |
-                                   |
-                                                                                             |
-            |
+| **中断处理**                    |                                   |                                                                                             |            |
 +---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
-|
-                                 |
-   Regular
-interrupts
-              |
-        Y
-        |
-   Y
-     |
-   Y
-    |
-    Y
-      |
-    Y
-   |
-    Y
-    |
-     Y
-      |
-   Y
-        |
-   Y
-        |
+|                                 |   常规中断                        |        Y        |   Y     |   Y    |    Y      |    Y   |    Y    |     Y      |   Y        |   Y        |
 +---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
-|
-                                 |
-   Dynamic
-interrupts
-              |
-        Y
-        |
-   Y
-     |
-   Y
-    |
-    Y
-      |
-    Y
-   |
-    Y
-    |
-     Y
-      |
-   Y
-        |
-   Y
-        |
+|                                 |   动态中断                        |        Y        |   Y     |   Y    |    Y      |    Y   |    Y    |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+|                                 |   直接中断                        |        Y        |   Y     |   Y    |    Y      |    Y   |    Y    |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+|                                 |   零延迟中断                      |        N        |   N     |   Y    |    Y      |    Y   |    Y    |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+| CPU 空闲                        |                                   |        Y        |   Y     |   Y    |    Y      |    Y   |    Y    |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+| 原生系统定时器（SysTick）       |                                   |        N [#f1]_ |   Y     |   Y    |    Y      |    Y   |    Y    |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+| **内存保护**                    |                                   |                                                                                             |            |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+|                                 |   用户模式                        |        N        |   Y     |   Y    |    Y      |    Y   |    Y    |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+|                                 |   硬件栈保护（MPU）              |        N        |   N     |   Y    |    Y      |    Y   |    Y    |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+|                                 | 硬件辅助栈限制检查                |        N        |   N     |   N    |    N      |    N   |Y [#f2]_ |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+|                                 |   特权执行永不 [#f3]_            |        N        |   N     |   N    |    N      |    N   |    N    |     N      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+| 硬件辅助控制                    |                                   |                 |         |        |           |        |         |            |            |            |
+| 流完整性                        |   PACBTI                          |        N        |   N     |   N    |    N      |    N   |    N    |     N      |   N        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+| 硬件辅助空指针                |                                   |                 |         |        |           |        |         |            |            |            |
+| 解引用检测                      |                                   |        N        |   N     |   Y    |    Y      |    Y   |    Y    |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+| 硬件辅助原子操作                |                                   |        N        |   N     |   Y    |    Y      |    Y   |    N    |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+| 对不可缓存区域的支持            |                                   |        N        |   N     |   Y    |    Y      |    Y   |    N    |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+| 执行 SRAM 函数                  |                                   |        N        |   N     |   Y    |    Y      |    Y   |    N    |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+| 浮点服务                        |                                   |        N        |   N     |   N    |    Y      |    Y   |    N    |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+| DSP ISA                         |                                   |        N        |   N     |   N    |    Y      |    Y   |    N    |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+| **可信执行**                    |                                                                                                                                 |            |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+|                                 | 原生 TrustZone-M 支持             |        N        |   N     |   N    |    N      |    N   |    Y    |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+|                                 | TF-M 集成                         |        N        |   N     |   N    |    N      |    N   |    N    |     Y      |   N        |   N        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+| 代码重定位                      |                                   |        Y        |   Y     |   Y    |    Y      |    Y   |    Y    |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+| 基于软件的向量表中继            |                                   |        Y        |   Y     |   Y    |    Y      |    Y   |    Y    |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+| 硬件辅助计时函数                |                                   |        N        |   N     |   Y    |    Y      |    Y   |    N    |     Y      |   Y        |   Y        |
++---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
+
+注释
+=====
+
+.. [#f1] SysTick 在 Cortex-M1 中是可选的
+.. [#f2] 栈限制检查仅在 Cortex-M23 的安全构建中
+.. [#f3] https://developer.arm.com/documentation/107655/100/RTOS-and-Secure-software-design-considerations/Secure-software-development-design-considerations/Security-and-privilege-combination/Using-PXN-bit?lang=en
+
+操作系统特性
+***********
+
+线程
+=======
+
+线程栈对齐
+----------------------
+
+每个 Zephyr 线程都定义有自己的栈内存。默认情况下，Cortex-M 强制双字
+线程栈对齐，参见 :kconfig:option:`CONFIG_STACK_ALIGN_DOUBLE_WORD`。如果启用
+基于 MPU 的硬件辅助栈溢出检测（:kconfig:option:`CONFIG_MPU_STACK_GUARD`），
+线程栈需要用更大的值对齐，由 :kconfig:option:`CONFIG_ARM_MPU_REGION_MIN_ALIGN_AND_SIZE`
+反映。在 Arm v6-M 和 Arm v7-M 架构变体中，在需要支持用户模式
+（:kconfig:option:`CONFIG_USERSPACE`）的应用中，线程栈还要求与其大小相等的值对齐。
+在这种情况下，线程栈大小需要是 2 的幂。这一切由
+:kconfig:option:`CONFIG_MPU_REQUIRES_POWER_OF_TWO_ALIGNMENT` 反映，
+它在带用户模式支持的 Arm v6-M 和 Arm v7-M 构建中强制执行。
+
+栈指针
+--------------
+
+在线程模式执行时，处理器使用进程栈指针（PSP）。处理器在处理程序模式
+执行时使用主栈指针（MSP），即在处理异常和硬件中断时。在线程模式中使用
+PSP *便于线程栈指针操作* 在线程上下文切换期间，而不影响处理程序模式
+中的当前执行上下文流。
+
+在 Arm Cortex-M 构建中，单个中断栈内存在异常和中断之间共享。
+中断栈的大小需要考虑嵌套中断，每个中断推送额外的栈帧。
+开发者可以用 :kconfig:option:`CONFIG_ISR_STACK_SIZE` 修改中断栈大小。
+
+中断栈也在早期启动期间使用，以便内核可以在切换到主线程之前
+初始化主线程的栈。
+
+线程上下文切换
+========================
+
+在 Arm Cortex-M 构建中，使用 PendSV 异常来触发切换到不同线程的
+上下文切换。PendSV 异常始终存在于 Cortex-M 实现中。PendSV 配置为
+最低可能的中断优先级，在所有 Cortex-M 变体中。这种设计的主要原因是
+
+* 利用 Cortex-M 处理器的尾链特性，从而限制发生的上下文切换操作数量。
+* 不影响硬件中断观察到的中断延迟。
+
+因此，Cortex-M 中的上下文切换是非原子的，即它可能被硬件中断*抢占*，
+然而，上下文切换操作必须在新线程上下文切换开始之前完成。
+
+通常，线程上下文切换将执行以下操作
+
+* 在切换出当前线程时，处理器存储
+
+    * 被调用者保存的寄存器（R4 - R11）在线程的被调用者保存寄存器容器中，
+      位于内核内存中
+    * 线程的当前操作*模式*
+
+        * 用户或特权执行模式
+        * 活动浮点上下文的存在
+        * 当前处理程序上下文（PendSV）的 EXC_RETURN 值
+
+    * 如果当前线程有活动的浮点上下文，则存储浮点被调用者保存寄存器
+      （S16 - S31）在线程的浮点被调用者保存寄存器容器中
+    * 当前线程的 PSP，指向当前线程异常栈帧的开头。后者包含被调用者
+      保存的上下文和被切换出线程的返回地址。
+
+* 在切换入新线程时，处理器
+
+    * 从线程的被调用者保存寄存器容器中恢复新线程的被调用者保存寄存器
+    * 恢复新线程的操作*模式*
+    * 如果切换入的线程在被切换出之前有活动的浮点上下文，则恢复浮点
+      被调用者保存寄存器
+    * 重新编程动态 MPU 区域以允许用户线程访问其栈和应用内存，和/或
+      在线程特权栈底部编程栈溢出 MPU 保护
+    * 为传入线程恢复 PSP 并重新编程栈指针限制寄存器（如适用，
+      参见 :kconfig:option:`CONFIG_BUILTIN_STACK_GUARD`）
+    * 如果启用基于哨兵的栈限制检查（参见 :kconfig:option:`CONFIG_STACK_SENTINEL`），
+      则可选地对切换入的线程执行栈限制检查。
+
+PendSV 异常返回序列在出栈异常栈帧时恢复新线程的被调用者保存寄存器
+和返回地址。
+
+上下文切换机制的实现存在于 :file:`arch/arm/core/cortex_m/swap_helper.S` 中。
+
+栈限制检查（Arm v8-M）
+-------------------------------
+
+Armv8-M 和 Armv8.1-M 变体支持使用 MSPLIM 和 PSPLIM 核心寄存器进行
+栈限制检查。当 :kconfig:option:`CONFIG_BUILTIN_STACK_GUARD` 设置时启用该特性。
+当启用栈限制检查时，线程的特权或用户栈以及中断栈分别由 PSPLIM 和
+MSPLIM 寄存器保护。MSPLIM 在内核启动期间*一次*配置，而 PSPLIM 在每次
+线程上下文切换或系统调用期间重新编程，当线程从使用其默认栈切换到
+使用其特权栈时，反之亦然。PSPLIM 重新编程
+
+* 具有相对较低的运行时开销（用 MSR 指令编程）
+* 不影响中断延迟
+* 不需要为栈保护保留任何内存区域
+* 不使用 MPU 区域
+
+因此，它被认为是在 Cortex-M 应用中轻量但非常高效的栈溢出检测机制。
+
+栈溢出触发 Arm v8-M 提供的专用 UsageFault 异常。
+
+中断处理特性
+===========================
+
+本节描述 Arm Cortex-M 中异常和中断处理周围的某些方面。
+
+中断优先级
+-------------------------
+
+可用（可配置）中断优先级级别的数量由 NVIC 中实现的中断优先级位数决定；
+这需要用设备树为每个 Cortex-M 平台描述：
+
+.. code-block:: devicetree
+
+    &nvic {
+            arm,num-irq-priority-bits = <#priority-bits>;
+    };
 
 
-.. note::
+保留优先级
+------------------------
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-* ZLIs are assigned the highest configurable priority level
-* SVCs are assigned the second highest configurable priority level
-* Regular HW interrupts are assigned priority levels lower than SVC.
+一些中断优先级级别为操作系统保留。
 
-The priority level configuration in Cortex-M is implemented in
-:file:`include/zephyr/arch/arm/cortex_m/exception.h`.
+按设计，系统故障异常具有最高优先级。在*基线*（Baseline）Cortex-M 中，
+这实际上由硬件强制执行，因为 HardFault 是唯一可用的处理器故障异常，
+其优先级高于任何可配置异常优先级。
 
-Locking and unlocking IRQs
+在*主线*（Mainline）Cortex-M 中，可用的故障异常（例如 MemManageFault、
+UsageFault 等）被分配最高的*可配置*优先级级别。
+（:kconfig:option:`CONFIG_CPU_CORTEX_M_HAS_PROGRAMMABLE_FAULT_PRIOS` 明确表示
+Cortex-M 实现支持可配置故障优先级。）
+
+该优先级级别从不与硬件中断共享（该规则的一个例外如下所述）。因此，
+在常规 ISR 中发生的处理器故障将由相应的故障处理程序处理，不会升级为
+HardFault，*类似于在线程模式中发生的处理器故障*。
+
+SVC 异常通常配置为最高可配置优先级级别（该规则的一个例外如下所述）。
+SVC 由 Zephyr 内核用于分发系统调用、触发运行时系统错误（例如 Kernel oops
+或 panic），或实现中断卸载。
+
+在基线 Cortex-M 中，SVC 的优先级级别可能与其他也被赋予最高可配置
+优先级的异常或硬件中断共享（因此，中断处理期间的内核运行时错误将升级为
+HardFault。故障处理例程中的额外逻辑确保成功检测此类运行时错误）。
+
+然而，在主线 Cortex-M 中，SVC 优先级级别是*保留*的，因此通常只与
+可配置优先级的故障异常共享。这简化了主线 Cortex-M 架构中的故障处理例程，
+因为运行时内核错误由 SVC 处理程序处理（即没有 HardFault 升级，即使
+内核错误发生在 ISR 上下文中）。
+
+主线 Cortex-M 构建中的硬件中断被分配低于 SVC 的优先级级别。
+
+上述规则的一个例外是当 Zephyr 应用支持零延迟中断（ZLIs）时。
+此类中断设计为具有高于任何硬件或系统中断的优先级级别。如果在主线
+Cortex-M 构建中启用 ZLI 特性（参见 :kconfig:option:`CONFIG_ZERO_LATENCY_IRQS`），则
+
+* ZLIs 被分配最高可配置优先级级别
+* SVCs 被分配第二最高可配置优先级级别
+* 常规硬件中断被分配低于 SVC 的优先级级别。
+
+Cortex-M 中的优先级级别配置实现在
+:file:`include/zephyr/arch/arm/cortex_m/exception.h` 中。
+
+锁定和解锁中断
 --------------------------
 
-In Baseline Cortex-M locking interrupts is implemented using the PRIMASK register.
+在基线 Cortex-M 中，使用 PRIMASK 寄存器实现中断锁定。
 
 .. code-block:: c
 
   arch_irq_lock()
 
-will set the PRIMASK register to 1, eventually, masking all IRQs with configurable
-priority. While this fulfils the OS requirement of locking interrupts, the consequence
-is that kernel runtime errors (triggering SVCs) will escalate to HardFault.
+最终将 PRIMASK 寄存器设置为 1，屏蔽所有可配置优先级的中断。虽然这满足了
+操作系统锁定中断的要求，但后果是内核运行时错误（触发 SVCs）将升级为
+HardFault。
 
-In Mainline Cortex-M locking interrupts is implemented using the BASEPRI register (Mainline
-Cortex-M builds select :kconfig:option:`CONFIG_CPU_CORTEX_M_HAS_BASEPRI` to signify that BASEPRI register is
-implemented.). By modifying BASEPRI (or BASEPRI_MAX) arch_irq_lock() masks all system and HW
-interrupts with the exception of
+在主线 Cortex-M 中，使用 BASEPRI 寄存器实现中断锁定（主线 Cortex-M 构建
+选择 :kconfig:option:`CONFIG_CPU_CORTEX_M_HAS_BASEPRI` 表示 BASEPRI 寄存器
+已实现。）。通过修改 BASEPRI（或 BASEPRI_MAX），arch_irq_lock() 屏蔽
+除以下之外的所有系统和硬件中断
 
 * SVCs
-* processor faults
+* 处理器故障
 * ZLIs
 
-This allows zero latency interrupts to be triggered inside OS critical sections.
-Additionally, this allows system (processor and kernel) faults to be handled by Zephyr
-in *exactly the same way*, regardless of whether IRQs have been locked or not when the
-error occurs. It also allows for system calls to be dispatched while IRQs are locked.
+这允许在操作系统关键节中触发零延迟中断。此外，这允许系统（处理器和内核）
+故障由 Zephyr 以*完全相同的方式*处理，无论错误发生时中断是否已锁定。
+它还可以在中断锁定时分发系统调用。
 
 .. note::
 
-   Mainline Cortex-M fault handling is designed and configured in a way that all processor
-   and kernel faults are handled by the corresponding exception handlers and never result
-   in HardFault escalation. In other words, a HardFault may only occur in Zephyr applications
-   that have modified the default fault handling configurations. The main reason for this
-   design was to reserve the HardFault exception for handling exceptional error conditions
-   in safety critical applications.
+   主线 Cortex-M 故障处理的设计和配置方式使得所有处理器和内核故障都由
+   相应的异常处理程序处理，从不导致 HardFault 升级。换句话说，HardFault
+   可能只发生在修改了默认故障处理配置的 Zephyr 应用中。这种设计的主要
+   原因是为安全关键应用中的异常错误条件处理保留 HardFault 异常。
 
-Dynamic direct interrupts
+动态直接中断
 -------------------------
 
-Cortex-M builds support the installation of direct interrupt service routines during
-runtime. Direct interrupts are designed for performance-critical interrupt
-handling and do not go through all of the common Zephyr interrupt handling
-code.
+Cortex-M 构建支持在运行时安装直接中断服务例程。直接中断设计用于
+性能关键的中断处理，不经过所有常见的 Zephyr 中断处理代码。
 
-Direct dynamic interrupts are enabled via switching on
-:kconfig:option:`CONFIG_DYNAMIC_DIRECT_INTERRUPTS`.
+直接动态中断通过启用 :kconfig:option:`CONFIG_DYNAMIC_DIRECT_INTERRUPTS` 启用。
 
-Note that enabling direct dynamic interrupts requires enabling support for
-dynamic interrupts in the kernel, as well (see :kconfig:option:`CONFIG_DYNAMIC_INTERRUPTS`).
+注意，启用直接动态中断还需要在内核中启用对动态中断的支持
+（参见 :kconfig:option:`CONFIG_DYNAMIC_INTERRUPTS`）。
 
-Zero Latency interrupts
+零延迟中断
 -----------------------
 
-As described above, in Mainline Cortex-M applications, the Zephyr kernel reserves
-the highest configurable interrupt priority level for its own use (SVC). SVCs will
-not be masked by interrupt locking. Zero-latency interrupt can be used to set up
-an interrupt at the highest interrupt priority which will not be blocked by interrupt
-locking. To use the ZLI feature :kconfig:option:`CONFIG_ZERO_LATENCY_IRQS` needs to be enabled.
+如上所述，在主线 Cortex-M 应用中，Zephyr 内核为其自身使用保留最高可配置
+中断优先级级别（SVC）。SVCs 不会被中断锁定屏蔽。零延迟中断可用于设置
+最高中断优先级的中断，不会被中断锁定阻塞。要使用 ZLI 特性，
+需要启用 :kconfig:option:`CONFIG_ZERO_LATENCY_IRQS`。
 
-Zero latency IRQs have minimal interrupt latency, as they will always preempt regular HW
-or system interrupts.
+零延迟中断具有最小中断延迟，因为它们总是抢占常规硬件或系统中断。
 
-Note, however, that since ZLI ISRs will run at a priority level higher than the kernel
-exceptions they **cannot use** any kernel functionality. Additionally, since the ZLI
-interrupt priority level is equal to processor fault priority level, faults occurring
-in ZLI ISRs will escalate to HardFault and will not be handled in the same way as regular
-processor faults. Developers need to be aware of this limitation.
+注意，然而，由于 ZLI ISRs 将在高于内核异常的优先级级别运行，
+它们**不能**使用任何内核功能。此外，由于 ZLI 中断优先级级别等于
+处理器故障优先级级别，ZLI ISRs 中发生的故障将升级为 HardFault，
+不会以与常规处理器故障相同的方式处理。开发者需要意识到这一限制。
 
-CPU Idling
+CPU 空闲
 ==========
 
-The Cortex-M architecture port implements both k_cpu_idle()
-and k_cpu_atomic_idle(). The implementation is present in
-:file:`arch/arm/core/cortex_m/cpu_idle.c`.
+Cortex-M 架构移植实现了 k_cpu_idle() 和 k_cpu_atomic_idle()。
+实现存在于 :file:`arch/arm/core/cortex_m/cpu_idle.c` 中。
 
-In both implementations, the processor
-will attempt to put the core to low power mode.
-In k_cpu_idle() the processor ends up executing WFI (Wait For Interrupt)
-instruction, while in k_cpu_atomic_idle() the processor will
-execute a WFE (Wait For Event) instruction.
+在两个实现中，处理器都将尝试将核心放入低功耗模式。在 k_cpu_idle() 中，
+处理器最终执行 WFI（等待中断）指令，而在 k_cpu_atomic_idle() 中，
+处理器将执行 WFE（等待事件）指令。
 
-When using the CPU idling API in Cortex-M it is important to note the
-following:
+在 Cortex-M 中使用 CPU 空闲 API 时，重要的是注意以下事项：
 
-* Both k_cpu_idle() and k_cpu_atomic_idle() are *assumed* to be invoked
-  with interrupts locked. This is taken care of by the kernel if the APIs
-  are called by the idle thread.
-* After waking up from low power mode, both functions will *restore*
-  interrupts unconditionally, that is, regardless of the interrupt lock
-  status before the CPU idle API was called.
+* k_cpu_idle() 和 k_cpu_atomic_idle() 都*假设*在中断锁定时调用。
+  如果 API 由空闲线程调用，内核会处理这一点。
+* 从低功耗模式唤醒后，两个函数都将无条件地*恢复*中断，即无论
+  调用 CPU 空闲 API 之前的中断锁定状态如何。
 
-The Zephyr CPU Idling mechanism is detailed in :ref:`cpu_idle`.
+Zephyr CPU 空闲机制在 :ref:`cpu_idle` 中详细描述。
 
-Memory protection features
+内存保护特性
 ==========================
 
-This section describes certain aspects around memory protection features
-in Arm Cortex-M applications.
+本节描述 Arm Cortex-M 应用中内存保护特性周围的某些方面。
 
-User mode system calls
+用户模式系统调用
 ----------------------
 
-User mode is supported in Cortex-M platforms that implement the standard (Arm) MPU
-or a similar core peripheral logic for memory access policy configuration and
-control, such as the NXP MPU for Kinetis platforms. (Currently,
-:kconfig:option:`CONFIG_ARCH_HAS_USERSPACE` is selected if :kconfig:option:`CONFIG_ARM_MPU` is enabled
-by the user in the board default Kconfig settings).
+在实现标准（Arm）MPU 或类似核心外设逻辑用于内存访问策略配置和控制的
+Cortex-M 平台上支持用户模式，例如 NXP Kinetis 平台的 MPU。（目前，
+如果用户在板级默认 Kconfig 设置中启用 :kconfig:option:`CONFIG_ARM_MPU`，
+则选择 :kconfig:option:`CONFIG_ARCH_HAS_USERSPACE`）。
 
-A thread performs a system call by triggering a (synchronous) SVC exception, where
+线程通过触发（同步）SVC 异常执行系统调用，其中
 
-* up to 5 arguments are placed on registers R1 - R5
-* system call ID is placed on register R6.
+* 最多 5 个参数放在寄存器 R1 - R5 中
+* 系统调用 ID 放在寄存器 R6 中。
 
-The SVC Handler will branch to the system call preparation logic, which will perform
-the following operations
+SVC 处理程序将分支到系统调用准备逻辑，执行以下操作
 
-* switch the thread's PSP to point to the beginning of the thread's privileged
-  stack area, optionally reprogramming the PSPLIM if stack limit checking is enabled
-* modify CONTROL register to switch to privileged mode
-* modify the return address in the SVC exception stack frame, so that after exception
-  return the system call dispatcher is executed (in thread privileged mode)
+* 将线程的 PSP 切换为指向线程特权栈区域的开头，可选地在启用
+  栈限制检查时重新编程 PSPLIM
+* 修改 CONTROL 寄存器切换到特权模式
+* 修改 SVC 异常栈帧中的返回地址，以便在异常返回后执行系统调用
+  分发程序（在线程特权模式中）
 
-Once the system call execution is completed the system call dispatcher will restore the
-user's original PSP and PSPLIM and switch the CONTROL register back to unprivileged mode
-before returning back to the caller of the system call.
+系统调用执行完成后，系统调用分发程序将恢复用户的原始 PSP 和 PSPLIM
+并将 CONTROL 寄存器切换回非特权模式，然后返回到系统调用的调用者。
 
-System calls execute in thread mode and can be preempted by interrupts at any time. A
-thread may also be context-switched-out while doing a system call; the system call will
-resume as soon as the thread is switched-in again.
+系统调用在线程模式中执行，可以随时被中断抢占。线程也可能在执行
+系统调用时被上下文切换出；系统调用将在线程再次切换入时立即恢复。
 
-The system call dispatcher executes at SVC priority, therefore it cannot be preempted
-by HW interrupts (with the exception of ZLIs), which may observe some additional interrupt
-latency if they occur during a system call preparation.
+系统调用分发程序在 SVC 优先级执行，因此不能被硬件中断抢占（ZLIs 除外），
+如果在系统调用准备期间发生，可能会观察到一些额外的中断延迟。
 
-MPU-assisted stack overflow detection
+MPU 辅助栈溢出检测
 -------------------------------------
 
-Cortex-M platforms with MPU may enable :kconfig:option:`CONFIG_MPU_STACK_GUARD` to enable the MPU-based
-stack overflow detection mechanism. The following points need to be considered when enabling the
-MPU stack guards
+带 MPU 的 Cortex-M 平台可能启用 :kconfig:option:`CONFIG_MPU_STACK_GUARD`
+以启用基于 MPU 的栈溢出检测机制。启用 MPU 栈保护时需要考虑以下要点
 
-* stack overflows are triggering processor faults as soon as they occur
-* the mechanism is essential for detecting stack overflows in supervisor threads, or
-  user threads in privileged mode; stack overflows in threads in user mode will always be
-  detected regardless of :kconfig:option:`CONFIG_MPU_STACK_GUARD` being set.
-* stack overflows are always detected, however, the mechanism does not guarantee that
-  no memory corruption occurs when supervisor threads overflow their stack memory
-* :kconfig:option:`CONFIG_MPU_STACK_GUARD` will normally reserve one MPU region for programming
-  the stack guard (in certain Arm v8-M configurations with :kconfig:option:`CONFIG_MPU_GAP_FILLING`
-  enabled 2 MPU regions are required to implement the guard feature)
-* MPU guards are re-programmed at every context-switch, adding a small overhead to the
-  thread swap routine. Compared, however, to the :kconfig:option:`CONFIG_BUILTIN_STACK_GUARD` feature,
-  no re-programming occurs during system calls.
-* When :kconfig:option:`CONFIG_HW_STACK_PROTECTION` is enabled on Arm v8-M platforms the native
-  stack limit checking mechanism is used by default instead of the MPU-based stack overflow
-  detection mechanism; users may override this setting by manually enabling :kconfig:option:`CONFIG_MPU_STACK_GUARD`
-  in these scenarios.
+* 栈溢出在发生时立即触发处理器故障
+* 该机制对于检测监督线程或特权模式用户线程中的栈溢出至关重要；
+  用户模式线程中的栈溢出无论 :kconfig:option:`CONFIG_MPU_STACK_GUARD`
+  是否设置都将始终被检测
+* 栈溢出始终被检测，然而，该机制不保证监督线程溢出其栈内存时
+  不发生内存损坏
+* :kconfig:option:`CONFIG_MPU_STACK_GUARD` 通常保留一个 MPU 区域用于
+  编程栈保护（在某些启用 :kconfig:option:`CONFIG_MPU_GAP_FILLING` 的
+  Arm v8-M 配置中，需要 2 个 MPU 区域来实现保护特性）
+* MPU 保护在每次上下文切换时重新编程，为线程交换例程添加少量开销。
+  然而，与 :kconfig:option:`CONFIG_BUILTIN_STACK_GUARD` 特性相比，
+  系统调用期间不发生重新编程。
+* 当在 Arm v8-M 平台上启用 :kconfig:option:`CONFIG_HW_STACK_PROTECTION`
+  时，默认使用原生栈限制检查机制而非基于 MPU 的栈溢出检测机制；
+  用户可以在这些场景中通过手动启用 :kconfig:option:`CONFIG_MPU_STACK_GUARD`
+  覆盖此设置。
 
-Pointer Authentication and Branch Target Identification (PACBTI)
+指针认证和分支目标识别（PACBTI）
 ================================================================
 
-The Armv8.1-M Pointer Authentication and Branch Target Identification (PACBTI) extension is an
-optional extension for the Armv8.1-M architecture profile and consists of the implementation of the
-following control-flow integrity approaches:
+Armv8.1-M 指针认证和分支目标识别（PACBTI）扩展是 Armv8.1-M 架构配置
+的可选扩展，由以下控制流完整性方法的实现组成：
 
-* Return address signing and authentication (PAC-RET) as a mitigation for Return Oriented Programming (ROP) style attack.
-* BTI instruction placement (BTI) as a mitigation for Jump Oriented Programming (JOP) style attacks.
+* 返回地址签名和认证（PAC-RET）作为对返回导向编程（ROP）风格攻击的缓解。
+* BTI 指令放置（BTI）作为对跳转导向编程（JOP）风格攻击的缓解。
 
-When hardware support is present (e.g., Cortex-M85) and compiler support is available, PACBTI can be
-enabled at build time in Zephyr by selecting one of the below configs:
+当存在硬件支持（例如 Cortex-M85）且编译器支持可用时，PACBTI 可以在
+Zephyr 构建时通过选择以下配置之一启用：
 
 - :kconfig:option:`CONFIG_ARM_PACBTI_STANDARD`
 - :kconfig:option:`CONFIG_ARM_PACBTI_PACRET`
@@ -454,281 +410,258 @@ enabled at build time in Zephyr by selecting one of the below configs:
 - :kconfig:option:`CONFIG_ARM_PACBTI_PACRET_LEAF_BTI`
 - :kconfig:option:`CONFIG_ARM_PACBTI_NONE`
 
-The config options ensures that compiler flags enabling PACBTI instructions are added to the build,
-specifically:
+配置选项确保启用 PACBTI 指令的编译器标志被添加到构建中，具体为：
 
-- ``-mbranch-protection=`` for GCC toolchains.
+- ``-mbranch-protection=`` 用于 GCC 工具链。
 
-Further, :kconfig:option:`CONFIG_ARM_PAC` and :kconfig:option:`CONFIG_ARM_BTI` are
-automatically selected based on the branch protection option chosen for
-:kconfig:option:`CONFIG_ARM_PACBTI`. These configuration options enforce PACBTI by enabling
-corresponding PACBTI bits in CONTROL register and in the FVP.
+此外，:kconfig:option:`CONFIG_ARM_PAC` 和 :kconfig:option:`CONFIG_ARM_BTI`
+根据为 :kconfig:option:`CONFIG_ARM_PACBTI` 选择的分支保护选项自动选择。
+这些配置选项通过在 CONTROL 寄存器和 FVP 中启用相应的 PACBTI 位
+来强制执行 PACBTI。
 
-To further enhance pointer authentication, Zephyr supports using cryptographically secure,
-per-thread PAC keys by enabling :kconfig:option:`CONFIG_ARM_PAC_PER_THREAD`.
-For more details on key generation sources and configuration, refer to the Kconfig help for
-:kconfig:option:`CONFIG_ARM_PAC_PER_THREAD`.
+为进一步增强指针认证，Zephyr 支持通过启用 :kconfig:option:`CONFIG_ARM_PAC_PER_THREAD`
+使用密码学安全的每线程 PAC 密钥。有关密钥生成源和配置的更多细节，
+参考 :kconfig:option:`CONFIG_ARM_PAC_PER_THREAD` 的 Kconfig 帮助。
 
-**Limitations:**
+**限制：**
 
-- Only builds targeting Armv8.1-M Mainline processors with PACBTI hardware support (e.g.,
-  Cortex-M85) are able to fully use this feature.
-- Zephyr’s integrated SDK currently includes GCC 12.2 which does not support PACBTI so external GCC
-  toolchains (14.3 or later recommended) must be used for PACBTI support.
-  Refer to `this document <https://docs.zephyrproject.org/latest/develop/toolchains/index.html>`_ on how to set up
-  toolchains.
+- 只有目标为具有 PACBTI 硬件支持（例如 Cortex-M85）的 Armv8.1-M 主线
+  处理器的构建才能完全使用此特性。
+- Zephyr 集成的 SDK 目前包含不支持 PACBTI 的 GCC 12.2，因此必须使用
+  外部 GCC 工具链（推荐 14.3 或更高版本）进行 PACBTI 支持。
+  参考 `this document <https://docs.zephyrproject.org/latest/develop/toolchains/index.html>`_
+  了解如何设置工具链。
 
-For more information about PACBTI, refer to the official `Arm documentation <https://developer.arm.com/documentation/109576/latest/>`_
-and also `Arm community blog <https://community.arm.com/arm-community-blogs/b/architectures-and-processors-blog/posts/armv8-1-m-pointer-authentication-and-branch-target-identification-extension>`_
+有关 PACBTI 的更多信息，参考官方
+`Arm documentation <https://developer.arm.com/documentation/109576/latest/>`_
+以及 `Arm community blog <https://community.arm.com/arm-community-blogs/b/architectures-and-processors-blog/posts/armv8-1-m-pointer-authentication-and-branch-target-identification-extension>`_
 
 .. _arm_cortex_m_mpu_considerations:
 
-Memory map and MPU considerations
+内存映射和 MPU 考虑
 =================================
 
-Fixed MPU regions
+固定 MPU 区域
 -----------------
 
-By default, when :kconfig:option:`CONFIG_ARM_MPU` is enabled a set of *fixed* MPU regions
-are programmed during system boot.
+默认情况下，当启用 :kconfig:option:`CONFIG_ARM_MPU` 时，一组*固定* MPU
+区域在系统启动期间编程。
 
-* One MPU region programs the entire flash area as read-execute.
-  User can override this setting by enabling :kconfig:option:`CONFIG_MPU_ALLOW_FLASH_WRITE`,
-  which programs the flash with RWX permissions. If :kconfig:option:`CONFIG_USERSPACE` is
-  enabled unprivileged access on the entire flash area is allowed.
-* One MPU region programs the entire SRAM area with privileged-only
-  RW permissions. That is, an  MPU region is utilized to disallow execute permissions on
-  SRAM. (An exception to this setting is when :kconfig:option:`CONFIG_MPU_GAP_FILLING` is disabled (Arm v8-M only);
-  in that case no SRAM MPU programming is done so the access is determined by the default
-  Arm memory map policies, allowing for privileged-only RWX permissions on SRAM).
-* All the memory regions defined in the devicetree with the property
-  ``zephyr,memory-attr`` defining the MPU permissions for the memory region.
-  See the next section for more details.
+* 一个 MPU 区域将整个 flash 区域编程为读执行。用户可以通过启用
+  :kconfig:option:`CONFIG_MPU_ALLOW_FLASH_WRITE` 覆盖此设置，将 flash
+  编程为 RWX 权限。如果启用 :kconfig:option:`CONFIG_USERSPACE`，
+  允许对整个 flash 区域的非特权访问。
+* 一个 MPU 区域将整个 SRAM 区域编程为仅特权 RW 权限。即，利用 MPU
+  区域禁止 SRAM 上的执行权限。（该设置的一个例外是当禁用
+  :kconfig:option:`CONFIG_MPU_GAP_FILLING` 时（仅 Arm v8-M）；在这种情况下，
+  不执行 SRAM MPU 编程，因此访问由默认 Arm 内存映射策略决定，
+  允许 SRAM 上仅特权 RWX 权限）。
+* 设备树中定义的所有带有属性 ``zephyr,memory-attr`` 定义内存区域
+  MPU 权限的内存区域。参见下一节获取更多细节。
 
-The above MPU regions are defined in :file:`arch/arm/core/mpu/arm_mpu_regions.c`.
-Alternative MPU configurations are allowed by enabling :kconfig:option:`CONFIG_CPU_HAS_CUSTOM_FIXED_SOC_MPU_REGIONS`.
-When enabled, this option signifies that the Cortex-M SoC will define and
-configure its own fixed MPU regions in the SoC definition.
+上述 MPU 区域定义在 :file:`arch/arm/core/mpu/arm_mpu_regions.c` 中。
+通过启用 :kconfig:option:`CONFIG_CPU_HAS_CUSTOM_FIXED_SOC_MPU_REGIONS`
+允许替代 MPU 配置。启用时，此选项表示 Cortex-M SoC 将在 SoC 定义中
+定义和配置自己的固定 MPU 区域。
 
-Fixed MPU regions defined in devicetree
+设备树中定义的固定 MPU 区域
 ---------------------------------------
 
-When the property ``zephyr,memory-attr`` is present in a memory node, a new MPU
-region will be allocated and programmed during system boot. When used with the
-:dtcompatible:`zephyr,memory-region` devicetree compatible, it will result in a
-linker section being generated associated to that MPU region.
+当内存节点中存在属性 ``zephyr,memory-attr`` 时，将在系统启动期间分配
+并编程新的 MPU 区域。与 :dtcompatible:`zephyr,memory-region` 设备树
+compatible 一起使用时，将生成与该 MPU 区域关联的链接器节。
 
-For example, to define a new non-cacheable memory region in devicetree:
+例如，要在设备树中定义新的不可缓存内存区域：
 
 .. code-block:: devicetree
 
    sram_no_cache: memory@20300000 {
-        compatible = "zephyr,memory-region", "mmio-sram";
-        reg = <0x20300000 0x100000>;
-        zephyr,memory-region = "SRAM_NO_CACHE";
-        zephyr,memory-attr = <DT_MEM_ARM_MPU_RAM_NOCACHE>;
+       compatible = "zephyr,memory-region", "mmio-sram";
+       reg = <0x20300000 0x100000>;
+       zephyr,memory-region = "SRAM_NO_CACHE";
+       zephyr,memory-attr = <DT_MEM_ARM_MPU_RAM_NOCACHE>;
    };
 
-This will automatically create a new MPU entry in with the correct name, base,
-size and attributes gathered directly from the devicetree. See :ref:`cache_guide`
-and :ref:`mem_mgmt_api` for more details.
+这将自动创建一个新的 MPU 条目，具有正确的名称、基址、大小和直接从
+设备树获取的属性。参见 :ref:`cache_guide` 和 :ref:`mem_mgmt_api` 获取更多细节。
 
-Static MPU regions
+静态 MPU 区域
 ------------------
 
-Additional *static* MPU regions may be programmed once during system boot. These regions
-are required to enable certain features. See :ref:`cache_guide` for more details.
+可以在系统启动期间编程一次额外的*静态* MPU 区域。这些区域用于启用
+某些特性。参见 :ref:`cache_guide` 获取更多细节。
 
-* a RX region to allow execution from SRAM, when :kconfig:option:`CONFIG_ARCH_HAS_RAMFUNC_SUPPORT` is
-  enabled and users have defined functions to execute from SRAM.
-* a RX region for relocating text sections to SRAM, when :kconfig:option:`CONFIG_CODE_DATA_RELOCATION_SRAM` is enabled
-* a ``nocache`` region to allow for a non-cacheable SRAM area, when :kconfig:option:`CONFIG_NOCACHE_MEMORY` is enabled
-* a possibly unprivileged RW region for GCOV code coverage accounting area, when :kconfig:option:`CONFIG_COVERAGE_GCOV` is enabled
-* a no-access region to implement null pointer dereference detection, when :kconfig:option:`CONFIG_NULL_POINTER_EXCEPTION_DETECTION_MPU` is enabled
+* 当启用 :kconfig:option:`CONFIG_ARCH_HAS_RAMFUNC_SUPPORT` 且用户定义了
+  从 SRAM 执行的函数时，用于允许从 SRAM 执行的 RX 区域。
+* 当启用 :kconfig:option:`CONFIG_CODE_DATA_RELOCATION_SRAM` 时，
+  用于将 text 节重定位到 SRAM 的 RX 区域
+* 当启用 :kconfig:option:`CONFIG_NOCACHE_MEMORY` 时，用于允许
+  不可缓存 SRAM 区域的 ``nocache`` 区域
+* 当启用 :kconfig:option:`CONFIG_COVERAGE_GCOV` 时，用于 GCOV 代码
+  覆盖率计数区域的可能的非特权 RW 区域
+* 当启用 :kconfig:option:`CONFIG_NULL_POINTER_EXCEPTION_DETECTION_MPU`
+  时，用于实现空指针解引用检测的无访问区域
 
-The boundaries of these static MPU regions are derived from symbols exposed by the linker, in
-:file:`include/linker/linker-defs.h`.
+这些静态 MPU 区域的边界从链接器暴露的符号派生，在
+:file:`include/linker/linker-defs.h` 中。
 
-Dynamic MPU regions
+动态 MPU 区域
 -------------------
 
-Certain thread-specific MPU regions may be re-programmed dynamically, at each thread context switch:
+某些线程特定的 MPU 区域可以在每次线程上下文切换时动态重新编程：
 
-* an unprivileged RW region for the current thread's stack area (for user threads)
-* a read-only region for the MPU stack guard
-* unprivileged RW regions for the partitions of the current thread's application memory
-  domain.
+* 当前线程栈区域的非特权 RW 区域（用于用户线程）
+* MPU 栈保护的只读区域
+* 当前线程应用内存域分区的非特权 RW 区域。
 
 
-Considerations
+考虑
 --------------
 
-The number of available MPU regions for a Cortex-M platform is a limited resource.
-Most platforms have 8 MPU regions, while some Cortex-M33 or Cortex-M7 platforms may
-have up to 16 MPU regions. Therefore there is a relatively strict limitation on how
-many fixed, static and dynamic MPU regions may be programmed simultaneously. For platforms
-with 8 available MPU regions it might not be possible to enable all the aforementioned
-features that require MPU region programming. In most practical applications, however,
-only a certain set of features is required and 8 MPU regions are, in many cases, sufficient.
+Cortex-M 平台可用 MPU 区域的数量是有限资源。大多数平台有 8 个 MPU 区域，
+而某些 Cortex-M33 或 Cortex-M7 平台可能有最多 16 个 MPU 区域。因此，
+对同时编程多少固定、静态和动态 MPU 区域有相对严格的限制。对于有 8 个
+可用 MPU 区域的平台，可能无法启用所有上述需要 MPU 区域编程的特性。
+然而，在大多数实际应用情况下，只需要某些特性集，8 个 MPU 区域在许多
+情况下是足够的。
 
-In Arm v8-M processors the MPU architecture does not allow programmed MPU regions to
-overlap. :kconfig:option:`CONFIG_MPU_GAP_FILLING` controls whether the fixed MPU region
-covering the entire SRAM is programmed. When it does, a full SRAM area partitioning
-is required, in order to program the  static and the dynamic MPU regions. This increases
-the total number of required MPU regions. When :kconfig:option:`CONFIG_MPU_GAP_FILLING` is not
-enabled the fixed MPU region covering the entire SRAM is not programmed, thus, the static
-and dynamic regions are simply programmed on top of the always-existing background region
-(full-SRAM partitioning is not required).
-Note, however, that the background SRAM region allows execution from SRAM, so when
-:kconfig:option:`CONFIG_MPU_GAP_FILLING` is not set Zephyr is not protected against attacks
-that attempt to execute malicious code from SRAM.
+在 Arm v8-M 处理器中，MPU 架构不允许编程的 MPU 区域重叠。
+:kconfig:option:`CONFIG_MPU_GAP_FILLING` 控制是否编程覆盖整个 SRAM 的
+固定 MPU 区域。当它这样做时，需要完整的 SRAM 区域分区，以便编程
+静态和动态 MPU 区域。这增加了所需的 MPU 区域总数。当不启用
+:kconfig:option:`CONFIG_MPU_GAP_FILLING` 时，不编程覆盖整个 SRAM 的
+固定 MPU 区域，因此，静态和动态区域简单地编程在始终存在的背景区域上
+（不需要完整 SRAM 分区）。注意，然而，背景 SRAM 区域允许从 SRAM 执行，
+因此当不设置 :kconfig:option:`CONFIG_MPU_GAP_FILLING` 时，Zephyr 不受
+试图从 SRAM 执行恶意代码的攻击保护。
 
 
-Floating point Services
+浮点服务
 =======================
 
-Both unshared and shared FP registers mode are supported in Cortex-M (see
-:ref:`float_v2` for more details).
+Cortex-M 中支持非共享和共享浮点寄存器模式（参见 :ref:`float_v2`
+获取更多细节）。
 
-When FPU support is enabled in the build
-(:kconfig:option:`CONFIG_FPU` is enabled), the
-sharing FP registers mode (:kconfig:option:`CONFIG_FPU_SHARING`)
-is enabled by default. This is done as some compiler configurations
-may activate a floating point context by generating FP instructions
-for any thread, regardless of whether floating point calculations are
-performed, and that context must be preserved when switching such
-threads in and out.
+当在构建中启用 FPU 支持（启用 :kconfig:option:`CONFIG_FPU`）时，
+默认启用共享浮点寄存器模式（:kconfig:option:`CONFIG_FPU_SHARING`）。
+这样做是因为某些编译器配置可能通过为任何线程生成浮点指令来激活
+浮点上下文，无论是否执行浮点计算，并且该上下文在切换此类线程
+进出时必须保留。
 
-The developers can still disable the FP sharing mode in their
-application projects, and switch to Unshared FP registers mode,
-if it is guaranteed that the image code does not generate FP
-instructions outside the single thread context that is allowed
-(and supposed) to do so.
+开发者仍然可以在其应用项目中禁用浮点共享模式，并切换到非共享
+浮点寄存器模式，如果保证镜像代码不在允许（并假定）这样做的
+单个线程上下文之外生成浮点指令。
 
-Under FPU sharing mode, the callee-saved FPU registers are saved
-and restored in context-switch, if the corresponding threads have
-an active FP context. This adds some runtime overhead on the swap
-routine. In addition to the runtime overhead, the sharing FPU mode
+在浮点共享模式下，如果相应线程有活动的浮点上下文，则在上下文切换中
+保存和恢复被调用者保存的 FPU 寄存器。这为交换例程添加一些运行时开销。
+除了运行时开销外，共享浮点模式
 
-* requires additional memory for each thread to save the callee-saved
-  FP registers
-* requires additional stack memory for each thread, to stack the caller-saved
-  FP registers, upon exception entry, if an FP context is active. Note, however,
-  that since lazy stacking is enabled, there is no runtime overhead of FP context
-  stacking in regular interrupts (FP state preservation is only activated in the
-  swap routine in PendSV interrupt).
+* 需要每个线程额外的内存来保存被调用者保存的浮点寄存器
+* 需要每个线程额外的栈内存，在异常入口时，如果浮点上下文活动，
+  则栈被调用者保存的浮点寄存器。注意，然而，由于启用懒栈，
+  常规中断中没有浮点上下文栈的运行时开销（浮点状态保存仅在
+  PendSV 中断中的交换例程中激活）。
 
 
-Misc
+杂项
 ****
 
-Chain-loadable images
+链式加载镜像
 =====================
 
-Cortex-M applications may either be standalone images or chain-loadable, for instance,
-by a bootloader. Application images chain-loadable by bootloaders (or other applications)
-normally occupy a specific area in the flash denoted as their *code partition*.
-:kconfig:option:`CONFIG_USE_DT_CODE_PARTITION` will ensure that a Zephyr chain-loadable image
-will be linked into its code partition, specified in DeviceTree.
+Cortex-M 应用可以是独立镜像或链式加载，例如由引导加载器。由引导加载器
+（或其他应用）链式加载的应用镜像通常占据 flash 中的特定区域，
+称为其*代码分区*。:kconfig:option:`CONFIG_USE_DT_CODE_PARTITION`
+将确保 Zephyr 链式加载镜像被链接到其在设备树中指定的代码分区。
 
-HW initialization at boot
+启动时的硬件初始化
 -------------------------
 
-In order to boot properly, chain-loaded applications may require that the core Arm
-hardware registers and peripherals are initialized in their reset values. Enabling
-:kconfig:option:`CONFIG_INIT_ARCH_HW_AT_BOOT` Zephyr to force the initialization of the
-internal Cortex-M architectural state during boot to the reset values as specified
-by the corresponding Arm architecture manual.
+为了正确启动，链式加载的应用可能需要核心 Arm 硬件寄存器和外设
+初始化为它们的复位值。启用 :kconfig:option:`CONFIG_INIT_ARCH_HW_AT_BOOT`
+强制 Zephyr 在启动期间将内部 Cortex-M 架构状态初始化为相应
+Arm 架构手册指定的复位值。
 
-Software vector relaying
+软件向量中继
 ------------------------
 
-In Cortex-M platforms that implement the VTOR register (see :kconfig:option:`CONFIG_CPU_CORTEX_M_HAS_VTOR`),
-chain-loadable images relocate the Cortex-M vector table by updating the VTOR register with the offset
-of the image vector table.
+在实现 VTOR 寄存器的 Cortex-M 平台上（参见
+:kconfig:option:`CONFIG_CPU_CORTEX_M_HAS_VTOR`），链式加载镜像通过
+用镜像向量表的偏移更新 VTOR 寄存器来重定位 Cortex-M 向量表。
 
-Baseline Cortex-M platforms without VTOR register might not be able to relocate their
-vector table which remains at a fixed location. Therefore, a chain-loadable image will
-require an alternative way to route HW interrupts and system exceptions to its own vector
-table; this is achieved with software vector relaying.
+没有 VTOR 寄存器的基线 Cortex-M 平台可能无法重定位其向量表，
+该向量表保持在固定位置。因此，链式加载镜像需要替代方式将硬件
+中断和系统异常路由到其自己的向量表；这通过软件向量中继实现。
 
-When a bootloader image enables :kconfig:option:`CONFIG_SW_VECTOR_RELAY`
-it is able to relay exceptions and interrupts based on a vector table
-pointer that is set by the chain-loadable application. The latter sets
-the :kconfig:option:`CONFIG_SW_VECTOR_RELAY_CLIENT` option to instruct the boot
-sequence to set the vector table pointer in SRAM so that the bootloader can
-forward the exceptions and interrupts to the chain-loadable image's software
-vector table.
+当引导加载器镜像启用 :kconfig:option:`CONFIG_SW_VECTOR_RELAY` 时，
+它可以根据链式加载应用设置的向量表指针中继异常和中断。后者设置
+:kconfig:option:`CONFIG_SW_VECTOR_RELAY_CLIENT` 选项以指示启动序列
+在 SRAM 中设置向量表指针，以便引导加载器可以将异常和中断转发到
+链式加载镜像的软件向量表。
 
-While this feature is intended for processors without VTOR register, it
-may also be used in Mainline Cortex-M platforms.
+虽然此特性旨在用于没有 VTOR 寄存器的处理器，但也可以在主线
+Cortex-M 平台中使用。
 
-Code relocation
-===============
+代码重定位
+=================
 
-Cortex-M support the code relocation feature. When
-:kconfig:option:`CONFIG_CODE_DATA_RELOCATION_SRAM` is selected,
-Zephyr will relocate .text, data and .bss sections
-from the specified files and place it in SRAM. It is
-possible to relocate only parts of the code sections
-into SRAM, without relocating the whole image text
-and data sections. More details on the code relocation
-feature can be found in :ref:`code_data_relocation`.
+Cortex-M 支持代码重定位特性。当选择
+:kconfig:option:`CONFIG_CODE_DATA_RELOCATION_SRAM` 时，Zephyr 将
+从指定文件重定位 .text、data 和 .bss 节并将其放入 SRAM。
+可以将代码节的部分重定位到 SRAM，而不重定位整个镜像的
+text 和 data 节。有关代码重定位特性的更多细节可以在
+:ref:`code_data_relocation` 中找到。
 
 
-Linking Cortex-M applications
+链接 Cortex-M 应用
 *****************************
 
-Most Cortex-M platforms make use of the default Cortex-M
-GCC linker script in :file:`include/zephyr/arch/arm/cortex_m/scripts/linker.ld`,
-although it is possible for platforms to use a custom linker
-script as well.
+大多数 Cortex-M 平台使用 :file:`include/zephyr/arch/arm/cortex_m/scripts/linker.ld`
+中的默认 Cortex-M GCC 链接器脚本，尽管平台也可以使用自定义链接器脚本。
 
 
 CMSIS
 *****
 
-Cortex-M CMSIS headers are provided through standalone module repositories:
+Cortex-M CMSIS 头文件通过独立模块仓库提供：
 
 - **CMSIS 5**: `zephyrproject-rtos/cmsis <https://github.com/zephyrproject-rtos/cmsis>`_
 - **CMSIS 6**: `zephyrproject-rtos/CMSIS_6 <https://github.com/zephyrproject-rtos/CMSIS_6>`_
 
-Zephyr has begun transitioning to **CMSIS 6** as the default source for Cortex-M core headers.
-However, at present, Zephyr includes headers from **both** the CMSIS 6 and legacy CMSIS 5 modules.
+Zephyr 已开始过渡到 **CMSIS 6** 作为 Cortex-M 核心头文件的默认源。
+然而，目前，Zephyr 包含来自 **两个** CMSIS 6 和旧版 CMSIS 5 模块的头文件。
 
-The legacy CMSIS 5 headers remain available primarily for compatibility with vendor HALs, while all
-new architecture-level development should use **CMSIS 6** headers whenever possible.
+旧版 CMSIS 5 头文件主要保留用于与厂商 HAL 的兼容性，而所有新的
+架构级开发应尽可能使用 **CMSIS 6** 头文件。
 
-:kconfig:option:`CONFIG_CPU_CORTEX_M` selects :kconfig:option:`CONFIG_HAS_CMSIS_CORE` to signify that
-CMSIS headers are available for all supported Cortex-M variants.
+:kconfig:option:`CONFIG_CPU_CORTEX_M` 选择 :kconfig:option:`CONFIG_HAS_CMSIS_CORE`
+表示所有支持的 Cortex-M 变体都有可用的 CMSIS 头文件。
 
-Testing
+测试
 *******
 
-A list of unit tests for the Cortex-M porting and miscellaneous features
-is present in :file:`tests/arch/arm/`. The tests suites are continuously
-extended and new test suites are added, in an effort to increase the coverage
-of the Cortex-M architecture support in Zephyr.
+Cortex-M 移植和杂项特性的单元测试列表存在于 :file:`tests/arch/arm/` 中。
+测试套件不断扩展并添加新的测试套件，以增加 Zephyr 中 Cortex-M 架构
+支持的覆盖率。
 
 QEMU
 ****
 
-We use QEMU to verify the implemented features of the Cortex-M architecture port in Zephyr.
-Adequate coverage is achieved by defining and utilizing a list of QEMU targets,
-each with a specific architecture variant and Arm peripheral support list.
+我们使用 QEMU 验证 Zephyr 中实现的 Cortex-M 架构移植特性。
+通过定义和利用 QEMU 目标列表实现足够的覆盖率，每个目标具有
+特定的架构变体和 Arm 外设支持列表。
 
-The table below lists the QEMU platform targets defined in Zephyr
-along with the corresponding Cortex-M implementation variant and the peripherals
-these targets emulate.
+下表列出 Zephyr 中定义的 QEMU 平台目标，连同相应的 Cortex-M
+实现变体和这些目标模拟的外设。
 
 +---------------------------------+--------------------+--------------------+----------------+----------------------+----------------------------+
-|                                 | **QEMU target**                                                                                              |
+|                                 | **QEMU 目标**                                                                                              |
 +---------------------------------+--------------------+--------------------+----------------+----------------------+----------------------------+
-| Architecture variant            | Arm v6-M           | Arm v7-M                            | Arm v8-M             | Arm v8.1-M                 |
+| 架构变体                        | Arm v6-M           | Arm v7-M                            | Arm v8-M             | Arm v8.1-M                 |
 +---------------------------------+--------------------+--------------------+----------------+----------------------+----------------------------+
 |                                 | **qemu_cortex_m0** | **qemu_cortex_m3** | **mps2/an385** | **mps2/an521/cpu0**  | **mps3/corstone300/an547** |
 +---------------------------------+--------------------+--------------------+----------------+----------------------+----------------------------+
-| **Emulated features**           |                                                                                                              |
+| **模拟特性**                    |                                                                                                              |
 +---------------------------------+--------------------+--------------------+----------------+----------------------+----------------------------+
 | NVIC                            | Y                  | Y                  | Y              | Y                    | Y                          |
 +---------------------------------+--------------------+--------------------+----------------+----------------------+----------------------------+
@@ -745,9 +678,8 @@ these targets emulate.
 | TrustZone-M                     | N                  | N                  | N              | Y                    | N                          |
 +---------------------------------+--------------------+--------------------+----------------+----------------------+----------------------------+
 
-Maintainers & Collaborators
+维护者和协作者
 ***************************
 
-The status of the Arm Cortex-M architecture port in Zephyr is: *maintained*.
-The updated list of maintainers and collaborators for Cortex-M can be found
-in :file:`MAINTAINERS.yml`.
+Zephyr 中 Arm Cortex-M 架构移植的状态是：*已维护*。
+Cortex-M 的更新维护者和协作者列表可以在 :file:`MAINTAINERS.yml` 中找到。

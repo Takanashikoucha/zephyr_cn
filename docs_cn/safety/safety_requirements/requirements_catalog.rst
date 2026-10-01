@@ -16,7 +16,7 @@ dedicated
 repository
 using
 `StrictDoc
-<https://github.com/strictdoc-project/strictdoc>`__。
+<https://github.com/strictdoc-project/strictdoc>`__.
 When
 that
 repository
@@ -43,46 +43,50 @@ directly
 into
 this
 documentation
-below。
+below.
 
-.. only::
-   reqmgmt
+..
+only::
+reqmgmt
 
-   .. toctree::
-      :maxdepth:
-      2
+..
+toctree::
+:
+maxdepth:
+2
 
-      /build/requirements/index
+/build/requirements/index
 
-.. only::
-   not
-   reqmgmt
+..
+only::
+not
+reqmgmt
 
-   The
-   requirements
-   are
-   not
-   included
-   in
-   this
-   build
-   because
-   the
-   ``reqmgmt``
-   module
-   is
-   not
-   present
-   in
-   the
-   workspace。
-   See
-   the
-   `Zephyr
-   Project
-   Requirements
-   <https://zephyrproject-rtos.github.io/reqmgmt/>`__
-   for
-   the
-   published
-   version。
+The
+requirements
+are
+not
+included
+in
+this
+build
+because
+the
+``reqmgmt``
+module
+is
+not
+present
+in
+the
+workspace.
+See
+the
+`Zephyr
+Project
+Requirements
+<https://zephyrproject-rtos.github.io/reqmgmt/>`__
+for
+the
+published
+version.

@@ -1,55 +1,11 @@
 .. _host_toolchains:
 
-主机
-工具链
+主机工具链
 ###############
 
-在
-某些
-特定
-配置
-中，
-如
-在
-Linux
-主机
-上
-为
-非
-MCU
-x86
-目标
-构建
-时，
-你
-可能
-能
-重用
-操作
-系统
-提供
-的
-原生
-开发
-工具。
+在某些特定配置下，例如在 Linux 主机上为非 MCU 的 x86 目标构建时，
+你可以直接复用操作系统提供的原生开发工具。
 
-要
-使用
-你
-的
-主机
-gcc，
-设置
-:envvar:`ZEPHYR_TOOLCHAIN_VARIANT`
-:ref:`environment
-variable
-<env_vars>`
-为
-``host/gnu``。
-要
-使用
-clang，
-设置
-:envvar:`ZEPHYR_TOOLCHAIN_VARIANT`
-为
-``host/llvm``。
+要使用主机上的 gcc，将 :envvar:`ZEPHYR_TOOLCHAIN_VARIANT`
+:ref:`环境变量 <env_vars>` 设置为 ``host/gnu``。
+要使用 clang，将 :envvar:`ZEPHYR_TOOLCHAIN_VARIANT` 设置为 ``host/llvm``。

@@ -2,318 +2,357 @@
 
 .. _migration_3.5:
 
-Migration
-guide
-to
-Zephyr
-v3.5.0
+迁移到 Zephyr v3.5.0 的指南
 ################################
 
-这
-个
-document
-describe
-migrating
-你
-的
-application
-从
-Zephyr
-v3.4.0
-到
-Zephyr
-v3.5.0
-required
-或
-recommended
-的
-changes。
+本文档描述了将应用程序从 Zephyr v3.4.0
+迁移到 Zephyr v3.5.0 时必需或推荐的更改。
 
-其他
-changes
-（不
-directly
-related
-to
-migrating
-applications）
-可以
-found
-在
-:ref:`release
-notes<zephyr_3.5>`。
+任何其他更改（与迁移应用程序不直接相关）
+可在 :ref:`发布说明 <zephyr_3.5>` 中找到。
 
-Required
-changes
+必需的更改
 ****************
 
-Kernel
+内核
 ======
 
-*
-Kernel
-:c:func:`k_mem_slab_free`
-function
-changed
-它
-的
-signature
-now
-take
-一
-个
-``void
-*mem``
-pointer
-而
-不
-是
-``void
-**mem``
-double
-pointer。
-New
-的
-signature
-将
-不
-immediately
-trigger
-一
-个
-compiler
-error
-或
-warning
-instead
-likely
-cause
-一
-个
-invalid
-的
-memory
-access
-在
-runtime。
-一
-个
-new
-的
-``_ASSERT``
-statement
-你
-可以
-用
-:kconfig:option:`CONFIG_ASSERT`
-enable
-它
-将
-detect
-如果
-你
-pass
-该
-function
-memory
-不
-belonging
-to
-slab
-中
-的
-memory
-blocks。
+* 内核 :c:func:`k_mem_slab_free` 函数已更改其签名，
+  现在接受 ``void *mem`` 指针而非 ``void **mem`` 双重指针。
+  新签名不会立即触发编译器错误或警告，
+  反而很可能在运行时导致无效内存访问。
+  一个新的 ``_ASSERT`` 语句
+  （你可以通过 :kconfig:option:`CONFIG_ASSERT` 启用）
+  将检测你是否向该函数传递
+  不属于内存块中内存的内存。
 
-*
-:c:macro:`CONTAINER_OF`
-now
-perform
-type
-checking
-这
-very
-commonly
-被
-misused
-用于
-从
-:c:struct:`k_work`
-pointers
-obtain
-user
-structure
-而
-不
-passing
-from
-:c:struct:`k_work_delayable`。
-这
-now
-result
-在
-一
-个
-build
-error
-且
-必须
-被
-properly
-done
-用
-:c:func:`k_work_delayable_from_work`。
+* :c:macro:`CONTAINER_OF` 现在执行类型检查。
+  此前它非常常见地被误用
+  为从 :c:struct:`k_work` 指针
+  获取用户结构体，而不经过 :c:struct:`k_work_delayable`。
+  这现在将导致构建错误，
+  必须使用 :c:func:`k_work_delayable_from_work` 正确完成。
 
-C
-Library
+C 库
 =========
 
-*
-Default
-的
-C
-library
-used
-在
-most
-targets
-上
-changed
-从
-built
-in
-的
-minimal
-C
-library
-到
-Picolibc。
-Both
-provide
-standard
-C
-library
-interfaces
-且
-shouldn't
-cause
-any
-behavioral
-regressions
-for
-applications
-但
-有
-a
-few
-side
-effects
-需要
-aware
-of
-在
-migrating
-到
-Picolibc
-时。
+* 大多数目标上使用的默认 C 库
+  已从内置的最小 C 库改为 Picolibc。
+  虽然两者都提供标准 C 库接口，
+  且不应导致应用程序出现任何行为退化，
+  但迁移到 Picolibc 时有几个副作用需要注意。
 
+  * Picolibc 在受支持的地方
+    启用线程局部存储
+    （:kconfig:option:`CONFIG_THREAD_LOCAL_STORAGE`）。
+    这改变了内核中一些内部操作，
+    使用某些 TLS 变量来提升性能。
+    Zephyr 将 TLS 变量放在为栈保留的内存中，
+    因此每个线程的栈使用量将增加 8-16 字节。
 
-.. note::
+  * Picolibc 使用与最小 C 库相同的 malloc 实现，
+    但默认堆大小取决于使用的是哪个 C 库。
+    使用最小 C 库时，默认堆为零字节，
+    这意味着 malloc 将始终失败。
+    使用 Picolibc 时，
+    启用 :kconfig:option:`CONFIG_MMU` 或 :kconfig:option:`ARCH_POSIX` 时默认为 16kB，
+    启用 :kconfig:option:`CONFIG_USERSPACE` 和
+    :kconfig:option:`CONFIG_MPU_REQUIRES_POWER_OF_TWO_ALIGNMENT` 时默认为 2kB。
+    对于所有其他目标，默认堆使用系统上所有剩余内存。
+    你可以通过调整 :kconfig:option:`CONFIG_COMMON_LIBC_MALLOC_ARENA_SIZE`
+    来更改这一点。
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-* The LPC55XXX series SOC (except LPC55S06) default main clock has been
-  updated to PLL1 source from XTAL32K running at 144MHZ. If the new
-  kconfig option :kconfig:option:`CONFIG_INIT_PLL1`
-  is disabled then the main clock is muxed to FRO_HR as before.
+  * Picolibc 可以作为操作系统构建的一部分构建，
+    也可以从工具链拉取。
+    作为操作系统的一部分构建时，
+    构建将增加约 1000 个文件。
 
-* The Kconfig option ``CONFIG_GPIO_NCT38XX_INTERRUPT`` has been renamed to
-  :kconfig:option:`CONFIG_GPIO_NCT38XX_ALERT`.
+  * 使用 Picolibc 的标准 C++ 库时，
+    两者都必须来自工具链，
+    因为标准 C++ 库依赖于 C 库 ABI。
 
-* The CAN controller timing API functions :c:func:`can_set_timing` and :c:func:`can_set_timing_data`
-  no longer fallback to the (Re-)Synchronization Jump Width (SJW) value set in the devicetree
-  properties for the given CAN controller upon encountering an SJW value corresponding to
-  ``CAN_SJW_NO_CHANGE`` (which is no longer available). The caller will therefore need to fill in
-  the ``sjw`` field in :c:struct:`can_timing`. To aid in this, the :c:func:`can_calc_timing` and
-  :c:func:`can_calc_timing_data` functions now automatically calculate a suitable SJW. The
-  calculated SJW can be overwritten by the caller if needed. The CAN controller API functions
-  :c:func:`can_set_bitrate` and :c:func:`can_set_bitrate_data` now also automatically calculate a
-  suitable SJW, but their SJW cannot be overwritten by the caller.
+  * Picolibc 移除了 ``-ffreestanding`` 编译器选项。
+    这允许显著的编译器优化改进，
+    但也意味着编译器现在将警告
+    不符合 Zephyr 要求类型的 `main` 声明
+    -- ``int main(void)``。
 
-* The CAN ISO-TP message configuration in :c:struct:`isotp_msg_id` is changed to use the following
-  flags instead of bit fields:
+  * Picolibc 在 Zephyr 中支持四种不同的 printf/scanf 变体：
+    'double'、'long long'、'integer' 和 'minimal'。
+    'double' 提供完整的 printf 实现，
+    支持十进制和十六进制格式的精确浮点数，
+    完整的整数支持（包括 long long）、
+    C99 整数大小说明符（j、z、t）和 POSIX 位置参数。
+    'long long' 模式移除浮点支持，
+    'integer' 移除 long long 支持，
+    而 'minimal' 模式还移除对格式修饰符和位置参数的支持。
+    将库作为模块构建允许对每个级别提供的功能集进行更细粒度的控制。
 
-  * :c:macro:`ISOTP_MSG_EXT_ADDR` to enable ISO-TP extended addressing
-  * :c:macro:`ISOTP_MSG_FIXED_ADDR` to enable ISO-TP fixed addressing
-  * :c:macro:`ISOTP_MSG_IDE` to use extended (29-bit) CAN IDs
+  * Picolibc 的默认浮点输入/输出代码
+    大于最小 C 库版本
+    （这对符合 C 语言对这些操作的“往返”要求是必需的）。
+    如果你使用 :kconfig:option:`CONFIG_CBPRINTF_FP_SUPPORT`，
+    你会看到内存使用量增加，
+    除非你也禁用 :kconfig:option:`CONFIG_PICOLIBC_IO_FLOAT_EXACT`，
+    该选项将 Picolibc 切换到更小但不精确的转换算法。
+    这需要
+    将 Picolibc 作为模块构建。
 
-  The two new flags :c:macro:`ISOTP_MSG_FDF` and :c:macro:`ISOTP_MSG_BRS` were added for CAN FD
-  mode.
-
-* NXP i.MX RT based boards should now enable
-  :kconfig:option:`CONFIG_DEVICE_CONFIGURATION_DATA` at the board level when
-  using a DCD with the RT bootrom, and enable
-  :kconfig:option:`CONFIG_NXP_IMX_EXTERNAL_SDRAM` when using external SDRAM
-  via the SEMC
-
-* NXP i.MX RT11xx series SNVS pin control name identifiers have been updated to
-  match with the source data for these SOCs. The pin names have had the
-  suffix ``dig`` added. For example, ``iomuxc_snvs_wakeup_gpio13_io00`` has
-  been renamed to ``iomuxc_snvs_wakeup_dig_gpio13_io00``
-
-Power Management
+可选模块
 ================
 
-* Platforms that implement power management hooks must explicitly select
-  :kconfig:option:`CONFIG_HAS_PM` in Kconfig. This is now a dependency of
-  :kconfig:option:`CONFIG_PM`. Before this change all platforms could enable
-  :kconfig:option:`CONFIG_PM` because empty weak stubs were provided, however,
-  this is no longer supported. As a result of this change, power management
-  hooks are no longer defined as weaks.
+以下模块已变为可选，
+默认不再通过 `west update` 下载：
 
-* Multiple platforms no longer support powering the system off using
-  :c:func:`pm_state_force`. The new :c:func:`sys_poweroff` API must be used.
-  Migrated platforms include Nordic nRF, STM32, ESP32 and TI CC13XX/26XX. The
-  new API is independent from :kconfig:option:`CONFIG_PM`. It requires
-  :kconfig:option:`CONFIG_POWEROFF` to be enabled, which depends on
-  :kconfig:option:`CONFIG_HAS_POWEROFF`, an option selected by platforms
-  implementing the required new hooks.
+* ``chre``
+* ``lz4``
+* ``nanopb``
+* ``psa-arch-tests``
+* ``sof``
+* ``tf-m-tests``
+* ``tflite-micro``
+* ``thrift``
+* ``zscilib``
 
-Bootloader
+要重新启用它们，
+使用 ``west config manifest.project-filter -- +<module name>`` 命令，
+或使用 ``west config manifest.group-filter -- +optional`` 启用所有可选模块，
+然后再次运行 ``west update``。
+
+设备驱动程序和设备树
+==============================
+
+* ``zephyr,memory-region-mpu`` 已重命名为 ``zephyr,memory-attr``，
+  其类型从 'enum' 移到 'int'。
+  要实现无缝转换，这是设备树中必需的更改：
+
+  .. code-block:: none
+
+     - "RAM"         -> <( DT_MEM_ARM(ATTR_MPU_RAM) )>
+     - "RAM_NOCACHE" -> <( DT_MEM_ARM(ATTR_MPU_RAM_NOCACHE) )>
+     - "FLASH"       -> <( DT_MEM_ARM(ATTR_MPU_FLASH) )>
+     - "PPB"         -> <( DT_MEM_ARM(ATTR_MPU_PPB) )>
+     - "IO"          -> <( DT_MEM_ARM(ATTR_MPU_IO) )>
+     - "EXTMEM"      -> <( DT_MEM_ARM(ATTR_MPU_EXTMEM) )>
+
+* 设备依赖项（在某些地方被错误地称为“设备句柄”）
+  现在是 :kconfig:option:`CONFIG_DEVICE_DEPS` 启用的可选功能。
+  这意味着如果未启用该选项，则不再需要额外的链接器阶段。
+
+* 在所有 STM32 ADC 上，
+  不再可能使用 ADC 驱动程序读取传感器通道（Vref、Vbat 或温度）。
+  应改用专门的传感器驱动程序。
+  此更改源于 STM32F4 的限制，
+  其中温度和 Vbat 的通道相同，
+  且仅使用 ADC API 无法确定要测量什么。
+
+* RAM 磁盘驱动程序已更改以支持多个实例
+  以及使用设备树实例化。
+  因此，Kconfig 选项 :kconfig:option:`CONFIG_DISK_RAM_VOLUME_SIZE`
+  和 Kconfig 选项 :kconfig:option:`CONFIG_DISK_RAM_VOLUME_NAME` 已被移除，
+  使用 RAM 磁盘的应用程序必须使用设备树实例化它，
+  如下例所示：
+
+  .. code-block:: devicetree
+
+    / {
+        ramdisk0 {
+            compatible = "zephyr,ram-disk";
+            disk-name = "RAM";
+            sector-size = <512>;
+            sector-count = <192>;
+        };
+    };
+
+* :dtcompatible:`goodix,gt911`、:dtcompatible:`xptek,xpt2046`
+  和 :dtcompatible:`hynitron,cst816s` 驱动程序
+  已从 Kscan 转换为 Input，
+  它们仍可通过添加 :dtcompatible:`zephyr,kscan-input` 节点
+  与 Kscan 应用程序一起使用。
+
+* ``zephyr,gpio-keys`` 绑定已合并到 :dtcompatible:`gpio-keys`，
+  回调定义已从 ``INPUT_LISTENER_CB_DEFINE``
+  重命名为 :c:macro:`INPUT_CALLBACK_DEFINE`。
+
+* :dtcompatible:`ti,bq274xx` 驱动程序
+  对容量和功率通道使用了不正确的单位，
+  这些已得到修复，并从先前实现按 x1000 因子缩放，
+  使用它们的任何应用程序都必须相应更改。
+
+* SSD1306 显示驱动程序
+  的配置选项现在
+  可以通过设备树绑定
+  :dtcompatible:`solomon,ssd1306fb`
+  提供。
+  以下 Kconfig 选项：
+  ``CONFIG_SSD1306_DEFAULT``、
+  ``CONFIG_SSD1306_SH1106_COMPATIBLE``
+  和 ``CONFIG_SSD1306_REVERSE_MODE``
+  已被移除。
+
+  * 你可以在不做任何其他修改的情况下移除 ``CONFIG_SSD1306_DEFAULT``。
+
+  * ``CONFIG_SSD1306_SH1106_COMPATIBLE`` 用于断言设备（兼容）SH1106。
+    这已被专门的 dts compatible 声明取代。
+    你可以更新现有的 sh1106 节点，
+    将 ``compatible`` 指定从 :dtcompatible:`solomon,ssd1306fb`
+    改为 :dtcompatible:`sinowealth,sh1106`。
+
+  * ``CONFIG_SSD1306_REVERSE_MODE`` 现在使用
+    设备树节点的 ``inversion-on`` 属性设置。
+
+* 未实现 IRQ 相关操作的 GPIO 驱动程序
+  现在必须向相关操作提供 ``NULL``：
+  ``pin_interrupt_configure``、``manage_callback``、``get_pending_int``。
+  公共 API 将在这些不可用时返回 ``-ENOSYS``，
+  而不是 ``-ENOTSUP``。
+
+* STM32 以太网驱动程序
+  误用了 :c:func:`hwinfo_get_device_id`
+  来生成 mac 地址的最后 3 个字节，
+  导致使用同一批次的 SoC 时碰撞风险很高。
+  这现已修复为使用唯一 ID（96 位）可用的整个熵范围。
+  使用基于唯一 ID 的 mac 地址的设备
+  将看到其 MAC 地址的最后 3 个字节因该更改而被修改。
+
+* 在所有 STM32 上（除 F1x 和 F37x 系列外），
+  两个新的必需属性已添加到 ADC，
+  用于配置源时钟和预分频器。
+  ``st,adc-clock-source`` 允许选择同步或异步时钟源。
+  ``st,adc-prescaler`` 允许为所选时钟源设置预分频器的值。
+  并非所有组合都被允许。
+  请参阅相应的 RefMan 了解更多信息。
+  选择异步时钟时，内核源时钟的选择
+  在 ``clocks`` 节点中完成，
+  与其他外设的做法相同，
+  例如，为 STM32G0 选择 HSI16 作为时钟源：
+
+  .. code-block:: devicetree
+
+     &adc {
+         clocks = <&rcc STM32_CLOCK_BUS_APB1_2 0x00100000>,
+                  <&rcc STM32_SRC_HSI ADC_SEL(2)>;
+       };
+
+* 在带 LPC DMA 的 NXP 开发板上，
+  DMA 控制器节点过去在开发板 DTS 中
+  设置其 ``dma-channels`` 属性，
+  作为配置驱动程序将分配的结构体数量的方式。
+  这与 zephyr dma-controller 绑定不匹配，
+  因此该属性现在已得到修复，
+  并在 SoC 设备树定义中设置。
+  下游开发板不应覆盖该属性，
+  而应改用新的驱动程序 Kconfig
+  :kconfig:option:`CONFIG_DMA_MCUX_LPC_NUMBER_OF_CHANNELS_ALLOCATED`。
+
+* LPC55XXX 系列 SoC（除 LPC55S06 外）
+  的默认主时钟已从以 144MHZ 运行的 XTAL32K
+  更新为 PLL1 源。
+  如果新的 kconfig 选项 :kconfig:option:`CONFIG_INIT_PLL1` 被禁用，
+  则主时钟如先前一样多路复用到 FRO_HR。
+
+* Kconfig 选项 ``CONFIG_GPIO_NCT38XX_INTERRUPT``
+  已重命名为 :kconfig:option:`CONFIG_GPIO_NCT38XX_ALERT`。
+
+* CAN 控制器时序 API 函数
+  :c:func:`can_set_timing` 和 :c:func:`can_set_timing_data`
+  在遇到对应 ``CAN_SJW_NO_CHANGE`` 的 SJW 值时
+  （该值不再可用）
+  不再回退到给定 CAN 控制器的设备树属性中设置的
+  （重新）同步跳宽（SJW）值。
+  因此调用者将需要填充 :c:struct:`can_timing` 中的 ``sjw`` 字段。
+  为此，:c:func:`can_calc_timing` 和 :c:func:`can_calc_timing_data`
+  函数现在自动计算适当的 SJW。
+  计算出的 SJW 可在需要时被调用者覆盖。
+  CAN 控制器 API 函数 :c:func:`can_set_bitrate`
+  和 :c:func:`can_set_bitrate_data`
+  现在也自动计算适当的 SJW，
+  但其 SJW 不能被调用者覆盖。
+
+* :c:struct:`isotp_msg_id` 中的
+  CAN ISO-TP 消息配置
+  已更改为使用以下标志而非位域：
+
+  * :c:macro:`ISOTP_MSG_EXT_ADDR` 启用 ISO-TP 扩展寻址
+  * :c:macro:`ISOTP_MSG_FIXED_ADDR` 启用 ISO-TP 固定寻址
+  * :c:macro:`ISOTP_MSG_IDE` 使用扩展（29 位）CAN ID
+
+  两个新标志 :c:macro:`ISOTP_MSG_FDF` 和 :c:macro:`ISOTP_MSG_BRS`
+  已为 CAN FD 模式添加。
+
+* 基于 NXP i.MX RT 的开发板
+  现在应在
+  使用 RT bootrom 的 DCD 时
+  在开发板级别
+  启用 :kconfig:option:`CONFIG_DEVICE_CONFIGURATION_DATA`，
+  并在通过 SEMC 使用外部 SDRAM 时
+  启用 :kconfig:option:`CONFIG_NXP_IMX_EXTERNAL_SDRAM`
+
+* NXP i.MX RT11xx 系列 SNVS 引脚控制名称标识符
+  已更新以与这些 SoC 的源数据匹配。
+  引脚名称已添加后缀 ``dig``。
+  例如，``iomuxc_snvs_wakeup_gpio13_io00``
+  已重命名为 ``iomuxc_snvs_wakeup_dig_gpio13_io00``
+
+电源管理
+================
+
+* 实现电源管理钩子的平台
+  必须在 Kconfig 中显式选择 :kconfig:option:`CONFIG_HAS_PM`。
+  这现在是 :kconfig:option:`CONFIG_PM` 的依赖项。
+  在此更改之前，所有平台都可以启用 :kconfig:option:`CONFIG_PM`，
+  因为提供了空的弱存根，然而这不再受支持。
+  作为此更改的结果，电源管理钩子不再被定义为弱符号。
+
+* 多个平台不再支持使用 :c:func:`pm_state_force` 关闭系统电源。
+  必须使用新的 :c:func:`sys_poweroff` API。
+  已迁移的平台包括 Nordic nRF、STM32、ESP32 和 TI CC13XX/26XX。
+  新的 API 独立于 :kconfig:option:`CONFIG_PM`。
+  它需要启用 :kconfig:option:`CONFIG_POWEROFF`，
+  该选项依赖于 :kconfig:option:`CONFIG_HAS_POWEROFF`，
+  一个由实现所需新钩子的平台选择的选项。
+
+引导加载程序
 ==========
 
-* The :kconfig:option:`CONFIG_BOOTLOADER_SRAM_SIZE` default value is now ``0`` (was
-  ``16``). Bootloaders that use a part of the SRAM should set this value to an
-  appropriate size. :github:`60371`
+* :kconfig:option:`CONFIG_BOOTLOADER_SRAM_SIZE` 的默认值
+  现在为 ``0``（此前为 ``16``）。
+  使用 SRAM 一部分的引导加载程序
+  应将该值设置为适当的大小。
+  :github:`60371`
 
-Bluetooth
+蓝牙
 =========
 
-* The ``accept()`` callback's signature in :c:struct:`bt_l2cap_server` has
-  changed to ``int (*accept)(struct bt_conn *conn, struct bt_l2cap_server
-  *server, struct bt_l2cap_chan **chan)``,
-  adding a new ``server`` parameter pointing to the :c:struct:`bt_l2cap_server`
-  structure instance the callback relates to. :github:`60536`
+* :c:struct:`bt_l2cap_server` 中 ``accept()`` 回调的签名
+  已更改为
+  ``int (*accept)(struct bt_conn *conn, struct bt_l2cap_server *server, struct bt_l2cap_chan **chan)``，
+  添加了新的 ``server`` 参数，
+  指向该回调所关联的 :c:struct:`bt_l2cap_server` 结构体实例。
+  :github:`60536`
 
-Networking
+网络
 ==========
 
-* A new networking Kconfig option :kconfig:option:`CONFIG_NET_INTERFACE_NAME`
-  defaults to ``y``. The option allows user to set a name to a network interface.
-  During system startup a default name is assigned to the network interface like
-  ``eth0`` to the first Ethernet network interface. The option affects the behavior
-  of ``SO_BINDTODEVICE`` BSD socket option. If the Kconfig option is set to ``n``,
-  which is how the system worked earlier, then the name of the device assigned
-  to the network interface is used by the ``SO_BINDTODEVICE`` socket option.
-  If the Kconfig option is set to ``y`` (current default), then the network
-  interface name is used by the ``SO_BINDTODEVICE`` socket option.
+* 新的网络 Kconfig 选项 :kconfig:option:`CONFIG_NET_INTERFACE_NAME`
+  默认为 ``y``。
+  该选项允许用户为网络接口设置名称。
+  在系统启动期间，会为网络接口分配默认名称，
+  例如为第一个以太网网络接口分配 ``eth0``。
+  该选项影响 ``SO_BINDTODEVICE`` BSD socket 选项的行为。
+  如果 Kconfig 选项设置为 ``n``（即系统先前的工作方式），
+  则分配给网络接口的设备名称被 ``SO_BINDTODEVICE`` socket 选项使用。
+  如果 Kconfig 选项设置为 ``y``（当前默认值），
+  则网络接口名称被 ``SO_BINDTODEVICE`` socket 选项使用。
 
-* Ethernet PHY devicetree bindings were updated to use the standard ``reg``
-  property for the PHY address instead of a custom ``address`` property. As a
-  result, MDIO controller nodes now require ``#address-cells`` and
-  ``#size-cells`` properties. Similarly, Ethernet PHY devicetree nodes and
-  corresponding driver were updated to consistently use the node name
-  ``ethernet-phy`` instead of ``phy``. Devicetrees and overlays must be updated
-  accordingly:
+* 以太网 PHY 设备树绑定
+  已更新为使用标准 ``reg`` 属性
+  而非自定义 ``address`` 属性来指定 PHY 地址。
+  因此，MDIO 控制器节点现在需要
+  ``#address-cells`` 和 ``#size-cells`` 属性。
+  类似地，以太网 PHY 设备树节点和对应的驱动程序
+  已更新为一致使用节点名称 ``ethernet-phy`` 而非 ``phy``。
+  设备树和叠加层必须相应更新：
 
   .. code-block:: devicetree
 
@@ -328,60 +367,70 @@ Networking
          };
      };
 
-Other Subsystems
+其他子系统
 ================
 
-* ZBus runtime observers implementation now relies on the HEAP memory instead of a memory slab.
-  Thus, zbus' configuration (kconfig) related to runtime observers has changed. To keep your runtime
-  observers code working correctly, you need to:
+* ZBus 运行时观察者实现
+  现在依赖 HEAP 内存而非内存块。
+  因此，zbus 与运行时观察者相关的配置（kconfig）已更改。
+  要保持你的运行时观察者代码正确工作，你需要：
 
-  - Replace the integer ``CONFIG_ZBUS_RUNTIME_OBSERVERS_POOL_SIZE`` with the boolean
-    :kconfig:option:`CONFIG_ZBUS_RUNTIME_OBSERVERS`;
-  - Set the HEAP size with the :kconfig:option:`CONFIG_HEAP_MEM_POOL_SIZE`.
+  - 用布尔 :kconfig:option:`CONFIG_ZBUS_RUNTIME_OBSERVERS`
+    替换整数 ``CONFIG_ZBUS_RUNTIME_OBSERVERS_POOL_SIZE``；
+  - 用 :kconfig:option:`CONFIG_HEAP_MEM_POOL_SIZE` 设置 HEAP 大小。
 
-* The zbus VDED delivery sequence has changed. Check the :ref:`documentation<zbus delivery
-  sequence>` to verify if it will affect your code.
+* zbus VDED 投递顺序已更改。
+  检查 :ref:`文档 <zbus delivery sequence>`
+  以验证其是否会影响你的代码。
 
-* MCUmgr SMP version 2 error codes entry has changed due to a collision with an
-  existing response in shell_mgmt. Previously, these errors had the entry ``ret``
-  but now have the entry ``err``. ``smp_add_cmd_ret()`` is now deprecated and
-  :c:func:`smp_add_cmd_err` should be used instead, ``MGMT_CB_ERROR_RET`` is
-  now deprecated and :c:enumerator:`MGMT_CB_ERROR_ERR` should be used instead.
-  SMP version 2 error code defines for in-tree modules have been updated to
-  replace the ``*_RET_RC_*`` parts with ``*_ERR_*``.
+* MCUmgr SMP 版本 2 错误代码条目已更改，
+  因为与 shell_mgmt 中现有响应冲突。
+  此前，这些错误有条目 ``ret``，但现在有条目 ``err``。
+  ``smp_add_cmd_ret()`` 现在已弃用，
+  应改用 :c:func:`smp_add_cmd_err`，
+  ``MGMT_CB_ERROR_RET`` 现在已弃用，
+  应改用 :c:enumerator:`MGMT_CB_ERROR_ERR`。
+  树内模块的 SMP 版本 2 错误代码定义已更新，
+  将 ``*_RET_RC_*`` 部分替换为 ``*_ERR_*``。
 
-* MCUmgr SMP version 2 error translation (to legacy MCUmgr error code) is now
-  handled in function handlers by setting the ``mg_translate_error`` function
-  pointer of :c:struct:`mgmt_group` when registering a group. See
-  :c:type:`smp_translate_error_fn` for function details. Any SMP version 2
-  handlers made for Zephyr 3.4 need to be updated to include these translation
-  functions when the groups are registered.
+* MCUmgr SMP 版本 2 错误转换（到旧版 MCUmgr 错误代码）
+  现在在函数处理程序中处理，
+  通过在注册组时设置 :c:struct:`mgmt_group` 的
+  ``mg_translate_error`` 函数指针。
+  参见 :c:type:`smp_translate_error_fn` 了解函数详情。
+  为 Zephyr 3.4 制作的任何 SMP 版本 2 处理程序
+  需要更新，在组注册时包含这些转换函数。
 
 ARM
 ===
 
-* ARM SoC initialization routines no longer need to call `NMI_INIT()`. The
-  macro call has been removed as it was not doing anything useful.
+* ARM SoC 初始化例程
+  不再需要调用 `NMI_INIT()`。
+  该宏调用已被移除，
+  因为它没有做任何有用的事情。
 
 RISC V
 ======
 
-* The :kconfig:option:`CONFIG_RISCV_MTVEC_VECTORED_MODE` Kconfig option was renamed to
-  :kconfig:option:`CONFIG_RISCV_VECTORED_MODE`.
+* :kconfig:option:`CONFIG_RISCV_MTVEC_VECTORED_MODE` Kconfig 选项
+  已重命名为 :kconfig:option:`CONFIG_RISCV_VECTORED_MODE`。
 
-Recommended Changes
+推荐的更改
 *******************
 
-* Setting the GIC architecture version by selecting
-  :kconfig:option:`CONFIG_GIC_V1`, :kconfig:option:`CONFIG_GIC_V2` and
-  :kconfig:option:`CONFIG_GIC_V3` directly in Kconfig has been deprecated.
-  The GIC version should now be specified by adding the appropriate compatible, for
-  example :dtcompatible:`arm,gic-v2`, to the GIC node in the device tree.
+* 通过在 Kconfig 中直接选择
+  :kconfig:option:`CONFIG_GIC_V1`、:kconfig:option:`CONFIG_GIC_V2`
+  和 :kconfig:option:`CONFIG_GIC_V3`
+  来设置 GIC 架构版本已被弃用。
+  GIC 版本现在应通过向设备树中的 GIC 节点
+  添加适当的 compatible 来指定，
+  例如 :dtcompatible:`arm,gic-v2`。
 
-* Nordic nRF based boards using :kconfig:option:`CONFIG_NFCT_PINS_AS_GPIOS`
-  to configure NFCT pins as GPIOs, should instead set the new UICR
-  ``nfct-pins-as-gpios`` property in devicetree. It can be set like this in the
-  board devicetree files:
+* 使用 :kconfig:option:`CONFIG_NFCT_PINS_AS_GPIOS`
+  将 NFCT 引脚配置为 GPIOs 的
+  基于 Nordic nRF 的开发板
+  应改为在设备树中设置新的 UICR ``nfct-pins-as-gpios`` 属性。
+  它可以在开发板设备树文件中这样设置：
 
   .. code-block:: devicetree
 
@@ -389,10 +438,11 @@ Recommended Changes
          nfct-pins-as-gpios;
      };
 
-* Nordic nRF based boards using :kconfig:option:`CONFIG_GPIO_AS_PINRESET`
-  to configure reset GPIO as nRESET, should instead set the new UICR
-  ``gpio-as-nreset`` property in devicetree. It can be set like this in the
-  board devicetree files:
+* 使用 :kconfig:option:`CONFIG_GPIO_AS_PINRESET`
+  将复位 GPIO 配置为 nRESET 的
+  基于 Nordic nRF 的开发板
+  应改为在设备树中设置新的 UICR ``gpio-as-nreset`` 属性。
+  它可以在开发板设备树文件中这样设置：
 
   .. code-block:: devicetree
 
@@ -400,22 +450,25 @@ Recommended Changes
          gpio-as-nreset;
      };
 
-* The :kconfig:option:`CONFIG_MODEM_GSM_PPP` modem driver is obsolete.
-  Instead the new :kconfig:option:`CONFIG_MODEM_CELLULAR` driver should be used.
-  As part of this :kconfig:option:`CONFIG_GSM_MUX` and :kconfig:option:`CONFIG_UART_MUX` are being
-  marked as deprecated as well. The new modem subsystem :kconfig:option:`CONFIG_MODEM_CMUX`
-  and :kconfig:option:`CONFIG_MODEM_PPP` should be used instead.
+* :kconfig:option:`CONFIG_MODEM_GSM_PPP` 调制解调器驱动程序已过时。
+  相反，应使用新的 :kconfig:option:`CONFIG_MODEM_CELLULAR` 驱动程序。
+  作为此更改的一部分，
+  :kconfig:option:`CONFIG_GSM_MUX` 和 :kconfig:option:`CONFIG_UART_MUX`
+  也被标记为已弃用。
+  应改用新的调制解调器子系统
+  :kconfig:option:`CONFIG_MODEM_CMUX` 和 :kconfig:option:`CONFIG_MODEM_PPP`。
 
-* Device drivers should now be restricted to ``PRE_KERNEL_1``, ``PRE_KERNEL_2``
-  and ``POST_KERNEL`` initialization levels. Other device initialization levels,
-  including ``EARLY``, ``APPLICATION``, and ``SMP``, have been deprecated and
-  will be removed in future releases. Note that these changes do not apply to
-  initialization levels used in the context of the ``init.h`` API,
-  e.g. :c:macro:`SYS_INIT`.
+* 设备驱动程序现在应被限制为
+  ``PRE_KERNEL_1``、``PRE_KERNEL_2`` 和 ``POST_KERNEL`` 初始化级别。
+  其他设备初始化级别，
+  包括 ``EARLY``、``APPLICATION`` 和 ``SMP``，
+  已被弃用，并将在未来版本中被移除。
+  注意这些更改不适用于在 ``init.h`` API 上下文中使用的初始化级别，
+  例如 :c:macro:`SYS_INIT`。
 
-* The following CAN controller devicetree properties are now deprecated in favor specifying the
-  initial CAN bitrate using the ``bus-speed``, ``sample-point``, ``bus-speed-data``, and
-  ``sample-point-data`` properties:
+* 以下 CAN 控制器设备树属性现在已被弃用，
+  改为使用 ``bus-speed``、``sample-point``、``bus-speed-data``
+  和 ``sample-point-data`` 属性来指定初始 CAN 比特率：
 
   * ``sjw``
   * ``prop-seg``
@@ -426,11 +479,11 @@ Recommended Changes
   * ``phase-seg1-data``
   * ``phase-seg1-data``
 
-* ``<zephyr/arch/arm/aarch32/cortex_a_r/cmsis.h>`` and
-  ``<zephyr/arch/arm/aarch32/cortex_m/cmsis.h>`` are now deprecated in favor of
-  including ``<cmsis_core.h>`` instead. The new header is part of the CMSIS glue
-  code in the ``modules`` directory.
+* ``<zephyr/arch/arm/aarch32/cortex_a_r/cmsis.h>``
+  和 ``<zephyr/arch/arm/aarch32/cortex_m/cmsis.h>``
+  现在已被弃用，改为包含 ``<cmsis_core.h>``。
+  新的头文件是 ``modules`` 目录中 CMSIS 胶水代码的一部分。
 
-* Random API header ``<zephyr/random/rand32.h>`` is deprecated in favor of
-  ``<zephyr/random/random.h>``. The old header will be removed in future releases
-  and its usage should be avoided.
+* 随机 API 头文件 ``<zephyr/random/rand32.h>``
+  已被弃用，改为 ``<zephyr/random/random.h>``。
+  旧的头文件将在未来版本中被移除，应避免使用它。

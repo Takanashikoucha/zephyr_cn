@@ -1,189 +1,27 @@
 .. _devicetree_style:
 
-Devicetree
-Style
-Guidelines
+设备树风格指南
 ###########################
 
-   *
-   Indent
-   with
-   tabs。
-   *
-   Tab
-   size
-   is
-   8
-   characters。
-   *
-   Follow
-   the
-   Devicetree
-   specification
-   conventions
-   and
-   rules。
-   *
-   If
-   the
-   Linux
-   kernel
-   rules
-   in
-   `Devicetree
-   Sources
-   （DTS）
-   Coding
-   Style
-   <https://docs.kernel.org/devicetree/bindings/dts-coding-style.html>`_
-   make
-   a
-   recommendation
-   it's
-   the
-   preferred
-   style
-   in
-   Zephyr
-   too。
-   *
-   You
-   can
-   split
-   related
-   groups
-   of
-   properties
-   into
-   "paragraphs"
-   by
-   separating
-   them
-   with
-   one
-   empty
-   line
-   （two
-   newline
-   characters）
-   if
-   it
-   aids
-   readability。
-   *
-   Use
-   dashes
-   （``-``）
-   as
-   word
-   separators
-   for
-   node
-   and
-   property
-   names。
-   *
-   Use
-   underscores
-   （``_``）
-   as
-   word
-   separators
-   in
-   node
-   labels。
-   *
-   Leave
-   a
-   single
-   space
-   on
-   each
-   side
-   of
-   the
-   equal
-   sign
-   （``=``）
-   in
-   property
-   definitions。
-   *
-   Don't
-   insert
-   empty
-   lines
-   before
-   a
-   dedenting
-   ``};``。
-   *
-   Insert
-   a
-   single
-   empty
-   line
-   to
-   separate
-   nodes
-   at
-   the
-   same
-   hierarchy
-   level。
-   *
-   When
-   splitting
-   long
-   property
-   values
-   across
-   multiple
-   lines
-   specify
-   the
-   first
-   value
-   on
-   the
-   same
-   line
-   as
-   the
-   opening
-   bracket
-   （``<``
-   or
-   ``[``）。
-   Place
-   the
-   closing
-   bracket
-   and
-   semicolon
-   （``>;``
-   or
-   ``];``）
-   on
-   the
-   same
-   line
-   after
-   the
-   final
-   value
-   of
-   the
-   property。
+  * 使用制表符缩进。
+  * 制表符大小为 8 个字符。
+  * 遵循设备树规范的约定和规则。
+  * 如果
+    `设备树源码（DTS）编码风格 <https://docs.kernel.org/devicetree/bindings/dts-coding-style.html>`_
+    中的 Linux 内核规则给出了推荐，那么该风格在 Zephyr 中同样是首选风格。
+  * 如果有助于可读性，可以用一个空行（两个换行字符）将相关的属性组分隔成
+    "段落"。
+  * 节点和属性名称使用连字符（``-``）作为单词分隔符。
+  * 节点标签使用下划线（``_``）作为单词分隔符。
+  * 在属性定义中，等号（``=``）两侧各留一个空格。
+  * 不要在回退缩进的 ``};`` 前插入空行。
+  * 插入一个空行来分隔同一层级上的节点。
+  * 当将长属性值拆分到多行时，第一个值应与开括号（``<`` 或 ``[``）
+    放在同一行。闭括号和分号（``>;`` 或 ``];``）应放在该属性最后一个值
+    之后的同一行上。
 
-Examples:
+示例：
 
-.. literalinclude::
-   style
-   example.dts
-   :language:
-   devicetree
-   :start-after:
-   start
-   after
-   here
+.. literalinclude:: style-example.dts
+  :language: devicetree
+  :start-after: start-after-here

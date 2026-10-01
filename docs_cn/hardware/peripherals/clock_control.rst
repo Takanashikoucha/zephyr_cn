@@ -1,43 +1,21 @@
 .. _clock_control_api:
 
-Clock
-Control
+时钟控制
 #############
 
-Overview
+概述
 ********
 
-Clock
-control
-API
-提供
-对
-system
-中
-clocks
-的
-访问，
-包括
-打开
-和
-关闭
-它们
-的
-能力。
+时钟控制 API 提供对系统中时钟的访问，包括开启和关闭它们的能力。
 
-Configuration
-Options
+配置选项
 *********************
 
-相关
-配置
-选项：
+相关配置选项：
 
 * :kconfig:option:`CONFIG_CLOCK_CONTROL`
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   clock_control_interface
+.. doxygengroup:: clock_control_interface

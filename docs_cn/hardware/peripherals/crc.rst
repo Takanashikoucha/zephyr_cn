@@ -1,45 +1,22 @@
 .. _crc_api:
 
-Cyclic
-Redundancy
-Check
-（CRC）
-#############################
+循环冗余校验（CRC）
+#####################
 
-Overview
+概述
 ********
 
-Cyclic
-Redundancy
-Check
-（CRC）
-API
-提供
-函数
-用于
-在
-hardware
-上
-配置
-和
-计算
-CRC
-values。
+Cyclic Redundancy Check（CRC）API 提供用于在硬件上配置和计算 CRC 值的函数。
 
-Configuration
-Options
+配置选项
 *********************
 
-相关
-配置
-选项：
+相关配置选项：
 
 * :kconfig:option:`CONFIG_CRC_DRIVER`
 * :kconfig:option:`CONFIG_CRC_DRIVER_INIT_PRIORITY`
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   crc_interface
+.. doxygengroup:: crc_interface

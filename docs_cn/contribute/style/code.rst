@@ -1,256 +1,37 @@
 .. _general_code_style:
 
-C
-Code
-and
-General
-Style
-Guidelines
+C 代码与通用风格指南
 ###################################
 
-Coding
-style
-is
-enforced
-on
-any
-new
-or
-modified
-code
-but
-contributors
-are
-not
-expected
-to
-correct
-the
-style
-on
-existing
-code
-that
-they
-are
-not
-modifying。
+编码风格对任何新增或修改的代码强制执行，
+但贡献者不被要求纠正其未修改的现有代码的风格。
 
-For
-style
-aspects
-where
-the
-guidelines
-don't
-offer
-explicit
-guidance
-or
-permit
-multiple
-valid
-ways
-to
-express
-something
-contributors
-should
-follow
-the
-style
-of
-existing
-code
-in
-the
-tree
-with
-higher
-importance
-given
-to
-"nearby"
-code
-（first
-look
-at
-the
-function
-then
-the
-same
-file
-then
-subsystem
-etc）。
+对于指南未提供明确指导、或允许多种有效表达方式的风格方面，
+贡献者应遵循代码树中现有代码的风格，
+并优先参考"附近"的代码（先看函数，再看同一文件，
+再看子系统等）。
 
-In
-general
-follow
-the
-`Linux
-kernel
-coding
-style`_
-with
-the
-following
-exceptions
-and
-clarifications:
+一般而言，遵循 `Linux 内核编码风格`_，
+但有以下例外和澄清：
 
-*
-Tabs
-are
-8
-characters。
-*
-Use
-`snake
-case`_
-for
-code
-and
-variables。
-*
-The
-line
-length
-is
-100
-columns
-or
-fewer。
-In
-the
-documentation
-longer
-lines
-for
-URL
-references
-are
-an
-allowed
-exception。
-*
-Add
-braces
-to
-every
-``if``、
-``else``、
-``do``、
-``while``、
-``for``
-and
-``switch``
-body
-even
-for
-single
-line
-code
-blocks。
-*
-Use
-spaces
-instead
-of
-tabs
-to
-align
-comments
-after
-declarations
-as
-needed。
-*
-Use
-C89
-style
-single
-line
-comments
-``/*
-*/``。
-The
-C99
-style
-single
-line
-comment
-``//``
-is
-not
-allowed。
-*
-Use
-``/**
-*/``
-for
-doxygen
-comments
-that
-need
-to
-appear
-in
-the
-documentation。
-*
-Avoid
-using
-binary
-literals
-（constants
-starting
-with
-``0b``）。
-*
-Avoid
-using
-non
-ASCII
-symbols
-in
-code
-unless
-it
-significantly
-improves
-clarity
-avoid
-emojis
-in
-any
-case。
-*
-Use
-proper
-capitalization
-of
-nouns
-in
-code
-comments
-（e.g.
-``UART``
-and
-not
-``uart``、
-``CMake``
-and
-not
-``cmake``）。
+* 制表符为 8 个字符。
+* 代码和变量使用 `snake case`_。
+* 行长度为 100 列或更少。在文档中，
+  URL 引用的较长行是允许的例外。
+* 为每个 ``if``、``else``、``do``、``while``、``for`` 和
+  ``switch`` 主体添加花括号，即使是单行代码块。
+* 按需使用空格而非制表符来对齐声明后的注释。
+* 使用 C89 风格的单行注释 ``/*  */``。
+  不允许使用 C99 风格的单行注释 ``//``。
+* 对需要出现在文档中的 doxygen 注释，使用 ``/**  */``。
+* 避免使用二进制字面量（以 ``0b`` 开头的常量）。
+* 避免在代码中使用非 ASCII 符号，除非其能显著提高清晰度；
+  任何情况下都避免使用表情符号。
+* 代码注释中名词使用恰当的大写
+  （例如 ``UART`` 而非 ``uart``、``CMake`` 而非 ``cmake``）。
 
-.. _Linux
-   kernel
-   coding
-   style:
+.. _Linux kernel coding style:
    https://kernel.org/doc/html/latest/process/coding-style.html
 
-.. _snake
-   case:
+.. _snake case:
    https://en.wikipedia.org/wiki/Snake_case

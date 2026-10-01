@@ -1,56 +1,14 @@
 .. _otp:
 
-One
-Time
-Programmable
-（OTP）
-memory
-devices
+一次性可编程（OTP）内存设备
 ##########################################
 
-Overview
+概述
 ********
 
-OTP
-memory
-devices
-处理
-期望
-是
-permanent
-的
-memory。
-这
-memory
-通常
-在
-manufacturing
-期间
-被
-provision
-但
-有
-一些
-use-cases
-需要
-在
-更
-晚
-的
-lifecycle
-state
-编程
-OTP
-memory
-（例如：
-monotonic
-counters、
-cryptographic
-keys、
-等等...）。
+OTP 内存设备处理的是预期永久保存的内存。这类内存通常在制造期间写入，但也有一些用例需要在生命周期的后续阶段对 OTP 内存进行编程（例如：单调计数器、加密密钥等）。
 
 .. toctree::
-   :maxdepth:
-   2
+   :maxdepth: 2
 
    api.rst

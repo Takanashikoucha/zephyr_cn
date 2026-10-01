@@ -1,51 +1,36 @@
 .. _pm_api:
 
-Power
-Management
-APIs
+电源管理 API
 #####################
 
-System
-PM
-APIs
+系统 PM API
 **************
 
-.. doxygengroup::
-   subsys_pm_sys
+.. doxygengroup:: subsys_pm_sys
 
-States
+状态
 ======
 
-.. doxygengroup::
-   subsys_pm_states
+.. doxygengroup:: subsys_pm_states
 
-Policy
+策略
 ======
 
-.. doxygengroup::
-   subsys_pm_sys_policy
+.. doxygengroup:: subsys_pm_sys_policy
 
-Hooks
+钩子
 =====
 
-.. doxygengroup::
-   subsys_pm_sys_hooks
+.. doxygengroup:: subsys_pm_sys_hooks
 
-Device
-PM
-APIs
+设备 PM API
 **************
 
-.. doxygengroup::
-   subsys_pm_device
+.. doxygengroup:: subsys_pm_device
 
 .. _device_runtime_apis:
 
-Device
-Runtime
-PM
-APIs
+设备运行时 PM API
 **********************
 
-.. doxygengroup::
-   subsys_pm_device_runtime
+.. doxygengroup:: subsys_pm_device_runtime

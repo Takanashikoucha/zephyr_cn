@@ -1,214 +1,38 @@
 .. _external_module_lz4:
 
-LZ4
--
-极
-快
-压缩
+LZ4 - 极快的压缩算法
 ################################
 
-介绍
+简介
 ************
 
-LZ4
-是
-一个
-无损
-压缩
-算法，
-提供
-每
-核心
-超过
-500
-MB/s
-的
-压缩
-速度，
-可
-随
-多
-核心
-CPU
-扩展。
-它
-有
-一个
-极
-快
-的
-解码器，
-速度
-每
-核心
-多
-GB/s，
-通常
-在
-多
-核心
-系统
-上
-达到
-RAM
-速度
-限制。
+LZ4 是一种无损压缩算法，提供每核心大于 500 MB/s 的压缩速度，可随多核 CPU 扩展。它拥有一个极快的解码器，速度达每核心多个 GB/s，通常在多核系统上达到 RAM 速度极限。
 
-速度
-可以
-通过
-选择
-一个
-"acceleration"
-因子
-动态
-调整，
-它
-用
-压缩
-比
-换
-更
-快
-速度。
-在
-另一
-端，
-也
-提供
-一个
-高
-压缩
-衍生
-版本
-LZ4_HC，
-用
-CPU
-时间
-换
-改进
-的
-压缩
-比。
-所有
-版本
-有
-相同
-的
-解压缩
-速度。
+速度可以通过选择“加速”因子动态调整，以压缩比换取更快的速度。另一方面，也提供了一个高压缩比的衍生版本 LZ4_HC，以 CPU 时间换取更高的压缩比。所有版本都具有相同的解压速度。
 
-LZ4
-也
-兼容
-字典
-压缩，
-在
-API
-和
-CLI
-级别
-都
-兼容。
-它
-可以
-摄取
-任何
-输入
-文件
-作为
-字典，
-尽管
-只
-使用
-最后
-64KB。
-这个
-能力
-可以
-组合
+LZ4 也兼容字典压缩，在 API 和 CLI 级别均如此。它可以摄取任何输入文件作为字典，尽管只有最后 64KB 会被使用。这个能力可以与其他能力组合使用。
 
-
-用
-Zephyr
+在 Zephyr 中使用
 *****************
 
-要
-拉入
-lz4
-作为
-Zephyr
-模块，
-要么
-在
-``west.yaml``
-文件
-中
-添加
-它
-作为
-West
-项目
-或
-通过
-添加
-一个
-submanifest
-（例如
-``zephyr/submanifests/lz4.yaml``）
-文件
-拉入
-它
-带
-以下
-内容
-并
-运行
-``west
-update``：
+要将 lz4 作为 Zephyr 模块引入，可以将其作为 West 项目添加到 ``west.yaml`` 文件，或通过添加一个子 manifest 文件（例如 ``zephyr/submanifests/lz4.yaml``，内容如下）引入，然后运行 ``west update``：
 
 .. code-block:: yaml
 
    manifest:
      projects:
-       -
-       name:
-       lz4
-         url:
-       https://github.com/zephyrproject-rtos/lz4
-         revision:
-       zephyr
-         path:
-       modules/lib/lz4
-       #
-       按
-       需要
-       调整
-       路径
+       - name: lz4
+         url: https://github.com/zephyrproject-rtos/lz4
+         revision: zephyr
+         path: modules/lib/lz4 # 按需调整路径
 
-更多
-详细
-说明
-和
-API
-文档，
-参考
-`lz4
-documentation`_
-以及
-提供
-的
-`lz4
-examples`_。
+更详细的操作步骤和 API 文档请参阅 `lz4 文档`_ 以及提供的 `lz4 示例`_。
 
-
-参考
+参考资料
 *********
 
-.. _lz4
-   documentation:
+.. _lz4 文档:
    https://github.com/lz4/lz4/tree/dev/doc
 
-.. _lz4
-   examples:
+.. _lz4 示例:
    https://github.com/zephyrproject-rtos/lz4/tree/zephyr/zephyr/samples

@@ -48,544 +48,2575 @@ commands：
 ct`
 和
 :code:`avrcp
-tg`。
+tg`.
+The
 :code:`avrcp
 ct`
 sub
 command
-提供
+provides
 **Controller
 （CT）**
 functionality
+and
 :code:`avrcp
 tg`
 sub
 command
-提供
+provides
 **Target
 （TG）**
-functionality。
+functionality.
 
 Prerequisites
 -------------
 
-在
-运行
+Before
+running
+the
 :code:`avrcp`
-shell
-之前
-确保
-你
-的
+shell、
+make
+sure
+your
 build
-启用
-了
+enables
 Bluetooth
 Classic
-和
-shell。
-在
-AVRCP
-control
-或
-browsing
-connections
-可以
-被
-created
-之前
-必须
-先
-establish
-到
-peer
-device
-的
+and
+the
+shell.
+An
 ACL
 BR/EDR
 connection
-（通常
-通过
+to
+the
+peer
+device
+must
+be
+established
+first
+（typically
+via
+the
 general
-的
 :code:`bt`
 shell
-commands）。
+commands）
+before
+AVRCP
+control
+or
+browsing
+connections
+can
+be
+created.
 
 Commands
 ********
 
-所有
+All
 commands
-只
-能
-在
+can
+only
+be
+used
+after
+the
 ACL
 connection
-被
+has
+been
 established
-之后
-使用
-除了
+except
 :code:`avrcp
 ct
-register_cb`
-和
+register
+cb`
+and
 :code:`avrcp
 tg
-register_cb`。
+register
+cb`.
 
+The
 :code:`avrcp`
-commands：
+commands:
 
-.. code-block::
-   console
+..
+code
+block::
+console
+uart:~$
+avrcp
+avrcp
+Bluetooth
+AVRCP
+shell
+commands
+Subcommands:
+connect
+:
+connect
+AVRCP
+disconnect
+:
+disconnect
+AVRCP
+browsing
+connect
+:
+connect
+browsing
+AVRCP
+browsing
+disconnect
+:
+disconnect
+browsing
+AVRCP
+ct
+:
+AVRCP
+CT
+shell
+commands
+tg
+:
+AVRCP
+TG
+shell
+commands
 
-   uart:~$
-   avrcp
-   avrcp
-   -
-   Bluetooth
-   AVRCP
-   shell
-   commands
-   Subcommands:
-     connect
-                :
-      connect
-      AVRCP
-     disconnect
-             :
-      disconnect
-      AVRCP
-     browsing_connect
-       :
-      connect
-      browsing
-      AVRCP
-     browsing_disconnect
-    :
-      disconnect
-      browsing
-      AVRCP
-     ct
-                     :
-      AVRCP
-      CT
-      shell
-      commands
-     tg
-                     :
-      AVRCP
-      TG
-      shell
-      commands
-
+The
 :code:`avrcp
 ct`
-commands：
+commands:
 
+..
+code
+block::
+console
+uart:~$
+avrcp
+ct
+ct
+AVRCP
+CT
+shell
+commands
+Subcommands:
+register
+cb
+:
+register
+avrcp
+ct
+callbacks
+get
+unit
+:
+get
+unit
+info
+get
+subunit
+:
+get
+subunit
+info
+get
+caps
+:
+get
+capabilities
+<cap
+id:
+company
+or
+events>
+play
+:
+request
+a
+play
+at
+the
+remote
+player
+pause
+:
+request
+a
+pause
+at
+the
+remote
+player
+register
+notification
+:
+register
+notify
+<event
+id>
+[playback
+interval]
+set
+browsed
+player
+:
+set
+browsed
+player
+<player
+id>
+get
+folder
+items
+:
+[none]
+change
+path
+:
+[none]
+get
+item
+attrs
+:
+get
+item
+attrs
+[scope]
+get
+total
+number
+of
+items
+:
+get
+total
+number
+of
+items
+[scope]
+search
+:
+search
+[search
+string]
+list
+app
+attrs
+:
+[none]
+list
+app
+vals
+:
+List
+App
+vals
+<attr
+id>
+get
+app
+curr
+:
+Get
+curr
+player
+app
+setting
+val
+[attr1]
+[attr2]
+...
+set
+app
+val
+:
+Set
+app
+setting
+Val
+<attr1>
+<val1>
+[<attr2>
+<val2>]
+...
+get
+app
+attr
+text
+:
+Get
+app
+setting
+attrs
+text
+<attr1>
+[attr2]
+...
+get
+app
+val
+text
+:
+Get
+setting
+vals
+Text
+<attr
+id>
+<val1>
+[val2]
+...
+inform
+displayable
+char
+:
+Inform
+Displayable
+Character
+Set
+<charset
+id1>
+[charset
+id2]
+...
+inform
+batt
+:
+Inform
+Battery
+Status
+Of
+CT
+<Battery
+status>
+set
+absolute
+volume
+:
+set
+absolute
+volume
+<volume>
+get
+element
+attrs
+:
+get
+element
+attrs
+[identifier]
+[attr1]
+[attr2]
+...
+get
+play
+status
+:
+[none]
+set
+addressed
+player
+:
+set
+addressed
+player
+<player
+id>
+play
+item
+:
+PlayItem
+<scope>
+<uid
+hex>
+<uid
+counter>
+add
+to
+now
+playing
+:
+AddToNowPlaying
+<scope>
+<uid
+hex>
+<uid
+counter>
 
-.. note::
+The
+:code:`avrcp
+tg`
+commands:
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-        .. group-tab:: Device B (TG - Target)
+..
+code
+block::
+console
+uart:~$
+avrcp
+tg
+tg
+AVRCP
+TG
+shell
+commands
+Subcommands:
+register
+cb
+:
+register
+avrcp
+tg
+callbacks
+send
+unit
+rsp
+:
+send
+unit
+info
+response
+send
+subunit
+rsp
+:
+[none]
+send
+get
+caps
+rsp
+:
+send
+get
+capabilities
+response
+[status]
+send
+notification
+rsp
+:
+send
+notify
+rsp
+<event
+id>
+<type>
+[value...]
+send
+browsed
+player
+rsp
+:
+Send
+SetBrowsedPlayer
+response
+send
+get
+folder
+items
+rsp
+:
+send
+get
+folder
+items
+[status]
+send
+change
+path
+rsp
+:
+send
+change
+path
+[status]
+send
+get
+item
+attrs
+rsp
+:
+send
+get
+item
+attrs
+[status]
+send
+get
+total
+number
+of
+items
+rsp
+:
+send
+get
+total
+number
+of
+items
+[status]
+send
+search
+rsp
+:
+search
+[status]
+send
+browsing
+general
+reject
+:
+send
+browsing
+general
+reject
+[reason]
+send
+passthrough
+rsp
+:
+send_passthrough_rsp
+<op
+opvu>
+<opid>
+<state>
+send
+list
+player
+app
+setting
+attrs
+rsp
+:
+send
+attrs
+rsp
+<num>
+[attr
+id...]
+send
+list
+player
+app
+setting
+vals
+rsp
+:
+send
+vals
+rsp
+<num>
+[val
+id...]
+send
+get
+curr
+player
+app
+setting
+val
+rsp
+:
+send
+current
+vals
+rsp
+<num
+pairs>
+[attr
+val]...
+send
+set
+player
+app
+setting
+val
+rsp
+:
+set
+app
+setting
+val
+rsp
+[status]
+send
+get
+player
+app
+setting
+attr
+text
+rsp
+:
+send
+get
+player
+app
+setting
+attr
+text
+rsp
+[status]
+send
+get
+player
+app
+setting
+val
+text
+rsp
+:
+send
+get
+player
+app
+setting
+val
+text
+rsp
+[status]
+send
+inform
+displayable
+char
+rsp
+:
+send
+displayable
+char
+rsp
+[status]
+send
+inform
+batt
+status
+of
+ct
+rsp
+:
+send
+inform
+batt
+rsp
+[status]
+send
+get
+element
+attrs
+rsp
+:
+send
+get
+element
+attrs
+response<large:
+1>
+send
+absolute
+volume
+rsp
+:
+send
+absolute
+volume
+rsp
+<volume>
+send
+get
+play
+status
+rsp
+:
+send
+get
+play
+status
+[status]
+send
+set
+addressed
+player
+rsp
+:
+send
+set
+addressed
+player
+rsp
+[status]
+send
+play
+item
+rsp
+:
+send
+play
+item
+rsp
+[status]
+send
+add
+to
+now
+playing
+rsp
+:
+send
+add
+to
+now
+playing
+rsp
+[status]
 
-                .. code-block:: console
+.. _avrcp
+basic
+operations:
 
-                        uart:~$ avrcp tg register_cb
-                        AVRCP TG callbacks registered
-                        <input `avrcp connect` in CT side>
-                        AVRCP TG connected
-                        <input `avrcp ct get_caps events` in CT side>
-                        AVRCP get capabilities command received: cap_id 0x03 (EVENTS_SUPPORTED)
-                        uart:~$ avrcp tg send_get_caps_rsp
-                        Get capabilities response sent successfully
-                        <input `avrcp ct register_notification 0x01` in CT side>
-                        receive register notification request event_id=0x01
-                        uart:~$ avrcp tg send_notification_rsp 0x01 interim 0
-                        Sent notification rsp event_id=0x01 type=interim
-                        <input `avrcp ct play` in CT side>
-                        receive passthrough command: op_id=0x44 (PLAY)
-                        uart:~$ avrcp tg send_passthrough_rsp op play pressed
-                        Passthrough opid=0x44 (STANDARD), state=pressed sent successfully
-                        uart:~$ avrcp tg send_passthrough_rsp op play released
-                        Passthrough opid=0x44 (STANDARD), state=released sent successfully
-                        uart:~$ avrcp tg send_notification_rsp 0x01 changed 1
-                        Sent notification rsp event_id=0x01 type=changed
-                        <input `avrcp ct get_play_status` in CT side>
-                        receive get play status request
-                        uart:~$ avrcp tg send_get_play_status_rsp
-                        GetPlayStatus rsp sent
-                        <input `avrcp ct get_element_attrs` in CT side>
-                        AVRCP GetElementAttributes command received
-                        uart:~$ avrcp tg send_get_element_attrs_rsp 0
-                        Sending standard GetElementAttributes response (7 attrs)
-                        GetElementAttributes response sent successfully
-                        <input `avrcp ct set_absolute_volume 50` in CT side>
-                        AVRCP set_absolute_volume_req: tid=0x06, absolute_volume=0x32
-                        uart:~$ avrcp tg send_absolute_volume_rsp 50
-                        Set absolute volume response sent successfully
-                        <input `avrcp ct pause` in CT side>
-                        AVRCP passthrough command received: opid = 0x46
-                        uart:~$ avrcp tg send_passthrough_rsp op pause pressed
-                        send passthrough response
-                        uart:~$ avrcp tg send_passthrough_rsp op pause released
-                        send passthrough response
-
-AVRCP Connection
-****************
-
-The AVRCP profile supports both control and browsing connections. The control connection
-is used for basic remote control functionality, while the browsing connection allows
-browsing of media content.
-
-Control Connection
-==================
-
-Establish AVRCP control connection:
-
-1. Register callbacks (CT side):
-
-.. code-block:: console
-
-   uart:~$ avrcp ct register_cb
-   AVRCP CT callbacks registered
-
-2. Register callbacks (TG side):
-
-.. code-block:: console
-
-   uart:~$ avrcp tg register_cb
-   AVRCP TG callbacks registered
-
-3. Connect AVRCP:
-
-.. code-block:: console
-
-   uart:~$ avrcp connect
-   AVRCP CT connected
-   AVRCP TG connected
-
-4. Disconnect AVRCP:
-
-.. code-block:: console
-
-   uart:~$ avrcp disconnect
-   AVRCP CT disconnected
-   AVRCP TG disconnected
-
-Browsing Connection
-===================
-
-After control connection is established, browsing connection can be initiated:
-
-1. Connect browsing:
-
-.. code-block:: console
-
-   uart:~$ avrcp browsing_connect
-   AVRCP browsing connect request sent
-   AVRCP CT browsing connected
-   AVRCP TG browsing connected
-
-2. Disconnect browsing:
-
-.. code-block:: console
-
-   uart:~$ avrcp browsing_disconnect
-   AVRCP browsing disconnect request sent
-   AVRCP CT browsing disconnected
-   AVRCP TG browsing disconnected
-
-Basic Playback Control
+Basic
+AVRCP
+Operations
 **********************
 
-Control playback from CT side:
+Demonstrate
+the
+flow
+of
+basic
+AVRCP
+operations:
+两
+侧
+用
+:code:`avrcp
+ct
+register
+cb`
+and
+:code:`avrcp
+tg
+register
+cb`
+register
+AVRCP
+callbacks.
+用
+:code:`avrcp
+connect`
+创建
+AVRCP
+connection.
+CT
+gets
+capabilities
+from
+TG
+using
+:code:`avrcp
+ct
+get
+caps
+events`.
+CT
+registers
+for
+notifications
+using
+:code:`avrcp
+ct
+register
+notification
+0x01`.
+CT
+requests
+playback
+control
+using
+:code:`avrcp
+ct
+play`.
+CT
+gets
+current
+play
+status
+using
+:code:`avrcp
+ct
+get
+play
+status`.
+CT
+gets
+element
+attributes
+（metadata）
+using
+:code:`avrcp
+ct
+get
+element
+attrs`.
+CT
+sets
+volume
+using
+:code:`avrcp
+ct
+set
+absolute
+volume
+50`.
+CT
+pauses
+playback
+using
+:code:`avrcp
+ct
+pause`.
 
-.. tabs::
+..
+note::
+CT
+（Controller）
+sends
+commands
+and
+TG
+（Target）
+responds.
+For
+notification
+capable
+events、
+TG
+typically
+sends
+an
+**INTERIM**
+response
+immediately
+after
+registration
+to
+indicate
+the
+current
+value、
+and
+later
+a
+**CHANGED**
+response
+when
+the
+value
+actually
+changes.
 
-   .. group-tab:: Play Command
+..
+tabs::
+..
+group
+tab::
+Device
+A
+（CT
+-
+Controller）
+..
+code
+block::
+console
+uart:~$
+avrcp
+ct
+register
+cb
+AVRCP
+CT
+callbacks
+registered
+uart:~$
+avrcp
+connect
+AVRCP
+CT
+connected
+uart:~$
+avrcp
+ct
+get
+caps
+events
+GetCapabilities
+:
+status=0x04
+Remote
+supported
+EventID
+=
+0x01
+Remote
+supported
+EventID
+=
+0x02
+Remote
+supported
+EventID
+=
+0x0d
+uart:~$
+avrcp
+ct
+register
+notification
+0x01
+Get
+capabilities
+command
+sent
+successfully:
+cap
+id=events
+Sent
+register
+notification
+event
+id=0x01
+AVRCP
+notification
+rsp:
+tid=0x01、
+status=0x04、
+event
+id=0x01
+Notification
+type:
+INTERIM
+PLAYBACK
+STATUS
+CHANGED:
+status=0x00
+uart:~$
+avrcp
+ct
+play
+Passthrough
+PRESSED
+command
+sent
+successfully:
+opid=0x44
+Passthrough
+RELEASED
+command
+sent
+successfully:
+opid=0x44
+<input
+`avrcp
+tg
+send
+passthrough
+rsp
+op
+play
+pressed`
+in
+TG
+side>
+AVRCP
+passthrough
+command
+accepted、
+operation
+id
+=
+0x44、
+state
+=
+0
+<input
+`avrcp
+tg
+send
+passthrough
+rsp
+op
+play
+released`
+in
+TG
+side>
+AVRCP
+passthrough
+command
+accepted、
+operation
+id
+=
+0x44、
+state
+=
+1
+<input
+`avrcp
+tg
+send
+notification
+rsp
+0x01
+changed
+1`
+in
+TG
+side>
+AVRCP
+notification
+rsp:
+tid=0x01、
+status=0x04、
+event
+id=0x01
+Notification
+type:
+CHANGED
+PLAYBACK
+STATUS
+CHANGED:
+status=0x01
+uart:~$
+avrcp
+ct
+get
+play
+status
+AVRCP
+GetPlayStatus
+getplaystatus
+:
+status=0x04
+GetPlayStatus:
+len=180000
+ms、
+pos=30000
+ms、
+status=0x01
+status:
+PLAYING
+uart:~$
+avrcp
+ct
+get
+element
+attrs
+Requesting
+element
+attributes:
+identifier=0x0000000000000000、
+num
+attrs=0
+AVRCP
+CT
+get
+element
+attrs
+command
+sent
+GetElementAttributes
+:
+status=0x04
+AVRCP
+GetElementAttributes
+response
+received、
+tid=0x05、
+num
+attrs=7
+Attr[0]:
+ID=0x00000001
+（TITLE）
+charset=0x006a、
+len=11
+Value:
+"Test
+Title"
+Attr[1]:
+ID=0x00000002
+（ARTIST）
+charset=0x006a、
+len=11
+Value:
+"Test
+Artist"
+uart:~$
+avrcp
+ct
+set
+absolute
+volume
+50
+set
+absolute
+volume
+absolute
+volume=0x32
+AVRCP
+set
+absolute
+volume
+rsp:
+tid=0x02、
+status=0x04、
+volume=0x32
+uart:~$
+avrcp
+ct
+pause
+Passthrough
+PRESSED
+command
+sent
+successfully:
+opid=0x46
+Passthrough
+RELEASED
+command
+sent
+successfully:
+opid=0x46
+<input
+`avrcp
+tg
+send
+passthrough
+rsp
+op
+pause
+pressed`
+in
+TG
+side>
+AVRCP
+passthrough
+command
+accepted、
+operation
+id
+=
+0x46、
+state
+=
+0
+<input
+`avrcp
+tg
+send
+passthrough
+rsp
+op
+pause
+released`
+in
+TG
+side>
+AVRCP
+passthrough
+command
+accepted、
+operation
+id
+=
+0x46、
+state
+=
+1
+..
+group
+tab::
+Device
+B
+（TG
+-
+Target）
+..
+code
+block::
+console
+uart:~$
+avrcp
+tg
+register
+cb
+AVRCP
+TG
+callbacks
+registered
+<input
+`avrcp
+connect`
+in
+CT
+side>
+AVRCP
+TG
+connected
+<input
+`avrcp
+ct
+get
+caps
+events`
+in
+CT
+side>
+AVRCP
+get
+capabilities
+command
+received:
+cap
+id
+0x03
+（EVENTS
+SUPPORTED）
+uart:~$
+avrcp
+tg
+send
+get
+caps
+rsp
+Get
+capabilities
+response
+sent
+successfully
+<input
+`avrcp
+ct
+register
+notification
+0x01`
+in
+CT
+side>
+receive
+register
+notification
+request
+event
+id=0x01
+uart:~$
+avrcp
+tg
+send
+notification
+rsp
+0x01
+interim
+0
+Sent
+notification
+rsp
+event
+id=0x01
+type=interim
+<input
+`avrcp
+ct
+play`
+in
+CT
+side>
+receive
+passthrough
+command:
+op
+id=0x44
+（PLAY）
+uart:~$
+avrcp
+tg
+send
+passthrough
+rsp
+op
+play
+pressed
+Passthrough
+opid=0x44
+（STANDARD）
+state=pressed
+sent
+successfully
+uart:~$
+avrcp
+tg
+send
+passthrough
+rsp
+op
+play
+released
+Passthrough
+opid=0x44
+（STANDARD）
+state=released
+sent
+successfully
+uart:~$
+avrcp
+tg
+send
+notification
+rsp
+0x01
+changed
+1
+Sent
+notification
+rsp
+event
+id=0x01
+type=changed
+<input
+`avrcp
+ct
+get
+play
+status`
+in
+CT
+side>
+receive
+get
+play
+status
+request
+uart:~$
+avrcp
+tg
+send
+get
+play
+status
+rsp
+GetPlayStatus
+rsp
+sent
+<input
+`avrcp
+ct
+get
+element
+attrs`
+in
+CT
+side>
+AVRCP
+GetElementAttributes
+command
+received
+uart:~$
+avrcp
+tg
+send
+get
+element
+attrs
+rsp
+0
+Sending
+standard
+GetElementAttributes
+response
+（7
+attrs）
+GetElementAttributes
+response
+sent
+successfully
+<input
+`avrcp
+ct
+set
+absolute
+volume
+50`
+in
+CT
+side>
+AVRCP
+set
+absolute
+volume
+req:
+tid=0x06、
+absolute
+volume=0x32
+uart:~$
+avrcp
+tg
+send
+absolute
+volume
+rsp
+50
+Set
+absolute
+volume
+response
+sent
+successfully
+<input
+`avrcp
+ct
+pause`
+in
+CT
+side>
+AVRCP
+passthrough
+command
+received:
+opid
+=
+0x46
+uart:~$
+avrcp
+tg
+send
+passthrough
+rsp
+op
+pause
+pressed
+send
+passthrough
+response
+uart:~$
+avrcp
+tg
+send
+passthrough
+rsp
+op
+pause
+released
+send
+passthrough
+response
 
-      .. code-block:: console
-
-         uart:~$ avrcp ct play
-         Passthrough PRESSED command sent successfully: opid=0x44
-         Passthrough RELEASED command sent successfully: opid=0x44
-
-   .. group-tab:: Pause Command
-
-      .. code-block:: console
-
-         uart:~$ avrcp ct pause
-         Passthrough PRESSED command sent successfully: opid=0x46
-         Passthrough RELEASED command sent successfully: opid=0x46
-
-Get Capabilities
+AVRCP
+Connection
 ****************
 
-Query supported capabilities:
+The
+AVRCP
+profile
+supports
+both
+control
+and
+browsing
+connections.
+The
+control
+connection
+is
+used
+for
+basic
+remote
+control
+functionality、
+while
+the
+browsing
+connection
+allows
+browsing
+of
+media
+content.
 
-.. tabs::
-
-   .. group-tab:: Company ID
-
-      .. code-block:: console
-
-         uart:~$ avrcp ct get_caps company
-         Get capabilities command sent successfully: cap_id=company
-         GetCapabilities : status=0x04
-         Remote CompanyID = 0x001958
-
-   .. group-tab:: Events Supported
-
-      .. code-block:: console
-
-         uart:~$ avrcp ct get_caps events
-         Get capabilities command sent successfully: cap_id=events
-         GetCapabilities : status=0x04
-         Remote supported EventID = 0x01
-         Remote supported EventID = 0x02
-         Remote supported EventID = 0x03
-         Remote supported EventID = 0x04
-         Remote supported EventID = 0x0d
-
-   .. group-tab:: TG Response
-
-      .. code-block:: console
-
-         uart:~$ avrcp tg send_get_caps_rsp
-         Sending company ID capability rsp: 0x001958
-
-Media Metadata Operations
-*************************
-
-Get Element Attributes
-======================
-
-Retrieve metadata for the currently playing media:
-
-.. tabs::
-
-   .. group-tab:: CT Request
-
-      .. code-block:: console
-
-         uart:~$ avrcp ct get_element_attrs
-         Requesting element attributes: identifier=0x0000000000000000, num_attrs=0
-         AVRCP CT get element attrs command sent
-         GetElementAttributes : status=0x04
-         AVRCP GetElementAttributes response received, tid=0x00, num_attrs=7
-          Attr[0]: ID=0x00000001 (TITLE), charset=0x006a, len=11
-            Value: "Test Title"
-          Attr[1]: ID=0x00000002 (ARTIST), charset=0x006a, len=11
-            Value: "Test Artist"
-          Attr[2]: ID=0x00000003 (ALBUM), charset=0x006a, len=10
-            Value: "Test Album"
-          Attr[3]: ID=0x00000004 (TRACK_NUMBER), charset=0x006a, len=1
-            Value: "1"
-          Attr[4]: ID=0x00000005 (TOTAL_TRACKS), charset=0x006a, len=2
-            Value: "10"
-          Attr[5]: ID=0x00000006 (GENRE), charset=0x006a, len=4
-            Value: "Rock"
-          Attr[6]: ID=0x00000007 (PLAYING_TIME), charset=0x006a, len=6
-            Value: "240000"
-
-   .. group-tab:: TG Response
-
-      .. code-block:: console
-
-         uart:~$ avrcp tg send_get_element_attrs_rsp 0
-         Sending standard GetElementAttributes response (7 attrs)
-         GetElementAttributes response sent successfully
-
-Play Status
-===========
-
-Get current playback status:
-
-.. tabs::
-
-   .. group-tab:: CT Request
-
-      .. code-block:: console
-
-         uart:~$ avrcp ct get_play_status
-         AVRCP GetPlayStatus
-         getplaystatus : status=0x04
-         GetPlayStatus: len=180000 ms, pos=30000 ms, status=0x01
-          status: PLAYING
-
-   .. group-tab:: TG Response
-
-      .. code-block:: console
-
-         uart:~$ avrcp tg send_get_play_status_rsp
-         GetPlayStatus rsp sent
-
-Volume Control
-**************
-
-Set absolute volume:
-
-.. tabs::
-
-   .. group-tab:: CT Set Volume
-
-      .. code-block:: console
-
-         uart:~$ avrcp ct set_absolute_volume 50
-         set absolute volume absolute_volume=0x32
-         AVRCP set absolute volume rsp: tid=0x01, status=0x04, volume=0x32
-
-   .. group-tab:: TG Response
-
-      .. code-block:: console
-
-         uart:~$ avrcp tg send_absolute_volume_rsp 50
-         Set absolute volume response sent successfully
-
-Event Notifications
-*******************
-
-Register for notifications and handle events:
-
-Register for Volume Change Notification
-========================================
-
-.. tabs::
-
-   .. group-tab:: CT Register
-
-      .. code-block:: console
-
-         uart:~$ avrcp ct register_notification 0x0d
-         Sent register notification event_id=0x0d
-         AVRCP notification rsp: tid=0x02, status=0x04, event_id=0x0d
-          Notification type: INTERIM
-          VOLUME_CHANGED: absolute_volume=0x0a
-         AVRCP notify_changed_cb received: event_id=0x0d
-          Notification type: CHANGED
-          VOLUME_CHANGED: absolute_volume=0x14
-
-   .. group-tab:: TG Send Notification
-
-      .. code-block:: console
-
-         uart:~$ avrcp tg send_notification_rsp 0x0d interim 10
-         Sent notification rsp event_id=0x0d type=interim
-
-         uart:~$ avrcp tg send_notification_rsp 0x0d changed 20
-         Sent notification rsp event_id=0x0d type=changed
-
-Browsing Operations
-*******************
-
-Set Browsed Player
-==================
-
-.. tabs::
-
-   .. group-tab:: CT Request
-
-      .. code-block:: console
-
-         uart:~$ avrcp ct set_browsed_player 1
-         AVRCP send set browsed player req
-         AVRCP set browsed player success, tid = 0
-           UID Counter: 1
-           Number of Items: 100
-           Charset ID: 0x006A
-           Folder Depth: 1
-           charset_id  : 0x006A
-           Get folder Name (hex)  :
-         00000000: 4d 75 73 69 63                                   |Music            |
-
-   .. group-tab:: TG Response
-
-      .. code-block:: console
-
-         uart:~$ avrcp tg send_browsed_player_rsp
-         Send set browsed player response, status = 0x04
-
-Get Folder Items
+Control
+Connection
 ================
 
-.. tabs::
+Establish
+AVRCP
+control
+connection:
 
-   .. group-tab:: CT Request
+Register
+callbacks
+（CT
+side）:
 
-      .. code-block:: console
+..
+code
+block::
+console
+uart:~$
+avrcp
+ct
+register
+cb
+AVRCP
+CT
+callbacks
+registered
 
-         uart:~$ avrcp ct get_folder_items
-         Sent GetFolderItems command
-         AVRCP get folder items success, tid = 1
-           UID Counter: 1
-           Number of Items: 1
-         Media Player Item:
-           item_len   : 28
-           player_id   : 1
-           major_type  : 0x01
-           sub_type    : 0x00000000
-           play_status : 0x00
-           charset_id  : 0x006A
-           name_len    : 4
-           charset_id  : 0x006A
-           Name (hex)  :
-         00000000: 44:65:6d:6f                                      |Demo
+Register
+callbacks
+（TG
+side）:
 
-   .. group-tab:: TG Response
+..
+code
+block::
+console
+uart:~$
+avrcp
+tg
+register
+cb
+AVRCP
+TG
+callbacks
+registered
 
-      .. code-block:: console
+Connect
+AVRCP:
 
-         uart:~$ avrcp tg send_get_folder_items_rsp
-         TG: Sent GetFolderItems response
+..
+code
+block::
+console
+uart:~$
+avrcp
+connect
+AVRCP
+CT
+connected
+AVRCP
+TG
+connected
 
-Player Application Settings
-***************************
+Disconnect
+AVRCP:
 
-List and get configure player application settings:
+..
+code
+block::
+console
+uart:~$
+avrcp
+disconnect
+AVRCP
+CT
+disconnected
+AVRCP
+TG
+disconnected
 
-List Available Settings
-=======================
+Browsing
+Connection
+================
 
-.. tabs::
+After
+control
+connection
+is
+established、
+browsing
+connection
+can
+be
+initiated:
 
-   .. group-tab:: CT Request
+Connect
+browsing:
 
-      .. code-block:: console
+..
+code
+block::
+console
+uart:~$
+avrcp
+browsing
+connect
+AVRCP
+browsing
+connect
+request
+sent
+AVRCP
+CT
+browsing
+connected
+AVRCP
+TG
+browsing
+connected
 
-         uart:~$ avrcp ct list_app_attrs
-         Sent list player app setting attrs
-         list player app setting attrs : status=0x04
-         attr =0x01 (EQUALIZER)
-         attr =0x02 (REPEAT_MODE)
+Disconnect
+browsing:
 
-   .. group-tab:: TG Response
+..
+code
+block::
+console
+uart:~$
+avrcp
+browsing
+disconnect
+AVRCP
+browsing
+disconnect
+request
+sent
+AVRCP
+CT
+browsing
+disconnected
+AVRCP
+TG
+browsing
+disconnected
 
-      .. code-block:: console
+Basic
+Playback
+Control
+**********************
 
-         uart:~$ avrcp tg send_list_player_app_setting_attrs_rsp 2 0x01 0x02
-         TG: Sent list player app setting attrs response
+Control
+playback
+from
+CT
+side:
 
-Get Current Settings
+..
+tabs::
+..
+group
+tab::
+Play
+Command
+..
+code
+block::
+console
+uart:~$
+avrcp
+ct
+play
+Passthrough
+PRESSED
+command
+sent
+successfully:
+opid=0x44
+Passthrough
+RELEASED
+command
+sent
+successfully:
+opid=0x44
+..
+group
+tab::
+Pause
+Command
+..
+code
+block::
+console
+uart:~$
+avrcp
+ct
+pause
+Passthrough
+PRESSED
+command
+sent
+successfully:
+opid=0x46
+Passthrough
+RELEASED
+command
+sent
+successfully:
+opid=0x46
+
+Get
+Capabilities
+****************
+
+Query
+supported
+capabilities:
+
+..
+tabs::
+..
+group
+tab::
+Company
+ID
+..
+code
+block::
+console
+uart:~$
+avrcp
+ct
+get
+caps
+company
+Get
+capabilities
+command
+sent
+successfully:
+cap
+id=company
+GetCapabilities
+:
+status=0x04
+Remote
+CompanyID
+=
+0x001958
+..
+group
+tab::
+Events
+Supported
+..
+code
+block::
+console
+uart:~$
+avrcp
+ct
+get
+caps
+events
+Get
+capabilities
+command
+sent
+successfully:
+cap
+id=events
+GetCapabilities
+:
+status=0x04
+Remote
+supported
+EventID
+=
+0x01
+Remote
+supported
+EventID
+=
+0x02
+Remote
+supported
+EventID
+=
+0x03
+Remote
+supported
+EventID
+=
+0x04
+Remote
+supported
+EventID
+=
+0x0d
+..
+group
+tab::
+TG
+Response
+..
+code
+block::
+console
+uart:~$
+avrcp
+tg
+send
+get
+caps
+rsp
+Sending
+company
+ID
+capability
+rsp:
+0x001958
+
+Media
+Metadata
+Operations
+*************************
+
+Get
+Element
+Attributes
 ====================
 
-.. tabs::
+Retrieve
+metadata
+for
+the
+currently
+playing
+media:
 
-   .. group-tab:: CT Request
+..
+tabs::
+..
+group
+tab::
+CT
+Request
+..
+code
+block::
+console
+uart:~$
+avrcp
+ct
+get
+element
+attrs
+Requesting
+element
+attributes:
+identifier=0x0000000000000000、
+num
+attrs=0
+AVRCP
+CT
+get
+element
+attrs
+command
+sent
+GetElementAttributes
+:
+status=0x04
+AVRCP
+GetElementAttributes
+response
+received、
+tid=0x00、
+num
+attrs=7
+Attr[0]:
+ID=0x00000001
+（TITLE）
+charset=0x006a、
+len=11
+Value:
+"Test
+Title"
+Attr[1]:
+ID=0x00000002
+（ARTIST）
+charset=0x006a、
+len=11
+Value:
+"Test
+Artist"
+Attr[2]:
+ID=0x00000003
+（ALBUM）
+charset=0x006a、
+len=10
+Value:
+"Test
+Album"
+Attr[3]:
+ID=0x00000004
+（TRACK
+NUMBER）
+charset=0x006a、
+len=1
+Value:
+"1"
+Attr[4]:
+ID=0x00000005
+（TOTAL
+TRACKS）
+charset=0x006a、
+len=2
+Value:
+"10"
+Attr[5]:
+ID=0x00000006
+（GENRE）
+charset=0x006a、
+len=4
+Value:
+"Rock"
+Attr[6]:
+ID=0x00000007
+（PLAYING
+TIME）
+charset=0x006a、
+len=6
+Value:
+"240000"
+..
+group
+tab::
+TG
+Response
+..
+code
+block::
+console
+uart:~$
+avrcp
+tg
+send
+get
+element
+attrs
+rsp
+0
+Sending
+standard
+GetElementAttributes
+response
+（7
+attrs）
+GetElementAttributes
+response
+sent
+successfully
 
-      .. code-block:: console
+Play
+Status
+===========
 
-         uart:~$ avrcp ct get_app_curr 1 2
-         Sent get_curr_player_app_setting_val num=2
-         get curr player app setting val : status=0x04
-         attr_id :1 val 1
-         attr_id :2 val 1
+Get
+current
+playback
+status:
 
-   .. group-tab:: TG Response
+..
+tabs::
+..
+group
+tab::
+CT
+Request
+..
+code
+block::
+console
+uart:~$
+avrcp
+ct
+get
+play
+status
+AVRCP
+GetPlayStatus
+getplaystatus
+:
+status=0x04
+GetPlayStatus:
+len=180000
+ms、
+pos=30000
+ms、
+status=0x01
+status:
+PLAYING
+..
+group
+tab::
+TG
+Response
+..
+code
+block::
+console
+uart:~$
+avrcp
+tg
+send
+get
+play
+status
+rsp
+GetPlayStatus
+rsp
+sent
 
-      .. code-block:: console
+Volume
+Control
+****************
 
-         uart:~$ avrcp tg send_get_curr_player_app_setting_val_rsp 2 0x01 0x01 0x02 0x02
-         TG: Send get curr player app setting val rsp (num=2)
+Set
+absolute
+volume:
+
+..
+tabs::
+..
+group
+tab::
+CT
+Set
+Volume
+..
+code
+block::
+console
+uart:~$
+avrcp
+ct
+set
+absolute
+volume
+50
+set
+absolute
+volume
+absolute
+volume=0x32
+AVRCP
+set
+absolute
+volume
+rsp:
+tid=0x01、
+status=0x04、
+volume=0x32
+..
+group
+tab::
+TG
+Response
+..
+code
+block::
+console
+uart:~$
+avrcp
+tg
+send
+absolute
+volume
+rsp
+50
+Set
+absolute
+volume
+response
+sent
+successfully
+
+Event
+Notifications
+*******************
+
+Register
+for
+notifications
+and
+handle
+events:
+
+Register
+for
+Volume
+Change
+Notification
+========================================
+
+..
+tabs::
+..
+group
+tab::
+CT
+Register
+..
+code
+block::
+console
+uart:~$
+avrcp
+ct
+register
+notification
+0x0d
+Sent
+register
+notification
+event
+id=0x0d
+AVRCP
+notification
+rsp:
+tid=0x02、
+status=0x04、
+event
+id=0x0d
+Notification
+type:
+INTERIM
+VOLUME
+CHANGED:
+absolute
+volume=0x0a
+AVRCP
+notify
+changed
+cb
+received:
+event
+id=0x0d
+Notification
+type:
+CHANGED
+VOLUME
+CHANGED:
+absolute
+volume=0x14
+..
+group
+tab::
+TG
+Send
+Notification
+..
+code
+block::
+console
+uart:~$
+avrcp
+tg
+send
+notification
+rsp
+0x0d
+interim
+10
+Sent
+notification
+rsp
+event
+id=0x0d
+type=interim
+uart:~$
+avrcp
+tg
+send
+notification
+rsp
+0x0d
+changed
+20
+Sent
+notification
+rsp
+event
+id=0x0d
+type=changed
+
+Browsing
+Operations
+*******************
+
+Set
+Browsed
+Player
+================
+
+..
+tabs::
+..
+group
+tab::
+CT
+Request
+..
+code
+block::
+console
+uart:~$
+avrcp
+ct
+set
+browsed
+player
+1
+AVRCP
+send
+set
+browsed
+player
+req
+AVRCP
+set
+browsed
+player
+success、
+tid
+=
+0
+UID
+Counter:
+1
+Number
+of
+Items:
+100
+Charset
+ID:
+0x006A
+Folder
+Depth:
+1
+charset
+id
+:
+0x006A
+Get
+folder
+Name
+（hex）
+:
+00000000:
+4d
+75
+73
+69
+63
+|Music
+|
+..
+group
+tab::
+TG
+Response
+..
+code
+block::
+console
+uart:~$
+avrcp
+tg
+send
+browsed
+player
+rsp
+Send
+set
+browsed
+player
+response、
+status
+=
+0x04
+
+Get
+Folder
+Items
+================
+
+..
+tabs::
+..
+group
+tab::
+CT
+Request
+..
+code
+block::
+console
+uart:~$
+avrcp
+ct
+get
+folder
+items
+Sent
+GetFolderItems
+command
+AVRCP
+get
+folder
+items
+success、
+tid
+=
+1
+UID
+Counter:
+1
+Number
+of
+Items:
+1
+Media
+Player
+Item:
+item
+len
+:
+28
+player
+id
+:
+1
+major
+type
+:
+0x01
+sub
+type
+:
+0x00000000
+play
+status
+:
+0x00
+charset
+id
+:
+0x006A
+name
+len
+:
+4
+charset
+id
+:
+0x006A
+Name
+（hex）
+:
+00000000:
+44:65:6d:6f
+|Demo
+..
+group
+tab::
+TG
+Response
+..
+code
+block::
+console
+uart:~$
+avrcp
+tg
+send
+get
+folder
+items
+rsp
+TG:
+Sent
+GetFolderItems
+response
+
+Player
+Application
+Settings
+***************************
+
+List
+and
+get
+configure
+player
+application
+settings:
+
+List
+Available
+Settings
+======================
+
+..
+tabs::
+..
+group
+tab::
+CT
+Request
+..
+code
+block::
+console
+uart:~$
+avrcp
+ct
+list
+app
+attrs
+Sent
+list
+player
+app
+setting
+attrs
+list
+player
+app
+setting
+attrs
+:
+status=0x04
+attr
+=0x01
+（EQUALIZER）
+attr
+=0x02
+（REPEAT
+MODE）
+..
+group
+tab::
+TG
+Response
+..
+code
+block::
+console
+uart:~$
+avrcp
+tg
+send
+list
+player
+app
+setting
+attrs
+rsp
+2
+0x01
+0x02
+TG:
+Sent
+list
+player
+app
+setting
+attrs
+response
+
+Get
+Current
+Settings
+==================
+
+..
+tabs::
+..
+group
+tab::
+CT
+Request
+..
+code
+block::
+console
+uart:~$
+avrcp
+ct
+get
+app
+curr
+1
+2
+Sent
+get
+curr
+player
+app
+setting
+val
+num=2
+get
+curr
+player
+app
+setting
+val
+:
+status=0x04
+attr
+id
+:1
+val
+1
+attr
+id
+:2
+val
+1
+..
+group
+tab::
+TG
+Response
+..
+code
+block::
+console
+uart:~$
+avrcp
+tg
+send
+get
+curr
+player
+app
+setting
+val
+rsp
+2
+0x01
+0x01
+0x02
+0x02
+TG:
+Send
+get
+curr
+player
+app
+setting
+val
+rsp
+（num=2）

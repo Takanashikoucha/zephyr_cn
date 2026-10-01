@@ -4,8 +4,7 @@ POSIX
 #####
 
 .. toctree::
-   :maxdepth:
-   2
+   :maxdepth: 2
 
    overview/index.rst
    conformance/index.rst

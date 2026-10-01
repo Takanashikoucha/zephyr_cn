@@ -1,11 +1,10 @@
 .. _cache:
 
-Caching
+缓存
 #######
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    config.rst
    guide.rst

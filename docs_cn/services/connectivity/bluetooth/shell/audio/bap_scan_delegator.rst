@@ -37,149 +37,329 @@ short
 的
 overview。
 
+The
 Scan
 Delegator
-可能
+may
 optionally
 support
+the
 periodic
 advertisements
 synchronization
 transfer
 （PAST）
-protocol。
+protocol.
 
+The
 Scan
 Delegator
 server
-通常
-reside
-在
-带
-inputs
-或
-outputs
-的
+typically
+resides
+on
 devices
-上。
+that
+have
+inputs
+or
+outputs.
 
-必须
-启用
+It
+is
+necessary
+to
+have
 :kconfig:option:`CONFIG_BT_BAP_SCAN_DELEGATOR_LOG_LEVEL_DBG`
-才能
-interactive
-地
-使用
-Scan
-Delegator。
-
+enabled
+for
+using
+the
 Scan
 Delegator
-当前
-只
-能
+interactively.
+
+The
+Scan
+Delegator
+can
+currently
+only
 set
-receive
-state
-的
+the
 sync
 state
-但
-还
-不
-实际
+of
+a
+receive
+state、
+but
+does
+not
+actually
 support
-与
+syncing
+with
 periodic
 advertisements
-的
-syncing。
+yet.
 
-.. code-block::
-   console
+..
+code
+block::
+console
+bap
+scan
+delegator
+--help
+bap
+scan
+delegator
+Bluetooth
+BAP
+Scan
+Delegator
+shell
+commands
+Subcommands:
+init
+:
+Initialize
+the
+service
+and
+register
+callbacks
+set
+past
+pref
+:
+Set
+PAST
+preference
+<true
+||
+false>
+sync
+pa
+:
+Sync
+to
+PA
+<src
+id>
+term
+pa
+:
+Terminate
+PA
+sync
+<src
+id>
+add
+src
+:
+Add
+a
+PA
+as
+source
+<addr>
+<sid>
+<broadcast
+id>
+<enc
+state>
+[bis
+sync
+[metadata]]
+add
+src
+by
+pa
+sync
+:
+Add
+a
+PA
+as
+source
+<broadcast
+id>
+<enc
+state>
+[bis
+sync
+[metadata]]
+mod
+src
+:
+Modify
+source
+<src
+id>
+<broadcast
+id>
+<enc
+state>
+[bis
+sync
+[metadata]]
+rem
+src
+:
+Remove
+source
+<src
+id>
+synced
+:
+Set
+server
+scan
+state
+<src
+id>
+<bis
+syncs>
 
-   bap_scan_delegator
-   --help
-   bap_scan_delegator
-   -
-   Bluetooth
-   BAP
-   Scan
-   Delegator
-   shell
-   commands
-   Subcommands:
-     init
-                :
-      Initialize
-      the
-      service
-      and
-      register
-      callbacks
-     set_past_pref
-       :
-      Set
-      PAST
-      preference
-      <true
-      ||
-      false>
-     sync_pa
-             :
-      Sync
-      to
-      PA
-      <src_id>
-     term_pa
-             :
-      Terminate
-      PA
-      sync
-      <src_id>
-     add_src
-             :
-      Add
-      a
-      PA
-      as
-      source
-      <addr>
-      <sid>
-      <broadcast_id>
-                          <enc_state>
-      [bis_sync
-      [metadata]]
-     add_src_by_pa_sync
-  :
-      Add
-      a
-      PA
-      as
-      source
-      <broadcast_id>
-      <enc_state>
-      [bis_sync
-      [metadata]]
-     mod_src
-             :
-      Modify
-      source
-      <src_id>
-      <broadcast_id>
-      <enc_state>
-                          [bis_sync
-      [metadata]]
-     rem_src
-             :
-      Remove
-      source
-      <src_id>
-     synced
-              :
-      Set
-      server
-      scan
-      state
-      <src_id>
-      <bis_syncs>
+Example
+Usage
+*************
+
+Setup
+=====
+
+..
+code
+block::
+console
+uart:~$
+bt
+init
+uart:~$
+bap
+scan
+delegator
+init
+uart:~$
+bt
+advertise
+on
+Advertising
+started
+
+Adding
+a
+source
+===============
+
+..
+code
+block::
+console
+uart:~$
+bap
+scan
+delegator
+add
+src
+P:11:22:33:44:55:66
+0
+1234
+0
+Receive
+state
+with
+ID
+0
+updated
+
+Adding
+a
+source
+from
+a
+PA
+sync
+==============================
+
+..
+code
+block::
+console
+uart:~$
+bt
+scan
+on
+Found
+broadcaster
+with
+ID
+0x681A22
+and
+addr
+R:2C:44:05:82:EB:82
+and
+sid
+0x00
+（looking
+for
+0x1000000）
+uart:~$
+bt
+scan
+off
+uart:~$
+bt
+per
+adv
+sync
+create
+R:2C:44:05:82:EB:82
+0
+PA
+0x2003e9b0
+synced
+uart:~$
+bap
+scan
+delegator
+add
+src
+by
+pa
+sync
+0x681A22
+0
+Receive
+state
+with
+ID
+0
+updated
+
+When
+connected
+==============
+
+Set
+sync
+state
+for
+a
+source:
+
+..
+code
+block::
+console
+uart:~$
+bap
+scan
+delegator
+synced
+0
+1
+3
+0

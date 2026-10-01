@@ -1,109 +1,22 @@
 .. _espi_api:
 
-Enhanced
-Serial
-Peripheral
-Interface
-（eSPI）
-Bus
+增强串行外设接口（eSPI）总线
 ###############################################
 
-Overview
+概述
 ********
 
-eSPI
-（enhanced
-serial
-peripheral
-interface）
-是
-基于
-SPI
-的
-serial
-bus。
-它
-也
-有
-four-wire
-interface
-（receive、
-transmit、
-clock
-和
-target
-select）
-和
-三
-个
-configurations：
-single
-IO、
-dual
-IO
-和
-quad
-IO。
+eSPI（增强串行外设接口）是基于 SPI 的串行总线。它具有四线接口（接收、发送、时钟和目标选择）以及三种配置：单 IO、双 IO 和四 IO。
 
-技术
-进步
-包括
-更低
-的
-voltage
-signal
-levels
-（1.8V
-vs.
-3.3V）、
-更少
-的
-pin
-count、
-以及
-frequency
-是
-两倍
-快
-（66MHz
-vs.
-33MHz）
-因为
-其
-enhancements，
-eSPI
-被
-用
-来
-替换
-LPC
-（lower
-pin
-count）
-interface、
-SPI、
-SMBus
-和
-sideband
-signals。
+技术改进包括更低的电压信号电平（1.8V 对比 3.3V）、更少的引脚数量，以及频率提升一倍（66MHz 对比 33MHz）。由于这些增强特性，eSPI 被用于替代 LPC（较少引脚计数）接口、SPI、SMBus 和边带信号。
 
-参考
-`eSPI
-interface
-specification`_
-获取
-额外
-细节。
+参见 `eSPI 接口规范`_ 获取更多细节。
 
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   espi_interface
+.. doxygengroup:: espi_interface
 
-.. _eSPI
-   interface
-   specification:
-   https://downloadmirror.intel.com/27055/327432%20espi_base_specification%20R1-5.pdf
+.. _eSPI interface specification:
+    https://downloadmirror.intel.com/27055/327432%20espi_base_specification%20R1-5.pdf

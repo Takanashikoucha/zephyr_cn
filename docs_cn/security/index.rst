@@ -1,30 +1,12 @@
 .. _security_section:
 
-Security
+安全
 ########
 
-These
-documents
-describe
-the
-requirements、
-processes、
-and
-developer
-guidelines
-for
-ensuring
-security
-is
-addressed
-within
-the
-Zephyr
-project。
+这些文档描述了在 Zephyr 项目中确保处理安全的需求、流程和开发者指南。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
    :glob:
 
    security-overview.rst

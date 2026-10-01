@@ -1,17 +1,11 @@
 .. _virtualization:
 
-Virtualization
+虚拟化
 ##############
 
-这些
-pages
-记录
-Zephyr
-virtualization
-facilities。
+这些页面介绍 Zephyr 的虚拟化功能。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    virtio.rst

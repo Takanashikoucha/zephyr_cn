@@ -1,488 +1,541 @@
 .. _release_process:
 
-Release
-Process
-###############
+发布流程
+########
 
-The
-Zephyr
-project
-releases
-on
-a
-time
-based
-cycle
-rather
-than
-a
-feature
-driven
-one。
-Zephyr
-releases
-represent
-an
-aggregation
-of
-the
-work
-of
-many
-contributors、
-companies、
-and
-individuals
-from
-the
-community。
+Zephyr 项目按时间周期发布，而非按功能驱动发布。
+Zephyr 的每个版本都代表了社区中众多贡献者、
+公司和个人的工作成果。
 
-A
-time
-based
-release
-process
-enables
-the
-Zephyr
-project
-to
-provide
-users
-with
-a
-balance
-of
-the
-latest
-technologies
-and
-features
-and
-excellent
-overall
-quality。
-A
-roughly
-6
-month
-release
-cycle
-allows
-the
-project
-to
-coordinate
-development
-of
-the
-features
-that
-have
-actually
-been
-implemented
-allowing
-the
-project
-to
-maintain
-the
-quality
-of
-the
-overall
-release
-without
-delays
-because
-of
-one
-or
-two
-features
-that
-are
-not
-ready
-yet。
+基于时间的发布流程使 Zephyr 项目能够为用户提供
+最新技术与功能同优秀整体质量之间的平衡。
+大约 6 个月的发布周期允许项目协调那些
+已经实际实现的功能的开发，
+使项目能够在不因一两个尚未就绪的功能
+而延误的情况下维持整个版本的质量。
 
-Release
-Phases
-Overview
-***********************
+发布阶段概览
+************
 
-Each
-release
-cycle
-consists
-of
-a
-*development
-phase*
-followed
-by
-a
-*stabilization
-phase*。
-Release
-candidates
-will
-be
-created
-during
-the
-stabilization
-phase。
+每个发布周期由*开发阶段*后接*稳定化阶段*组成。
+发布候选版本（release candidate）会在
+稳定化阶段期间创建。
 
-During
-the
-development
-phase
-all
-sorts
-of
-changes
-can
-be
-merged。
-This
-is
-called
-the
-*merge
-window*
-for
-the
-main
-branch
-for
-this
-reason。
-During
-the
-stabilization
-phase
-the
-project
-and
-its
-maintainers
-focus
-on
-fixing
-bugs
-and
-documenting
-the
-release。
-During
-this
-time
-new
-features
-are
-generally
-not
-accepted。
-The
-main
-branch
-is
-in
-*feature
-freeze*
-during
-the
-stabilization
-phase。
+在开发阶段，各种各样的更改都可以被合并。
+正因如此，这段时间被称为主分支的*合并窗口*。
+在稳定化阶段，项目及其维护者专注于
+修复缺陷和编写发布文档。在此期间，
+通常不接受新功能。稳定化阶段期间，
+主分支处于*功能冻结*状态。
 
-.. figure::
-   release
-   cycle.svg
-   :align:
-   center
-   :alt:
-   Release
-   Cycle
-   :figclass:
-   align
-   center
-   :width:
-   80%
+.. figure:: release_cycle.svg
+    :align: center
+    :alt: 发布周期
+    :figclass: align-center
+    :width: 80%
 
-   Release
-   Cycle
+    发布周期
 
-The
-milestones
-for
-the
-current
-major
-version
-can
-be
-found
-on
-the
-`Official
-GitHub
-Wiki
-<https://github.com/zephyrproject-rtos/zephyr/wiki/Release
-Management>`_。
-
+当前主版本的里程碑可以在
+`官方 GitHub Wiki <https://github.com/zephyrproject-rtos/zephyr/wiki/Release-Management>`_
+上找到。先前版本的信息可在
+:ref:`这里 <zephyr_release_notes>` 找到。
 
 .. note::
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-  * Release engineers shall not merge code changes originating and reviewed
-    only by their own organisation. To be able to merge such changes, at least
-    one review shall be from a different organisation.
+   每当一个稳定版本发布后，
+   就会为该版本创建一个新的“发布分支”。
 
-* A minimum review period of 2 business days, 4 hours for trivial changes (see
-  :ref:`review_time`).
-* Hotfixes can be merged at any time after CI has passed and are excluded from
-  most of the conditions listed above.
-* All required checks are passing:
+   例如，在宣布 Zephyr 稳定版本 v4.4.0 之后，
+   就创建了一个新分支 ``v4.4-branch``。
+   面向 v4.4.x 点版本
+   （v4.4.1、v4.4.2 等）的提交
+   应当以该分支为目标提出。
 
-  * Device Tree
-  * Documentation
-  * Code linters (Gitlint, Pylint, Ruff, Sphinx, etc.)
-  * Identity/Emails
+   本页目前不详细记录点版本的发布流程。
+
+.. _merge_window:
+
+合并窗口（开发阶段）
+====================
+
+为某个版本打好标签之后，
+发布经理会为下一个发布周期
+重新打开 `main 分支 <https://github.com/zephyrproject-rtos/zephyr/tree/main>`_
+以供开发。我们把这段时间称为
+每个版本的*合并窗口*或*开发阶段*。
+在合并窗口期间，任何符合 :ref:`合并标准 <merge_criteria>`
+的代码都可以被合并到 main 分支。
+每个版本的大多数更改都是在
+其合并窗口期间完成的。
+
+每个版本的合并窗口持续大约五个月。
+
+合并窗口结束后，发布团队会为
+即将发布的版本打第一个*发布候选版本*标签。
+从那时起，main 分支对大多数功能开发关闭，
+项目进入下一个版本的 :ref:`功能冻结 <feature_freeze>` 状态。
+功能冻结在下一节中描述。
+
+以下是合并窗口的示例时间线：
+
+- 合并窗口在 `v4.3.0
+  <https://github.com/zephyrproject-rtos/zephyr/tree/v4.3.0>`_
+  于 2025 年 11 月 13 日打好标签时开启。
+  从那时起，main 分支对下一个版本
+  （即 v4.4.0）的合并开放。
+
+- v4.4.0 的合并窗口在 `v4.4.0-rc1
+  <https://github.com/zephyrproject-rtos/zephyr/tree/v4.4.0-rc1>`_
+  于 2026 年 3 月 24 日打好标签时关闭。
+  从那时起，项目进入 v4.4.0 版本的功能冻结。
+
+.. _feature_freeze:
+
+功能冻结（稳定化阶段）
+======================
+
+当第一个发布候选版本打好标签时，
+该版本的合并窗口即告关闭。
+这被称为该版本的*功能冻结*或*稳定化阶段*。
+在功能冻结期间，没有经 :ref:`TSC <tsc>` 批准的例外，
+就不会为该版本合并任何新功能。
+
+在稳定化阶段等待新功能拉取请求（pull request）
+审查时，请耐心等待。
+
+如前所述，功能冻结期间合并新功能的例外流程
+需要 TSC 批准并附上理由。作为一般规则，
+如果你的拉取请求尚未合并而功能冻结已经宣布，
+最好的做法就是等待下一个 :ref:`合并窗口 <merge_window>` 开启。
+
+如果你认为你的功能值得获得例外、
+应当在功能冻结期间合并，请联系 TSC。
+参见 `TSC wiki
+<https://github.com/zephyrproject-rtos/zephyr/wiki/Technical-Steering-Committee-%28TSC%29>`_
+页面获取一般联系信息。
+
+以下是功能冻结的示例时间线：
+
+- v4.4.0 的功能冻结在 `v4.4.0-rc1
+  <https://github.com/zephyrproject-rtos/zephyr/tree/v4.4.0-rc1>`_
+  于 2026 年 3 月 24 日打好标签时开始。
+  从那时起，新功能需要获得 TSC 例外批准
+  才能合并到 main 分支。
+
+- v4.4.0 的功能冻结在 `v4.4.0
+  <https://github.com/zephyrproject-rtos/zephyr/tree/v4.4.0>`_
+  于 2026 年 4 月 14 日打好标签时结束。
+  从那时起，main 分支为下一个版本的
+  :ref:`合并窗口 <merge_window>` 重新开放。
+
+以下各节将更详细地描述功能冻结。
+
+允许的更改
+----------
+
+功能冻结之后，**仅**接受与**稳定化**相关的更改：
+
+* 针对功能性缺陷的缺陷修复
+* 提高可靠性、构建稳定性或测试行为的稳定化修复
+* 文档更新（澄清、更正、改进）
+* 针对现有功能的测试（不启用任何新功能）
+
+关于何时接受某些更改的更多细节，
+参见 :ref:`下表 <release_milestones>`。
+
+这些允许更改的例外很少见，
+且需要同时具备明确的理由和 TSC 批准。
+作为一般规则，如果某个功能错过了
+开发阶段的时间窗口，它应当等待下一个开发周期。
+
+禁止的更改
+----------
+
+以下更改在功能冻结之后**不得**被接受：
+
+* 新功能或功能增强
+* API 变更，除非为解决严重缺陷所必需
+* 与缺陷修复或稳定化工作无直接关联的重构
+* 新的子系统、驱动程序、开发板或架构变更
+
+功能冻结期间的议题跟踪
+**********************
+
+功能冻结期间，在拉取请求中引用 GitHub 议题
+是**推荐的**但**并非必需**。
+
+拉取请求**必须**包含清晰的说明：
+
+* 所处理的议题
+* 该议题的影响
+* 该更改如何解决该议题
+
+当拉取请求的意图或范围不清晰时，
+维护者和发布工程师**可以**要求补充澄清。
+
+强制使用议题
+============
+
+在以下情况下，**必须**使用 GitHub 议题：
+
+* 发布阻塞项
+* 针对已发布分支维护的修复
+
+
+审查与批准
+==========
+
+所有拉取请求**必须**遵循标准的审查与批准流程。
+
+维护者**必须**确保：
+
+* 更改符合本政策
+* 范围最小且专注于稳定化
+* 风险与发布阶段相匹配
+
+发布工程师**可以**：
+
+* 基于风险评估拒绝或推迟更改
+* 要求修改或补充理由
+
+风险预期
+========
+
+稳定化期间接受的更改**必须**：
+
+* 范围最小
+* 风险低
+* 经过充分测试
+
+引入重大风险的更改**可以**被推迟到
+未来版本，即使它们属于缺陷修复。
+
+.. _merge_criteria:
+
+拉取请求合并标准
+****************
+
+以下标准适用于所有发布阶段。
+
+.. figure:: img/img_release_activity.png
+      :width: 663px
+      :align: center
+      :alt: 发布活动
+
+* 必须满足所有 :ref:`拉取请求要求 <pr_requirements>`。
+* 至少 2 个批准，包括指定指派人的批准。
+* 拉取请求应由每个受影响领域的
+  至少一名维护者或协作者审查；
+  除非对某个领域的更改被认为足够琐碎，
+  在这种情况下，其他受影响子系统的
+  维护者/协作者的批准即可。
+* 组织层面的四眼原则。我们已经要求
+  至少 2 个批准（基本四眼原则），
+  然而，如果提交者与批准者来自同一组织，
+  此类审查和批准可能无意中带有偏向。
+  为允许项目范围的审查和批准，
+  合并标准用以下准则扩展：
+
+  * 对公共和共享代码的更改或新增
+    应获得来自不同组织的批准
+    （至少一个批准来自不同于
+    提交者的组织）。公共和共享代码
+    定义为不属于 :file:`soc`、:file:`boards`
+    和 :file:`drivers/*/*` 的一切。
+  * 对硬件支持（驱动程序、SoC、开发板）
+    的更改或新增，至少应保证
+    合并者来自不同组织。
+    这仅适用于支持厂商特定硬件的
+    API 的实现，而非 API 本身。
+  * 发布工程师可以对贡献主要来自
+    一个组织、且无法获得其他组织审查的
+    领域做出例外，然而合并
+    必须由来自不同组织的人完成。
+    在此类情况下，必须严格遵守
+    至少 2 天的最短审查期，
+    以允许更多审查。
+  * 发布工程师不得合并仅源自
+    其自身组织且仅由其自身组织审查的
+    代码更改。要能合并此类更改，
+    至少一个审查必须来自不同组织。
+
+* 最短审查期为 2 个工作日，
+  琐碎更改为 4 小时（参见 :ref:`review_time`）。
+* 热修复（hotfix）在 CI 通过后
+  任何时间都可以合并，
+  且排除上面列出的大多数条件。
+* 所有必需的检查均通过：
+
+  * Device Tree（设备树）
+  * 文档
+  * 代码检查器（Gitlint、Pylint、Ruff、Sphinx 等）
+  * 身份/邮箱
   * Kconfig
-  * License checks
-  * Checkpatch (Coding Style)
-  * Integration Tests (Via twister) on emulation/simulation platforms
-  * Simulated Bluetooth Tests
+  * 许可证检查
+  * Checkpatch（编码风格）
+  * 在仿真/模拟平台上的集成测试（通过 twister）
+  * 模拟蓝牙测试
 
 
 .. _release_quality_criteria:
 
-Release Quality Criteria
-************************
+发布质量标准
+************
 
-The main motivation is to clearly have the criteria in place that must be met
-for a release. This will help define when a release is "done" in terms that most
-people can understand and in ways that help new people to understand the process
-and participate in creating successful releases:
+主要动机是明确建立版本发布必须满足的标准。
+这将有助于用大多数人能够理解的方式
+定义版本何时“完成”，并以帮助新人
+理解流程并参与创建成功发布的方式呈现：
 
-- The release criteria documents all the requirements of our target audience for
-  each Zephyr release
-- The target audiences for each release can be different, and may overlap
-- The criteria at any given time are not set in stone: there may be requirements
-  that have been overlooked, or that are new, and in these cases, the criteria
-  should be expanded to ensure all needs are covered.
+- 发布标准文档记录了我们的目标受众
+  对每个 Zephyr 版本的所有要求
+- 每个版本的目标受众可以不同，
+  并且可能重叠
+- 任何给定时间的标准都不是固定不变的：
+  可能有被忽略的或新的要求，
+  在这种情况下，标准应当扩展
+  以确保覆盖所有需求。
 
-Below is the high level criteria to be met for each release:
+以下是每个版本必须满足的高层标准：
 
-- No blocker bugs / blocking issues
-- All relevant tests shall pass on ``Tier 0`` platforms
-- All relevant tests shall pass on Tier 0 and 1 platforms (at least 1 per
-  architecture/architecture variant/Hardware features)
-- All applicable samples/tests shall build on Tiers 0, 1 and 2
-- All high and critical static analysis and security issues addressed
-- Release Notes are up-to-date.
+- 无阻塞性缺陷/阻塞性议题
+- 所有相关测试必须在 ``Tier 0``（层级 0）平台上通过
+- 所有相关测试必须在层级 0 和 1 平台上通过
+  （每个架构/架构变体/硬件特性至少 1 个）
+- 所有适用的示例/测试必须在层级 0、1 和 2 上构建
+- 所有高严重级别和关键级别的
+  静态分析与安全问题均已处理
+- 发布说明（Release Notes）是最新的。
 
-Blocker Bugs
-============
+阻塞性缺陷
+==========
 
-Blocker bug process kicks in during the release process and is in effect after the
-feature freeze milestone. An issue labeled as a blocker practically blocks a
-release from happening. All blocker bugs shall be resolved before a release is
-created.
+阻塞性缺陷流程在发布流程中启动，
+并在功能冻结里程碑之后生效。
+被标记为阻塞项的议题实际上会阻止
+版本发布。所有阻塞性缺陷
+都必须在创建版本之前解决。
 
-A fix for a bug that is granted ``blocker`` status can be merged to 'main' and included in
-the release all the way until the final release date.
+被赋予 ``blocker`` 状态的缺陷的修复
+可以合并到 'main' 并包含在版本中，
+直到最终发布日期。
 
-Bugs of moderate severity and higher that have impact on all users are typically
-the candidates to be promoted to blocker bugs
+中等严重级别及以上、且影响所有用户的缺陷
+通常是被提升为阻塞性缺陷的候选者。
 
-Contributors and member of the release engineering team shall follow these
-guidelines for release blocker bugs:
+贡献者和发布工程团队的成员
+应遵循以下关于发布阻塞性缺陷的准则：
 
-- Only mark bugs as blockers if the software (Zephyr) must not be released with
-  the bug present.
-- All collaborators can add or remove blocking labels.
-- Evaluate bugs as potential blockers based on their severity and prevalence.
-- Provide detailed rationale whenever adding or removing a blocking label.
-- Ensure all blockers have the milestone tagged.
-- Release managers have final say on blocking status; contact them with any questions.
+- 仅当软件（Zephyr）不得带着该缺陷发布时，
+  才将缺陷标记为阻塞项。
+- 所有协作者都可以添加或移除阻塞标签。
+- 基于严重级别和普遍程度
+  评估缺陷是否为潜在阻塞项。
+- 每次添加或移除阻塞标签时
+  都应提供详细的理由。
+- 确保所有阻塞项都打了里程碑标签。
+- 发布经理对阻塞状态有最终决定权；
+  有任何问题请联系他们。
 
 
 .. _release_milestones:
 
-Release Milestones
-******************
+发布里程碑
+**********
 
-This table documents milestones associated with each release.
+本表记录了与每个版本相关的里程碑。
 
-.. list-table:: Release Milestones
+.. list-table:: 发布里程碑
    :widths: 15 25 100 25
    :header-rows: 1
 
-   * - Timeline
-     - Checkpoint
-     - Description
-     - Owner
+   * - 时间线
+     - 检查点
+     - 描述
+     - 负责人
    * - T-5M
-     - Planning
-     - Finalize dates for release, Assign release owner and agree on project wide goals for this release.
+     - 规划
+     - 确定发布日期、指定发布负责人，
+       并就本版本的项目级目标达成一致。
      - TSC
    * - T-7W
-     - Review target milestones
-     - Finalize target milestones for features in flight.
-     - Release Engineering
+     - 审查目标里程碑
+     - 确定在途功能的
+       目标里程碑。
+     - 发布工程
    * - T-5W
-     - Release Announcement
-     - Release owner announces feature freeze and timeline for release.
-     - Release Manager
+     - 发布公告
+     - 发布负责人宣布本版本的
+       功能冻结和时间线。
+     - 发布经理
    * - T-4W
-     - Release Timeline reminder
-     - Release owner sends a reminder of the feature freeze and timeline for release.
-     - Release Manager
+     - 发布时间线提醒
+     - 发布负责人发送本版本
+       功能冻结和时间线的提醒。
+     - 发布经理
    * - T-3W
-     - Feature Freeze (RC1)
-     - After RC1, no new features may be introduced. Only stabilization,
-       cosmetic updates, bug fixes, documentation improvements, and new tests
-       for existing features are permitted.
-     - Release Engineering
+     - 功能冻结（RC1）
+     - RC1 之后不得引入任何新功能。
+       仅允许稳定化、外观更新、缺陷修复、
+       文档改进以及针对现有功能的新测试。
+     - 发布工程
    * - T-2W
-     - 2nd Release Candidate
-     - No new features after RC2, ONLY stabilization and cosmetic changes, bug and doc fixes are allowed.
-     - Release Manager
+     - 第二个发布候选版本
+     - RC2 之后无新功能，
+       仅允许稳定化和外观更改、
+       缺陷与文档修复。
+     - 发布经理
    * - T-1W
-     - Hard Freeze (RC3)
-     - Only blocker bug fixes after RC3, documentation improvements and changes
-       to release notes are allowed.
-       Release notes need to be complete by this checkpoint. Release Criteria is
-       met.
-     - Release Manager
+     - 硬性冻结（RC3）
+     - RC3 之后仅允许阻塞性缺陷修复、
+       文档改进以及发布说明的更改。
+       发布说明必须在此检查点前完成。
+       发布标准得到满足。
+     - 发布经理
    * - T-0W
-     - Release
+     - 发布
      -
-     - Release Manager
+     - 发布经理
 
 .. _release_process_lts:
 
-Long Term Support (LTS) Releases
-********************************
+长期支持（LTS）版本
+********************
 
-Long-term support releases are designed to be supported and maintained
-for an extended period and are the recommended release for
-products and the auditable branch used for certification.
+长期支持版本被设计为在较长时间内
+得到支持和维护，是面向产品以及
+用于认证的可审计分支的推荐版本。
 
-An LTS release is defined as:
+一个 LTS 版本被定义为：
 
-- **Product focused**
-- **Extended Stabilisation period**: Allow for more testing and bug fixing
-- **Stable APIs**
-- **Quality Driven Process**
-- **Long Term**: Maintained for an extended period of time (at least 5 years).
+- **面向产品**
+- **延长的稳定化期**：允许更多测试和缺陷修复
+- **稳定的 API**
+- **质量驱动的流程**
+- **长期**：在较长时间内得到维护（至少 5 年）。
 
-Product Focused
-===============
+面向产品
+========
 
-Zephyr LTS is the recommended release for product makers with an extended
-support and maintenance which includes general stability and bug fixes,
-security fixes.
+Zephyr LTS 是面向产品制造商的推荐版本，
+提供延长的支持和维护，
+包括通用稳定性与缺陷修复、
+安全修复。
 
-An LTS includes both mature and new features. API and feature maturity is
-documented and tracked. The footprint and scope of mature and stable APIs expands
-as we move from one LTS to the next giving users access to bleeding edge features
-and new hardware while keeping a stable foundation that evolves over time.
+一个 LTS 版本既包含成熟功能也包含新功能。
+API 与功能的成熟度被记录并跟踪。
+成熟且稳定的 API 的足迹和范围
+会随着我们从一个 LTS 走向下一个而扩展，
+在保持一个随时间演进的稳定基础的同时，
+让用户能够使用前沿功能和新硬件。
 
-Extended Stabilisation Period
-=============================
+延长的稳定化期
+==============
 
-Zephyr LTS development cycle differs from regular releases and has an extended
-stabilization period. Feature freeze of regular releases happens 3-4 weeks
-before the scheduled release date. The stabilization period for LTS is extended
-by 3 weeks with the feature freeze occurring 6-7 weeks before the anticipated
-release date. The time between code freeze and release date is extended in this case.
+Zephyr LTS 的开发周期与常规版本不同，
+具有延长的稳定化期。常规版本的功能冻结
+发生在预定发布日期前 3-4 周。LTS 的稳定化期
+延长了 3 周，功能冻结发生在预期发布日期
+前 6-7 周。代码冻结与发布日期之间的
+时间在此情况下被延长。
 
-Stable APIs
-===========
+稳定的 API
+==========
 
-Zephyr LTS provides a stable and long-lived foundation for developing
-products. To guarantee stability of the APIs and the implementation of such
-APIs it is required that any release software that makes the core of the OS
-went through the Zephyr API lifecycle and stabilized over at least 2 releases.
-This guarantees that we release many of the highlighted and core features with
-mature and well-established implementations with stable APIs that are
-supported during the lifetime of the release LTS.
+Zephyr LTS 为产品开发提供稳定且
+长期存在的基础。为保证 API 及其
+实现的稳定性，要求构成操作系统核心的
+任何发布软件都必须经过 Zephyr API 生命周期
+并在至少 2 个版本中保持稳定。
+这保证了我们发布的许多重点和核心功能
+都具有成熟且经过充分验证的实现，
+以及在整个 LTS 版本生命周期内
+得到支持的稳定 API。
 
-- API Freeze (LTS - 2)
+- API 冻结（LTS - 2）
 
-  - All stable APIs need to be frozen 2 releases before an LTS. APIs can be extended
-    with additional features, but the core implementation is not modified. This
-    is valid for the following subsystems for example:
+  - 所有稳定的 API 必须在 LTS 之前
+    2 个版本冻结。API 可以用
+    附加功能扩展，但核心实现不被修改。
+    这对以下子系统有效（例如）：
 
-    - Device Drivers (i2c.h, spi.h)...
-    - Kernel (k_*):
-    - OS services (logging,debugging, ..)
-    - DTS: API and bindings stability
+    - 设备驱动程序（i2c.h、spi.h）……
+    - 内核（k_*）：
+    - 操作系统服务（日志、调试、……）
+    - DTS：API 与绑定稳定性
     - Kconfig
 
-  - New APIs for experimental features can be added at any time as long as they
-    are standalone and documented as experimental or unstable features/APIs.
-- Feature Freeze (LTS - 1)
-  - No new features or overhaul/restructuring of code covering major LTS features.
+  - 实验性功能的新 API 可以随时添加，
+    只要它们是独立的，
+    并被记录为实验性或不稳定的功能/API。
+- 功能冻结（LTS - 1）
+  - 无新功能，或对覆盖主要 LTS 功能的代码
+    的整体改造/重构。
 
-    - Kernel + Base OS
-    - Additional advertised LTS features
+    - 内核 + 基础操作系统
+    - 额外宣传的 LTS 功能
 
-  - Auxiliary features on top of and/or extending the base OS and advertised LTS features
-    can be added at any time and should be marked as experimental if applicable
+  - 建立在基础操作系统之上和/或扩展
+    已宣传 LTS 功能的辅助功能
+    可以随时添加，如适用
+    应标记为实验性。
 
-Quality Driven Process
-======================
+质量驱动的流程
+==============
 
-The Zephyr project follows industry standards and processes with the goal of
-providing a quality oriented releases. This is achieved by providing the
-following products to track progress, integrity and quality of the software
-components provided by the project:
+Zephyr 项目遵循行业标准与流程，
+目标是提供质量导向的发布。
+这通过提供以下产物来跟踪
+项目所提供的软件组件的
+进度、完整性和质量：
 
-- Compliance with published coding guidelines, style guides and naming
-  conventions and documentation of deviations.
-- Static analysis reports
+- 遵循已发布的编码指南、风格指南
+  和命名约定，并记录偏差。
+- 静态分析报告
 
-  - Regular static analysis on the complete tree using available commercial and
-    open-source tools, and documentation of deviations and false positives.
+  - 使用可用的商业和开源工具
+    对完整代码树进行定期静态分析，
+    并记录偏差与误报。
 
-- Documented components and APIS
-- Requirements Catalog
-- Verification Plans
-- Verification Reports
-- Coverage Reports
-- Requirements Traceability Matrix (RTM)
-- SPDX License Reports
+- 已文档化的组件和 API
+- 需求目录
+- 验证计划
+- 验证报告
+- 覆盖率报告
+- 需求可追溯性矩阵（RTM）
+- SPDX 许可证报告
 
-Each release is created with the above products to document the quality and the
-state of the software when it was released.
+每个版本创建时都附带上述产物，
+用于记录发布时软件的质量与状态。
 
-Long Term Support and Maintenance
-=================================
+长期支持与维护
+==============
 
-LTS releases are published every 2.5 to 3 years and are branched and maintained independently from
-the main tree for approximately 5 years after they were released.
+LTS 版本每 2.5 到 3 年发布一次，
+并从主代码树独立分支出来，
+在发布后大约 5 年内独立维护。
 
-Support is provided in three main phases:
+支持在三个主要阶段提供：
 
-- **Phase 1 (first 2 years):** General bug fixes and security fixes, including platform and driver
-  fixes.
-- **Phase 2 (following 3+ years):** Security and OS stability fixes only.
-- **Phase 3:** Extended support may be available through third parties (details to be determined).
+- **阶段 1（前 2 年）**：通用缺陷修复
+  和安全修复，包括平台和驱动程序修复。
+- **阶段 2（随后 3 年以上）**：
+  仅安全与操作系统稳定性修复。
+- **阶段 3**：延长支持可能
+  通过第三方提供（细节待定）。
 
-Support for a given LTS release (LTS *N*) continues until the initial release of the LTS two
-versions ahead (LTS *N+2*). A final release of LTS *N* occurs shortly after the initial release of
-LTS *N+2*.
+某个 LTS 版本（LTS *N*）的支持
+持续到两个版本之后的 LTS 的
+初始发布（LTS *N+2*）。
+LTS *N* 的最终版本在
+LTS *N+2* 的初始发布后不久发生。
 
-The list of currently supported LTS releases and their EOL dates can be found
-:ref:`here <supported_releases>`.
+当前受支持的 LTS 版本列表及其 EOL 日期
+可在 :ref:`这里 <supported_releases>` 找到。
 
 .. mermaid::
-   :caption: Long Term Support Release
+   :caption: 长期支持版本
 
    gitGraph
        commit id: "3.5"
@@ -496,235 +549,278 @@ The list of currently supported LTS releases and their EOL dates can be found
        commit id: "4.0"
        commit id: "4.1"
 
-Changes and fixes flow in both directions. However, changes from main branch to an
-LTS branch will be limited to fixes that apply to both branches and for existing
-features only.
+更改和修复在两个方向之间流动。
+然而，从 main 分支到 LTS 分支的更改
+将仅限于同时适用于两个分支
+且仅针对现有功能的修复。
 
-All fixes for an LTS branch that apply to the mainline tree shall be submitted to
-mainline tree as well.
+适用于主线（mainline）代码树的
+所有 LTS 分支修复也必须
+提交到主线代码树。
 
-Auditable Code Base
-===================
+可审计代码基
+============
 
-An auditable code base is to be established from a defined subset of Zephyr OS
-features and will be limited in scope. The LTS,  development tree, and the
-auditable code bases shall be kept in sync after the audit branch is created,
-but with a more rigorous process in place for adding new features into the audit
-branch used for certification.
+一个可审计的代码基应基于
+Zephyr 操作系统功能的一个
+明确定义的子集建立，且范围受限。
+LTS、开发代码树和可审计代码基
+在审计分支创建之后应保持同步，
+但用于认证的审计分支中
+添加新功能须遵循更严格的流程。
 
-This process will be applied before new features move into the
-auditable code base.
+该流程将应用于新功能
+移入可审计代码基之前。
 
-The initial and subsequent certification targets will be decided by the Zephyr project
-governing board.
+初始及后续的认证目标
+将由 Zephyr 项目治理委员会决定。
 
-Processes to achieve selected certification will be determined by the Security and
-Safety Working Groups and coordinated with the TSC.
+实现所选认证的流程
+将由安全与安全工作组确定，
+并与 TSC 协调。
 
-Host Tools Support Policy
-*************************
+主机工具支持政策
+****************
 
-This section documents policies related to host tools required to develop
-zephyr applications.
+本节记录与开发 Zephyr 应用程序
+所需的主机工具相关的政策。
 
-Python Version Policy
-=====================
+Python 版本政策
+===============
 
-Zephyr tracks the `Python upstream release schedule`_ when determining its minimum supported Python
-version.
+Zephyr 在确定其最小支持的
+Python 版本时，
+跟踪 `Python 上游发布计划`_。
 
-The minimum supported version is selected to balance long-term support and practical availability in
-mainstream, actively supported Linux distributions (e.g. current Ubuntu LTS and Debian Stable
-releases).
+最小支持版本的选择旨在平衡
+长期支持与在主流、受积极支持的
+Linux 发行版（例如当前的
+Ubuntu LTS 和 Debian Stable 版本）
+中的实际可用性。
 
-A Python version is considered for removal when:
+在以下情况下，
+某个 Python 版本会被考虑移除：
 
-* It is approaching or has reached upstream end-of-life (EOL), and
-* Newer Python versions are broadly available in current, actively supported major Linux
-  distributions.
+* 它接近或已达到上游生命周期结束（EOL），且
+* 较新的 Python 版本在当前受积极支持的
+  主要 Linux 发行版中广泛可用。
 
 .. _Python upstream release schedule: https://devguide.python.org/versions/
 
-Hardware Support Tiers
-**********************
+硬件支持层级
+************
 
-This section documents a rough set of tiers associated with hardware platforms.
-These criteria are not currently formally enforced or evaluated at a board,
-architecture, or SoC level.
+本节记录了与硬件平台相关的
+一组粗略的层级。这些标准目前
+不在开发板、架构或 SoC 级别
+正式强制执行或评估。
 
-Tier 0: Emulation Platforms
-===========================
+层级 0：仿真平台
+================
 
-- Tests are both built and run in these platforms in CI, and therefore runtime
-  failures can block Pull Requests.
-- Supported by the Zephyr project itself, commitment to fix bugs in releases.
-- One Tier 0 platform is required for each new architecture.
-- Bugs reported against platforms of this tier are to be evaluated and treated as
-  a general bug in Zephyr and should be dealt with the highest priority.
+- 测试在这些平台上既构建又运行
+  （在 CI 中），因此运行时失败
+  可以阻止拉取请求。
+- 由 Zephyr 项目本身支持，
+  承诺在版本中修复缺陷。
+- 每个新架构需要一个
+  层级 0 平台。
+- 针对此层级平台报告的缺陷
+  应被评估并作为 Zephyr 的
+  通用缺陷处理，且应以最高优先级处理。
 
-Tier 1: Supported Platforms
-===========================
+层级 1：受支持平台
+==================
 
-- Commitment from a specific team to run tests using twister device
-  testing for the "Zephyr compatibility test suite" (details TBD)
-  on a regular basis using open-source and publicly available drivers.
-- Commitment to fix bugs in time for releases. Not supported by "Zephyr Project"
-  itself.
-- General availability for purchase
-- Bugs reported against platforms of this tier are to be evaluated and treated
-  as a general bug in Zephyr and should be dealt with medium to high priority.
+- 特定团队的承诺：定期使用
+  开源且公开可用的驱动程序，
+  用 twister 设备测试对
+  “Zephyr 兼容性测试套件”
+  （细节待定）运行测试。
+- 承诺在版本发布前修复缺陷。
+  不由“Zephyr 项目”本身支持。
+- 普遍可购买
+- 针对此层级平台报告的缺陷
+  应被评估并作为 Zephyr 的
+  通用缺陷处理，
+  且应以中到高优先级处理。
 
-Tier 2: Community Platforms
-===========================
+层级 2：社区平台
+================
 
-- Platform implementation is available in upstream, no commitment to testing,
-  may not be generally available.
-- Has a dedicated maintainer who commits to respond to issues / review patches.
-- Bugs reported against platforms of this tier are NOT considered as
-  a general bug in Zephyr.
+- 平台实现在上游可用，
+  无测试承诺，可能不普遍可用。
+- 有专门的维护者，
+  承诺响应议题/审查补丁。
+- 针对此层级平台报告的缺陷
+  **不**被视为 Zephyr 的通用缺陷。
 
-Tier 3: Deprecated and unsupported Platforms
-============================================
+层级 3：已弃用且不受支持的
+平台
+============================
 
-- Platform implementation is available, but no owner or unresponsive owner.
-- No commitment to support is available.
-- May be removed from upstream if no one works to bring it up to tier 2 or better.
-- Bugs reported against platforms of this tier are NOT considered as
-  a general bug in Zephyr.
+- 平台实现可用，
+  但无负责人或负责人不响应。
+- 无支持承诺可用。
+- 如果无人着手将其提升到
+  层级 2 或更好，
+  可能从上游移除。
+- 针对此层级平台报告的缺陷
+  **不**被视为 Zephyr 的通用缺陷。
 
-Release Procedure
-*****************
+发布流程
+********
 
-This section documents the Release manager responsibilities so that it serves as
-a knowledge repository for Release managers.
+本节记录了发布经理的职责，
+使其作为发布经理的知识库。
 
-Release Checklist
-=================
+发布检查清单
+============
 
-Each release has a GitHub issue associated with it that contains the full
-checklist. After a release is complete, a checklist for the next release is
-created.
+每个版本都有一个与之关联的
+GitHub 议题，其中包含完整的检查清单。
+一个版本完成后，
+会为下一个版本创建检查清单。
 
-Tagging
+打标签
 =======
 
 
-The following syntax should be used for releases and tags in Git:
+Git 中的版本和标签应使用以下语法：
 
-- Release [Major].[Minor].[Patch Level]
-- Release Candidate [Major].[Minor].[Patch Level]-rc[RC Number]
-- Tagging:
+- 版本 [Major].[Minor].[Patch Level]
+- 发布候选版本 [Major].[Minor].[Patch Level]-rc[RC Number]
+- 打标签：
 
   - v[Major].[Minor].[Patch Level]-rc[RC Number]
   - v[Major].[Minor].[Patch Level]
-  - v[Major].[Minor].99 - A tag applied to main branch to signify that work on
-    v[Major].[Minor+1] has started. For example, v1.7.99 will be tagged at the
-    start of v1.8 process. The tag corresponds to
-    VERSION_MAJOR/VERSION_MINOR/PATCHLEVEL macros as defined for a
-    work-in-progress main branch version. Presence of this tag allows generation of
-    sensible output for "git describe" on main branch, as typically used for
-    automated builds and CI tools.
+  - v[Major].[Minor].99 - 应用到 main 分支的标签，
+    表示 v[Major].[Minor+1] 的工作已开始。
+    例如，v1.7.99 将在 v1.8 流程开始时
+    打好标签。该标签对应于
+    为进行中的 main 分支版本定义的
+    VERSION_MAJOR/VERSION_MINOR/PATCHLEVEL
+    宏。该标签的存在使得
+    在 main 分支上运行 "git describe"
+    时能生成合理的输出，
+    通常用于自动化构建和 CI 工具。
 
 
 .. figure:: release_flow.png
     :align: center
-    :alt: Releases
+    :alt: 版本发布
     :figclass: align-center
     :width: 80%
 
-    Zephyr Code and Releases
+    Zephyr 代码与版本发布
 
-The final release and each release candidate shall be tagged using the following
-steps:
+最终版本和每个发布候选版本
+都应按以下步骤打好标签：
 
 .. note::
 
-    Tagging needs to be done via explicit git commands and not via GitHub's release
-    interface.  The GitHub release interface does not generate annotated tags (it
-    generates 'lightweight' tags regardless of release or pre-release). You should
-    also upload your gpg public key to your GitHub account, since the instructions
-    below involve creating signed tags. Alternatively, if you don't have a gpg key,
-    you can also use your ssh key for signing.
+    打标签必须通过显式的 git 命令完成，
+    而不是通过 GitHub 的发布界面。
+    GitHub 发布界面不会生成
+    附注标签（无论发布还是预发布，
+    都只生成“轻量”标签）。
+    你还应将你的 gpg 公钥上传到你的
+    GitHub 账户，因为下面的说明
+    涉及创建签名标签。
+    或者，如果你没有 gpg 密钥，
+    也可以你的 ssh 密钥进行签名。
 
 .. tabs::
 
-    .. tab:: Release Candidate
+    .. tab:: 发布候选版本
 
         .. note::
 
-            This section uses tagging 1.11.0-rc1 as an example, replace with
-            the appropriate release candidate version.
+            本节以打标签 1.11.0-rc1 作为示例，
+            请替换为适当的发布候选版本。
 
-        #. Update the version variables in the :zephyr_file:`VERSION` file
-           located in the root of the Git repository to match the version for
-           this release candidate. The ``EXTRAVERSION`` variable is used to
-           identify the rc[RC Number] value for this candidate::
+        #. 更新位于 Git 仓库根目录的
+           :zephyr_file:`VERSION` 文件中的
+           版本变量，使其与该发布候选版本的
+           版本匹配。``EXTRAVERSION`` 变量
+           用于标识该候选版本的 rc[RC Number] 值::
 
             EXTRAVERSION = rc1
 
-        #. Post a PR with the updated :zephyr_file:`VERSION` file using
-           ``release: Zephyr 1.11.0-rc1`` as the commit subject. Merge
-           the PR after successful CI.
+        #. 用 ``release: Zephyr 1.11.0-rc1``
+           作为提交主题，发布包含
+           更新后 :zephyr_file:`VERSION` 文件的
+           拉取请求。CI 成功后合并该拉取请求。
 
-        #. Tag and push the version, using an annotated tag::
+        #. 使用附注标签打好标签并推送该版本::
 
             $ git pull
             $ git tag -s -m "Zephyr 1.11.0-rc1" v1.11.0-rc1
 
-        #. Verify that the tag has been signed correctly, ``git show`` for the
-           tag must contain a signature (look for the ``BEGIN PGP SIGNATURE``
-           or ``BEGIN SSH SIGNATURE`` marker in the output)::
+        #. 验证标签已正确签名：
+           该标签的 ``git show`` 输出
+           必须包含签名（在输出中查找
+           ``BEGIN PGP SIGNATURE`` 或
+           ``BEGIN SSH SIGNATURE`` 标记）::
 
             $ git show v1.11.0-rc1
 
-        #. Push the tag::
+        #. 推送标签::
 
             $ git push git@github.com:zephyrproject-rtos/zephyr.git v1.11.0-rc1
 
-        #. Send an email to the mailing lists (``announce`` and ``devel``)
-           with a link to the release
+        #. 向邮件列表（``announce`` 和 ``devel``）
+           发送一封包含版本链接的邮件
 
-    .. tab:: Final Release
+    .. tab:: 最终版本
 
         .. note::
 
-            This section uses tagging 1.11.0 as an example, replace with the
-            appropriate final release version.
+            本节以打标签 1.11.0 作为示例，
+            请替换为适当的最终版本。
 
-        When all final release criteria has been met and the final release notes
-        have been approved and merged into the repository, the final release version
-        will be set and repository tagged using the following procedure:
+        当所有最终版本标准都已满足，
+        且最终版本说明已获批准并
+        合并到仓库后，将按以下流程
+        设置最终版本并为仓库打好标签：
 
-        #. Update the version variables in the :zephyr_file:`VERSION` file
-           located in the root of the Git repository. Set ``EXTRAVERSION``
-           variable to an empty string to indicate final release::
+        #. 更新位于 Git 仓库根目录的
+           :zephyr_file:`VERSION` 文件中的
+           版本变量。将 ``EXTRAVERSION`` 变量
+           设置为空字符串以表示最终版本::
 
             EXTRAVERSION =
 
-        #. Post a PR with the updated :zephyr_file:`VERSION` file using
-           ``release: Zephyr 1.11.0`` as the commit subject. Merge
-           the PR after successful CI.
-        #. Tag and push the version, using two annotated tags::
+        #. 用 ``release: Zephyr 1.11.0``
+           作为提交主题，发布包含
+           更新后 :zephyr_file:`VERSION` 文件的
+           拉取请求。CI 成功后合并该拉取请求。
+        #. 使用两个附注标签打好标签并推送该版本::
 
             $ git pull
             $ git tag -s -m "Zephyr 1.11.0" v1.11.0
 
-        #. Verify that the tag has been signed correctly, ``git show`` for the
-           tag must contain a signature (look for the ``BEGIN PGP SIGNATURE``
-           or ``BEGIN SSH SIGNATURE`` marker in the output)::
+        #. 验证标签已正确签名：
+           该标签的 ``git show`` 输出
+           必须包含签名（在输出中查找
+           ``BEGIN PGP SIGNATURE`` 或
+           ``BEGIN SSH SIGNATURE`` 标记）::
 
             $ git show v1.11.0
 
-        #. Push the tag::
+        #. 推送标签::
 
             $ git push git@github.com:zephyrproject-rtos/zephyr.git v1.11.0
 
-        #. Find the new ``v1.11.0`` tag at the top of the releases page and
-           edit the release with the ``Edit tag`` button with the following:
+        #. 在发布页面顶部找到新的
+           ``v1.11.0`` 标签，
+           用 ``Edit tag`` 按钮
+           编辑该版本，内容如下：
 
-            * Copy the overview of ``docs/releases/release-notes-1.11.rst``
-              into the release notes textbox and link to the full release notes
-              file on docs.zephyrproject.org.
+            * 将 ``docs/releases/release-notes-1.11.rst``
+              的概述复制到版本说明文本框，
+              并链接到 docs.zephyrproject.org
+              上的完整版本说明文件。
 
-        #. Send an email to the mailing lists (``announce`` and ``devel``) with a link
-           to the release
+        #. 向邮件列表（``announce`` 和 ``devel``）
+           发送一封包含版本链接的邮件

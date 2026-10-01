@@ -1,202 +1,34 @@
 .. _networking_with_armfvp:
 
-Networking
-with
-Arm
-FVP
-User
-Mode
+Networking with Arm FVP User Mode
 #################################
 
 .. contents::
     :local:
-    :depth:
-    2
+    :depth: 2
 
-这
-个
-page
-intended
-作为
-一
-个
-starting
-point
-用于
-任何
-对
-use
-Arm
-FVP
-user
-mode
-networking
-与
-Zephyr
-感兴趣
-的
-人。
+此页面旨在作为对使用 Arm FVP user mode networking 与 Zephyr 感兴趣者的起点。
 
 Introduction
 *************
 
-User
-mode
-networking
-emulate
-一
-个
-built
-in
-的
-IP
-router
-和
-DHCP
-server
-并
-在
-guest
-和
-host
-之间
-route
-TCP
-和
-UDP
-traffic。
-它
-use
-host
-的
-user
-mode
-socket
-layer
-与
-其他
-hosts
-communicate。
-这
-允许
-use
-大量
-的
-IP
-network
-services
-而
-不
-require
-administrative
-privileges
-或
-在
-model
-run
-的
-host
-上
-install
-separate
-的
-driver。
+User mode networking 模拟内置 IP router 和 DHCP server（并在 guest 和 host 之间路由 TCP 和 UDP traffic。其用 host 的 user mode socket layer 与其他 hosts 通信。这允许使用大量 IP network services（无需 administrative privileges（或无需在安装 model 运行的 host 上安装单独 driver。
 
-Default
-下
-Arm
-FVP
-use
-``172.20.51.0/24``
-network
-并
-run
-一
-个
-gateway
-在
-``172.20.51.254``。
-这
-个
-gateway
-也
-作为
-GOS
-的
-DHCP
-server
-function
-允许
-它
-被
-automatically
-assigned
-一
-个
-IP
-address
-``172.20.51.1``。
+默认（Arm FVP 使用 ``172.20.51.0/24`` network（并在 ``172.20.51.254`` 运行 gateway。此 gateway 还作为 GOS 的 DHCP server（允许其自动分配 IP address ``172.20.51.1``。
 
-关于
-Arm
-FVP
-user
-mode
-networking
-的
-更多
-details
-可
-从
-这里
-获得：
-https://developer.arm.com/documentation/100964/latest/Introduction-to-Fast-Models/User-mode-networking
+Arm FVP user mode networking 更多细节可从 https://developer.arm.com/documentation/100964/latest/Introduction-to-Fast-Models/User-mode-networking 获取。
 
-Using
-Arm
-FVP
-User
-Mode
-Networking
-with
-Zephyr
+Using Arm FVP User Mode Networking with Zephyr
 ***********************************************
 
-Arm
-FVP
-user
-mode
-networking
-可以
-在
-任何
-applications
-中
-被
-enabled
-它
-不
-需要
-在
-host
-system
-上
-任何
-configurations。
-这
-个
-feature
-已在
-DHCPv4
-client
-sample
-中
-被
-enabled。
-参考
-:zephyr:code-sample:`dhcpv4-client`
-sample
-application。
+Arm FVP user mode networking 可在任何 applications 中启用（且无需在 host system 上任何 configurations。此 feature 已在 DHCPv4 client sample 中启用。参见 :zephyr:code-sample:`dhcpv4-client` sample application。
 
 Limitations
 *************
+
+* 可用 TCP 和 UDP over IP（但不可用 ICMP（ping）。
+* User mode networking 不支持将 host 上的 UDP ports 转发到 model。
+* 仅可在 private network 内使用 DHCP。
+* 仅可通过将 host 上的 TCP ports 映射到 model 建立 inward connections。这对用 NAT 提供 host connectivity 的所有 implementations 通用。
+* 需 privileged source ports 的 operations（例如默认配置下的 NFS）不工作。
+* 若 setup 失败（或 parameter 语法不正确（无 error 报告。

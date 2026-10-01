@@ -9,6 +9,7 @@ Call
 Control
 Server
 *******************
+
 Call
 Control
 Server
@@ -49,144 +50,171 @@ Call
 Control
 Server
 =============================
-Server
-可以
-被
-locally
-control
-或
-被
-remote
-device
-control
-（当
-在
-call
-中
-时
-）。
-例如
-remote
-device
-可能
-initiate
-到
-server
-的
-call
-或
-Server
-可能
-initiate
-到
-remote
-device
-的
-call
-而
-没有
-client。
 
-对
-所有
-接受
-optional
-的
-:code:`index`
-的
+The
+Server
+can
+be
+controlled
+locally、
+or
+by
+a
+remote
+device
+（when
+in
+a
+call）.
+For
+example
+a
+remote
+device
+may
+initiate
+a
+call
+to
+the
+server、
+or
+the
+Server
+may
+initiate
+a
+call
+to
+remote
+device、
+without
+a
+client.
+
+For
+all
 commands
-如果
+that
+take
+an
+optional
+:code:`index`、
+if
+the
 index
-没
-被
+is
+not
 supplied
-则
-它
+then
+it
 defaults
-到
+to
 :code:`0`
-这
-是
+which
+is
+the
 GTBS
-bearer。
+bearer.
 
-.. code-block::
-   console
-
-   ccp_call_control_server
-   --help
-   ccp_call_control_server
-   -
-   Bluetooth
-   CCP
-   Call
-   Control
-   Server
-   shell
-   commands
-   Subcommands:
-     init
-                    :
-      Initialize
-      CCP
-      Call
-      Control
-      Server
-     set_bearer_name
-         :
-      Set
-      bearer
-      name
-      [index]
-      <name>
-     get_bearer_name
-         :
-      Get
-      bearer
-      name
-      [index]
-     get_bearer_uci
-          :
-      Get
-      bearer
-      UCI
-      [index]
-     set_bearer_tech
-         :
-      Set
-      bearer
-      technology
-      [index]
-      <technology>
-     get_bearer_tech
-         :
-      Get
-      bearer
-      technology
-      [index]
-     set_bearer_uri_schemes
-  :
-      Set
-      bearer
-      URI
-      schemes
-      supported
-      list
-      [index]
-      <URI
-      schemes>
-                          (e.g.
-      "tel,skype")
-     get_bearer_uri_schemes
-  :
-      Get
-      bearer
-      URI
-      schemes
-      supported
-      list
-      [index]
-
+..
+code
+block::
+console
+ccp
+call
+control
+server
+--help
+ccp
+call
+control
+server
+Bluetooth
+CCP
+Call
+Control
+Server
+shell
+commands
+Subcommands:
+init
+:
+Initialize
+CCP
+Call
+Control
+Server
+set
+bearer
+name
+:
+Set
+bearer
+name
+[index]
+<name>
+get
+bearer
+name
+:
+Get
+bearer
+name
+[index]
+get
+bearer
+uci
+:
+Get
+bearer
+UCI
+[index]
+set
+bearer
+tech
+:
+Set
+bearer
+technology
+[index]
+<technology>
+get
+bearer
+tech
+:
+Get
+bearer
+technology
+[index]
+set
+bearer
+uri
+schemes
+:
+Set
+bearer
+URI
+schemes
+supported
+list
+[index]
+<URI
+schemes>
+（e.g.
+"tel、skype"）
+get
+bearer
+uri
+schemes
+:
+Get
+bearer
+URI
+schemes
+supported
+list
+[index]
 
 Example
 Usage
@@ -194,3 +222,417 @@ Usage
 
 Setup
 -----
+
+..
+code
+block::
+console
+uart:~$
+bt
+init
+uart:~$
+ccp
+call
+control
+server
+init
+Registered
+GTBS
+bearer
+Registered
+bearer[1]
+uart:~$
+bt
+connect
+P:xx:xx:xx:xx:xx:xx
+
+Setting
+and
+getting
+the
+bearer
+name
+-----------------------------------
+
+..
+code
+block::
+console
+uart:~$
+ccp
+call
+control
+server
+get
+bearer
+name
+Bearer[0]
+name:
+Generic
+TBS
+uart:~$
+ccp
+call
+control
+server
+set
+bearer
+name
+"New
+name"
+Bearer[0]
+name:
+New
+name
+uart:~$
+ccp
+call
+control
+server
+get
+bearer
+name
+Bearer[0]
+name:
+New
+name
+uart:~$
+ccp
+call
+control
+server
+get
+bearer
+name
+1
+Bearer[1]
+name:
+Telephone
+Bearer
+#1
+uart:~$
+ccp
+call
+control
+server
+set
+bearer
+name
+1
+"New
+TBS
+name"
+Bearer[1]
+name:
+New
+TBS
+name
+uart:~$
+ccp
+call
+control
+server
+get
+bearer
+name
+1
+Bearer[1]
+name:
+New
+TBS
+name
+
+Getting
+the
+bearer
+UCI
+----------------------
+
+..
+code
+block::
+console
+uart:~$
+ccp
+call
+control
+server
+get
+bearer
+uci
+Bearer[0]
+UCI:
+un999
+uart:~$
+ccp
+call
+control
+server
+get
+bearer
+uci
+1
+Bearer[1]
+UCI:
+skype
+
+Setting
+and
+getting
+the
+bearer
+technology
+-----------------------------------------
+
+..
+code
+block::
+console
+uart:~$
+ccp
+call
+control
+server
+get
+bearer
+tech
+Bearer[0]
+technology:
+3G
+（0x01）
+uart:~$
+ccp
+call
+control
+server
+set
+bearer
+tech
+0x02
+Bearer[0]
+new
+technology:
+4G
+（0x02）
+
+Setting
+and
+getting
+the
+bearer
+URI
+supported
+schemes
+list
+---------------------------------------------------------
+
+..
+code
+block::
+console
+uart:~$
+ccp
+call
+control
+server
+get
+bearer
+uri
+schemes
+Bearer[0]
+URI
+schemes
+supported
+list:
+tel、skype
+uart:~$
+ccp
+call
+control
+server
+set
+bearer
+uri
+schemes
+"tel、teamspeak"
+Bearer[0]
+new
+URI
+schemes
+supported
+list:
+tel、teamspeak
+
+Call
+Control
+Client
+*******************
+
+The
+Call
+Control
+Client
+is
+a
+role
+that
+typically
+resides
+on
+resource
+constrained
+devices
+such
+as
+earbuds
+or
+headsets.
+
+Using
+the
+Call
+Control
+Client
+=============================
+
+The
+Client
+can
+control
+a
+remote
+CCP
+server
+device.
+For
+example
+a
+remote
+device
+may
+have
+an
+incoming
+call
+that
+can
+be
+accepted
+by
+the
+Client.
+
+..
+code
+block::
+console
+uart:~$
+ccp
+call
+control
+client
+--help
+ccp
+call
+control
+client
+Bluetooth
+CCP
+Call
+Control
+Client
+shell
+commands
+Subcommands:
+discover
+:
+Discover
+GTBS
+and
+TBS
+on
+remote
+device
+
+Example
+Usage
+when
+connected
+============================
+
+..
+code
+block::
+console
+uart:~$
+ccp
+call
+control
+client
+discover
+Discovery
+completed
+with
+GTBS
+and
+1
+TBS
+bearers
+
+..
+code
+block::
+console
+uart:~$
+ccp
+call
+control
+client
+read
+bearer
+name
+Bearer
+0x20046254
+name:
+Generic
+TBS
+uart:~$
+ccp
+call
+control
+client
+read
+bearer
+name
+1
+Bearer
+0x20046256
+name:
+Telephone
+Bearer
+#1
+uart:~$
+ccp
+call
+control
+client
+read
+bearer
+uci
+Bearer
+0x20046254
+UCI:
+un999
+uart:~$
+ccp
+call
+control
+client
+read
+bearer
+uci
+1
+Bearer
+0x20046256
+UCI:
+skype

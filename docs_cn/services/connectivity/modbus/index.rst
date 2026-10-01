@@ -3,208 +3,24 @@
 Modbus
 ######
 
-Modbus
-是
-一
-个
-industrial
-messaging
-protocol。
-该
-protocol
-为
-不同
-type
-的
-networks
-或
-buses
-被
-specified。
-Zephyr
-OS
-implementation
-support
-通过
-serial
-line
-的
-communication
-并
-可
-用
-于
-不同
-的
-physical
-interfaces
-如
-RS485
-或
-RS232。
-TCP
-support
-不
-被
-直接
-implemented
-但
-有
-helper
-functions
-用于
-根据
-application
-的
-needs
-realize
-TCP
-support。
+Modbus 是工业 messaging protocol。该 protocol 为不同类型的 networks 或 buses 指定。Zephyr OS 实现支持通过 serial line 通信（可用于不同 physical interfaces（如 RS485 或 RS232。TCP support 未直接实现（但有 helper functions 按 application 需求实现 TCP support。
 
-Modbus
-communication
-基于
-client/server
-model。
-总线上
-只
-能
-有
-一
-个
-client
-present。
-Client
-可以
-与
-多
-个
-server
-devices
-communicate。
-Server
-devices
-本身
-是
-passive
-的
-必须
-不
-send
-requests
-或
-unsolicited
-responses。
-Client
-requested
-的
-services
-由
-function
-codes
-（FCxx）
-specified
-可
-在
-specification
-或
-下面
-的
-API
-documentation
-中
-找到。
+Modbus 通信基于 client/server model。总线上仅可存在一个 client。Client 可与多个 server devices 通信。Server devices 本身为 passive（且不得发送 requests 或 unsolicited responses。Client 请求的 services 由 function codes（FCxx）指定（可在 specification 或以下 API 文档中找到。
 
-Zephyr
-RTOS
-implementation
-support
-client
-和
-server
-两
-个
-roles。
+Zephyr RTOS 实现支持 client 和 server 两种 roles。
 
-关于
-Modbus
-和
-Modbus
-RTU
-的
-更多
-information
-可
-在
-website
-`MODBUS
-Protocol
-Specifications`_
-上
-找到。
+在 `MODBUS Protocol Specifications`_ 网站可找到更多关于 Modbus 和 Modbus RTU 的信息。
 
 Samples
 *******
 
-*
-:zephyr:code-sample:`modbus-rtu-server`
-和
-:zephyr:code-sample:`modbus-rtu-client`
-samples
-give
-the
-possibility
-to
-try
-out
-RTU
-server
-和
-RTU
-client
-implementation
-用
-一
-个
-evaluation
-board。
-*
-:zephyr:code-sample:`modbus-tcp-server`
-sample
-是
-一
-个
-简单
-的
-Modbus
-TCP
-server。
-*
-:zephyr:code-sample:`modbus-gateway`
-sample
-show
-如何
-用
-Zephyr
-OS
-build
-一
-个
-TCP
-到
-serial
-line
-的
-gateway。
+* :zephyr:code-sample:`modbus-rtu-server` 和 :zephyr:code-sample:`modbus-rtu-client` samples 提供用 evaluation board 试用 RTU server 和 RTU client 实现的可能性。
+* :zephyr:code-sample:`modbus-tcp-server` sample 为简单 Modbus TCP server。
+* :zephyr:code-sample:`modbus-gateway` sample 展示如何用 Zephyr OS 构建 TCP 到 serial line 的 gateway。
 
-API
-Reference
+API Reference
 *************
 
-.. doxygengroup::
-   modbus
+.. doxygengroup:: modbus
 
-.. _`MODBUS
-Protocol
-Specifications`:
-   https://www.modbus.org/specs.php
+.. _`MODBUS Protocol Specifications`: https://www.modbus.org/specs.php

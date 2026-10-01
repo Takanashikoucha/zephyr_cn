@@ -1,4 +1,6 @@
-.. _bt_uuid_api:
+.. _bt
+uuid
+api:
 
 Universal
 Unique
@@ -6,10 +8,10 @@ Identifiers
 （UUIDs）
 #####################################
 
-
 API
 Reference
 *************
 
-.. doxygengroup::
-   bt_uuid
+..
+doxygengroup::
+bt_uuid

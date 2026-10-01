@@ -20,12 +20,21 @@ requirements
 in
 the
 Zephyr
-Project。
+Project.
 
-.. toctree::
-   :maxdepth:
-   1
-   :glob:
+..
+toctree::
+:
+maxdepth:
+1
+:
+glob:
 
-   getting_started_with_requirements.rst
-   create_your_first_requirement.rst
+getting
+started
+with
+requirements.rst
+create
+your
+first
+requirement.rst

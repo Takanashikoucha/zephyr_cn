@@ -1,283 +1,76 @@
 .. _reviewer-expectations:
 
-Reviewer
-Expectations
+审查者预期
 #####################
 
--
-Be
-respectful
-when
-commenting
-on
-PRs。
-Refer
-to
-the
-Zephyr
-`Code
-of
-Conduct`_
-for
-more
-details。
+- 在评论 PR 时保持尊重。更多细节参见 Zephyr `行为准则`_。
 
--
-The
-Zephyr
-Project
-recognizes
-that
-reviewers
-and
-maintainers
-have
-limited
-bandwidth。
-As
-a
-reviewer
-prioritize
-review
-requests
-in
-the
-following
-order:
+- Zephyr 项目承认审查者和维护者的带宽有限。作为审查者，
+  按以下顺序优先处理审查请求：
 
-    #.
-    PRs
-    related
-    to
-    items
-    in
-    the
-    `Zephyr
-    Release
-    Plan`_
-    or
-    those
-    targeting
-    the
-    next
-    release
-    during
-    the
-    stabilization
-    period
-    （after
-    RC1）。
-    #.
-    PRs
-    where
-    the
-    reviewer
-    has
-    requested
-    blocking
-    changes。
-    #.
-    PRs
-    assigned
-    to
-    the
-    reviewer
-    as
-    the
-    area
-    maintainer。
-    #.
-    All
-    other
-    PRs。
+     #. 与 `Zephyr 发布计划`_ 中项目相关的 PR，或在稳定期（RC1 之后）
+        针对下一个版本的 PR。
+     #. 审查者已请求阻塞性更改的 PR。
+     #. 作为领域维护者分配给审查者的 PR。
+     #. 所有其他 PR。
 
--
-Reviewers
-shall
-strive
-to
-advance
-the
-PR
-to
-a
-mergeable
-state
-with
-their
-feedback
-and
-engagement
-with
-the
-PR
-author。
+- 审查者应努力通过反馈和与 PR 作者的互动，
+  将 PR 推进到可合并状态。
 
--
-Try
-to
-provide
-feedback
-on
-the
-entire
-PR
-in
-one
-shot。
-This
-provides
-the
-contributor
-an
-opportunity
-to
-address
-all
-comments
-in
-the
-next
-PR
-update。
+- 尽量一次性提供对整个 PR 的反馈。
+  这为贡献者提供了在下次 PR 更新中处理所有评论的机会。
 
--
-Partial
-reviews
-are
-permitted
-but
-the
-reviewer
-must
-add
-a
-comment
-indicating
-what
-portion
-of
-the
-PR
-they
-reviewed。
-Examples
-of
-useful
-partial
-reviews
-include:
+- 允许部分审查，但审查者必须添加评论说明其审查了 PR 的哪一部分。
+  有用的部分审查示例包括：
 
-   -
-   Domain
-   specific
-   reviews
-   （e.g.
-   Devicetree）。
-   -
-   Code
-   style
-   changes
-   that
-   impact
-   the
-   readability
-   of
-   the
-   PR。
-   -
-   Reviewing
-   commits
-   separately
-   when
-   the
-   requested
-   changes
-   cascade
-   into
-   the
-   later
-   commits。
+  - 领域特定的审查（例如设备树）。
+  - 影响 PR 可读性的代码风格更改。
+  - 当请求的更改级联到后续 commit 时，分别审查各个 commit。
 
--
-Avoid
-increasing
-scope
-of
-the
-PR
-by
-requesting
-new
-features
-especially
-when
-there
-is
-a
-corresponding
-:ref:`RFC
-<rfcs>`
-associated
-with
-the
-PR。
-Instead
-reviewers
-should
-add
-suggestions
-as
-a
-comment
-to
-the
-:ref:`RFC
-<rfcs>`。
-This
-also
-encourages
-more
-collaboration
-as
-it
-is
-easier
-for
-multiple
-contributors
-to
-work
-on
-a
-feature
-once
-the
-minimum
-implementation
-has
-merged。
+- 避免通过请求新功能来扩大 PR 的范围，
+  特别是当 PR 关联有相应的 :ref:`RFC <rfcs>` 时。
+  相反，审查者应将建议作为评论添加到 :ref:`RFC <rfcs>` 中。
+  这也有助于鼓励更多协作，因为一旦最小实现被合并，
+  多个贡献者就更容易在该功能上协作。
 
--
-When
-using
-the
-"Request
-Changes"
-option
-mark
-trivial、
-non
-functional、
-requests
-as
-"Non
-blocking"
-in
-the
-comment。
-Reviewers
-should
-approve
-PRs
-once
+- 使用"Request Changes"（请求更改）选项时，
+  在评论中将琐碎的、非功能性的请求标记为"Non-blocking"（非阻塞）。
+  审查者应在仅剩非阻塞性更改时批准 PR。
+  PR 作者自行决定是否处理所有非阻塞性评论。
+  PR 作者应以某种方式确认每条审查评论，即使只是用一个表情符号。
+
+- 审查者不同意、但未被记录为项目规范一部分的风格更改
+  可以指出为非阻塞性，但不能构成请求更改的理由。
+  审查者可以自行纠正代码树中任何潜在的不一致，
+  记录新的指南或规则，然后在审查中强制执行它们。
+
+- 每当请求风格相关更改时，审查者应能指出
+  项目文档中相应的指南、规则或理由。
+  这不适用于某些类型的更改请求，
+  特别是与正在提交的更改本身特定相关的（例如
+  特定数据结构的使用或锁原语的选择）。
+
+- 使用"Request Changes"选项时，审查者必须对其请求的更改保持*清晰*。
+  请求的更改应在所涉 PR 的范围内，
+  并遵循项目的贡献和风格指南。
+  此外，审查者必须能指出 PR 中触发更改请求的确切问题。
+
+- 审查者不应请求更改那些被 CI 自动捕获的问题，
+  因为这会导致 pull request 在 CI 失败被处理后仍保持阻塞，
+  并可能不必要地延迟其合并。
+
+- 审查者不得因技术或结构上的分歧而关闭 PR。
+  如果请求的更改无法在审查过程中解决，
+  任何潜在解决路径都应走 :ref:`pr_technical_escalation` 流程，
+  其中包括关闭 PR。
+
+- 使用 AI 工具辅助审查代码或起草回复时：
+
+  - 审查者负责跟进其使用的 AI 工具（例如 GitHub Copilot）生成的评论。
+  - 审查者永远不应将原始的、未经验证的 LLM 输出粘贴为 PR 评论。
+  - 一般而言：所有 AI 生成的反馈都必须由人类审查者审核、验证
+    并结合上下文，该人类审查者对评论或审查的准确性和语气承担全部责任。
+
+.. _Code of Conduct: https://github.com/zephyrproject-rtos/zephyr/blob/main/CODE_OF_CONDUCT.md
+
+.. _Zephyr Release Plan: https://github.com/orgs/zephyrproject-rtos/projects/13

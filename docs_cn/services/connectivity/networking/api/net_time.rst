@@ -1,17 +1,9 @@
 .. _net_time_interface:
 
-Network
-stack
-中
-的
-Network
-time
-representation
+Network time representation in the network stack
 ################################################
 
-API
-Reference
+API Reference
 *************
 
-.. doxygengroup::
-   net_time
+.. doxygengroup:: net_time

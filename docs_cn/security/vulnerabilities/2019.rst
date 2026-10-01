@@ -1,4 +1,5 @@
-.. _vulnerabilities_2019:
+.. _vulnerabilities
+2019:
 
 CVE
 2019
@@ -10,7 +11,8 @@ CVE
 
 The
 Bluetooth
-BR/EDR
+BR
+EDR
 specification
 up
 to
@@ -35,7 +37,7 @@ influencing
 the
 key
 length
-negotiation。
+negotiation.
 This
 allows
 practical
@@ -55,7 +57,7 @@ ciphertext
 without
 the
 victim
-noticing。
+noticing.
 
 -
 `Zephyr
@@ -72,11 +74,13 @@ ZEPSEC
 fix
 for
 v1.14.0
-<https://github.com/zephyrproject-rtos/zephyr/pull/18702>`_
+<https://github.com/zephyrproject
+rtos/zephyr/pull/18702>`_
 
 -
 `PR18659
 fix
 for
 v2.0.0
-<https://github.com/zephyrproject-rtos/zephyr/pull/18659>`_
+<https://github.com/zephyrproject
+rtos/zephyr/pull/18659>`_

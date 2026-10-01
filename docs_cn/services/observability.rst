@@ -1,50 +1,18 @@
 .. _observability_services:
 
-Logging、
-Tracing
-&
-Debugging
+日志、跟踪与调试
 ############################
 
-这
-个
-section
-cover
-help
-你
-observe、
-diagnose、
-和
-debug
-run
-中
-的
-system
-的
-services：
-emit
-log
-messages、
-trace
-execution、
-通过
-shell
-inspect
-system、
-和
-monitor
-runtime
-health。
+本节介绍帮助你观察、诊断和调试运行中系统的服务：输出日志消息、跟踪执行过程、通过 shell 检查系统，以及监控运行时健康状况。
 
 .. toctree::
-   :maxdepth:
-   1
+    :maxdepth: 1
 
-   logging/index.rst
-   tracing/index.rst
-   debugging/index.rst
-   profiling/index.rst
-   instrumentation/index.rst
-   cpu_load/index.rst
-   shell/index.rst
-   task_wdt/index.rst
+    logging/index.rst
+    tracing/index.rst
+    debugging/index.rst
+    profiling/index.rst
+    instrumentation/index.rst
+    cpu_load/index.rst
+    shell/index.rst
+    task_wdt/index.rst

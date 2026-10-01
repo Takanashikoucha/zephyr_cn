@@ -1,181 +1,49 @@
 .. _tcpc_api:
 
-USB
-Type-C
-Port
-Controller
-（TCPC）
-#################################
+USB Type-C 端口控制器（TCPC）
+#############################
 
-Overview
+概述
 ********
 
-`TCPC
-<tcpc-specification_>`_
-（USB
-Type-C
-Port
-Controller）
-TCPC
-是
-一
-个
-用
-来
-简化
-USB-C
-system
-implementation
-的
-device
-通过
-提供
-以下
-三
-个
-function：
+`TCPC <tcpc-specification_>`_（USB Type-C 端口控制器）
+TCPC 是一种用于简化 USB-C 系统实现的设备，它提供以下三个功能：
 
-* VBUS
-  和
-  VCONN
-  control
-  `USB
-  Type-C
-  <usb-type-c-specification_>`_:
-  TCPC
-  可以
-  提供
-  Source
-  device、
-  控制
-  VBUS
-  sourcing
-  的
-  mechanism、
-  和
-  Sink
-  device、
-  控制
-  VBUS
-  sinking
-  的
-  mechanism。
-  类似
-  的
-  mechanism
-  被
-  提供
-  用于
-  VCONN
-  的
-  control。
+* VBUS 和 VCONN 控制 `USB Type-C <usb-type-c-specification_>`_：
+  TCPC 可为 Source（电源输出方）设备提供控制 VBUS 输出的机制，为 Sink（电源接收方）设备提供控制 VBUS 接收的机制。类似机制也用于 VCONN 控制。
 
-* CC
-  control
-  和
-  sensing:
-  TCPC
-  实现
-  用于
-  控制
-  CC
-  pin
-  pull-up
-  和
-  pull-down
-  resistors
-  的
-  logic。
-  它
-  也
-  提供
-  一
-  种
-  方式
-  sense
-  并
-  report
-  CC
-  pin
-  上
-  存在
-  哪些
-  resistors。
+* CC 控制与检测：
+  TCPC 实现了控制 CC 引脚上拉和下拉电阻的逻辑。它还提供了检测并报告 CC 引脚上存在哪些电阻的方法。
 
-* Power
-  Delivery
-  message
-  reception
-  和
-  transmission
-  `USB
-  Power
-  Delivery
-  <usb-pd-specification_>`_:
-  TCPC
-  发送
-  和
-  接收
-  在
-  TCPM
-  中
-  构建
-  的
-  messages
-  并
-  将
-  它们
-  放置
-  在
-  CC
-  lines
-  上。
+* 电源传输（Power Delivery）消息的接收与发送 `USB Power Delivery <usb-pd-specification_>`_：
+  TCPC 发送和接收由 TCPM 构建的消息，并将其放到 CC 线路上。
 
 .. _tcpc-api:
 
-TCPC
-API
+TCPC API
 ========
 
-TCPC
-device
-driver
-function
-作为
-TCPC
-device
-和
-application
-software
-之间
-的
-liaison；
-这
-通过
-Zephyr
-的
-API
-实现
-该
-API
-由
-device
-driver
-提供
-用
-来
-与
-TCPC
-device
-通信
-和
-control
-它。
+TCPC 设备驱动程序充当 TCPC 设备与应用软件之间的中间层；这通过设备驱动程序提供的 Zephyr API 实现，该 API 用于与 TCPC 设备通信并控制它。
 
-Configuration
-Options
+配置选项
 *********************
 
-相关
-配置
-选项：
+相关配置选项：
+
+* :kconfig:option:`CONFIG_USBC_TCPC_DRIVER`
+
+API 参考
+*************
+
+.. doxygengroup:: usb_type_c
+.. doxygengroup:: usb_type_c_port_controller_api
+.. doxygengroup:: usb_power_delivery
+
+.. _tcpc-specification:
+   https://www.usb.org/document-library/usb-type-cr-port-controller-interface-specification
+
+.. _usb-type-c-specification:
+   https://www.usb.org/document-library/usb-type-cr-cable-and-connector-specification-revision-21
+
+.. _usb-pd-specification:
+   https://www.usb.org/document-library/usb-power-delivery

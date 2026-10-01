@@ -6,19 +6,14 @@ CANopenNode 协议栈
 简介
 ****
 
-`CANopenNode`_ 是一个自由开源的 CANopen 协议栈。用于将该协议栈与
-Zephyr 集成的胶水代码位于专门的 `CANopenNodeZephyr`_ 仓库中，该仓库
-将 CANopenNode 作为 Git 子模块包含。
+`CANopenNode`_ 是一个自由且开源的 CANopen 协议栈。用于将该协议栈与 Zephyr 集成的胶水代码位于专门的 `CANopenNodeZephyr`_ 仓库中，该仓库将 CANopenNode 作为 Git 子模块包含。
 
 CANopenNode 和 CANopenNodeZephyr 均采用 Apache-2.0 许可。
 
 在 Zephyr 中使用
 ****************
 
-要将 CANopenNodeZephyr 作为 Zephyr :ref:`module <modules>` 引入，可以将其
-作为 West 项目添加到 ``west.yaml`` 文件，或通过添加子 manifest
-（例如 ``zephyr/submanifests/canopennodezephyr.yaml``）文件引入，内容如下，
-然后运行 ``west update``：
+要将 CANopenNodeZephyr 作为 Zephyr :ref:`模块 <modules>` 引入，可以将其作为 West 项目添加到 ``west.yaml`` 文件，或通过添加子 manifest（例如 ``zephyr/submanifests/canopennodezephyr.yaml``）文件引入，内容如下，然后运行 ``west update``：
 
 .. code-block:: yaml
 

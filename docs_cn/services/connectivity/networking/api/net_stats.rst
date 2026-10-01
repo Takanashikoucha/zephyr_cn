@@ -1,154 +1,26 @@
 .. _net_stats_interface:
 
-Network
-Statistics
+Network Statistics
 ##################
 
 .. contents::
     :local:
-    :depth:
-    2
+    :depth: 2
 
 Overview
 ********
 
-如果
-:kconfig:option:`CONFIG_NET_STATISTICS`
-被
-set
-则
-network
-statistics
-被
-collected。
-IPv4
-或
-IPv6
-的
-individual
-component
-statistics
-可以
-被
-turned
-off
-如果
-那些
-statistics
-不
-被
-needed。
-参考
-:zephyr_file:`subsys/net/ip/Kconfig.stats`
-file
-中
-的
-各种
-options
-获取
-details。
+若设置 :kconfig:option:`CONFIG_NET_STATISTICS`（则收集 network statistics。IPv4 或 IPv6 的 individual component statistics 可在不需要时关闭。细节参见 :zephyr_file:`subsys/net/ip/Kconfig.stats` file 中的各种 options。
 
-Default
-下
-system
-per
-network
-interface
-collect
-network
-statistics。
-这
-可以
-由
-:kconfig:option:`CONFIG_NET_STATISTICS_PER_INTERFACE`
-option
-controlled。
+默认（system 按 network interface 收集 network statistics。这可由 :kconfig:option:`CONFIG_NET_STATISTICS_PER_INTERFACE` option 控制。
 
-如果
-application
-想
-collect
-statistics
-用于
-further
-processing
-则
-:kconfig:option:`CONFIG_NET_STATISTICS_USER_API`
-option
-可
-被
-set。
-Network
-management
-interface
-API
-为
-此
-被
-used。
-参考
-:ref:`net_mgmt_interface`
-获取
-details。
+若 application 想收集 statistics 以进一步处理（可设置 :kconfig:option:`CONFIG_NET_STATISTICS_USER_API` option。用 network management interface API 执行此操作。细节参见 :ref:`net_mgmt_interface`。
 
-:kconfig:option:`CONFIG_NET_STATISTICS_ETHERNET`
-option
-可
-被
-set
-用于
-collect
-generic
-的
-Ethernet
-statistics。
-如果
-:kconfig:option:`CONFIG_NET_STATISTICS_ETHERNET_VENDOR`
-option
-被
-set
-那么
-Ethernet
-device
-driver
-可以
-collect
-Ethernet
-device
-specific
-的
-statistics。
-这些
-statistics
-然后
-可以
-被
-transferred
-到
-application
-用于
-processing。
+可设置 :kconfig:option:`CONFIG_NET_STATISTICS_ETHERNET` option 以收集 generic Ethernet statistics。若设置 :kconfig:option:`CONFIG_NET_STATISTICS_ETHERNET_VENDOR` option（则 Ethernet device driver 可收集 Ethernet device specific statistics。这些 statistics 然后可传输到 application 以处理。
 
-如果
-:kconfig:option:`CONFIG_NET_SHELL`
-option
-被
-set
-那么
-network
-shell
-可以
-用
-``net
-stats``
-command
-show
-statistics
-information。
+若设置 :kconfig:option:`CONFIG_NET_SHELL` option（则 network shell 可用 ``net stats`` command 显示 statistics 信息。
 
-API
-Reference
+API Reference
 *************
 
-.. doxygengroup::
-   net_stats
+.. doxygengroup:: net_stats
