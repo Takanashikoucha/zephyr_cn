@@ -39,9 +39,12 @@ TTCN-3 是 ETSI 标准化的用于编写测试的语言。此处的测试套件
 应用程序，小型 pytest 测试框架用 Titan 构建测试套件，运行它，
 并将 Titan 的判决转化为测试结果。
 
-当 Titan、第三方 TTCN-3 模块或
-网络接口缺失时，每个测试跳过自身，因此在
-未为其设置的运行中测试套件是无害的。运行所需参见 :ref:`ttcn3_running`，
+当 Titan、第三方 TTCN-3 模块、
+``NET_ADMIN`` 或 tap 设备缺失时，每个测试跳过自身，因此在
+未为其设置的运行中测试套件是无害的。它设置 ``NET_CONFORMANCE_REQUIRED``，
+因此无法运行的测试套件会失败而不是跳过：
+什么都没测的运行不应看起来像通过了。
+运行所需参见 :ref:`ttcn3_running`，
 各部分如何组合参见 :ref:`ttcn3_architecture`。
 
 .. _ttcn3_suites:

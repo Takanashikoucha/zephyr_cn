@@ -79,8 +79,7 @@ CMake 用户包注册表中的一个 CMake 配置包。
 作为一组 `SPDX`_ 文档。
 它记录了进入构建的源文件、它们产生的构建产物，
 以及它们之间的关系。
-在源文件中找到的 ``SPDX-License-Identifier`` 注释
-会被扫描并填入文档中，连同文件哈希值和（尽力而为的）版权声明。
+每个文件的许可证和版权都会被扫描并填入文档中，连同文件哈希值。
 
 .. _west-spdx-versions:
 
@@ -161,12 +160,21 @@ SPDX 3.0 JSON-LD 格式用 ``.jsonld``：
 
 物料清单中的每个文件都会被扫描，
 以便记录其哈希值（SHA256、SHA1 和 MD5），
-以及如果文件中出现 ``SPDX-License-Identifier`` 注释时
-检测到的任何许可证。
+连同其许可证和版权。
 
-版权声明使用 REUSE 组的第三方 :command:`reuse` 工具提取。
-找到时，这些声明作为 ``FileCopyrightText`` 字段（SPDX 2.x）
-或版权属性（SPDX 3.0）添加到 SPDX 文档中。
+两者都通过 REUSE 组的第三方 :command:`reuse` 工具解析，
+因此 ``west spdx`` 遵循 `REUSE 规范`_ 允许的所有声明方式：
+文件本身的 ``SPDX-License-Identifier`` 和 ``SPDX-FileCopyrightText`` 注释、
+旁边放置的 :file:`.license` 文件，
+或仓库根部的 :file:`REUSE.toml`（一次性注释整组路径）。
+最后一种形式是唯一能为无法包含注释的文件（特别是二进制文件）
+指定许可证的方式。
+
+找到的内容被写为 ``LicenseInfoInFile``、``LicenseConcluded`` 和
+``FileCopyrightText``（SPDX 2.x），
+或作为元素的许可证和版权属性（SPDX 3.0）。
+
+.. _REUSE 规范: https://reuse.software/spec/
 
 .. note::
    版权提取使用可能无法捕获完整声明文本的启发式方法，
@@ -322,6 +330,32 @@ SPDX 3.0 JSON-LD 格式用 ``.jsonld``：
 或带有 SHA-256 后缀（``<filename>.<sha>``）。
 如果找到，blob 从缓存复制到 blob 路径；
 否则从其 URL 下载到 blob 路径。
+
+可以通过 ``blobs.mirrors`` 配置选项配置一个或多个下载镜像。
+其值是一个 JSON 对象，包含一个或多个键值对，
+其中每个键是一个远程 URL 前缀（字符串），
+每个值是一个镜像 URL 前缀（字符串）
+或镜像 URL 前缀列表（字符串数组）。
+
+某个远程 URL 前缀的单个镜像::
+
+  west config blobs.mirrors '{"https://github.com/": "https://example.com/github-mirror/"}'
+
+同一远程 URL 前缀的多个镜像，按列表顺序尝试::
+
+  west config blobs.mirrors '{
+    "https://github.com/": [
+      "https://example.com/github1-mirror/",
+      "https://example.com/github2-mirror/"
+    ]
+  }'
+
+对于每个 blob URL，所有远程 URL 前缀匹配的镜像都会被尝试，
+排序方式为*最长*（最具体）的匹配远程 URL 前缀优先尝试
+（类似 git 的 ``insteadOf``）；
+较短、较不具体的匹配镜像随后尝试。
+为同一远程 URL 前缀配置的镜像按列出顺序尝试。
+原始 URL 最后尝试，作为所有镜像都失败时的回退。
 
 .. _west-twister:
 

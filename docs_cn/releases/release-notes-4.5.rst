@@ -299,6 +299,12 @@ API 更改
 
     * ``stream_flash_erase_page()``
 
+* 跟踪
+
+  * ``_track_list_k_*`` 对象跟踪列表头、``SYS_PORT_TRACK_NEXT()`` 宏以及
+    :file:`include/zephyr/tracing/tracking.h` 头文件。对象跟踪现通过
+    :ref:`对象核心框架 <object_cores_api>` 枚举对象。
+
 * ZTest
 
     * ``CONFIG_ZTEST_SHUFFLE_SUITE_REPEAT_COUNT``
@@ -394,6 +400,16 @@ API 更改
 
   * 已将 :c:func:`lora_recv_duty_cycle` 重命名为 :c:func:`lora_recv_duty_cycle_async`，
     以与现有的同步/异步命名约定保持一致。
+
+* MCUmgr
+
+  * :c:type:`smp_transport_get_mtu_fn` 类型和 :c:struct:`smp_transport_api_t` 的
+    ``get_mtu`` 成员已被弃用，因为 SMP 层不使用它们。详见
+    :ref:`迁移指南 <migration_4.5>`。
+
+  * :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_UART_MTU` 和
+    :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_SHELL_MTU` 已被弃用，因为它们仅设置
+    已弃用的 ``get_mtu`` 回调返回的值。详见 :ref:`迁移指南 <migration_4.5>`。
 
 * Nordic
 
@@ -591,6 +607,7 @@ API 更改
 
   * 主机
 
+    * :c:func:`bt_att_get_max_notify_size`
     * :c:func:`bt_conn_take`
     * :c:func:`bt_conn_drop`
     * :c:func:`bt_id_reset_irk`

@@ -703,41 +703,27 @@ Locking may not be needed if multiple independent channels are available.
         ``emit(a ## b ## c, thread_id);``
 
 
-Object tracking
+对象跟踪
 ***************
 
-The kernel can also maintain lists of objects that can be used to track
-their usage. Currently, the following lists can be enabled::
+内核还可以跟踪系统中的内核对象。启用
+:kconfig:option:`CONFIG_TRACING_OBJECT_TRACKING` 会启用
+:ref:`对象核心框架 <object_cores_api>`，
+它枚举每种内核对象类型的对象。例如，要访问每个互斥锁，可以写::
 
-  struct k_timer *_track_list_k_timer;
-  struct k_mem_slab *_track_list_k_mem_slab;
-  struct k_sem *_track_list_k_sem;
-  struct k_mutex *_track_list_k_mutex;
-  struct k_stack *_track_list_k_stack;
-  struct k_msgq *_track_list_k_msgq;
-  struct k_mbox *_track_list_k_mbox;
-  struct k_pipe *_track_list_k_pipe;
-  struct k_queue *_track_list_k_queue;
-  struct k_event *_track_list_k_event;
+  static int visit_mutex(struct k_obj_core *obj_core, void *data)
+  {
+      struct k_mutex *mutex = CONTAINER_OF(obj_core, struct k_mutex, obj_core);
 
-Those global variables are the head of each list - they can be traversed
-with the help of macro ``SYS_PORT_TRACK_NEXT``. For instance, to traverse
-all initialized mutexes, one can write::
+      /* Do something */
 
-  struct k_mutex *cur = _track_list_k_mutex;
-  while (cur != NULL) {
-    /* Do something */
-
-    cur = SYS_PORT_TRACK_NEXT(cur);
+      return 0;
   }
 
-To enable object tracking, enable :kconfig:option:`CONFIG_TRACING_OBJECT_TRACKING`.
-Note that each list can be enabled or disabled via their tracing
-configuration. For example, to disable tracking of semaphores, one can
-disable :kconfig:option:`CONFIG_TRACING_SEMAPHORE`.
+  k_obj_type_walk_locked(k_obj_type_find(K_OBJ_TYPE_MUTEX_ID), visit_mutex, NULL);
 
-Object tracking is behind tracing configuration as it currently leverages
-tracing infrastructure to perform the tracking.
+每种对象类型可以通过其 ``CONFIG_OBJ_CORE_*`` 选项排除。
+:zephyr:code-sample:`object_cores` 示例可以启用对象跟踪来构建。
 
 API
 ***

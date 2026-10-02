@@ -1512,6 +1512,27 @@ Twister
   :c:enumerator:`K_OBJ_FUTEX` 已移除。任何用户可访问的内存
   都可以用作 futex 地址。futex 操作上不再可能发生 -EINVAL 错误。
 
+* :ref:`对象核心框架 <object_cores_api>` 不再通过对象内的节点将对象链接到
+  按类型的列表中。静态定义的对象就地枚举，运行时初始化的对象则从一个由
+  :kconfig:option:`CONFIG_OBJ_CORE_MAX_DYNAMIC_OBJECTS` 决定大小的有界注册表中
+  引用。:c:struct:`k_obj_core` 的 ``node`` 成员和 :c:struct:`k_obj_type` 的
+  ``list`` 成员已被移除；遍历这些列表的工具必须改用
+  :c:func:`k_obj_type_walk_locked` 或 :c:func:`k_obj_type_walk_unlocked`。
+  :c:macro:`K_OBJ_TYPE_DEFINE` 现在直接定义 :c:struct:`k_obj_type` 变量本身，
+  因此必须去掉对该变量的单独声明。位于线程栈或中断栈中的对象不再被注册，
+  且 :kconfig:option:`CONFIG_OBJ_CORE` 会选中
+  :kconfig:option:`CONFIG_THREAD_STACK_INFO`，为每个 :c:struct:`k_thread` 添加
+  栈信息字段。新增的 :kconfig:option:`CONFIG_OBJ_CORE_QUEUE`（默认启用）为每个
+  :c:struct:`k_queue` 添加一个对象核心；由于 FIFO 和 LIFO 内嵌队列，它们会同时
+  按自身的对象类型和队列类型被报告。
+
+* 对象跟踪（:kconfig:option:`CONFIG_TRACING_OBJECT_TRACKING`）现由对象核心框架
+  提供，该框架会选中它。``_track_list_k_*`` 列表头、``SYS_PORT_TRACK_NEXT()``
+  宏、``sys_track_*_init()`` 钩子以及 :file:`include/zephyr/tracing/tracking.h`
+  头文件已被移除。遍历跟踪列表的代码必须改用 :c:func:`k_obj_type_walk_locked`
+  或 :c:func:`k_obj_type_walk_unlocked`，配合 :c:func:`k_obj_type_find` 找到的
+  对象类型使用。
+
 开发板（补充）
 **************
 

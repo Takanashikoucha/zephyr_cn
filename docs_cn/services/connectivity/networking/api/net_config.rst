@@ -33,6 +33,27 @@
    ":kconfig:option:`CONFIG_NET_CONFIG_MY_IPV4_GW`","分配给默认网络接口的静态 IPv4 网关地址。"
    ":kconfig:option:`CONFIG_NET_CONFIG_PEER_IPV4_ADDR`","对端静态 IPv4 地址。这主要可用于应用程序可以连接到预定义主机的测试环境。"
 
+SNTP 时钟初始化
+*************************
+
+如果设置了 :kconfig:option:`CONFIG_NET_CONFIG_CLOCK_SNTP_INIT`，
+库还会从 SNTP 服务器初始化系统时钟，
+并可选地通过 :kconfig:option:`CONFIG_NET_CONFIG_SNTP_INIT_RESYNC` 保持同步。
+
+要查询的服务器按以下顺序查找：
+
+1. 运行时用 :c:func:`net_config_sntp_set_server` 设置的服务器。
+   这需要 :kconfig:option:`CONFIG_NET_CONFIG_SNTP_INIT_SERVER_RUNTIME`，
+   适用于仅在运行时才得知使用哪个时间服务器的应用程序，
+   例如在预配之后。
+2. 通过 DHCPv4 NTP 服务器选项收到的服务器，
+   如果设置了 :kconfig:option:`CONFIG_NET_CONFIG_SNTP_INIT_SERVER_USE_DHCPV4_OPTION`。
+3. :kconfig:option:`CONFIG_NET_CONFIG_SNTP_INIT_SERVER`，
+   如果设置了 :kconfig:option:`CONFIG_NET_CONFIG_CLOCK_SNTP_INIT`
+   但未启用 :kconfig:option:`CONFIG_NET_CONFIG_SNTP_INIT_SERVER_RUNTIME`
+   或 :kconfig:option:`CONFIG_NET_CONFIG_SNTP_INIT_SERVER_USE_DHCPV4_OPTION`，
+   则必须设置此项。
+
 使用示例
 ************
 
