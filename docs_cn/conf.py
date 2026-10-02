@@ -60,19 +60,46 @@ extensions = [
 # 注意：部分扩展依赖外部数据（manifest、boards 等），
 # 中文文档构建时可能不可用，故采用 try/except 逐个加载
 _zephyr_extensions = [
-    "zephyr.build_timer",
     "zephyr.kconfig",
     "zephyr.dtcompatible-role",
-    "zephyr.link-roles",
-    "zephyr.domain",
-    "zephyr.api_overview",
 ]
+# kconfig 扩展配置：不生成 Kconfig 数据库（中文文档不需要 kconfig:search 指令）
+kconfig_generate_db = False
 for _ext in _zephyr_extensions:
     try:
         import importlib
         importlib.import_module(_ext)
         extensions.append(_ext)
-    except ImportError:
+    except Exception:
+        pass
+
+# 手动注册 zephyr.domain 提供的角色（该扩展依赖 west/runners 等外部模块，
+# 中文文档构建时不可用；以下角色仅做文本高亮，不做交叉引用解析）
+def _setup(app):
+    from docutils import nodes
+
+    def _text_role(name, rawtext, text, lineno, inliner, opts=None):
+        node = nodes.emphasis(text, text)
+        return [node], []
+
+    _roles = [
+        "zephyr:board", "zephyr:code-sample", "zephyr:code-sample-category",
+        "zephyr:board-catalog", "zephyr:code-sample-listing",
+        "cmake:module", "cmake:command", "cmake:variable", "cmake:manual",
+        "kconfig:option-regex",
+        "zephyr_file", "zephyr_raw", "module_file",
+    ]
+    for _r in _roles:
+        app.add_role(_r, _text_role)
+
+def setup(app):
+    _setup(app)
+    # Monkey-patch zephyr.kconfig 的 kconfig_build_resources（该回调尝试导入
+    # runners 模块，中文文档构建时不可用）
+    try:
+        import zephyr.kconfig as _zk
+        _zk.kconfig_build_resources = lambda app: None
+    except Exception:
         pass
 
 # -- 主题 --------------------------------------------------------------------

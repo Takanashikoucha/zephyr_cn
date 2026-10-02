@@ -943,7 +943,6 @@ Bouffalolab Platforms:
     - will-tm
   files:
     - boards/**/*bflb*
-    - boards/**/*bflb*/
     - boards/aithinker/ai_*/
     - boards/doiting/
     - boards/others/bl704l_dvk/
@@ -957,9 +956,7 @@ Bouffalolab Platforms:
     - dts/riscv/bflb/
     - dts/bindings/*/bflb,*
     - soc/bflb/
-    - include/zephyr/**/*bflb*
     - scripts/west_commands/runners/bflb*
-    - samples/**/*bflb*/
   labels:
     - "platform: Bouffalo Lab"
 
@@ -4159,11 +4156,9 @@ Microchip MEC Platforms:
     - include/zephyr/*/*/*xec*
     - tests/boards/mec15xxevb_assy6853/
     - tests/boards/mec172xevb_assy6906/
-    - tests/**/boards/*mec*
     - dts/bindings/*/microchip,mec*
     - dts/bindings/*/microchip,xec*
     - dts/bindings/*/microchip,dmec*
-    - samples/**/boards/mec*
   labels:
     - "platform: Microchip MEC"
   tests:
@@ -4189,12 +4184,7 @@ Microchip PIC32 Platforms:
     - dts/bindings/*/microchip,sam*
     - dts/bindings/*/microchip,*-g*
     - drivers/*/*mchp*
-    - include/zephyr/**/mchp*
-    - samples/**/boards/sam_*
     - soc/microchip/pic32*/
-    - tests/**/boards/pic32*
-    - tests/**/boards/sam_*
-    - tests/**/microchip/
   labels:
     - "platform: Microchip PIC32"
 
@@ -4294,10 +4284,7 @@ Microchip Standalone Devices:
     - dts/bindings/*/microchip,enc*
     - dts/bindings/*/microchip,mcp*
     - dts/bindings/*/microchip,tcn*
-    - dts/bindings/**/microchip,ksz*
     - dts/bindings/**/microchip,lan*
-    - dts/bindings/**/microchip,t1s*
-    - dts/bindings/**/microchip,vsc*
   labels:
     - "platform: Microchip"
 
@@ -4453,10 +4440,6 @@ NXP Platform Wireless:
     - drivers/hdlc_rcp_if/*nxp*
     - drivers/ieee802154/ieee802154_kw41z.c
     - drivers/wifi/nxp/
-    - samples/bluetooth/**/*rw*
-    - samples/net/**/*mcxw*
-    - samples/net/**/*nxp*
-    - samples/net/**/*rw*
     - soc/nxp/mcx/mcxw/
     - soc/nxp/rw/
   file-groups:
@@ -4755,7 +4738,6 @@ Networking:
     - doc/services/connectivity/networking/
     - tests/net/
     - tests/unit/net_timeout/
-    - .github/workflows/net_conformance.yml
   files-exclude:
     - doc/services/connectivity/networking/api/gptp.rst
     - doc/services/connectivity/networking/api/ieee802154.rst
@@ -8008,7 +7990,6 @@ nRF BSIM:
     - tests/boards/nrf52_bsim/
     - tests/bsim/
     - doc/develop/test/bsim.rst
-    - .github/workflows/bsim-tests*
   files-regex-exclude:
     - tests\/bsim\/.*\/.*\.([ch]|conf)
     - tests\/bsim\/.*\/(CMakeLists|Kconfig).*
