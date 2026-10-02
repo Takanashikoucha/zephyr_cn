@@ -67,3 +67,4 @@ Zephyr 项目文档
    samples/index.rst
    boards/index.rst
    releases/index.rst
+   源码阅读指南.rst

@@ -15,13 +15,17 @@
 指南目录
 ********
 
-- **01-快速入门**：如何开始读 Zephyr 源码（★）
-- **02-内核架构**：``kernel/`` 目录导读（★★）
-- **03-调度器**：线程调度源码走读（★★★）
-- **04-内存管理**：内存子系统导读（★★★）
-- **05-设备驱动模型**：驱动框架导读（★★★）
-- **06-构建系统**：CMake + Kconfig 导读（★★）
-- **07-子系统**：``subsys/`` 目录导读（★★）
+.. raw:: html
+
+   <ul>
+     <li><a href="/guide/01-快速入门.html"><strong>01-快速入门</strong>：如何开始读 Zephyr 源码（★）</a></li>
+     <li><a href="/guide/02-内核架构.html"><strong>02-内核架构</strong>：``kernel/`` 目录导读（★★）</a></li>
+     <li><a href="/guide/03-调度器.html"><strong>03-调度器</strong>：线程调度源码走读（★★★）</a></li>
+     <li><a href="/guide/04-内存管理.html"><strong>04-内存管理</strong>：内存子系统导读（★★★）</a></li>
+     <li><a href="/guide/05-设备驱动模型.html"><strong>05-设备驱动模型</strong>：驱动框架导读（★★★）</a></li>
+     <li><a href="/guide/06-构建系统.html"><strong>06-构建系统</strong>：CMake + Kconfig 导读（★★）</a></li>
+     <li><a href="/guide/07-子系统.html"><strong>07-子系统</strong>：``subsys/`` 目录导读（★★）</a></li>
+   </ul>
 
 .. tip::
 
