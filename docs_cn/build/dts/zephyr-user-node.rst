@@ -4,65 +4,22 @@
 ``/zephyr,user`` 节点
 #########################
 
-Zephyr 的设备树脚本将 ``/zephyr,user`` 节点作为特殊情况处理：
-你可以在其中放入基本上任意的属性，
-无需编写绑定即可获取其值。
-它旨在作为
-仅需要少量简单属性时的
-便捷容器。
-类型从
-分配给
-属性的
-值推断。
+Zephyr 的设备树脚本将 ``/zephyr,user`` 节点作为特殊情况处理：你可以在其中放入
+基本上任意的属性，无需编写绑定即可获取其值。它旨在作为仅需要少量简单属性时的
+便捷容器。类型从分配给属性的值推断。
 
 .. note::
 
-   此节点
-   用于
-   示例
-   代码
-   和
-   用户
-   应用。
-   不应
-   在
-   上游
-   Zephyr 源
-   代码
-   （设备
-   驱动、
-   子
-   系统等）
-   中
-   使用。
+   此节点用于示例代码和用户应用。不应在上游 Zephyr 源代码（设备驱动、子系统
+   等）中使用。
 
 简单值
 *************
 
-如果
-你
-想
-在
-构建
-时
-通过
-设备树
-配置
-数值
-或
-数组
-值，
-可以
-将其
-存储
-在
+如果你想让数值或数组值在构建时可通过设备树配置，可以将其存储在
 ``/zephyr,user`` 中。
 
-例如，
-对于
-此
-设备树
-覆盖：
+例如，对于此设备树覆盖：
 
 .. code-block:: devicetree
 
@@ -77,17 +34,7 @@ Zephyr 的设备树脚本将 ``/zephyr,user`` 节点作为特殊情况处理：
    	};
    };
 
-你可以
-像
-这样
-在
-C/C++ 代码
-中
-获取
-上面
-的
-属性
-值：
+你可以像这样在 C/C++ 代码中获取上面的属性值：
 
 .. code-block:: C
 
@@ -103,33 +50,10 @@ C/C++ 代码
 设备
 *******
 
-如果
-你
-想
-在
-简单
-情况
-下
-使用
-设备树
-覆盖
-重新
-配置
-应用
-使用
-的
-设备，
-可以
-在
-``/zephyr,user`` 中
-存储
-:ref:`phandle <dt-phandles>`。
+如果你想能在简单情况下使用设备树覆盖重新配置应用使用的设备，可以在
+``/zephyr,user`` 中存储 :ref:`phandle <dt-phandles>`。
 
-例如，
-对于
-此
-设备树
-覆盖：
+例如，对于此设备树覆盖：
 
 .. code-block:: devicetree
 
@@ -137,22 +61,10 @@ C/C++ 代码
    	zephyr,user {
    		handle = <&gpio0>;
    		handles = <&gpio0>, <&gpio1>;
-        };
+         };
    };
 
-你可以
-像
-这样
-将
-``handle`` 和
-``handles`` 属性
-中
-的
-phandle
-转换
-为
-设备
-指针：
+你可以像这样将 ``handle`` 和 ``handles`` 属性中的 phandle 转换为设备指针：
 
 .. code-block:: C
 
@@ -179,50 +91,14 @@ phandle
 GPIO
 *****
 
-``/zephyr,user`` 节点
-是
-存储
-你
-想
-用
-设备树
-覆盖
-重新
-配置
-的
-应用
-特定
-GPIO 的
-便捷
-位置。
+``/zephyr,user`` 节点是存储你想用设备树覆盖重新配置的应用特定 GPIO 的便捷位置。
 
 .. note::
 
-   所有
-   值
-   包含
-   至少
-   一个
-   phandle
-   和
-   一个
-   数字
-   的
-   属性
-   都
-   会
-   被
-   推断
-   为
-   phandle-array。
-   例如
-   ``<&adc0 1>``。
+   所有值包含至少一个 phandle 和一个数字的属性都会被推断为 phandle-array。
+   例如 ``<&adc0 1>``。
 
-例如，
-对于
-此
-设备树
-覆盖：
+例如，对于此设备树覆盖：
 
 .. code-block:: devicetree
 
@@ -231,23 +107,11 @@ GPIO 的
    / {
    	zephyr,user {
    		signal-gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
-        };
+         };
    };
 
-你可以
-将
-``signal-gpios`` 中
-定义
-的
-引脚
-转换
-为
-``struct
-gpio_dt_spec``，
-然后
-像
-这样
-使用：
+你可以在源代码中将 ``signal-gpios`` 中定义的引脚转换为 ``struct gpio_dt_spec``，
+然后像这样使用：
 
 .. code-block:: C
 
@@ -264,9 +128,5 @@ gpio_dt_spec``，
    /* Set the pin to its active level */
    gpio_pin_set_dt(&signal, 1);
 
-（这些
-API 的
-细节
-见
-:c:struct:`gpio_dt_spec`、:c:macro:`GPIO_DT_SPEC_GET` 和
+（这些 API 的细节见 :c:struct:`gpio_dt_spec`、:c:macro:`GPIO_DT_SPEC_GET` 和
 :c:func:`gpio_pin_configure_dt`。）

@@ -1,288 +1,49 @@
-.. _bluetooth
-mesh
-heartbeat:
+.. _bluetooth_mesh_heartbeat:
 
-Heartbeat
+心跳
 #########
 
-Heartbeat
-feature
-提供
-monitor
-Bluetooth
-Mesh
-nodes
-和
-determine
-nodes
-之间
-distance
-的
-functionality。
+心跳功能提供监控蓝牙 Mesh 节点并确定节点之间距离的功能。
 
-The
-Heartbeat
-feature
-is
-configured
-through
-the
-:ref:`bluetooth_mesh_models_cfg_srv`
-model.
+心跳功能通过 :ref:`bluetooth_mesh_models_cfg_srv` 模型配置。
 
-Heartbeat
-messages
+心跳消息
 ******************
 
-Heartbeat
-messages
-作为
-transport
-control
-packets
-通过
-network
-发送
-只
-用
-network
-key
-encrypted。
-Heartbeat
-messages
-包含
-发送
-message
-时
-用的
-原始
-Time
-To
-Live
-（TTL）
-value
-和
-node
-上
-active
-features
-的
-bitfield。
-通过
-这
-个
-receiving
-node
-可以
-determine
-message
-到达
-receiver
-之前
-经过
-了
-多少
-relays
-以及
-node
-支持
-什么
-features。
+心跳消息作为传输控制报文通过网络发送，并且仅使用网络密钥加密。心跳消息包含发送消息时使用的原始生存时间（TTL）值，以及节点上激活特性的位域。通过这种方式，接收节点可以确定消息到达接收者之前经过了多少次中继，以及该节点支持哪些特性。
 
-Available
-Heartbeat
-feature
-flags:
+可用心跳特性标志：
 
-:c:macro:`BT_MESH_FEAT_RELAY`
-:c:macro:`BT_MESH_FEAT_PROXY`
-:c:macro:`BT_MESH_FEAT_FRIEND`
-:c:macro:`BT_MESH_FEAT_LOW_POWER`
+- :c:macro:`BT_MESH_FEAT_RELAY`
+- :c:macro:`BT_MESH_FEAT_PROXY`
+- :c:macro:`BT_MESH_FEAT_FRIEND`
+- :c:macro:`BT_MESH_FEAT_LOW_POWER`
 
-Heartbeat
-publication
+心跳发布
 *********************
 
-Heartbeat
-publication
-is
-controlled
-through
-the
-Configuration
-models、
-and
-can
-be
-triggered
-in
-two
-ways:
+心跳发布通过配置模型控制，可以通过两种方式触发：
 
-Periodic
-publication
-The
-node
-publishes
-a
-new
-Heartbeat
-message
-at
-regular
-intervals.
-The
-publication
-can
-be
-configured
-to
-stop
-after
-a
-certain
-number
-of
-messages、
-or
-continue
-indefinitely.
+定期发布
+   节点按固定间隔发布新的心跳消息。发布可以配置为在发布一定数量的消息后停止，也可以无限期继续。
 
-Triggered
-publication
-The
-node
-publishes
-a
-new
-Heartbeat
-message
-every
-time
-a
-feature
-changes.
-The
-set
-of
-features
-that
-can
-trigger
-the
-publication
-is
-configurable.
+触发发布
+   每当特性发生变化时，节点都会发布新的心跳消息。可以触发发布的特性集合是可配置的。
 
-The
-two
-publication
-types
-can
-be
-combined.
+这两种发布类型可以组合使用。
 
-Heartbeat
-subscription
+心跳订阅
 **********************
 
-A
-node
-can
-be
-configured
-to
-subscribe
-to
-Heartbeat
-messages
-from
-one
-node
-at
-the
-time.
-To
-receive
-a
-Heartbeat
-message、
-both
-the
-source
-and
-destination
-must
-match
-the
-configured
-subscription
-parameters.
+可以配置节点一次订阅来自一个节点的心跳消息。要接收心跳消息，源和目的都必须匹配已配置的订阅参数。
 
-Heartbeat
-subscription
-is
-always
-time
-limited、
-and
-throughout
-the
-subscription
-period、
-the
-node
-keeps
-track
-of
-the
-number
-of
-received
-Heartbeats
-as
-well
-as
-the
-minimum
-and
-maximum
-received
-hop
-count.
+心跳订阅始终限时，在整个订阅期间，节点会跟踪接收到的心跳数量，以及接收到的最小和最大跳数。
 
-All
-Heartbeats
-received
-with
-the
-configured
-subscription
-parameters
-are
-passed
-to
-the
-:cpp:member:`bt_mesh_hb_cb::recv`
-event
-handler.
+所有使用已配置订阅参数接收到的心跳都会传递给 :cpp:member:`bt_mesh_hb_cb::recv` 事件处理程序。
 
-When
-the
-Heartbeat
-subscription
-period
-ends、
-the
-:cpp:member:`bt_mesh_hb_cb::sub_end`
-callback
-gets
-called.
+当心跳订阅期结束时，会调用 :cpp:member:`bt_mesh_hb_cb::sub_end` 回调。
 
-API
-reference
+API 参考
 **************
 
-..
-doxygengroup::
-bt_mesh_heartbeat
+.. doxygengroup:: bt_mesh_heartbeat

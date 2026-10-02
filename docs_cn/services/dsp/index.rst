@@ -1,97 +1,89 @@
 .. _zdsp_api:
 
-Digital Signal Processing (DSP)
+数字信号处理（DSP）
 ###############################
 
 .. contents::
     :local:
     :depth: 2
 
-DSP API 提供
-architecture agnostic 的 signal processing 方式。
-当前（API 在任何
-architecture 上工作（但很可能不
-optimized。各
-architectures 的状态如下：
+DSP API 提供了一种架构无关的信号处理方式。
+当前，该 API 可在任何架构上工作，但很可能未
+做优化。各架构的状态如下：
 
-============ =============
-Architecture Status
-============ =============
-ARC          Optimized
-ARM          Optimized
-ARM64        Optimized
-MIPS         Unoptimized
-POSIX        Unoptimized
-RISCV        Unoptimized
-RISCV64      Unoptimized
-SPARC        Unoptimized
-X86          Unoptimized
-XTENSA       Unoptimized
-============ =============
+============= =============
+架构          状态
+============= =============
+ARC          已优化
+ARM          已优化
+ARM64        已优化
+MIPS         未优化
+POSIX        未优化
+RISCV        未优化
+RISCV64      未优化
+SPARC        未优化
+X86          未优化
+XTENSA       未优化
+============= =============
 
-Using zDSP
+使用 zDSP
 **********
 
-zDSP 提供
-application 自动选择的
-various backend options。默认（包含
-CMSIS module 将启用
-所有
-architectures 使用
-zDSP APIs。可通过设置::
+zDSP 提供多种后端选项，由应用自动选择。
+默认情况下，包含 CMSIS 模块将启用所有
+架构使用 zDSP API。可通过设置::
 
 	CONFIG_CMSIS_DSP=y
 
 完成。
 
-若 application 需
-某些额外
-customization（可
-启用 :kconfig:option:`CONFIG_DSP_BACKEND_CUSTOM`（这意味着
-application 负责
+若应用需要某些额外
+自定义，可
+启用 :kconfig:option:`CONFIG_DSP_BACKEND_CUSTOM`，这意味着
+应用负责
 提供
 zDSP
-library 的
-implementation。
+库的
+实现。
 
-Optimizing for your architecture
+为你的架构做优化
 ********************************
 
 若你的
-architecture 显示为
-``Unoptimized``（可
+架构显示为
+``未优化``，可
 添加
-新
+新的
 zDSP
-backend 以
+后端以
 更好地
 支持
-它。为此（应
+它。为此，应
 向
 :file:`subsys/dsp/Kconfig` 添加
-新
+新的
 Kconfig
-option（连同
+选项，连同
 所需
-dependencies（并将
+依赖项，并将
 ``DSP_BACKEND``
 Kconfig
 choice 的
 ``default`` 设置。
 
-接下来（应
+接下来，应
 在
 ``subsys/dsp/<backend>/`` 添加
-implementation（并在
-:file:`subsys/dsp/CMakeLists.txt` link 入。要
+实现，并在
+:file:`subsys/dsp/CMakeLists.txt` 链接入。要
 添加
-architecture-specific
-attributes（其
+架构特定
+属性，其
 相应
 Kconfig
-option 应
+选项应
 添加到
-:file:`subsys/dsp/Kconfig`（并
+:file:`subsys/dsp/Kconfig`，并
 用
 它们
 更新
@@ -99,7 +91,7 @@ option 应
 ``DSP_DATA`` 和
 ``DSP_STATIC_DATA``。
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: math_dsp

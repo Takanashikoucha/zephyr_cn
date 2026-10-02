@@ -1,33 +1,55 @@
 .. _net_capture_interface:
 
-Network Packet Capture
+网络数据包捕获
 ######################
 
 .. contents::
     :local:
     :depth: 2
 
-Overview
+概述
 ********
 
-``net_capture`` API 允许用户监控 Zephyr network interfaces 之一的 network traffic 并将该 traffic 发送到 external system 以分析。Monitoring 可手动使用 ``net-shell`` 设置或自动使用 ``net_capture`` API。
+``net_capture`` API 允许用户监控 Zephyr 网络接口之一的
+网络流量，并将该流量发送到
+外部系统进行分析。监控可以
+手动使用 ``net-shell`` 设置，也可以使用 ``net_capture`` API 自动设置。
 
-Cooked Mode Capture
+Cooked 模式捕获
 *******************
 
-若 capturing 已启用并配置（系统将自动捕获给定 network interface 的 network traffic。若想在无 network interface 参与时捕获 network data（则需使用 cooked mode capture API。
+如果捕获已启用并配置，系统将自动捕获
+给定网络接口的网络流量。如果希望在
+没有网络接口参与的情况下捕获网络数据，则需要使用
+cooked 模式捕获 API。
 
-Cooked mode capture 中（可捕获任意 network packets（且无需 network interface 参与。例如（PPP 中低层 HDLC packets 可被捕获（因为使用正常 network interface based capture 时 HDLC L2 layer data 被剥离。也可捕获 CANBUS 或 Bluetooth network data（尽管目前 network stack 中无支持捕获它们的。
+在 cooked 模式捕获中，可以捕获任意网络数据包，
+且无需网络接口参与。例如，PPP 中的低层 HDLC
+数据包可以被捕获，因为使用
+基于普通网络接口的捕获时，HDLC L2 层数据会被剥离。此外，CANBUS 或
+Bluetooth 网络数据也可以被捕获，尽管目前
+网络协议栈中尚无捕获这些数据的
+支持。
 
-Cooked mode capture 如此工作：
+cooked 模式捕获的工作方式如下：
 
-* 创建 ``any`` network interface。它作为 sink（cooked mode 捕获的 packets 由 cooked mode capture API 写入。
-* 在此 ``any`` interface 上附加 ``cooked`` virtual network interface。
-* 须用 network interface configuration API 配置 ``cooked`` interface 以捕获特定 L2 packet 类型。
-* 使用 cooked mode capture API 时（caller 须指定捕获 data 的 layer 2 protocol 类型。Cooked mode capture API 然后能确定收到此类 L2 packet 时捕获什么。
-* 然后设置 network packet capturing infrastructure（使 ``cooked`` interface 标记为 captured network interface。通过 ``any`` interface 由 ``cooked`` interface 收到的 packets 然后自动放到 capture IP tunnel 并发送到 remote host 以分析。
+* 创建一个 ``any`` 网络接口。它充当一个汇聚点（sink），
+  cooked 模式捕获的数据包由 cooked 模式捕获 API 写入该接口。
+* 一个 ``cooked`` 虚拟网络接口被附加在该 ``any``
+  接口之上。
+* 必须使用网络接口配置 API，将 ``cooked`` 接口
+  配置为捕获特定 L2 数据包类型。
+* 使用 cooked 模式捕获 API 时，调用者必须指定
+  所捕获数据的第 2 层协议类型。随后 cooked 模式捕获 API
+  就能确定在收到此类 L2 数据包时捕获什么。
+* 然后配置网络数据包捕获基础设施，
+  将 ``cooked`` 接口标记为被捕获的网络接口。
+  通过 ``any`` 接口由 ``cooked`` 接口接收到的
+  数据包随后被自动放入捕获 IP 隧道，
+  并发送到远程主机进行分析。
 
-例如（在 sample capture application 中（创建这些 network interfaces：
+例如，在示例捕获应用中，
+创建了以下网络接口：
 
 .. code-block:: c
 
@@ -62,19 +84,29 @@ Cooked mode capture 如此工作：
 	     fe80::efed:6dff:fef2:b1df autoconf preferred infinite
 	     fe80::56da:1eff:fe5e:bc02 autoconf preferred infinite
 
-此示例中（``192.0.2.2`` 为终止 tunnel 的 host 的 outer end point 的 address。Zephyr 用此 address 选择用于 tunnel 的 internal interface。此示例中为 interface 3。
+在此示例中，``192.0.2.2`` 是
+终止该隧道的宿主机的外层端点地址。Zephyr 使用该地址
+选择用于隧道的内部接口。在此示例中为接口 3。
 
-Interface 2 为运行在 interface 1 之上的 virtual interface。Cooked 捕获的 packets 由 capture API 写入 sink interface 1。Packets 传播到 interface 2（因其链接到第一个 interface。``net capture enable 2`` net-shell 命令将使发送到 interface 2 的 packets 写入 capture interface 4（其然后 capsulates packets 并通过 Ethernet interface 3 通过 tunnel 发送到 peer。
+接口 2 是运行在接口 1 之上的虚拟接口。
+cooked 捕获的数据包由捕获 API 写入汇聚接口 1。
+由于接口 2 链接到第一个接口，数据包会
+传播到接口 2。``net capture enable 2`` net-shell 命令会使
+发送到接口 2 的数据包被写入捕获接口 4，
+接口 4 随后封装这些数据包，并通过以太网接口 3 通过隧道
+发送到对端。
 
-若在 sample :zephyr_file:`samples/net/capture/overlay-tunnel.conf` 文件中更改 addresses（上述 IP addresses 可能改变。
+如果在示例 :zephyr_file:`samples/net/capture/overlay-tunnel.conf` 文件中更改地址，
+上述 IP 地址可能会改变。
 
-Sample usage
+示例用法
 ************
 
-参见 :zephyr:code-sample:`net-capture` sample application 和 :ref:`network_monitoring` 以了解细节。
+参见 :zephyr:code-sample:`net-capture` 示例应用和
+:ref:`network_monitoring` 了解详情。
 
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: net_capture

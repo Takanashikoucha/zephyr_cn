@@ -3,34 +3,7 @@
 Input / Output
 ##############
 
-此
-section
-涵盖
-runtime
-与
-outside
-world
-交互
-的
-services：
-从
-input
-devices
-读取、
-向
-console
-写入、
-format
-output（并
-在
-application
-code
-和
-hardware
-间
-高效
-移动
-data。
+本节介绍运行时与外部世界交互的服务：从输入设备读取、向控制台写入、格式化输出，以及在应用代码与硬件之间高效地移动数据。
 
 .. toctree::
    :maxdepth: 1

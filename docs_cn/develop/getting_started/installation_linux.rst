@@ -1,7 +1,7 @@
 .. _installation_linux:
 
 安装 Linux 主机依赖
-###################
+###############################
 
 以下 Linux 发行版有可用的文档：
 
@@ -55,7 +55,7 @@
 .. _linux_requirements:
 
 安装要求和依赖
-**************
+*************************************
 
 .. NOTE FOR DOCS AUTHORS: DO NOT PUT DOCUMENTATION BUILD DEPENDENCIES HERE.
 
@@ -179,7 +179,7 @@ CMake
 （使用 ``whereis cmake`` 查找其他已安装的版本。）
 
 DTC（Device Tree Compiler，设备树编译器）
-========================================
+=========================
 
 需要一个 :ref:`较新的 DTC 版本 <install-required-tools>`。
 使用 ``dtc --version`` 检查你当前的版本。
@@ -201,7 +201,7 @@ Python
 .. _pyenv: https://github.com/pyenv/pyenv
 
 安装 Zephyr 软件开发套件（SDK）
-******************************
+*************************************************
 
 Zephyr 软件开发套件（SDK）包含 Zephyr 所支持的每种架构的工具链。
 它还包括额外的主机工具，例如定制 QEMU 和 OpenOCD。
@@ -216,7 +216,7 @@ Zephyr 软件开发套件（SDK）包含 Zephyr 所支持的每种架构的工�
 .. _sdkless_builds:
 
 在 Linux 上不使用 Zephyr SDK 构建
-********************************
+****************************************
 
 Zephyr SDK 是为了方便和易用而提供的。
 它为所有 Zephyr 目标架构提供工具链，

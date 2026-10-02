@@ -1,489 +1,144 @@
-.. _fido2
-api:
+.. _fido2_api:
 
-FIDO2
-Authenticator
+FIDO2 认证器
 ###################
 
-Overview
+概述
 ********
 
-FIDO2
-authenticator
-subsystem
-实现
-`FIDO2
-CTAP2
-Specification`_
-（Client
-to
-Authenticator
-Protocol）
-使
-Zephyr
-device
-能
-作为
-passwordless
-authentication
-的
-hardware
-security
-key。
-Subsystem
-可以
-用
-:kconfig:option:`CONFIG_FIDO2`
-option
-启用。
+FIDO2 认证器子系统实现了 `FIDO2 CTAP2 规范`_
+（客户端到认证器协议），允许 Zephyr 设备作为
+无密码认证的硬件安全密钥。该子系统
+可通过 :kconfig:option:`CONFIG_FIDO2` 选项启用。
 
-FIDO2
-security
-keys
-与
-`WebAuthn
-Specification`_
-web
-standard
-一起
-使用。
-一
-个
-relying
-party
-（website
-或
-service）
-通过
-client
-（browser
-或
-OS
-platform）
-与
-authenticator
-交互
-以
-注册
-和
-验证
-用户
-credentials。
-Authenticator
-使用
-on
-device
-keys
-执行
-cryptographic
-operations、
-这些
-keys
-永远
-不
-离开
-hardware。
+FIDO2 安全密钥与 `WebAuthn 规范`_ Web 标准配合使用。
+依赖方（网站或服务）通过客户端（浏览器或操作系统平台）与认证器交互，
+以注册和验证用户凭据。
+认证器使用设备上永不出硬件的密钥执行加密操作。
 
-Subsystem
-目前
-支持
-以下
-CTAP2
-commands:
+该子系统当前支持以下 CTAP2 命令：
 
--
-``authenticatorMakeCredential``
--
-``authenticatorGetAssertion``
--
-``authenticatorGetInfo``
--
-``authenticatorClientPIN``
--
-``authenticatorGetNextAssertion``
--
-``authenticatorSelection``
+- ``authenticatorMakeCredential``
+- ``authenticatorGetAssertion``
+- ``authenticatorGetInfo``
+- ``authenticatorClientPIN``
+- ``authenticatorGetNextAssertion``
+- ``authenticatorSelection``
 
-Architecture
+架构
 ************
 
-Subsystem
-组织
-为
-pluggable
-backend
-components、
-每个
-都
-可以
-在
-build
-time
-通过
-Kconfig
-选择:
+该子系统组织为可插拔后端组件，每个组件
+可通过 Kconfig 在构建时选择：
 
-Transport
-Handles
-wire
-protocol
-communication
-between
-the
-host
-and
-the
-authenticator.
-Transports
-are
-registered
-using
-the
-:c:macro:`FIDO2_TRANSPORT_DEFINE`
-macro
-and
-are
-iterated
-at
-startup.
-Available
-transports:
+传输
+   处理主机和认证器之间的线路协议通信。
+   传输使用 :c:macro:`FIDO2_TRANSPORT_DEFINE` 宏注册
+   并在启动时迭代。
+   可用传输：
 
--
-**USB
-HID
-（CTAPHID）**
-—
-:kconfig:option:`CONFIG_FIDO2_TRANSPORT_USB_HID`
--
-**Bluetooth
-LE
-（CTAPBLE）**
-—
-:kconfig:option:`CONFIG_FIDO2_TRANSPORT_BLE`
+   - **USB HID（CTAPHID）** — :kconfig:option:`CONFIG_FIDO2_TRANSPORT_USB_HID`
+   - **蓝牙低功耗（CTAPBLE）** — :kconfig:option:`CONFIG_FIDO2_TRANSPORT_BLE`
 
-User
-Presence
-（UP）
-Confirms
-that
-a
-human
-is
-physically
-present.
-Backends
-are
-selected
-via
-:kconfig:option:`CONFIG_FIDO2_UP_BACKEND`:
+用户在场（UP）
+   确认人类物理在场。后端通过
+   :kconfig:option:`CONFIG_FIDO2_UP_BACKEND` 选择：
 
--
-**Input
-device**
-—
-:kconfig:option:`CONFIG_FIDO2_UP_INPUT`
--
-**Always
-approve**
-—
-:kconfig:option:`CONFIG_FIDO2_UP_ALWAYS`
--
-**Custom**
-—
-:kconfig:option:`CONFIG_FIDO2_UP_CUSTOM`
-（application
-provided）
+   - **输入设备** — :kconfig:option:`CONFIG_FIDO2_UP_INPUT`
+   - **始终批准** — :kconfig:option:`CONFIG_FIDO2_UP_ALWAYS`
+   - **自定义** — :kconfig:option:`CONFIG_FIDO2_UP_CUSTOM`（应用程序提供）
 
-Credential
-Storage
-Persists
-discoverable
-（resident）
-credentials.
-Backends
-are
-selected
-via
-:kconfig:option:`CONFIG_FIDO2_STORAGE_BACKEND`:
+凭据存储
+   持久化可发现（驻留）凭据。后端
+   通过 :kconfig:option:`CONFIG_FIDO2_STORAGE_BACKEND` 选择：
 
--
-**Settings
-subsystem**
-—
-:kconfig:option:`CONFIG_FIDO2_STORAGE_SETTINGS`
--
-**None**
-—
-:kconfig:option:`CONFIG_FIDO2_STORAGE_NONE`
-（non
-discoverable
-credentials
-only）
+   - **设置子系统** — :kconfig:option:`CONFIG_FIDO2_STORAGE_SETTINGS`
+   - **无** — :kconfig:option:`CONFIG_FIDO2_STORAGE_NONE`（仅不可发现凭据）
 
-Attestation
-Signs
-newly
-created
-credentials
-to
-prove
-their
-origin.
-Backends
-are
-selected
-via
-:kconfig:option:`CONFIG_FIDO2_ATTESTATION_BACKEND`:
+证明
+   对新创建的凭据进行签名以证明其来源。后端通过
+   :kconfig:option:`CONFIG_FIDO2_ATTESTATION_BACKEND` 选择：
 
--
-**Self
-attestation**
-—
-:kconfig:option:`CONFIG_FIDO2_ATTESTATION_SELF`
-（default）
--
-**None**
-—
-:kconfig:option:`CONFIG_FIDO2_ATTESTATION_NONE`
--
-**Custom**
-—
-:kconfig:option:`CONFIG_FIDO2_ATTESTATION_CUSTOM`
-（application
-provided）
+   - **自证明** — :kconfig:option:`CONFIG_FIDO2_ATTESTATION_SELF`（默认）
+   - **无** — :kconfig:option:`CONFIG_FIDO2_ATTESTATION_NONE`
+   - **自定义** — :kconfig:option:`CONFIG_FIDO2_ATTESTATION_CUSTOM`（应用程序提供）
 
-Usage
+使用
 *****
 
-To
-use
-the
-FIDO2
-subsystem、
-include
-the
-main
-header:
+要使用 FIDO2 子系统，包含主头文件：
 
-..
-code
-block::
-c
+.. code-block:: c
 
-#include
-<zephyr/authentication/fido2/fido2.h>
+   #include <zephyr/authentication/fido2/fido2.h>
 
-Basic
-Initialization
+基本初始化
 ====================
 
-At
-least
-one
-transport
-must
-be
-enabled
-for
-the
-authenticator
-to
-communicate
-with
-a
-host.
+认证器必须至少启用一个传输才能与主机通信。
 
-See
-:zephyr:code
-sample:`fido2`
-for
-a
-complete
-initialization
-sequence.
+参见 :zephyr:code-sample:`fido2` 了解完整初始化序列。
 
-Runtime
-State
-Monitoring
+运行时状态监控
 ========================
 
-The
-subsystem
-exposes
-a
-runtime
-state
-callback
-that
-applications
-can
-use
-to
-drive
-status
-indicators
-such
-as
-LEDs:
+该子系统暴露一个运行时状态回调，应用程序可用于
+驱动 LED 等状态指示器：
 
-..
-code
-block::
-c
+.. code-block:: c
 
-#include
-<zephyr/authentication/fido2/fido2.h>
+   #include <zephyr/authentication/fido2/fido2.h>
 
-static
-void
-on
-state
-change（enum
-fido2
-runtime
-state
-state、
-void
-*user
-data）
-{
-switch
-（state）
-{
-case
-FIDO2
-RUNTIME
-STATE
-IDLE:
-/*
-LED
-off
-*/
-break;
-case
-FIDO2
-RUNTIME
-STATE
-WAITING
-USER
-PRESENCE:
-/*
-Blink
-LED
-*/
-break;
-case
-FIDO2
-RUNTIME
-STATE
-PROCESSING:
-/*
-LED
-on
-solid
-*/
-break;
-default:
-break;
-}
-}
+   static void on_state_change(enum fido2_runtime_state state, void *user_data)
+   {
+       switch (state) {
+       case FIDO2_RUNTIME_STATE_IDLE:
+           /* LED 关闭 */
+           break;
+       case FIDO2_RUNTIME_STATE_WAITING_USER_PRESENCE:
+           /* LED 闪烁 */
+           break;
+       case FIDO2_RUNTIME_STATE_PROCESSING:
+           /* LED 常亮 */
+           break;
+       default:
+           break;
+       }
+   }
 
-fido2
-set
-state
-callback（on
-state
-change、
-NULL）;
+   fido2_set_state_callback(on_state_change, NULL);
 
-Extensions
+扩展
 **********
 
-CTAP2
-extensions
-are
-not
-implemented
-yet.
-The
-following
-Kconfig
-options
-exist
-for
-future
-implementation:
+CTAP2 扩展尚未实现。以下 Kconfig 选项
+供将来实现使用：
 
--
-**credProtect**
-—
-:kconfig:option:`CONFIG_FIDO2_EXT_CRED_PROTECT`
--
-**hmac
-secret**
-—
-:kconfig:option:`CONFIG_FIDO2_EXT_HMAC_SECRET`
--
-**largeBlobKey**
-—
-:kconfig:option:`CONFIG_FIDO2_EXT_LARGE_BLOB_KEY`
--
-**credBlob**
-—
-:kconfig:option:`CONFIG_FIDO2_EXT_CRED_BLOB`
--
-**thirdPartyPayment**
-—
-:kconfig:option:`CONFIG_FIDO2_EXT_THIRD_PARTY_PAYMENT`
+- **credProtect** — :kconfig:option:`CONFIG_FIDO2_EXT_CRED_PROTECT`
+- **hmac-secret** — :kconfig:option:`CONFIG_FIDO2_EXT_HMAC_SECRET`
+- **largeBlobKey** — :kconfig:option:`CONFIG_FIDO2_EXT_LARGE_BLOB_KEY`
+- **credBlob** — :kconfig:option:`CONFIG_FIDO2_EXT_CRED_BLOB`
+- **thirdPartyPayment** — :kconfig:option:`CONFIG_FIDO2_EXT_THIRD_PARTY_PAYMENT`
 
-References
+参考
 **********
 
-*
-`FIDO2
-CTAP2
-Specification`_
+* `FIDO2 CTAP2 规范`_
 
-..
-_FIDO2
-CTAP2
-Specification:
-https://fidoalliance.org/specs/fido
-v2.2
-rd
-20230321/fido
-client
-to
-authenticator
-protocol
-v2.2
-rd
-20230321.html
+.. _FIDO2 CTAP2 Specification:
+   https://fidoalliance.org/specs/fido-v2.2-rd-20230321/fido-client-to-authenticator-protocol-v2.2-rd-20230321.html
 
-*
-`WebAuthn
-Specification`_
+* `WebAuthn 规范`_
 
-..
-_WebAuthn
-Specification:
-https://www.w3.org/TR/webauthn
-2/
+.. _WebAuthn Specification:
+   https://www.w3.org/TR/webauthn-2/
 
-*
-`FIDO
-Alliance`_
+* `FIDO 联盟`_
 
-..
-_FIDO
-Alliance:
-https://fidoalliance.org/
+.. _FIDO Alliance:
+   https://fidoalliance.org/
 
-API
-Reference
+API 参考
 *************
 
-..
-doxygengroup::
-fido2
+.. doxygengroup:: fido2

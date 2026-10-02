@@ -1,16 +1,11 @@
 .. _bt_rfcomm:
 
 
-Serial
-Port
-Emulation
-（RFCOMM）
+串行端口仿真（RFCOMM）
 ##############################
 
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   bt_rfcomm
+.. doxygengroup:: bt_rfcomm

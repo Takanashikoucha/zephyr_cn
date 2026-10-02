@@ -13,7 +13,7 @@ Zephyr 实现中不支持的特性
 
 内核
     ``osKernelGetState``、``osKernelSuspend``、``osKernelResume``、``osKernelInitialize``
-    和 ``osKernelStart`` 均不支持。
+    和 ``osKernelStart`` 均不受支持。
 
 互斥锁
     ``osMutexPrioInherit`` 默认受支持且不可配置，

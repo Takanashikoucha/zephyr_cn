@@ -1,782 +1,205 @@
-Bluetooth:
-A2DP
-Shell
+Bluetooth：A2DP Shell
 #####################
 
-:code:`a2dp`
-command
-expose
-A2DP
-API
-的
-parts。
+:code:`a2dp` 命令暴露了 A2DP API 的部分功能。
 
-以下
-examples
-假设
-你
-已
-有
-两
-个
-devices
-被
-connected。
+以下示例假设你已有两台设备已连接。
 
-.. _a2dp
-conn
-disconn:
+.. _a2dp_conn_disconn:
 
-A2DP
-Connection
+A2DP 连接
 ***************
 
-Demonstrate
-创建
-A2DP
-connection
-的
-flow：
+演示创建 A2DP 连接的流程：
 
-两
-侧
-用
-:code:`a2dp
-register
-cb`
-register
-A2DP
-callbacks。
-任一
-侧
-用
-:code:`a2dp
-connect`
-建立
-A2DP
-connection、
-这
-将
-创建
-AVDTP
-Signaling
-channel。
-任一
-侧
-可以
-用
-:code:`a2dp
-get
-conn`
-获取
-ACL
-connection。
-任一
-侧
-可以
-用
-:code:`a2dp
-disconnect`
-断开
-A2DP
-connection。
+* 两侧使用 :code:`a2dp register_cb` 注册 A2DP 回调。
+* 任一侧使用 :code:`a2dp connect` 建立 A2DP 连接，这将创建 AVDTP 信令通道。
+* 任一侧可以使用 :code:`a2dp get_conn` 获取 ACL 连接。
+* 任一侧可以使用 :code:`a2dp disconnect` 断开 A2DP 连接。
 
-..
-tabs::
-..
-group
-tab::
-Device
-A
-（initiator）
-..
-code
-block::
-console
-uart:~$
-a2dp
-register
-cb
-success
-uart:~$
-a2dp
-connect
-Bonded
-with
-XX:XX:XX:XX:XX:XX
-Security
-changed:
-XX:XX:XX:XX:XX:XX
-level
-2
-a2dp
-connected
-uart:~$
-a2dp
-get
-conn
-a2dp
-conn
-is:
-0xXXXXXXXX
-uart:~$
-a2dp
-disconnect
-a2dp
-disconnected
-..
-group
-tab::
-Device
-B
-（acceptor）
-..
-code
-block::
-console
-uart:~$
-a2dp
-register
-cb
-success
-<input
-`a2dp
-connect`
-in
-initiator
-side>
-Connected:
-XX:XX:XX:XX:XX:XX
-Bonded
-with
-XX:XX:XX:XX:XX:XX
-Security
-changed:
-XX:XX:XX:XX:XX:XX
-level
-2
-a2dp
-connected
-<input
-`a2dp
-disconnect`
-in
-initiator
-side>
-a2dp
-disconnected
+.. tabs::
 
-.. _a2dp
-basic
-operations:
+        .. group-tab:: Device A (initiator)
 
-Basic
-A2DP
-Operations
+                .. code-block:: console
+
+                        uart:~$ a2dp register_cb
+                        success
+                        uart:~$ a2dp connect
+                        Bonded with XX:XX:XX:XX:XX:XX
+                        Security changed: XX:XX:XX:XX:XX:XX level 2
+                        a2dp connected
+                        uart:~$ a2dp get_conn
+                        a2dp conn is: 0xXXXXXXXX
+                        uart:~$ a2dp disconnect
+                        a2dp disconnected
+
+        .. group-tab:: Device B (acceptor)
+
+                .. code-block:: console
+
+                        uart:~$ a2dp register_cb
+                        success
+                        <input `a2dp connect` in initiator side>
+                        Connected: XX:XX:XX:XX:XX:XX
+                        Bonded with XX:XX:XX:XX:XX:XX
+                        Security changed: XX:XX:XX:XX:XX:XX level 2
+                        a2dp connected
+                        <input `a2dp disconnect` in initiator side>
+                        a2dp disconnected
+
+.. _a2dp_basic_operations:
+
+基本 A2DP 操作
 *********************
 
-Demonstrate
-the
-flow
-of
-basic
-A2DP
-operations:
+演示基本 A2DP 操作的流程：
 
-Source
-and
-Sink
-sides
-register
-stream
-endpoints
-using
-:code:`a2dp
-register
-ep
-source
-sbc`
-and
-:code:`a2dp
-register
-ep
-sink
-sbc`.
-Create
-an
-A2DP
-connection
-based
-on
-:ref:`a2dp
-connection
-<a2dp
-conn
-disconn>`.
-Initiator
-discovers
-remote
-device's
-stream
-endpoints
-using
-:code:`a2dp
-discover
-peer
-eps
-0x0104`.
-Initiator
-configures
-the
-stream
-to
-create
-the
-stream
-after
-discovering
-remote
-endpoints
-using
-:code:`a2dp
-configure`.
-Initiator
-establishes
-the
-stream
-using
-:code:`a2dp
-establish`.
-Sink
-sends
-delay
-report
-using
-:code:`a2dp
-send
-delay
-report`.
-Initiator
-starts
-the
-media
-using
-:code:`a2dp
-start`.
-Source
-tests
-media
-sending
-using
-:code:`a2dp
-send
-media`
-to
-send
-one
-test
-packet
-data.
-Initiator
-suspends
-the
-media
-using
-:code:`a2dp
-suspend`.
-Initiator
-releases
-the
-media
-using
-:code:`a2dp
-release`.
+* 源端和汇端使用 :code:`a2dp register_ep source sbc` 和 :code:`a2dp register_ep sink sbc` 注册流端点。
+* 基于 :ref:`a2dp 连接 <a2dp_conn_disconn>` 创建 A2DP 连接。
+* 发起方使用 :code:`a2dp discover_peer_eps 0x0104` 发现远程设备的流端点。
+* 发起方在发现远程端点后使用 :code:`a2dp configure` 配置流以创建流。
+* 发起方使用 :code:`a2dp establish` 建立流。
+* 汇端使用 :code:`a2dp send_delay_report` 发送延迟报告。
+* 发起方使用 :code:`a2dp start` 启动媒体。
+* 源端使用 :code:`a2dp send_media` 测试媒体发送，发送一个测试数据包。
+* 发起方使用 :code:`a2dp suspend` 挂起媒体。
+* 发起方使用 :code:`a2dp release` 释放媒体。
 
-..
-note::
-The
-initiator
-is
-the
-A2DP
-source
-role
-and
-the
-acceptor
-is
-the
-A2DP
-sink
-role
-in
-the
-following
-logs.
-The
-delay
-report
-can
-only
-be
-sent
-by
-the
-sink
-role.
-The
-media
-data
-can
-only
-be
-sent
-by
-the
-source
-role.
+.. note::
+   在以下日志中，发起方是 A2DP 源角色，接受方是 A2DP 汇角色。
+   延迟报告只能由汇角色发送。媒体数据只能由源角色发送。
 
-..
-tabs::
-..
-group
-tab::
-Device
-A
-（initiator）
-..
-code
-block::
-console
-uart:~$
-a2dp
-register
-ep
-source
-sbc
-SBC
-source
-endpoint
-is
-registered
-uart:~$
-a2dp
-discover
-peer
-eps
-0x0104
-endpoint
-id:
-1、
-（sink）
-（idle）:
-codec
-type:
-SBC
-sample
-frequency:
-44100
-48000
-channel
-mode:
-Mono
-Stereo
-Joint
-Stero
-Block
-Length:
-16
-Subbands:
-8
-Allocation
-Method:
-Loudness
-Bitpool
-Range:
-18
--
-35
-uart:~$
-a2dp
-configure
-success
-to
-configure
-stream
-configured
-uart:~$
-a2dp
-establish
-success
-to
-establish
-stream
-established
-<input
-`a2dp
-send
-delay
-report`
-in
-sink
-side>
-receive
-delay
-report
-and
-accept
-received
-delay
-report:
-1
-1/10ms
-uart:~$
-a2dp
-start
-success
-to
-start
-stream
-started
-uart:~$
-a2dp
-send
-media
-frames
-num:
-1、
-data
-length:
-160
-data:
-1、
-2、
-3、
-4、
-5、
-6
-......
-uart:~$
-a2dp
-suspend
-success
-to
-suspend
-stream
-suspended
-uart:~$
-a2dp
-release
-success
-to
-release
-stream
-released
-..
-group
-tab::
-Device
-B
-（acceptor）
-..
-code
-block::
-console
-uart:~$
-a2dp
-register
-ep
-sink
-sbc
-SBC
-sink
-endpoint
-is
-registered
-<input
-`a2dp
-configure`
-in
-initiator
-side>
-receive
-requesting
-config
-and
-accept
-sample
-rate
-44100Hz
-stream
-configured
-<input
-`a2dp
-establish`
-in
-initiator
-side>
-receive
-requesting
-establishment
-and
-accept
-stream
-established
-uart:~$
-a2dp
-send
-delay
-report
-success
-to
-send
-report
-delay
-<input
-`a2dp
-start`
-in
-initiator
-side>
-receive
-requesting
-start
-and
-accept
-stream
-started
-<input
-`a2dp
-send
-media`
-in
-source
-side>
-received、
-num
-of
-frames:
-1、
-data
-length:
-160
-data:
-1、
-2、
-3、
-4、
-5、
-6
-......
-<input
-`a2dp
-suspend`
-in
-initiator
-side>
-receive
-requesting
-suspend
-and
-accept
-stream
-suspended
-<input
-`a2dp
-release`
-in
-initiator
-side>
-receive
-requesting
-release
-and
-accept
-stream
-released
+.. tabs::
 
-Abort
-Operation
+        .. group-tab:: Device A (initiator)
+
+                .. code-block:: console
+
+                        uart:~$ a2dp register_ep source sbc
+                        SBC source endpoint is registered
+                        uart:~$ a2dp discover_peer_eps 0x0104
+                        endpoint id: 1, (sink), (idle):
+                          codec type: SBC
+                          sample frequency:
+                                  44100
+                                  48000
+                          channel mode:
+                                  Mono
+                                  Stereo
+                                  Joint-Stereo
+                          Block Length:
+                                  16
+                          Subbands:
+                                  8
+                          Allocation Method:
+                                  Loudness
+                          Bitpool Range: 18 - 35
+                        uart:~$ a2dp configure
+                        success to configure
+                        stream configured
+                        uart:~$ a2dp establish
+                        success to establish
+                        stream established
+                        <input `a2dp send_delay_report` in sink side>
+                        receive delay report and accept
+                        received delay report: 1 1/10ms
+                        uart:~$ a2dp start
+                        success to start
+                        stream started
+                        uart:~$ a2dp send_media
+                        frames num: 1, data length: 160
+                        data: 1, 2, 3, 4, 5, 6 ......
+                        uart:~$ a2dp suspend
+                        success to suspend
+                        stream suspended
+                        uart:~$ a2dp release
+                        success to release
+                        stream released
+
+        .. group-tab:: Device B (acceptor)
+
+                .. code-block:: console
+
+                        uart:~$ a2dp register_ep sink sbc
+                        SBC sink endpoint is registered
+                        <input `a2dp configure` in initiator side>
+                        receive requesting config and accept
+                        sample rate 44100Hz
+                        stream configured
+                        <input `a2dp establish` in initiator side>
+                        receive requesting establishment and accept
+                        stream established
+                        uart:~$ a2dp send_delay_report
+                        success to send report delay
+                        <input `a2dp start` in initiator side>
+                        receive requesting start and accept
+                        stream started
+                        <input `a2dp send_media` in source side>
+                        received, num of frames: 1, data length: 160
+                        data: 1, 2, 3, 4, 5, 6 ......
+                        <input `a2dp suspend` in initiator side>
+                        receive requesting suspend and accept
+                        stream suspended
+                        <input `a2dp release` in initiator side>
+                        receive requesting release and accept
+                        stream released
+
+中止操作
 ***************
 
-Demonstrate
-the
-abort
-operation:
+演示中止操作：
 
-Establish
-an
-A2DP
-stream
-based
-on
-:ref:`basic
-a2dp
-operations
-<a2dp
-basic
-operations>`.
-Initiator
-aborts
-the
-stream
-using
-:code:`a2dp
-abort`.
+* 基于 :ref:`基本 a2dp 操作 <a2dp_basic_operations>` 建立 A2DP 流。
+* 发起方使用 :code:`a2dp abort` 中止流。
 
-..
-tabs::
-..
-group
-tab::
-Device
-A
-（initiator）
-..
-code
-block::
-console
-uart:~$
-a2dp
-abort
-success
-to
-abort
-stream
-released
-..
-group
-tab::
-Device
-B
-（acceptor）
-..
-code
-block::
-console
-<input
-`a2dp
-abort`
-in
-initiator
-side>
-receive
-requesting
-abort
-and
-accept
-stream
-released
+.. tabs::
 
-Get
-Configuration
-and
-Reconfigure
-Operation
+        .. group-tab:: Device A (initiator)
+
+                .. code-block:: console
+
+                        uart:~$ a2dp abort
+                        success to abort
+                        stream released
+
+        .. group-tab:: Device B (acceptor)
+
+                .. code-block:: console
+
+                        <input `a2dp abort` in initiator side>
+                        receive requesting abort and accept
+                        stream released
+
+获取配置和重新配置操作
 ********************************************
 
-Demonstrate
-the
-get
-configuration
-and
-reconfigure
-operations:
+演示获取配置和重新配置操作：
 
-Establish
-an
-A2DP
-stream
-based
-on
-:ref:`basic
-a2dp
-operations
-<a2dp
-basic
-operations>`.
-Initiator
-gets
-configuration
-using
-:code:`a2dp
-get
-config`.
-Initiator
-reconfigures
-the
-stream
-using
-:code:`a2dp
-reconfigure`.
+* 基于 :ref:`基本 a2dp 操作 <a2dp_basic_operations>` 建立 A2DP 流。
+* 发起方使用 :code:`a2dp get_config` 获取配置。
+* 发起方使用 :code:`a2dp reconfigure` 重新配置流。
 
-..
-tabs::
-..
-group
-tab::
-Device
-A
-（initiator）
-..
-code
-block::
-console
-uart:~$
-a2dp
-get
-config
-get
-config
-result:
-0
-sample
-rate
-44100Hz
-uart:~$
-a2dp
-reconfigure
-success
-to
-configure
-stream
-configured
-..
-group
-tab::
-Device
-B
-（acceptor）
-..
-code
-block::
-console
-<input
-`a2dp
-get
-config`
-in
-initiator
-side>
-receive
-get
-config
-request
-and
-accept
-<input
-`a2dp
-reconfigure`
-in
-initiator
-side>
-receive
-requesting
-reconfig
-and
-accept
-sample
-rate
-44100Hz
-stream
-configured
+.. tabs::
+
+        .. group-tab:: Device A (initiator)
+
+                .. code-block:: console
+
+                        uart:~$ a2dp get_config
+                        get config result: 0
+                        sample rate 44100Hz
+                        uart:~$ a2dp reconfigure
+                        success to configure
+                        stream configured
+
+        .. group-tab:: Device B (acceptor)
+
+                .. code-block:: console
+
+                        <input `a2dp get_config` in initiator side>
+                        receive get config request and accept
+                        <input `a2dp reconfigure` in initiator side>
+                        receive requesting reconfig and accept
+                        sample rate 44100Hz
+                        stream configured

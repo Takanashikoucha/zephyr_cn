@@ -1,13 +1,10 @@
 .. _bt_data_buffers:
 
 
-Data
-Buffers
+数据缓冲区
 #############
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   bt_buf
+.. doxygengroup:: bt_buf

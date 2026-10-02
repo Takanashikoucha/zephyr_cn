@@ -3,237 +3,48 @@
 Perf
 ####
 
-Perf
-是
-一
-个
-基于
-stack
-tracing
-的
-profiler
-tool。
-它
-可
-被
-used
-用于
-lightweight
-的
-profiling
-带
-minimal
-的
-code
-overhead。
+Perf 是一个基于栈跟踪（stack tracing）的性能分析工具，
+可用于以极小的代码开销进行轻量级性能分析。
 
-Work
-Principle
+工作原理
 **************
 
-``perf
-record``
-shell
-command
-start
-一
-个
-timer
-带
-perf
-tracer
-function。
-Timers
-被
-interrupts
-driven
-所以
-perf
-tracer
-function
-在
-interruption
-期间
-被
-called。
-Zephyr
-core
-在
-call
-interrupt
-handler
-之前
-save
-return
-address
-和
-frame
-pointer
-在
-interrupt
-stack、
-``callee_saved``
-structure、
-或
-architecture
-specific
-的
-exception
-frame
-中。
-因此
-perf
-trace
-function
-用
-return
-address
-和
-frame
-pointer
-make
-stack
-traces。
+``perf record`` shell 命令会启动一个定时器，其回调为 perf 跟踪函数。
+定时器由中断驱动，因此 perf 跟踪函数在中断期间被调用。
+Zephyr 内核在调用中断处理程序之前，会在中断栈、
+``callee_saved`` 结构体或架构特定的异常帧中保存返回地址和帧指针。
+因此，perf 跟踪函数利用返回地址和帧指针来生成栈跟踪。
 
-在
-Cortex
-M
-上
-perf
-wrap
-SysTick
-handler
-使
-它
-可以
-sample
-interrupted
-的
-Thread
-mode
-Process
-Stack
-Pointer
-（PSP）
-frame
-在
-normal
-的
-timer
-ISR
-use
-handler
-stack
-之前。
-Backend
-在
-pass
-该
-frame
-到
-Arm
-stack
-walker
-之前
-validate
-它。
+在 Cortex-M 上，perf 对 SysTick 处理程序进行了包装，
+以便在常规定时器 ISR 使用处理程序栈之前，
+采样被中断的线程模式进程栈指针（PSP）帧。
+后端在向 Arm 栈遍历器传递该帧之前会先对其进行校验。
 
-Cortex
-M
-backend
-对
-Non
-secure
-的
-Trusted
-Execution
-images
-unavailable
-因为
-Secure
-的
-exception
-frames
-对
-Non
-secure
-的
-firmware
-inaccessible。
+Cortex-M 后端不适用于非安全可信执行（Non-secure Trusted Execution）镜像，
+因为非安全固件无法访问安全异常帧。
 
-:zephyr_file:`scripts/profiling/stackcollapse.py`
-script
-可
-被
-used
-用于
-用
-ELF
-file
-中
-的
-symbols
-将
-stack
-trace
-中
-的
-return
-addresses
-convert
-到
-function
-names
-并
-print
-它们
-在
-`FlameGraph`_
-expected
-的
-format
-中。
+:zephyr_file:`scripts/profiling/stackcollapse.py` 脚本可用于利用 ELF 文件中的符号，
+将栈跟踪中的返回地址转换为函数名，
+并以 `FlameGraph`_ 所期望的格式打印出来。
 
-Configuration
+配置
 *************
 
-你
-可以
-用
-以下
-options
-configure
-这
-个
-module：
+可以使用以下选项配置该模块：
 
-*
-:kconfig:option:`CONFIG_PROFILING_PERF`：
-Enable
-这
-个
-module。
-这
-个
-option
-向
-shell
-add
-``perf``
-command。
+* :kconfig:option:`CONFIG_PROFILING_PERF`：启用该模块。此选项会在 shell 中添加
+  ``perf`` 命令。
 
-*
-:kconfig:option:`CONFIG_PROFILING_PERF_BUFFER_SIZE`：
-Set
-perf
-buffer
-的
-size
-samples
-在
-print
-之前
-被
-saved
-在
-那里。
+* :kconfig:option:`CONFIG_PROFILING_PERF_BUFFER_SIZE`：设置 perf 缓冲区的大小，
+  样本在打印前先保存在该缓冲区中。
+
+架构后端可能需要额外的栈展开（stack-unwind）支持。Cortex-M 后端
+需要 SysTick、线程栈信息、额外的异常信息、Arm 栈遍历支持，
+以及单处理器（uniprocessor）配置。
+
+使用
+*****
+
+关于如何使用 perf 工具的示例，请参考 :zephyr:code-sample:`profiling-perf` 示例。
+
+ .. _FlameGraph: https://github.com/brendangregg/FlameGraph/

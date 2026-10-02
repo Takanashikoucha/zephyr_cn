@@ -7,38 +7,59 @@ CoAP
     :local:
     :depth: 2
 
-Overview
+概述
 ********
 
-Constrained Application Protocol（CoAP）是用于 constrained nodes 和 constrained（如低功耗、lossy）networks 的专用 web transfer protocol。其为支持 CoAP features 的 RESTful Web services 提供便利 API。协议本身更多信息参见 :rfc:`7252`。
+Constrained Application Protocol（CoAP，受限应用协议）
+是一种专用的 Web 传输协议，
+用于受限节点和受限（例如低功耗、
+有损）网络。它为支持 CoAP 特性的
+RESTful Web 服务提供了便捷的 API。
+有关协议本身的更多信息，参见 :rfc:`7252`。
 
-Zephyr 提供支持 client 和 server roles 的 CoAP library。库可用 :kconfig:option:`CONFIG_COAP` Kconfig option 启用（且可按 user 需求配置。Zephyr CoAP library 用 plain buffers 实现。API 的 users 创建 sockets 以通信（并将 buffer 传递给 library 以解析和其他目的。Library 本身不为 users 创建任何 sockets。
+Zephyr 提供了一个 CoAP 库，支持客户端和服务器角色。
+该库可通过 :kconfig:option:`CONFIG_COAP` Kconfig 选项启用，
+并可按用户需求进行配置。Zephyr CoAP 库
+使用普通缓冲区实现。API 的使用者创建
+用于通信的套接字，并将缓冲区
+传递给库进行解析等用途。
+库本身不会为用户创建任何套接字。
 
-CoAP 之上（Zephyr 支持 LwM2M "Lightweight Machine 2 Machine" protocol（简单、低成本的 remote management 和 service enablement 机制。更多信息参见 :ref:`lwm2m_interface`。
+在 CoAP 之上，Zephyr 还支持 LwM2M（"Lightweight Machine 2 Machine"，
+轻量级机器对机器）协议，
+一种简单、低成本的远程管理与服务使能机制。
+更多信息参见 :ref:`lwm2m_interface`。
 
-Supported RFCs：
+支持的 RFC：
 
-- :rfc:`7252` - The Constrained Application Protocol（CoAP）
-- :rfc:`6690` - Constrained RESTful Environments（CoRE）Link Format
-- :rfc:`7959` - Block-Wise Transfers in the Constrained Application Protocol（CoAP）
-- :rfc:`7641` - Observing Resources in the Constrained Application Protocol（CoAP）
-- :rfc:`8613` - Object Security for Constrained RESTful Environments（OSCORE）
+- :rfc:`7252` - The Constrained Application Protocol (CoAP)
+- :rfc:`6690` - Constrained RESTful Environments (CoRE) Link Format
+- :rfc:`7959` - Block-Wise Transfers in the Constrained Application Protocol (CoAP)
+- :rfc:`7641` - Observing Resources in the Constrained Application Protocol (CoAP)
+- :rfc:`8613` - Object Security for Constrained RESTful Environments (OSCORE)
 
-.. note:: 这些 RFCs 并非所有部分均支持。Features 按 Zephyr 需求支持。
+.. note:: 这些 RFC 并非所有部分都受支持。特性按 Zephyr 的需求支持。
 
-Zephyr CoAP library 还支持按 :rfc:`8613` 指定的 Object Security for Constrained RESTful Environments（OSCORE）。更多信息参见 :ref:`coap_oscore_interface`。
+Zephyr CoAP 库还支持 Object Security for Constrained RESTful
+Environments（OSCORE），规范见 :rfc:`8613`。
+更多信息参见 :ref:`coap_oscore_interface`。
 
-Sample Usage
+示例用法
 ************
 
-CoAP Server
+CoAP 服务器
 ===========
 
 .. note::
 
-   有 :ref:`coap_server_interface` subsystem 可用（以下为创建 custom server 实现。
+    有 :ref:`coap_server_interface` 子系统可用，
+    以下内容为创建自定义
+    服务器实现。
 
-要创建 CoAP server（须定义 server 的 resources。``.well-known/core`` resource 应在所有应包含在 ``.well-known/core`` resource 的 responses 中的其他 resources 之前添加。
+要创建 CoAP 服务器，需要先定义
+服务器的资源。``.well-known/core`` 资源
+应在所有应包含在 ``.well-known/core``
+资源响应中的其他资源之前添加。
 
 .. code-block:: c
 
@@ -55,7 +76,14 @@ CoAP Server
         { },
     };
 
-Application 从 socket 读取 data（并将 buffer 传递给 CoAP library 以解析 message。若 CoAP message 适当（library 用 buffer 连同上述定义的 resources 调用正确的 callback function 以处理来自 client 的 CoAP request。Callback function 负责按 CoAP request 回复或行动。
+应用从套接字读取数据，并将缓冲区
+传递给 CoAP 库以解析消息。
+如果 CoAP 消息格式正确，库会
+使用该缓冲区连同上述定义的资源，
+调用正确的回调函数
+来处理来自客户端的 CoAP 请求。
+由回调函数负责
+按 CoAP 请求进行回复或执行相应操作。
 
 .. code-block:: c
 
@@ -64,10 +92,12 @@ Application 从 socket 读取 data（并将 buffer 传递给 CoAP library 以解
     coap_handle_request(&request, resources, options, opt_num,
                         client_addr, client_addr_len);
 
-若启用 :kconfig:option:`CONFIG_COAP_URI_WILDCARD`（server 可用 MQTT-like wildcard style 接受多个 resources：
+如果启用了 :kconfig:option:`CONFIG_COAP_URI_WILDCARD`，
+服务器可使用类 MQTT 通配符风格
+接受多个资源：
 
-- plus symbol 代表 path 中的 single-level wild card；
-- hash symbol 代表 path 中的 multi-level wild card。
+- 加号（plus）符号代表路径中的单级通配符；
+- 井号（hash）符号代表路径中的多级通配符。
 
 .. code-block:: c
 
@@ -75,18 +105,29 @@ Application 从 socket 读取 data（并将 buffer 传递给 CoAP library 以解
     static const char * const btn_get[] = { "button","#", NULL };
     static const char * const no_wc[] = { "test","+1", NULL };
 
-其接受 /led/0/set、led/1234/set、led/any/set、/button/door/1、/test/+1（但对 /led/1、/test/21、/test/1 返回 -ENOENT。
+它接受 /led/0/set、led/1234/set、led/any/set、/button/door/1、/test/+1，
+但对 /led/1、/test/21、/test/1 返回 -ENOENT。
 
-此 option 默认启用（禁用它以避免 resource path 如 '/some_resource/+/#' 的意外行为。
+该选项默认启用。如需避免
+类似 '/some_resource/+/#' 的资源路径
+带来的意外行为，可将其禁用。
 
-CoAP Client
+CoAP 客户端
 ===========
 
 .. note::
 
-   有 :ref:`coap_client_interface` subsystem 可用（以下为创建 custom client 实现。
+    有 :ref:`coap_client_interface` 子系统可用，
+    以下内容为创建自定义
+    客户端实现。
 
-若 CoAP client 了解 CoAP server 中的 resources（client 可开始准备 CoAP requests 并等待 responses。若 client 不了解 CoAP server 中的 resources（其可通过 ``.well-known/core`` CoAP message 请求 resources。
+如果 CoAP 客户端了解 CoAP 服务器中的资源，
+客户端即可开始
+准备 CoAP 请求并等待响应。
+如果客户端不了解
+CoAP 服务器中的资源，
+它可以通过
+``.well-known/core`` CoAP 消息请求资源。
 
 .. code-block:: c
 
@@ -113,20 +154,29 @@ CoAP Client
 
     /* send over sockets */
 
-Testing
+测试
 *******
 
-有多种方式测试 Zephyr CoAP library。
+测试 Zephyr CoAP 库有多种方式。
 
 libcoap
 =======
-libcoap 为 resource constrained 的 devices（如受 computing power、RF range、memory、bandwidth 或 network packet sizes 限制）实现轻量级 application-protocol。Sources 可在 `libcoap <https://github.com/obgm/libcoap>`_ 找到。libcoap 有 script（``examples/etsi_coaptest.sh``）测试 Zephyr 中的 coap-server 功能。
+libcoap 为资源受限的设备（例如受
+计算能力、射频范围、内存、带宽
+或网络数据包大小限制）实现了一种
+轻量级应用协议。源码可在 `libcoap <https://github.com/obgm/libcoap>`_ 找到。
+libcoap 有一个脚本（``examples/etsi_coaptest.sh``）
+用于测试 Zephyr 中的 coap-server 功能。
 
-更多细节参见 `net-tools <https://github.com/zephyrproject-rtos/net-tools>`_ project。
+更多细节参见 `net-tools <https://github.com/zephyrproject-rtos/net-tools>`_ 项目。
 
-:zephyr:code-sample:`coap-server` sample 可按 :ref:`networking_with_qemu` 描述在 QEMU 上构建并执行。
+:zephyr:code-sample:`coap-server` 示例可按
+:ref:`networking_with_qemu` 的描述
+在 QEMU 上构建并运行。
 
-在 host 上用此命令运行 libcoap 实现的 ETSI test cases：
+在主机上使用以下命令
+运行 libcoap 实现的
+ETSI 测试用例：
 
 .. code-block:: console
 
@@ -134,9 +184,10 @@ libcoap 为 resource constrained 的 devices（如受 computing power、RF range
 
 TTCN3
 =====
-Eclipse 有基于 TTCN3 的 tests 以针对 CoAP 实现运行。
+Eclipse 提供了基于 TTCN3 的测试，
+可用于针对 CoAP 实现运行。
 
-安装 eclipse-titan（并为 titan tools 设置 symbolic links：
+安装 eclipse-titan，并为 titan 工具设置符号链接
 
 .. code-block:: console
 
@@ -156,29 +207,33 @@ Eclipse 有基于 TTCN3 的 tests 以针对 CoAP 实现运行。
 
     cd titan.misc
 
-按此处的说明设置 CoAP test suite：
+按照以下来源的说明设置 CoAP 测试套件：
 
 - https://gitlab.eclipse.org/eclipse/titan/titan.misc
 - https://gitlab.eclipse.org/eclipse/titan/titan.misc/-/tree/master/CoAP_Conf
 
-构建完成后（:zephyr:code-sample:`coap-server` sample 可按 :ref:`networking_with_qemu` 描述在 QEMU 上构建并执行。
+构建完成后，:zephyr:code-sample:`coap-server` 示例即可按
+:ref:`networking_with_qemu` 的描述
+在 QEMU 上构建并运行。
 
-按您的 setup 在 coap.cfg 文件中更改 client（test suite）和 server（Zephyr coap-server sample）addresses。
+按您的环境，
+在 coap.cfg 文件中更改客户端（测试套件）
+和服务器（Zephyr coap-server 示例）的地址。
 
-用以下命令执行 test cases。
+使用以下命令执行测试用例。
 
 .. code-block:: console
 
    ttcn3_start coaptests coap.cfg
 
-ttcn3 tests 的示例输出如下。
+ttcn3 测试的示例输出如下。
 
 .. code-block:: console
 
    Verdict statistics: 0 none (0.00 %), 10 pass (100.00 %), 0 inconc (0.00 %), 0 fail (0.00 %), 0 error (0.00 %).
    Test execution summary: 10 test cases were executed. Overall verdict: pass
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: coap

@@ -1,6 +1,6 @@
 .. _shields:
 
-Shield
+Shields
 #######
 
 Shield（又称"add-on"或"daughter board"）附加到 board 上以扩展其功能和服务，
@@ -181,7 +181,7 @@ Feather
 - ``feather_adc``
 - ``feather_i2c``
 - ``feather_serial``
-- ``feather_spi`
+- ``feather_spi``
 
 Microbit
 --------
@@ -264,7 +264,7 @@ ST Microelectronics 的开发 boards 通常使用 ST Morpho shield 接口。
 - ``st_morpho_header``  参见 :dtcompatible:`st-morpho-header`
   了解 devicetree 文件中使用的 GPIO 引脚定义和 includes 的详细信息。
 - ``st_morpho_lcd_spi``
-- ``st_morpho_flash_spi`
+- ``st_morpho_flash_spi``
 
 ST Zio
 ------
@@ -284,7 +284,7 @@ ST Microelectronics 的 STM32 Nucleo-144 开发 boards
 STMod+
 ------
 
-这是在某些 STMicroelectronics Discovery 和 Evaluation boards
+这是在某些 STMicroelectronics Discovery 和评估（Evaluation）boards
 上找到的 20 针扩展连接器。
 
 相关 devicetree 节点标签：
@@ -457,7 +457,7 @@ Shield 配置文件在 :zephyr_file:`boards/shields` 下的 board 目录中可�
 
 此外，为避免与可能在 board 级别定义的设备的名称冲突，
 建议特别是对于 shields devicetree 描述，
-提供 ``<device>_<shield>`` 形式的设备 nodelabel，例如：
+提供形如 <device>_<shield> 的设备 nodelabel，例如：
 
 .. code-block:: devicetree
 
@@ -521,7 +521,7 @@ Board 特定 shield 配置
        └── <board>.conf
 
 
-Shield variants
+Shield 变体
 ***************
 
 某些 shields 可能支持多个 variants 或 revisions。

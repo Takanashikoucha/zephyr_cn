@@ -1,5 +1,4 @@
-编写
-片段
+编写片段
 ################
 
 .. contents::
@@ -8,76 +7,19 @@
 基础
 ******
 
-片段
-使用
-名为
-:file:`snippet.yml` 的
-YAML 文件
-定义。
+片段使用名为 :file:`snippet.yml` 的 YAML 文件定义。
 
-:file:`snippet.yml` 文件
-包含
-片段
-的
-名称，
-连同
-额外
-的
-构建
-系统
-设置，
-像
-这样：
+一个 :file:`snippet.yml` 文件包含片段名称，连同额外的构建系统设置，像这样：
 
 .. code-block:: yaml
 
    name: snippet-name
-   # ... 构建
-   # 系统
-   # 设置
-   # 放
-   # 这里
-   # ...
+   # ... 构建系统设置放在这里 ...
 
-构建
-系统
-设置
-放在
-文件
-中
-的
-其他
-键
-中，
-如
-本页
-后面
-所述。
+构建系统设置放在文件中的其他键中，如本页后面所述。
 
-只要
-设置
-出现在
-相同
-的
-键
-下，
-就
-可以
-组合
-设置。
-例如，
-你
-可以
-像
-这样
-组合
-片段
-特定
-的
-设备树
-覆盖
-和
-``.conf`` 文件：
+只要设置出现在相同的键下，就可以组合设置。例如，你可以像这样组合片段特定的
+设备树覆盖和 ``.conf`` 文件：
 
 .. code-block:: yaml
 
@@ -86,16 +28,7 @@ YAML 文件
      EXTRA_DTC_OVERLAY_FILE: foo.overlay
      EXTRA_CONF_FILE: foo.conf
 
-此外，
-片段
-也
-可以
-像
-这样
-应用
-到
-sysbuild
-配置：
+此外，片段也可以像这样应用到 sysbuild 配置：
 
 .. code-block:: yaml
 
@@ -107,44 +40,11 @@ sysbuild
 命名空间
 ***********
 
-在
-片段
-中
-编写
-设备树
-覆盖
-时，
-选择
-节点
-标签、
-节点
-名称
-等
-的
-名称
-时
-使用
-``snippet_<name>`` 或
-``snippet-<name>`` 作为
-命名空间
-前缀。
-这
-避免
-命名空间
-冲突。
+在片段中编写设备树覆盖时，选择节点标签、节点名称等的名称时，
+使用 ``snippet_<name>`` 或 ``snippet-<name>`` 作为命名空间前缀。
+这避免命名空间冲突。
 
-例如，
-如果
-你的
-片段
-名为
-``foo-bar``，
-像
-这样
-编写
-你的
-设备树
-覆盖：
+例如，如果你的片段名为 ``foo-bar``，像这样编写你的设备树覆盖：
 
 .. code-block:: DTS
 
@@ -156,133 +56,33 @@ sysbuild
            /* ... */
    };
 
-片段
-位于
-哪里
+片段位于哪里
 **************************
 
-构建
-系统
-在
-这些
-地方
-查找
-片段：
+构建系统在这些地方查找片段：
 
-#. 在
-   :makevar:`SNIPPET_ROOT` CMake 变量
-   配置
-   的
-   目录
-   中。
-   这
-   始终
-   包含
-   zephyr
-   仓库
-   （因此
-   :zephyr_file:`snippets/` 始终
-   是
-   片段
-   的
-   来源）。
+#. 在 :makevar:`SNIPPET_ROOT` CMake 变量配置的目录中。
+   这始终包含 zephyr 仓库（因此 :zephyr_file:`snippets/` 始终是片段的来源）。
 
-   额外
-   的
-   目录
-   可以
-   在
-   CMake 时
-   手动
-   添加。
+   额外的目录可以在 CMake 时手动添加。
 
-   该
-   变量
-   是
-   空白
-   或
-   分号
-   分隔
-   的
-   目录
-   列表，
-   可能
-   包含
-   片段
-   定义。
+   该变量是空白或分号分隔的目录列表，可能包含片段定义。
 
-   对于
-   列表
-   中
-   的
-   每个
-   目录，
-   构建
-   系统
-   查找
-   名为
-   :file:`snippets/` 的
-   子
-   目录
-   下
-   的
-   :file:`snippet.yml` 文件
-   （如果
-   存在）。
+   对于列表中的每个目录，构建系统查找名为 :file:`snippets/` 的子目录下
+   的 :file:`snippet.yml` 文件（如果存在）。
 
-   例如，
-   如果
-   :makevar:`SNIPPET_ROOT` 设置
-   为
-   ``/foo;/bar``，
-   构建
-   系统
-   将
-   查找
-   以下
-   子
-   目录
-   下
-   的
-   :file:`snippet.yml` 文件：
+   例如，如果 :makevar:`SNIPPET_ROOT` 设置为 ``/foo;/bar``，构建系统将查找
+   以下子目录下的 :file:`snippet.yml` 文件：
 
    - :file:`/foo/snippets/`
    - :file:`/bar/snippets/`
 
-   :file:`snippet.yml` 文件
-   可以
-   嵌套
-   在
-   这些
-   位置
-   下
-   的
-   任何
-   地方。
+   :file:`snippet.yml` 文件可以嵌套在这些位置下的任何地方。
 
-#. 在
-   任何
-   :ref:`模块 <modules>` 的
-   :file:`module.yml` 文件
-   提供
-   ``snippet_root`` 设置
-   的
-   地方。
+#. 在任何 :ref:`模块 <modules>` 的 :file:`module.yml` 文件提供
+   ``snippet_root`` 设置的地方。
 
-   例如，
-   在
-   名为
-   ``baz`` 的
-   zephyr
-   模块
-   中，
-   你
-   可以
-   将
-   这
-   添加
-   到
-   你的
+   例如，在名为 ``baz`` 的 zephyr 模块中，你可以将这添加到你的
    :file:`module.yml` 文件：
 
    .. code-block:: yaml
@@ -290,138 +90,41 @@ sysbuild
       settings:
         snippet_root: .
 
-   然后
-   ``baz/snippets`` 中
-   的
-   任何
-   :file:`snippet.yml` 文件
-   将
-   被
-   构建
-   系统
-   自动
-   发现，
-   就像
-   ``baz`` 的
-   路径
-   出现
-   在
-   :makevar:`SNIPPET_ROOT` 中
-   一样。
+   然后 ``baz/snippets`` 中的任何 :file:`snippet.yml` 文件将被构建系统
+   自动发现，就像 ``baz`` 的路径出现在 :makevar:`SNIPPET_ROOT` 中一样。
 
-处理
-顺序
+处理顺序
 ****************
 
-片段
-按
-它们在
-:makevar:`SNIPPET` 变量
-中
-列出
-的
-顺序
-处理，
-或
-使用
-west
-时
-``-S`` 参数
-的
-顺序。
+片段按它们在 :makevar:`SNIPPET` 变量中列出的顺序处理，
+或使用 west 时 ``-S`` 参数的顺序。
 
-在
-``foo`` 之后
-应用
-``bar``：
+要在 ``foo`` 之后应用 ``bar``：
 
 .. code-block:: console
 
    cmake -Sapp -Bbuild -DSNIPPET="foo;bar" [...]
    cmake --build build
 
-用
-west
-可以
-用
-以下
-方式
-达到
-相同
-效果：
+用 west 可以用以下方式达到相同效果：
 
 .. code-block:: console
 
    west build -S foo -S bar [...] app
 
-当
-多个
-片段
-设置
-相同
-的
-配置
-时，
-最后
-处理
-的
-片段
-设置
-的
-配置
-值
-最终
-出现在
-最终
-配置
-中。
+当多个片段设置相同的配置时，最后处理的片段设置的配置值最终出现在最终配置中。
 
-例如，
-如果
-上面
-示例
-中
-``foo`` 设置
-``CONFIG_FOO=1`` 且
-``bar`` 设置
-``CONFIG_FOO=2``，
-结果
-最终
-配置
-将
-是
-``CONFIG_FOO=2``，
-因为
-``bar`` 在
-``foo`` 之后
-处理。
+例如，如果上面示例中 ``foo`` 设置 ``CONFIG_FOO=1`` 且 ``bar`` 设置
+``CONFIG_FOO=2``，结果最终配置将是 ``CONFIG_FOO=2``，因为 ``bar`` 在 ``foo`` 之后处理。
 
-这个
-原则
-适用
-于
-Kconfig
-片段
-（``.conf`` 文件）
-和
-设备树
-覆盖
-（``.overlay`` 文件）
-两者。
+这个原则适用于 Kconfig 片段（``.conf`` 文件）和设备树覆盖（``.overlay`` 文件）两者。
 
 .. _snippets-devicetree-overlays:
 
-设备树
-覆盖
-（``.overlay``）
+设备树覆盖（``.overlay``）
 **********************************
 
-这个
-:file:`snippet.yml`
-将
-:file:`foo.overlay` 添加
-到
-构建：
+这个 :file:`snippet.yml` 将 :file:`foo.overlay` 添加到构建：
 
 .. code-block:: yaml
 
@@ -429,20 +132,8 @@ Kconfig
    append:
      EXTRA_DTC_OVERLAY_FILE: foo.overlay
 
-:file:`foo.overlay` 的
-路径
-相对
-于
-包含
-:file:`snippet.yml` 的
-目录。
-多个
-``.overlay`` 文件
-也
-可以
-作为
-列表
-提供：
+:file:`foo.overlay` 的路径相对于包含 :file:`snippet.yml` 的目录。
+多个 ``.overlay`` 文件也可以作为列表提供：
 
 .. code-block:: yaml
 
@@ -455,14 +146,9 @@ Kconfig
 .. _snippets-conf-files:
 
 ``.conf`` 文件
-***********************
+***************
 
-这个
-:file:`snippet.yml`
-将
-:file:`foo.conf` 添加
-到
-构建：
+这个 :file:`snippet.yml` 将 :file:`foo.conf` 添加到构建：
 
 .. code-block:: yaml
 
@@ -470,32 +156,13 @@ Kconfig
    append:
      EXTRA_CONF_FILE: foo.conf
 
-:file:`foo.conf` 的
-路径
-相对
-于
-包含
-:file:`snippet.yml` 的
-目录。
-多个
-``.conf`` 文件
-也
-可以
-作为
-列表
-提供。
+:file:`foo.conf` 的路径相对于包含 :file:`snippet.yml` 的目录。
+多个 ``.conf`` 文件也可以作为列表提供。
 
-Sysbuild
-``.conf`` 文件
+Sysbuild ``.conf`` 文件
 ************************
 
-这个
-:file:`snippet.yml`
-将
-:file:`foo.conf` 添加
-到
-sysbuild
-配置：
+这个 :file:`snippet.yml` 将 :file:`foo.conf` 添加到 sysbuild 配置：
 
 .. code-block:: yaml
 
@@ -503,34 +170,13 @@ sysbuild
    append:
      SB_EXTRA_CONF_FILE: foo.conf
 
-:file:`foo.conf` 的
-路径
-相对
-于
-包含
-:file:`snippet.yml` 的
-目录。
-多个
-sysbuild
-``.conf`` 文件
-也
-可以
-作为
-列表
-提供。
+:file:`foo.conf` 的路径相对于包含 :file:`snippet.yml` 的目录。
+多个 sysbuild ``.conf`` 文件也可以作为列表提供。
 
 ``DTS_EXTRA_CPPFLAGS``
 **********************
 
-这个
-:file:`snippet.yml`
-将
-``DTS_EXTRA_CPPFLAGS`` CMake
-Cache
-变量
-添加
-到
-构建：
+这个 :file:`snippet.yml` 将 ``DTS_EXTRA_CPPFLAGS`` CMake 缓存变量添加到构建：
 
 .. code-block:: yaml
 
@@ -538,147 +184,40 @@ Cache
    append:
      DTS_EXTRA_CPPFLAGS: -DMY_DTS_CONFIGURE
 
-添加
-这些
-标志
-使
-控制
-设备树
-文件
-的
-内容
-成为
-可能。
+添加这些标志使控制设备树文件的内容成为可能。
 
-开发板
-特定
-设置
+开发板特定设置
 ***********************
 
-你
-可以
-编写
-只
-应用
-于
-某些
-开发板
-的
-设置。
+你可以编写只应用于某些开发板的设置。
 
-这里
-描述
-的
-设置
-在
-**除了**
-应用
-于
-所有
-开发板
-的
-片段
-设置
-**之外**
-被
-应用。
-（这
-类似
-于
-例如
-一个
-同时
-有
-:file:`prj.conf` 和
-:file:`boards/foo.conf` 文件
-的
-应用
-在
-为
-开发板
-``foo`` 构建
-时
-将在
-构建
-中
-使用
-两个
-``.conf`` 文件，
-而非
-只
-使用
+这里描述的设置**除了**应用于所有开发板的片段设置**之外**被应用。
+（这类似于例如一个同时有 :file:`prj.conf` 和 :file:`boards/foo.conf` 文件的应用，
+在为开发板 ``foo`` 构建时将在构建中使用两个 ``.conf`` 文件，而非只使用
 :file:`boards/foo.conf`）
 
-按
-名称
+按名称
 =======
 
 .. code-block:: yaml
 
    name: ...
    boards:
-     bar: # 开发板
-     # "bar"
-     # 的
-     # 设置
-     # 放
-     # 这里
-     append:
-       EXTRA_DTC_OVERLAY_FILE: bar.overlay
-     baz: # 开发板
-     # "baz"
-     # 的
-     # 设置
-     # 放
-     # 这里
-     append:
-       EXTRA_DTC_OVERLAY_FILE: baz.overlay
+     bar: # 开发板 "bar" 的设置放在这里
+       append:
+         EXTRA_DTC_OVERLAY_FILE: bar.overlay
+     baz: # 开发板 "baz" 的设置放在这里
+       append:
+         EXTRA_DTC_OVERLAY_FILE: baz.overlay
 
-上面
-示例
-在
-为
-开发板
-``bar`` 构建
-时
-使用
-:file:`bar.overlay`，
-为
-``baz`` 构建
-时
-使用
-:file:`baz.overlay`。
+上面示例在为开发板 ``bar`` 构建时使用 :file:`bar.overlay`，
+为 ``baz`` 构建时使用 :file:`baz.overlay`。
 
-按
-正则
-表达式
+按正则表达式
 =====================
 
-你
-可以
-将
-开发板
-名称
-包围
-在
-斜杠
-（``/``）
-中
-以
-按
-`CMake 语法`_ 中
-的
-正则
-表达式
-匹配
-名称。
-正则
-表达式
-必须
-匹配
-整个
-开发板
-名称。
+你可以将开发板名称包围在斜杠（``/``）中，以按 `CMake 语法`_ 中的正则表达式
+匹配名称。正则表达式必须匹配整个开发板名称。
 
 .. _CMake 语法:
    https://cmake.org/cmake/help/latest/command/string.html#regex-specification
@@ -693,49 +232,14 @@ Cache
        append:
          EXTRA_DTC_OVERLAY_FILE: my_vendor.overlay
 
-上面
-示例
-在
-为
-开发板
-``my_vendor_board1`` 或
-``my_vendor_board2`` 构建
-时
-使用
-设备树
-覆盖
-:file:`my_vendor.overlay`。
-为
-``another_vendor_board`` 或
-``x_my_vendor_board`` 构建
-时
-它
-不
-会
-使用
-该
-覆盖。
+上面示例在为开发板 ``my_vendor_board1`` 或 ``my_vendor_board2`` 构建时
+使用设备树覆盖 :file:`my_vendor.overlay`。为 ``another_vendor_board`` 或
+``x_my_vendor_board`` 构建时它不会使用该覆盖。
 
-开发板
-修订
-版本
-==================
+开发板修订版本
+====================
 
-开发板
-修订
-版本
-的
-特定
-配置
-也
-被
-支持，
-将
-在
-通用
-文件
-之后
-应用：
+开发板修订版本的特定配置也被支持，将在通用文件之后应用：
 
 .. code-block:: yaml
 
@@ -743,42 +247,14 @@ Cache
    boards:
      bar:
        append:
-         # 基础
-         # 文件
-         # 先
-         # 应用
+         # 基础文件先应用
          EXTRA_DTC_OVERLAY_FILE: first.overlay
        revisions:
          "0.7.0":
            append:
-             # 将
-             # 在
-             # 通用
-             # 开发板
-             # 文件
-             # 之上
-             # 应用
+             # 将在通用开发板文件之上应用
              EXTRA_DTC_OVERLAY_FILE: extra_0_7_0.overlay
 
-上面
-示例
-将
-对
-``bar`` 开发板
-的
-所有
-修订
-版本
-使用
-:file:`first.overlay`，
-并为
-``bar`` 开发板
-的
-修订
-版本
-``0.7.0``（``bar@0.7.0``）
-构建
-时
-也
-包含
-:file:`extra_0_7_0.overlay`。
+上面示例将对 ``bar`` 开发板的所有修订版本使用 :file:`first.overlay`，
+并为 ``bar`` 开发板的修订版本 ``0.7.0``（``bar@0.7.0``）构建时
+也包含 :file:`extra_0_7_0.overlay`。

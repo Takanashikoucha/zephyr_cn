@@ -1,231 +1,227 @@
 .. _bluetooth_mesh_cdb_usage:
 
-Configuration
-Database
-（CDB）
+Configuration Database (CDB)
 ############################
 
 .. contents::
    :local:
-   :depth:
-   2
+   :depth: 2
 
 Overview
 ********
 
-Configuration
-Database
-（CDB）
-是
-Bluetooth®
-Mesh
-provisioner
-devices
-的
-subsystem。
-它
-存储
-和
-管理
-关于
-mesh
-network
-的
-information
-包括
-provisioned
-nodes、
-network
-keys、
-和
-application
-keys。
-CDB
-使
-provisioner
-能
-跟踪
-network
-topology、
-assign
-addresses、
-并
-systematically
-配置
-nodes。
+The Configuration Database (CDB) is the subsystem for Bluetooth® Mesh provisioner devices.
+It stores and manages information about the mesh network, including provisioned nodes, network keys, and application keys.
+The CDB enables a provisioner to track the network topology, assign addresses, and configure nodes systematically.
 
 .. note::
 
-   CDB
-   implementation
-   有
-   proprietary
-   design
-   不
-   遵循
-   Bluetooth
-   SIG
-   specification。
+   The CDB implementation has proprietary design and does not follow the Bluetooth SIG specification.
 
-CDB
-通过
-:kconfig:option:`CONFIG_BT_MESH_CDB`
-configuration
-option
-启用
-通常
-只
-在
-network
-中
-的
-provisioner
-device
-上
-使用。
-Mesh
-network
-中
-应该
-只
-有
-一
-个
-device
-启用
-CDB
-以
-避免
-conflicts。
+The CDB is enabled with the :kconfig:option:`CONFIG_BT_MESH_CDB` configuration option and is typically used only on the provisioner device in the network.
+There should be only one device in the mesh network with CDB enabled to avoid conflicts.
 
-Key
-features
-================
+Key features
+============
 
-*
-**Persistent
-Storage**：
-当
-:kconfig:option:`CONFIG_BT_SETTINGS`
-启用
-时
-所有
-CDB
-data
-被
-persistently
-存储
-允许
-provisioner
-在
-reboots
-之间
-recover
-network
-state。
-*
-**Address
-Management**：
-自动
-allocation
-和
-tracking
-provisioned
-nodes
-的
-unicast
-addresses。
-*
-**Key
-Management**：
-存储
-和
-synchronization
-network
-keys
-和
-application
-keys。
-*
-**Node
-Tracking**：
-维护
-每个
-provisioned
-node
-的
-information
-包括
-UUID、
-address、
-element
-count、
-device
-key、
-和
-configuration
-status。
-*
-**IV
-Index
-Management**：
-跟踪
-network
-的
-IV
-Index
-和
-IV
-Update
-state。
+* **Persistent Storage**: All CDB data is stored persistently when :kconfig:option:`CONFIG_BT_SETTINGS` is enabled, allowing the provisioner to recover network state across reboots.
+* **Address Management**: Automatic allocation and tracking of unicast addresses for provisioned nodes.
+* **Key Management**: Storage and synchronization of network keys and application keys.
+* **Node Tracking**: Maintains information about each provisioned node including UUID, address, element count, device key, and configuration status.
+* **IV Index Management**: Tracks the network's IV Index and IV Update state.
 
-Configuration
-options
+Configuration options
 *********************
 
-以下
-Kconfig
-options
-控制
-CDB
-capacity：
+The following Kconfig options control the CDB capacity:
 
-*
-:kconfig:option:`CONFIG_BT_MESH_CDB_NODE_COUNT`
--
-CDB
-可以
-处理
-的
-nodes
-最大
-数量。
-*
-:kconfig:option:`CONFIG_BT_MESH_CDB_SUBNET_COUNT`
--
-CDB
-可以
-处理
-的
-subnets
-最大
-数量。
-*
-:kconfig:option:`CONFIG_BT_MESH_CDB_APP_KEY_COUNT`
--
-CDB
-可以
-处理
-的
-application
-keys
-最大
-数量。
+* :kconfig:option:`CONFIG_BT_MESH_CDB_NODE_COUNT` - Maximum number of nodes the CDB can handle.
+* :kconfig:option:`CONFIG_BT_MESH_CDB_SUBNET_COUNT` - Maximum number of subnets the CDB can handle.
+* :kconfig:option:`CONFIG_BT_MESH_CDB_APP_KEY_COUNT` - Maximum number of application keys the CDB can handle.
 
+Additional options:
+
+* :kconfig:option:`CONFIG_BT_MESH_CDB_KEY_SYNC` - Enables automatic synchronization between mesh keys on the provisioner node and the CDB keys.
+  If option is enabled then operations with keys performed through the :ref:`bluetooth_mesh_models_cfg_srv` are automatically mirrored to the CDB.
+
+Data Structures
+***************
+
+The CDB was designed to handle data collected in several data structures.
+The structures represent nodes, subnets, application keys, and the overall database state.
+
+Node structure
+==============
+
+.. literalinclude:: ../../../../../../include/zephyr/bluetooth/mesh/cdb.h
+   :language: c
+   :dedent:
+   :start-after: doc string cdb node start
+   :end-before: doc string cdb node end
+
+Node flags:
+
+* ``BT_MESH_CDB_NODE_CONFIGURED`` - Set when the node has been configured with keys and bindings.
+
+Subnet structure
+================
+
+.. literalinclude:: ../../../../../../include/zephyr/bluetooth/mesh/cdb.h
+   :language: c
+   :dedent:
+   :start-after: doc string cdb subnet start
+   :end-before: doc string cdb subnet end
+
+Application Key structure
+==========================
+
+.. literalinclude:: ../../../../../../include/zephyr/bluetooth/mesh/cdb.h
+   :language: c
+   :dedent:
+   :start-after: doc string cdb app key start
+   :end-before: doc string cdb app key end
+
+Main CDB structure
+==================
+
+.. literalinclude:: ../../../../../../include/zephyr/bluetooth/mesh/cdb.h
+   :language: c
+   :dedent:
+   :start-after: doc string cdb start
+   :end-before: doc string cdb end
+
+Usage scenarios
+***************
+
+The following patterns demonstrate common CDB usage scenarios:
+
+* :ref:`cdb_pattern_1` - Creating and initializing the CDB
+* :ref:`cdb_pattern_2` - Managing node provisioning and addresses
+* :ref:`cdb_pattern_3` - Managing network keys and subnets
+* :ref:`cdb_pattern_4` - Finding and removing subnets
+* :ref:`cdb_pattern_5` - Adding application keys to the CDB
+* :ref:`cdb_pattern_6` - Finding and removing application keys
+* :ref:`cdb_pattern_7` - Configuring provisioned nodes
+* :ref:`cdb_pattern_8` - Processing nodes with callbacks
+* :ref:`cdb_pattern_9` - Finding and removing nodes
+* :ref:`cdb_pattern_10` - Managing IV Index updates
+* :ref:`cdb_pattern_11` - Importing/exporting device keys
+* :ref:`cdb_pattern_12` - Resetting the database
 
 .. note::
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+   The provided below source code of scenarios should be treated as conceptual patterns rather than exact implementations.
+   They require adaptation to fit into an application context and testing.
+   Please read the CDB API description for correct usage.
+
+.. _cdb_pattern_1:
+
+Provisioner initialization
+==========================
+
+On the embedded provisioner node, the CDB must be initialized before the mesh stack is provisioned and the application can use it for key storage, node tracking, and configuration.
+This step establishes the primary network key, the initial subnet, and the starting IV Index and address space, so that all later CDB operations work on a well‑defined network context and can be persisted across reboots.
+
+A typical provisioner initializes the CDB during startup:
+
+.. code-block:: c
+
+   #include <zephyr/bluetooth/mesh.h>
+
+   static int provisioner_init(void)
+   {
+       uint8_t net_key[16];
+       int err;
+
+       /* Initialize Bluetooth Mesh */
+       err = bt_mesh_init(&prov, &comp);
+       if (err) {
+           return err;
+       }
+
+       /* Load settings if persistent storage is enabled */
+       if (IS_ENABLED(CONFIG_BT_SETTINGS)) {
+           settings_load();
+       }
+
+       /* Generate or use predefined network key */
+       bt_rand(net_key, 16);
+
+       /* Create CDB with primary network key */
+       err = bt_mesh_cdb_create(net_key);
+       if (err == -EALREADY) {
+           printk("Using stored CDB\n");
+       } else if (err) {
+           printk("Failed to create CDB (err %d)\n", err);
+           return err;
+       } else {
+           printk("Created new CDB\n");
+       }
+
+       return 0;
+   }
+
+Key points:
+
+* Call the :c:func:`bt_mesh_cdb_create` function with the primary network key.
+* Returns error code if CDB already exists (loaded from persistent storage).
+* The function automatically creates a subnet with ``NetIdx = 0``.
+* Sets the IV Index to ``0`` and lowest available address to ``1``.
+
+.. _cdb_pattern_2:
+
+Provisioning and node allocation
+================================
+
+When you add new devices to the mesh, their addresses, device keys, and basic metadata must be recorded consistently in the provisioner’s database.
+Automatic node allocation during PB‑ADV/PB‑GATT provisioning keeps CDB and the actual network in sync.
+When provisioning a new device, the CDB automatically allocates the node during the provisioning process.
+
+However, you can also manually allocate nodes or check allocation.
+Manual node allocation is useful for advanced scenarios such as importing nodes from an external source, pre‑allocating address ranges, or recovering a network from known information.
+
+.. code-block:: c
+
+   /* Provisioning callback - node is automatically added to CDB */
+   static void node_added(uint16_t idx, uint8_t uuid[16], uint16_t addr,
+                          uint8_t num_elem)
+   {
+       printk("Node added: addr=0x%04x, elements=%d\n", addr, num_elem);
+       /* The CDB node is created automatically by the provisioning subsystem */
+   }
+
+   static const struct bt_mesh_prov prov = {
+       .uuid = dev_uuid,
+       .node_added = node_added,
+       /* ... other callbacks ... */
+   };
+
+   /* Manual node allocation (if needed) */
+   static struct bt_mesh_cdb_node *allocate_node(const uint8_t uuid[16],
+                                                   uint8_t num_elem)
+   {
+       struct bt_mesh_cdb_node *node;
+       uint16_t addr;
+
+       /* Get free address or specify one (0 = auto-allocate) */
+       addr = bt_mesh_cdb_free_addr_get(num_elem);
+       if (addr == BT_MESH_ADDR_UNASSIGNED) {
+           printk("No free addresses available\n");
+           return NULL;
+       }
+
+       /* Allocate node in CDB */
+       node = bt_mesh_cdb_node_alloc(uuid, addr, num_elem, net_idx);
+       if (node == NULL) {
+           printk("Failed to allocate node\n");
+           return NULL;
+       }
+
+       return node;
+   }
+
+Key points:
+
 * During normal PB-ADV/PB-GATT provisioning, nodes are automatically added to the CDB.
 * The :c:func:`bt_mesh_cdb_node_alloc` function creates a CDB entry with the specified parameters.
 * Pass :c:macro:`BT_MESH_ADDR_UNASSIGNED` as the address to let the CDB auto-assign the lowest available address.

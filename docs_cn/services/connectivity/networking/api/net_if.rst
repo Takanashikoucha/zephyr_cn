@@ -1,71 +1,71 @@
 .. _net_if_interface:
 
-Network Interface
+网络接口
 #################
 
 .. contents::
     :local:
     :depth: 2
 
-Overview
+概述
 ********
 
-Network interface 是将 network device drivers 和 network stack 上层联系在一起的 nexus。所有发送和接收的 data 通过 network interface 传输。Network interfaces 无法在 runtime 创建。专用 linker section 将包含关于它们的信息（且该 section 在 linking 时填充。
+网络接口是将网络设备驱动程序和网络协议栈上层联系在一起的枢纽。所有发送和接收的数据都通过网络接口传输。网络接口无法在运行时创建。一个特殊的链接器节将包含关于它们的信息，该节在链接时填充。
 
-Network interfaces 由 ``NET_DEVICE_INIT()`` macro 创建。对 Ethernet network（应改用名为 ``ETH_NET_DEVICE_INIT()`` 的 macro（其若启用 :kconfig:option:`CONFIG_NET_VLAN` 将自动创建 VLAN interfaces。这些 macros 通常用于 network device driver 源代码中。
+网络接口由 ``NET_DEVICE_INIT()`` 宏创建。对于以太网，应改用名为 ``ETH_NET_DEVICE_INIT()`` 的宏，因为它会在启用 :kconfig:option:`CONFIG_NET_VLAN` 时自动创建 VLAN 接口。这些宏通常用于网络设备驱动程序源代码中。
 
-Network interface 可调用 ``net_if_up()`` 开启（调用 ``net_if_down()`` 关闭。Device 上电时（network interface 默认也开启。
+通过调用 ``net_if_up()`` 可以打开网络接口，通过调用 ``net_if_down()`` 可以关闭。当设备上电时，网络接口默认也会打开。
 
-Network interfaces 可用 ``struct net_if *`` pointer 或 network interface index 引用。Network interface 可调用 ``net_if_get_by_index()`` 从其 index 解析（调用 ``net_if_get_by_iface()`` 从 interface pointer 解析。
+网络接口可以通过 ``struct net_if *`` 指针或网络接口索引来引用。通过调用 ``net_if_get_by_index()`` 可以从索引解析网络接口，通过调用 ``net_if_get_by_iface()`` 可以从接口指针解析。
 
 .. _net_if_interface_ip_management:
 
-Network devices 的 IP address 须设置以使它们可连接。在典型动态 network 环境中（IP addresses 自动由例如 DHCPv4 设置。然而若需要（application 可手动设置 device 的 IP address。执行此操作的 functions（如 ``net_if_ipv4_addr_add()``）参见以下 API 文档。
+必须为网络设备设置 IP 地址才能使其可连接。在典型的动态网络环境中，IP 地址例如由 DHCPv4 自动设置。但是，如果需要，应用程序可以手动设置设备的 IP 地址。有关执行此操作的函数（如 ``net_if_ipv4_addr_add()``），参见以下 API 文档。
 
-``net_if_get_default()`` 返回*默认* network interface。此默认 interface 的含义可通过 :kconfig:option:`CONFIG_NET_DEFAULT_IF_FIRST` 和 :kconfig:option:`CONFIG_NET_DEFAULT_IF_ETHERNET` 等 options 配置。选择默认 network interface 的可用 options 参见 Kconfig file :zephyr_file:`subsys/net/ip/Kconfig`。
+``net_if_get_default()`` 返回*默认*网络接口。此默认接口的含义可以通过 :kconfig:option:`CONFIG_NET_DEFAULT_IF_FIRST` 和 :kconfig:option:`CONFIG_NET_DEFAULT_IF_ETHERNET` 等选项进行配置。有关选择默认网络接口的可用选项，参见 Kconfig 文件 :zephyr_file:`subsys/net/ip/Kconfig`。
 
-传输和接收的 network packets 可用 network packet priority 分类。这通常在 Ethernet networks 中使用 virtual LANs（VLANs）时执行。高优先级 packets 可比低优先级 packets 更早发送或接收。Traffic class setup 可用 :kconfig:option:`CONFIG_NET_TC_TX_COUNT` 和 :kconfig:option:`CONFIG_NET_TC_RX_COUNT` options 配置。
+发送和接收的网络数据包可以通过网络数据包优先级进行分类。这通常在使用虚拟局域网（VLAN）的以太网中执行。高优先级数据包可以比低优先级数据包更早发送或接收。流量类设置可以通过 :kconfig:option:`CONFIG_NET_TC_TX_COUNT` 和 :kconfig:option:`CONFIG_NET_TC_RX_COUNT` 选项进行配置。
 
-若启用 :kconfig:option:`CONFIG_NET_PROMISCUOUS_MODE`（且底层 network technology 支持 promiscuous mode（则可能接收 network device driver 能接收的所有 network packets。更多细节参见 :ref:`promiscuous_interface` API。
+如果启用了 :kconfig:option:`CONFIG_NET_PROMISCUOUS_MODE` 并且底层网络技术支持混杂模式，则可以接收网络设备驱动程序能够接收的所有网络数据包。更多细节参见 :ref:`promiscuous_interface` API。
 
 .. _net_if_interface_state_management:
 
-Network interface state management
+网络接口状态管理
 **********************************
 
-Zephyr 区分两种 interface states：administrative state 和 operational state（如 RFC 2863 所述。Administrative state 指示 interface 是否开启或关闭。此 state 由 :c:enumerator:`NET_IF_UP` flag 表示（并由 application 控制。其可调用 :c:func:`net_if_up` 或 :c:func:`net_if_down` functions 更改。Network drivers 或 L2 implementations 不应自行更改 administrative state。
+Zephyr 区分两种接口状态：管理状态和操作状态，如 RFC 2863 所述。管理状态指示接口是否打开或关闭。此状态由 :c:enumerator:`NET_IF_UP` 标志表示，并由应用程序控制。可以通过调用 :c:func:`net_if_up` 或 :c:func:`net_if_down` 函数来更改。网络驱动程序或 L2 实现不应自行更改管理状态。
 
-然而将 interface 启动不总意味着 interface 准备好传输 packets。因此（实现了表示 interface 内部 status 的 operational state。Operational state 在以下任一条件发生时更新：
+然而，将接口启动并不总是意味着接口已准备好发送数据包。因此，实现了表示接口内部状态的操作状态。操作状态在以下任一条件发生时更新：
 
-  * Application 启动/关闭 interface（administrative state 变化）。
-  * Driver/L2 通知 interface PHY status 已变化。
-  * Driver/L2 通知 interface 已加入/离开 network。
+  * 应用程序启动/关闭接口（管理状态变化）。
+  * 驱动程序/L2 通知接口 PHY 状态已变化。
+  * 驱动程序/L2 通知接口已加入/离开网络。
 
-PHY status 由 :c:enumerator:`NET_IF_LOWER_UP` flag 表示（并可用 :c:func:`net_if_carrier_on` 和 :c:func:`net_if_carrier_off` 更改。默认（flag 在新初始化的 interface 上设置。更改 carrier state 的 event 示例为 Ethernet cable 插入或拔出。
+PHY 状态由 :c:enumerator:`NET_IF_LOWER_UP` 标志表示，并可用 :c:func:`net_if_carrier_on` 和 :c:func:`net_if_carrier_off` 更改。默认情况下，该标志在新初始化的接口上设置。更改载波状态的事件示例为以太网电缆插入或拔出。
 
-Network association status 由 :c:enumerator:`NET_IF_DORMANT` flag 表示（并可用 :c:func:`net_if_dormant_on` 和 :c:func:`net_if_dormant_off` 更改。默认（flag 在新初始化的 interface 上清除。更改 dormant state 的 event 示例为 Wi-Fi driver 成功连接到 access point。此场景中（driver 应在初始化期间将 dormant state 设为 ON（且一旦检测到已连接到 Wi-Fi network（dormant state 应设为 OFF。
+网络关联状态由 :c:enumerator:`NET_IF_DORMANT` 标志表示，并可用 :c:func:`net_if_dormant_on` 和 :c:func:`net_if_dormant_off` 更改。默认情况下，该标志在新初始化的接口上清除。更改休眠状态的事件示例为 Wi-Fi 驱动程序成功连接到接入点。在此场景中，驱动程序应在初始化期间将休眠状态设置为 ON，一旦检测到已连接到 Wi-Fi 网络，休眠状态应设置为 OFF。
 
-Interface 的 operational state 按如下更新：
+接口的操作状态按如下方式更新：
 
   * ``!net_if_is_admin_up()``
 
-    Interface 处于 :c:enumerator:`NET_IF_OPER_DOWN`。
+    接口处于 :c:enumerator:`NET_IF_OPER_DOWN`。
 
   * ``net_if_is_admin_up() && !net_if_is_carrier_ok()``
 
-    Interface 处于 :c:enumerator:`NET_IF_OPER_DOWN` 或（若 interface 为 stacked（virtual）（:c:enumerator:`NET_IF_OPER_LOWERLAYERDOWN`。
+    接口处于 :c:enumerator:`NET_IF_OPER_DOWN`，或者如果接口是堆叠的（虚拟的），则处于 :c:enumerator:`NET_IF_OPER_LOWERLAYERDOWN`。
 
   * ``net_if_is_admin_up() && net_if_is_carrier_ok() && net_if_is_dormant()``
 
-    Interface 处于 :c:enumerator:`NET_IF_OPER_DORMANT`。
+    接口处于 :c:enumerator:`NET_IF_OPER_DORMANT`。
 
   * ``net_if_is_admin_up() && net_if_is_carrier_ok() && !net_if_is_dormant()``
 
-    Interface 处于 :c:enumerator:`NET_IF_OPER_UP`。
+    接口处于 :c:enumerator:`NET_IF_OPER_UP`。
 
-仅当 interface 进入 :c:enumerator:`NET_IF_OPER_UP` state 后（interface 上设置 :c:enumerator:`NET_IF_RUNNING` flag（指示 interface 准备好供 application 使用。
+只有当接口进入 :c:enumerator:`NET_IF_OPER_UP` 状态后，接口上才设置 :c:enumerator:`NET_IF_RUNNING` 标志，表示接口已准备好供应用程序使用。
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: net_if

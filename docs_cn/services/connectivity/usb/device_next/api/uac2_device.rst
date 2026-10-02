@@ -1,11 +1,11 @@
 .. _uac2_device:
 
-Audio Class 2 device API
+音频类 2 设备 API
 ########################
 
-USB Audio Class 2 device 特定 API（定义在 :zephyr_file:`include/zephyr/usb/class/usbd_uac2.h`。
+USB 音频类 2 设备专用 API，定义在 :zephyr_file:`include/zephyr/usb/class/usbd_uac2.h` 中。
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: uac2_device

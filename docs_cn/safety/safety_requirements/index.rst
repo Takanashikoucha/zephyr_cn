@@ -1,48 +1,16 @@
 .. _safety_requirements_section:
 
-Safety
-Requirements
-Management
+安全需求管理
 ##############################
 
-These
-documents
-describe
-the
-processes、
-developer
-guidelines
-and
-requirements
-for
-ensuring
-the
-creation、
-verification
-and
-configuration
-management
-of
-requirements
-follows
-a
-suitable
-approach.
+这些文档描述了用于确保需求（requirements）的创建、验证和配置管理遵循合适方法
+的流程、开发者指南和需求。
 
-..
-toctree::
-:
-maxdepth:
-1
-:
-glob:
+.. toctree::
+   :maxdepth: 1
+   :glob:
 
-safety
-requirements.rst
-safety
-requirements
-checklist.rst
-getting
-started/index
-requirements
-catalog.rst
+   safety_requirements.rst
+   safety_requirements_checklist.rst
+   getting_started/index
+   requirements_catalog.rst

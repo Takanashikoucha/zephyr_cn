@@ -1,34 +1,30 @@
 .. _mcumgr_smp_group_9:
 
-Shell management
+Shell 管理
 ################
 
-Shell management 允许通过 SMP
-protocol 向 shell subsystem 传递
-commands。
+Shell 管理允许通过 SMP 协议向 shell 子系统传递命令。
 
-Shell management group 定义以下 commands：
+Shell 管理组定义了以下命令：
 
 .. table::
     :align: center
 
     +-------------------+-----------------------------------------------+
-    | ``Command ID``    | Command description                           |
+    | ``命令 ID``    | 命令描述                                       |
     +===================+===============================================+
-    | ``0``             | Shell command line execute                    |
+    | ``0``             | Shell 命令行执行                                |
     +-------------------+-----------------------------------------------+
 
-Shell command line execute
+Shell 命令行执行
 **************************
 
-Command 允许以类似输入到
-shell 的方式执行 command line（但 request 和
-response 均通过 SMP 传输。
+该命令允许以类似在 shell 中键入的方式执行命令行，但请求和响应均通过 SMP 传输。
 
-Shell command line execute request
+Shell 命令行执行请求
 ==================================
 
-Execute command request header：
+执行命令请求头：
 
 .. table::
     :align: center
@@ -39,7 +35,7 @@ Execute command request header：
     | ``2``  | ``9``        |  ``0``         |
     +--------+--------------+----------------+
 
-Request 的 CBOR data：
+请求的 CBOR 数据：
 
 .. code-block:: none
 
@@ -57,18 +53,17 @@ Request 的 CBOR data：
     :align: center
 
     +-----------------------+---------------------------------------------------+
-    | "argv"                | array consisting of strings representing command  |
-    |                       | and its arguments.                                |
+    | "argv"                | 由表示命令及其参数的字符串组成的数组。             |
     +-----------------------+---------------------------------------------------+
-    | <cmd>                 | command to be executed.                           |
+    | <cmd>                 | 要执行的命令。                                     |
     +-----------------------+---------------------------------------------------+
-    | <arg>                 | optional arguments to command.                    |
+    | <arg>                 | 命令的可选参数。                                   |
     +-----------------------+---------------------------------------------------+
 
-Shell command line execute response
+Shell 命令行执行响应
 ===================================
 
-Command line execute response header fields：
+命令行执行响应头字段：
 
 .. table::
     :align: center
@@ -79,7 +74,7 @@ Command line execute response header fields：
     | ``3``  | ``9``        |  ``0``         |
     +--------+--------------+----------------+
 
-成功 response 的 CBOR data：
+成功响应的 CBOR 数据：
 
 .. code-block:: none
 
@@ -88,8 +83,7 @@ Command line execute response header fields：
         (str)"ret"          : (int)
     }
 
-错误时（CBOR data 取
-以下形式：
+出错时 CBOR 数据形式如下：
 
 .. tabs::
 
@@ -104,7 +98,7 @@ Command line execute response header fields：
               }
           }
 
-   .. group-tab:: SMP version 1 (and non-group SMP version 2)
+   .. group-tab:: SMP version 1（及非组基 SMP version 2）
 
       .. code-block:: none
 
@@ -118,23 +112,21 @@ Command line execute response header fields：
     :align: center
 
     +------------------+-------------------------------------------------------------------------+
-    | "o"              | command output.                                                         |
+    | "o"              | 命令输出。                                                              |
     +------------------+-------------------------------------------------------------------------+
-    | "ret"            | return code from shell command execution.                               |
+    | "ret"            | shell 命令执行的返回码。                                                |
     +------------------+-------------------------------------------------------------------------+
-    | "err" -> "group" | :c:enum:`mcumgr_group_t` group of the group-based error code. Only      |
-    |                  | appears if an error is returned when using SMP version 2.               |
+    | "err" -> "group" | :c:enum:`mcumgr_group_t` 组基错误码所属的组。仅在                        |
+    |                  | 使用 SMP version 2 且返回错误时出现。                                     |
     +------------------+-------------------------------------------------------------------------+
-    | "err" -> "rc"    | contains the index of the group-based error code. Only appears if       |
-    |                  | non-zero (error condition) when using SMP version 2.                    |
+    | "err" -> "rc"    | 包含组基错误码的索引。仅在使用 SMP version 2 且                           |
+    |                  | 非零（错误条件）时出现。                                                  |
     +------------------+-------------------------------------------------------------------------+
-    | "rc"             | :c:enum:`mcumgr_err_t` only appears if non-zero (error condition) when  |
-    |                  | using SMP version 1 or for SMP errors when using SMP version 2.         |
+    | "rc"             | :c:enum:`mcumgr_err_t` 仅在使用 SMP version 1 且非零（错误条件）时出现，  |
+    |                  | 或使用 SMP version 2 时 SMP 错误时出现。                                  |
     +------------------+-------------------------------------------------------------------------+
 
 .. note::
-    在 Zephyr 较旧版本中（"rc" 同时用于
-    mcumgr status code
-    和 shell command execution return code（此 legacy behaviour 可
-    通过启用 :kconfig:option:`CONFIG_MCUMGR_GRP_SHELL_LEGACY_RC_RETURN_CODE`
-    恢复
+    在 Zephyr 较旧版本中，"rc" 同时用于 mcumgr 状态码
+    和 shell 命令执行返回码。此旧版行为可通过启用
+    :kconfig:option:`CONFIG_MCUMGR_GRP_SHELL_LEGACY_RC_RETURN_CODE` 恢复。

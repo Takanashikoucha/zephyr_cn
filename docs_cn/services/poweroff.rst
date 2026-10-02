@@ -1,8 +1,6 @@
 .. _poweroff:
 
-Power
-off
+断电
 #########
 
-.. doxygengroup::
-   sys_poweroff
+.. doxygengroup:: sys_poweroff

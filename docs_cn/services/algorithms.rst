@@ -1,9 +1,10 @@
 .. _algorithms_services:
 
-Algorithms & Data
+算法与数据
 #################
 
-此 section 涵盖用于转换、编码和验证 data 的 services（包括 checksums、digital signal processing 和 serialization。
+本节涵盖用于转换、编码和验证数据的服务，
+包括校验和、数字信号处理和序列化。
 
 .. toctree::
    :maxdepth: 1

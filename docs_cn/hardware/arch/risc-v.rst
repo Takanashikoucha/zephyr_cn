@@ -94,7 +94,7 @@ S 模式移植的实际规则是：
   调用例程、递减 ``nested``、重新启用中断，然后调用
   :c:func:`z_reschedule_unlocked` 处理在例程内部变为就绪状态的线程。
 
-支持将 `OpenSBI`_ 等外部 SBI 实现作为 West 模块使用，
+将 `OpenSBI`_ 等外部 SBI 实现作为 West 模块使用的支持
 留作后续工作。
 
 SMP 支持

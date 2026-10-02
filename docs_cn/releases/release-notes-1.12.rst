@@ -30,7 +30,6 @@ Security Vulnerability Related
 * 适当大小的 k_malloc() 请求可能导致小于请求的缓冲。
   使用该缓冲可能导致写入未分配内存。
   已添加适当的溢出检查以修复 k_malloc 和 k_calloc 中的此问题
-  issue in k_malloc and k_calloc.
 
   * kernel：mempool：在 k_malloc() 中检查溢出
   * kernel：mempool：始终在 k_calloc() 中检查溢出
@@ -163,7 +162,7 @@ Networking
 * 添加 freeaddrinfo() API 支持
 * 允许 getaddrinfo() API 中的空服务
 * 为 net_context 添加 PRIORITY 支持。其工作方式与
-  BSD sockets API 中的 SO_PRIORITY 相同
+  BSD sockets API 中的 SO_PRIORITY 相同。
 * 为 Rx 和 Tx 路径添加网络流量分类支持。
   这允许对传入或传出网络流量进行优先级排序。
   Rx 和 Tx 均可有最多 8 个网络队列
@@ -201,14 +200,12 @@ Networking
 * WPAN USB 驱动和示例应用修复
 * BSD socket 示例应用修复
 * 在具有多个网络接口时修复 net-shell 中的 IPv4 echo-request（ping）
-  interfaces.
 * 修复某些配置中的 IPv6 编译错误
 
 Bluetooth
 *********
 
 * 基于 settings 的 BLE（包括 CCC）和 Mesh 持久存储功能
-  Mesh
 * 避免闪存磨损的 Mesh 特定优化
 * 添加从应用设置身份地址的新 API
 * 从代码库移除旧 bt_storage API
@@ -216,13 +213,11 @@ Bluetooth
 * 通过 ISR 友好调用为 BLE 添加标准 entropy 驱动支持
 * 多个 BLE Mesh bug 修复和改进
 * 添加选项，即使使用隐私也使用身份地址进行广播
-  privacy
 * 添加对 L2CAP 动态分配 PSM 值的支持
 * GATT CCC 处理修复
 * 为清晰度重新设计 GATT 属性声明宏
 * 修复控制器中的连接取消处理
 * 修复控制器中与白名单处理相关的潜在断言失败
-  handling
 
 Build and Infrastructure
 ************************

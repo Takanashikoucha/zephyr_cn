@@ -1,34 +1,18 @@
 .. _ip_4_6_interface:
 
-IPv4/IPv6
-Primitives
-and
-Helpers
+IPv4/IPv6 原语和辅助函数
 ################################
 
 .. contents::
-   :local:
-   :depth:
-   2
+    :local:
+    :depth: 2
 
-Overview
+概述
 ********
 
-Miscellaneous
-defines
-和
-helper
-functions
-用于
-IP
-addresses
-和
-IP
-protocols。
+IP 地址和 IP 协议的各种定义和辅助函数。
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   ip_4_6
+.. doxygengroup:: ip_4_6

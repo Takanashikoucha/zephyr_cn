@@ -7,37 +7,37 @@ MQTT
     :local:
     :depth: 2
 
-Overview
+概述
 ********
 
-MQTT（Message Queuing Telemetry Transport）是运行于 TCP/IP stack 之上的 application layer protocol。其为 machine-to-machine 通信的轻量级 publish/subscribe messaging transport。协议本身更多信息参见 https://mqtt.org/。
+MQTT（消息队列遥测传输）是一种应用层协议，运行在 TCP/IP 协议栈之上。它是一种轻量级的发布/订阅消息传输协议，用于机器对机器通信。有关协议本身的更多信息，参见 https://mqtt.org/。
 
-Zephyr 提供构建于 BSD sockets API 之上的 MQTT client library。Library 可用 :kconfig:option:`CONFIG_MQTT_LIB` Kconfig option 启用（且可按 per-client 配置（支持 MQTT versions 3.1.0、3.1.1 和 5.0。Zephyr MQTT 实现可用于通过 TCP 通信的 plain sockets（或通过 TLS 通信的 secure sockets。Zephyr sockets 更多信息参见 :ref:`bsd_sockets_interface`。
+Zephyr 提供了一个基于 BSD 套接字 API 构建的 MQTT 客户端库。该库可以通过 :kconfig:option:`CONFIG_MQTT_LIB` Kconfig 选项启用，并按客户端进行配置，支持 MQTT 版本 3.1.0、3.1.1 和 5.0。Zephyr MQTT 实现可用于通过 TCP 通信的普通套接字，也可用于通过 TLS 通信的安全套接字。有关 Zephyr 套接字的更多信息，参见 :ref:`bsd_sockets_interface`。
 
-MQTT clients 需要连接 MQTT server。此类 server 称为 MQTT Broker（负责管理 client subscriptions（并分发 clients 发布的 messages。有许多 MQTT brokers 实现（其中之一为 Eclipse Mosquitto。Eclipse Mosquitto project 更多信息参见 https://mosquitto.org/。
+MQTT 客户端需要一个 MQTT 服务器来连接。这样的服务器称为 MQTT 代理（Broker），负责管理客户端订阅并分发客户端发布的消息。有许多 MQTT 代理实现，其中之一是 Eclipse Mosquitto。有关 Eclipse Mosquitto 项目的更多信息，参见 https://mosquitto.org/。
 
-Sample usage
+使用示例
 ************
 
-要创建 MQTT client（须定义 client context structure 和 buffers：
+要创建一个 MQTT 客户端，需要定义客户端上下文结构和缓冲区：
 
 .. code-block:: c
 
-   /* Buffers for MQTT client. */
+   /* MQTT 客户端缓冲区。 */
    static uint8_t rx_buffer[256];
    static uint8_t tx_buffer[256];
 
-   /* MQTT client context */
+   /* MQTT 客户端上下文 */
    static struct mqtt_client client_ctx;
 
-Application 中可创建多个 MQTT client instances（并独立管理。此外（还需要 MQTT Broker address information 的 structure。此 structure 须在 MQTT client 的整个 lifespan 中可访问（且可在 MQTT clients 之间共享：
+应用程序中可以创建多个 MQTT 客户端实例并独立管理。此外，还需要一个 MQTT 代理地址信息结构。该结构必须在 MQTT 客户端的整个生命周期中可访问，并可在 MQTT 客户端之间共享：
 
 .. code-block:: c
 
-   /* MQTT Broker address information. */
+   /* MQTT 代理地址信息。 */
    static struct net_sockaddr_storage broker;
 
-MQTT client library 通过为处理相应 events 创建的 callback function 向 application 通知 MQTT events：
+MQTT 客户端库通过为处理相应事件创建的回调函数向应用程序通知 MQTT 事件：
 
 .. code-block:: c
 
@@ -45,19 +45,19 @@ MQTT client library 通过为处理相应 events 创建的 callback function 向
                          const struct mqtt_evt *evt)
    {
       switch (evt->type) {
-         /* Handle events here. */
+         /* 在此处处理事件。 */
       }
    }
 
-可能 events 的列表参见 :ref:`mqtt_api_reference`。
+有关可能事件的列表，参见 :ref:`mqtt_api_reference`。
 
-Client context structure 须在使用前初始化并设置。TCP transport 的示例 configuration 如下：
+客户端上下文结构需要在使用前进行初始化和配置。以下是 TCP 传输的示例配置：
 
 .. code-block:: c
 
    mqtt_client_init(&client_ctx);
 
-   /* MQTT client configuration */
+   /* MQTT 客户端配置 */
    client_ctx.broker = &broker;
    client_ctx.evt_cb = mqtt_evt_handler;
    client_ctx.client_id.utf8 = (uint8_t *)"zephyr_mqtt_client";
@@ -67,13 +67,13 @@ Client context structure 须在使用前初始化并设置。TCP transport 的�
    client_ctx.protocol_version = MQTT_VERSION_3_1_1;
    client_ctx.transport.type = MQTT_TRANSPORT_NON_SECURE;
 
-   /* MQTT buffers configuration */
+   /* MQTT 缓冲区配置 */
    client_ctx.rx_buf = rx_buffer;
    client_ctx.rx_buf_size = sizeof(rx_buffer);
    client_ctx.tx_buf = tx_buffer;
    client_ctx.tx_buf_size = sizeof(tx_buffer);
 
-Configuration 设置后（MQTT client 可连接 MQTT broker。调用 ``mqtt_connect`` function（其创建适当的 socket（建立 TCP/TLS connection（并发送 ``MQTT CONNECT`` message。被通知时（application 应调用 ``mqtt_input`` function 以处理收到的 response。注意 ``mqtt_input`` 为非阻塞 function（因此 application 应使用 socket ``poll`` 等待 response。若 connection 成功（``MQTT_EVT_CONNACK`` 通过 callback function 通知 application。
+配置完成后，MQTT 客户端可以连接到 MQTT 代理。调用 ``mqtt_connect`` 函数，该函数将创建适当的套接字、建立 TCP/TLS 连接并发送 ``MQTT CONNECT`` 消息。收到通知后，应用程序应调用 ``mqtt_input`` 函数处理收到的响应。注意，``mqtt_input`` 是非阻塞函数，因此应用程序应使用套接字 ``poll`` 等待响应。如果连接成功，``MQTT_EVT_CONNACK`` 将通过回调函数通知应用程序。
 
 .. code-block:: c
 
@@ -92,18 +92,18 @@ Configuration 设置后（MQTT client 可连接 MQTT broker。调用 ``mqtt_conn
       mqtt_abort(&client_ctx);
    }
 
-上述代码片段中（MQTT callback function 应在成功连接时设置 ``connected`` flag。若 connection 在 MQTT 层失败或发生 timeout（connection 被中止（且底层 socket 关闭。
+在上述代码片段中，MQTT 回调函数应在成功连接时设置 ``connected`` 标志。如果连接在 MQTT 层失败或发生超时，连接将被中止，底层套接字关闭。
 
-Connection 建立后（application 需周期性调用 ``mqtt_input`` 和 ``mqtt_live`` functions 以处理 incoming data（并维护 connection。若收到 MQTT message（MQTT callback function 被调用（并通知适当 event。
+连接建立后，应用程序需要定期调用 ``mqtt_input`` 和 ``mqtt_live`` 函数来处理传入数据并维护连接。如果收到 MQTT 消息，将调用 MQTT 回调函数并通知相应事件。
 
-Connection 可调用 ``mqtt_disconnect`` function 关闭。
+通过调用 ``mqtt_disconnect`` 函数可以关闭连接。
 
-Zephyr 提供利用 MQTT client API 的 sample code。更多信息参见 :zephyr:code-sample:`mqtt-publisher`。
+Zephyr 提供了使用 MQTT 客户端 API 的示例代码。更多信息参见 :zephyr:code-sample:`mqtt-publisher`。
 
-Using MQTT with TLS
+使用 TLS 的 MQTT
 *******************
 
-Zephyr MQTT library 可通过选择 secure transport type（``MQTT_TRANSPORT_SECURE``）和一些额外 configuration information 用于 TLS transport 以进行安全通信：
+Zephyr MQTT 库可以通过选择安全传输类型（``MQTT_TRANSPORT_SECURE``）和一些额外配置信息来使用 TLS 传输进行安全通信：
 
 .. code-block:: c
 
@@ -118,17 +118,17 @@ Zephyr MQTT library 可通过选择 secure transport type（``MQTT_TRANSPORT_SEC
    tls_config->hostname = MQTT_BROKER_HOSTNAME;
    tls_config->set_native_tls = true;
 
-此 sample code 中（``m_sec_tags`` array 持有 tags 列表（引用 MQTT library 应用于 authentication 的 TLS credentials。不指定 ``cipher_list``（以允许使用系统中可用的所有 cipher suites。将 ``hostname`` field 设为 broker hostname（其是 server authentication 所必需的。最后（通过设置 ``peer_verify`` field 强制 peer certificate 验证。
+在此示例代码中，``m_sec_tags`` 数组持有一组标签，引用 MQTT 库应用于身份验证的 TLS 凭据。我们不指定 ``cipher_list``，以允许使用系统中可用的所有密码套件。我们将 ``hostname`` 字段设置为代理主机名，这是服务器身份验证所必需的。最后，我们通过设置 ``peer_verify`` 字段来强制对等证书验证。
 
-注意 ``m_sec_tags`` array 引用的 TLS credentials 须先在系统中注册。如何做的更多信息参见 :ref:`secure sockets documentation <secure_sockets_interface>`。
+注意，``m_sec_tags`` 数组引用的 TLS 凭据必须先在系统中注册。有关如何操作的更多信息，参见 :ref:`安全套接字文档 <secure_sockets_interface>`。
 
-最后（``set_native_tls`` 可选设置以启用 native TLS 支持（而非将 TLS operations 卸载到 offloaded socket。
+最后，``set_native_tls`` 可以可选地设置为启用原生 TLS 支持，而不是将 TLS 操作卸载到卸载套接字。
 
-如何使用 TLS 与 MQTT 的示例也在 :zephyr:code-sample:`mqtt-publisher` sample application 中。
+如何使用 TLS 与 MQTT 的示例也存在于 :zephyr:code-sample:`mqtt-publisher` 示例应用程序中。
 
 .. _mqtt_api_reference:
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: mqtt_socket

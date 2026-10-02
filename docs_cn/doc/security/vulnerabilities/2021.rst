@@ -1,0 +1,333 @@
+.. _vulnerabilities_2021:
+
+CVE-2021
+########
+
+:cve:`2021-3319`
+----------------
+
+DOS：对省略源/目的地址的 802154 帧验证不正确
+
+ieee802154 帧验证（ieee802154_validate_frame）中对省略的源地址和
+目的地址处理不当
+
+此问题已在 v2.5.0 的 main 分支中修复
+
+- `Zephyr 项目缺陷跟踪器 GHSA-94jg-2p6q-5364
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-94jg-2p6q-5364>`_
+
+- `PR31908 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/31908>`_
+
+:cve:`2021-3320`
+----------------
+802154 ACK 帧的验证与处理不匹配，其中 ACK 帧在验证时被考虑，
+但在实际处理时未被考虑，导致类型混淆。
+
+- `PR31908 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/31908>`_
+
+:cve:`2021-3321`
+----------------
+
+IEEE 802154 最小分片大小检查不完整，导致整数下溢。
+
+- `Zephyr 项目缺陷跟踪器 ZEPSEC-114
+  <https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-114>`_
+
+- `PR33453 针对 v2.4 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33453>`_
+
+:cve:`2021-3323`
+----------------
+
+6LoWPAN IPHC 头部解压缩中的整数下溢
+
+此问题已在 v2.5.0 的 main 分支中修复
+
+- `Zephyr 项目缺陷跟踪器 GHSA-89j6-qpxf-pfpc
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-89j6-qpxf-pfpc>`_
+
+- `PR 31971 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/31971>`_
+
+:cve:`2021-3430`
+----------------
+
+重复 LL_CONNECTION_PARAM_REQ 可触发断言。
+
+此问题已在 v2.6.0 的 main 分支中修复
+
+- `Zephyr 项目缺陷跟踪器 GHSA-46h3-hjcq-2jjr
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-46h3-hjcq-2jjr>`_
+
+- `PR 33272 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33272>`_
+
+- `PR 33369 针对 2.5 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33369>`_
+
+- `PR 33759 针对 1.14.2 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33759>`_
+
+:cve:`2021-3431`
+----------------
+
+BT：重复 LL_FEATURE_REQ 导致断言失败
+
+此问题已在 v2.6.0 的 main 分支中修复
+
+- `Zephyr 项目缺陷跟踪器 GHSA-7548-5m6f-mqv9
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-7548-5m6f-mqv9>`_
+
+- `PR 33340 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33340>`_
+
+- `PR 33369 针对 2.5 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33369>`_
+
+:cve:`2021-3432`
+----------------
+
+CONNECT_IND 中的无效间隔导致除以零
+
+此问题已在 v2.6.0 的 main 分支中修复
+
+- `Zephyr 项目缺陷跟踪器 GHSA-7364-p4wc-8mj4
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-7364-p4wc-8mj4>`_
+
+- `PR 33278 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33278>`_
+
+- `PR 33369 针对 2.5 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33369>`_
+
+:cve:`2021-3433`
+----------------
+
+BT：CONNECT_IND 中的无效信道图导致死锁
+
+此问题已在 v2.6.0 的 main 分支中修复
+
+- `Zephyr 项目缺陷跟踪器 GHSA-3c2f-w4v6-qxrp
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-3c2f-w4v6-qxrp>`_
+
+- `PR 33278 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33278>`_
+
+- `PR 33369 针对 2.5 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33369>`_
+
+:cve:`2021-3434`
+----------------
+
+L2CAP：le_ecred_conn_req() 中的栈缓冲区溢出
+
+此问题已在 v2.6.0 的 main 分支中修复
+
+- `Zephyr 项目缺陷跟踪器 GHSA-8w87-6rfp-cfrm
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-8w87-6rfp-cfrm>`_
+
+- `PR 33305 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33305>`_
+
+- `PR 33419 针对 2.5 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33419>`_
+
+- `PR 33418 针对 1.14.2 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33418>`_
+
+:cve:`2021-3435`
+----------------
+
+L2CAP：le_ecred_conn_req() 中的信息泄露
+
+此问题已在 v2.6.0 的 main 分支中修复
+
+- `Zephyr 项目缺陷跟踪器 GHSA-xhg3-gvj6-4rqh
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-xhg3-gvj6-4rqh>`_
+
+- `PR 33305 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33305>`_
+
+- `PR 33419 针对 2.5 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33419>`_
+
+- `PR 33418 针对 1.14.2 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33418>`_
+
+:cve:`2021-3436`
+----------------
+
+Bluetooth：当已知 bond 的身份地址时，可能在密钥分发阶段覆盖已有的 bond
+
+在分发身份地址信息过程中，我们未检查是否存在具有相同身份地址的
+已有 bond。这意味着将在 RAM 中创建重复条目，而最新条目将覆盖
+持久化存储中的已有条目。
+
+此问题已在 v2.6.0 的 main 分支中修复
+
+- `Zephyr 项目缺陷跟踪器 GHSA-j76f-35mc-4h63
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-j76f-35mc-4h63>`_
+
+- `PR 33266 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33266>`_
+
+- `PR 33432 针对 2.5 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33432>`_
+
+- `PR 33433 针对 2.4 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33433>`_
+
+- `PR 33718 针对 1.14.2 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33718>`_
+
+:cve:`2021-3454`
+----------------
+
+截断的 L2CAP K 帧导致断言失败
+
+例如，发送 SDU 长度字段被截断为仅一个字节的 L2CAP K 帧，
+在 Zephyr 的先前版本中会导致断言失败。此问题已通过 commit 0ba9437
+在 master 中修复，但尚未回溯移植到较旧的发布分支。
+
+此问题已在 v2.6.0 的 main 分支中修复
+
+- `Zephyr 项目缺陷跟踪器 GHSA-fx88-6c29-vrp3
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-fx88-6c29-vrp3>`_
+
+- `PR 32588 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/32588>`_
+
+- `PR 33513 针对 2.5 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33513>`_
+
+- `PR 33514 针对 2.4 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/33514>`_
+
+:cve:`2021-3455`
+----------------
+
+在无效 ATT 请求后立即断开 L2CAP 通道会导致冻结
+
+当中央设备连接到外设并为增强 ATT 创建 L2CAP 连接时，
+发送某些无效 ATT 请求后立即断开连接会导致冻结。
+
+此问题已在 v2.6.0 的 main 分支中修复
+
+- `Zephyr 项目缺陷跟踪器 GHSA-7g38-3x9v-v7vp
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-7g38-3x9v-v7vp>`_
+
+- `PR 35597 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/35597>`_
+
+- `PR 36104 针对 2.5 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/36104>`_
+
+- `PR 36105 针对 2.4 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/36105>`_
+
+:cve:`2021-3510`
+----------------
+
+Zephyr JSON 解码器错误解码数组的数组
+
+当使用 JSON_OBJ_DESCR_ARRAY_ARRAY 时，子数组具有
+JSON_TOK_LIST_START 类型的 token，但随后赋值给联合体中的对象部分。
+arr_parse 随后取数组对象的偏移量（与列表无关），将其视为相对于
+父对象的偏移，并将子数组的长度存储在其中。
+
+此问题已在 v2.7.0 的 main 分支中修复
+
+- `Zephyr 项目缺陷跟踪器 GHSA-289f-7mw3-2qf4
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-289f-7mw3-2qf4>`_
+
+- `PR 36340 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/36340>`_
+
+- `PR 37816 针对 2.6 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/37816>`_
+
+:cve:`2021-3581`
+----------------
+
+HCI 数据未正确检查导致蓝牙协议栈内存溢出
+
+在通过 HCI 命令设置 SCAN_RSP 的过程中，Zephyr 蓝牙协议栈
+未有效检查传入 HCI 数据的长度。导致内存溢出，随后内存中的
+数据被覆盖，甚至可能导致任意代码执行。
+
+此问题已在 v2.6.0 的 main 分支中修复
+
+- `Zephyr 项目缺陷跟踪器 GHSA-8q65-5gqf-fmw5
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-8q65-5gqf-fmw5>`_
+
+- `PR 35935 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/35935>`_
+
+- `PR 35984 针对 2.5 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/35984>`_
+
+- `PR 35985 针对 2.4 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/35985>`_
+
+- `PR 35985 针对 1.14 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/35985>`_
+
+:cve:`2021-3625`
+----------------
+
+Zephyr USB DFU DNLOAD 中的缓冲区溢出
+
+此问题已在 v2.6.0 的 main 分支中修复
+
+- `Zephyr 项目缺陷跟踪器 GHSA-c3gr-hgvr-f363
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-c3gr-hgvr-f363>`_
+
+- `PR 36694 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/36694>`_
+
+:cve:`2021-3835`
+----------------
+
+Zephyr USB 设备类中的缓冲区溢出
+
+此问题已在 v3.0.0 的 main 分支中修复
+
+- `Zephyr 项目缺陷跟踪器 GHSA-fm6v-8625-99jf
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-fm6v-8625-99jf>`_
+
+- `PR 42093 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/42093>`_
+
+- `PR 42167 针对 2.7 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/42167>`_
+
+:cve:`2021-3861`
+----------------
+
+RNDIS USB 设备类中的缓冲区溢出
+
+此问题已在 v3.0.0 的 main 分支中修复
+
+- `Zephyr 项目缺陷跟踪器 GHSA-hvfp-w4h8-gxvj
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-hvfp-w4h8-gxvj>`_
+
+- `PR 39725 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/39725>`_
+
+:cve:`2021-3966`
+----------------
+
+Usb 蓝牙设备 ACL 读取回调缓冲区溢出
+
+此问题已在 v3.0.0 的 main 分支中修复
+
+- `Zephyr 项目缺陷跟踪器 GHSA-hfxq-3w6x-fv2m
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-hfxq-3w6x-fv2m>`_
+
+- `PR 42093 针对 main 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/42093>`_
+
+- `PR 42167 针对 v2.7.0 的修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/42167>`_

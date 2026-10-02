@@ -1,21 +1,23 @@
 .. _trickle_interface:
 
-Trickle Timer Library
+Trickle 定时器库
 #####################
 
 .. contents::
     :local:
     :depth: 2
 
-Overview
+概述
 ********
 
-Trickle timer library 实现 :rfc:`6206`。
+Trickle 定时器库实现了 :rfc:`6206`。
 
-Trickle algorithm 允许 lossy shared medium（如 low-power 和 lossy networks）中的 nodes 以高度 robust、energy efficient、simple 和 scalable 方式交换 information。
+Trickle 算法允许处于易失性共享介质（例如
+低功耗且易失性网络）中的节点以高度健壮、
+节能、简单且可扩展的方式交换信息。
 
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: trickle

@@ -1,1785 +1,411 @@
-.. _autopts
-linux:
+.. _autopts-linux:
 
-AutoPTS
-on
-Linux
+Linux 上的 AutoPTS
 ################
 
-这
-个
-tutorial
-展示
-如何
-在
-Linux
-上
-setup
-AutoPTS
-client
-同时
-AutoPTS
-server
-运行
-在
-Windows
-10
-virtual
-machine
-上。
-在
-Ubuntu
-20.4
-和
-Linux
-Mint
-20.4
-上
-tested。
+本教程介绍如何在 Linux 上搭建 AutoPTS 客户端，而 AutoPTS 服务器运行在 Windows 10 虚拟机中。已在 Ubuntu 20.4 和 Linux Mint 20.4 上测试。
 
-You
-must
-have
-a
-Zephyr
-development
-environment
-set
-up.
-See
-:ref:`getting
-started`
-for
-details.
+你必须已搭建好 Zephyr 开发环境。详情参见 :ref:`getting_started`。
 
-Supported
-methods
-to
-test
-zephyr
-bluetooth
-host:
+测试 Zephyr 蓝牙主机所支持的方法：
 
-Testing
-Zephyr
-Host
-Stack
-on
-QEMU
+- 在 QEMU 上测试 Zephyr Host Stack
 
-Testing
-Zephyr
-Host
-Stack
-on
-:zephyr:board:`native
-sim
-<native
-sim>`
+- 在 :zephyr:board:`native_sim <native_sim>` 上测试 Zephyr Host Stack
 
-Testing
-Zephyr
-combined
-（controller
-+
-host）
-build
-on
-Real
-hardware
-（such
-as
-nRF52）
+- 在真实硬件（如 nRF52）上测试 Zephyr 组合（controller + host）构建
 
-For
-running
-with
-QEMU
-or
-:zephyr:board:`native
-sim
-<native
-sim>`、
-see
-:ref:`bluetooth_qemu
-native`.
+有关在 QEMU 或 :zephyr:board:`native_sim <native_sim>` 上运行的方法，参见 :ref:`bluetooth_qemu_native`。
 
-..
-contents::
-:
-local:
-:
-depth:
-2
+.. contents::
+    :local:
+    :depth: 2
 
-Setup
-Linux
+搭建 Linux
 ***********
 
-Please
-follow
-:ref:`getting
-started`
-on
-how
-to
-setup
-Linux
-for
-building
-and
-flashing
-applications.
+请按照 :ref:`getting_started` 了解如何为构建和烧录应用程序搭建 Linux 环境。
 
-Setup
-Windows
-10
-11
-virtual
-machine
+搭建 Windows 10/11 虚拟机
 ***********************************
 
-Choose
-and
-install
-your
-hypervisor
-like
-VMWare
-Workstation（preferred）
-or
-VirtualBox.
-On
-VirtualBox
-could
-be
-some
-issues、
-if
-your
-host
-has
-fewer
-than
-6
-CPU.
+选择并安装你的 hypervisor，例如 VMWare Workstation（推荐）或 VirtualBox。如果主机 CPU 少于 6 个，使用 VirtualBox 可能会遇到一些问题。
 
-Create
-Windows
-virtual
-machine
-instance.
-Make
-sure
-it
-has
-at
-least
-2
-cores
-and
-installed
-guest
-extensions.
+创建 Windows 虚拟机实例。确保它至少有 2 个核心，并已安装 guest 扩展。
 
-Setup
-tested
-with
-VirtualBox
-7.2.4
-and
-VMWare
-Workstation
-16.1.1
-Pro.
+本教程在 VirtualBox 7.2.4 和 VMWare Workstation 16.1.1 Pro 上测试通过。
 
-Update
-Windows
+更新 Windows
 =============
 
-Update
-Windows
-in:
+按以下路径更新 Windows：
 
-Start
-Settings
-Update
-&
-Security
-Windows
-Update
+开始 -> 设置 -> 更新和安全 -> Windows 更新
 
-Setup
-NAT
+配置 NAT
 =========
 
-It
-is
-possible
-to
-use
-NAT
-and
-portforwarding
-to
-setup
-communication
-between
-a
-Linux
-host
-and
-a
-Windows
-guest.
-This
-is
-easiest
-setup
-for
-VirtualBox、
-and
-does
-not
-require
-any
-static
-IPs
-to
-be
-configured、
-and
-will
-not
-get
-blocked
-by
-the
-Windows
-Firewall.
+可以使用 NAT 和端口转发来建立 Linux 主机与 Windows 客户机之间的通信。这是 VirtualBox 最简单的配置方式，无需配置任何静态 IP，也不会被 Windows 防火墙拦截。
 
 VirtualBox
 ----------
 
-Open
-virtual
-machine
-network
-settings.
-On
-adapter
-1
-you
-will
-have
-created
-by
-default
-NAT.
-Open
-the
-Port
-Forwarding
-menu
-an
-add
-the
-ports
-you
-want.
+打开虚拟机的网络设置。在适配器 1 上，默认会创建 NAT。
+打开 Port Forwarding 菜单并添加你想要的端口。
 
-..
-image::
-virtualbox
-nat
-1.png
-:
-width:
-500
-:
-align:
-center
 
-For
-example
-setting
-up
-the
-following
-will
-allow
-you
-to
-use
-``localhost:65000``
-and
-``localhost:65002``
-（or
-``127.0.0.0:65000``
-and
-``127.0.0.0:65002``）
-to
-connect
-to
-an
-AutoPTS
-Server
-in
-Windows
-running
-on
-ports
-65000
-and
-65002.
+.. image:: virtualbox_nat_1.png
+   :width: 500
+   :align: center
 
-..
-image::
-virtualbox
-nat
-2.png
-:
-width:
-500
-:
-align:
-center
+例如，设置以下内容后，你就可以使用
+``localhost:65000`` 和 ``localhost:65002``（或 ``127.0.0.0:65000`` 和 ``127.0.0.0:65002``）
+来连接运行在 Windows 中 65000 和 65002 端口上的 AutoPTS 服务器。
 
-Setup
-static
-IP
-===============
+.. image:: virtualbox_nat_2.png
+   :width: 500
+   :align: center
 
-If
-you
-cannot
-or
-do
-not
-want
-to
-use
-NAT
-it
-is
-possible
-to
-configure
-a
-static
-IP.
+配置静态 IP
+==============
 
-VMWare
-Works
-------------
+如果你不能或不想使用 NAT，也可以配置静态 IP。
 
-On
-Linux、
-open
-Virtual
-Network
-Editor
-app
-and
-create
-network:
+VMWare Workstation
+----------------
 
-..
-image::
-vmware
-static
-ip
-1.png
-:
-height:
-400
-:
-width:
-500
-:
-align:
-center
+在 Linux 上，打开 Virtual Network Editor 应用并创建网络：
 
-Open
-virtual
-machine
-network
-settings.
-Add
-custom
-adapter:
+.. image:: vmware_static_ip_1.png
+   :height: 400
+   :width: 500
+   :align: center
 
-..
-image::
-vmware
-static
-ip
-2.png
-:
-height:
-400
-:
-width:
-500
-:
-align:
-center
+打开虚拟机的网络设置。添加自定义适配器：
 
-If
-you
-type
-'ifconfig'
-in
-terminal、
-you
-should
-be
-able
-to
-find
-your
-host
-IP:
+.. image:: vmware_static_ip_2.png
+   :height: 400
+   :width: 500
+   :align: center
 
-..
-image::
-vmware
-static
-ip
-3.png
-:
-height:
-150
-:
-width:
-550
-:
-align:
-center
+如果你在终端中输入 'ifconfig'，你应该能找到你的主机 IP：
+
+.. image:: vmware_static_ip_3.png
+   :height: 150
+   :width: 550
+   :align: center
 
 VirtualBox
 ----------
 
-VirtualBox
-on
-Linux、
-macOS
-and
-Solaris
-Oracle
-VM
-VirtualBox
-will
-only
-allow
-IP
-addresses
-in
-``192.168.56.0/21``
-range
-to
-be
-assigned
-to
-host
-only
-adapters、
-so
-if
-using
-a
-static
-address
-with
-VirtualBox
-this
-is
-the
-only
-address
-range
-you
-can
-use.
+在 Linux、macOS 和 Solaris 上，Oracle VM VirtualBox 只允许将 ``192.168.56.0/21`` 范围内的 IP 地址分配给 host-only 适配器，因此如果使用 VirtualBox 配置静态地址，这是唯一可用的地址范围。
 
-Go
-to:
+转到：
 
-File
-Tools
-Network
-Manager
+文件 -> 工具 -> 网络管理器
 
-and
-create
-network:
+并创建网络：
 
-..
-image::
-virtualbox
-static
-ip
-1.png
-:
-width:
-500
-:
-align:
-center
+.. image:: virtualbox_static_ip_1.png
+   :width: 500
+   :align: center
 
-Open
-virtual
-machine
-network
-settings.
-On
-adapter
-1
-you
-will
-have
-created
-by
-default
-NAT.
-Add
-adapter
-2:
+打开虚拟机的网络设置。在适配器 1 上，默认会创建 NAT。
+添加适配器 2：
 
-..
-image::
-virtualbox
-static
-ip
-2.png
-:
-width:
-500
-:
-align:
-center
+.. image:: virtualbox_static_ip_2.png
+   :width: 500
+   :align: center
 
 Windows
 -------
-Setup
-static
-IP
-on
-Windows
-virtual
-machine.
-Go
-to
 
-Settings
-Network
-&
-Internet
-Ethernet
-Unidentified
-network
-Edit
+在 Windows 虚拟机上配置静态 IP。转到
 
-and
-set:
+设置 -> 网络和 Internet -> 以太网 -> 未识别的网络 -> 编辑
 
-..
-image::
-windows
-static
-ip.png
-:
-height:
-400
-:
-width:
-400
-:
-align:
-center
+并设置：
 
-Install
-Python
-3
-================
+.. image:: windows_static_ip.png
+   :height: 400
+   :width: 400
+   :align: center
 
-Download
-and
-install
-latest
-`Python
-3
-<https://www.python.org/downloads/>`_
-on
-Windows.
-Let
-the
-installer
-add
-the
-Python
-installation
-directory
-to
-the
-PATH
-and
-disable
-the
-path
-length
-limitation.
 
-..
-image::
-install
-python1.png
-:
-height:
-300
-:
-width:
-450
-:
-align:
-center
+安装 Python 3
+===============
 
-..
-image::
-install
-python2.png
-:
-height:
-300
-:
-width:
-450
-:
-align:
-center
+在 Windows 上下载并安装最新的 `Python 3 <https://www.python.org/downloads/>`_。
+让安装程序将 Python 安装目录添加到 PATH，并禁用路径长度限制。
 
-Install
-Git
+.. image:: install_python1.png
+   :height: 300
+   :width: 450
+   :align: center
+
+.. image:: install_python2.png
+   :height: 300
+   :width: 450
+   :align: center
+
+安装 Git
 ===========
 
-Download
-and
-install
-`Git
-<https://git
-scm.com/downloads>`_.
-During
-installation
-enable
-option:
-Enable
-experimental
-support
-for
-pseudo
-consoles.
-We
-will
-use
-Git
-Bash
-as
-Windows
-terminal.
+下载并安装 `Git <https://git-scm.com/downloads>`_。
+安装期间启用选项：Enable experimental support for pseudo
+consoles。我们将使用 Git Bash 作为 Windows 终端。
 
-..
-image::
-install
-git.png
-:
-height:
-350
-:
-width:
-400
-:
-align:
-center
+.. image:: install_git.png
+   :height: 350
+   :width: 400
+   :align: center
 
-Install
-PTS
+安装 PTS
 ===========
 
-On
-Windows
-virtual
-machine、
-install
-the
-latest
-PTS
-from
-https://pts.bluetooth.com/download.
-Remember
-to
-install
-drivers
-from
-installation
-directory
-"C:/Program
-Files
-（x86）/Bluetooth
-SIG/Bluetooth
-PTS/PTS
-Driver/win64/CSRBlueCoreUSB.inf"
+在 Windows 虚拟机上，从 https://pts.bluetooth.com/download 安装最新的 PTS。
+记得从安装目录安装驱动程序
+"C:/Program Files (x86)/Bluetooth SIG/Bluetooth PTS/PTS Driver/win64/CSRBlueCoreUSB.inf"
 
-..
-image::
-install
-pts
-drivers.png
-:
-height:
-250
-:
-width:
-850
-:
-align:
-center
+.. image:: install_pts_drivers.png
+   :height: 250
+   :width: 850
+   :align: center
 
-..
-note::
-Starting
-with
-PTS
-8.0.1
-the
-Bluetooth
-Protocol
-Viewer
-is
-no
-longer
-included.
-So
-to
-capture
-Bluetooth
-events、
-you
-have
-to
-download
-it
-separately.
+.. note::
 
-Connect
-PTS
-dongle
+    从 PTS 8.0.1 开始，不再包含 Bluetooth Protocol Viewer。
+    因此要捕获 Bluetooth 事件，你必须单独下载它。
+
+连接 PTS 适配器
 ==================
 
-With
-VirtualBox
-there
-should
-be
-no
-problem.
-Just
-find
-dongle
-in
-Devices
-USB
-and
-connect.
+使用 VirtualBox 应该没有问题。只需在 设备 -> USB 中找到适配器并连接即可。
 
-With
-VMWare
-you
-might
-need
-to
-use
-some
-trick、
-if
-you
-cannot
-find
-dongle
-in
-VM
-Removable
-Devices.
-Type
-in
-Linux
-terminal:
+使用 VMWare 时你可能需要采用一些技巧，如果你在
+VM -> 可移动设备中找不到适配器。在 Linux 终端中输入：
 
-..
-code
-block::
-usb
-devices
+.. code-block::
 
-and
-find
-in
-output
-your
-PTS
-Bluetooth
-USB
-dongle
+    usb-devices
 
-..
-image::
-usb
-devices
-output.png
-:
-height:
-100
-:
-width:
-500
-:
-align:
-center
+并在输出中找到你的 PTS 蓝牙 USB 适配器
 
-Note
-Vendor
-and
-ProdID
-number.
-Close
-VMWare
-Workstation
-and
-open
-.vmx
-of
-your
-virtual
-machine
-（path
-similar
-to
-/home/codecoup/vmware/Windows
-10/Windows
-10.vmx）
-in
-text
-editor.
-Write
-anywhere
-in
-the
-file
-following
-line:
+.. image:: usb-devices_output.png
+   :height: 100
+   :width: 500
+   :align: center
 
-..
-code
-block::
-usb.autoConnect.device0
-=
-"0x0a12:0x0001"
+记下 Vendor 和 ProdID 号。关闭 VMWare Workstation 并用文本编辑器打开你的虚拟机 .vmx 文件
+（路径类似于 /home/codecoup/vmware/Windows 10/Windows 10.vmx）。
+在文件中任意位置写入以下行：
 
-just
-replace
-0x0a12
-with
-Vendor
-number
-and
-0x0001
-with
-ProdID
-number
-you
-found
-earlier.
+.. code-block::
 
-Connect
-devices
-（only
-required
-in
-the
-actual
-hardware
-test
-mode）
+    usb.autoConnect.device0 = "0x0a12:0x0001"
+
+只需将 0x0a12 替换为你找到的 Vendor 号，将 0x0001 替换为你找到的 ProdID 号。
+
+连接设备（仅在真实硬件测试模式下需要）
 ****************************************************************
 
-..
-image::
-devices
-1.png
-:
-height:
-400
-:
-width:
-600
-:
-align:
-center
+.. image:: devices_1.png
+   :height: 400
+   :width: 600
+   :align: center
 
-..
-image::
-devices
-2.png
-:
-height:
-700
-:
-width:
-500
-:
-align:
-center
+.. image:: devices_2.png
+   :height: 700
+   :width: 500
+   :align: center
 
-Setup
-auto
-pts
-project
+搭建 auto-pts 项目
 **********************
 
-AutoPTS
-client
-on
-Linux
+Linux 上的 AutoPTS 客户端
 =======================
 
-Clone
-auto
-pts
-project:
+克隆 auto-pts 项目：
 
-..
-code
-block::
-git
-clone
-https://github.com/auto
-pts/auto
-pts.git
+.. code-block::
 
-Install
-socat、
-that
-is
-used
-to
-transfer
-BTP
-data
-stream
-from
-UART's
-tty
-file:
+    git clone https://github.com/auto-pts/auto-pts.git
 
-..
-code
-block::
-sudo
-apt
-get
-install
-python
-setuptools
-socat
 
-Install
-required
-python
-modules:
+安装 socat，它用于从 UART 的 tty 文件传输 BTP 数据流：
 
-..
-code
-block::
-cd
-auto
-pts
-pip3
-install
---user
--r
-autoptsclient
-requirements.txt
+.. code-block::
 
-Autopts
-server
-on
-Windows
-virtual
-machine
+    sudo apt-get install python-setuptools socat
+
+安装所需的 python 模块：
+
+.. code-block::
+
+   cd auto-pts
+   pip3 install --user -r autoptsclient_requirements.txt
+
+Windows 虚拟机上的 AutoPTS 服务器
 =========================================
-In
-Git
-Bash、
-clone
-auto
-pts
-project
-repo:
 
-..
-code
-block::
-git
-clone
-https://github.com/auto
-pts/auto
-pts.git
+在 Git Bash 中克隆 auto-pts 项目仓库：
 
-Install
-required
-python
-modules:
+.. code-block::
 
-..
-code
-block::
-cd
-auto
-pts
-pip3
-install
---user
-wheel
-pip3
-install
---user
--r
-autoptsserver
-requirements.txt
+    git clone https://github.com/auto-pts/auto-pts.git
 
-Restart
-virtual
-machine.
+安装所需的 python 模块：
 
-Running
-AutoPTS
+.. code-block::
+
+   cd auto-pts
+   pip3 install --user wheel
+   pip3 install --user -r autoptsserver_requirements.txt
+
+重启虚拟机。
+
+运行 AutoPTS
 ***************
 
-Please
-follow
-the
-information
-from
-https://github.com/zephyrproject
-rtos/zephyr/tree/main/tests/bluetooth/tester
-on
-how
-to
-build、
-flash
-and
-run
-the
-Bluetooth
-Tester
-application.
+请按照
+https://github.com/zephyrproject-rtos/zephyr/tree/main/tests/bluetooth/tester 中的信息了解如何构建、
+烧录并运行 Bluetooth Tester 应用程序。
 
-Server
-and
-client
-by
-default
-will
-run
-on
-localhost
-address.
-Run
-the
-server
-in
-the
-Windows
-virtual
-machine:
+服务器和客户端默认将运行在 localhost 地址上。
+在 Windows 虚拟机中运行服务器：
 
-..
-code
-block::
-python
-./autoptsserver.py
+.. code-block::
 
-..
-image::
-autoptsserver
-run
-2.png
-:
-height:
-120
-:
-width:
-700
-:
-align:
-center
+    python ./autoptsserver.py
 
-See
-also
-https://github.com/auto
-pts/auto
-pts
-for
-additional
-information
-on
-how
-to
-run
-auto
-pts.
+.. image:: autoptsserver_run_2.png
+   :height: 120
+   :width: 700
+   :align: center
 
-Testing
-Zephyr
-Host
-Stack
-on
-hardware
+另请参阅 https://github.com/auto-pts/auto-pts 了解如何运行 auto-pts 的更多信息。
+
+在硬件上测试 Zephyr Host Stack
 =====================================
 
-..
-code
-block::
-python
-./autoptsclient
-zephyr.py
-zephyr
-master
--t
-/dev/ttyACM0
--b
-BOARD
--i
-SERVER_IP
--l
-LOCAL_IP
+.. code-block::
 
-Where
-``/dev/ttyACM0``
-is
-the
-tty
-for
-the
-board、
-``BOARD``
-is
-the
-board
-to
-use
-（e.g.
-``nrf53
-audio``）
-``SERVER_IP``
-is
-the
-IP
-of
-the
-AutoPTS
-server、
-``LOCAL_IP``
-is
-the
-local
-IP
-of
-the
-Linux
-machine.
+    python ./autoptsclient-zephyr.py zephyr-master -t /dev/ttyACM0 -b BOARD -i SERVER_IP -l LOCAL_IP
 
-Testing
-Zephyr
-Host
-Stack
-on
-QEMU
+其中 ``/dev/ttyACM0`` 是该板卡的 tty，
+``BOARD`` 是要使用的板卡（例如 ``nrf53_audio``），
+``SERVER_IP`` 是 AutoPTS 服务器的 IP，
+``LOCAL_IP`` 是 Linux 机器的本地 IP。
+
+在 QEMU 上测试 Zephyr Host Stack
 =================================
 
-A
-Bluetooth
-controller
-needs
-to
-be
-mounted.
-For
-running
-with
-HCI
-UART、
-please
-visit
-:zephyr:code
-sample:`bluetooth_hci
-uart`.
+需要挂载一个 Bluetooth controller。
+有关使用 HCI UART 运行的方法，请参见 :zephyr:code-sample:`bluetooth_hci_uart`。
 
-..
-code
-block::
-python
-./autoptsclient
-zephyr.py
-zephyr
-master
-BUILD_DIR/zephyr/zephyr.elf
--i
-SERVER_IP
--l
-LOCAL_IP
+.. code-block::
 
-Where
-``BUILD_DIR``
-is
-the
-build
-directory、
-``SERVER_IP``
-is
-the
-IP
-of
-the
-AutoPTS
-server、
-``LOCAL_IP``
-is
-the
-local
-IP
-of
-the
-Linux
-machine.
+    python ./autoptsclient-zephyr.py zephyr-master BUILD_DIR/zephyr/zephyr.elf -i SERVER_IP -l LOCAL_IP
 
-Testing
-Zephyr
-Host
-Stack
-on
-:zephyr:board:`native
-sim
-<native
-sim>`
-====================================================================
+其中 ``BUILD_DIR`` 是构建目录，
+``SERVER_IP`` 是 AutoPTS 服务器的 IP，
+``LOCAL_IP`` 是 Linux 机器的本地 IP。
 
-When
-tester
-application
-has
-been
-built
-for
-:zephyr:board:`native
-sim
-<native
-sim>`
-it
-produces
-a
-``zephyr.exe``
-file、
-that
-can
-be
-run
-as
-a
-native
-Linux
-application.
-Depending
-on
-your
-system、
-you
-may
-need
-to
-perform
-the
-following
-steps
-to
-successfully
-run
-``zephyr.exe``.
-
-Setting
-capabilities
---------------------
-
-Since
-the
-application
-will
-need
-access
-to
-connect
-to
-a
-socket
-for
-HCI、
-you
-may
-need
-to
-perform
-the
-following
-
-..
-code
-block::
-setcap
-cap
-net
-raw、cap
-net
-admin、cap
-sys
-admin+ep
-zephyr.exe
-
-This
-is
-not
-required
-if
-you
-run
-``zephyr.exe``
-or
-``./autoptsclient
-zephyr.py``
-with
-e.g.
-``sudo``.
-
-Downing
-the
-HCI
-controller
---------------------------
-
-You
-may
-also
-need
-to
-"down"
-or
-"power
-off"
-the
-HCI
-controller
-before
-running
-``zephyr.exe``.
-This
-can
-be
-done
-either
-with
-``hciconfig``
-as
-
-..
-code
-block::
-hciconfig
-hciX
-down
-
-Where
-``hciX``
-is
-a
-value
-like
-``hci0``.
-You
-may
-run
-``hciconfig``
-to
-get
-a
-list
-of
-your
-HCI
-devices.
-
-Since
-``hciconfig``
-is
-deprecated
-on
-some
-systems、
-you
-may
-need
-to
-use
-
-..
-code
-block::
-btmgmt
--i
-hciX
-power
-off
-
-Similar
-to
-``hciconfig``、
-``btmgmt
-info``
-may
-be
-used
-to
-list
-current
-controllers
-and
-their
-states.
-
-Both
-``hciconfig``
-and
-``btmgmt``
-may
-require
-``sudo``
-when
-powering
-down
-a
-controller.
-
-Running
-the
-client
-------------------
-
-The
-application
-can
-be
-run
-as
-
-..
-code
-block::
-python
-./autoptsclient
-zephyr.py
-zephyr
-master
---hci
-HCI
-BUILD_DIR/zephyr/zephyr.exe
--i
-SERVER_IP
--l
-LOCAL_IP
-
-Where
-``HCI``
-is
-the
-HCI
-index、
-e.g.
-``0``
-or
-``1``、
-``BUILD_DIR``
-is
-the
-build
-directory、
-``SERVER_IP``
-is
-the
-IP
-of
-the
-AutoPTS
-server、
-``LOCAL_IP``
-is
-the
-local
-IP
-of
-the
-Linux
-machine.
-
-Troubleshooting
-****************
-
-After
-running
-one
-test、
-I
-need
-to
-restart
-my
-Windows
-virtual
-machine
-to
-run
-another、
-because
-of
-fail
-verdict
-from
-APICOM
-in
-PTS
-logs
-====================================================================================================================================
-
-It
-means
-your
-virtual
-machine
-has
-not
-enough
-processor
-cores
-or
-memory.
-Try
-to
-add
-more
-in
-settings.
-Note
-that
-a
-host
-with
-4
-CPUs
-could
-be
-not
-enough
-with
-VirtualBox
-as
-hypervisor.
-In
-this
-case、
-choose
-rather
-VMWare
-Workstation.
-
-I
-cannot
-start
-autoptsserver
-zephyr.py.
-I
-always
-get
-a
-Python
-error
+在 :zephyr:board:`native_sim <native_sim>` 上测试 Zephyr Host Stack
 ===================================================================
 
-..
-image::
-autoptsserver
-typical
-error.png
-:
-height:
-300
-:
-width:
-650
-:
-align:
-center
+当 tester 应用程序为 :zephyr:board:`native_sim <native_sim>` 构建后，它会生成一个
+``zephyr.exe`` 文件，可以作为原生 Linux 应用程序运行。
+根据你的系统，
+你可能需要执行以下步骤才能成功运行 ``zephyr.exe``。
 
-One
-or
-more
-of
-the
-following
-steps
-should
-help:
+设置 capabilities
+--------------------
 
-Close
-all
-PTS
-Windows.
+由于该应用程序需要访问用于连接 HCI 套接字的权限，
+你可能需要执行以下操作
 
-Replug
-PTS
-bluetooth
-dongle.
+.. code-block::
 
-Delete
-temporary
-workspace.
-You
-will
-find
-it
-in
-auto
-pts
-code/workspaces/zephyr/zephyr
-master/
-as
-temp
-zephyr
-master.
-Be
-careful、
-do
-not
-remove
-the
-original
-one
-zephyr
-master.pqw6.
+    setcap cap_net_raw,cap_net_admin,cap_sys_admin+ep zephyr.exe
 
-Restart
-Windows
-virtual
-machine.
+如果你使用例如 ``sudo`` 运行 ``zephyr.exe`` 或 ``./autoptsclient-zephyr.py``，则不需要此操作。
 
-The
-PTS
-automation
-window
-keeps
-opening
-and
-closing
-==================================================
+关闭 HCI controller
+--------------------------
 
-This
-indicates
-that
-it
-fails
-to
-capture
-a
-PTS
-dongle.
-If
-the
-AutoPTS
-server
-is
-able
-to
-find
-and
-use
-a
-PTS
-dongle、
-then
-the
-title
-of
-the
-window
-will
-show
-the
-Bluetooth
-address
-of
-the
-dongle.
-If
-this
-does
-not
-happen
-then
-ensure
-that
-the
-dongle
-is
-plugged
-in、
-updated
-and
-recognized
-by
-PTS.
+在运行 ``zephyr.exe`` 之前，你可能还需要"down"（关闭）或"power off"（断电）HCI controller。
+可以使用 ``hciconfig`` 完成：
 
-..
-image::
-pts
-automation
-window.png
-:
-width:
-500
-:
-align:
-center
+.. code-block::
 
-If
-it
-still
-fails
-to
-run
-tests
-after
-this、
-please
-ensure
-that
-the
-Bluetooth
-Protocol
-Viewer
-is
-installed.
+    hciconfig hciX down
+
+其中 ``hciX`` 是类似 ``hci0`` 的值。你可以运行 ``hciconfig`` 获取你的 HCI 设备列表。
+
+由于 ``hciconfig`` 在某些系统上已被弃用，你可能需要使用
+
+.. code-block::
+
+    btmgmt -i hciX power off
+
+与 ``hciconfig`` 类似，``btmgmt info`` 可用于列出当前 controller 及其状态。
+
+关闭 controller 电源时，``hciconfig`` 和 ``btmgmt`` 都可能需要 ``sudo``。
+
+运行客户端
+------------------
+
+该应用程序可以这样运行：
+
+.. code-block::
+
+    python ./autoptsclient-zephyr.py zephyr-master --hci HCI BUILD_DIR/zephyr/zephyr.exe -i SERVER_IP -l LOCAL_IP
+
+其中 ``HCI`` 是 HCI 索引，例如 ``0`` 或 ``1``，
+``BUILD_DIR`` 是构建目录，
+``SERVER_IP`` 是 AutoPTS 服务器的 IP，
+``LOCAL_IP`` 是 Linux 机器的本地 IP。
+
+故障排除
+****************
+
+运行完一个测试后，我需要重启 Windows 虚拟机才能运行另一个测试，因为 PTS 日志中 APICOM 的 fail verdict
+===================================================================================================================================
+
+这意味着你的虚拟机处理器核心或内存不足。尝试在
+设置中添加更多。注意，使用 VirtualBox 作为 hypervisor 时，4 个 CPU 的主机可能不够。
+在这种情况下，建议选择 VMWare Workstation。
+
+我无法启动 autoptsserver-zephyr.py。我总是遇到 Python 错误
+===================================================================
+
+.. image:: autoptsserver_typical_error.png
+   :height: 300
+   :width: 650
+   :align: center
+
+以下一个或多个步骤应该有帮助：
+
+- 关闭所有 PTS 窗口。
+
+- 重新插拔 PTS 蓝牙适配器。
+
+- 删除临时工作区。你可以在 auto-pts-code/workspaces/zephyr/zephyr-master/ 中找到它，名为 temp_zephyr-master。小心，不要删除原始工作区 zephyr-master.pqw6。
+
+- 重启 Windows 虚拟机。
+
+PTS 自动化窗口不断打开和关闭
+===================================================
+
+这表明它无法捕获 PTS 适配器。
+如果 AutoPTS 服务器能够找到并使用 PTS 适配器，
+则该窗口标题将显示该适配器的 Bluetooth 地址。
+如果没有发生这种情况，请确保适配器已插入、已更新并被 PTS 识别。
+
+.. image:: pts_automation_window.png
+   :width: 500
+   :align: center
+
+如果之后仍然无法运行测试，
+请确保已安装 Bluetooth Protocol Viewer。

@@ -1,311 +1,281 @@
 .. _mcumgr_smp_transport_specification:
 
-SMP Transport Specification
+SMP 传输规范
 ###########################
 
-此 documents 规定实现
-server 和 client
-side SMP transports 所需 information。
+本文档规定了实现服务端和客户端 SMP 传输所需的信息。
 
 .. _mcumgr_smp_transport_ble:
 
-Bluetooth Low Energy (LE)
+低功耗蓝牙（Bluetooth LE）
 *************************
 
-实现
-SMP client 时（MCUmgr Clients 须使用以下
-Bluetooth Characteristics：
+实现 SMP 客户端时，MCUmgr 客户端须使用以下蓝牙特性：
 
-- **Service UUID**: ``8D53DC1D-1DB7-4CD3-868B-8A527460AA84``
-- **Characteristic UUID**: ``DA2E7828-FBCE-4E01-AE9E-261174997C48``
+- **服务 UUID**：``8D53DC1D-1DB7-4CD3-868B-8A527460AA84``
+- **特性 UUID**：``DA2E7828-FBCE-4E01-AE9E-261174997C48``
 
-所有 SMP communication 使用单个 GATT characteristic。SMP request
-通过 GATT Write Without Response command 发送。SMP
-response 以
-GATT Notification 形式发送
+所有 SMP 通信使用单个 GATT 特性。SMP 请求通过 GATT 无响应写入（Write Without Response）命令发送，
+SMP 响应以 GATT 通知（Notification）形式发送。
 
-若 SMP request 或
-response 过大无法装入单个 GATT command（
-sender 将其 fragment 到多个 packets。Request 或
-response 被 fragment 时不引入额外
-framing；payload 简单
-拆分到多个 packets 中。由于 GATT 保证
-packets 的有序
-delivery（第一个 fragment 中的 SMP header 包含
-reassembly 所需
-sufficient information。
+若 SMP 请求或响应过大无法装入单个 GATT 命令，
+发送方将其分片到多个数据包中。请求或响应被分片时不引入额外
+帧封装；负载被简单拆分到多个数据包中。由于 GATT 保证
+数据包的有序投递，第一个分片中的 SMP 头部包含
+重组所需的全部信息。
 
 .. _mcumgr_smp_transport_uart:
 
-UART/serial and console
+UART/串行与控制台
 ***********************
 
-Zephyr 的 MCUmgr subsystem 的 SMP protocol specification 使用
-data 的基本 framing 以
-允许 UART channel 的
-multiplexing。Multiplexing 需
-每个 frame 前缀两个 byte marker（并以
-newline 终止。当前
-MCUmgr 对 frame size 施加 127 byte 限制（虽然
-无真正
-protocol constraints 要求该限制。
-Limit 包含
-prefix 和 newline character（故允许的
-payload
-size 实际为 124 bytes。
+Zephyr MCUmgr 子系统的 SMP 协议规范使用数据的基本帧封装
+以允许 UART 通道复用。复用要求
+每个帧前缀两个字节标记，并以换行符终止。当前
+MCUmgr 对帧大小施加 127 字节限制，虽然
+没有真正的协议约束要求该限制。
+该限制包含前缀和换行符，因此允许的
+负载大小实际为 124 字节。
 
-虽然 Zephyr 中无此
-transport（但可
-实现无
-framing 的
-MCUmgr client/server（经 UART transport（或用
-hardware serial port control（或其他
-framing 手段。
+虽然 Zephyr 中不存在此传输，但
+可以实现无帧封装的
+MCUmgr 客户端/服务器（经 UART 传输），
+或使用硬件串行端口控制，或其他帧封装手段。
 
-Frame fragmenting
+帧分片
 =================
 
-Serial 上的 SMP protocol 被 fragment 为
-MTU size frames；每
-frame 由两个 byte start marker、body 和
-terminating newline
-character 组成。
+串行上的 SMP 协议被分片为 MTU 大小的帧；每
+帧由两个字节起始标记、主体和
+终止换行符组成。
 
-有四种类型的 frames：initial、partial、partial-final
-和 initial-final；每种 frame 类型以
-start marker 和/或 body
-contents 不同。
+有四种帧类型：初始帧（initial）、部分帧（partial）、部分-最终帧（partial-final）
+和初始-最终帧（initial-final）；每种帧类型以
+起始标记和/或主体内容不同。
 
-Frame formats
+帧格式
 -------------
 
-Initial frame 须由
-optional sequence of partial
-frames 跟随（最后由
-partial-final frame 跟随。
-Body 始终 Base64 编码（故此处描述为
-MTU - 3 的 body size 实际
-能携带 N = (MTU - 3) / 4 * 3 bytes
-的 raw data。
+初始帧须由
+可选的部分帧序列跟随，
+最后由部分-最终帧跟随。
+主体始终为 Base64 编码，因此此处描述为
+MTU - 3 的主体大小实际
+能携带 N = (MTU - 3) / 4 * 3 字节的
+原始数据。
 
-Initial frame 的 body 前缀两个 byte total packet length（
-Big Endian 编码（且等于 raw body size 加
+初始帧的主体前缀两个字节总包长度
+（大端编码），且等于原始主体大小加
 两个
-bytes（
+字节（
 CRC16 的
-size；这意味着允许装入
-initial frame 的实际 body size 为 N - 2。
+大小；这意味着允许装入
+初始帧的实际主体大小为 N - 2。
 
-若 body size 小于 N - 4（则
+若主体大小小于 N - 4，则
 可在
 单个
-frame 中携带
-preceding length 和
-following
+帧中携带
+前缀长度和
+跟随其后的
 CRC 的
-entire body（此处称为
-initial-final；initial-final
-frame 的描述见下文。
+整个主体，此处称为
+初始-最终帧；初始-最终帧
+的描述见下文。
 
-Initial frame 格式：
+初始帧格式：
 
 .. table::
     :align: center
 
     +---------------+---------------+---------------------------+
-    | Content       | Size          | Description               |
+    | 内容       | 大小          | 描述               |
     +===============+===============+===========================+
-    | 0x06 0x09     | 2 bytes       | Frame start marker        |
+    | 0x06 0x09     | 2 字节       | 帧起始标记        |
     +---------------+---------------+---------------------------+
-    | <base64-i>    | no more than  | Base64 encoded body       |
-    |               | MTU - 3 bytes |                           |
+    | <base64-i>    | 不超过      | Base64 编码主体       |
+    |               | MTU - 3 字节 |                           |
     +---------------+---------------+---------------------------+
-    | 0x0a          | 1 byte        | Frame termination         |
+    | 0x0a          | 1 字节        | 帧终止         |
     +---------------+---------------+---------------------------+
 
 ``<base64-i>`` 为以下形式的 Base64 编码
-body：
+主体：
 
 .. table::
     :align: center
 
     +---------------+---------------+---------------------------+
-    | Content       | Size          | Description               |
+    | 内容       | 大小          | 描述               |
     +===============+===============+===========================+
-    | total length  | 2 bytes       | Big endian 16-bit value   |
-    |               |               | representing total length |
-    |               |               | of body + 2 bytes for     |
-    |               |               | CRC16; note that size of  |
-    |               |               | total length field is not |
-    |               |               | added to total length     |
-    |               |               | value.                    |
+    | 总长度  | 2 字节       | 大端 16 位值   |
+    |               |               | 表示主体总长度 |
+    |               |               | 加 CRC16 的 2 字节；注意 |
+    |               |               | 总长度字段的大小不 |
+    |               |               | 加入总长度值。    |
     +---------------+---------------+---------------------------+
-    | body          | no more than  | Raw body data fragment    |
+    | 主体          | 不超过      | 原始主体数据分片    |
     |               | MTU - 5       |                           |
     +---------------+---------------+---------------------------+
 
-Initial-final frame 格式类似 initial frame 格式（
+初始-最终帧格式类似初始帧格式，
 但以 ``<base64-i>`` 定义不同。
 
-Initial-final frame 的 ``<base64-i>`` 为取
+初始-最终帧的 ``<base64-i>`` 为取
 以下形式的 Base64 编码
-data：
+数据：
 
 .. table::
     :align: center
 
     +---------------+---------------+---------------------------+
-    | Content       | Size          | Description               |
+    | 内容       | 大小          | 描述               |
     +===============+===============+===========================+
-    | total length  | 2 bytes       | Big endian 16-bit value   |
-    |               |               | representing total length |
-    |               |               | of body + 2 bytes for     |
-    |               |               | CRC16; note that size of  |
-    |               |               | total length field is not |
-    |               |               | added to total length     |
-    |               |               | value.                    |
+    | 总长度  | 2 字节       | 大端 16 位值   |
+    |               |               | 表示主体总长度 |
+    |               |               | 加 CRC16 的 2 字节；注意 |
+    |               |               | 总长度字段的大小不 |
+    |               |               | 加入总长度值。    |
     +---------------+---------------+---------------------------+
-    | body          | no more than  | Raw body data fragment    |
+    | 主体          | 不超过      | 原始主体数据分片    |
     |               | MTU - 7       |                           |
     +---------------+---------------+---------------------------+
-    | crc16         | 2 bytes       | CRC16 of entire packet    |
-    |               |               | body, preceding length    |
-    |               |               | not included.             |
+    | crc16         | 2 字节       | 整个包主体的 CRC16    |
+    |               |               | 不包含前缀长度。     |
     +---------------+---------------+---------------------------+
 
-Partial frame 为
-preceding initial 或其他
-partial
-frame 后的
-continuation。Partial frame 取
+部分帧是前一个初始帧或其他
+部分帧后的
+延续。部分帧取
 以下形式：
 
 .. table::
     :align: center
 
     +---------------+---------------+---------------------------+
-    | Content       | Size          | Description               |
+    | 内容       | 大小          | 描述               |
     +===============+===============+===========================+
-    | 0x04 0x14     | 2 bytes       | Frame start marker        |
+    | 0x04 0x14     | 2 字节       | 帧起始标记        |
     +---------------+---------------+---------------------------+
-    | <base64-i>    | no more than  | Base64 encoded body       |
-    |               | MTU - 3 bytes |                           |
+    | <base64-i>    | 不超过      | Base64 编码主体       |
+    |               | MTU - 3 字节 |                           |
     +---------------+---------------+---------------------------+
-    | 0x0a          | 1 byte        | Frame termination         |
+    | 0x0a          | 1 字节        | 帧终止         |
     +---------------+---------------+---------------------------+
 
-Partial frame 的 ``<base64-i>`` 为
-data 的 Base64 编码（取
+部分帧的 ``<base64-i>`` 为
+数据的 Base64 编码，取
 以下形式：
 
 .. table::
     :align: center
 
     +---------------+---------------+---------------------------+
-    | Content       | Size          | Description               |
+    | 内容       | 大小          | 描述               |
     +===============+===============+===========================+
-    | body          | no more than  | Raw body data fragment    |
+    | 主体          | 不超过      | 原始主体数据分片    |
     |               | MTU - 3       |                           |
     +---------------+---------------+---------------------------+
 
-Partial-final frame 的 ``<base64-i>`` 为
-data 的 Base64 编码（取
+部分-最终帧的 ``<base64-i>`` 为
+数据的 Base64 编码，取
 以下形式：
 
 .. table::
     :align: center
 
     +---------------+---------------+---------------------------+
-    | Content       | Size          | Description               |
+    | 内容       | 大小          | 描述               |
     +===============+===============+===========================+
-    | body          | no more than  | Raw body data fragment    |
+    | 主体          | 不超过      | 原始主体数据分片    |
     |               | MTU - 5       |                           |
     +---------------+---------------+---------------------------+
-    | crc16         | 2 bytes       | CRC16 of entire packet    |
-    |               |               | body, preceding length    |
-    |               |               | not included.             |
+    | crc16         | 2 字节       | 整个包主体的 CRC16    |
+    |               |               | 不包含前缀长度。     |
     +---------------+---------------+---------------------------+
 
 
-CRC Details
+CRC 详情
 -----------
 
-Final 类型 frames 中包含的
+最终类型帧中包含的
 CRC16 仅对
-raw data 计算（不包含
-packet length。
-CRC16 多项式为 0x1021（初始值为 0。
+原始数据计算，不包含
+包长度。
+CRC16 多项式为 0x1021，初始值为 0。
 
 .. _mcumgr_smp_transport_raw_uart:
 
-Raw UART/serial (without console)
+原始 UART/串行（无控制台）
 *********************************
 
-在 Zephyr 中（UART 有
+在 Zephyr 中，UART 有
 可用替代
-transport（其不用
+传输，其不用
 Base64（而 SMP
-over console transport 用（这允许
-更小 code size 和更快
-transfers - 但
+经控制台传输用），这允许
+更小的代码尺寸和更快的
+传输速度——但
 不能用于在同一 UART 上有
-shell 或 log output 的
-devices（或连接到
-显示 ASCII data 的
-terminals（因为所有
-communication 均用
-raw binary
-SMP protocol 进行。
+shell 或日志输出的
+设备，或连接到
+显示 ASCII 数据的
+终端，因为所有
+通信均用
+原始二进制
+SMP 协议进行。
 
-要用此 protocol（用 :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_RAW_UART`（其需
-MCUmgr UART console driver 以
-raw mode 启用。
+要使用此协议，启用 :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_RAW_UART`，
+其需要
+MCUmgr UART 控制台驱动以
+原始模式启用。
 
-Timeout
+超时
 =======
 
-由于用此
-transport 时无
-framing（UART 上可能
+由于使用此
+传输时无
+帧封装，UART 上可能
 接收到
-invalid
-data（使
-system 等待（如
+无效
+数据，使
+系统等待（例如
 永不
 到达的
 非常
-长
-packet。为防止此（有
-timeout
-system（若
+长的
+数据包。为防止此，有
+超时
+机制：若
 特定
-timeframe 内
+时间窗口内
 未
 接收
 完整
-packet（整个
-receive
-buffer 被
+数据包，整个
+接收
+缓冲区被
 清除。建议
-UART ports 上
+UART 端口上
 启用
 此
-option（对
+选项；对
 USB CDC 等
-"virtual"
+"虚拟"
 UART 的
-transports（data 在
+传输，
+数据在
 传递
 前可
-验证（此
-option 不
+验证，此
+选项不
 需要。此
-option 可用
-:kconfig:option:`CONFIG_MCUMGR_TRANSPORT_RAW_UART_INPUT_TIMEOUT` 启用（其
-timeout 可用
+选项可用
+:kconfig:option:`CONFIG_MCUMGR_TRANSPORT_RAW_UART_INPUT_TIMEOUT` 启用，其
+超时可用
 :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_RAW_UART_INPUT_TIMEOUT_TIME_MS` 设置。
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: mcumgr_transport_smp

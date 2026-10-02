@@ -1,92 +1,23 @@
 .. _requirements_catalog:
 
-Requirements
-Catalog
+需求目录
 ####################
 
-The
-Zephyr
-requirements
-are
-maintained
-in
-the
-dedicated
-``reqmgmt``
-repository
-using
-`StrictDoc
-<https://github.com/strictdoc-project/strictdoc>`__.
-When
-that
-repository
-is
-present
-in
-the
-workspace
-（it
-is
-pulled
-in
-as
-a
-west
-project）
-its
-requirements
-are
-exported
-and
-rendered
-directly
-into
-this
-documentation
-below.
+Zephyr 的需求维护在专用的 ``reqmgmt`` 仓库中，
+使用 `StrictDoc <https://github.com/strictdoc-project/strictdoc>`__ 管理。当该
+仓库存在于工作区中（作为 west 项目被拉取进来）时，其
+需求会被导出并直接渲染到本文档下方。
 
-..
-only::
-reqmgmt
+.. only:: reqmgmt
 
-..
-toctree::
-:
-maxdepth:
-2
+   .. toctree::
+      :maxdepth: 2
 
-/build/requirements/index
+      /build/requirements/index
 
-..
-only::
-not
-reqmgmt
+.. only:: not reqmgmt
 
-The
-requirements
-are
-not
-included
-in
-this
-build
-because
-the
-``reqmgmt``
-module
-is
-not
-present
-in
-the
-workspace.
-See
-the
-`Zephyr
-Project
-Requirements
-<https://zephyrproject-rtos.github.io/reqmgmt/>`__
-for
-the
-published
-version.
+   由于工作区中不存在 ``reqmgmt``
+   模块，本次构建未包含这些需求。请参见
+   `Zephyr Project Requirements <https://zephyrproject-rtos.github.io/reqmgmt/>`__
+   查看已发布的版本。

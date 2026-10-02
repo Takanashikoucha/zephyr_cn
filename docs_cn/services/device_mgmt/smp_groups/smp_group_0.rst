@@ -1,123 +1,121 @@
 .. _mcumgr_smp_group_0:
 
-Default/OS
-Management
-Group
+Default/OS Management Group
 ###########################
 
-OS
-management
-group
-define
-以下
-commands：
+OS management group defines following commands:
 
 .. table::
-    :align:
-    center
+    :align: center
 
     +-------------------+-----------------------------------------------+
-    |
-    ``Command
-    ID``
-    |
-    Command
-    description
-    |
+    | ``Command ID``    | Command description                           |
     +===================+===============================================+
-    |
-    ``0``
-    |
-    Echo
-    |
+    | ``0``             | Echo                                          |
     +-------------------+-----------------------------------------------+
-    |
-    ``1``
-    |
-    Console/Terminal
-    echo
-    control;
-    |
-    |
-    unimplemented
-    by
-    Zephyr
-    |
+    | ``1``             | Console/Terminal echo control;                |
+    |                   | unimplemented by Zephyr                       |
     +-------------------+-----------------------------------------------+
-    |
-    ``2``
-    |
-    Task
-    Statistics
-    |
+    | ``2``             | Task Statistics                               |
     +-------------------+-----------------------------------------------+
-    |
-    ``3``
-    |
-    Memory
-    pool
-    statistics
-    |
+    | ``3``             | Memory pool statistics                        |
     +-------------------+-----------------------------------------------+
-    |
-    ``4``
-    |
-    Date-time
-    string
-    |
+    | ``4``             | Date-time string                              |
     +-------------------+-----------------------------------------------+
-    |
-    ``5``
-    |
-    System
-    reset
-    |
+    | ``5``             | System reset                                  |
     +-------------------+-----------------------------------------------+
-    |
-    ``6``
-    |
-    MCUMGR
-    parameters
-    |
+    | ``6``             | MCUMGR parameters                             |
     +-------------------+-----------------------------------------------+
-    |
-    ``7``
-    |
-    OS/Application
-    info
-    |
+    | ``7``             | OS/Application info                           |
     +-------------------+-----------------------------------------------+
-    |
-    ``8``
-    |
-    Bootloader
-    information
-    |
+    | ``8``             | Bootloader information                        |
     +-------------------+-----------------------------------------------+
 
-Echo
-command
+Echo command
 ************
 
-Echo
-command
-responds
-by
-sending
-back
-它
-received
-的
-string。
+Echo command responses by sending back string that it has received.
 
-Echo
-request
-===========
+Echo request
+============
 
+Echo request header fields:
 
-.. note::
+.. table::
+    :align: center
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+    +--------------------+--------------+----------------+
+    | ``OP``             | ``Group ID`` | ``Command ID`` |
+    +====================+==============+================+
+    | ``0`` or ``2``     | ``0``        |  ``0``         |
+    +--------------------+--------------+----------------+
+
+CBOR data of request:
+
+.. code-block:: none
+
+    {
+        (str)"d" : (str)
+    }
+
+where:
+
+.. table::
+    :align: center
+
+    +-----------------------+---------------------------------------------------+
+    | "d"                   | string to be replied by echo service.             |
+    +-----------------------+---------------------------------------------------+
+
+Echo response
+=============
+
+Echo response header fields:
+
+.. table::
+    :align: center
+
+    +--------+--------------+----------------+----------------------------------+
+    | ``OP`` | ``Group ID`` | ``Command ID`` | Note                             |
+    +========+==============+================+==================================+
+    | ``1``  | ``0``        |  ``0``         | When request ``OP`` was ``0``    |
+    +--------+--------------+----------------+----------------------------------+
+    | ``3``  | ``0``        |  ``0``         | When request ``OP`` was ``2``    |
+    +--------+--------------+----------------+----------------------------------+
+
+CBOR data of successful response:
+
+.. code-block:: none
+
+    {
+        (str)"r"        : (str)
+    }
+
+In case of error the CBOR data takes the form:
+
+.. tabs::
+
+   .. group-tab:: SMP version 2
+
+      .. code-block:: none
+
+          {
+              (str)"err" : {
+                  (str)"group"    : (uint)
+                  (str)"rc"       : (uint)
+              }
+          }
+
+   .. group-tab:: SMP version 1 (and non-group SMP version 2)
+
+      .. code-block:: none
+
+          {
+              (str)"rc"       : (int)
+          }
+
+where:
+
 .. table::
     :align: center
 

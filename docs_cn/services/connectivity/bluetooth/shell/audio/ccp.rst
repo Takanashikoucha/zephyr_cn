@@ -1,638 +1,131 @@
-Bluetooth:
-Call
-Control
-Profile
-Shell
+Bluetooth：呼叫控制配置文件 Shell
 #####################################
 
-Call
-Control
-Server
+呼叫控制服务器
 *******************
+呼叫控制服务器是一种通常驻留在能够发起呼叫的设备上的角色，
+包括来自 Skype 等应用程序的呼叫，例如（智能）手机和 PC，
+这些设备通常是 GAP 中央设备。
 
-Call
-Control
-Server
-是
-一
-个
-role
-通常
-reside
-在
-能
-make
-calls
-的
-devices
-上
-包括
-从
-Skype
-等
-apps
-的
-calls
-例如
-（smart）phones
-和
-PCs
-它们
-通常
-是
-GAP
-Central
-devices。
-
-Using
-the
-Call
-Control
-Server
+使用呼叫控制服务器
 =============================
+服务器可以本地控制，也可以由远程设备控制（在呼叫过程中）。
+例如，远程设备可以向服务器发起呼叫，
+或者服务器可以向远程设备发起呼叫，而无需客户端。
 
-The
-Server
-can
-be
-controlled
-locally、
-or
-by
-a
-remote
-device
-（when
-in
-a
-call）.
-For
-example
-a
-remote
-device
-may
-initiate
-a
-call
-to
-the
-server、
-or
-the
-Server
-may
-initiate
-a
-call
-to
-remote
-device、
-without
-a
-client.
+对于所有接受可选 :code:`index` 参数的命令，如果未提供索引，则默认为
+:code:`0`，即 GTBS 承载。
 
-For
-all
-commands
-that
-take
-an
-optional
-:code:`index`、
-if
-the
-index
-is
-not
-supplied
-then
-it
-defaults
-to
-:code:`0`
-which
-is
-the
-GTBS
-bearer.
+.. code-block:: console
 
-..
-code
-block::
-console
-ccp
-call
-control
-server
---help
-ccp
-call
-control
-server
-Bluetooth
-CCP
-Call
-Control
-Server
-shell
-commands
-Subcommands:
-init
-:
-Initialize
-CCP
-Call
-Control
-Server
-set
-bearer
-name
-:
-Set
-bearer
-name
-[index]
-<name>
-get
-bearer
-name
-:
-Get
-bearer
-name
-[index]
-get
-bearer
-uci
-:
-Get
-bearer
-UCI
-[index]
-set
-bearer
-tech
-:
-Set
-bearer
-technology
-[index]
-<technology>
-get
-bearer
-tech
-:
-Get
-bearer
-technology
-[index]
-set
-bearer
-uri
-schemes
-:
-Set
-bearer
-URI
-schemes
-supported
-list
-[index]
-<URI
-schemes>
-（e.g.
-"tel、skype"）
-get
-bearer
-uri
-schemes
-:
-Get
-bearer
-URI
-schemes
-supported
-list
-[index]
+   ccp_call_control_server --help
+   ccp_call_control_server - Bluetooth CCP Call Control Server shell commands
+   Subcommands:
+     init                    : Initialize CCP Call Control Server
+     set_bearer_name         : Set bearer name [index] <name>
+     get_bearer_name         : Get bearer name [index]
+     get_bearer_uci          : Get bearer UCI [index]
+     set_bearer_tech         : Set bearer technology [index] <technology>
+     get_bearer_tech         : Get bearer technology [index]
+     set_bearer_uri_schemes  : Set bearer URI schemes supported list [index] <URI schemes>
+                              (e.g. "tel,skype")
+     get_bearer_uri_schemes  : Get bearer URI schemes supported list [index]
 
-Example
-Usage
+
+使用示例
 =============
 
-Setup
+设置
 -----
 
-..
-code
-block::
-console
-uart:~$
-bt
-init
-uart:~$
-ccp
-call
-control
-server
-init
-Registered
-GTBS
-bearer
-Registered
-bearer[1]
-uart:~$
-bt
-connect
-P:xx:xx:xx:xx:xx:xx
+.. code-block:: console
 
-Setting
-and
-getting
-the
-bearer
-name
+   uart:~$ bt init
+   uart:~$ ccp_call_control_server init
+   Registered GTBS bearer
+   Registered bearer[1]
+   uart:~$ bt connect P:xx:xx:xx:xx:xx:xx
+
+设置和获取承载名称
 -----------------------------------
 
-..
-code
-block::
-console
-uart:~$
-ccp
-call
-control
-server
-get
-bearer
-name
-Bearer[0]
-name:
-Generic
-TBS
-uart:~$
-ccp
-call
-control
-server
-set
-bearer
-name
-"New
-name"
-Bearer[0]
-name:
-New
-name
-uart:~$
-ccp
-call
-control
-server
-get
-bearer
-name
-Bearer[0]
-name:
-New
-name
-uart:~$
-ccp
-call
-control
-server
-get
-bearer
-name
-1
-Bearer[1]
-name:
-Telephone
-Bearer
-#1
-uart:~$
-ccp
-call
-control
-server
-set
-bearer
-name
-1
-"New
-TBS
-name"
-Bearer[1]
-name:
-New
-TBS
-name
-uart:~$
-ccp
-call
-control
-server
-get
-bearer
-name
-1
-Bearer[1]
-name:
-New
-TBS
-name
+.. code-block:: console
 
-Getting
-the
-bearer
-UCI
+   uart:~$ ccp_call_control_server get_bearer_name
+   Bearer[0] name: Generic TBS
+   uart:~$ ccp_call_control_server set_bearer_name "New name"
+   Bearer[0] name: New name
+   uart:~$ ccp_call_control_server get_bearer_name
+   Bearer[0] name: New name
+   uart:~$ ccp_call_control_server get_bearer_name 1
+   Bearer[1] name: Telephone Bearer #1
+   uart:~$ ccp_call_control_server set_bearer_name 1 "New TBS name"
+   Bearer[1] name: New TBS name
+   uart:~$ ccp_call_control_server get_bearer_name 1
+   Bearer[1] name: New TBS name
+
+获取承载 UCI
 ----------------------
 
-..
-code
-block::
-console
-uart:~$
-ccp
-call
-control
-server
-get
-bearer
-uci
-Bearer[0]
-UCI:
-un999
-uart:~$
-ccp
-call
-control
-server
-get
-bearer
-uci
-1
-Bearer[1]
-UCI:
-skype
+.. code-block:: console
 
-Setting
-and
-getting
-the
-bearer
-technology
+   uart:~$ ccp_call_control_server get_bearer_uci
+   Bearer[0] UCI: un999
+   uart:~$ ccp_call_control_server get_bearer_uci 1
+   Bearer[1] UCI: skype
+
+
+设置和获取承载技术
 -----------------------------------------
 
-..
-code
-block::
-console
-uart:~$
-ccp
-call
-control
-server
-get
-bearer
-tech
-Bearer[0]
-technology:
-3G
-（0x01）
-uart:~$
-ccp
-call
-control
-server
-set
-bearer
-tech
-0x02
-Bearer[0]
-new
-technology:
-4G
-（0x02）
+.. code-block:: console
 
-Setting
-and
-getting
-the
-bearer
-URI
-supported
-schemes
-list
+   uart:~$ ccp_call_control_server get_bearer_tech
+   Bearer[0] technology: 3G (0x01)
+   uart:~$ ccp_call_control_server set_bearer_tech 0x02
+   Bearer[0] new technology: 4G (0x02)
+
+设置和获取承载 URI 支持方案列表
 ---------------------------------------------------------
 
-..
-code
-block::
-console
-uart:~$
-ccp
-call
-control
-server
-get
-bearer
-uri
-schemes
-Bearer[0]
-URI
-schemes
-supported
-list:
-tel、skype
-uart:~$
-ccp
-call
-control
-server
-set
-bearer
-uri
-schemes
-"tel、teamspeak"
-Bearer[0]
-new
-URI
-schemes
-supported
-list:
-tel、teamspeak
+.. code-block:: console
 
-Call
-Control
-Client
+   uart:~$ ccp_call_control_server get_bearer_uri_schemes
+   Bearer[0] URI schemes supported list: tel,skype
+   uart:~$ ccp_call_control_server set_bearer_uri_schemes "tel,teamspeak"
+   Bearer[0] new URI schemes supported list: tel,teamspeak
+
+呼叫控制客户端
 *******************
+呼叫控制客户端是一种通常驻留在资源受限设备（如耳塞或头戴式耳机）上的角色。
 
-The
-Call
-Control
-Client
-is
-a
-role
-that
-typically
-resides
-on
-resource
-constrained
-devices
-such
-as
-earbuds
-or
-headsets.
-
-Using
-the
-Call
-Control
-Client
+使用呼叫控制客户端
 =============================
+客户端可以控制远程 CCP 服务器设备。
+例如，远程设备可能有来电，客户端可以接听。
 
-The
-Client
-can
-control
-a
-remote
-CCP
-server
-device.
-For
-example
-a
-remote
-device
-may
-have
-an
-incoming
-call
-that
-can
-be
-accepted
-by
-the
-Client.
+.. code-block:: console
 
-..
-code
-block::
-console
-uart:~$
-ccp
-call
-control
-client
---help
-ccp
-call
-control
-client
-Bluetooth
-CCP
-Call
-Control
-Client
-shell
-commands
-Subcommands:
-discover
-:
-Discover
-GTBS
-and
-TBS
-on
-remote
-device
+   uart:~$ ccp_call_control_client --help
+   ccp_call_control_client - Bluetooth CCP Call Control Client shell commands
+   Subcommands:
+     discover  : Discover GTBS and TBS on remote device
 
-Example
-Usage
-when
-connected
+连接后的使用示例
 ============================
 
-..
-code
-block::
-console
-uart:~$
-ccp
-call
-control
-client
-discover
-Discovery
-completed
-with
-GTBS
-and
-1
-TBS
-bearers
+.. code-block:: console
 
-..
-code
-block::
-console
-uart:~$
-ccp
-call
-control
-client
-read
-bearer
-name
-Bearer
-0x20046254
-name:
-Generic
-TBS
-uart:~$
-ccp
-call
-control
-client
-read
-bearer
-name
-1
-Bearer
-0x20046256
-name:
-Telephone
-Bearer
-#1
-uart:~$
-ccp
-call
-control
-client
-read
-bearer
-uci
-Bearer
-0x20046254
-UCI:
-un999
-uart:~$
-ccp
-call
-control
-client
-read
-bearer
-uci
-1
-Bearer
-0x20046256
-UCI:
-skype
+   uart:~$ ccp_call_control_client discover
+   Discovery completed with GTBS and 1 TBS bearers
+
+.. code-block:: console
+
+   uart:~$ ccp_call_control_client read_bearer_name
+   Bearer 0x20046254 name: Generic TBS
+   uart:~$ ccp_call_control_client read_bearer_name 1
+   Bearer 0x20046256 name: Telephone Bearer #1
+   uart:~$ ccp_call_control_client read_bearer_uci
+   Bearer 0x20046254 UCI: un999
+   uart:~$ ccp_call_control_client read_bearer_uci 1
+   Bearer 0x20046256 UCI: skype

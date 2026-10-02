@@ -1,40 +1,13 @@
 .. _safety_getting_started_requ_section:
 
-Getting
-Started
-with
-Requirements
+需求管理入门
 #################################
 
-These
-documents
-contain
-some
-guidance
-for
-starting
-to
-work
-with
-requirements
-in
-the
-Zephyr
-Project.
+这些文档包含了一些关于如何在 Zephyr 项目中开始进行需求工作的指导。
 
-..
-toctree::
-:
-maxdepth:
-1
-:
-glob:
+.. toctree::
+   :maxdepth: 1
+   :glob:
 
-getting
-started
-with
-requirements.rst
-create
-your
-first
-requirement.rst
+   getting_started_with_requirements.rst
+   create_your_first_requirement.rst

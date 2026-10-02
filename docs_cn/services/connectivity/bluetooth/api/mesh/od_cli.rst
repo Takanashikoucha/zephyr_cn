@@ -1,197 +1,30 @@
-.. _bluetooth
-mesh
-od
-cli:
+.. _bluetooth_mesh_od_cli:
 
-On
-Demand
-Private
-Proxy
-Client
+按需私有代理客户端
 ##############################
 
-On
-Demand
-Private
-Proxy
-Client
-model
-是
-Bluetooth
-Mesh
-specification
-定义
-的
-foundation
-model。
-该
-model
-是
-optional
-的
-通过
-:kconfig:option:`CONFIG_BT_MESH_OD_PRIV_PROXY_CLI`
-option
-启用。
+按需私有代理客户端模型是蓝牙 Mesh 规范定义的基础模型。该模型是可选的，通过
+:kconfig:option:`CONFIG_BT_MESH_OD_PRIV_PROXY_CLI` 选项启用。
 
-The
-On
-Demand
-Private
-Proxy
-Client
-model
-was
-introduced
-in
-the
-Bluetooth
-Mesh
-Protocol
-Specification
-version
-1.1、
-and
-is
-used
-to
-set
-and
-retrieve
-the
-On
-Demand
-Private
-GATT
-Proxy
-state.
-The
-state
-defines
-how
-long
-a
-node
-will
-advertise
-Mesh
-Proxy
-Service
-with
-Private
-Network
-Identity
-type
-after
-it
-receives
-a
-Solicitation
-PDU.
+按需私有代理客户端模型引入于蓝牙 Mesh 协议规范
+版本 1.1，用于设置和获取按需私有 GATT 代理状态。该状态
+定义了节点在接收 Solicitation PDU 后广播 Mesh 代理服务（私有网络身份类型）的持续时间。
 
-The
-On
-Demand
-Private
-Proxy
-Client
-model
-communicates
-with
-an
-On
-Demand
-Private
-Proxy
-Server
-model
-using
-the
-device
-key
-of
-the
-node
-containing
-the
-target
-On
-Demand
-Private
-Proxy
-Server
-model
-instance.
+按需私有代理客户端模型使用包含目标按需私有代理服务器模型
+实例的节点的设备密钥与按需私有代理服务器模型通信。
 
-If
-present、
-the
-On
-Demand
-Private
-Proxy
-Client
-model
-must
-only
-be
-instantiated
-on
-the
-primary
-element.
+如果存在，按需私有代理客户端模型只能实例化在主元素上。
 
-Configurations
+配置
 **************
 
-The
-On
-Demand
-Private
-Proxy
-Client
-model
-behavior
-can
-be
-configured
-with
-the
-transmission
-timeout
-option
-:kconfig:option:`CONFIG_BT_MESH_OD_PRIV_PROXY_CLI_TIMEOUT`.
-The
-:kconfig:option:`CONFIG_BT_MESH_OD_PRIV_PROXY_CLI_TIMEOUT`
-controls
-how
-long
-the
-Client
-waits
-for
-a
-state
-response
-message
-to
-arrive
-in
-milliseconds.
-This
-value
-can
-be
-changed
-at
-runtime
-using
-:c:func:`bt_mesh_od_priv_proxy_cli_timeout_set`.
+按需私有代理客户端模型行为可通过传输超时选项
+:kconfig:option:`CONFIG_BT_MESH_OD_PRIV_PROXY_CLI_TIMEOUT` 配置。
+:kconfig:option:`CONFIG_BT_MESH_OD_PRIV_PROXY_CLI_TIMEOUT` 控制客户端等待状态响应消息到达的毫秒数。该值可在运行时通过
+:c:func:`bt_mesh_od_priv_proxy_cli_timeout_set` 更改。
 
-API
-reference
+
+API 参考
 *************
 
-..
-doxygengroup::
-bt_mesh_od_priv_proxy_cli
+.. doxygengroup:: bt_mesh_od_priv_proxy_cli

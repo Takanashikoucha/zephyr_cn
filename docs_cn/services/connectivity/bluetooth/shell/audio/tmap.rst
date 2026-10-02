@@ -1,12 +1,16 @@
-Bluetooth: Telephone and Media Audio Profile Shell
+Bluetooth：电话和媒体音频配置文件 Shell
 ##################################################
 
-此文档描述如何运行 Telephone and Media Audio Profile 功能。与大多数其他 low-layer profiles 不同（TMAP 是一个存在于所有设备上且有 service（TMAS）的 profile。因此 initiator 和 acceptor（或 central 和 peripheral）都应 discover 远端 device 的 TMAS 以查看其支持的 TMAP roles。
+本文档描述如何运行电话和媒体音频配置文件功能。
+与大多数其他底层配置文件不同，TMAP 是一个在所有设备上都存在并拥有服务（TMAS）的配置文件。
+因此发起方和接受方（或中央设备和外围设备）都应该对远程设备的 TMAS 进行发现，
+以查看它们支持哪些 TMAP 角色。
 
-Using the TMAP Shell
+使用 TMAP Shell
 ********************
 
-当 Bluetooth stack 已初始化（:code:`bt init`）时（TMAS 可通过调用 :code:`tmap init` 注册。
+当蓝牙协议栈已初始化（:code:`bt init`）后，
+可以通过调用 :code:`tmap init` 来注册 TMAS。
 
 .. code-block:: console
 

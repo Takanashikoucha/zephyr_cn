@@ -24,7 +24,7 @@ LuDLC 采用 (Apache-2.0 OR GPL-2.0-or-later) 双重许可。
        - name: ludlc
          url: https://github.com/avolkov-1221/ludlc.git
          revision: main
-         path: modules/ludlc # 按需调整路径
+         path: modules/ludlc # adjust the path as needed
 
 参考资料
 *********

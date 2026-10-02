@@ -6,7 +6,6 @@ Communication
 ##################################
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    ipc_service/ipc_service.rst

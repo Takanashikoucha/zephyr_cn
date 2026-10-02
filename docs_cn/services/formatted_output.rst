@@ -1,93 +1,27 @@
 .. _formatted_output:
 
-Formatted Output
+格式化输出
 ################
 
-Applications 以及
-Zephyr 本身需
-格式化
-values 供
-user 消费的
-infrastructure。标准
-C99 library ``*printf()``
-functionality 满足
-streaming output devices 或
-memory
-buffers 的
-此
-需求（但
-embedded system 中
-devices 可能
-不接受
-streamed
-data（且
-memory 可能
-不可
-用于
-存储
-格式化
-output。
+应用以及 Zephyr 本身都需要格式化值供用户使用的设施。
+标准 C99 库的 ``*printf()`` 功能满足了流式输出设备或内存
+缓冲区的需求，但在嵌入式系统中，设备可能不接受流式数据，
+内存也可能不可用于存储格式化输出。
 
-Internal Zephyr API 传统上
-为
-:c:func:`printk` 和
-Zephyr 的
-internal minimal libc 提供
-此
-功能（但
-用
-separate internal interfaces。Logging、
-tracing、
-shell 和
-其他
-applications 基于
-build options 使用
-这些
-APIs 或
-标准
-libc
-routines。
+Zephyr 内部 API 传统上同时为
+:c:func:`printk` 和 Zephyr 内部最小 libc 提供
+此功能，但使用不同的内部接口。日志、跟踪、shell 和
+其他应用基于构建选项使用这些 API 或标准 libc 例程。
 
-:c:func:`cbprintf` public APIs 转换
-C99 format strings 和
-arguments（提供
-逐
-character 通过
-callback
-mechanism 产生的
-output（替代
-原始
-internal
-functions（并提供
-几乎
-所有
-C99 format
-specifications 的
-支持。Zephyr 中
-``s*printf()`` C
-libraries 的
-既有
-使用
-可
-转换
-为
-:c:func:`snprintfcb()` 以
-避免
-pull in
-libc
-implementations。
+:c:func:`cbprintf` 公共 API 转换 C99 格式字符串和
+参数，通过回调机制逐字符产生输出，
+替代了原始内部函数，并支持几乎所有 C99 格式规范。
+Zephyr 中 ``s*printf()`` C 库的
+既有使用可转换为
+:c:func:`snprintfcb()` 以避免引入 libc 实现。
 
-若干
-Kconfig options 控制
-启用的
-features 集合（
-允许
-对
-features 和
-memory
-usage 的
-某些
-控制：
+若干 Kconfig 选项控制启用的功能集合，
+允许对功能和内存用量进行某些控制：
 
 * :kconfig:option:`CONFIG_CBPRINTF_FULL_INTEGRAL`
   或 :kconfig:option:`CONFIG_CBPRINTF_REDUCED_INTEGRAL`
@@ -97,502 +31,332 @@ usage 的
 * :kconfig:option:`CONFIG_CBPRINTF_N_SPECIFIER`
 
 :kconfig:option:`CONFIG_CBPRINTF_LIBC_SUBSTS` 可用于
-提供
-行为
-类似
-标准
-libc
-functions 的
-functions（但
-用
-选择的
-cbprintf
-formatter（而非
-pull in
-libc 的
-另一
-formatter。
+提供行为类似标准 libc 函数的函数，
+但使用所选的 cbprintf 格式化器
+而非引入 libc 的另一格式化器。
 
 另外
 :kconfig:option:`CONFIG_CBPRINTF_NANO` 可用于
-回退
-到
-添加
-此
-capability
-前
-用于
-:c:func:`printk` 的
-非常
-space-optimized
-但
-有限的
-formatter。
+回退到添加此功能前
+用于 :c:func:`printk` 的
+非常节省空间但有限的格式化器。
 
 .. _cbprintf_packaging:
 
-Cbprintf Packaging
+Cbprintf 打包
 ******************
 
-通常（调用
-``printf``
-family 的
-function 时
-strings
-同步
-格式化。然而（有
-formatting
-延迟
-更
-有益
-的
-cases。此
-情况下（须
-捕获
-state（format
-string 和
-arguments。此
-state 形成
-self-contained
-package（包含
-format
-string 和
-arguments。另外（package 可
-包含
-format
-string
-一部分
-的
-strings 的
-copies（format
-string 或
-任何
-``%s``
-argument）。Package
-primary
-content 类似
-va_list
-stack
-frame（故
-标准
-formatting
-functions 用于
-处理
-package。由于
-package
-包含
-作为
-va_list
-frame 处理的
-data（须
-维持
-strict
-alignment。由于
-所需
-padding（package
-的
-size
-取决于
-alignment。复制
-package 时（应
-复制到
-与
-origin 相同
-alignment 的
-memory
-block。
+通常，调用 ``printf`` 族的函数时
+字符串同步格式化。然而，有
+延迟格式化更有益的场景。此
+情况下，须捕获状态（格式
+字符串和参数）。此状态形成
+自包含包，包含格式
+字符串和参数。另外，包可
+包含格式字符串一部分的
+字符串副本（格式
+字符串或任何 ``%s`` 参数）。包
+主要内容类似
+va_list 栈帧，故
+标准格式化函数用于
+处理包。由于包
+包含作为 va_list 帧处理的
+数据，须维持严格对齐。由于
+所需填充，包
+大小取决于对齐。复制
+包时，应
+复制到与原始
+对齐相同的内存块。
 
-Package 可有
-以下
-variants：
+包可有
+以下变体：
 
-* **Self-contained** - 非
-  read-only
-  strings 追加
-  到
-  package。只要
-  有
-  对
-  read-only
-  string
-  locations 的
-  访问（即可
-  从
-  此
-  package
-  格式化
-  string。Package
-  可
-  包含
-  read-only
-  strings
-  在
-  package
-  中
-  位置
-  的
-  information。该
-  information
-  可
-  用于
-  将
-  packet
-  转换
-  为
-  fully
-  self-contained
-  package。
-* **Fully self-contained** - 所有
-  strings
-  追加
-  到
-  package。无需
-  任何
-  external
-  data 即可
-  从
-  此
-  package
-  格式化
-  string。
-* **Transient**- 仅
-  存储
-  arguments。Package
-  包含
-  非
-  read-only
-  strings 的
-  pointers
-  在
-  package
-  中
-  位置
-  的
-  information。可选（
-  其
-  可
-  包含
-  read-only
-  string
-  location
-  information。只要
-  非
-  read-only
-  strings
-  仍
-  有效
-  且
-  read-only
-  strings
-  可
-  访问（即可
-  从
-  此
-  package
-  格式化
-  string。或者（若
-  package
-  中
-  有
-  read-only
-  string
-  locations 的
-  information（package
-  可
-  转换
-  为
-  **self-contained**
-  package 或
-  **fully self-contained**
-  package。
+* **自包含** - 非
+  只读字符串追加到包。只要
+  有对只读字符串
+  位置的访问，即可
+  从此包格式化
+  字符串。包可
+  包含只读字符串在
+  包中位置的信息。该
+  信息可用于将
+  包转换为完全
+  自包含包。
+* **完全自包含** - 所有
+  字符串追加到包。无需
+  任何外部数据即可
+  从此包格式化
+  字符串。
+* **临时** - 仅
+  存储参数。包
+  包含非只读字符串
+  指针在包中位置的信息。可选
+  地，其可
+  包含只读字符串
+  位置信息。只要
+  非只读字符串仍
+  有效且只读字符串
+  可访问，即可
+  从此包格式化
+  字符串。或者，若
+  包中有只读字符串
+  位置信息，包
+  可转换为**自包含**
+  包或**完全自包含**
+  包。
 
-Package 可用
-两种
-methods 创建：
+包可用
+两种方法创建：
 
-* runtime - 用
+* 运行时 - 用
   :c:func:`cbprintf_package` 或
   :c:func:`cbvprintf_package`。此
-  method
-  扫描
-  format
-  string（并
-  基于
-  检测
-  到的
-  format
-  specifiers
-  构建
-  package。
-* static - arguments 的
-  types
-  由
-  preprocessor
-  在
-  compile
-  time
-  检测（且
-  package
-  创建
-  为
-  向
-  提供
-  memory 的
-  简单
-  assignments。此
-  method
-  显著
-  快于
-  runtime（超过
-  15
-  倍）（但
-  有
-  显著
-  限制：char
-  pointer
-  使用时
-  不能
-  区分
+  方法扫描格式
+  字符串，并基于
+  检测到的格式
+  规范符构建
+  包。
+* 静态 - 参数
+  类型由预处理器
+  在编译时检测，且
+  包创建为向
+  提供的内存的
+  简单赋值。此
+  方法显著快于
+  运行时（超过
+  15 倍），但
+  有显著限制：char
+  指针使用时
+  不能区分
   ``%p`` 和
   ``%s``。其
-  将
-  所有
-  (unsigned)
-  char
-  pointers
-  视为
-  ``%s``（故
-  将
-  尝试
-  将
-  string
-  追加
-  到
-  package。用
+  将所有 (unsigned)
+  char 指针
+  视为 ``%s``，故
+  将尝试
+  将字符串
+  追加到包。用
   :c:macro:`CBPRINTF_PACKAGE_CONVERT_PTR_CHECK`
-  flag
-  从
-  **transient**
-  package
-  转换
-  为
-  **self-contained**
-  package
+  标志
+  从**临时**
+  包转换为**自包含**
+  包
   时
   可
   正确
-  处理。然而（其
+  处理。然而，其
   需
   访问
-  format
-  string（且
+  格式
+  字符串，且
   并非
   总是
-  可能（故
+  可能，故
   建议
   将
   用于
   ``%p`` 的
   char
-  pointers
-  cast
-  为
+  指针
+  转换为
   ``void *``。用
   :c:macro:`CBPRINTF_PACKAGE_CONVERT_PTR_CHECK`
-  flag
+  标志
   调用
   的
   :c:func:`cbprintf_package_convert`
   在
   char
-  pointer
+  指针
   与
   ``%p``
   一起
   使用时
   生成
-  logging
-  warning。
+  日志
+  警告。
 
 
 若干
 Kconfig
-options
+选项
 控制
-packaging
+打包
 的
-behavior：
+行为：
 
 * :kconfig:option:`CONFIG_CBPRINTF_PACKAGE_LONGDOUBLE`
 * :kconfig:option:`CONFIG_CBPRINTF_STATIC_PACKAGE_CHECK_ALIGNMENT`
 
-Cbprintf package conversion
+Cbprintf 包转换
 ===========================
 
 可
 将
-package
+包
 转换
 为
 包含
 更多
-information 的
-variant（如
-**transient**
-package
+信息
+的
+变体，如
+**临时**
+包
 可
 转换
 为
-**self-contained**。若
-package
+**自包含**。若
+包
 创建
 时
 用了
 :c:macro:`CBPRINTF_PACKAGE_ADD_RO_STR_POS`
-flag（则
+标志，则
 可
 转换
 为
-**fully self-contained**
-package。
+**完全自包含**
+包。
 
 :c:func:`cbprintf_package_copy` 用于
 计算
 新
-package
+包
 所需
-space（并
+空间，并
 复制
 并
 转换
-package。
+包。
 
-Cbprintf package format
-=======================
+Cbprintf 包格式
+======================
 
-Package
-的
-format
+包的
+格式
 包含
-platform
-specific 的
-paddings。Package
+平台
+特定的
+填充。包
 由
-header
-组成（其
+头部
+组成，其
 包含
-package
+包
 的
-size（不含
+大小（不含
 追加
-strings）和
+字符串）和
 追加
-strings
+字符串
 的
 数量。其后为
-arguments（包含
-alignment
-paddings（并
+参数（包含
+对齐
+填充），并
 类似
 *va_list*
-stack
-frame。其后为
+栈
+帧。其后为
 与
-string
+字符串
 使用
 的
-character
-pointer
-arguments 关联的
-data（其
+字符
+指针
+参数
+关联的
+数据（其
 未
 追加
 到
-string（但
+字符串，但
 之后
 可
 由
 :c:func:`cbprinf_package_convert`
-追加。最后（package（
-可选（
+追加。最后，包
+可选地
 包含
 追加
-strings。每
-string
+字符串。每
+个
+字符串
 包含
 1
-byte
-header（其
+字节
+头部，其
 包含
 存储
-address
-argument
+地址
+参数
 位置
 的
-index。Packaging
+索引。打包
 期间
-address
+地址
 设为
-null（且
-string
+null，且
+字符串
 格式化
 前
 更新
 为
 指向
-package
+包
 中
 当前
-string
-location。更新
-address
-argument
+字符串
+位置。更新
+地址
+参数
 须
 在
-string
+字符串
 格式化
 前
 立即
-发生（因为
-address
+发生，因为
+地址
 在
-package
+包
 每次
 复制
 时
 变更。
 
 +------------------+-------------------------------------------------------------------------+
-| Header           | 1 byte: Argument list size including header and *fmt* (in 32 bit words) |
+| 头部           | 1 字节：参数列表大小（含头部和 *fmt*，以 32 位字计） |
 |                  +-------------------------------------------------------------------------+
-| sizeof(void \*)  | 1 byte: Number of strings appended to the package                       |
+| sizeof(void \*)  | 1 字节：追加到包的字符串数量                       |
 |                  +-------------------------------------------------------------------------+
-|                  | 1 byte: Number of read-only string argument locations                   |
+|                  | 1 字节：只读字符串参数位置数量                   |
 |                  +-------------------------------------------------------------------------+
-|                  | 1 byte: Number of transient string argument locations                   |
+|                  | 1 字节：临时字符串参数位置数量                   |
 |                  +-------------------------------------------------------------------------+
-|                  | platform specific padding to sizeof(void \*)                            |
+|                  | 平台特定填充至 sizeof(void \*)                            |
 +------------------+-------------------------------------------------------------------------+
-| Arguments        | Pointer to *fmt* (or null if *fmt* is appended to the package)          |
+| 参数        | 指向 *fmt* 的指针（若 *fmt* 追加到包则为 null）          |
 |                  +-------------------------------------------------------------------------+
-|                  | (optional padding for platform specific alignment)                      |
+|                  | （平台特定对齐的可选填充）                      |
 |                  +-------------------------------------------------------------------------+
-|                  | argument 0                                                              |
+|                  | 参数 0                                                              |
 |                  +-------------------------------------------------------------------------+
-|                  | (optional padding for platform specific alignment)                      |
+|                  | （平台特定对齐的可选填充）                      |
 |                  +-------------------------------------------------------------------------+
-|                  | argument 1                                                              |
+|                  | 参数 1                                                              |
 |                  +-------------------------------------------------------------------------+
 |                  | ...                                                                     |
 +------------------+-------------------------------------------------------------------------+
-| String location  | Indexes of words within the package where read-only strings are located |
-| information      +-------------------------------------------------------------------------+
-| (optional)       | Pairs of argument index and argument location index where transient     |
-|                  | strings are located                                                     |
+| 字符串位置  | 包中只读字符串所在位置的索引 |
+| 信息      +-------------------------------------------------------------------------+
+| （可选）       | 临时字符串所在位置的参数索引和参数位置索引对     |
+|                  |                                                     |
 +------------------+-------------------------------------------------------------------------+
-| Appended         | 1 byte: Index within the package to the location of associated argument |
-| strings          +-------------------------------------------------------------------------+
-| (optional)       | Null terminated string                                                  |
+| 追加         | 1 字节：包中关联参数位置的索引 |
+| 字符串          +-------------------------------------------------------------------------+
+| （可选）       | 空终止字符串                                                  |
 |                  +-------------------------------------------------------------------------+
 |                  | ...                                                                     |
 +------------------+-------------------------------------------------------------------------+
@@ -604,89 +368,88 @@ package
   与
   :kconfig:option:`CONFIG_CBPRINTF_NANO`
   组合
-  选择（用
+  选择，用
   C
-  standard
-  library
-  functions（如
+  标准
+  库
+  函数（如
   ``printf`` 或
   ``snprintf``）的
-  formatting
+  格式化
   有限。除
   其他
-  外（``%n``
-  specifier、
+  外，``%n``
+  规范符、
   大多数
-  format
-  flags、
-  precision
-  control 和
-  floating
-  point
+  格式
+  标志、
+  精度
+  控制和
+  浮点
   不
   支持。
 
 .. _cbprintf_packaging_limitations:
 
-Limitations and recommendations
+限制和建议
 ===============================
 
 * 建议
   将
   与
   ``%p``
-  format
-  specifier
+  格式
+  规范符
   一起
   使用
   的
   任何
-  character
-  pointer
-  cast
+  字符
+  指针
+  转换
   为
   其他
-  pointer
-  type（如
+  指针
+  类型（如
   ``void *``）。若
-  format
-  string
+  格式
+  字符串
   不
   可
-  访问（则
+  访问，则
   仅
   可
-  static
-  packaging（且
+  静态
+  打包，且
   其
   将
   追加
   所有
   检测
   到的
-  strings。用于
+  字符串。用于
   ``%p`` 的
-  Character
-  pointer
+  字符
+  指针
   将
   被
   视为
-  string
-  pointer。从
+  字符串
+  指针。从
   非预期
-  location
+  位置
   复制
   可
   有
   严重
   后果（如
-  memory
-  fault
+  内存
+  故障
   或
-  security
-  violation）。
+  安全
+  违规）。
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: cbprintf_apis

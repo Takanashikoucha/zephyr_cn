@@ -1,6 +1,6 @@
 .. _cpptest:
 
-Parasoft C/C++test support
+Parasoft C/C++test 支持
 ##########################
 
 Parasoft `C/C++test <https://www.parasoft.com/products/parasoft-c-ctest/>`__ 是一个用于 C 和 C++ 的软件测试和静态分析工具。它是一个商业软件，你必须获取商业许可证才能使用它。
@@ -16,7 +16,7 @@ C/C++test 的文档可以在 https://docs.parasoft.com/ 找到。请参考文档
 
     west build -b qemu_cortex_m3 zephyr/samples/hello_world -- -DZEPHYR_SCA_VARIANT=cpptest
 
-一个 ``.bdf`` 文件将生成为 :file:`build/sca/cpptest/cpptestscan.bdf`。
+一个 ``.bdf`` 文件将生成为 :file:`build/sca/cpptest/cpptestscan.bdf`（构建数据文件）。
 
 生成报告文件
 ************************

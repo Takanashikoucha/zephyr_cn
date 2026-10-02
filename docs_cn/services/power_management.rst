@@ -1,41 +1,14 @@
 .. _power_management_services:
 
-Power
-Management
+电源管理
 ################
 
-这
-个
-section
-cover
-用于
-control
-energy
-consumption
-和
-performance
-的
-services：
-system
-和
-device
-power
-management、
-CPU
-frequency
-scaling、
-controlled
-shutdown、
-和
-cooperative
-的
-resource
-lifecycle
-management。
+本节涵盖用于控制能耗与性能的服务：
+系统和设备电源管理、CPU 频率调节、受控关机，
+以及协作式资源生命周期管理。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    pm/index.rst
    cpu_freq/index.rst

@@ -1,31 +1,23 @@
 .. _mcumgr_smp_protocol_specification:
 
-SMP Protocol Specification
+SMP 协议规范
 ##########################
 
-此为 Simple Management Protocol (SMP) 的描述（
-MCUmgr 用其向 devices 传递
-requests 并接收 responses。
+本文描述了简单管理协议（SMP），MCUmgr 使用它向设备传递请求并接收响应。
 
-SMP 为 application layer protocol。底层
-transport layer 不在此
-documentation 范围内。
+SMP 是应用层协议。底层传输层不在本文档范围内。
 
 .. note::
-    此语境中的 SMP 指 MCUmgr 的 SMP (Simple Management Protocol)（
-    与 Bluetooth 中的 SMP (Security Manager Protocol) 无关（但
-    有用于 Bluetooth 的 MCUmgr SMP transport。
+    本文语境中的 SMP 指 MCUmgr 的 SMP（简单管理协议），
+    与蓝牙中的 SMP（安全管理协议）无关，
+    但存在用于蓝牙的 MCUmgr SMP 传输。
 
-Frame: The envelope
+帧：封装
 *******************
 
-每个 frame 由 header 和 data 组成。Header 中的
-``Data Length`` field 若底层
-transport layer 支持
-fragmentation 可用于 reassembly 目的。
-Fields 超过
-一个 byte 长时（frames 以 "Big Endian" (Network endianness) 编码（并
-取以下形式：
+每个帧由头部和数据组成。头部的 ``Data Length`` 字段
+在底层传输层支持分片时可用于重组。
+多字节字段以"大端"（网络字节序）编码，形式如下：
 
 .. _mcumgr_smp_protocol_frame:
 
@@ -46,61 +38,54 @@ Fields 超过
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 .. note::
-    原始 specification 声明 SMP 应支持接收
-    "Little-endian" 和 "Big-endian" frames（但实际
-    MCUmgr library 硬编码为始终将 "Network" 侧视为
-    "Big-endian"。
+    原始规范声明 SMP 应支持接收
+    "小端"和"大端"帧，但实际
+    MCUmgr 库硬编码为始终将"网络"侧视为
+    "大端"。
 
 
-Data 可选（且 ``Data Length`` 为零时不存在。
-Data 的编码取决于
-group/ID 的 target。
+数据是可选的，``Data Length`` 为零时不存在。
+数据的编码取决于目标组/ID。
 
-各 fields 及其含义的描述：
+各字段及其含义的描述：
 
 .. table::
     :align: center
 
     +-------------------+---------------------------------------------------+
-    | Field             | Description                                       |
+    | 字段             | 描述                                       |
     +===================+===================================================+
-    | ``Res``           | This is reserved, not-used field and must be      |
-    |                   | always set to 0.                                  |
+    | ``Res``           | 保留未使用字段，必须始终                        |
+    |                   | 设置为 0。                                  |
     +-------------------+---------------------------------------------------+
-    | ``Ver`` (Version) | This indicates the version of the protocol being  |
-    |                   | used, this should be set to 0b01 to use the newer |
-    |                   | SMP transport where error codes are more detailed |
-    |                   | and returned in the map, otherwise left as 0b00   |
-    |                   | to use the legacy SMP protocol. Versions 0b10 and |
-    |                   | 0b11 are reserved for future use and should not   |
-    |                   | be used.                                          |
+    | ``Ver``（版本）  | 指示所使用的协议版本，应设置为 0b01 以使用  |
+    |                   | 错误码更详细且以 map 形式返回的新版          |
+    |                   | SMP 传输，否则保留为 0b00 以使用            |
+    |                   | 旧版 SMP 协议。版本 0b10 和                 |
+    |                   | 0b11 保留供未来使用，不应使用。              |
     +-------------------+---------------------------------------------------+
-    | ``OP``            | :c:enum:`mcumgr_op_t`, determines whether         |
-    |                   | information is written to a device or requested   |
-    |                   | from it and whether a packet contains request to  |
-    |                   | an SMP server or response from it.                |
+    | ``OP``            | :c:enum:`mcumgr_op_t`，决定是向设备           |
+    |                   | 写入信息还是从设备请求信息，以及数据包         |
+    |                   | 包含的是对 SMP 服务器的请求还是来自          |
+    |                   | 该服务器的响应。                              |
     +-------------------+---------------------------------------------------+
-    | ``Flags``         | Reserved for flags; there are no flags defined    |
-    |                   | yet, the field should be set to 0                 |
+    | ``Flags``         | 保留标志位；尚未定义任何标志，                |
+    |                   | 该字段应设置为 0。                           |
     +-------------------+---------------------------------------------------+
-    | ``Data Length``   | Length of the ``Data`` field                      |
+    | ``Data Length``   | ``Data`` 字段的长度。                        |
     +-------------------+---------------------------------------------------+
-    | ``Group ID``      | :c:enum:`mcumgr_group_t`, see                     |
-    |                   | :ref:`mcumgr_smp_protocol_group_ids` for further  |
-    |                   | details.                                          |
+    | ``Group ID``      | :c:enum:`mcumgr_group_t`，详见               |
+    |                   | :ref:`mcumgr_smp_protocol_group_ids`。       |
     +-------------------+---------------------------------------------------+
-    | ``Sequence Num``  | This is a frame sequence number.                  |
-    |                   | The number is increased by one with each request  |
-    |                   | frame.                                            |
-    |                   | The Sequence Num of a response should match       |
-    |                   | the one in the request.                           |
+    | ``Sequence Num``  | 帧序列号。每收到一个请求帧，                |
+    |                   | 该编号递增 1。响应的序列号应与               |
+    |                   | 请求中的序列号一致。                         |
     +-------------------+---------------------------------------------------+
-    | ``Command ID``    | This is a command, within ``Group``.              |
+    | ``Command ID``    | 组内的命令。                                 |
     +-------------------+---------------------------------------------------+
-    | ``Data``          | This is data payload of the ``Data Length``       |
-    |                   | size. It is optional as ``Data Length`` may be    |
-    |                   | set to zero, which means that no data follows     |
-    |                   | the header.                                       |
+    | ``Data``          | 大小为 ``Data Length`` 的数据负载。          |
+    |                   | 它是可选的，因为 ``Data Length`` 可          |
+    |                   | 设置为零，表示头部后无数据。               |
     +-------------------+---------------------------------------------------+
 
 .. note::
@@ -109,20 +94,18 @@ group/ID 的 target。
 
 .. _mcumgr_smp_protocol_group_ids:
 
-Management ``Group ID``'s
+管理 ``Group ID``
 =========================
 
-SMP protocol 支持预定义 common groups（并允许
-user defined
-groups。以下表格列出
-common groups 的列表：
+SMP 协议支持预定义的通用组，并允许用户自定义组。
+以下表格列出了通用组：
 
 
 .. table::
     :align: center
 
     +---------------+-----------------------------------------------+
-    | Decimal ID    | Group description                             |
+    | 十进制 ID    | 组描述                                       |
     +===============+===============================================+
     | ``0``         | :ref:`mcumgr_smp_group_0`                     |
     +---------------+-----------------------------------------------+
@@ -132,17 +115,17 @@ common groups 的列表：
     +---------------+-----------------------------------------------+
     | ``3``         | :ref:`mcumgr_smp_group_3`                     |
     +---------------+-----------------------------------------------+
-    | ``4``         | Application/system log management             |
-    |               | (currently not used by Zephyr)                |
+    | ``4``         | 应用/系统日志管理                              |
+    |               | （Zephyr 当前未使用）                         |
     +---------------+-----------------------------------------------+
-    | ``5``         | Run-time tests                                |
-    |               | (unused by Zephyr)                            |
+    | ``5``         | 运行时测试                                     |
+    |               | （Zephyr 未使用）                             |
     +---------------+-----------------------------------------------+
-    | ``6``         | Split image management                        |
-    |               | (unused by Zephyr)                            |
+    | ``6``         | 分割镜像管理                                   |
+    |               | （Zephyr 未使用）                             |
     +---------------+-----------------------------------------------+
-    | ``7``         | Test crashing application                     |
-    |               | (unused by Zephyr)                            |
+    | ``7``         | 测试崩溃应用                                   |
+    |               | （Zephyr 未使用）                             |
     +---------------+-----------------------------------------------+
     | ``8``         | :ref:`mcumgr_smp_group_8`                     |
     +---------------+-----------------------------------------------+
@@ -150,30 +133,24 @@ common groups 的列表：
     +---------------+-----------------------------------------------+
     | ``63``        | :ref:`mcumgr_smp_group_63`                    |
     +---------------+-----------------------------------------------+
-    | ``64``        | This is the base group for defining           |
-    |               | an application specific management groups.    |
+    | ``64``        | 这是定义应用特定管理组的基础组。               |
     +---------------+-----------------------------------------------+
 
-上述 groups 的 payload（user groups（``64`` 及以上）除外）
-始终 CBOR 编码。Group
-``64`` 及以上可定义自己的
-data communication scheme。
+上述组的负载（用户组（``64`` 及以上）除外）
+始终为 CBOR 编码。``64`` 及以上的组可定义自己的
+数据通信方案。
 
-Minimal response
+最小响应
 ****************
 
-无论发出何种 command（只要
-request 的另一侧有 SMP client（就应发出
-response（包含
-header 后跟 CBOR map container。
-仅在无 SMP service 或
-device 无响应时允许
-response 缺失。
+无论发出何种命令，只要请求的另一侧存在 SMP 客户端，
+就应发出包含头部后跟 CBOR map 容器的响应。
+仅在无 SMP 服务或设备无响应时允许响应缺失。
 
-Minimal response SMP data
+最小响应的 SMP 数据
 =========================
 
-Minimal response 为：
+最小响应为：
 
 .. tabs::
 
@@ -188,7 +165,7 @@ Minimal response 为：
               }
           }
 
-   .. group-tab:: SMP version 1 (and non-group SMP version 2)
+   .. group-tab:: SMP version 1（及非组基 SMP version 2）
 
       .. code-block:: none
 
@@ -202,26 +179,24 @@ Minimal response 为：
     :align: center
 
     +------------------+-------------------------------------------------------------------------+
-    | "err" -> "group" | :c:enum:`mcumgr_group_t` group of the group-based error code. Only      |
-    |                  | appears if an error is returned when using SMP version 2.               |
+    | "err" -> "group" | :c:enum:`mcumgr_group_t` 组基错误码所属的组。仅在                        |
+    |                  | 使用 SMP version 2 且返回错误时出现。                                     |
     +------------------+-------------------------------------------------------------------------+
-    | "err" -> "rc"    | contains the index of the group-based error code. Only appears if       |
-    |                  | non-zero (error condition) when using SMP version 2.                    |
+    | "err" -> "rc"    | 包含组基错误码的索引。仅在使用 SMP version 2 且                           |
+    |                  | 非零（错误条件）时出现。                                                  |
     +------------------+-------------------------------------------------------------------------+
-    | "rc"             | :c:enum:`mcumgr_err_t` only appears if non-zero (error condition) when  |
-    |                  | using SMP version 1 or for SMP errors when using SMP version 2.         |
+    | "rc"             | :c:enum:`mcumgr_err_t` 仅在使用 SMP version 1 且非零（错误条件）时出现，  |
+    |                  | 或使用 SMP version 2 时 SMP 错误时出现。                                  |
     +------------------+-------------------------------------------------------------------------+
 
-注意成功 command 时返回空 map（``rc``/``err``
-仅在
-error condition 时返回（因此若仅返回空 map 或
-response 缺少这些（request 可视为成功。对 SMP version 2（
-与 SMP 本身相关且非
-group specific 的 errors 仍以 ``rc``
-errors 返回（故 SMP version 2 clients 须
-能处理两种类型的 errors。
+注意：命令成功时返回空 map（``rc``/``err``
+仅在错误条件时返回，因此若仅返回空 map 或
+响应缺少这些字段，则请求可视为成功。对于 SMP version 2，
+与 SMP 本身相关且非组特定的错误仍以 ``rc``
+错误形式返回，因此 SMP version 2 客户端须
+能处理两种类型的错误。
 
-Specifications of management groups supported by Zephyr
+Zephyr 支持的管理组规范
 *******************************************************
 
 .. toctree::

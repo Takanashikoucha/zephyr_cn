@@ -11,7 +11,7 @@ Zephyr 设备树维护者做出的决定优先于
 本节内容。如果发生这种情况，请让他们知道，
 以便他们更新此页面，或者你自己发送补丁。
 
-.. contents:: 目录
+.. contents:: Contents
    :local:
 
 始终检查现有绑定
@@ -82,7 +82,7 @@ Zephyr 追求设备树 :ref:`dt-source-compatibility`。因此，如果
 
 .. code-block:: yaml
 
-   title: 我相信你需要一个简短标题。
+   title: I'm sure you need a short title.
 
    description: |
      My very long string
@@ -211,36 +211,37 @@ Zephyr 追求设备树 :ref:`dt-source-compatibility`。因此，如果
        type: int
        default: 0
        description: |
-         片选取消有效与有效之间的最小间隔。
-         默认值对应寄存器字段的复位值。
+         Minimum interval between chip select deassertion and assertion.
+         The default corresponds to the reset value of the register field.
      hold-time-ms:
        type: int
        default: 20
        description: |
-         在发起通信前保持电源使能 GPIO 有效的时间。
-         默认值来自制造商数据手册的推荐，
-         仅在极低温下才会改变。
+         Amount of time to hold the power enable GPIO asserted before
+         initiating communication. The default was recommended in the
+         manufacturer datasheet, and would only change under very
+         cold temperatures.
 
 一些**不要**做的示例及原因：
 
 .. code-block:: yaml
 
    properties:
-     # 描述未提及默认值
+     # Description doesn't mention anything about the default
      foo:
        type: int
        default: 1
        description: number of foos
 
-     # 描述提及默认值而非
-     # 为什么选择它
+     # Description mentions the default value instead of why it
+     # was chosen
      bar:
        type: int
        default: 2
        description: bar size; default is 2
 
-     # 默认值的解释在注释中而非
-     # 描述中。这不会显示在绑定索引中。
+     # Explanation of the default value is in a comment instead
+     # of the description. This won't be shown in the bindings index.
      baz:
        type: int
        # This is the recommended value chosen by the manufacturer.

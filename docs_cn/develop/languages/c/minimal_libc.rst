@@ -1,7 +1,7 @@
 .. _c_library_minimal:
 
 最小 libc
-############
+##############
 
 最基础的 C 库名为 "minimal libc"，
 它是 Zephyr 代码库的一部分，

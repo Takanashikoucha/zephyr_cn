@@ -1,169 +1,23 @@
-.. _bluetooth
-mesh
-od
-srv:
+.. _bluetooth_mesh_od_srv:
 
-On
-Demand
-Private
-Proxy
-Server
+按需私有代理服务器
 ##############################
 
-On
-Demand
-Private
-Proxy
-Server
-model
-是
-Bluetooth
-Mesh
-specification
-定义
-的
-foundation
-model。
-它
-通过
-:kconfig:option:`CONFIG_BT_MESH_OD_PRIV_PROXY_SRV`
-option
-启用。
+按需私有代理服务器模型是蓝牙 Mesh 规范定义的基础模型。通过 :kconfig:option:`CONFIG_BT_MESH_OD_PRIV_PROXY_SRV` 选项启用。
 
-The
-On
-Demand
-Private
-Proxy
-Server
-model
-was
-introduced
-in
-the
-Bluetooth
-Mesh
-Protocol
-Specification
-version
-1.1、
-and
-supports
-the
-configuration
-of
-advertising
-with
-Private
-Network
-Identity
-type
-of
-a
-node
-that
-is
-a
-recipient
-of
-Solicitation
-PDUs
-by
-managing
-its
-On
-Demand
-Private
-GATT
-Proxy
-state.
+按需私有代理服务器模型引入于蓝牙 Mesh 协议规范
+版本 1.1，支持通过管理其按需私有 GATT 代理状态来配置接收 Solicitation PDU 的节点的私有网络身份类型广播。
 
-When
-enabled、
-the
-:ref:`bluetooth_mesh_srpl_srv`
-is
-also
-enabled.
-The
-On
-Demand
-Private
-Proxy
-Server
-is
-dependent
-on
-the
-:ref:`bluetooth_mesh_models_priv_beacon_srv`
-to
-be
-present
-on
-the
-node.
+启用时，:ref:`bluetooth_mesh_srpl_srv` 也会启用。按需私有代理服务器
+依赖于 :ref:`bluetooth_mesh_models_priv_beacon_srv` 存在于节点上。
 
-The
-On
-Demand
-Private
-Proxy
-Server
-does
-not
-have
-an
-API
-of
-its
-own、
-and
-relies
-on
-a
-:ref:`bluetooth_mesh_od_cli`
-to
-control
-it.
-The
-On
-Demand
-Private
-Proxy
-Server
-model
-only
-accepts
-messages
-encrypted
-with
-the
-node's
-device
-key.
+按需私有代理服务器没有自己的 API，依赖于
+:ref:`bluetooth_mesh_od_cli` 来控制。按需私有代理服务器模型只接受
+使用节点设备密钥加密的消息。
 
-If
-present、
-the
-On
-Demand
-Private
-Proxy
-Server
-model
-must
-only
-be
-instantiated
-on
-the
-primary
-element.
+如果存在，按需私有代理服务器模型只能实例化在主元素上。
 
-API
-reference
+API 参考
 *************
 
-..
-doxygengroup::
-bt_mesh_od_priv_proxy_srv
+.. doxygengroup:: bt_mesh_od_priv_proxy_srv

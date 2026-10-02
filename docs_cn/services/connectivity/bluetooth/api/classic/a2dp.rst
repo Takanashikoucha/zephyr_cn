@@ -1,16 +1,10 @@
 .. _bt_a2dp:
 
-Advanced
-Audio
-Distribution
-Profile
-（A2DP）
+高级音频分发配置文件（A2DP）
 ###########################################
 
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   bt_a2dp
+.. doxygengroup:: bt_a2dp

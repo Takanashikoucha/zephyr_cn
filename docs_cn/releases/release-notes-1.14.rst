@@ -459,203 +459,135 @@ TICKLESS_KERNEL 模式现在是所有架构的默认设置
 仅针对 QEMU 目标实现，支持任意数量的 CPU，
 默认以 SMP 模式运行，这是我们第一个这样做的平台
 
-* We've overhauled the Network packet (:ref:`net-pkt <net_pkt_interface>`)
-  API and moved the majority of components and protocols to use the
-  :ref:`BSD socket API <bsd_sockets_interface>`, including MQTT, CoAP,
-  LWM2M, and SNTP.
+* 我们改造了网络数据包（:ref:`net-pkt <net_pkt_interface>`）API，并将大部分组件和协议迁移到使用 :ref:`BSD socket API <bsd_sockets_interface>`，包括 MQTT、CoAP、LWM2M 和 SNTP。
 
-* We enhanced the native POSIX port by adding UART, USB, and display
-  drivers. Based on this port, we added a simulated NRF52832 SoC which enables
-  running full system, multi-node simulations, without the need of real
-  hardware.
+* 我们通过添加 UART、USB 和 display 驱动增强了 native POSIX 移植。基于此移植，我们添加了模拟 NRF52832 SoC，支持运行全系统、多节点仿真，无需真实硬件。
 
-* We added an experimental BLE split software Controller with Upper Link Layer
-  and Lower Link Layer for supporting multiple BLE radio hardware
-  architectures.
+* 我们添加了实验性 BLE 分体软件控制器，包含上层链路层和底层链路层，支持多种 BLE 无线电硬件架构。
 
-* The power management subsystem has been overhauled to support device idle
-  power management and move most of the power management logic from the
-  application back to the BSP.
+* 电源管理子系统已改造，支持设备空闲电源管理，并将大部分电源管理逻辑从应用移回 BSP。
 
-* We introduced major updates and an overhaul to both the logging and
-  shell subsystems, supporting multiple back-ends, integration
-  of logging into the shell, and delayed log processing.
+* 我们对日志和 shell 子系统引入了重大更新和改造，支持多后端、日志集成到 shell 以及延迟日志处理。
 
-* Introduced the ``west`` tool for management of multiple repositories and
-  enhanced support for flashing and debugging.
+* 引入 `west` 工具用于管理多个仓库，并增强烧录和调试支持。
 
-* Added support for application user mode, application memory
-  partitions, and hardware stack protection in ARMv8m
+* 添加应用用户模式、应用内存分区和 ARMv8m 硬件栈保护支持。
 
-* Applied MISRA-C code guideline on the kernel and core components of Zephyr.
-  MISRA-C is a well established code guideline focused on embedded systems and
-  aims to improve code safety, security and portability.
+* 在 Zephyr 内核和核心组件上应用 MISRA-C 代码规范。MISRA-C 是专注于嵌入式系统的成熟代码规范，旨在提高代码安全性、安全性和可移植性。
 
-The following sections provide detailed lists of changes by component.
+以下各节提供按组件分类的更改详细列表。
 
 Security Vulnerability Related
 ******************************
 
-The following security vulnerabilities (CVEs) were addressed in this release:
+以下安全漏洞（CVE）已在此版本中解决：
 
-* Tinycrypt HMAC-PRNG implementation doesn't take the HMAC state
-  clearing into account as it performs the HMAC operations, thereby using a
-  incorrect HMAC key for some of the HMAC operations.
-  (CVE-2017-14200)
+* Tinycrypt HMAC-PRNG 实现在执行 HMAC 操作时未考虑 HMAC 状态清除，因此对某些 HMAC 操作使用了不正确的 HMAC 密钥。（CVE-2017-14200）
 
-* The shell DNS command can cause unpredictable results due to misuse of stack
-  variables.
-  (CVE-2017-14201)
+* shell DNS 命令可能由于栈变量误用导致不可预测的结果。（CVE-2017-14201）
 
-* The shell implementation does not protect against buffer overruns resulting
-  in unpredictable behavior.
-  (CVE-2017-14202)
+* shell 实现未保护缓冲区溢出，导致不可预测的行为。（CVE-2017-14202）
 
-* We introduced Kernel Page Table Isolation, a technique for
-  mitigating the Meltdown security vulnerability on x86 systems. This
-  technique helps isolate user and kernel space memory by ensuring
-  non-essential kernel pages are unmapped in the page tables when the CPU
-  is running in the least privileged user mode, Ring 3. This is the
-  fix for Rogue Data Cache Load. (CVE-2017-5754)
+* 我们引入了内核页表隔离，一种用于缓解 x86 系统 Meltdown 安全漏洞的技术。该技术通过确保非关键内核页在 CPU 运行在最低权限用户模式（Ring 3）时从页表中取消映射，帮助隔离用户空间和内核空间内存。这是对 Rogue Data Cache Load 的修复。（CVE-2017-5754）
 
-* We also addressed these CVEs for the x86 port:
+* 我们还为 x86 移植解决了以下 CVE：
 
-  - Bounds Check Bypass (CVE-2017-5753)
-  - Branch Target Injection (CVE-2017-5715)
-  - Speculative Store Bypass (CVE-2018-3639)
-  - L1 Terminal Fault (CVE-2018-3620)
-  - Lazy FP State Restore (CVE-2018-3665)
+  - 边界检查绕过（CVE-2017-5753）
+  - 分支目标注入（CVE-2017-5715）
+  - 推测性存储绕过（CVE-2018-3639）
+  - L1 终端故障（CVE-2018-3620）
+  - 延迟 FP 状态恢复（CVE-2018-3665）
 
 Kernel
 ******
 
 * The timing subsystem has been reworked and mostly replaced:
 
-   - The timer driver API has been extensively reworked, greatly
-     simplifying the resulting drivers. By removing thousands of lines
-     of code, we reduced the size of a typical kernel build by hundreds
-     of bytes.
+    - 定时器驱动 API 已大幅改造，大大简化了相关驱动。通过移除数千行代码，我们将典型内核构建大小减少了数百字节。
 
-   - TICKLESS_KERNEL mode is now the default on all architectures.  Many
-     bugs were fixed in this support.
+    - TICKLESS_KERNEL 模式现在是所有架构的默认设置。此支持中修复了许多 bug。
 
-* Lots of work on the rapidly-evolving SMP subsystem:
+* 对快速演进的 SMP 子系统进行了大量工作：
 
-  - There is a new CPU affinity API available to "pin" threads to
-    specific cores or sets of cores.
+  - 现在可以使用新的 CPU 亲和性 API 将线程"固定"到特定核心或核心组。
 
-  - The core kernel is now 100% free of use of the global irq_lock on
-    SMP systems, and exclusively uses the spinlock API (which on
-    uniprocessor systems reduces to the same code).
+  - 核心内核现在在 SMP 系统上 100% 不再使用全局 irq_lock，而是专门使用自旋锁 API（在单处理器系统上简化为相同代码）。
 
-  - Zephyr now has a simple interprocessor interrupt framework for
-    applications, such as the scheduler, to use for synchronously
-    notifying other processors of state changes.  It's currently implemented
-    only on x86_64 and used only for thread abort.
+  - Zephyr 现在有一个简单的处理器间中断框架，供调度器等应用使用，用于同步通知其他处理器状态变化。目前仅在 x86_64 上实现，仅用于线程中止。
 
-* Zephyr now has support for the x86_64 architecture.  It is
-  currently implemented only for QEMU targets.
+* Zephyr 现在支持 x86_64 架构。目前仅针对 QEMU 目标实现。
 
-  - It supports arbitrary numbers of CPUs in SMP, and runs in SMP mode
-    by default, our first platform to do so.
+  - 支持 SMP 中任意数量的 CPU，默认以 SMP 模式运行，这是我们第一个这样做的平台。
 
-  - It currently runs code built for the "x32" ABI, which is a native
-    64-bit hardware state, where pointers are 32 bit in memory.
-    Zephyr still has some lurking word size bugs that will need to be
-    fixed to turn on native 64 bit code generation.
+  - 目前运行针对 "x32" ABI 构建的代码，这是一种原生 64 位硬件状态，其中指针在内存中为 32 位。Zephyr 仍有一些潜在的字数大小 bug，需要修复才能启用原生 64 位代码生成。
 
-* K_THREAD_STACK_BUFFER() has been demoted to a private API and will be removed
-  in a future Zephyr release.
-* A new API sys_mutex has been introduced. It has the same semantics
-  as a k_mutex, but the memory for it can reside in user memory and so
-  no explicit permission management is required.
-* sys_mem_pool() now uses a sys_mutex() for concurrency control.
-* Memory protection changes:
+* K_THREAD_STACK_BUFFER() 已降级为私有 API，将在未来 Zephyr 版本中移除。
+* 引入新 API sys_mutex，具有与 k_mutex 相同的语义，但其内存可位于用户内存中，因此无需显式权限管理。
+* sys_mem_pool() 现在使用 sys_mutex() 进行并发控制。
+* 内存保护更改：
 
-  - CONFIG_APPLICATION_MEMORY option has been removed from Zephyr. All test
-    cases have been appropriately converted to use memory domains.
-  - The build time memory domain partition generation mechanism, formerly
-    an optional feature under CONFIG_APP_SHARED_MEM, has been overhauled
-    and is now a core part of memory protection.
-  - Userspace is no longer enabled by default for tests. Tests that are
-    written to execute wholly or in part in user mode will need to enable
-    CONFIG_TEST_USERSPACE in the test's project configuration. There are
-    assertions in place to enforce that this is done.
-  - The default stack size for handling system calls has been increased to
-    1024 bytes.
+  - CONFIG_APPLICATION_MEMORY 选项已从 Zephyr 中移除。所有测试用例已适当转换为使用内存域。
+  - 构建时内存域分区生成机制（原为 CONFIG_APP_SHARED_MEM 下的可选功能）已改造，现在是内存保护的核心部分。
+  - 用户空间不再默认在测试中启用。完全或部分在用户模式下运行的测试需要在测试项目配置中启用 CONFIG_TEST_USERSPACE。已设置断言以强制执行此操作。
+  - 用于处理系统调用的默认栈大小已增加到 1024 字节。
 
-* We started applying MISRA-C (https://www.misra.org.uk/) code guideline on
-  the Zephyr kernel. MISRA-C is a well established code guideline focused on
-  embedded systems and aims to improve code safety, security, and portability.
-  This initial effort was narrowed to the Zephyr kernel and architecture
-  code, and focused only on mandatory and required rules. The following rules
-  were addressed:
+* 我们开始在 Zephyr 内核上应用 MISRA-C（https://www.misra.org.uk/）代码规范。MISRA-C 是专注于嵌入式系统的成熟代码规范，旨在提高代码安全性、安全性和可移植性。此初始工作范围缩小到 Zephyr 内核和架构代码，仅关注强制和必需规则。已解决以下规则：
 
-  - Namespace changes
-  - Normalize switch() operators
-  - Avoid implicit conversion to boolean types
-  - Fix and normalize headers guard
-  - Make if() evaluate boolean operands
-  - Remove all VLAs (variable length array)
-  - Avoid undefined and implementation defined behavior with shift operator
-  - Remove recursions
+  - 命名空间更改
+  - 规范化 switch() 运算符
+  - 避免隐式转换为布尔类型
+  - 修复并规范化头文件保护
+  - 使 if() 评估布尔操作数
+  - 移除所有 VLA（变长数组）
+  - 避免移位运算符的未定义和实现定义行为
+  - 移除递归
 
 Architectures
 *************
 
-* Introduced X86_64 (64 bit) architecture support with SMP features
-* High-level Kconfig symbol structure for Trusted Execution
+* 引入 X86_64（64 位）架构支持，具备 SMP 功能
+* Trusted Execution 的高层 Kconfig 符号结构
 
-* ARM:
+* ARM：
 
-  * Re-architect Memory Protection code for ARM and NXP
-  * Fully support application user mode, memory partitions, and
-    stack protection in ARMv8m
-  * Support built-in stack overflow protection in user mode in ARMv8m
-  * Fix stack overflow error reporting
-  * Support executing from SRAM in XIP builds
-  * Support non-cacheable memory sections
-  * Remove power-of-two align and size requirement for ARMv8-m
-  * Introduce sync barriers in ARM-specific IRQ lock/unlock functions
-  * Enforce double-word stack alignment on exception entry
-  * API to allow Non-Secure FPU Access (ARMv8-M)
-  * Various enhancements in ARM system boot code
-  * Indicate Secure domain fault in Non-Secure fault exception
-  * Update ARM CMSIS headers to version 5.4.0
+  * 重新架构 ARM 和 NXP 的内存保护代码
+  * 完全支持 ARMv8m 中的应用用户模式、内存分区和栈保护
+  * 支持 ARMv8m 用户模式下的内置栈溢出保护
+  * 修复栈溢出错误报告
+  * 支持在 XIP 构建中从 SRAM 执行
+  * 支持非缓存内存段
+  * 移除 ARMv8-m 的 2 的幂对齐和大小要求
+  * 在 ARM 特定的 IRQ 锁/解锁函数中引入同步屏障
+  * 在异常入口时强制双字栈对齐
+  * 允许非安全 FPU 访问的 API（ARMv8-M）
+  * ARM 系统引导代码的各种增强
+  * 在非安全故障异常中指示安全域故障
+  * 将 ARM CMSIS 头文件更新到 5.4.0 版本
 
-* ARC:
+* ARC：
 
-  * Userspace and MPU driver improvements
-  * Optimization of the thread stack definition macros
-  * Bug fixes: handling of lp_xxx registers in _rirq_return_from_coop, nested
-    interrupt handling, hardware stack bounds checking, execution benchmarking
-  * Atomic operations are now usable from user mode on all ARC CPUs
+  * 用户空间和 MPU 驱动改进
+  * 线程栈定义宏的优化
+  * Bug 修复：_rirq_return_from_coop 中 lp_xxx 寄存器处理、嵌套中断处理、硬件栈边界检查、执行基准测试
+  * 原子操作现在可在所有 ARC CPU 的用户模式下使用
 
 * x86:
 
-  - Support for non-PAE page tables has been dropped.
-  - Fixed various security CVEs related to micro-architecture side-effects of
-    speculative execution, as detailed in the security notes.
-  - Added robustness when reporting exceptions generated due to stack
-    overflows or induced in user mode
-  - Pages containing read-only data no longer have the execute disable (XD)
-    bit un-set.
-  - Fix potential IRQ stack corruption when handling double faults
-
+  - 已移除对非 PAE 页表的支持。
+  - 修复了与推测执行微架构副作用相关的各种安全 CVE，详见安全说明。
+  - 增强了报告因栈溢出或在用户模式下引发的异常时的鲁棒性
+  - 包含只读数据的页不再取消设置执行禁用（XD）位。
+  - 修复处理双重故障时潜在的 IRQ 栈损坏
 
 Boards & SoC Support
 ********************
 
-* Added the all new :ref:`NRF52 simulated board <nrf52_bsim>`:
-  This simulator models some of the hardware in an NRF52832 SOC, to enable
-  running full system, multi-node simulations, without the need of real
-  hardware.  It enables fast, reproducible testing, development, and debugging
-  of an application, BlueTooth (BT) stack, and kernel. It relies on `BabbleSim`_
-  to simulate the radio physical layer.
+* 添加了全新的 :ref:`NRF52 模拟开发板 <nrf52_bsim>`：
+  此模拟器模拟 NRF52832 SOC 的部分硬件，支持运行全系统、多节点仿真，无需真实硬件。它支持快速、可重复的测试、开发和调试应用、BlueTooth（BT）协议栈和内核。它依赖 `BabbleSim`\_ 来模拟无线电物理层。
 
-* Added SoC configuration for nRF9160 and Musca ARM Cortex-M33 CPU
+* 添加了 nRF9160 和 Musca ARM Cortex-M33 CPU 的 SoC 配置
 
-* Added support for the following ARM boards:
+* 添加对以下 ARM 开发板的支持：
 
   * 96b_stm32_sensor_mez
   * b_l072z_lrwan1
@@ -684,15 +616,15 @@ Boards & SoC Support
   * particle_xenon
   * v2m_musca
 
-* Added support for the following RISC-V boards:
+* 添加对以下 RISC-V 开发板的支持：
 
   * rv32m1_vega
 
-* Added support for the following ARC boards:
+* 添加对以下 ARC 开发板的支持：
   * Synopsys ARC IoT DevKit
-  * Several ARC simulation targets (ARC nSIM EM/SEM; with and without MPU stack guards)
+  * 多个 ARC 仿真目标（ARC nSIM EM/SEM；带/不带 MPU 栈保护）
 
-* Added support for the following shield boards:
+* 添加对以下 shield 开发板的支持：
 
   * frdm_kw41z
   * x_nucleo_iks01a1
@@ -704,34 +636,32 @@ Boards & SoC Support
 Drivers and Sensors
 *******************
 
-* Added new drivers and backends for ``native_posix``:
+* 为 `native_posix` 添加了新驱动和后端：
 
-  * A UART driver that maps the Zephyr UART to a new host PTY
-  * A USB driver that can expose a host connected USB device
-  * A display driver that will render to a dedicated window using the SDL
-    library
-  * A dedicated backend for the new logger subsystem
+  * 一个将 Zephyr UART 映射到新的主机 PTY 的 UART 驱动
+  * 一个可以暴露主机连接 USB 设备的 USB 驱动
+  * 一个使用 SDL 库渲染到专用窗口的 display 驱动
+  * 为新的 logger 子系统添加的专用后端
 
 * Counter
 
-  * Refactored API
-  * Ported existing counter and RTC drivers to the new API
-  * Deprecated legacy API
+  * 重构 API
+  * 将现有 counter 和 RTC 驱动移植到新 API
+  * 弃用旧 API
 
 * RTC
 
-  - Deprecated the RTC API. The Counter API should be used instead
+  - 弃用 RTC API。应改用 Counter API
 
 * UART
 
-  * Added asynchronous API.
-  * Added implementation of the new asynchronous API for nRF series (UART and
-    UARTE).
+  * 添加异步 API。
+  * 为 nRF 系列（UART 和 UARTE）添加新异步 API 的实现。
 
 * ADC
 
-  * ADC driver APIs are now available to threads running in user mode.
-  * Overhauled adc_dw and renamed it to adc_intel_quark_se_c1000_ss
+  * ADC 驱动 API 现在可用于用户模式下运行的线程。
+  * 改造 adc_dw 并更名为 adc_intel_quark_se_c1000_ss
   * Fixed handling of invalid sampling requests
 
 * Display
@@ -805,156 +735,139 @@ Drivers and Sensors
   * entropy: Added Atmel SAM entropy generator driver
   * spi: Converted nRF drivers to use device tree
   * watchdog: Converted drivers to new API
-  * wifi: simplelink: Implemented setsockopt() for TLS offload
-  * wifi: Added inventek es-WiFi driver
-  * timer: Refactored and accuracy improvements of the arcv2 timer driver (boot
-    time measurements)
-  * timer: Added/reworked Xtensa, RISV-V, NRF, HPET, and ARM systick drivers
-  * gpio: Added RV32M1 driver
-  * hwinfo: Added new hwinfo API and drivers
-  * ipm: Added IMX IPM driver for i.MX socs
-  * interrupt_controller: Added RV32M1 driver
-  * interrupt_controller: Added support for STM32F302x8 EXTI_LINES
-  * neural_net: Added Intel GNA driver
-  * can: Added socket CAN support
-
+  * wifi: simplelink: 为 TLS 卸载实现 setsockopt()
+  * wifi: 添加 inventek es-WiFi 驱动
+  * timer: 重构 arcv2 定时器驱动并提高精度（启动时间测量）
+  * timer: 添加/重构 Xtensa、RISV-V、NRF、HPET 和 ARM systick 驱动
+  * gpio: 添加 RV32M1 驱动
+  * hwinfo: 添加新的 hwinfo API 和驱动
+  * ipm: 为 i.MX socs 添加 IMX IPM 驱动
+  * interrupt_controller: 添加 RV32M1 驱动
+  * interrupt_controller: 添加对 STM32F302x8 EXTI_LINES 的支持
+  * neural_net: 添加 Intel GNA 驱动
+  * can: 添加 socket CAN 支持
 
 Networking
 **********
 
-* The :ref:`BSD socket API <bsd_sockets_interface>` should be used by
-  applications for any network connectivity needs.
-* Majority of the network sample applications were converted to use
-  the BSD socket API.
-* New BSD socket based APIs were created for these components and protocols:
+* 应用应使用 :ref:`BSD socket API <bsd_sockets_interface>` 满足任何网络连接需求。
+* 大部分网络示例应用已转换为使用 BSD socket API。
+* 为以下组件和协议创建新的基于 BSD socket 的 API：
 
   - :ref:`MQTT <mqtt_socket_interface>`
   - :ref:`CoAP <coap_sock_interface>`
   - :ref:`LWM2M <lwm2m_interface>`
   - :ref:`SNTP <sntp_interface>`
-* net-app client and server APIs were removed. This also required removal of
-  the following net-app based legacy APIs:
+* 移除 net-app 客户端和服务器 API。这也需要移除以下基于 net-app 的旧 API：
 
   - MQTT
   - CoAP
   - SNTP
   - LWM2M
-  - HTTP client and server
+  - HTTP 客户端和服务器
   - Websocket
-* Network packet (:ref:`net-pkt <net_pkt_interface>`) API overhaul. The new
-  net-pkt API uses less memory and is more streamlined than the old one.
-* Implement following BSD socket APIs: ``freeaddrinfo()``, ``gethostname()``,
-  ``getnameinfo()``, ``getsockopt()``, ``select()``, ``setsockopt()``,
-  ``shutdown()``
-* Converted BSD socket code to use global file descriptor numbers.
-* Network subsystem converted to use new :ref:`logging system <logging_api>`.
-* Added support for disabling IPv4, IPv6, UDP, and TCP simultaneously.
-* Added support for :ref:`BSD socket offloading <net_socket_offloading>`.
-* Added support for long lifetime IPv6 prefixes.
-* Added enhancements to IPv6 multicast address checking.
-* Added support for IPv6 Destination Options Header extension.
-* Added support for packet socket (AF_PACKET).
-* Added support for socket CAN (AF_CAN).
-* Added support for SOCKS5 proxy in MQTT client.
-* Added support for IPSO Timer object in LWM2M.
-* Added support for receiving gratuitous ARP request.
-* Added sample application for Google IoT Cloud.
-* :ref:`Network interface <net_if_interface>` numbering starts now from 1 for
-  POSIX compatibility.
-* :ref:`OpenThread <thread_protocol_interface>` enhancements.
-* :zephyr:code-sample:`zperf <zperf>` sample application fixes.
-* :ref:`LLDP <lldp_interface>` (Link Layer Discovery Protocol) enhancements.
-* ARP cache update fix.
-* gPTP link delay calculation fixes.
-* Changed how network data is passed from
-  :ref:`L2 to network device driver <network_stack_architecture>`.
-* Removed RPL (Ripple) IPv6 mesh routing support.
-* MQTT is now available to threads running in user mode.
-* Network device driver additions and enhancements:
+* 网络数据包（:ref:`net-pkt <net_pkt_interface>`）API 改造。新的 net-pkt API 比旧版使用更少的内存且更加精简。
+* 实现以下 BSD socket API：`freeaddrinfo()`、`gethostname()`、`getnameinfo()`、`getsockopt()`、`select()`、`setsockopt()`、`shutdown()`
+* 将 BSD socket 代码转换为使用全局文件描述符编号。
+* 网络子系统转换为使用新的 :ref:`日志系统 <logging_api>`。
+* 添加同时禁用 IPv4、IPv6、UDP 和 TCP 的支持。
+* 添加对 :ref:`BSD socket 卸载 <net_socket_offloading>` 的支持。
+* 添加对长生命周期 IPv6 前缀的支持。
+* 增强 IPv6 多播地址检查。
+* 添加对 IPv6 目标选项头扩展的支持。
+* 添加对 packet socket（AF_PACKET）的支持。
+* 添加对 socket CAN（AF_CAN）的支持。
+* 添加对 MQTT 客户端中 SOCKS5 代理的支持。
+* 添加对 LWM2M 中 IPSO Timer 对象的支持。
+* 添加对接收免费 ARP 请求的支持。
+* 添加 Google IoT Cloud 示例应用。
+* :ref:`网络接口 <net_if_interface>` 编号现在从 1 开始，以兼容 POSIX。
+* :ref:`OpenThread <thread_protocol_interface>` 增强。
+* :zephyr:code-sample:`zperf <zperf>` 示例应用修复。
+* :ref:`LLDP <lldp_interface>`（链路层发现协议）增强。
+* 修复 ARP 缓存更新。
+* 修复 gPTP 链路延迟计算。
+* 更改从 :ref:`L2 到网络设备驱动 <network_stack_architecture>` 传递网络数据的方式。
+* 移除 RPL（Ripple）IPv6 mesh 路由支持。
+* MQTT 现在可用于用户模式下运行的线程。
+* 添加和增强网络设备驱动：
 
-  - Added Intel PRO/1000 Ethernet driver (e1000).
-  - Added SMSC9118/LAN9118 Ethernet driver (smsc911x).
-  - Added Inventek es-WiFi driver for disco_l475_iot1 board.
-  - Added support for automatically enabling QEMU based Ethernet drivers.
-  - SAM-E70 gmac Ethernet driver Qav fixes.
-  - enc28j60 Ethernet driver fixes and enhancements.
+  - 添加 Intel PRO/1000 以太网驱动（e1000）。
+  - 添加 SMSC9118/LAN9118 以太网驱动（smsc911x）。
+  - 为 disco_l475_iot1 开发板添加 Inventek es-WiFi 驱动。
+  - 添加自动启用基于 QEMU 的以太网驱动的支持。
+  - 修复 SAM-E70 gmac 以太网驱动 Qav。
+  - 修复和增强 enc28j60 以太网驱动。
 
 Bluetooth
 *********
 
-* Host:
+* Host：
 
-  * GATT: Added support for Robust Caching
-  * GATT: L2CAP: User driven flow control
-  * Many fixes to Mesh
-  * Fixed and improved persistent storage handling
-  * Fixed direct advertising support
-  * Fixed security level 4 handling
-  * Add option to configure peripheral connection parameters
-  * Added support for updating advertising data without having to restart advertising
-  * Added API to iterate through existing bonds
-  * Added support for setting channel map
-  * Converted SPI HCI driver to use device tree
+  * GATT: 添加对 Robust Caching 的支持
+  * GATT: L2CAP: 用户驱动流控
+  * 修复 Mesh 的许多问题
+  * 修复并改进持久存储处理
+  * 修复直接广播支持
+  * 修复安全级别 4 处理
+  * 添加配置外围连接参数的选项
+  * 添加无需重启广播即可更新广播数据的支持
+  * 添加遍历现有绑定的 API
+  * 添加设置信道图的支持
+  * 将 SPI HCI 驱动转换为使用设备树
 
-* New BLE split software Controller (experimental):
+* 新的 BLE 分体软件控制器（实验性）：
 
-  - Split design with Upper Link Layer and Lower Link Layer
-  - Enabled with :kconfig:option:`CONFIG_BT_LL_SW_SPLIT` (disabled by default)
-  - Support for multiple BLE radio hardware architectures
-  - Asynchronous handling of procedures in the ULL
-  - Enhanced radio utilization (99% on continuous 100ms scan)
-  - Latency resilience: Approx 100uS vs 10uS, 10x improvement
-  - CPU and power usage: About 20% improvement
-  - Multiple advertiser and scanner instances
-  - Support for both Big and Little-Endian architectures
+  - 分体设计，包含上层链路层和底层链路层
+  - 通过 :kconfig:option:`CONFIG_BT_LL_SW_SPLIT` 启用（默认禁用）
+  - 支持多种 BLE 无线电硬件架构
+  - ULL 中程序的异步处理
+  - 增强无线电利用率（连续 100ms 扫描时 99%）
+  - 延迟弹性：约 100uS 对比 10uS，10 倍改进
+  - CPU 和功耗：约 20% 改进
+  - 多个广播器和扫描器实例
+  - 支持 Big 和 Little-Endian 架构
 
-* Controller:
+* Controller：
 
-  * Added support for setting the public address
-  * Multiple control procedures fixes and improvements
-  * Advertising random delay fixes
-  * Fixed a serious memory corruption issue during scanning
-  * Fixes to RSSI measurement
-  * Fixes to Connection Failed to be Established sequence
-  * Transitioned to the new logging subsystem from syslog
-  * Switched from ``-Ofast`` to ``-O2`` in time-critical sections
-  * Reworked the RNG/entropy driver to make it available to apps
-  * Multiple size optimizations to make it fit in smaller devices
-  * nRF: Rework the PPI channel assignment to use pre-assigned ones
-  * Add extensive documentation to the shared primitives
+  * 添加设置公共地址的支持
+  * 修复和改进多个控制程序
+  * 修复广播随机延迟
+  * 修复扫描期间的严重内存损坏问题
+  * 修复 RSSI 测量
+  * 修复连接失败建立序列
+  * 从 syslog 迁移到新的日志子系统
+  * 在时间关键部分从 `-Ofast` 切换到 `-O2`
+  * 重新架构 RNG/entropy 驱动使其可用于应用
+  - 多种大小优化以适配更小设备
+  * nRF: 重新架构 PPI 通道分配以使用预分配的
+  * 为共享原语添加大量文档
 
-* Several fixes for big-endian architectures
+* 修复多个 big-endian 架构的问题
 
 Build and Infrastructure
 ************************
 
-* Added support for out-of-tree architectures.
-* Added support for out-of-tree implementations of in-tree drivers.
-* `BabbleSim`_ has been integrated in Zephyr's CI system.
-* Introduced ``DT_`` prefix for all labels generated for information extracted
-  from device tree (with a few exceptions, such as labels for LEDs and buttons,
-  kept for backward compatibility with existing applications).  Deprecated all
-  other defines that are generated.
-* Introduce CMake variables for DT symbols, just as we have for CONFIG symbols.
-* Move DeviceTree processing before Kconfig. Thereby allowing software
-  to be configured based on DeviceTree information.
-* Automatically change the KCONFIG_ROOT when the application directory
-  has a Kconfig file.
-* Added :ref:`west <west>` tool for multiple repository management
-* Added support for :ref:`Zephyr modules <modules>`
-* Build system ``flash`` and ``debug`` targets now require west
-* Added generation of DT_<COMPAT>_<INSTANCE>_<PROP> defines which allowed
-  sensor or other drivers on buses like I2C or SPI to not require dts fixup.
-* Added proper support for device tree boolean properties
+* 添加对树外架构的支持。
+* 添加对树内驱动的树外实现的支持。
+* `BabbleSim`\_ 已集成到 Zephyr 的 CI 系统中。
+* 为从设备树提取的信息生成的所有标签引入 `DT_` 前缀（少数例外，如 LED 和按钮的标签，为与现有应用保持向后兼容而保留）。弃用所有其他生成的定义。
+* 为 DT 符号引入 CMake 变量，就像我们为 CONFIG 符号所做的那样。
+* 将 DeviceTree 处理移到 Kconfig 之前。从而允许软件基于 DeviceTree 信息进行配置。
+* 当应用目录有 Kconfig 文件时自动更改 KCONFIG_ROOT。
+* 添加 :ref:`west <west>` 工具用于多仓库管理
+* 添加对 :ref:`Zephyr 模块 <modules>` 的支持
+* 构建系统 `flash` 和 `debug` 目标现在需要 west
+* 添加生成 DT_<COMPAT>_<INSTANCE>_<PROP> 定义，允许 I2C 或 SPI 等总线上的传感器或其他驱动不需要 dts 修复。
+* 添加对设备树布尔属性的适当支持
 
 Libraries / Subsystems
 ***********************
 
-* Added a new display API and subsystem
-* Added support for CTF Tracing
-* Added support for JWT (JSON Web Tokens)
-* Flash Maps:
-
+* 添加新的 display API 和子系统
+* 添加对 CTF Tracing 的支持
+* 添加对 JWT（JSON Web Tokens）的支持
+* Flash Maps：
   - API extension
   - Automatic generation of the list of flash areas
 
@@ -964,117 +877,92 @@ Libraries / Subsystems
   - Always use the storage partition for FCB
   - Fixed FCB backend and common bugs
 
-* Logging:
+* Logging：
 
-  - Removed sys_log, which has been replaced by the new logging subsystem
-    introduced in v1.13
-  - Refactored log modules registration macros
-  - Improved synchronous operation (see ``CONFIG_LOG_IMMEDIATE``)
-  - Added commands to control the logger using shell
-  - Added :c:macro:`LOG_PANIC()` call to the fault handlers to ensure that
-    logs are output on fault
-  - Added mechanism for handling logging of transient strings. See
-    :c:func:`log_strdup`
-  - Added support for up to 15 arguments in the log message
-  - Added optional function name prefix in the log message
-  - Changed logging thread priority to the lowest application priority
-  - Added notification about dropped log messages due to insufficient logger
-    buffer size
-  - Added log backends:
+  - 移除 sys_log，已由 v1.13 引入的新日志子系统取代
+  - 重构日志模块注册宏
+  - 改进同步操作（参见 `CONFIG_LOG_IMMEDIATE`）
+  - 添加使用 shell 控制 logger 的命令
+  - 在故障处理程序中添加 :c:macro:`LOG_PANIC()` 调用，确保故障时输出日志
+  - 添加处理临时字符串日志记录的机制。参见 :c:func:`log_strdup`
+  - 添加日志消息中最多 15 个参数的支持
+  - 添加日志消息中可选的函数名前缀
+  - 将日志线程优先级更改为最低应用优先级
+  - 添加因 logger 缓冲区大小不足而丢弃日志消息的通知
+  - 添加日志后端：
 
     - RTT
     - native_posix
     - net
     - SWO
     - Xtensa Sim
-  - Changed default timestamp source function to :c:func:`k_uptime_get_32`
+  - 将默认时间戳源函数更改为 :c:func:`k_uptime_get_32`
 
-* Shell:
+* Shell：
 
-  - Added new implementation of the shell sub-system. See :ref:`shell_api`
-  - Added shell backends:
+  - 添加 shell 子系统的新实现。参见 :ref:`shell_api`
+  - 添加 shell 后端：
 
     - UART
     - RTT
     - telnet
 
-* Ring buffer:
+* Ring buffer：
 
-  - Added byte mode
-  - Added API to work directly on ring buffer memory to reduce memory copying
-  - Removed ``sys_`` prefix from API functions
+  - 添加字节模式
+  - 添加直接操作 ring buffer 内存的 API 以减少内存复制
+  - 从 API 函数中移除 `sys_` 前缀
 
-* MBEDTLS APIs may now be used from user mode.
-
+* MBEDTLS API 现在可用于用户模式。
 
 HALs
 ****
 
-* Updated Nordic nrfx to version 1.6.2
-* Updated Nordic nrf ieee802154 radio driver to version 1.2.3
-* Updated SimpleLink to TI CC32XX SDK 2.40.01.01
-* Added Microchip MEC1701 Support
-* Added Cypress PDL for PSoC6 SoC Support
-* Updates to stm32cube, Silabs Gecko SDK, Atmel.
-* Update ARM CMSIS headers to version 5.4.0
-
+* 将 Nordic nrfx 更新到 1.6.2 版本
+* 将 Nordic nrf ieee802154 无线电驱动更新到 1.2.3 版本
+* 将 SimpleLink 更新到 TI CC32XX SDK 2.40.01.01
+* 添加 Microchip MEC1701 支持
+* 为 PSoC6 SoC 支持添加 Cypress PDL
+* 更新 stm32cube、Silabs Gecko SDK、Atmel。
+* 将 ARM CMSIS 头文件更新到 5.4.0 版本
 
 Documentation
 *************
 
-* Reorganized subsystem documentation into more meaningful collections
-  and added or improved introductory material for each subsystem.
-* Overhauled  Bluetooth documentation to split it into
-  manageable units and included additional information, such as
-  architecture and tooling.
-* Added to and improved documentation on many subsystems and APIs
-  including socket offloading, Ethernet management, LLDP networking,
-  network architecture and overview, net shell, CoAP, network interface,
-  network configuration library, DNS resolver, DHCPv4, DTS, flash_area,
-  flash_mpa, NVS, settings, and more.
-* Introduced a new debugging guide (see :ref:`debug-probes`) that documents
-  the supported debug probes and host tools in
-  one place, including which combinations are valid.
-* Clarified and improved information about the west tool and its use.
-* Improved :ref:`development process <development_model>` documentation
-  including how new features
-  are proposed and tracked, and clarifying API lifecycle, issue and PR
-  tagging requirements, contributing guidelines, doc guidelines,
-  release process, and PR review process.
-* Introduced a developer "fast" doc build option to eliminate
-  the time needed to create the full kconfig option docs from a local
-  doc build, saving potentially five minutes for a full doc build. (Doc
-  building time depends on your development hardware performance.)
-* Made dramatic improvements to the doc build processing, bringing
-  iterative local doc generation down from over two minutes to only a
-  few seconds. This makes it much faster for doc developers to iteratively
-  edit and test doc changes locally before submitting a PR.
-* Added a new ``zephyr-file`` directive to link directly to files in the
-  Git tree.
-* Introduced simplified linking to doxygen-generated API reference
-  material.
-* Made board documentation consistent, enabling a board-image carousel
-  on the zephyrproject.org home page.
-* Reduced unnecessarily large images to improve page load times.
-* Added CSS changes to improve API docs appearance and usability
-* Made doc version selector more obvious, making it easier to select
-  documentation for a specific release
-* Added a friendlier and more graphic home page.
+* 将子系统文档重新组织为更有意义的集合，并为每个子系统添加或改进介绍材料。
+* 改造 Bluetooth 文档，将其拆分为可管理的单元，并包含额外信息，如架构和工具。
+* 为许多子系统和 API 添加并改进文档，包括 socket 卸载、以太网管理、LLDP 网络、网络架构概述、net shell、CoAP、网络接口、网络配置库、DNS 解析器、DHCPv4、DTS、flash_area、flash_mpa、NVS、settings 等。
+* 引入新的调试指南（参见 :ref:`debug-probes`），在一个地方记录支持的调试探针和主机工具，包括哪些组合有效。
+* 澄清并改进关于 west 工具及其使用的信息。
+* 改进 :ref:`开发流程 <development_model>` 文档，包括如何提出和跟踪新功能，以及澄清 API 生命周期、issue 和 PR 标签要求、贡献指南、文档指南、发布流程和 PR 审查流程。
+* 引入开发者"fast"文档构建选项，消除从本地文档构建创建完整 kconfig 选项文档所需的时间，为完整文档构建节省潜在的五分钟。（文档构建时间取决于开发硬件性能。）
+* 对文档构建处理进行显著改进，将迭代本地文档生成从两分钟以上缩短到仅几秒钟。这使得文档开发者在提交 PR 前本地迭代编辑和测试文档变更快得多。
+* 添加新的 `zephyr-file` 指令以直接链接到 Git 树中的文件。
+* 引入简化的链接到 doxygen 生成的 API 参考材料。
+* 使开发板文档保持一致，启用 zephyrproject.org 主页上的开发板图像轮播。
+* 缩减不必要的大图像以改善页面加载时间。
+* 添加 CSS 更改以改善 API 文档的外观和可用性
+* 使文档版本选择器更明显，便于选择特定版本的文档
+* 添加更友好、更具图形化的主页。
 
 Tests and Samples
 *****************
 
-* A new set of, multinode, full system tests of the BT stack,
-  based on `BabbleSim`_ have been added.
-* Added unique identifiers to all tests and samples.
-* Removed old footprint benchmarks
-* Added tests for CMSIS RTOS API v2, BSD Sockets, CANBus, Settings, USB,
-  and miscellaneous drivers.
-* Added benchmark applications for the scheduler and mbedTLS
-* Added samples for the display subsystem, LVGL, Google IOT, Sockets, CMSIS RTOS
-  API v2, Wifi, Shields, IPC subsystem, USB CDC ACM, and USB HID.
-* Add support for using sanitycheck testing with Renode
+* 添加一组新的基于 `BabbleSim`\_ 的 BT 协议栈多节点、全系统测试。
+* 为所有测试和示例添加唯一标识符。
+* 移除旧的 footprint 基准测试
+* 为 CMSIS RTOS API v2、BSD Sockets、CANBus、Settings、USB 和杂项驱动添加测试。
+* 为调度器和 mbedTLS 添加基准测试应用
+* 为 display 子系统、LVGL、Google IOT、Sockets、CMSIS RTOS API v2、Wifi、Shields、IPC 子系统、USB CDC ACM 和 USB HID 添加示例。
+* 添加使用 sanitycheck 测试与 Renode 的支持
 
+Issue Related Items
+*******************
+
+自上次 1.13.0 标记发布以来解决了以下 GitHub issue：
+
+.. comment  List derived from GitHub Issue query: ...
+   * :github:`issuenumber` - issue title
 
 Issue Related Items
 *******************

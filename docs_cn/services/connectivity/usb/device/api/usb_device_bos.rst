@@ -1,18 +1,9 @@
 .. _usb_bos_api:
 
-Binary
-Device
-Object
-Store
-（BOS）
-support
-API
-（deprecated）
+二进制设备对象存储（BOS）支持 API（已弃用）
 #########################################################
 
-API
-reference
+API 参考
 *************
 
-.. doxygengroup::
-   usb_bos
+.. doxygengroup:: usb_bos

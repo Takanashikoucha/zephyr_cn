@@ -1,14 +1,10 @@
 .. _usb_device_next_api:
 
-USB
-device
-support
-APIs
+USB 设备支持 API
 #######################
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    udc.rst
    usbd.rst

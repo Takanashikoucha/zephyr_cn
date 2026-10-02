@@ -3,115 +3,78 @@
 JSON
 ####
 
-Zephyr
-provide
-一
-个
-JSON
-library
-它
-可
-被
-used
-用于
-encode
-和
-decode
-JSON
-data。
+Zephyr 提供了一个 JSON 库，可用于编码和解码 JSON 数据。
 
-Usage
+使用
 *****
 
-Defining
-the
-Data
-Structure
+定义数据结构
 ===========================
 
-First
-define
-与
-JSON
-object
-对应
-的
-C
-structure
-和
-将
-structure
-fields
-map
-到
-JSON
-tokens
-的
-descriptor。
+首先，定义与 JSON 对象对应的 C 结构体，以及将结构体字段映射到 JSON 令牌的描述符。
 
-.. code-block::
-   c
+.. code-block:: c
 
-   #include
-   <zephyr/data/json.h>
+   #include <zephyr/data/json.h>
 
-   struct
-   foo
-   {
-       int
-   bar;
-       const
-   char
-   *baz;
+   struct foo {
+       int bar;
+       const char *baz;
    };
 
-   static
-   const
-   struct
-   json_obj_descr
-   foo_descr[]
-   =
-   {
-       JSON_OBJ_DESCR_PRIM(struct
-   foo,
-   bar,
-   JSON_TOK_NUMBER),
-       JSON_OBJ_DESCR_PRIM(struct
-   foo,
-   baz,
-   JSON_TOK_STRING),
+   static const struct json_obj_descr foo_descr[] = {
+       JSON_OBJ_DESCR_PRIM(struct foo, bar, JSON_TOK_NUMBER),
+       JSON_OBJ_DESCR_PRIM(struct foo, baz, JSON_TOK_STRING),
    };
 
-Encoding
+编码
 ========
 
-要
-将
-C
-structure
-encode
-到
-JSON
-string
-中
-use
-:c:func:`json_obj_encode_buf`。
+要将 C 结构体编码为 JSON 字符串，请使用 :c:func:`json_obj_encode_buf`。
 
-.. code-block::
-   c
+.. code-block:: c
 
-   void
-   encode_example(void)
+   void encode_example(void)
    {
-       struct
-   foo
-   data
-   =
+       struct foo data = { .bar = 42, .baz = "hello" };
+       char buffer[128];
+       int ret;
+
+       ret = json_obj_encode_buf(foo_descr, ARRAY_SIZE(foo_descr),
+                                 &data,
+                                 buffer, sizeof(buffer));
+       if (ret < 0) {
+           /* handle error */
+       }
+   }
+
+解码
+========
+
+要将 JSON 字符串解码为 C 结构体，请使用 :c:func:`json_obj_parse`。
+
+.. code-block:: c
+
+   void decode_example(void)
    {
-   .bar
-   =
-   42,
-   .baz
-   =
-   "hello"
-   };
+       struct foo data;
+       const char *json_text = "{\"bar\": 42, \"baz\": \"hello\"}";
+       int ret;
+
+       ret = json_obj_parse(json_text, strlen(json_text),
+                            foo_descr, ARRAY_SIZE(foo_descr),
+                            &data);
+       if (ret < 0) {
+           /* handle error */
+       }
+   }
+
+配置
+*************
+
+要启用 JSON 支持，请启用 :kconfig:option:`CONFIG_JSON_LIBRARY` Kconfig 选项。
+
+API 参考
+*************
+
+.. doxygengroup:: json

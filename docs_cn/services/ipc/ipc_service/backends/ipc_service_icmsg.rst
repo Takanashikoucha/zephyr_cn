@@ -3,216 +3,37 @@
 ICMsg backend
 #############
 
-Inter
-core
-messaging
-backend（ICMsg）是
-更
-heavy 的
-RPMsg
-static
-vrings
-backend 的
-lighter
-alternative。其
-提供
-minimal
-feature
-set
-且
-small
-memory
-footprint。ICMsg
-backend
-构建
-在
-:ref:`spsc_pbuf` 之上。
+核间消息 backend（ICMsg）是比功能较重的 RPMsg static vrings backend 更轻量的替代方案。它以较小的内存占用提供了最小的功能集。ICMsg backend 构建在 :ref:`spsc_pbuf` 之上。
 
 Overview
 ========
 
-ICMsg
-backend
-用
-shared
-memory
-和
-MBOX
-devices
-交换
-data。Shared
-memory
-用于
-存储
-data（MBOX
-devices
-用于
-signal
-data
-已
-写入。
+ICMsg backend 使用共享内存和 MBOX 设备来交换数据。
+共享内存用于存储数据，MBOX 设备用于发出数据已写入的信号。
 
-Backend
-支持
-在
-单个
-instance
-上
-注册
-单个
-endpoint。若
-application
-需
-超过
-一个
-communication
-channel（须
-定义
-多个
-instances（每
-instance
-有
-其
-自己
-dedicated
-endpoint。
+该 backend 支持在单个 instance 上注册单个 endpoint。如果应用需要多个通信通道，你必须定义多个 instances，每个 instance 拥有自己的专用 endpoint。
 
 Configuration
 =============
 
-Backend
-通过
-Kconfig
-和
-devicetree
-配置。
-配置
-backend
-时（做
-以下：
+该 backend 通过 Kconfig 和 devicetree 进行配置。
+配置该 backend 时，请执行以下操作：
 
-* 若
-  至少
-  一个
-  core
-  在
-  shared
-  memory
-  上
-  用
-  data
-  cache（设置
-  ``dcache-alignment``
-  value。
-  其
-  须
-  为
-  通信
-  双方
-  的
-  invalidation
-  或
-  write-back
-  size
-  的
-  最大
-  value。
-  若
-  通信
-  双方
-  均
-  不
-  在
-  shared
-  memory
-  上
-  用
-  data
-  cache（可
-  跳过。
-* 定义
-  两个
-  memory
-  regions（并
-  分配
-  给
-  instance
-  的
-  ``tx-region``
-  和
-  ``rx-region``。
-  确保
-  用于
-  data
-  exchange
-  的
-  memory
-  regions
-  唯一（不
-  与
-  任何
-  其他
-  region
-  重叠）且
-  两个
-  domains（或
-  CPUs）可
-  访问。
-* 定义
-  用于
-  发送
-  告知
-  另一
-  domain（或
-  CPU）data
-  已
-  写入
-  的
-  signal 的
-  MBOX
-  devices。
-  确保
-  另一
-  domain（或
-  CPU）能
-  接收
-  signal。
+* 如果至少一个 core 在共享内存上使用数据缓存，请设置 ``dcache-alignment`` 值。
+  这必须是通信双方失效或写回大小的最大值。
+  如果通信双方都不在共享内存上使用数据缓存，则可以跳过。
+* 定义两个内存区域，并将它们分配给 instance 的 ``tx-region`` 和 ``rx-region``。
+  确保用于数据交换的内存区域是唯一的（不与其他任何区域重叠），并且两个 domains（或 CPUs）都可以访问。
+* 定义用于发送信号以通知其他 domain（或 CPU）数据已写入的 MBOX 设备。
+  确保其他 domain（或 CPU）能够接收该信号。
 
 .. caution::
 
-    确保
-    设置
-    正确
-    的
-    ``dcache-alignment``
-    value。
-    最初（错误
-    value
-    可能
-    不
-    显示
-    任何
-    signs（这
-    可能
-    给
-    一切
-    工作
-    的
-    错误
-    印象。
-    Unstable
-    behavior
-    迟早
-    会
-    出现。
+    请确保你设置了正确的 ``dcache-alignment`` 值。
+    起初，错误的值可能不会表现出任何征兆，这可能会给人一切正常的错误印象。
+    不稳定的行为迟早会出现。
 
-参见
-以下
-一
-instance
-的
-configuration
-示例：
+参见以下某个 instance 的配置示例：
 
 .. code-block:: devicetree
 
@@ -240,93 +61,18 @@ configuration
    };
 
 
-须
-为
-通信
-另一
-侧（domain
-或
-CPU）提供
-类似
-configuration（但
-须
-swap
-MBOX
-channels
-和
-memory
-regions（``tx-region``
-和
-``rx-region``）。
+你必须为通信的另一方（domain 或 CPU）提供类似的配置，但你必须交换 MBOX 通道和内存区域（``tx-region`` 和 ``rx-region``）。
 
 Bonding
 =======
 
-Endpoint
-注册
-时（通过
-IPC
-instance
-连接
-的
-每
-domain（或
-CPU）上
-发生
-以下：
+当 endpoint 被注册时，每个通过 IPC instance 连接的 domain（或 CPU）上会发生以下情况：
 
-1. Domain（或
-   CPU）将
-   magic
-   number
-   写入
-   其
-   shared
-   memory 的
-   ``tx-region``。
-#. 然后
-   向
-   另一
-   domain
-   或
-   CPU
-   发送
-   signal（告知
-   data
-   已
-   写入。向
-   另一
-   domain
-   或
-   CPU
-   发送
-   signal
-   用
-   timeout
-   重复。
-#. 接收
-   来自
-   另一
-   domain
-   或
-   CPU
-   的
-   signal
-   时（从
-   ``rx-region``
-   读取
-   magic
-   number。若
-   正确（bonding
-   process
-   完成（且
-   backend
-   通过
-   调用
-   :c:member:`ipc_service_cb.bound`
-   callback
-   告知
-   application。
+1. 该 domain（或 CPU）将一个 magic number 写入其共享内存的 ``tx-region``。
+#. 然后它向另一个 domain 或 CPU 发送信号，通知数据已写入。
+   向另一个 domain 或 CPU 发送信号的操作会带超时重复执行。
+#. 当收到来自另一个 domain 或 CPU 的信号时，从 ``rx-region`` 读取 magic number。
+   如果正确，bonding 过程完成，backend 通过调用 :c:member:`ipc_service_cb.bound` 回调通知应用。
 
 Samples
 =======
@@ -336,312 +82,107 @@ Samples
 Detailed Protocol Specification
 ===============================
 
-ICMsg
-用
-两个
-shared
-memory
-regions
-和
-两个
-MBOX
-channels。
-Region
-和
-channel
-pair
-用于
-单向
-传输
-messages。
-另
-一
-pair
-对称（且
-传输
-相反
-方向
-的
-messages。因此（以下
-specification
-聚焦
-于
-一
-pair。
-另
-一
-pair
-相同。
+ICMsg 使用两个共享内存区域和两个 MBOX 通道。
+区域和通道对用于单向传输消息。
+另一对是对称的，用于相反方向传输消息。
+因此，下面的规范专注于这样的一对。
+另一对是相同的。
 
-ICMsg
-每
-instance
-仅
-提供
-一个
-endpoint。
+ICMsg 每个 instance 只提供单个 endpoint。
 
 Shared Memory Region Organization
 ---------------------------------
 
-若
-启用
-data
-caching（提供
-给
-ICMsg 的
-shared
-memory
-region
-须
-按
-cache
-requirement
-对齐。
-若
-不
-启用
-cache（所需
-alignment
-为
-4
-bytes。
+如果启用了数据缓存，提供给 ICMsg 的共享内存区域必须按缓存要求对齐。
+如果未启用缓存，所需的对齐值为 4 字节。
 
-Shared
-memory
-region
-完全
-用于
-单个
-FIFO。
-其
-包含
-read
-和
-write
-indexes（后接
-data
-buffer。详细
-structure
-包含
-在
-以下
-table
-中：
+共享内存区域完全由单个 FIFO 使用。
+它包含读写索引，后跟数据缓冲区。
+详细结构包含在以下表格中：
 
 .. list-table::
    :header-rows: 1
 
-   * - Field name
-     - Size (bytes)
-     - Byte order
-     - Description
+   * - 字段名
+     - 大小（字节）
+     - 字节序
+     - 描述
    * - ``rd_idx``
      - 4
      - little‑endian
-     - Index of the first incoming byte in the ``data`` field.
+     - ``data`` 字段中第一个传入字节的索引。
    * - ``padding``
-     - depends on cache alignment
+     - 取决于缓存对齐
      - n/a
-     - Padding added to align ``wr_idx`` to the cache alignment.
+     - 为将 ``wr_idx`` 对齐到缓存对齐而添加的填充。
    * - ``wr_idx``
      - 4
      - little‑endian
-     - Index of the byte after the last incoming byte in the ``data`` field.
+     - ``data`` 字段中最后一个传入字节之后字节的索引。
    * - ``data``
-     - everything to the end of the region
+     - 从当前位置到区域末尾的所有内容
      - n/a
-     - Circular buffer containing actual bytes to transfer.
+     - 包含实际待传输字节的循环缓冲区。
 
-此
-为
-带
-circular
-buffer 的
-usual
-FIFO：
+这是一个带有循环缓冲区的常规 FIFO：
 
-* Indexes（``rd_idx``
-  和
-  ``wr_idx``）在
-  到达
-  ``data``
-  buffer
-  末尾
-  时
-  wrap
-  around。
-* 若
-  ``rd_idx
-  ==
-  wr_idx``（FIFO
-  为空。
-* FIFO
-  的
-  capacity
-  比
-  ``data``
-  buffer
-  length
-  少
-  一
-  byte。
+* 索引（``rd_idx`` 和 ``wr_idx``）在到达 ``data`` 缓冲区末尾时回绕。
+* 如果 ``rd_idx == wr_idx``，则 FIFO 为空。
+* FIFO 的容量比 ``data`` 缓冲区长度少一个字节。
 
 Packets
 -------
 
-Packets
-通过
-上述
-section
-描述
-的
-FIFO
-发送。
-若
-packet
-发生在
-FIFO
-buffer
-末尾（其
-可
-wrap
-around。
+数据包通过上面章节中描述的 FIFO 发送。
+如果一个数据包出现在 FIFO 缓冲区末尾，它可以发生回绕。
 
-以下
-为
-packet
-structure：
+以下是数据包结构：
 
 .. list-table::
    :header-rows: 1
 
-   * - Field name
-     - Size (bytes)
-     - Byte order
-     - Description
+   * - 字段名
+     - 大小（字节）
+     - 字节序
+     - 描述
    * - ``len``
      - 2
      - big‑endian
-     - Length of the ``data`` field.
+     - ``data`` 字段的长度。
    * - ``reserved``
      - 2
      - n/a
-     - Reserved for the future use.
-       It must be 0 for the current protocol version.
+     - 保留供将来使用。
+       对于当前协议版本，它必须为 0。
    * - ``data``
      - ``len``
      - n/a
-     - Packet data.
+     - 数据包数据。
    * - ``padding``
      - 0‑3
      - n/a
-     - Padding is added to align the total packet size to 4 bytes.
+     - 添加填充以将数据包总大小对齐到 4 字节。
 
-Packet
-send
-procedure
-如下：
+数据包发送流程如下：
 
-#. 检查
-   packet
-   是否
-   装入
-   buffer。
-#. 从
-   ``wr_idx``
-   开始
-   将
-   packet
-   写入
-   ``data``
-   FIFO
-   buffer。
-   需要
-   时
-   wrap。
-#. 写入
-   ``wr_idx``
-   的
-   新
-   value。
-#. 通过
-   MBOX
-   channel
-   notify
-   receiver。
+#. 检查数据包是否能放入缓冲区。
+#. 从 ``wr_idx`` 开始将数据包写入 ``data`` FIFO 缓冲区。
+   如需要则进行回绕。
+#. 写入 ``wr_idx`` 的新值。
+#. 通过 MBOX 通道通知接收方。
 
 Initialization
 --------------
 
-Initialization
-sequence
-如下：
+初始化序列如下：
 
-#. 将
-   ``wr_idx``
-   和
-   ``rd_idx``
-   设为
-   zero。
-#. 向
-   FIFO
-   push
-   单个
-   含
-   magic
-   data 的
-   packet：``45
-   6d
-   31
-   6c
-   31
-   4b
-   30
-   72
-   6e
-   33
-   6c
-   69
-   34``。
-   尚
-   不
-   用
-   MBOX。
-#. 初始化
-   MBOX。
-#. 用
-   某
-   interval（如
-   1
-   ms）重复
-   通过
-   MBOX
-   channel
-   notify。
-#. 等待
-   含
-   magic
-   data 的
-   传入
-   packet。
-   其
-   将
-   通过
-   另
-   一
-   pair（shared
-   memory
-   region
-   和
-   MBOX）到达。
-#. 停止
-   重复
-   MBOX
-   notification。
+#. 将 ``wr_idx`` 和 ``rd_idx`` 设置为零。
+#. 向 FIFO 推送一个包含 magic data 的单个数据包：``45 6d 31 6c 31 4b 30 72 6e 33 6c 69 34``。
+   此时尚不使用 MBOX。
+#. 初始化 MBOX。
+#. 使用某个时间间隔（例如 1 ms）重复通过 MBOX 通道发送通知。
+#. 等待包含 magic data 的传入数据包。
+   它将通过另一对（共享内存区域和 MBOX）到达。
+#. 停止重复 MBOX 通知。
 
-此后（ICMsg
-bound（且
-ready
-传输
-packets。
+在此之后，ICMsg 完成绑定，并准备好传输数据包。

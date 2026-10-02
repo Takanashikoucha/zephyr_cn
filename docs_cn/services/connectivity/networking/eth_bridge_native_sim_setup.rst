@@ -1,26 +1,34 @@
 .. _networking_with_native_sim_eth_bridge:
 
-Ethernet bridge with native_sim board
+使用 native_sim 板卡的以太网桥接
 #####################################
 
 .. contents::
     :local:
     :depth: 2
 
-此文档描述如何在 (Linux) host 与运行在 :zephyr:board:`native_sim <native_sim>` board 的 Zephyr application 之间设置 bridged Ethernet network。
+本文档描述如何在（Linux）主机与运行在
+:zephyr:board:`native_sim <native_sim>` 板卡上的 Zephyr 应用程序之间
+设置桥接以太网网络。
 
-此 setup 在测试可用 :kconfig:option:`CONFIG_NET_ETHERNET_BRIDGE` Kconfig option 启用的 Ethernet bridging feature 时有用。此 setup 中（net-tools configuration 创建两个 host network interfaces ``zeth0`` 和 ``zeth1``（并将其连接到 Zephyr 的 :zephyr:board:`native_sim <native_sim>` application。
+此设置在测试可用 :kconfig:option:`CONFIG_NET_ETHERNET_BRIDGE` Kconfig 选项
+启用的以太网桥接功能时有用。在此设置中，net-tools
+配置创建两个主机网络接口 ``zeth0`` 和 ``zeth1``，
+并将它们连接到 Zephyr 的 :zephyr:board:`native_sim <native_sim>` 应用程序。
 
-首先创建 host interfaces。此示例中创建两个 interfaces。
+首先创建主机接口。在此示例中创建两个接口。
 
 .. code-block:: console
 
    cd $ZEPHYR_BASE/../tools/net-tools
    ./net-setup.sh -c zeth-multiface.conf -i zeth0 -t 2
 
-``-c`` 告知使用哪个 configuration file（``zeth-multiface.conf`` 专为在 host 中生成多个 network interfaces 定制。``-i`` option 告知第一个 host interface name。``-t`` 告知创建多少个 network interfaces。
+``-c`` 告知使用哪个配置文件，其中 ``zeth-multiface.conf``
+专为在主机中生成多个网络接口定制。
+``-i`` 选项告知第一个主机接口名称。``-t`` 告知
+创建多少个网络接口。
 
-Host interfaces 示例 output：
+主机接口的示例输出：
 
 .. code-block:: console
 
@@ -44,9 +52,11 @@ Host interfaces 示例 output：
           TX packets 45  bytes 3916 (3.9 KB)
           TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 
-然后创建 sample 并启用 Ethernet bridging 支持。此示例中创建 :zephyr:code-sample:`sockets-echo-server` sample application。
+然后创建示例并启用以太网桥接支持。在此示例中创建
+:zephyr:code-sample:`sockets-echo-server` 示例应用程序。
 
-Bridging 需第二个 TAP interface。创建 devicetree overlay file :file:`second-iface.overlay` 以添加第二个 ``zephyr,native-tap`` interface：
+桥接需要第二个 TAP 接口。创建设备树覆盖文件
+:file:`second-iface.overlay`，添加第二个 ``zephyr,native-tap`` 接口：
 
 .. code-block:: devicetree
 
@@ -59,7 +69,7 @@ Bridging 需第二个 TAP interface。创建 devicetree overlay file :file:`seco
        };
    };
 
-然后构建并运行 application（指向 overlay：
+然后构建并运行应用程序，指向覆盖文件：
 
 .. code-block:: console
 
@@ -73,16 +83,20 @@ Bridging 需第二个 TAP interface。创建 devicetree overlay file :file:`seco
       -DCONFIG_NET_IF_MAX_IPV4_COUNT=2
    ../build/echo-server/zephyr/zephyr.exe -attach_uart
 
-这将创建并运行启用 bridging（但尚未配置）的 :zephyr:code-sample:`sockets-echo-server`。要配置 bridging（须用 bridge shell 或直接从 application 调用 bridging API。此示例用 bridge shell 设置 bridging：
+这将创建并运行启用桥接但尚未配置的
+:zephyr:code-sample:`sockets-echo-server`。要配置桥接，
+你要么使用桥接 shell，要么直接从应用程序
+调用桥接 API。我们使用桥接 shell 设置桥接如下：
 
 .. code-block:: console
 
    net bridge addif 1 3 2
    net iface up 1
 
-上述示例中（bridge interface index 为 1（interfaces 2 和 3 为链接到 host 侧 ``zeth0`` 和 ``zeth1`` 的 Ethernet interfaces。
+在上述示例中，桥接接口索引为 1，接口 2 和 3 是
+链接到主机侧 ``zeth0`` 和 ``zeth1`` 的以太网接口。
 
-Zephyr 侧的 network interfaces 如下：
+Zephyr 侧的网络接口如下：
 
 .. code-block:: console
 
@@ -159,7 +173,7 @@ Zephyr 侧的 network interfaces 如下：
            224.0.0.1
    IPv4 gateway : 0.0.0.0
 
-``net bridge`` command 将显示 bridging 当前状态：
+``net bridge`` 命令将显示桥接的当前状态：
 
 .. code-block:: console
 
@@ -167,13 +181,18 @@ Zephyr 侧的 network interfaces 如下：
    Bridge Status   Config   Interfaces
    1      up       ok       2 3
 
-``addif`` command 将 Ethernet interfaces 2 和 3 添加到 bridge interface 1。``addif`` command 后（bridging 仍禁用（因为 bridge interface 默认未 up。``net iface up`` command 将启用 bridging。
+``addif`` 命令将以太网接口 2 和 3 添加到桥接接口 1。
+``addif`` 命令后，桥接仍禁用，因为桥接接口
+默认未启动。``net iface up`` 命令将启用桥接。
 
-若 host 侧运行 wireshark（并监控 ``zeth0`` 和 ``zeth1``（应在两个 host interfaces 中看到相同的 network traffic。
+如果你在主机侧运行 wireshark 并监控 ``zeth0`` 和 ``zeth1``，
+你应该在两个主机接口中看到相同的网络流量。
 
-注意 interface index numbers 不固定（bridge 和 Ethernet interface index values 在您的 setup 中可能不同。
+注意接口索引号不固定，桥接和以太网接口索引
+值在你的设置中可能不同。
 
-Bridge interface down 可禁用 bridging（且可用 ``delif`` command 从 bridge 移除 Ethernet interfaces。
+通过关闭桥接接口可以禁用桥接，
+可用 ``delif`` 命令从桥接中移除以太网接口。
 
 .. code-block:: console
 

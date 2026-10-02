@@ -1,1466 +1,408 @@
-.. _vulnerabilities
-2023:
+.. _vulnerabilities_2023:
 
-CVE
-2023
+CVE-2023
 ########
 
-:cve:`2023
-0396`
+:cve:`2023-0396`
 ----------------
 
-Buffer
-Overreads
-in
-Bluetooth
-HCI
+蓝牙 HCI 中的缓冲区过度读取
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-8rpp
-6vxq
-pqg3
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-8rpp
-6vxq
-pqg3>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-8rpp-6vxq-pqg3
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-8rpp-6vxq-pqg3>`_
 
-:cve:`2023
-0397`
+:cve:`2023-0397`
 ----------------
 
-DoS:
-Invalid
-Initialization
-in
-le
-read
-buffer
-size
-complete（）
+DoS: le_read_buffer_size_complete() 中的无效初始化
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-wc2h
-h868
-q7hj
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-wc2h
-h868
-q7hj>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-wc2h-h868-q7hj
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-wc2h-h868-q7hj>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.3.0
+此问题已在 main 分支（v3.3.0）中修复
 
--
-`PR
-54905
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/54905>`_
+- `PR 54905 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/54905>`_
 
--
-`PR
-47957
-fix
-for
-v3.2.0
-<https://github.com/zephyrproject
-rtos/zephyr/pull/55024>`_
+- `PR 47957 修复 v3.2.0
+  <https://github.com/zephyrproject-rtos/zephyr/pull/55024>`_
 
--
-`PR
-47958
-fix
-for
-v3.1.0
-<https://github.com/zephyrproject
-rtos/zephyr/pull/55023>`_
+- `PR 47958 修复 v3.1.0
+  <https://github.com/zephyrproject-rtos/zephyr/pull/55023>`_
 
--
-`PR
-47959
-fix
-for
-v2.7.4
-<https://github.com/zephyrproject
-rtos/zephyr/pull/55022>`_
+- `PR 47959 修复 v2.7.4
+  <https://github.com/zephyrproject-rtos/zephyr/pull/55022>`_
 
-:cve:`2023
-0779`
+:cve:`2023-0779`
 ----------------
 
-net:
-shell:
-Improper
-input
-validation
+net: shell: 输入验证不当
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-9xj8
-6989
-r549
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-9xj8
-6989
-r549>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-9xj8-6989-r549
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-9xj8-6989-r549>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.3.0
+此问题已在 main 分支（v3.3.0）中修复
 
--
-`PR
-54371
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/54371>`_
+- `PR 54371 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/54371>`_
 
--
-`PR
-54380
-fix
-for
-v3.2.0
-<https://github.com/zephyrproject
-rtos/zephyr/pull/54380>`_
+- `PR 54380 修复 v3.2.0
+  <https://github.com/zephyrproject-rtos/zephyr/pull/54380>`_
 
--
-`PR
-54381
-fix
-for
-v2.7.4
-<https://github.com/zephyrproject
-rtos/zephyr/pull/54381>`_
+- `PR 54381 修复 v2.7.4
+  <https://github.com/zephyrproject-rtos/zephyr/pull/54381>`_
 
-:cve:`2023
-1901`
+:cve:`2023-1901`
 ----------------
 
-HCI
-send
-sync
-Dangling
-Semaphore
-Reference
-Re
-use
+HCI send_sync 悬挂信号量引用重用
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-xvvm
-8mcm
-9cq3
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-xvvm
-8mcm
-9cq3>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-xvvm-8mcm-9cq3
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-xvvm-8mcm-9cq3>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.4.0
+此问题已在 main 分支（v3.4.0）中修复
 
--
-`PR
-56709
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/56709>`_
+- `PR 56709 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/56709>`_
 
-:cve:`2023
-1902`
+:cve:`2023-1902`
 ----------------
 
-HCI
-Connection
-Creation
-Dangling
-State
-Reference
-Re
-use
+HCI 连接创建悬挂状态引用重用
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-fx9g
-8fr2
-q899
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-fx9g
-8fr2
-q899>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-fx9g-8fr2-q899
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-fx9g-8fr2-q899>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.4.0
+此问题已在 main 分支（v3.4.0）中修复
 
--
-`PR
-56709
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/56709>`_
+- `PR 56709 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/56709>`_
 
-:cve:`2023
-3725`
+:cve:`2023-3725`
 ----------------
 
-Potential
-buffer
-overflow
-vulnerability
-in
-the
-Zephyr
-CANbus
-subsystem.
+Zephyr CANbus 子系统中的潜在缓冲区溢出漏洞
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-2g3m
-p6c7
-8rr3
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-2g3m
-p6c7
-8rr3>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-2g3m-p6c7-8rr3
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-2g3m-p6c7-8rr3>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.5.0
+此问题已在 main 分支（v3.5.0）中修复
 
--
-`PR
-61502
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/61502>`_
+- `PR 61502 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/61502>`_
 
--
-`PR
-61518
-fix
-for
-3.4
-<https://github.com/zephyrproject
-rtos/zephyr/pull/61518>`_
+- `PR 61518 修复 3.4
+  <https://github.com/zephyrproject-rtos/zephyr/pull/61518>`_
 
--
-`PR
-61517
-fix
-for
-3.3
-<https://github.com/zephyrproject
-rtos/zephyr/pull/61517>`_
+- `PR 61517 修复 3.3
+  <https://github.com/zephyrproject-rtos/zephyr/pull/61517>`_
 
--
-`PR
-61516
-fix
-for
-2.7
-<https://github.com/zephyrproject
-rtos/zephyr/pull/61516>`_
+- `PR 61516 修复 2.7
+  <https://github.com/zephyrproject-rtos/zephyr/pull/61516>`_
 
-:cve:`2023
-4257`
+:cve:`2023-4257`
 ----------------
 
-Unchecked
-user
-input
-length
-in
-the
-Zephyr
-WiFi
-shell
-module
-can
-cause
-buffer
-overflows.
+Zephyr WiFi shell 模块中未检查的用户输入长度可导致缓冲区溢出
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-853q
-q69w
-gf5j
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-853q
-q69w
-gf5j>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-853q-q69w-gf5j
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-853q-q69w-gf5j>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.5.0
+此问题已在 main 分支（v3.5.0）中修复
 
--
-`PR
-605377
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/605377>`_
+- `PR 605377 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/605377>`_
 
--
-`PR
-61383
-fix
-for
-3.4
-<https://github.com/zephyrproject
-rtos/zephyr/pull/61383>`_
+- `PR 61383 修复 3.4
+  <https://github.com/zephyrproject-rtos/zephyr/pull/61383>`_
 
-:cve:`2023
-4258`
+:cve:`2023-4258`
 ----------------
 
-bt:
-mesh:
-vulnerability
-in
-provisioning
-protocol
-implementation
-on
-provisionee
-side
+bt: mesh: provisionee 侧配置协议实现中的漏洞
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-m34c
-cp63
-rwh7
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-m34c
-cp63
-rwh7>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-m34c-cp63-rwh7
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-m34c-cp63-rwh7>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.5.0
+此问题已在 main 分支（v3.5.0）中修复
 
--
-`PR
-59467
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/59467>`_
+- `PR 59467 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/59467>`_
 
--
-`PR
-60078
-fix
-for
-3.4
-<https://github.com/zephyrproject
-rtos/zephyr/pull/60078>`_
+- `PR 60078 修复 3.4
+  <https://github.com/zephyrproject-rtos/zephyr/pull/60078>`_
 
--
-`PR
-60079
-fix
-for
-3.3
-<https://github.com/zephyrproject
-rtos/zephyr/pull/60079>`_
+- `PR 60079 修复 3.3
+  <https://github.com/zephyrproject-rtos/zephyr/pull/60079>`_
 
-:cve:`2023
-4259`
+:cve:`2023-4259`
 ----------------
 
-Buffer
-overflow
-vulnerabilities
-in
-the
-Zephyr
-eS
-WiFi
-driver
+Zephyr eS-WiFi 驱动中的缓冲区溢出漏洞
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-gghm
-c696
-f4j4
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-gghm
-c696
-f4j4>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-gghm-c696-f4j4
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-gghm-c696-f4j4>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.5.0
+此问题已在 main 分支（v3.5.0）中修复
 
--
-`PR
-63074
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/63074>`_
+- `PR 63074 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/63074>`_
 
--
-`PR
-63750
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/63750>`_
+- `PR 63750 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/63750>`_
 
-:cve:`2023
-4260`
+:cve:`2023-4260`
 ----------------
 
-Off
-by
-one
-buffer
-overflow
-vulnerability
-in
-the
-Zephyr
-FS
-subsystem
+Zephyr FS 子系统中的差一（off-by-one）缓冲区溢出漏洞
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-gj27
-862r
-55wh
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-gj27
-862r
-55wh>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-gj27-862r-55wh
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-gj27-862r-55wh>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.5.0
+此问题已在 main 分支（v3.5.0）中修复
 
--
-`PR
-63079
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/63079>`_
+- `PR 63079 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/63079>`_
 
-:cve:`2023
-4262`
+:cve:`2023-4262`
 ----------------
 
-This
-issue
-has
-been
-determined
-to
-be
-a
-false
-positive
-after
-further
-analysis.
+- 此问题在进一步分析后已被确定为误报。
 
-:cve:`2023
-4263`
+:cve:`2023-4263`
 ----------------
 
-Potential
-buffer
-overflow
-vulnerability
-in
-the
-Zephyr
-IEEE
-802.15.4
-nRF
-15.4
-driver.
+Zephyr IEEE 802.15.4 nRF 15.4 驱动中的潜在缓冲区溢出漏洞
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-rf6q
-rhhp
-pqhf
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-rf6q
-rhhp
-pqhf>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-rf6q-rhhp-pqhf
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-rf6q-rhhp-pqhf>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.5.0
+此问题已在 main 分支（v3.5.0）中修复
 
--
-`PR
-60528
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/60528>`_
+- `PR 60528 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/60528>`_
 
--
-`PR
-61384
-fix
-for
-3.4
-<https://github.com/zephyrproject
-rtos/zephyr/pull/61384>`_
+- `PR 61384 修复 3.4
+  <https://github.com/zephyrproject-rtos/zephyr/pull/61384>`_
 
--
-`PR
-61216
-fix
-for
-2.7
-<https://github.com/zephyrproject
-rtos/zephyr/pull/61216>`_
+- `PR 61216 修复 2.7
+  <https://github.com/zephyrproject-rtos/zephyr/pull/61216>`_
 
-:cve:`2023
-4264`
+:cve:`2023-4264`
 ----------------
 
-Potential
-buffer
-overflow
-vulnerabilities
-in
-the
-Zephyr
-Bluetooth
-subsystem
+Zephyr 蓝牙子系统中的潜在缓冲区溢出漏洞
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-rgx6
-3w4j
-gf5j
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-rgx6
-3w4j
-gf5j>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-rgx6-3w4j-gf5j
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-rgx6-3w4j-gf5j>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.5.0
+此问题已在 main 分支（v3.5.0）中修复
 
--
-`PR
-58834
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/58834>`_
+- `PR 58834 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/58834>`_
 
--
-`PR
-60465
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/60465>`_
+- `PR 60465 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/60465>`_
 
--
-`PR
-61845
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/61845>`_
+- `PR 61845 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/61845>`_
 
--
-`PR
-61385
-fix
-for
-3.4
-<https://github.com/zephyrproject
-rtos/zephyr/pull/61385>`_
+- `PR 61385 修复 3.4
+  <https://github.com/zephyrproject-rtos/zephyr/pull/61385>`_
 
-:cve:`2023
-4265`
+:cve:`2023-4265`
 ----------------
 
-Two
-potential
-buffer
-overflow
-vulnerabilities
-in
-Zephyr
-USB
-code
+Zephyr USB 代码中的两个潜在缓冲区溢出漏洞
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-4vgv
-5r6q
-r6xh
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-4vgv
-5r6q
-r6xh>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-4vgv-5r6q-r6xh
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-4vgv-5r6q-r6xh>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.4.0
+此问题已在 main 分支（v3.4.0）中修复
 
--
-`PR
-59157
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/59157>`_
--
-`PR
-59018
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/59018>`_
+- `PR 59157 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/59157>`_
+- `PR 59018 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/59018>`_
 
-:cve:`2023
-4424`
+:cve:`2023-4424`
 ----------------
 
-bt:
-hci:
-DoS
-and
-possible
-RCE
+bt: hci: DoS 和可能的 RCE
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-j4qm
-xgpf
-qjw3
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-j4qm
-xgpf
-qjw3>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-j4qm-xgpf-qjw3
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-j4qm-xgpf-qjw3>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.5.0
+此问题已在 main 分支（v3.5.0）中修复
 
--
-`PR
-61651
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/61651>`_
+- `PR 61651 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/61651>`_
 
--
-`PR
-61696
-fix
-for
-3.4
-<https://github.com/zephyrproject
-rtos/zephyr/pull/61696>`_
+- `PR 61696 修复 3.4
+  <https://github.com/zephyrproject-rtos/zephyr/pull/61696>`_
 
--
-`PR
-61695
-fix
-for
-3.3
-<https://github.com/zephyrproject
-rtos/zephyr/pull/61695>`_
+- `PR 61695 修复 3.3
+  <https://github.com/zephyrproject-rtos/zephyr/pull/61695>`_
 
--
-`PR
-61694
-fix
-for
-2.7
-<https://github.com/zephyrproject
-rtos/zephyr/pull/61694>`_
+- `PR 61694 修复 2.7
+  <https://github.com/zephyrproject-rtos/zephyr/pull/61694>`_
 
-:cve:`2023
-5055`
+:cve:`2023-5055`
 ----------------
 
-L2CAP:
-Possible
-Stack
-based
-buffer
-overflow
-in
-le
-ecred
-reconf
-req（）
+L2CAP: le_ecred_reconf_req() 中可能的栈缓冲区溢出
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-wr8r
-7f8x
-24jj
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-wr8r
-7f8x
-24jj>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-wr8r-7f8x-24jj
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-wr8r-7f8x-24jj>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.5.0
+此问题已在 main 分支（v3.5.0）中修复
 
--
-`PR
-62381
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/62381>`_
+- `PR 62381 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/62381>`_
 
-:cve:`2023
-5139`
+:cve:`2023-5139`
 ----------------
 
-Potential
-buffer
-overflow
-vulnerability
-in
-the
-Zephyr
-STM32
-Crypto
-driver.
+Zephyr STM32 Crypto 驱动中的潜在缓冲区溢出漏洞
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-rhrc
-pcxp
-4453
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-rhrc
-pcxp
-4453>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-rhrc-pcxp-4453
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-rhrc-pcxp-4453>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.5.0
+此问题已在 main 分支（v3.5.0）中修复
 
--
-`PR
-61839
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/61839>`_
+- `PR 61839 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/61839>`_
 
-:cve:`2023
-5184`
+:cve:`2023-5184`
 ----------------
 
-Potential
-signed
-to
-unsigned
-conversion
-errors
-and
-buffer
-overflow
-vulnerabilities
-in
-the
-Zephyr
-IPM
-driver
+Zephyr IPM 驱动中潜在的有符号到无符号转换错误和缓冲区溢出漏洞
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-8x3p
-q3r5
-xh9g
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-8x3p
-q3r5
-xh9g>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-8x3p-q3r5-xh9g
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-8x3p-q3r5-xh9g>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.5.0
+此问题已在 main 分支（v3.5.0）中修复
 
--
-`PR
-63069
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/63069>`_
+- `PR 63069 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/63069>`_
 
-:cve:`2023
-5563`
+:cve:`2023-5563`
 ----------------
 
-The
-SJA1000
-CAN
-controller
-driver
-backend
-automatically
-attempts
-to
-recover
-from
-a
-bus
-off
-event
-when
-built
-with
-CONFIG
-CAN
-AUTO
-BUS
-OFF
-RECOVERY
-y.
-This
-results
-in
-calling
-k
-sleep（）
-in
-IRQ
-context、
-causing
-a
-fatal
-exception.
+SJA1000 CAN 控制器驱动后端在构建时使用 CONFIG_CAN_AUTO_BUS_OFF_RECOVERY=y 时会自动尝试从总线关闭（bus-off）事件恢复。这导致在 IRQ 上下文中调用 k_sleep()，造成致命异常。
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-98mc
-rj7w
-7rpv
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-98mc
-rj7w
-7rpv>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-98mc-rj7w-7rpv
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-98mc-rj7w-7rpv>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.5.0
+此问题已在 main 分支（v3.5.0）中修复
 
--
-`PR
-63713
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/63713>`_
+- `PR 63713 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/63713>`_
 
--
-`PR
-63718
-fix
-for
-3.4
-<https://github.com/zephyrproject
-rtos/zephyr/pull/63718>`_
+- `PR 63718 修复 3.4
+  <https://github.com/zephyrproject-rtos/zephyr/pull/63718>`_
 
--
-`PR
-63717
-fix
-for
-3.3
-<https://github.com/zephyrproject
-rtos/zephyr/pull/63717>`_
+- `PR 63717 修复 3.3
+  <https://github.com/zephyrproject-rtos/zephyr/pull/63717>`_
 
-:cve:`2023
-5753`
+:cve:`2023-5753`
 ----------------
 
-Potential
-buffer
-overflow
-vulnerabilities
-in
-the
-Zephyr
-Bluetooth
-subsystem
-source
-code
-when
-asserts
-are
-disabled.
+禁用断言时 Zephyr 蓝牙子系统源代码中的潜在缓冲区溢出漏洞
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-hmpr
-px56
-rvww
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-hmpr
-px56
-rvww>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-hmpr-px56-rvww
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-hmpr-px56-rvww>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.5.0
+此问题已在 main 分支（v3.5.0）中修复
 
--
-`PR
-63605
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/63605>`_
+- `PR 63605 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/63605>`_
 
-:cve:`2023
-5779`
+:cve:`2023-5779`
 ----------------
 
-Out
-of
-bounds
-issue
-in
-remove
-rx
-filter
-in
-multiple
-can
-drivers.
+多个 CAN 驱动中 remove_rx_filter 的越界问题
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-7cmj
-963q
-jj47
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-7cmj
-963q
-jj47>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-7cmj-963q-jj47
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-7cmj-963q-jj47>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.6.0
+此问题已在 main 分支（v3.6.0）中修复
 
--
-`PR
-64399
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/64399>`_
+- `PR 64399 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/64399>`_
 
--
-`PR
-64416
-fix
-for
-3.5
-<https://github.com/zephyrproject
-rtos/zephyr/pull/64416>`_
+- `PR 64416 修复 3.5
+  <https://github.com/zephyrproject-rtos/zephyr/pull/64416>`_
 
--
-`PR
-64415
-fix
-for
-3.4
-<https://github.com/zephyrproject
-rtos/zephyr/pull/64415>`_
+- `PR 64415 修复 3.4
+  <https://github.com/zephyrproject-rtos/zephyr/pull/64415>`_
 
--
-`PR
-64427
-fix
-for
-3.3
-<https://github.com/zephyrproject
-rtos/zephyr/pull/64427>`_
+- `PR 64427 修复 3.3
+  <https://github.com/zephyrproject-rtos/zephyr/pull/64427>`_
 
--
-`PR
-64431
-fix
-for
-2.7
-<https://github.com/zephyrproject
-rtos/zephyr/pull/64431>`_
+- `PR 64431 修复 2.7
+  <https://github.com/zephyrproject-rtos/zephyr/pull/64431>`_
 
-:cve:`2023
-6249`
+:cve:`2023-6249`
 ----------------
 
-Signed
-to
-unsigned
-conversion
-problem
-in
-esp32
-ipm
-send
-may
-lead
-to
-buffer
-overflow
+esp32_ipm_send 中的有符号到无符号转换问题可能导致缓冲区溢出
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-32f5
-3p9h
-2rqc
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-32f5
-3p9h
-2rqc>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-32f5-3p9h-2rqc
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-32f5-3p9h-2rqc>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.6.0
+此问题已在 main 分支（v3.6.0）中修复
 
--
-`PR
-65546
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/65546>`_
+- `PR 65546 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/65546>`_
 
-:cve:`2023
-6749`
+:cve:`2023-6749`
 ----------------
 
-Potential
-buffer
-overflow
-due
-unchecked
-data
-coming
-from
-user
-input
-in
-settings
-shell.
+settings shell 中来自用户输入的未检查数据可能导致缓冲区溢出
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-757h
-rw37
-66hw
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-757h
-rw37
-66hw>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-757h-rw37-66hw
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-757h-rw37-66hw>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.6.0
+此问题已在 main 分支（v3.6.0）中修复
 
--
-`PR
-66451
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/66451>`_
+- `PR 66451 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/66451>`_
 
--
-`PR
-66584
-fix
-for
-3.5
-<https://github.com/zephyrproject
-rtos/zephyr/pull/66584>`_
+- `PR 66584 修复 3.5
+  <https://github.com/zephyrproject-rtos/zephyr/pull/66584>`_
 
-:cve:`2023
-6881`
+:cve:`2023-6881`
 ----------------
 
-Potential
-buffer
-overflow
-vulnerability
-in
-Zephyr
-fuse
-file
-system.
+Zephyr fuse 文件系统中的潜在缓冲区溢出漏洞
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-mh67
-4h3q
-p437
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-mh67
-4h3q
-p437>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-mh67-4h3q-p437
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-mh67-4h3q-p437>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.6.0
+此问题已在 main 分支（v3.6.0）中修复
 
--
-`PR
-66592
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/66592>`_
+- `PR 66592 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/66592>`_
 
-:cve:`2023
-7060`
+:cve:`2023-7060`
 ----------------
 
-Missing
-Security
-Control
-in
-Zephyr
-OS
-IP
-Packet
-Handling
+Zephyr OS IP 包处理中缺失安全控制
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-fjc8
-223c
-qgqr
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-fjc8
-223c
-qgqr>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-fjc8-223c-qgqr
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-fjc8-223c-qgqr>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.6.0
+此问题已在 main 分支（v3.6.0）中修复
 
--
-`PR
-66645
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/66645>`_
+- `PR 66645 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/66645>`_
 
--
-`PR
-66739
-fix
-for
-3.5
-<https://github.com/zephyrproject
-rtos/zephyr/pull/66739>`_
+- `PR 66739 修复 3.5
+  <https://github.com/zephyrproject-rtos/zephyr/pull/66739>`_
 
--
-`PR
-66738
-fix
-for
-3.4
-<https://github.com/zephyrproject
-rtos/zephyr/pull/66738>`_
+- `PR 66738 修复 3.4
+  <https://github.com/zephyrproject-rtos/zephyr/pull/66738>`_
 
--
-`PR
-66887
-fix
-for
-2.7
-<https://github.com/zephyrproject
-rtos/zephyr/pull/66887>`_
+- `PR 66887 修复 2.7
+  <https://github.com/zephyrproject-rtos/zephyr/pull/66887>`_

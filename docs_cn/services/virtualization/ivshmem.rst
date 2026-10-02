@@ -1,188 +1,42 @@
 .. _ivshmem_driver:
 
-Inter
-VM
-Shared
-Memory
+Inter-VM Shared Memory
 ######################
 
 .. contents::
    :local:
-   :depth:
-   2
+   :depth: 2
 
 Overview
 ********
 
-因为
-Zephyr
-被
-enabled
-用于
-在
-Qemu
-和
-`ACRN
-<https://projectacrn.github.io/latest/tutorials/using_zephyr_as_uos.html>`_
-上
-run
-作为
-guest
-OS
-可能
-需要
-make
-VMs
-aware
-彼此
-或
-aware
-host。
-这
-通过
-一
-个
-called
-ivshmem
-的
-feature
-achieved
-它
-stand
-for
-inter
-VM
-Shared
-Memory
-它
-在
-parties
-之间
-expose
-shared
-memory。
+Zephyr 已支持作为客户操作系统运行在 Qemu 和 `ACRN <https://projectacrn.github.io/latest/tutorials/using_zephyr_as_uos.html>`_ 上，因此可能需要让虚拟机彼此感知，或感知宿主机。这通过名为 ivshmem（inter-VM Shared Memory，虚拟机间共享内存）的特性实现，它向各参与方暴露一块共享内存。
 
-Two
-types
-被
-supported：
-plain
-的
-shared
-memory
-（ivshmem
-plain）
-或
-带
-ability
-用于
-一
-个
-VM
-在
-另一个
-上
-generate
-一
-个
-interruption
-且
-因此
-它
-自己
-也
-被
-interrupted
-的
-shared
-memory
-（ivshmem
-doorbell）。
+支持两种类型：纯共享内存（ivshmem-plain），或具备让一个虚拟机向另一个虚拟机产生中断、从而自身也能被中断能力的共享内存（ivshmem-doorbell）。
 
-参考
-official
-的
-`Qemu
-ivshmem
-documentation
-<https://www.qemu.org/docs/master/system/devices/ivshmem.html>`_
-获取
-更多
-information。
+更多信息请参阅官方 `Qemu ivshmem 文档 <https://www.qemu.org/docs/master/system/devices/ivshmem.html>`_。
 
 Support
 *******
 
-Zephyr
-support
-both
-versions：
-plain
-和
-doorbell。
-Ivshmem
-driver
-可以
-通过
-enable
-:kconfig:option:`CONFIG_IVSHMEM`
-被
-built。
-Default
-下
-这
-将
-expose
-plain
-的
-version。
-:kconfig:option:`CONFIG_IVSHMEM_DOORBELL`
-需要
-被
-enabled
-用于
-get
-doorbell
-的
-version。
+Zephyr 同时支持 plain 和 doorbell 两个版本。启用 :kconfig:option:`CONFIG_IVSHMEM` 即可构建 ivshmem 驱动。默认情况下，这将暴露 plain 版本。需要启用 :kconfig:option:`CONFIG_IVSHMEM_DOORBELL` 才能获得 doorbell 版本。
 
-因为
-doorbell
-的
-version
-use
-MSI
-X
-vectors
-support
-notification
-vectors
-:kconfig:option:`CONFIG_IVSHMEM_MSI_X_VECTORS`
-必须
-被
-tweaked
-到
-将
-被
-needed
-的
-vectors
-数量。
+由于 doorbell 版本使用 MSI-X 向量支持通知向量，必须将 :kconfig:option:`CONFIG_IVSHMEM_MSI_X_VECTORS` 调整为所需的向量数量。
 
-Note
-一
-个
-tiny
-的
-shell
-module
-可以
-被
-exposed
-用于
-test
-ivshmem
-feature
-通过
-enable
-:kconfig:option:`CONFIG_IVSHMEM_SHELL`。
+请注意，可以通过启用 :kconfig:option:`CONFIG_IVSHMEM_SHELL` 暴露一个小型 shell 模块来测试 ivshmem 功能。
+
+ivshmem-v2
+**********
+
+Zephyr 还支持 ivshmem-v2：
+
+https://github.com/siemens/jailhouse/blob/master/Documentation/ivshmem-v2-specification.md
+
+它主要用于 Jailhouse 虚拟化器的 IPC（例如 :zephyr:code-sample:`eth-ivshmem`）。也可以在不使用 Jailhouse 的情况下使用 ivshmem-v2，方法是构建 Siemens 的 QEMU fork 并修改 QEMU 启动参数：
+
+https://github.com/siemens/qemu/tree/wip/ivshmem2
+
+API Reference
+*************
+
+.. doxygengroup:: ivshmem

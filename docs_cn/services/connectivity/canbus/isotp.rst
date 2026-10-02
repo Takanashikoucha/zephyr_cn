@@ -1,29 +1,29 @@
 .. _can_isotp:
 
-ISO-TP Transport Protocol
+ISO-TP 传输协议
 #########################
 
 .. contents::
     :local:
     :depth: 2
 
-Overview
+概述
 ********
 
-ISO-TP 是 ISO-Standard ISO15765-2 Road vehicles - Diagnostic communication over Controller Area Network（DoCAN）Part2: Transport protocol and network layer services 中定义的 transport protocol。如其名称已暗示（其最初设计为道路车辆诊断 over Controller Area Networks 使用（且仍如此使用。然而（其不限于道路车辆或 automotive domain 的应用。
+ISO-TP 是在 ISO 标准 ISO15765-2《道路车辆 - 通过控制器局域网的诊断通信（DoCAN）》第 2 部分：传输协议和网络层服务中定义的传输协议。如其名称所示，它最初是为通过控制器局域网的道路车辆诊断而设计的，至今仍在该领域使用。不过，它并不局限于道路车辆或汽车领域的应用。
 
-此 transport protocol 将 classical CAN（8 bytes）和 CAN FD（64 bytes）的有限 payload data size 扩展为理论上的四 gigabytes。此外（其添加 flow control 机制以影响 sender 行为。ISO-TP 按 CAN frame 的 payload size 将 packets 分割为小 fragments。这些 segments 的 header 称为 Protocol Control Information（PCI）。
+该传输协议将经典 CAN（8 字节）和 CAN FD（64 字节）有限的有效载荷数据大小扩展到理论上的四 GB。此外，它还添加了流量控制机制以影响发送方的行为。ISO-TP 根据 CAN 帧的有效载荷大小将数据包分割为小的片段。这些片段的头部称为协议控制信息（PCI）。
 
-Classical CAN 上小于或等于 7 bytes 的 packets 称为 single-frames（SF）。它们无需 fragment 且无任何 flow-control。
+在经典 CAN 上小于或等于 7 字节的数据包称为单帧（SF）。它们无需分片，也没有任何流量控制。
 
-大于该值的 packets 被分割为 first-frame（FF）和所需数量的 consecutive-frames（CF）。FF 包含关于整个 payload data 长度的信息（此外还有 payload data 的前几个 bytes。接收 peer 发回 flow-control-frame（FC）以拒绝、推迟或接受后续 consecutive frames。FC 还定义发送条件（即 block-size（BS）和 frames 之间的最小 separation time（STmin）。Block size 定义 sender 在必须等待另一 FC 前允许发送多少 CF。
+大于该值的数据包被分割为首帧（FF）和所需数量的连续帧（CF）。FF 包含关于整个有效载荷数据长度的信息，此外还有有效载荷数据的前几个字节。接收对等方发回流量控制帧（FC），以拒绝、推迟或接受后续的连续帧。FC 还定义了发送条件，即块大小（BS）和帧之间的最小间隔时间（STmin）。块大小定义了发送方在必须等待另一个 FC 之前允许发送多少个 CF。
 
 .. image:: isotp_sequence.svg
    :width: 20%
    :align: center
-   :alt: ISO-TP Sequence
+   :alt: ISO-TP 时序
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: can_isotp

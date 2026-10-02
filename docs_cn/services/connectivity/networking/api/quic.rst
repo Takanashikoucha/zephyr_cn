@@ -1,241 +1,243 @@
 .. _quic_transport_interface:
 
-QUIC
-Transport
-Interface
+QUIC Transport Interface
 ########################
 
 .. contents::
     :local:
-    :depth:
-    2
+    :depth: 2
 
 Overview
 ********
 
-QUIC
-是
-一
-个
-general
-purpose
-的
-multiplexed
-transport
-protocol
-它
-被
-standardised
-在
-:rfc:`9000`
-中。
-它
-operate
-在
-UDP
-上面
-并
-provide
-ordered、
-reliable
-的
-byte
-stream
-delivery
-带
-integrated
-的
-TLS
-1.3
-security
-（:rfc:`9001`）、
-stream
-multiplexing、
-和
-connection
-migration。
-Zephyr
-的
-QUIC
-implementation
-可
-用
-于
-:kconfig:option:`CONFIG_QUIC`
-下。
+QUIC is a general-purpose, multiplexed transport protocol standardised in
+:rfc:`9000`. It operates over UDP and provides ordered, reliable byte-stream
+delivery with integrated TLS 1.3 security (:rfc:`9001`), stream multiplexing,
+and connection migration. Zephyr's QUIC implementation is available under
+:kconfig:option:`CONFIG_QUIC`.
 
-与
-embedded
-use
-相关
-的
-key
-properties：
+Key properties relevant to embedded use:
 
-*
-**Stream
-multiplexing**：
-Bidirectional
-和
-unidirectional
-的
-streams
-share
-单
-个
-UDP
-socket
-避免
-transport
-layer
-的
-head
-of
-line
-blocking。
-*
-**Integrated
-TLS
-1.3**：
-Handshake
-被
-built
-into
-connection
-establishment
-不
-需要
-separate
-的
-TLS
-layer。
-*
-**Flow
-control**：
-Per
-stream
-和
-per
-connection
-的
-credit
-based
-的
-flow
-control
-prevent
-fast
-的
-senders
-overwhelm
-constrained
-的
-receivers。
-*
-**Loss
-recovery**：
-Probe
-Timeout
-（PTO）
-mechanism
-retransmit
-data
-而
-不
-rely
-on
-ICMP
-或
-TCP
-style
-的
-ACK
-clocks。
-*
-**Path
-MTU
-discovery**：
-Datagram
-Packetization
-Layer
-PMTU
-Discovery
-（DPLPMTUD
-:rfc:`9000`
-Section
-14.3）
-在
-handshake
-后
-probe
-path
-并
-只
-在
-probes
-被
-acknowledged
-后
-raise
-send
-size。
-*
-**Socket
-Integration**：
-Use
-standard
-的
-Zephyr
-socket
-calls
-如
-``zsock_send``、
-``zsock_recv``、
-``zsock_recvmsg``、
-``zsock_sendmsg``、
-``zsock_close``
-用于
-data
-transfer。
-*
-**Dual
-stack**：
-Support
-IPv4
-和
-IPv6
-两
-个
-connections。
+* **Stream multiplexing**: Bidirectional and unidirectional streams share a
+  single UDP socket, avoiding head-of-line blocking at the transport layer.
+* **Integrated TLS 1.3**: The handshake is built into the connection
+  establishment; no separate TLS layer is required.
+* **Flow control**: Per-stream and per-connection credit-based flow control
+  prevents fast senders from overwhelming constrained receivers.
+* **Loss recovery**: A Probe Timeout (PTO) mechanism retransmits data
+  without relying on ICMP or TCP-style ACK clocks.
+* **Path MTU discovery**: Datagram Packetization Layer PMTU Discovery
+  (DPLPMTUD, :rfc:`9000` Section 14.3) probes the path after the handshake
+  and raises the send size only after probes are acknowledged.
+* **Socket Integration**: Uses standard Zephyr socket calls like ``zsock_send``,
+  ``zsock_recv``, ``zsock_recvmsg``, ``zsock_sendmsg``, ``zsock_close``
+  for data transfer.
+* **Dual stack**: Supports both IPv4 and IPv6 connections.
 
 .. note::
 
-   QUIC
-   support
-   当前
-   在
-   Zephyr
-   中
-   是
-   **experimental**
-   的。
-   用
-   ``CONFIG_QUIC=y``
-   enable
-   它
-   并
-   aware
-   APIs
-   和
-   Kconfig
-   options
-   可能
-   change
+   QUIC support is currently **experimental** in Zephyr. Enable it with
+   ``CONFIG_QUIC=y`` and be aware that APIs and Kconfig options may change
+   between releases.
 
 
-.. note::
+Architecture & Concepts
+***********************
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+To effectively use the library, it is helpful to understand the relationship
+between **Connections** and **Streams**.
+
+* **QUIC Connection Socket**: Represents the "tunnel" to the peer. It handles
+  the TLS handshake, congestion control, and connection termination.
+  You typically do not send application data directly over this socket; you use
+  it to create streams.
+* **QUIC Stream Socket**: Represents a lightweight data channel inside the connection.
+  This is where the actual application data (``send`` or ``recv``) flows.
+
+
+Application Workflow
+********************
+
+The following sections outline how to write a generic Client and Server
+application using the library.
+
+Client Application
+------------------
+
+A client initiates a connection to a remote server, opens a stream,
+sends a request, and reads the response.
+
+**Step 1: Setup Addresses**
+
+.. code-block:: c
+
+   struct net_sockaddr_in remote_addr = {
+       .sin_family = NET_AF_INET,
+       .sin_port = net_htons(4422),
+   };
+
+   zsock_inet_pton(NET_AF_INET, "192.0.2.1", &remote_addr.sin_addr);
+
+
+**Step 2: Open QUIC Connection**
+
+.. code-block:: c
+
+   int conn_sock = quic_connection_open((struct net_sockaddr *)&remote_addr, NULL);
+   if (conn_sock < 0) {
+       /* Handle error */
+   }
+
+   /* The TLS handshake occurs automatically upon the first stream creation. */
+
+
+**Step 3: Open a Stream**
+
+.. code-block:: c
+
+   /* Create a bidirectional stream initiated by the client */
+   int stream_sock = quic_stream_open(conn_sock,
+                                      QUIC_STREAM_CLIENT,
+                                      QUIC_STREAM_BIDIRECTIONAL,
+                                      0);
+
+
+**Step 4: Transfer Data**
+
+Use standard socket calls on the **stream socket**, not the connection socket.
+
+.. code-block:: c
+
+   zsock_send(stream_sock, "Hello Server", 12, 0);
+
+   char buffer[64];
+   zsock_recv(stream_sock, buffer, sizeof(buffer), 0);
+
+
+**Step 5: Cleanup**
+
+.. code-block:: c
+
+   quic_stream_close(stream_sock);
+   quic_connection_close(conn_sock);
+
+
+Server Application
+------------------
+
+A server binds to a local port, waits for incoming connections,
+accepts streams, and processes data.
+
+**Step 1: Bind Connection Socket**
+
+.. code-block:: c
+
+   struct net_sockaddr_in local_addr = {
+      .sin_family = NET_AF_INET,
+      .sin_port = net_htons(4422),
+      .sin_addr.s_addr = NET_INADDR_ANY,
+   };
+
+   /* Create the listening context */
+   int conn_sock = quic_connection_open(NULL, (struct net_sockaddr *)&local_addr);
+
+
+**Step 2: Accept Incoming Streams**
+
+The :c:func:`quic_connection_open` socket acts as a "parent".
+Use :c:func:`zsock_accept()` on the **connection socket** to retrieve a file
+descriptor for a new stream initiated by a peer.
+
+.. code-block:: c
+
+   struct net_sockaddr_in peer_addr;
+   net_socklen_t addrlen = sizeof(peer_addr);
+
+   /* Block until a client opens a stream */
+   int stream_sock = zsock_accept(conn_sock, (struct net_sockaddr *)&peer_addr, &addrlen);
+
+   if (stream_sock >= 0) {
+       /* Handle the new stream (read/write data) */
+       char buf[128];
+       int len = zsock_recv(stream_sock, buf, sizeof(buf), 0);
+
+       /* Echo back */
+       zsock_send(stream_sock, buf, len, 0);
+
+       /* Close the stream when done, also zsock_close() can be used */
+       quic_stream_close(stream_sock);
+   }
+
+
+TLS & Security Configuration
+****************************
+
+The QUIC transport uses Mbed TLS and PSA APIs for cryptographic operations.
+Security credentials (certificates, keys) are managed via the
+Zephyr **TLS Credentials** subsystem.
+
+Managing Certificates
+---------------------
+
+Before opening a connection, you must register your certificates
+using :c:func:`tls_credential_add`.
+
+1. **CA Certificate**: Required for clients to verify servers.
+2. **Server Certificate & Private Key**: Required for servers.
+
+**Example: Loading Credentials**
+
+.. code-block:: c
+
+   #include <zephyr/net/tls_credentials.h>
+
+   /* Tag ID to reference credentials later */
+   #define MY_SEC_TAG 1
+
+   static const char server_cert[] = ...; /* PEM or DER data */
+   static const char priv_key[] = ...;    /* PEM or DER data */
+
+   void setup_credentials(void) {
+       tls_credential_add(MY_SEC_TAG, TLS_CREDENTIAL_PUBLIC_CERTIFICATE,
+                          server_cert, sizeof(server_cert));
+       tls_credential_add(MY_SEC_TAG, TLS_CREDENTIAL_PRIVATE_KEY,
+                          priv_key, sizeof(priv_key));
+   }
+
+
+Applying Credentials to QUIC
+----------------------------
+
+You apply credentials to the QUIC socket using :c:func:`zsock_setsockopt` on
+the **connection socket** immediately after creation. The credentials
+must be set before the stream is created.
+
+Peer certificate verification follows the same default policy as Zephyr TLS
+sockets: clients require successful peer verification by default, while servers
+default to not verifying client certificates unless
+``ZSOCK_TLS_PEER_VERIFY`` is explicitly enabled. A client that does not load a
+CA certificate therefore fails the handshake by default; applications that
+deliberately skip server authentication must opt out with
+``ZSOCK_TLS_PEER_VERIFY = MBEDTLS_SSL_VERIFY_NONE``.
+
+.. code-block:: c
+
+   sec_tag_t sec_tag_list[] = { MY_SEC_TAG };
+
+   zsock_setsockopt(conn_sock, ZSOCK_SOL_TLS, ZSOCK_TLS_SEC_TAG_LIST,
+                    sec_tag_list, sizeof(sec_tag_list));
+
+
+Applying ALPN to QUIC
+---------------------
+
+The Application-Layer Protocol Negotiation (ALPN) is mandatory in QUIC.
+The ALPN is used to negotiate the application protocol that is run on top
+of two QUIC endpoints. You apply ALPN list to the QUIC socket using
+:c:func:`zsock_setsockopt` on the **connection socket** immediately after creation.
+The ALPN list must be set before the stream is created.
+Note that the list items must be constants, and they cannot be variables.
+
 .. code-block:: c
 
    const char * const alpn_list[] = {

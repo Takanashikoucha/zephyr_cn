@@ -105,10 +105,10 @@ Twister 调用配合使用。我们应该如何处理？
 
 .. code:: python
 
-    capfd.readouterr()   # 从缓冲区移除输出
-                         # 注意：如果你希望所有运行的输出依次出现，
-                         # 请跳过这一行。
-    clear_log_in_test()  # 移除日志重复
+    capfd.readouterr()   # To remove output from the buffer
+                         # Note that if you want output from all runs after each other,
+                         # skip this line.
+    clear_log_in_test()  # To remove log duplication
 
 
 ------

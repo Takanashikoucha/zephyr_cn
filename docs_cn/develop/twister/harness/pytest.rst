@@ -19,9 +19,9 @@ pytest_root: <pytest 测试路径列表>（默认为 pytest）
             - "/tmp/test_shell.py"
             - "~/tmp/test_shell.py"
             - "$ZEPHYR_BASE/samples/subsys/testsuite/pytest/shell/pytest/test_shell.py"
-            - "$ZEPHYR_HAL_NORDIC_MODULE_DIR/tests/pytest/test_hal.py"  # 模块内的路径
-            - "pytest/test_shell_help.py::test_shell2_sample"  # 选择 pytest 子测试
-            - "pytest/test_shell_help.py::test_shell2_sample[param_a]"  # 选择 pytest 参数化子测试
+            - "$ZEPHYR_HAL_NORDIC_MODULE_DIR/tests/pytest/test_hal.py"  # path inside a module
+            - "pytest/test_shell_help.py::test_shell2_sample"  # select pytest subtest
+            - "pytest/test_shell_help.py::test_shell2_sample[param_a]"  # select pytest parametrized subtest
 
 .. _pytest_args:
 
@@ -134,17 +134,17 @@ required_devices: <所需设备条目列表>（默认为空）
     .. code-block:: yaml
 
         tests:
-          # 两个 DUT，相同平台和应用
+          # Two DUTs, same platform and application
           multidut.basic:
             harness_config:
               required_devices:
                 - {}
-          # 第二个 DUT 固定到特定平台
+          # Second DUT fixed to a specific platform
           multidut.fixed_platform:
             harness_config:
               required_devices:
                 - platform: nrf52840dk/nrf52840
-          # 第二个 DUT 用不同应用烧录
+          # Second DUT flashed with a different application
           multidut.other_app:
             harness_config:
               required_devices:

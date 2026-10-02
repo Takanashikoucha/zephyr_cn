@@ -1,22 +1,22 @@
-Bluetooth: GAP Shell
+Bluetooth: GAP 外壳
 ####################
 
-GAP shell 是 Bluetooth 的"主"shell（处理 connection management、scanning、advertising 等。
+GAP 外壳是 Bluetooth 的"主"外壳，负责连接管理、扫描、广播等。
 
 
-Identities
+身份
 **********
 
-Identities 是 Zephyr host 概念（允许单个物理 device 表现得像多个 logical Bluetooth devices。
+身份（Identities）是 Zephyr 主机的概念，允许单个物理设备表现得像多个逻辑 Bluetooth 设备。
 
-Shell 允许创建多个 identities（最大数由 Kconfig symbol :kconfig:option:`CONFIG_BT_ID_MAX` 设置。要创建新 identity（使用 :code:`bt id-create` 命令。然后可用其 ID 选择它 :code:`bt id-select <id>`。最后（可用 :code:`id-show` 列出所有可用 identities。
+外壳允许创建多个身份，最大数量由 Kconfig 符号 :kconfig:option:`CONFIG_BT_ID_MAX` 设定。要创建新身份，请使用 :code:`bt id-create` 命令。然后可以用其 ID 通过 :code:`bt id-select <id>` 选择它。最后，你可以用 :code:`id-show` 列出所有可用身份。
 
-Scan for devices
+扫描设备
 ****************
 
-用 :code:`bt scan on` 命令开始 scanning。根据您所在的环境（您可能看到 shell 上打印许多行。要停止 scan（运行 :code:`bt scan off`（滚动应停止。
+使用 :code:`bt scan on` 命令开始扫描。根据你所处的环境，你可能会在 shell 上看到打印许多行。要停止扫描，运行 :code:`bt scan off`，滚动应该会停止。
 
-以下是您可预期看到的示例：
+以下是你可能预期看到的示例：
 
 .. code-block:: console
 
@@ -33,35 +33,37 @@ Scan for devices
         uart:~$ bt scan off
         Scan successfully stopped
 
-如您所见（这可能导致大量 results。要减少该数量并轻松找到特定 device（可启用 scan filters。有四种 filter 类型：按 name、按 RSSI、按 address 和按 periodic advertising interval。要应用 filter（使用 :code:`bt scan-set-filter` 命令后跟 filter 类型。可再次使用命令添加多个 filters。
+如你所见，这可能导致大量结果。要减少该数量并轻松找到特定设备，你可以启用扫描过滤器。有四种过滤器类型：按名称、按 RSSI、按地址和按周期性广播间隔。要应用过滤器，请使用 :code:`bt scan-set-filter` 命令后跟过滤器类型。你可以再次使用命令添加多个过滤器。
 
-例如（若您只想查找 name 为 *test shell* 的 devices：
+例如，如果你只想查找名称为 *test shell* 的设备：
 
 .. code-block:: console
 
         uart:~$ bt scan-filter-set name "test shell"
 
-或者若您想查找非常近距离的 devices：
+或者如果你想查找非常近距离的设备：
 
 .. code-block:: console
 
         uart:~$ bt scan-filter-set rssi -40
         RSSI cutoff set at -40 dB
 
-最后（若您想移除所有 filters：
+最后，如果你想移除所有过滤器：
 
 .. code-block:: console
 
         uart:~$ bt scan-filter-clear all
 
-可用 :code:`bt scan on` 命令创建 *active* scanner（即 scanner 将通过发送 *scan request* packet 向 advertisers 请求更多信息。或者（可用 :code:`bt scan passive` 命令创建 *passive scanner*（这样 scanner 不会向 advertiser 请求更多信息。
+你可以使用 :code:`bt scan on` 命令创建一个*主动*扫描器，意味着扫描器将通过发送*扫描请求*数据包向广播器请求更多信息。或者，你可以使用 :code:`bt scan passive` 命令创建一个*被动扫描器*，这样扫描器就不会向广播器请求更多信息。
 
-启用 :kconfig:option:`CONFIG_BT_SCAN_EXT_FILTER_POLICY` 时（:code:`bt scan --ext-filter-policy on` 命令以 extended scanner filter policy 启动 scanner。Controller 还会报告其无法解析的 target address 为 resolvable private address 的 directed advertisements。Directed advertisement 的 target address 单独打印在一行。这需要支持 Extended Scanner Filter Policies 的 Controller（否则命令失败。
+启用 :kconfig:option:`CONFIG_BT_SCAN_EXT_FILTER_POLICY` 后，
+:code:`bt scan --ext-filter-policy on` 命令以扩展扫描器过滤策略启动扫描器。控制器还会报告其目标地址为无法解析的可解析私有地址的定向广播。定向广播的目标地址会单独打印在一行。这需要支持扩展扫描器过滤策略的控制器，否则命令会失败。
 
-Connecting to a device
+连接到设备
 **********************
 
-要连接到 device（需知道其 address 和 address 类型（并使用 :code:`bt connect` 命令以 address 和类型为 arguments。
+要连接到设备，你需要知道其地址和地址类型，并使用
+:code:`bt connect` 命令，以地址和类型作为参数。
 
 以下是示例：
 
@@ -76,24 +78,29 @@ Connecting to a device
         LE conn  param req: int (0x0018, 0x0028) lat 0 to 42
         LE conn param updated: int 0x0028 lat 0 to 42
 
-可用 :code:`bt connections` 命令列出 shell 的 active connections。Shell 最大 connections 数由 :kconfig:option:`CONFIG_BT_MAX_CONN` 定义。可用 :code:`bt disconnect <address: P:XX:XX:XX:XX:XX:XX or R:XX:XX:XX:XX:XX:XX>` 命令从 connection 断开。
+你可以使用 :code:`bt connections` 命令列出 shell 的活跃连接。Shell 的最大连接数由 :kconfig:option:`CONFIG_BT_MAX_CONN` 定义。你可以用
+:code:`bt disconnect <address: P:XX:XX:XX:XX:XX:XX or R:XX:XX:XX:XX:XX:XX>` 命令从连接断开。
 
 .. note::
 
-        若刚在 scanning（可仅运行 :code:`bt connect` 命令连接到最后扫描的 device。
+        如果你刚刚在扫描，你可以通过简单运行 :code:`bt connect` 命令连接到最后扫描到的设备。
 
-        或者（可用 :code:`bt connect-name <name>` 命令自动启用带 name filter 的 scanning 并连接到第一个匹配。
+        或者，你可以使用 :code:`bt connect-name <name>` 命令自动启用带名称过滤的扫描并连接到第一个匹配项。
 
-Advertising
+广播
 ***********
 
-用 :code:`bt advertise on` 命令开始 advertising。这将使用默认 parameters 并以 device name advertise resolvable private address。可运行 :code:`bt advertise on identity` 选择改用 identity address。要停止 advertising（使用 :code:`bt advertise off` 命令。
+使用 :code:`bt advertise on` 命令开始广播。这将使用默认参数，并以设备名称广播一个可解析私有地址。你可以通过运行 :code:`bt advertise on identity` 选择改用身份地址。要停止广播，请使用 :code:`bt advertise off` 命令。
 
-要启用 advertising 的更多高级 features（应使用 :code:`bt adv-create` 命令创建 advertiser。Advertiser 的 parameters 可在创建时传递或使用 :code:`bt adv-param` 命令。要使用此新创建的 advertiser 开始 advertising（使用 :code:`bt adv-start` 命令（然后用 :code:`bt adv-stop` 命令停止 advertising。
+要启用广播的更多高级功能，你应该使用
+:code:`bt adv-create` 命令创建一个广播器。广播器的参数可以在创建时传递，也可以使用 :code:`bt adv-param` 命令。要使用这个新创建的广播器开始广播，请使用 :code:`bt adv-start` 命令，然后用 :code:`bt adv-stop` 命令停止
+广播。
 
-使用 custom advertisers 时（可选择其是否为 connectable 或 scannable。这导致四个选项：:code:`conn-scan`、:code:`conn-nscan`、:code:`nconn-scan` 和 :code:`nconn-nscan`。创建 advertiser 或更新其 parameters 时这些 parameters 为 mandatory。
+使用自定义广播器时，你可以选择它是否可连接或可扫描。这导致
+四个选项：:code:`conn-scan`、:code:`conn-nscan`、:code:`nconn-scan` 和 :code:`nconn-nscan`。
+创建广播器或更新其参数时，这些参数是必需的。
 
-例如（若您想创建 connectable 且 scannable 的 advertiser 并启动它：
+例如，如果你想创建一个可连接且可扫描的广播器并启动它：
 
 .. code-block:: console
 
@@ -102,7 +109,8 @@ Advertising
         uart:~$ bt adv-start
         Advertiser[0] 0x200022f0 set started
 
-您可能注意到用此（custom advertiser 不 advertise device name；需添加它。继续之前的示例：
+你可能注意到，用这种方式，自定义广播器不会广播设备名称；你需要
+添加它。继续之前的示例：
 
 .. code-block:: console
 
@@ -112,7 +120,10 @@ Advertising
         uart:~$ bt adv-start
         Advertiser[0] 0x200022f0 set started
 
-现在应在 advertising data 中看到 device name。也可用 :code:`name <custom name>` 代替 :code:`dev-name` 设置 custom name。还可用 :code:`bt adv-data` 命令手动设置 advertising data。以下示例展示如何用 raw advertising data 设置 advertiser name：
+现在你应该能在广播数据中看到设备名称。你也可以用
+:code:`name <custom name>` 代替 :code:`dev-name` 设置自定义名称。还可用
+:code:`bt adv-data` 命令手动设置广播数据。以下示例展示了
+如何使用原始广播数据来设置广播器名称：
 
 .. code-block:: console
 
@@ -122,26 +133,35 @@ Advertising
         uart:~$ bt adv-start
         Advertiser[0] 0x20002348 set started
 
-Data 必须按 Bluetooth Core Specification 格式化（参见 version 5.3、vol. 3、part C、11）。此示例中（第一个 octet 为 data 的 size（data 和一个 octet 的 data type（第二个为 data type（``0x09`` 为 Complete Local Name（其余 data 为 ASCII 的 name。因此（在另一 device 上应看到 name *Bluetooth-Shell*。
+数据必须按照 Bluetooth 核心规范格式化（参见 5.3 版，第 3 卷，
+C 部分，11 节）。在此示例中，第一个字节是数据的大小（数据和用于
+数据类型的 1 个字节），第二个是数据类型，``0x09`` 是完整本地名称，
+其余数据是 ASCII 的名称。因此，在另一台设备上你应该看到名称
+*Bluetooth-Shell*。
 
-Advertising 时（若其他 devices 使用 *active* scanner（可能收到 *scan request* packets。要可视化这些 packets（可向 advertiser 的 parameters 添加 :code:`scan-reports`。
+广播时，如果其他设备使用*主动*扫描器，你可能会收到*扫描请求*数据包。
+要可视化这些数据包，你可以向广播器的参数中添加 :code:`scan-reports`。
 
-Directed Advertising
+定向广播
 ====================
 
-若想在 shell 上重新连接到 device（可使用 directed advertising。以下示例展示如何在 :code:`directed` parameter 后紧接指定 address 创建 directed advertiser。:code:`low` parameter 表示想使用 low duty cycle mode（:code:`dir-rpa` parameter 在远端 device 启用 privacy 且支持 directed advertisement 中 target address 的 address resolution 时为 required。
+如果你想重新连接到设备，可以在 shell 上使用定向广播。
+以下示例演示了如何创建定向广播器，地址紧跟在参数 :code:`directed` 之后指定。:code:`low` 参数表示我们想使用
+低占空比模式，:code:`dir-rpa` 参数在远端设备
+启用了隐私且支持定向广播中目标地址的地址解析时是必需的。
 
 .. code-block:: console
 
         uart:~$ bt adv-create conn-scan directed R:D7:54:03:CE:F3:B4 low dir-rpa
         Created adv id: 0, adv: 0x20002348
 
-之后（可启动 advertiser（然后 target device 将能重新连接。
+之后，你可以启动广播器，然后目标设备就能重新连接。
 
-Extended Advertising
+扩展广播
 ====================
 
-现在来看一些 extended advertising features。要启用 extended advertising（使用 ``ext-adv`` parameter。
+现在让我们来看一些扩展广播功能。要启用扩展广播，请使用
+``ext-adv`` 参数。
 
 .. code-block:: console
 
@@ -150,32 +170,44 @@ Extended Advertising
         uart:~$ bt adv-start
         Advertiser[0] 0x200022f0 set started
 
-这将创建 connectable 且 non-scannable 的 extended advertiser。
+这将创建一个可连接且不可扫描的扩展广播器。
 
-Encrypted Advertising Data
+加密广播数据
 ==========================
 
-Zephyr 支持 Encrypted Advertising Data feature。:code:`bt encrypted-ad` sub-commands 允许管理给定 advertiser 的 advertising data。
+Zephyr 支持加密广播数据功能。:code:`bt encrypted-ad`
+子命令允许管理给定广播器的广播数据。
 
-要加密 advertising data（需提供 key materials（可用 :code:`bt encrypted-ad set-keys <session key> <init vector>` 完成。Session key 长 16 bytes（initialisation vector 长 8 bytes。
+要加密广播数据，需要提供密钥材料，可以用 :code:`bt
+encrypted-ad set-keys <session key> <init vector>` 完成。会话密钥长 16 字节，
+初始化向量长 8 字节。
 
-可用 :code:`bt encrypted-ad add-ad` 和 :code:`bt encrypted-ad add-ead` 添加 advertising data。前者将添加一个 advertising data 结构（如 Core Specification 所定义（后者将读取给定 data（加密它们（然后添加生成的 encrypted advertising data 结构。可混合 encrypted 和 non-encrypted data（添加 advertising data 完成后（可用 :code:`bt encrypted-ad commit-ad` 将更改应用到选定 advertiser 的 data。之后可按前述启动 advertiser。可用 :code:`bt encrypted-ad clear-ad` 清除 advertising data。
+你可以使用 :code:`bt encrypted-ad add-ad` 和 :code:`bt encrypted-ad
+add-ead` 添加广播数据。前者将添加一个广播数据结构（如核心
+规范所定义），后者将读取给定数据、加密它们，然后添加生成的
+加密广播数据结构。可以混合加密和非加密数据，
+添加广播数据完成后，:code:`bt encrypted-ad commit-ad` 可用于将更改
+应用到所选广播器的数据。之后可以按前述方式启动广播器。
+可以用 :code:`bt encrypted-ad clear-ad` 清除广播数据。
 
-在 Central 端（可设置如前述的正确 key materials 然后用 :code:`bt encrypted-ad decrypt-scan on` 启用 data 的解密以解密收到的 encrypted advertising data。
+在中心设备一侧，可以通过设置如前述的正确密钥材料，然后用
+:code:`bt encrypted-ad decrypt-scan on` 启用数据解密，
+来解密接收到的加密广播数据。
 
 .. note::
 
-        要在 scan report 中看到 advertising data（需启用 :code:`bt scan-verbose-output`。
+        要在扫描报告中看到广播数据，需要启用 :code:`bt scan-verbose-output`。
 
 .. note::
 
-        可通过增大 :kconfig:option:`CONFIG_BT_CTLR_ADV_DATA_LEN_MAX` 和 :kconfig:option:`CONFIG_BT_CTLR_SCAN_DATA_LEN_MAX` 的值来增大 advertising data 的长度。
+        可以通过增大 :kconfig:option:`CONFIG_BT_CTLR_ADV_DATA_LEN_MAX` 和
+        :kconfig:option:`CONFIG_BT_CTLR_SCAN_DATA_LEN_MAX` 的值来增大广播数据的长度。
 
 以下是展示 EAD 用法的简单示例：
 
 .. tabs::
 
-        .. group-tab:: Peripheral
+        .. group-tab:: 外围设备
 
                 .. code-block:: console
 
@@ -188,14 +220,14 @@ Zephyr 支持 Encrypted Advertising Data feature。:code:`bt encrypted-ad` sub-c
                         00000000: 9b a2 2d 38 24 ef c7 0f  eb 80 0c 80 29 4c ba 38 |..-8$... ....)L.8|
                         initialisation vector set to:
                         00000000: 2e 83 f3 d4 d4 76 95 b6                          |.....v..         |
-                        uart:~$ bt encrypted-ad add-ad 06097368656c6c
+                        uart:~$ bt encrypted-ad add-ad 06097368656C6C
                         uart:~$ bt encrypted-ad add-ead 03ffdead03ffbeef
                         uart:~$ bt encrypted-ad commit-ad
                         Advertising data for Advertiser[0] 0x81769a0 updated.
                         uart:~$ bt adv-start
                         Advertiser[0] 0x81769a0 set started
 
-        .. group-tab:: Central
+        .. group-tab:: 中心设备
 
                 .. code-block:: console
 
@@ -222,10 +254,11 @@ Zephyr 支持 Encrypted Advertising Data feature。:code:`bt encrypted-ad` sub-c
                                 [SCAN DATA END]
                         ...
 
-Filter Accept List
+过滤接受列表
 ******************
 
-可创建允许 addresses 的列表（可用于自动连接到这些 addresses。以下是如何做到：
+可以创建允许地址的列表，用于
+自动连接到这些地址。以下是如何做到：
 
 .. code-block:: console
 
@@ -233,9 +266,12 @@ Filter Accept List
         uart:~$ bt fal-add R:66:C8:80:2A:05:73
         uart:~$ bt fal-connect on
 
-Shell 然后连接到第一个可用 device。示例中（若两个 devices 同时 advertising（将连接到添加到列表的第一个 address。
+然后 shell 将连接到第一个可用设备。在示例中，如果两个设备
+同时广播，我们将连接到添加到列表的第一个地址。
 
-Filter Accept List 也可用 :code:`fal` option 用于 scanning 或 advertising。例如（若想扫描一组选定的 addresses（可设置 Filter Accept List：
+过滤接受列表也可以用 :code:`fal` 选项用于扫描或广播。
+例如，如果我们想扫描一组选定的地址，我们可以设置一个过滤接受
+列表：
 
 .. code-block:: console
 
@@ -244,23 +280,31 @@ Filter Accept List 也可用 :code:`fal` option 用于 scanning 或 advertising�
         uart:~$ bt fal-add R:5D:85:50:1C:72:64
         uart:~$ bt scan on fal
 
-应只看到 scanner 报告的这三个 addresses。
+你应该只看到扫描器报告的这三个地址。
 
-Enabling security
+启用安全
 *****************
 
-连接到 device 时（可启用多个安全级别（以下是 Bluetooth LE 的列表：
+连接到设备时，你可以启用多个安全级别，以下是
+Bluetooth LE 的列表：
 
-* **1** 无 encryption 且无 authentication；
-* **2** Encryption 且无 authentication；
-* **3** Encryption 和 authentication；
-* **4** Bluetooth LE Secure Connection。
+* **1** 无加密且无认证；
+* **2** 加密且无认证；
+* **3** 加密和认证；
+* **4** Bluetooth LE 安全连接。
 
-要启用 security（使用 :code:`bt security <level>` 命令。对于需要 authentication 的级别（level 3 及以上（须先设置 authentication 方法。为此（可用 :code:`bt auth all` 命令。之后（设置 security level 时（将在两个 devices 上被要求确认 passkey。在 shell 端（用 :code:`bt auth-passkey-confirm` 命令完成。
+要启用安全，请使用 :code:`bt security <level>` 命令。对于需要认证
+的级别（3 级及以上），你必须先设置认证方法。为此，你可以使用
+:code:`bt auth all` 命令。之后，当你设置安全级别时，你将被要求
+在两台设备上确认配对密钥。在 shell 一侧，用命令
+:code:`bt auth-passkey-confirm` 完成。
 
-Pairing
+配对
 =======
 
-启用 authentication 要求 devices 为 bondable。默认 shell 为 bondable。可用 :code:`bt bondable off` 使 shell 非 bondable。可用 :code:`bt bonds` 命令列出所有已配对的 devices。
+启用认证要求设备可绑定。默认情况下 shell 是可绑定的。你
+可以用 :code:`bt bondable off` 使 shell 不可绑定。你可以用 :code:`bt bonds` 命令列出所有已配对的设备。
 
-最大 paired devices 数用 :kconfig:option:`CONFIG_BT_MAX_PAIRED` 设置。可用 :code:`bt clear <address: P:XX:XX:XX:XX:XX:XX or R:XX:XX:XX:XX:XX:XX>` 移除 paired device（或用 :code:`bt clear all` 命令移除所有 paired devices。
+最大配对设备数用 :kconfig:option:`CONFIG_BT_MAX_PAIRED` 设置。你可以
+用 :code:`bt clear <address: P:XX:XX:XX:XX:XX:XX or R:XX:XX:XX:XX:XX:XX>`
+移除一个配对设备，或用 :code:`bt clear all` 命令移除所有配对设备。

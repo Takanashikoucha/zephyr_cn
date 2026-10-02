@@ -1,26 +1,20 @@
 .. _networking_with_qemu:
 
-Networking with QEMU
+使用 QEMU 进行网络
 ####################
 
 .. contents::
     :local:
     :depth: 2
 
-此页面描述如何在 (Linux) host 与运行在 QEMU virtual machine（为 Zephyr
-targets（如 qemu_x86 和 qemu_cortex_m3）构建）的 Zephyr application 之间设置虚拟 network。某些 virtual ARM boards（如
-qemu_cortex_a53）仅支持单个 UART（此情况下首选 QEMU Ethernet（
-细节参见 :ref:`networking_with_eth_qemu`。
+本页介绍如何在（Linux）主机与运行在 QEMU 虚拟机（面向 qemu_x86 和 qemu_cortex_m3 等 Zephyr 目标构建）中的 Zephyr 应用之间搭建虚拟网络。某些虚拟 ARM 板卡（如 qemu_cortex_a53）仅支持单个 UART，此时建议优先使用 QEMU 以太网，详情参见 :ref:`networking_with_eth_qemu`。
 
-此示例中（Zephyr source distribution 的 :zephyr:code-sample:`sockets-echo-server` sample application 在 QEMU 中运行。QEMU instance
-通过 serial port 连接到 Linux host（且用 SLIP
-在 Zephyr application 和 Linux 间传输 data（通过虚拟
-connections 链。
+在本示例中，Zephyr 源码发行版中的 :zephyr:code-sample:`sockets-echo-server` 示例应用会在 QEMU 中运行。QEMU 实例通过串口连接到 Linux 主机，并使用 SLIP 在 Zephyr 应用与 Linux 之间传输数据（经过一串虚拟连接）。
 
-Prerequisites
+前提条件
 *************
 
-在 Linux Host 上（找到 Zephyr `net-tools`_ project（其可在 Zephyr standard installation 的 ``tools/net-tools`` directory 下找到（或从自己的 git repository 单独安装：
+在 Linux 主机上，找到 Zephyr `net-tools`_ 项目。它既可以位于 Zephyr 标准安装目录下的 ``tools/net-tools`` 目录中，也可以从其独立的 git 仓库单独安装：
 
 .. code-block:: console
 
@@ -31,50 +25,45 @@ Prerequisites
 
 .. note::
 
-   若得到关于 AX_CHECK_COMPILE_FLAG 的 error（在 Debian/Ubuntu 上安装
-   ``autoconf-archive`` package。
+   如果出现与 AX_CHECK_COMPILE_FLAG 相关的错误，请在 Debian/Ubuntu 上安装 ``autoconf-archive`` 软件包。
 
-Basic Setup
+基本设置
 ***********
 
-以下步骤至少需 4 个 terminal windows：
+以下步骤至少需要 4 个终端窗口：
 
-* Terminal #1 为常规 Zephyr development terminal（Zephyr environment
-  已初始化。
-* Terminals #2、#3 和 #4 为 net-tools 为当前
-  directory 的 terminal windows（``cd net-tools``）
+* 终端 #1 是您通常使用的 Zephyr 开发终端，且已初始化 Zephyr 环境。
+* 终端 #2、#3 和 #4 是当前目录为 net-tools 的终端窗口（``cd net-tools``）。
 
-Step 1 - Create helper socket
+步骤 1 - 创建辅助套接字
 =============================
 
-启动带 network 模拟的 QEMU 前（应为模拟
-创建 Unix socket。
+在启动带网络模拟的 QEMU 之前，应为模拟创建一个 Unix 套接字。
 
-Terminal #2 中输入：
+在终端 #2 中输入：
 
 .. code-block:: console
 
    ./loop-socat.sh
 
-Step 2 - Start TAP device routing daemon
+步骤 2 - 启动 TAP 设备路由守护进程
 ========================================
 
-Terminal #3 中输入：
+在终端 #3 中输入：
 
 
 .. code-block:: console
 
    sudo ./loop-slip-tap.sh
 
-对需 DNS 的 applications（可能须在此处重启 host 的 DNS server（
-如 :ref:`networking_internet` 中所述。
+对于需要 DNS 的应用，您可能需要在此处按 :ref:`networking_internet` 中的说明重启主机的 DNS 服务器。
 
-Step 3 - Start app in QEMU
-==========================
+步骤 3 - 在 QEMU 中启动应用
+=========================
 
-构建并启动 ``echo_server`` sample application。
+构建并启动 ``echo_server`` 示例应用。
 
-Terminal #1 中输入：
+在终端 #1 中输入：
 
 .. zephyr-app-commands::
    :zephyr-app: samples/net/sockets/echo_server
@@ -83,23 +72,21 @@ Terminal #1 中输入：
    :goals: run
    :compact:
 
-若看到 QEMU 关于 unix:/tmp/slip.sock 的 error（意味着漏了
-上述 Step 1。
+如果您看到 QEMU 报出关于 unix:/tmp/slip.sock 的错误，说明您遗漏了上述步骤 1。
 
-Step 4 - Run apps on host
+步骤 4 - 在主机上运行应用
 =========================
 
-现在 Terminal #4 中（可运行各种 tools 与
-QEMU 中运行的 application 通信。
+现在在终端 #4 中，您可以运行各种工具来与运行在 QEMU 中的应用通信。
 
-可从 pings 开始：
+可以从 ping 开始：
 
 .. code-block:: console
 
    ping 192.0.2.1
    ping6 2001:db8::1
 
-可用 netcat ("nc") utility（用 UDP 连接：
+您可以使用 netcat（"nc"）工具，通过 UDP 连接：
 
 .. code-block:: console
 
@@ -111,7 +98,7 @@ QEMU 中运行的 application 通信。
    echo foobar | nc -u 192.0.2.1 4242
    foobar
 
-若 echo_server 编译带 TCP 支持（当前 echo_server sample 默认启用（CONFIG_NET_TCP=y）：
+如果 echo_server 编译时启用了 TCP 支持（当前 echo_server 示例默认启用，CONFIG_NET_TCP=y）：
 
 .. code-block:: console
 
@@ -120,49 +107,29 @@ QEMU 中运行的 application 通信。
 
 .. note::
 
-   用 Ctrl+C 退出。
+   使用 Ctrl+C 退出。
 
-也可用 telnet command 实现上述。
+您也可以使用 telnet 命令实现上述功能。
 
-Step 5 - Stop supporting daemons
-================================
+步骤 5 - 停止辅助守护进程
+===============================
 
-完成用 QEMU 的 network testing 后（应停止
-初始步骤中启动的任何 daemons 或 helpers（以避免可能的
-networking 或 routing problems（如 local
-network interfaces 中的 address conflicts。例如（若从
-QEMU network testing 切换到用真实 hardware（或要将 host
-laptop 恢复正常 Wi-Fi 使用（停止它们。
+完成使用 QEMU 的网络测试后，应停止初始步骤中启动的任何守护进程或辅助程序，以避免可能出现的网络或路由问题（例如本地网络接口中的地址冲突）。例如，当您从 QEMU 网络测试切换到使用真实硬件，或者要把主机笔记本恢复为正常 Wi-Fi 使用时，就应停止它们。
 
-停止 daemons（在相应 terminal windows 中按 Ctrl+C
-（须停止 ``loop-slip-tap.sh`` 和 ``loop-socat.sh`` 两者）。
+要停止守护进程，请在相应终端窗口中按 Ctrl+C（需要同时停止 ``loop-slip-tap.sh`` 和 ``loop-socat.sh``）。
 
-按 :kbd:`CTRL+A` :kbd:`x` 退出 QEMU。
+按 :kbd:`CTRL+A` 再按 :kbd:`x` 退出 QEMU。
 
 .. _networking_internet:
 
-Setting up Zephyr and NAT/masquerading on host to access Internet
+配置 Zephyr 以及主机上的 NAT/伪装以访问互联网
 *****************************************************************
 
-要从 Zephyr application 访问 internet（host 上可能须
-额外 setup。此 setup 对在 QEMU 中和在真实 hardware 上运行的
-application 通用（假设
-development board 连接到 development host。若
-board 连接到专用 router（则不需要。
+要从 Zephyr 应用访问互联网，可能需要在主机上做一些额外设置。对于运行在 QEMU 中和运行在真实硬件上的应用，此设置是通用的，前提是开发板已连接到开发主机。如果板卡连接到专用路由器，则不需要此设置。
 
-要从 QEMU 中运行的自定义 application 用 IPv4 访问 internet（
-应通过 DHCP 设置或手动配置 gateway。
-对使用 "Settings" facility（启用 config option
-:kconfig:option:`CONFIG_NET_CONFIG_SETTINGS`）的 applications（
-将 :kconfig:option:`CONFIG_NET_CONFIG_MY_IPV4_GW` option 设为
-gateway 的 IP address。对不使用 "Settings" facility 的 apps（在
-runtime 调用 :c:func:`net_if_ipv4_set_gw 设置
-gateway。
-例如：``CONFIG_NET_CONFIG_MY_IPV4_GW="192.0.2.2"``
+要从 Zephyr 应用使用 IPv4 访问互联网，应通过 DHCP 设置或手动配置网关。对于使用“设置”机制（启用配置选项 :kconfig:option:`CONFIG_NET_CONFIG_SETTINGS`）的应用，将 :kconfig:option:`CONFIG_NET_CONFIG_MY_IPV4_GW` 选项设置为网关的 IP 地址。对于不使用“设置”机制的应用，在运行时调用 :c:func:`net_if_ipv4_set_gw` 来设置网关。例如：``CONFIG_NET_CONFIG_MY_IPV4_GW="192.0.2.2"``
 
-要从 QEMU 中运行的自定义 application 访问 internet（应为
-QEMU 的 source address 设置 NAT
-(masquerading)。假设使用 ``192.0.2.1``（且 Zephyr network interface 为 ``zeth``（以下 command 应以 root 运行：
+要从运行在 QEMU 中的自定义应用访问互联网，应为 QEMU 的源地址设置 NAT（伪装）。假设使用 ``192.0.2.1``，且 Zephyr 网络接口为 ``zeth``，则以下命令应以 root 身份运行：
 
 .. code-block:: console
 
@@ -170,39 +137,27 @@ QEMU 的 source address 设置 NAT
    iptables -I FORWARD 1 -i zeth -j ACCEPT
    iptables -I FORWARD 1 -o zeth -m state --state RELATED,ESTABLISHED -j ACCEPT
 
-另外（host 上应启用 IPv4 forwarding（且可能须
-检查其他 firewall (iptables) rules 不干扰 masquerading。
-启用 IPv4 forwarding（以下 command 应以 root 运行：
+此外，应在主机上启用 IPv4 转发，并且您可能需要检查其他防火墙（iptables）规则是否会干扰伪装。要启用 IPv4 转发，以下命令应以 root 身份运行：
 
 .. code-block:: console
 
    sysctl -w net.ipv4.ip_forward=1
 
-某些 applications 可能还需 DNS server。若干 Zephyr 提供的
-samples 默认假设 host 上
-（IP ``192.0.2.2``）有可用 DNS server（其在现代 Linux distributions 中通常至少运行
-DNS proxy。用 QEMU 运行时（可能须重启 host 的
-DNS（使其能为新建 TAP interface 上的 requests 服务。例如（
-在 Debian-based systems 上：
+某些应用可能还需要 DNS 服务器。许多 Zephyr 提供的示例默认假设主机上（IP 为 ``192.0.2.2``）有可用的 DNS 服务器；在现代 Linux 发行版中，主机通常至少运行一个 DNS 代理。使用 QEMU 运行时，可能需要重启主机的 DNS 服务，使其能够为新建 TAP 接口上的请求提供服务。例如，在基于 Debian 的系统上：
 
 .. code-block:: console
 
    service dnsmasq restart
 
-依赖 host DNS server 的替代方案为使用
-network 中的一个。例如（``8.8.8.8`` 为公开可用 DNS server。可
-用 :kconfig:option:`CONFIG_DNS_SERVER1` option 配置。
+依赖主机 DNS 服务器的替代方案是使用网络中的一个 DNS 服务器。例如，``8.8.8.8`` 是一个公开可用的 DNS 服务器。您可以使用 :kconfig:option:`CONFIG_DNS_SERVER1` 选项来配置它。
 
 
-Network connection between two QEMU VMs
+两个 QEMU 虚拟机之间的网络连接
 ***************************************
 
-与上述 VM-to-Host setup 不同（VM-to-VM setup
-自动。对支持此 mode 的 sample
-applications（如 echo_server 和 echo_client
-samples（须两个 terminal windows（为 Zephyr development 设置。
+与上述虚拟机到主机的设置不同，虚拟机到虚拟机的设置是自动完成的。对于支持此模式的示例应用（如 echo_server 和 echo_client 示例），您需要两个为 Zephyr 开发设置好的终端窗口。
 
-Terminal #1:
+终端 #1：
 ============
 
 .. zephyr-app-commands::
@@ -213,9 +168,9 @@ Terminal #1:
    :build-args: server
    :compact:
 
-这将启动 QEMU（等待来自 client QEMU 的 connection。
+这将启动 QEMU，等待来自客户端 QEMU 的连接。
 
-Terminal #2:
+终端 #2：
 ============
 
 .. zephyr-app-commands::
@@ -226,21 +181,16 @@ Terminal #2:
    :build-args: client
    :compact:
 
-这将启动第二个 QEMU instance（应在两者中看到发送和
-收到的 data 的 logging。
+这将启动第二个 QEMU 实例，您应能在两边看到发送和接收数据的日志。
 
-Running multiple QEMU VMs of the same sample
+运行同一示例的多个 QEMU 虚拟机
 ********************************************
 
-若发现想运行同一 Zephyr
-sample application 的多个 instances（且它们无需相互通信（用
-``QEMU_INSTANCE`` argument。
+如果您想运行同一 Zephyr 示例应用的多个实例，且它们之间不需要相互通信，请使用 ``QEMU_INSTANCE`` 参数。
 
-手动启动 ``socat`` 和 ``tunslip6``（而非用
-``loop-xxx.sh`` scripts）（按需启动的 instances 数量。用
-以下作为 guide（替换 MAIN 或 OTHER。
+手动启动 ``socat`` 和 ``tunslip6``（而不是使用 ``loop-xxx.sh`` 脚本），数量按您的需要而定。以下命令供参考，请将 MAIN 或 OTHER 替换为您自己的标识。
 
-Terminal #1:
+终端 #1：
 ============
 
 .. code-block:: console
@@ -250,7 +200,7 @@ Terminal #1:
    # Now run Zephyr
    make -Cbuild run QEMU_INSTANCE=MAIN
 
-Terminal #2:
+终端 #2：
 ============
 
 .. code-block:: console

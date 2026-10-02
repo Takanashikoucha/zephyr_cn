@@ -1,32 +1,29 @@
 .. _mcumgr_smp_group_63:
 
-Zephyr Management Group
+Zephyr 管理组
 #######################
 
-Zephyr management group 定义以下 commands：
+Zephyr 管理组定义了以下命令：
 
 .. table::
     :align: center
 
     +----------------+------------------------------+
-    | ``Command ID`` | Command description          |
+    | ``命令 ID`` | 命令描述                       |
     +================+==============================+
-    | ``0``          | Erase storage                |
+    | ``0``          | 擦除存储分区                   |
     +----------------+------------------------------+
 
-Erase storage command
+擦除存储命令
 *********************
 
-Erase storage command 允许清除
-device 上的 ``storage_partition`` flash partition（
-通常这在切换到新 application build 时使用（若 application 使用
-应被清除的
-storage（application 相关。
+擦除存储命令用于清除设备上的 ``storage_partition`` 闪存分区，
+通常当应用切换到新的构建版本且应用使用了需要被清除的存储时（取决于应用），会使用此命令。
 
-Erase storage request
+擦除存储请求
 =====================
 
-Erase storage request header fields：
+擦除存储请求头字段：
 
 .. table::
     :align: center
@@ -37,12 +34,12 @@ Erase storage request header fields：
     | ``2``  | ``63``       | ``0``          |
     +--------+--------------+----------------+
 
-Command 发送空 CBOR map 作为 data。
+该命令发送一个空的 CBOR map 作为数据。
 
-Erase storage response
-======================
+擦除存储响应
+=====================
 
-Read setting response header fields：
+擦除存储响应头字段：
 
 .. table::
     :align: center
@@ -53,8 +50,7 @@ Read setting response header fields：
     | ``3``  | ``63``       | ``0``          |
     +--------+--------------+----------------+
 
-成功时（command 发送空 CBOR map 作为 data。错误时（CBOR data 取
-以下形式：
+该命令在成功时发送一个空的 CBOR map 作为数据。出错时 CBOR 数据形式如下：
 
 .. tabs::
 
@@ -83,12 +79,12 @@ Read setting response header fields：
     :align: center
 
     +------------------+-------------------------------------------------------------------------+
-    | "err" -> "group" | :c:enum:`mcumgr_group_t` of the group-based error code. Only      |
-    |                  | appears if an error is returned when using SMP version 2.               |
+    | "err" -> "group" | :c:enum:`mcumgr_group_t` 组基错误码所属的组。仅在                        |
+    |                  | 使用 SMP version 2 且返回错误时出现。                                     |
     +------------------+-------------------------------------------------------------------------+
-    | "err" -> "rc"    | contains the index of the group-based error code. Only appears if       |
-    |                  | non-zero (error condition) when using SMP version 2.                    |
+    | "err" -> "rc"    | 包含组基错误码的索引。仅在使用 SMP version 2 且                           |
+    |                  | 非零（错误条件）时出现。                                                  |
     +------------------+-------------------------------------------------------------------------+
-    | "rc"             | :c:enum:`mcumgr_err_t` only appears if non-zero (error condition) when  |
-    |                  | using SMP version 1 or for SMP errors when using SMP version 2.         |
+    | "rc"             | :c:enum:`mcumgr_err_t` 仅在使用 SMP version 1 且非零（错误条件）时出现，  |
+    |                  | 或使用 SMP version 2 时 SMP 错误时出现。                                  |
     +------------------+-------------------------------------------------------------------------+

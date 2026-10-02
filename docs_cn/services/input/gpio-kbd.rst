@@ -1,595 +1,189 @@
 .. _gpio-kbd:
 
-GPIO Keyboard Matrix
+GPIO 键盘矩阵
 ####################
 
-:dtcompatible:`gpio-kbd-matrix` driver 支持
-大量
-keyboard
-matrix
-hardware
-configurations（并有
-numerous
-options
-改变
-其
-behavior。此为
-某些
-common
-setups
-及
-driver
-如何
-支持
-它们的
-overview。
+:dtcompatible:`gpio-kbd-matrix` 驱动支持大量键盘矩阵硬件配置，并有众多选项可改变其行为。
+本文概述了某些常见配置以及驱动如何支持它们。
 
-所有
-这些
-的
-conventional
-configuration
-为
-driver
-在
-row
-GPIOs（inputs）上
-读取（并在
-columns
-GPIOs（output）上
-select。
+所有这些的传统配置为驱动在行 GPIO（输入）上读取，并在列 GPIO（输出）上选择。
 
-Base use case, no isolation diodes, interrupt capable GPIOs
+基础用例：无隔离二极管、支持中断的 GPIO
 ***********************************************************
 
-此为
-membrane
-switches
-和
-flexible
-circuit
-boards 的
-consumer
-keyboards 上
-找到的
-common
-configuration（无
-isolation
-diodes（需
-ghosting
-detection（默认
-启用）。
+这是消费级键盘上常见的配置，使用薄膜开关和柔性电路板，无隔离二极管，
+需要鬼键检测（默认启用）。
 
 .. figure:: no-diodes.svg
       :align: center
       :width: 50%
 
-      A 3x3 matrix, no diodes
+      3x3 矩阵，无二极管
 
-System
-须
-支持
-GPIO
-interrupts（且
-interrupt
-可
-同时
-在
-所有
-row
-GPIOs
-上
-启用。
+系统须支持 GPIO 中断，且中断可在所有行 GPIO 上同时启用。
 
 .. code-block:: devicetree
 
    kbd-matrix {
-        compatible = "gpio-kbd-matrix";
-        row-gpios = <&gpio0 0 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>,
-                    <&gpio0 1 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>,
-                    <&gpio0 2 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
-        col-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>,
-                    <&gpio0 4 GPIO_ACTIVE_LOW>,
-                    <&gpio0 5 GPIO_ACTIVE_LOW>;
+       compatible = "gpio-kbd-matrix";
+       row-gpios = <&gpio0 0 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>,
+                   <&gpio0 1 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>,
+                   <&gpio0 2 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+       col-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>,
+                   <&gpio0 4 GPIO_ACTIVE_LOW>,
+                   <&gpio0 5 GPIO_ACTIVE_LOW>;
    };
 
-此
-configuration
-中（matrix
-scanning
-library
-在
-所有
-keys
-释放
-后
-进入
-idle
-mode（且
-keyboard
-matrix
-thread
-仅在
-key
-按下
-时
-唤醒。
+在此配置中，矩阵扫描库在所有按键释放后进入空闲模式，
+键盘矩阵线程仅在按键被按下时唤醒。
 
-当前
-未
-select 的
-columns 的
-GPIOs
-配置
-为
-high
-impedance
-mode。这
-意味着
-row
-state
-可能
-需
-一些
-time
-settle（以
-避免
-从
-一
-column
-到
-下一
-column
-误读
-key
-state。Settle
-time
-可
-通过
-更改
-``settle-time-us``
-property
-调整。
+当前未选中的列 GPIO 被配置为高阻模式。这意味着行状态可能需要一些时间
+才能稳定，以避免从一个列到下一个列误读键状态。稳定时间可通过
+修改 ``settle-time-us`` 属性来调整。
 
-Isolation diodes
+隔离二极管
 ****************
 
-若
-matrix
-每
-key
-有
-isolation
-diodes（则
-可：
+如果矩阵为每个按键都有隔离二极管，则可能：
 
- - 禁用
-   ghosting
-   detection（允许
-   检测
-   任何
-   key
-   combination
- - 配置
-   driver
-   将
-   未
-   select 的
-   columns
-   GPIO
-   drive
-   为
-   inactive
-   state
-   而非
-   high
-   impedance（这
-   允许
-   减少
-   settle
-   time
-   （潜在
-   至
-   0）（并
-   用
-   更
-   efficient 的
-   port
-   wide
-   GPIO
-   read
-   APIs
-   （若
-   GPIO
-   pins
-   连续
-   则
-   自动
-   发生）
+ - 禁用鬼键检测，允许检测任意按键组合
+ - 配置驱动将未选中的列 GPIO 驱动到非活动状态而非高阻，
+   这允许减少稳定时间（可能降至 0），并使用更高效的端口宽 GPIO 读取 API
+   （如果 GPIO 引脚是连续的则自动发生）
 
-diodes
-从
-rows
-到
-columns 的
-Matrixes
-须
-rows
-上
-用
-pull-ups（且
-columns
-active
-low。
+二极管从行到列的矩阵必须使用行上拉和列低有效。
 
 .. figure:: diodes-rc.svg
       :align: center
       :width: 50%
 
-      A 3x3 matrix with row to column isolation diodes.
+      3x3 矩阵，行到列隔离二极管。
 
 .. code-block:: devicetree
 
    kbd-matrix {
-        compatible = "gpio-kbd-matrix";
-        row-gpios = <&gpio0 0 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>,
-                    <&gpio0 1 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>,
-                    <&gpio0 2 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
-        col-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>,
-                    <&gpio0 4 GPIO_ACTIVE_LOW>,
-                    <&gpio0 5 GPIO_ACTIVE_LOW>;
-        col-drive-inactive;
-        settle-time-us = <0>;
-        no-ghostkey-check;
+       compatible = "gpio-kbd-matrix";
+       row-gpios = <&gpio0 0 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>,
+                   <&gpio0 1 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>,
+                   <&gpio0 2 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+       col-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>,
+                   <&gpio0 4 GPIO_ACTIVE_LOW>,
+                   <&gpio0 5 GPIO_ACTIVE_LOW>;
+       col-drive-inactive;
+       settle-time-us = <0>;
+       no-ghostkey-check;
    };
 
-diodes
-从
-columns
-到
-rows 的
-Matrixes
-须
-rows
-上
-用
-pull-downs（且
-columns
-active
-high。
+二极管从列到行的矩阵必须使用行下拉和列高有效。
 
 .. figure:: diodes-cr.svg
       :align: center
       :width: 50%
 
-      A 3x3 matrix with column to row isolation diodes.
+      3x3 矩阵，列到行隔离二极管。
 
 .. code-block:: devicetree
 
    kbd-matrix {
-        compatible = "gpio-kbd-matrix";
-        row-gpios = <&gpio0 0 (GPIO_PULL_DOWN | GPIO_ACTIVE_HIGH)>,
-                    <&gpio0 1 (GPIO_PULL_DOWN | GPIO_ACTIVE_HIGH)>,
-                    <&gpio0 2 (GPIO_PULL_DOWN | GPIO_ACTIVE_HIGH)>;
-        col-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>,
-                    <&gpio0 4 GPIO_ACTIVE_HIGH>,
-                    <&gpio0 5 GPIO_ACTIVE_HIGH>;
-        col-drive-inactive;
-        settle-time-us = <0>;
-        no-ghostkey-check;
+       compatible = "gpio-kbd-matrix";
+       row-gpios = <&gpio0 0 (GPIO_PULL_DOWN | GPIO_ACTIVE_HIGH)>,
+                   <&gpio0 1 (GPIO_PULL_DOWN | GPIO_ACTIVE_HIGH)>,
+                   <&gpio0 2 (GPIO_PULL_DOWN | GPIO_ACTIVE_HIGH)>;
+       col-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>,
+                   <&gpio0 4 GPIO_ACTIVE_HIGH>,
+                   <&gpio0 5 GPIO_ACTIVE_HIGH>;
+       col-drive-inactive;
+       settle-time-us = <0>;
+       no-ghostkey-check;
    };
 
-GPIO with no interrupt support
-******************************
+无中断支持的 GPIO
+**************************
 
-某些
-GPIO
-controllers
-对
-GPIO
-interrupts
-有
-limitations（且
-可能
-不支持
-同时
-在
-所有
-row
-GPIOs
-上
-启用
-interrupts。
+某些 GPIO 控制器对 GPIO 中断有限制，可能不支持同时在所有行 GPIO 上启用中断。
 
-此
-情况下（driver
-可
-配置
-为
-完全
-不用
-interrupt（而
-通过
-select
-所有
-columns 并
-持续
-poll
-row
-GPIOs 来
-idle（pins
-连续
-时
-此为
-单个
-GPIO
-API
-operation。
+在这种情况下，驱动可配置为不使用任何中断，而是通过选择所有列并在行 GPIO 上
+保持轮询来空闲，如果引脚是连续的则这是单个 GPIO API 操作。
 
-此
-configuration
-可
-通过
-将
-``idle-mode``
-property
-设为
-``poll`` 启用：
+此配置可通过将 ``idle-mode`` 属性设置为 ``poll`` 来启用：
 
 .. code-block:: devicetree
 
    kbd-matrix {
-        compatible = "gpio-kbd-matrix";
-        ...
-        idle-mode = "poll";
+       compatible = "gpio-kbd-matrix";
+       ...
+       idle-mode = "poll";
    };
 
-GPIO multiplexer
+GPIO 多路复用器
 ****************
 
-更
-extreme
-cases（如
-columns
-用
-multiplexer（且
-不可能
-同时
-select
-所有
-时（driver
-可
-配置
-为
-持续
-scan。
+在更极端的案例中，例如列使用多路复用器且不可能同时选择所有列时，
+驱动可配置为连续扫描。
 
-可
-通过
-将
-``idle-mode``
-设为
-``scan``（``poll-timeout-ms``
-设为
-``0`` 完成。
+这可通过将 ``idle-mode`` 设置为 ``scan`` 并将 ``poll-timeout-ms`` 设置为 ``0`` 来实现。
 
 .. code-block:: devicetree
 
    kbd-matrix {
-        compatible = "gpio-kbd-matrix";
-        ...
-        poll-timeout-ms = <0>;
-        idle-mode = "scan";
+       compatible = "gpio-kbd-matrix";
+       ...
+       poll-timeout-ms = <0>;
+       idle-mode = "scan";
    };
 
-Row and column GPIO selection
+行和列 GPIO 选择
 *****************************
 
-若
-row
-GPIOs
-连续
-且
-在
-同一
-gpio
-controller
-上（driver
-自动
-切换
-API
-为
-从
-整个
-GPIO
-port
-读取（而非
-individual
-pins。若
-GPIOs
-非
-memory
-mapped（如
-I2C
-或
-SPI
-port
-expander 上）这
-特别
-有用（因为
-这
-显著
-减少
-对应
-bus 上
-的
-transactions 数量。
+如果行 GPIO 是连续的且在同一 GPIO 控制器上，驱动自动切换到从整个 GPIO 端口
+而非单个引脚读取的 API。这对 GPIO 不是内存映射的情况特别有用，
+例如在 I2C 或 SPI 端口扩展器上，因为这显著减少了相应总线上的事务数量。
 
-Column
-GPIOs
-同样
-如此（但
-仅
-当
-matrix
-配置
-为
-``col-drive-inactive`` 时（故
-仅
-可
-用于
-有
-isolation
-diodes 的
-matrixes。
+列 GPIO 也是如此，但仅当矩阵配置为 ``col-drive-inactive`` 时，
+因此仅可用于有隔离二极管的矩阵。
 
-16-bit row support
+16 位行支持
 ******************
 
-Driver
-默认
-用
-8-bit
-datatype
-存储
-row
-state（这
-将
-matrix
-row
-size
-限制
-为
-8。可
-通过
-启用
-:kconfig:option:`CONFIG_INPUT_KBD_MATRIX_16_BIT_ROW`
-option
-增加
-至
-16。
+驱动默认使用 8 位数据类型存储行状态，这将矩阵行大小限制为 8。
+可通过启用 :kconfig:option:`CONFIG_INPUT_KBD_MATRIX_16_BIT_ROW` 选项将其增加到 16。
 
-Actual key mask configuration
+实际按键掩码配置
 *****************************
 
-若
-key
-matrix
-不
-完整（可用
-``actual-key-mask``
-property
-指定
-实际
-populated
-的
-keys
-的
-map。这
-允许
-过滤
-matrix
-state（在
-ghosting
-detection
-前
-移除
-不
-存在的
-keys（潜在
-允许
-否则
-被
-其
-阻止
-的
-key
-combinations。
+如果按键矩阵不完整，可使用 ``actual-key-mask`` 属性指定实际存在的按键映射。
+这允许在鬼键检测前过滤矩阵状态以移除不存在的按键，
+从而可能允许否则会被其阻止的按键组合。
 
-例如
-缺
-一
-key 的
-3x3
-matrix：
+例如对于缺少一个按键的 3x3 矩阵：
 
 .. figure:: no-sw4.svg
       :align: center
       :width: 50%
 
-      A 3x3 matrix missing a key.
+      缺少一个按键的 3x3 矩阵。
 
 .. code-block:: devicetree
 
    kbd-matrix {
-        compatible = "gpio-kbd-matrix";
-        ...
-        actual-key-mask = <0x07 0x05 0x07>;
+       compatible = "gpio-kbd-matrix";
+       ...
+       actual-key-mask = <0x07 0x05 0x07>;
    };
 
-这
-允许（例如（同时
-检测
-``Sw1``、``SW2`` 和
-``SW4``
-按下
-而
-不
-触发
-anti
-ghosting。
+例如，这将允许同时检测按下 ``Sw1``、``SW2`` 和 ``SW4`` 而不触发防鬼键。
 
-Actual
-key
-mask
-可
-通过
-启用
-:kconfig:option:`CONFIG_INPUT_KBD_ACTUAL_KEY_MASK_DYNAMIC`（并
-用
-:c:func:`input_kbd_matrix_actual_key_mask_set`
-API
-在
-runtime
-更改。
+实际按键掩码可通过启用 :kconfig:option:`CONFIG_INPUT_KBD_ACTUAL_KEY_MASK_DYNAMIC`
+并使用 :c:func:`input_kbd_matrix_actual_key_mask_set` API 在运行时更改。
 
-Keymap configuration
+按键映射配置
 ********************
 
-Keyboard
-matrix
-devices
-报告
-x/y/touch
-events
-的
-series。可
-用
-:dtcompatible:`input-keymap`
-driver
-将
-它们
-map
-到
-normal
-key
-events。
+键盘矩阵设备报告一系列 x/y/touch 事件。这些可使用 :dtcompatible:`input-keymap` 驱动
+映射为常规按键事件。
 
-例如（以下
-setup
-``keymap``
-device（其
-取
-x/y/touch
-events
-作为
-input（并
-生成
-对应
-key
-events
-作为
-output：
+例如，以下设置了一个 ``keymap`` 设备，将 x/y/touch 事件作为输入
+并生成相应的按键事件作为输出：
 
 .. code-block:: devicetree
 
@@ -615,53 +209,16 @@ output：
 
 .. doxygengroup:: input_keymap
 
-Keyboard matrix shell commands
-******************************
+键盘矩阵 shell 命令
+**************************
 
-Shell
-command
-``kbd_matrix_state_dump``
-可
-用于
-测试
-用
-keyboard
-matrix
-library
-实现
-的
-任何
-keyboard
-matrix
-driver 的
-functionality。启用
-后（每次
-matrix
-变更
-时
-log
-其
-state（禁用
-后
-打印
-任何
-检测
-到
-的
-key 的
-or-mask（可
-用于
-设置
-``actual-key-mask``
-property。
+shell 命令 ``kbd_matrix_state_dump`` 可用于测试任何使用键盘矩阵库实现的
+键盘矩阵驱动的功能。启用后，它记录矩阵每次变化时的状态；
+禁用后，它打印任何已检测按键的或掩码，可用于设置 ``actual-key-mask`` 属性。
 
-Command
-可
-用
-:kconfig:option:`CONFIG_INPUT_SHELL_KBD_MATRIX_STATE` 启用。
+该命令可通过 :kconfig:option:`CONFIG_INPUT_SHELL_KBD_MATRIX_STATE` 启用。
 
-Example
-usage：
+使用示例：
 
 .. code-block:: console
 
@@ -679,34 +236,11 @@ usage：
    Keyboard state logging disabled
    [00:01:47.967,651] <inf> input: kbd-matrix key-mask [07 05 07 --] (8)
 
-Keyboard matrix library
+键盘矩阵库
 ***********************
 
-GPIO
-keyboard
-matrix
-driver
-基于
-generic
-keyboard
-matrix
-library（其
-实现
-scanning
-delays、
-debouncing、
-idle
-mode 等
-core
-functionalities。可
-复用
-以
-实现
-其他
-keyboard
-matrix
-drivers（潜在
-application
-specific。
+GPIO 键盘矩阵驱动基于通用键盘矩阵库，该库实现了扫描延迟、去抖动、
+空闲模式等核心功能。这可复用于实现其他键盘矩阵驱动，
+可能是应用特定的。
 
 .. doxygengroup:: input_kbd_matrix

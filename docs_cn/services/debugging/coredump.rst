@@ -3,92 +3,90 @@
 Core Dump
 #########
 
-Core dump module 启用 dump CPU registers 和 memory content
-用于离线调试。此 module 在遇到 fatal error 时调用（并按启用
-backends 打印或存储 data。
+core dump 模块支持转储 CPU 寄存器和内存内容，用于离线调试。当遇到致命错误时会调用该模块，并根据启用的后端打印或存储数据。
 
-Configuration
+配置
 *************
 
-用以下 options 配置此 module。
+使用以下选项配置该模块。
 
-* ``DEBUG_COREDUMP``: 启用 module。
+* ``DEBUG_COREDUMP``：启用该模块。
 
-启用 core dump 输出 backends 的 options：
+启用 core dump 输出后端的选项：
 
-* ``DEBUG_COREDUMP_BACKEND_LOGGING``: 用 log module 作为 core dump 输出。
-* ``DEBUG_COREDUMP_BACKEND_LOGGING_UDP``: 与 logging backend 相同但带可选
-  raw UDP transfer；peer 为 ``DEBUG_COREDUMP_LOGGING_UDP_HOST``（由 ``net_ipaddr_parse()`` 解析的 string
-  （IPv4 或 IPv6（可选 ``:port``（省略时默认
-  UDP port ``17777``）。用
+* ``DEBUG_COREDUMP_BACKEND_LOGGING``：使用日志模块（log module）作为 core dump 输出。
+* ``DEBUG_COREDUMP_BACKEND_LOGGING_UDP``：与 logging 后端相同，但支持可选的
+  原始 UDP 传输；对端为 ``DEBUG_COREDUMP_LOGGING_UDP_HOST``，一个由 ``net_ipaddr_parse()`` 解析的字符串
+  （IPv4 或 IPv6，可选 ``:port``，省略时默认
+  UDP 端口 ``17777``）。使用
   :zephyr_file:`scripts/coredump/coredump_udp_receiver.py` 构建
-  :zephyr_file:`scripts/coredump/coredump_gdbserver.py` 的
-  binary。
-* ``DEBUG_COREDUMP_BACKEND_FLASH_PARTITION``: 用 flash partition 作为 core
+  :zephyr_file:`scripts/coredump/coredump_gdbserver.py` 的二进制文件。
+* ``DEBUG_COREDUMP_BACKEND_FLASH_PARTITION``：使用 flash 分区作为 core
   dump 输出。
-* ``DEBUG_COREDUMP_BACKEND_NULL``: 其他
-  backends 不能启用时的 fallback core dump backend。所有输出发送到 null。
+* ``DEBUG_COREDUMP_BACKEND_NULL``：其他
+  后端无法启用时的备用 core dump 后端。所有输出均发送到 null。
 
-memory dump 的 choices：
+关于内存转储的选项：
 
-* ``DEBUG_COREDUMP_MEMORY_DUMP_MIN``: 仅 dump exception
-  thread 的 stack、其 thread struct 和其他支持
-  在 debugger 中 walk stack 的 bare minimal data。仅在
-  期望绝对最小 data
-  dump 时使用。
+* ``DEBUG_COREDUMP_MEMORY_DUMP_MIN``：仅转储异常
+  线程的栈、其线程结构体以及其他用于在
+  调试器中遍历栈的最小必要数据。仅在
+  希望转储绝对最小数据
+  量时使用。
 
-* ``DEBUG_COREDUMP_MEMORY_DUMP_THREADS``: Dump 所有
-  threads 的 thread struct 和 stack 以及调试 threads 所需所有 data。
+* ``DEBUG_COREDUMP_MEMORY_DUMP_THREADS``：转储所有
+  线程的线程结构体和栈，以及调试线程所需的所有数据。
 
-* ``DEBUG_COREDUMP_MEMORY_DUMP_LINKER_RAM``: Dump
-  _image_ram_start[] 和 _image_ram_end[] 间的 memory region。这至少包括 data、noinit、
-  和 BSS sections。此为默认。
+* ``DEBUG_COREDUMP_MEMORY_DUMP_LINKER_RAM``：转储
+  _image_ram_start[] 与 _image_ram_end[] 之间的内存区域。这至少包括 data、noinit、
+  和 BSS 段。这是默认选项。
 
-额外 memory 可被包含在 dump 中（即使选择
-"DEBUG_COREDUMP_MEMORY_DUMP_MIN"
-config）（通过一个或多个 :ref:`coredump devices <coredump_device_api>`
+额外的内存可以通过一个或多个 :ref:`coredump 设备 <coredump_device_api>`
+  包含在转储中（即使选择了
+  "DEBUG_COREDUMP_MEMORY_DUMP_MIN"
+  配置项）。
 
-Usage
+用法
 *****
 
-启用 core dump module 时（fatal error 期间（CPU registers
-和 memory content 按启用
-backends 打印或存储。此 core dump data 可输入
-自制 GDB server 作为 GDB（及其他 GDB compatible debuggers）的 remote target。CPU registers、
-memory content 和 stack 可在 debugger 中检查。
+启用 core dump 模块后，发生致命错误时，CPU 寄存器
+和内存内容会根据启用的
+后端进行打印或存储。该 core dump 数据可以输入
+自制的 GDB server，作为 GDB（及其他 GDB 兼容调试器）的远程目标。CPU 寄存器、
+内存内容和栈都可以在调试器中检查。
 
 这通常涉及以下步骤：
 
-1. 按启用 backends 从 device 获取 core dump log。
-   例如（若用 log module backend（从
-   log module backend 获取 log 输出。
+1. 根据启用的后端从设备获取 core dump 日志。
+   例如，如果使用日志模块后端，则从
+   日志模块后端获取日志输出。
 
-2. 将 core dump log 转为 GDB server 可解析的
-   binary 格式。例如（
+2. 将 core dump 日志转换为 GDB server 可解析的
+   二进制格式。例如，
    :zephyr_file:`scripts/coredump/coredump_serial_log_parser.py` 可用于
-   将 serial console log 转为 binary file。
-   若启用 UDP coredump backend
-   （``DEBUG_COREDUMP_BACKEND_LOGGING_UDP``）（在
-   collector
-   host 上运行 :zephyr_file:`scripts/coredump/coredump_udp_receiver.py` 将 UDP datagrams 重组为 **相同** raw binary 格式。
+   将串口控制台日志转换为二进制文件。
+   如果启用了 UDP coredump 后端
+   （``DEBUG_COREDUMP_BACKEND_LOGGING_UDP``），在
+   采集
+   主机上运行 :zephyr_file:`scripts/coredump/coredump_udp_receiver.py` 将 UDP 数据报重组为 **相同的** 原始二进制格式。
 
-3. 用 core dump
-   binary log file 和 Zephyr ELF file 作为 parameters 用 script
+3. 使用 core dump
+   二进制日志文件和 Zephyr ELF 文件作为参数，通过脚本
    :zephyr_file:`scripts/coredump/coredump_gdbserver.py` 启动
    自定义 GDB server。GDB server
-   也可从 GDB 内部启动（见下文。
+   也可以从 GDB 内部启动，见下文。
 
-4. 启动与 target architecture 对应的 debugger。
+4. 启动与目标架构对应的调试器。
 
 .. note::
    使用
-   ``ZEPHYR_TOOLCHAIN_VARIANT=zephyr`` 的 Intel ADSP CAVS 15-25 platforms 的 Developers
+   ``ZEPHYR_TOOLCHAIN_VARIANT=zephyr`` 的 Intel ADSP CAVS 15-25 平台的开发者
    应使用 SDK 的
-   ``xtensa-intel_apl_adsp`` toolchain 中的 debugger。
+   ``xtensa-intel_apl_adsp`` 工具链中的调试器。
 
-5. 启用 ``DEBUG_COREDUMP_BACKEND_FLASH_PARTITION`` 时（core dump
-   data 存储在 flash partition 中。Flash partition 须
-   在 device tree 中定义：
+5. 启用 ``DEBUG_COREDUMP_BACKEND_FLASH_PARTITION`` 时，core dump
+   数据存储在 flash 分区中。flash 分区必须
+   在设备树中定义：
 
    .. code-block:: devicetree
 
@@ -101,14 +99,14 @@ memory content 和 stack 可在 debugger 中检查。
          };
       };
 
-Example
+示例
 -------
 
-此示例用绑定 serial console 的 log module backend。
-这在 :zephyr:board:`qemu_x86` 上完成（其中 null pointer 被 dereferenced。
+本示例使用绑定串口控制台的日志模块后端。
+这是在 :zephyr:board:`qemu_x86` 上完成的，其中发生了一个空指针解引用。
 
-此为 serial console 的 core dump log（存储
-在 :file:`coredump.log`：
+以下是串口控制台的 core dump 日志，存储
+在 :file:`coredump.log` 中：
 
 ::
 
@@ -136,7 +134,7 @@ Example
    E: #CD:0e0000000200000000000000749d1100f803000000000000009d1100109d1100
    E: #CD:00000000a71a100059041000060200000800000000901100
    E: #CD:4d010080901100e0901100
-   E: #CD:010000000000000000000000018000000000000000000000000000000000000
+   E: #CD:0100000000000000000000000180000000000000000000000000000000000000
    E: #CD:00000000000000000000000000000000e364100000000000000000004c9c1100
    E: #CD:000000000000000000000000b49911000004000000000000fc03000000000000
    E: #CD:4d0100b4991100b49d1100
@@ -176,7 +174,7 @@ Example
    E: Halting system
 
 
-1. 运行 core dump serial log converter：
+1. 运行 core dump 串口日志转换工具：
 
    .. code-block:: console
 
@@ -194,13 +192,13 @@ Example
 
       <path to SDK>/x86_64-zephyr-elf/bin/x86_64-zephyr-elf-gdb build/zephyr/zephyr.elf
 
-4. GDB 内部（通过 port 1234 连接 GDB server：
+4. 在 GDB 内部，通过端口 1234 连接 GDB server：
 
    .. code-block:: console
 
       (gdb) target remote localhost:1234
 
-5. 检查 CPU registers：
+5. 检查 CPU 寄存器：
 
    .. code-block:: console
 
@@ -227,7 +225,7 @@ Example
       fs             <unavailable>
       gs             <unavailable>
 
-6. 检查 backtrace：
+6. 检查回溯（backtrace）：
 
    .. code-block:: console
 
@@ -243,11 +241,11 @@ Example
       #2  0x00100492 in func_1 (addr=0x0) at zephyr/rtos/zephyr/samples/hello_world/src/main.c:28
       #3  0x001004c8 in main () at zephyr/rtos/zephyr/samples/hello_world/src/main.c:42
 
-Starting the GDB server from within GDB
+从 GDB 内部启动 GDB server
 ---------------------------------------
 
-可用 ``target remote |`` 从 GDB 内部启动
-自定义 GDB server（而非在单独 shell 中。
+可以使用 ``target remote |`` 从 GDB 内部启动
+自定义 GDB server，而不是在单独的 shell 中启动。
 
 1. 启动 GDB：
 
@@ -255,193 +253,193 @@ Starting the GDB server from within GDB
 
       <path to SDK>/x86_64-zephyr-elf/bin/x86_64-zephyr-elf-gdb build/zephyr/zephyr.elf
 
-2. GDB 内部（用 ``--pipe`` option 启动 GDB server：
+2. 在 GDB 内部，使用 ``--pipe`` 选项启动 GDB server：
 
    .. code-block:: console
 
       (gdb) target remote | ./scripts/coredump/coredump_gdbserver.py --pipe build/zephyr/zephyr.elf coredump.bin
 
 
-File Format
+文件格式
 ***********
 
-Core dump binary file 由一个 file header、一个
-architecture-specific block、零或一个 threads metadata block(s)
-和多个 memory blocks 组成。以下
-headers 中所有数字为 little endian。
+core dump 二进制文件由一个文件头、一个
+架构相关块（architecture-specific block）、零个或一个线程元数据块（threads metadata block）
+和多个内存块组成。以下
+文件头中的所有数字均为小端序（little endian）。
 
-File Header
+文件头
 -----------
 
-File header 由以下 fields 组成：
+文件头由以下字段组成：
 
-.. list-table:: Core dump binary file header
+.. list-table:: Core dump 二进制文件头
    :widths: 2 1 7
    :header-rows: 1
 
-   * - Field
-     - Data Type
-     - Description
+   * - 字段
+     - 数据类型
+     - 描述
    * - ID
      - ``char[2]``
-     - ``Z``、``E`` 作为 file 的 identifier。
-   * - Header version
+     - ``Z``、``E``，作为文件的标识符。
+   * - 头版本
      - ``uint16_t``
-     - 标识 header 的 version。每次修改
-       header struct 时须递增。这允许 parser
-       拒绝较旧 header versions（从而不会错误解析
-       header。
-   * - Target code
+     - 标识文件头的版本。每次修改
+       头结构体时须递增。这允许解析器
+       拒绝较旧的头版本，从而不会错误地解析
+       文件头。
+   * - 目标代码
      - ``uint16_t``
-     - 指示哪个 target（如 architecture 或 SoC）（使 parser
-       可实例化正确 register block parser。
-   * - Pointer size
+     - 指示目标（如架构或 SoC），使解析器
+       可以实例化正确的寄存器块解析器。
+   * - 指针大小
      - 'uint8_t'
-     - ``uintptr_t`` 的 size（2 的幂。（如 32-bit 为 5、
-       64-bit 为 6。解析 memory block addresses 时需兼容 32-bit 和 64-bit
-       target。
-   * - Flags
+     - ``uintptr_t`` 的大小（以 2 的幂表示，例如 32 位为 5、
+       64 位为 6）。解析内存块地址时需要兼容 32 位和 64 位
+       目标。
+   * - 标志
      - ``uint8_t``
      -
-   * - Fatal error reason
+   * - 致命错误原因
      - ``unsigned int``
-     - Fatal error 的原因（与
+     - 致命错误的原因，与
        :zephyr_file:`include/zephyr/fatal.h` 中定义的
        ``enum k_fatal_error_reason`` 相同
 
-Architecture-specific Block
+架构相关块
 ---------------------------
 
-Architecture-specific block 包含特定
-于 target architecture（如 CPU registers）的 data byte stream
+架构相关块包含特定
+于目标架构（如 CPU 寄存器）的数据字节流
 
-.. list-table:: Architecture-specific Block
+.. list-table:: 架构相关块
    :widths: 2 1 7
    :header-rows: 1
 
-   * - Field
-     - Data Type
-     - Description
+   * - 字段
+     - 数据类型
+     - 描述
    * - ID
      - ``char``
-     - ``A`` 表示此为 architecture-specific block。
-   * - Header version
+     - ``A``，表示这是架构相关块。
+   * - 头版本
      - ``uint16_t``
-     - 标识此 block 的 version。由 target
-       architecture specific block parser 解释。
-   * - Number of bytes
+     - 标识此块的版本。由目标
+       架构相关块解析器解释。
+   * - 字节数
      - ``uint16_t``
-     - Header 后包含 target data byte stream
-       的 byte 数量。Byte stream 的格式特定于
-       target（且仅由 target parser 解析。
-   * - Register byte stream
+     - 文件头之后包含目标数据字节流
+       的字节数。字节流的格式特定于
+       目标，且仅由目标解析器解析。
+   * - 寄存器字节流
      - ``uint8_t[]``
-     - 包含 target architecture 特定 data。
+     - 包含目标架构特定数据。
 
-Threads Metadata Block
+线程元数据块
 ---------------------------
 
-Threads metadata block 包含
-调试 threads 所需 data 的 byte stream。
+线程元数据块包含
+调试线程所需数据的字节流。
 
-.. list-table:: Threads Metadata Block
+.. list-table:: 线程元数据块
    :widths: 2 1 7
    :header-rows: 1
 
-   * - Field
-     - Data Type
-     - Description
+   * - 字段
+     - 数据类型
+     - 描述
    * - ID
      - ``char``
-     - ``T`` 表示此为 threads metadata block。
-   * - Header version
+     - ``T``，表示这是线程元数据块。
+   * - 头版本
      - ``uint16_t``
-     - 标识 header 的 version。每次修改
-       header struct 时须递增。这允许 parser
-       拒绝较旧 header versions（从而不会错误解析
-       header。
-   * - Number of bytes
+     - 标识文件头的版本。每次修改
+       头结构体时须递增。这允许解析器
+       拒绝较旧的头版本，从而不会错误地解析
+       文件头。
+   * - 字节数
      - ``uint16_t``
-     - Header 后包含 target data byte stream
-       的 byte 数量。
-   * - Byte stream
+     - 文件头之后包含目标数据字节流
+       的字节数。
+   * - 字节流
      - ``uint8_t[]``
-     - 包含调试 threads 所需 data。
+     - 包含调试线程所需的数据。
 
-Memory Block
+内存块
 ------------
 
-Memory block 包含
-memory region 的 start 和 end addresses 以及
-其中的 data。
+内存块包含
+内存区域的起始地址和结束地址，以及
+其中的数据。
 
-.. list-table:: Memory Block
+.. list-table:: 内存块
    :widths: 2 1 7
    :header-rows: 1
 
-   * - Field
-     - Data Type
-     - Description
+   * - 字段
+     - 数据类型
+     - 描述
    * - ID
      - ``char``
-     - ``M`` 表示此为 memory block。
-   * - Header version
+     - ``M``，表示这是内存块。
+   * - 头版本
      - ``uint16_t``
-     - 标识 header 的 version。每次修改
-       header struct 时须递增。这允许 parser
-       拒绝较旧 header versions（从而不会错误解析
-       header。
-   * - Start address
+     - 标识文件头的版本。每次修改
+       头结构体时须递增。这允许解析器
+       拒绝较旧的头版本，从而不会错误地解析
+       文件头。
+   * - 起始地址
      - ``uintptr_t``
-     - Memory region 的 start address。
-   * - End address
+     - 内存区域的起始地址。
+   * - 结束地址
      - ``uintptr_t``
-     - Memory region 的 end address。
-   * - Memory byte stream
+     - 内存区域的结束地址。
+   * - 内存字节流
      - ``uint8_t[]``
-     - 包含 start 和 end addresses 间的 memory content。
+     - 包含起始地址和结束地址之间的内存内容。
 
-Adding New Target
+添加新目标
 *****************
 
-Architecture-specific block 为 target specific（且新
-targets 需新
-dumping routine 和 parser。添加新 target 须做以下：
+架构相关块是目标特定的，新的
+目标需要新的
+转储例程和解析器。添加新目标需要执行以下操作：
 
 #. 在
    :zephyr_file:`include/zephyr/debug/coredump.h` 的
-   ``enum coredump_tgt_code`` 中添加新 target code。
-#. 简单返回
-   新引入 target code 地实现 :c:func:`arch_coredump_tgt_code_get`。
-#. 实现 :c:func:`arch_coredump_info_dump` 构建
-   target architecture block（并调用 :c:func:`coredump_buffer_output`
-   将 block 输出到 core dump backend。
-#. 在 ``scripts/coredump/gdbstubs/`` 下的 core dump GDB stub scripts
-   中添加 parser
+   ``enum coredump_tgt_code`` 中添加新的目标代码。
+#. 实现 :c:func:`arch_coredump_tgt_code_get`，简单地
+   返回新引入的目标代码。
+#. 实现 :c:func:`arch_coredump_info_dump`，构建
+   目标架构块，并调用 :c:func:`coredump_buffer_output`
+   将块输出到 core dump 后端。
+#. 在 ``scripts/coredump/gdbstubs/`` 下的 core dump GDB stub 脚本
+   中添加解析器
 
-   #. 扩展 ``gdbstubs.gdbstub.GdbStub`` class。
-   #. ``__init__`` 期间（将对应
-      exception reason 的 GDB signal 存储在 ``self.gdb_signal``。
+   #. 扩展 ``gdbstubs.gdbstub.GdbStub`` 类。
+   #. 在 ``__init__`` 期间，将对应
+      异常原因的 GDB 信号存储在 ``self.gdb_signal`` 中。
    #. 从
-      ``self.logfile.get_arch_data()`` 解析 architecture-specific block。须与
-      step 3（在 :c:func:`arch_coredump_info_dump` 内）实现的格式
+      ``self.logfile.get_arch_data()`` 解析架构相关块。其格式需要与
+      第 3 步（在 :c:func:`arch_coredump_info_dump` 中）实现的格式
       匹配。
-   #. 实现 abstract method ``handle_register_group_read_packet``
-      （其按 GDB 期望返回 register group。参见
-      GDB 的 code 和 documentation 了解其对
-      新 target 的期望。
-   #. 可选实现 ``handle_register_single_read_packet``
-      用于 ``g`` packet 未覆盖的 registers。
+   #. 实现抽象方法 ``handle_register_group_read_packet``，
+      按 GDB 期望返回寄存器组。参见
+      GDB 的代码和文档，了解其对
+      新目标的期望。
+   #. 可选地实现 ``handle_register_single_read_packet``，
+      用于 ``g`` 数据包未覆盖的寄存器。
 
 #. 扩展
-   :zephyr_file:`scripts/coredump/gdbstubs/__init__.py` 的 ``get_gdbstub()`` 以返回
+   :zephyr_file:`scripts/coredump/gdbstubs/__init__.py` 中的 ``get_gdbstub()``，以返回
    新实现的 GDB stub。
 
-UDP logging backend sample
+UDP 日志后端示例
 **************************
 
-测试 UDP coredump path 的 Sample README pages 链接到此章节（使 Sphinx
-将其包含在 documentation tree 中：
+演练 UDP coredump 路径的示例 README 页面链接到本章，以便 Sphinx
+将其包含在文档树中：
 
 .. toctree::
    :maxdepth: 1
@@ -449,7 +447,7 @@ UDP logging backend sample
 
    ../../samples/subsys/debug/coredump_udp_demos/demo_shell/README
 
-API documentation
+API 文档
 *****************
 
 .. doxygengroup:: coredump_apis

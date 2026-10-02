@@ -8,7 +8,8 @@ Nordic nRF5x Segger J-Link
 概览
 ********
 
-所有 Nordic nRF5x 开发套件、预览开发套件和 Dongle 都配备一个调试 IC（Atmel ATSAM3U2C），提供以下功能：
+所有 Nordic nRF5x 开发套件、预览开发套件和 Dongle 都配备一个调试 IC
+（Atmel ATSAM3U2C），提供以下功能：
 
 * Segger J-Link 固件和桌面工具
 * nRF5x IC 的 SWD 调试
@@ -29,18 +30,21 @@ Segger J-Link 软件安装
 nRF5x 命令行工具安装
 *************************************
 
-nRF5x 命令行工具允许你从命令行控制你的 nRF5x 设备，包括重置它、擦除或编程 flash 内存等。
+nRF5x 命令行工具允许你从命令行控制你的 nRF5x 设备，
+包括重置它、擦除或编程 flash 内存等。
 
 要安装它们，访问 `nRF5x Command-Line Tools`_ 并选择你的操作系统。
 
-安装后，确保 ``nrfjprog`` 在你的可执行路径某处以能够从任何地方调用它。
+安装后，确保 ``nrfjprog`` 在你的可执行路径的某处，
+以便能够从任何地方调用它。
 
 .. _nordic_segger_flashing:
 
 烧录
 ********
 
-在遵循安装 Segger J-Link 软件和 nRF5x 命令行工具的说明后，要用编译的 Zephyr 镜像编程 flash，遵循以下步骤：
+在遵循安装 Segger J-Link 软件和 nRF5x 命令行工具的说明后，
+要用编译的 Zephyr 镜像编程 flash，遵循以下步骤：
 
 * 将 micro-USB 线连接到 nRF5x 开发板和你的电脑
 * 擦除 nRF5x IC 中的 flash 内存：
@@ -57,7 +61,9 @@ nRF5x 命令行工具允许你从命令行控制你的 nRF5x 设备，包括重�
 
    nrfjprog --program outdir/<board>/zephyr.hex -f nrf5<x>
 
-其中：``<board>`` 是你在构建时 BOARD 指令中使用的开发板名称（例如 nrf52dk/nrf52832）且 ``<x>`` 是 1 用于 nRF51 基于的开发板或 2 用于 nRF52 基于的开发板
+其中：``<board>`` 是你在构建时 BOARD 指令中使用的开发板名称
+（例如 nrf52dk/nrf52832），
+且 ``<x>`` 是 1 用于 nRF51 基于的开发板或 2 用于 nRF52 基于的开发板
 
 * 重置并启动 Zephyr：
 
@@ -70,7 +76,10 @@ nRF5x 命令行工具允许你从命令行控制你的 nRF5x 设备，包括重�
 USB CDC ACM 串口设置
 *****************************
 
-**重要注意**：nRF5x 开发板上的 Segger J-Link 固件的一个问题可能导致某些机器上 USB CDC ACM 串口的数据丢失和/或损坏。要绕过这在你的开发板上禁用大容量存储设备如 :ref:`nordic_segger_msd` 中描述的。
+**重要注意**：nRF5x 开发板上的 Segger J-Link 固件的一个问题
+可能导致某些机器上 USB CDC ACM 串口的数据丢失和/或损坏。
+要绕过这一点，按 :ref:`nordic_segger_msd` 中的描述
+在你的开发板上禁用大容量存储设备。
 
 Windows
 =======
@@ -80,13 +89,19 @@ Windows
 GNU/Linux
 =========
 
-串口将出现为 ``/dev/ttyACMx``。默认情况下端口不对所有用户可访问。键入下面的命令将你的用户添加到 dialout 组以给它串口访问权限。注意这需要重新登录才生效。
+串口将出现为 ``/dev/ttyACMx``。默认情况下端口不对所有用户可访问。
+键入下面的命令将你的用户添加到 dialout 组以给它串口访问权限。
+注意这需要重新登录才生效。
 
 .. code-block:: bash
 
    sudo usermod -a -G dialout `whoami`
 
-较新版本的 ModemManager 会向 TTY 类设备发送 AT 命令（见 `ModemManager 向 TTY 类设备发送 AT 命令`_），这包括 Nordic 开发套件。这将阻止你使用串口几秒，并可能使你的应用行为异常（如果它从 UART 读取数据）。运行你的应用前，你可能想通过运行以下命令临时禁用 ModemManager：
+较新版本的 ModemManager 会向 TTY 类设备发送 AT 命令
+（见 `ModemManager 向 TTY 类设备发送 AT 命令`_），
+这包括 Nordic 开发套件。这将阻止你使用串口几秒，
+并可能使你的应用行为异常（如果它从 UART 读取数据）。
+运行你的应用前，你可能想通过运行以下命令临时禁用 ModemManager：
 
 .. code-block:: bash
 
@@ -113,7 +128,9 @@ Apple macOS（OS X）
 禁用大容量存储设备功能
 ***********************************************
 
-由于 Segger 的 J-Link 固件中的一个已知问题，取决于你的操作系统和版本，如果你用大于 64 字节的包使用 USB CDC ACM 串口你可能遇到数据损坏或丢失。这在 GNU/Linux 和 macOS（OS X）上都被观察到。
+由于 Segger 的 J-Link 固件中的一个已知问题，取决于你的操作系统和版本，
+如果你用大于 64 字节的包使用 USB CDC ACM 串口你可能遇到数据损坏或丢失。
+这在 GNU/Linux 和 macOS（OS X）上都被观察到。
 
 要避免此问题，你只需打开以下程序来禁用大容量存储设备：
 
@@ -126,12 +143,20 @@ Apple macOS（OS X）
 
    MSDDisable
 
-最后拔掉并重新插入开发板。大容量存储设备将不再出现且你现在应该能在虚拟串口上发送长包。来自 Segger 的更多信息可以在 `Segger SAM3U Wiki`_ 中找到。
+最后拔掉并重新插入开发板。大容量存储设备将不再出现
+且你现在应该能在虚拟串口上发送长包。
+来自 Segger 的更多信息可以在 `Segger SAM3U Wiki`_ 中找到。
 
 RTT 控制台
 ***********
 
-Segger 的 J-Link 支持 `Real-Time Tracing (RTT)`_，一种允许在目标（nRF5x 开发板）和开发电脑之间建立终端连接（输入和输出）的技术用于日志和输入。Zephyr 支持 nRF5x 目标上的 RTT，如果 UART（通过 USB CDC ACM）已经被用于不同于日志的目的（如 hci_uart 应用中的 HCI 流量），这可能非常有用。要用 RTT，你首先需要通过在 ``.conf`` 文件中添加以下行来启用它：
+Segger 的 J-Link 支持 `Real-Time Tracing (RTT)`_，
+一种允许在目标（nRF5x 开发板）和开发电脑之间
+建立终端连接（输入和输出）的技术用于日志和输入。
+Zephyr 支持 nRF5x 目标上的 RTT，
+如果 UART（通过 USB CDC ACM）已经被用于不同于日志的目的
+（如 hci_uart 应用中的 HCI 流量），这可能非常有用。
+要用 RTT，你首先需要通过在 ``.conf`` 文件中添加以下行来启用它：
 
 .. code-block:: cfg
 
@@ -144,7 +169,9 @@ Segger 的 J-Link 支持 `Real-Time Tracing (RTT)`_，一种允许在目标（nR
 
    ``USE_SEGGER_RTT`` 依赖于 ``HAS_SEGGER_RTT``。
 
-如果你得不到 RTT 输出你可能需要禁用其他与 RTT 控制台冲突的控制台如果它们在特定示例或应用中被默认启用。例如，要禁用 UART 控制台，在你的 ``.conf`` 文件中添加这个：
+如果你得不到 RTT 输出你可能需要禁用其他与 RTT 控制台冲突的控制台
+如果它们在特定示例或应用中被默认启用。
+例如，要禁用 UART 控制台，在你的 ``.conf`` 文件中添加这个：
 
 .. code-block:: cfg
 
@@ -195,7 +222,8 @@ Segger J-Link 与 `Segger Ozone`_ 兼容，一个可以从这里获取的可视�
 * Target Interface Speed: 4 MHz
 * Host Interface: USB
 
-配置后，你可以用 File->Open 菜单打开 ``zephyr.elf`` 文件你可以在构建文件夹中找到的那个。
+配置后，你可以用 File->Open 菜单打开 ``zephyr.elf`` 文件，
+你可以在构建文件夹中找到它。
 
 参考
 **********

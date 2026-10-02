@@ -6,230 +6,227 @@ Tracing
 Overview
 ********
 
-Tracing
-feature
-provide
-hooks
-它们
-permit
-你
-collect
-data
-从
-你
-的
-application
-并
-allow
-:ref:`tools`
-在
-host
-上
-run
-visualize
-kernel
-和
-各种
-subsystems
-的
-inner
-working。
+The tracing feature provides hooks that permits you to collect data from
+your application and allows :ref:`tools` running on a host to visualize the inner-working of
+the kernel and various subsystems.
 
-每个
-system
-有
-application
-specific
-的
-events
-需要
-traced
-out。
-Historically
-那
-implied：
+Every system has application-specific events to trace out.  Historically,
+that has implied:
 
-1.
-Determine
-application
-specific
-的
-payload
-2.
-Choose
-suitable
-的
-serialization
-format
-3.
-Write
-on
-target
-的
-serialization
-code
-4.
-Decide
-并
-write
-I/O
-transport
-的
-mechanics
-5.
-Write
-PC
-side
-的
-deserializer/parser
-6.
-Write
-custom
-的
-ad
-hoc
-的
-tools
-用于
-filtering
-和
-presentation
+1. Determining the application-specific payload,
+2. Choosing suitable serialization-format,
+3. Writing the on-target serialization code,
+4. Deciding on and writing the I/O transport mechanics,
+5. Writing the PC-side deserializer/parser,
+6. Writing custom ad-hoc tools for filtering and presentation.
 
-一
-个
-application
-可以
-use
-existing
-的
-formats
-之一
-或
-通过
-override
-在
-:zephyr_file:`include/zephyr/tracing/tracing.h`
-中
-declared
-的
-macros
-define
-一
-个
-custom
-的
-format。
+An application can use one of the existing formats or define a custom format by
+overriding the macros declared in :zephyr_file:`include/zephyr/tracing/tracing.h`.
 
-Different
-的
-formats、
-transports
-和
-host
-tools
-在
-Zephyr
-中
-available
-且
-被
-supported。
+Different formats, transports and host tools are available and supported in
+Zephyr.
 
-In
-fact
-I/O
-从
-system
-到
-system
-vary
-得
-very
-多。
-因此
-当
-我们
-必须
-ensure
-payload/format
-（Top
-Layer）
-和
-transport
-mechanics
-（bottom
-Layer）
-之间
-的
-interface
-generic
-且
-efficient
-enough
-用于
-model
-这些
-时
-为
-I/O
-types
-create
-一
-个
-taxonomy
-是
-instructive
-的。
-See
-下面
-的
-*I/O
-taxonomy*
-section。
+In fact, I/O varies greatly from system to system.  Therefore, it is
+instructive to create a taxonomy for I/O types when we must ensure the
+interface between payload/format (Top Layer) and the transport mechanics
+(bottom Layer) is generic and efficient enough to model these. See the
+*I/O taxonomy* section below.
 
-Named
-Trace
-Events
+Named Trace Events
 ******************
 
-虽然
-user
-可以
-extend
-supported
-的
-serialization
-formats
-any
-用于
-enable
-additional
-的
-tracing
-functions
-（或
-provide
-自己
-的
-backend）
-zephyr
-也
-provide
-一
-个
-generic
-的
-named
-tracing
-function
-用于
-convenience
-purposes
+Although the user can extend any of the supported serialization formats
+to enable additional tracing functions (or provide their own backend), zephyr
+also provides one generic named tracing function for convenience purposes,
+as well as to demonstrate how tracing frameworks could be extended.
+
+Users can generate a custom trace event by calling
+:c:func:`sys_trace_named_event`, which takes an event name as well as two
+arbitrary 4 byte arguments. Tracing backends may truncate the provided event
+name if it is too long for the serialization format they support.
+
+Serialization Formats
+**********************
+
+.. _ctf:
+
+Common Trace Format (CTF) Support
+=================================
+
+Common Trace Format, CTF, is an open format and language to describe trace
+formats. This enables tool reuse, of which line-textual (babeltrace) and
+graphical (TraceCompass) variants already exist.
+
+CTF should look familiar to C programmers but adds stronger typing.
+See `CTF - A Flexible, High-performance Binary Trace Format
+<https://diamon.org/ctf/>`_.
 
 
-.. note::
+CTF allows us to formally describe application specific payload and the
+serialization format, which enables common infrastructure for host tools
+and parsers and tools for filtering and presentation.
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+
+A Generic Interface
+--------------------
+
+In CTF, an event is serialized to a packet containing one or more fields.
+As seen from *I/O taxonomy* section below, a bottom layer may:
+
+- perform actions at transaction-start (e.g. mutex-lock),
+- process each field in some way (e.g. sync-push emit, concat, enqueue to
+  thread-bound FIFO),
+- perform actions at transaction-stop (e.g. mutex-release, emit of concat
+  buffer).
+
+CTF Top-Layer Example
+----------------------
+
+The CTF_EVENT macro will serialize each argument to a field::
+
+  /* Example for illustration */
+  static inline void ctf_top_foo(uint32_t thread_id, ctf_bounded_string_t name)
+  {
+    CTF_EVENT(
+      CTF_LITERAL(uint8_t, 42),
+      thread_id,
+      name,
+      "hello, I was emitted from function: ",
+      __func__  /* __func__ is standard since C99 */
+    );
+  }
+
+How to serialize and emit fields as well as handling alignment, can be done
+internally and statically at compile-time in the bottom-layer.
+
+
+The CTF top layer is enabled using the configuration option
+:kconfig:option:`CONFIG_TRACING_CTF` and can be used with the different transport
+backends both in synchronous and asynchronous modes.
+
+.. _tools:
+
+Tracing Tools
+*************
+
+Zephyr includes support for several popular tracing tools, presented below in alphabetical order.
+
+Percepio Tracealyzer Support
+============================
+
+Zephyr includes support for `Percepio Tracealyzer`_ that offers trace visualization for
+simplified analysis, report generation and other analysis features. Tracealyzer allows for trace
+streaming over various interfaces and also snapshot tracing, where the events are kept in a RAM
+buffer.
+
+.. _Percepio Tracealyzer: https://percepio.com/tracealyzer
+
+.. figure:: percepio_tracealyzer.png
+    :align: center
+    :alt: Percepio Tracealyzer
+    :figclass: align-center
+    :width: 80%
+
+Zephyr kernel events are captured automatically when Tracealyzer tracing is enabled.
+Tracealyzer also provides extensive support for application logging, where you call the tracing
+library from your application code. This lets you visualize kernel events and application events
+together, for example as data plots or state diagrams on logged variables.
+Learn more in the Tracealyzer User Manual provided with the application.
+
+Percepio TraceRecorder and Stream Ports
+---------------------------------------
+The tracing library for Tracealyzer (TraceRecorder) is included in the Zephyr manifest and
+provided under the same license (Apache 2.0). This is enabled by adding the following
+configuration options in your prj.conf:
+
+.. code-block:: cfg
+
+    CONFIG_TRACING=y
+    CONFIG_PERCEPIO_TRACERECORDER=y
+
+Or using menuconfig:
+
+* Enable :menuselection:`Subsystems and OS Services --> Tracing Support`
+* Under :menuselection:`Subsystems and OS Services --> Tracing Support --> Tracing Format`, select
+  :guilabel:`Percepio Tracealyzer`
+
+Some additional settings are needed to configure TraceRecorder. The most important configuration
+is to select the right "stream port". This specifies how to output the trace data.
+As of July 2024, the following stream ports are available in the Zephyr configuration system:
+
+* **Ring Buffer**: The trace data is kept in a circular RAM buffer.
+* **RTT**: Trace streaming via Segger RTT on J-Link debug probes.
+* **ITM**: Trace streaming via the ITM function on Arm Cortex-M devices.
+* **Semihost**: For tracing on QEMU. Streams the trace data to a host file.
+
+Select the stream port in menuconfig under
+:menuselection:`Modules --> percepio --> TraceRecorder --> Stream Port`.
+
+Or simply add one of the following options in your prj.conf:
+
+.. code-block:: cfg
+
+    CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_RINGBUFFER=y
+    CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_RTT=y
+    CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_ITM=y
+    CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_ZEPHYR_SEMIHOST=y
+
+Make sure to only include ONE of these configuration options.
+
+The stream port modules have individual configuration options. In menuconfig these are found
+under :menuselection:`Modules --> percepio --> TraceRecorder --> (Stream Port) Config`.
+The most important options for each stream port are described below.
+
+Tracealyzer Snapshot Tracing (Ring Buffer)
+------------------------------------------
+
+The "Ring Buffer" stream port keeps the trace data in a RAM buffer on the device.
+By default, this is a circular buffer, meaning that it always contains the most recent data.
+This is used to dump "snapshots" of the trace data, e.g. by using the debugger. This usually only
+allows for short traces, unless you have megabytes of RAM to spare, so it is not suitable for
+profiling. However, it can be quite useful for debugging in combination with breakpoints.
+For example, if you set a breakpoint in an error handler, a snapshot trace can show the sequence
+of events leading up to the error. Snapshot tracing is also easy to begin with, since it doesn't
+depend on any particular debug probe or other development tool.
+
+To use the Ring Buffer option, make sure to have the following configuration options in your
+prj.cnf:
+
+.. code-block:: cfg
+
+    CONFIG_TRACING=y
+    CONFIG_PERCEPIO_TRACERECORDER=y
+    CONFIG_PERCEPIO_TRC_START_MODE_START=y
+    CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_RINGBUFFER=y
+    CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_RINGBUFFER_SIZE=<size in bytes>
+
+Or if using menuconfig:
+
+* Enable :menuselection:`Subsystems and OS Services --> Tracing Support`
+* Under :menuselection:`Subsystems and OS Services --> Tracing Support --> Tracing Format`, select
+  :guilabel:`Percepio Tracealyzer`
+* Under :menuselection:`Modules --> percepio --> TraceRecorder --> Recorder Start Mode`, select
+  :guilabel:`Start`
+* Under :menuselection:`Modules --> percepio --> TraceRecorder --> Stream Port`, select
+  :guilabel:`Ring Buffer`
+* Under :menuselection:`Modules --> percepio --> TraceRecorder --> Ring Buffer Config --> Buffer Size`,
+  set the buffer size in bytes.
+
+The default buffer size can be reduced if you are tight on RAM, or increased if you have RAM to
+spare and want longer traces. You may also optimize the Tracing Configuration settings to get
+longer traces by filtering out less important events.
+In menuconfig, see
+:menuselection:`Subsystems and OS Services --> Tracing Support --> Tracing Configuration`.
+
+To view the trace data, the easiest way is to start your debugger (west debug) and run the
+following GDB command::
+
+    dump binary value trace.bin *RecorderDataPtr
+
+The resulting file is typically found in the root of the build folder, unless a different path is
+specified. Open this file in Tracealyzer by selecting :menuselection:`File --> Open --> Open File`.
+
+Tracealyzer Streaming with SEGGER RTT
 -------------------------------------
 
 Tracealyzer has built-in support for SEGGER RTT to receive trace data using a J-Link probe.
@@ -709,25 +706,38 @@ Locking may not be needed if multiple independent channels are available.
 Object tracking
 ***************
 
-内核也可以跟踪系统中的内核对象。
-启用 :kconfig:option:`CONFIG_TRACING_OBJECT_TRACKING`
-启用 :ref:`object core 框架 <object_cores_api>`，
-它枚举每种内核对象类型的对象。
-例如，要访问每个互斥锁，可以写::
+The kernel can also maintain lists of objects that can be used to track
+their usage. Currently, the following lists can be enabled::
 
-  static int visit_mutex(struct k_obj_core *obj_core, void *data)
-  {
-      struct k_mutex *mutex = CONTAINER_OF(obj_core, struct k_mutex, obj_core);
+  struct k_timer *_track_list_k_timer;
+  struct k_mem_slab *_track_list_k_mem_slab;
+  struct k_sem *_track_list_k_sem;
+  struct k_mutex *_track_list_k_mutex;
+  struct k_stack *_track_list_k_stack;
+  struct k_msgq *_track_list_k_msgq;
+  struct k_mbox *_track_list_k_mbox;
+  struct k_pipe *_track_list_k_pipe;
+  struct k_queue *_track_list_k_queue;
+  struct k_event *_track_list_k_event;
 
-      /* Do something */
+Those global variables are the head of each list - they can be traversed
+with the help of macro ``SYS_PORT_TRACK_NEXT``. For instance, to traverse
+all initialized mutexes, one can write::
 
-      return 0;
+  struct k_mutex *cur = _track_list_k_mutex;
+  while (cur != NULL) {
+    /* Do something */
+
+    cur = SYS_PORT_TRACK_NEXT(cur);
   }
 
-  k_obj_type_walk_locked(k_obj_type_find(K_OBJ_TYPE_MUTEX_ID), visit_mutex, NULL);
+To enable object tracking, enable :kconfig:option:`CONFIG_TRACING_OBJECT_TRACKING`.
+Note that each list can be enabled or disabled via their tracing
+configuration. For example, to disable tracking of semaphores, one can
+disable :kconfig:option:`CONFIG_TRACING_SEMAPHORE`.
 
-每种对象类型可以通过其 ``CONFIG_OBJ_CORE_*`` option 排除。
-:zephyr:code-sample:`object_cores` sample 可以启用 object tracking 构建。
+Object tracking is behind tracing configuration as it currently leverages
+tracing infrastructure to perform the tracking.
 
 API
 ***
@@ -816,6 +826,11 @@ Timers
 ======
 
 .. doxygengroup:: subsys_tracing_apis_timer
+
+Object tracking
+===============
+
+.. doxygengroup:: subsys_tracing_object_tracking
 
 Syscalls
 ========

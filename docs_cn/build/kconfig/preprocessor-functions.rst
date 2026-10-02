@@ -3,100 +3,25 @@
 自定义 Kconfig 预处理器函数
 #####################################
 
-Kconfiglib
-支持
-用
-Python
-编写
-的
-自定义
-Kconfig
-预处理器
-函数。
-这些
-函数
-定义
-在
+Kconfiglib 支持用 Python 编写的自定义 Kconfig 预处理器函数。这些函数定义在
 :zephyr_file:`scripts/kconfig/kconfigfunctions.py`。
 
 .. note::
 
-   官方
-   Kconfig
-   预处理器
-   文档
-   可以
-   在
+   官方 Kconfig 预处理器文档可以在
    `这里
    <https://www.kernel.org/doc/html/latest/kbuild/kconfig-macro-language.html>`__
    找到。
 
-关于
-详细
-文档
-见
-:zephyr_file:`scripts/kconfig/kconfigfunctions.py` 中
-的
-Python
-docstring。
-大多数
-自定义
-预处理器
-函数
-用于
-将
-设备树
-信息
-获取
-到
-Kconfig 中。
-例如，
-Kconfig 符号
-的
-默认
-值
-可以
-从
-设备树
-``reg`` 属性
-获取。
+关于详细文档见 :zephyr_file:`scripts/kconfig/kconfigfunctions.py` 中的 Python
+docstring。大多数自定义预处理器函数用于将设备树信息获取到 Kconfig 中。例如，
+Kconfig 符号的默认值可以从设备树 ``reg`` 属性获取。
 
-设备树
-相关
-函数
+设备树相关函数
 ****************************
 
-下面
-列出
-的
-函数
-用于
-将
-设备树
-信息
-获取
-到
-Kconfig 中。
-每个
-函数
-的
-``*_int`` 版本
-将
-值
-作为
-十
-进制
-整数
-返回，
-而
-``*_hex`` 版本
-返回
-以
-``0x`` 开头
-的
-十六
-进制
-值。
+下面列出的函数用于将设备树信息获取到 Kconfig 中。每个函数的 ``*_int`` 版本将
+值作为十进制整数返回，而 ``*_hex`` 版本返回以 ``0x`` 开头的十六进制值。
 
 .. code-block:: none
 
@@ -155,43 +80,11 @@ Kconfig 中。
    $(dt_partition_mtd,<node path>)
 
 
-整数
-函数
+整数函数
 *****************
 
-下面
-列出
-的
-函数
-可以
-用于
-对
-整数
-变量
-执行
-算术
-运算，
-如
-加法、
-减法
-和
-更多。
-名称
-中
-带
-和不
-带
-``_hex`` 后缀
-的
-函数
-分别
-返回
-十六
-进制
-和
-十
-进制
-值。
+下面列出的函数可以用于对整数变量执行算术运算，如加法、减法和更多。名称中
+带和不带 ``_hex`` 后缀的函数分别返回十六进制和十进制值。
 
 .. code-block:: none
 
@@ -215,19 +108,10 @@ Kconfig 中。
    $(sub_hex,<value>[,value]...)
 
 
-字符串
-函数
+字符串函数
 ****************
 
-下面
-列出
-的
-函数
-可以
-用于
-修改
-字符串
-变量。
+下面列出的函数可以用于修改字符串变量。
 
 .. code-block:: none
 
@@ -235,65 +119,23 @@ Kconfig 中。
    $(substring,<string>,<start>[,<stop>])
 
 
-其他
-函数
+其他函数
 ***************
 
-执行
-特定
-操作
-的
-函数，
-目前
-只有
-检查
-是否
-指定
-了
-shield
-名称。
+执行特定操作的函数，目前只有检查是否指定了 shield 名称。
 
 .. code-block:: none
 
    $(shields_list_contains,<shield name>)
 
-Shield
-名称
-不能
-包含
-空白。
-逗号
-后
-的
-空格，
-如
-``$(shields_list_contains, foo)`` 中
-的
-那样，
-被
-去除
-并
-打印
-警告，
-因此
-查找
-仍
-匹配
-``foo``。
+Shield 名称不能包含空白。逗号后的空格，如 ``$(shields_list_contains, foo)``
+中的那样，被去除并打印警告，因此查找仍匹配 ``foo``。
 
 
-示例
-用法
+示例用法
 ============
 
-假设
-某个
-开发板
-的
-设备树
-看起来
-像
-这样：
+假设某个开发板的设备树看起来像这样：
 
 .. code-block:: devicetree
 
@@ -310,38 +152,15 @@ Shield
    		};
    };
 
-``spi@1001400`` 中
-``reg`` 的
-第二个
-条目
-（``<0x20010000 0x3c0900>``）
-对应
-``mem``，
-地址
-为
-``0x20010000``。
-这个
-地址
-可以
-按
-如下
-方式
-插入
-Kconfig：
+``spi@1001400`` 中 ``reg`` 的第二个条目（``<0x20010000 0x3c0900>``）对应
+``mem``，地址为 ``0x20010000``。这个地址可以按如下方式插入 Kconfig：
 
 .. code-block:: kconfig
 
    config FLASH_BASE_ADDRESS
    	default $(dt_node_reg_addr_hex,/soc/spi@1001400,1)
 
-预处理器
-展开
-后，
-这
-变成
-下面
-的
-定义：
+预处理器展开后，这变成下面的定义：
 
 .. code-block:: kconfig
 

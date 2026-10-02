@@ -1,35 +1,19 @@
 .. _bt_hfp:
 
-Hands
-Free
-Profile
-（HFP）
+免提配置文件（HFP）
 ########################
 
 
-API
-Reference
+API 参考
 *************
 
-Hands
-Free
-Profile
-（HFP）
-Unit
+免提配置文件（HFP）单元
 =============================
 
-.. doxygengroup::
-   bt_hfp
+.. doxygengroup:: bt_hfp
 
 
-Hands
-Free
-Profile
--
-Audio
-Gateway
-（HFP-AG）
+免提配置文件 - 音频网关（HFP-AG）
 ===========================================
 
-.. doxygengroup::
-   bt_hfp_ag
+.. doxygengroup:: bt_hfp_ag

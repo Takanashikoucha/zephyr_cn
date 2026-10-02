@@ -1,17 +1,10 @@
-.. _bt
-uuid
-api:
+.. _bt_uuid_api:
 
-Universal
-Unique
-Identifiers
-（UUIDs）
+通用唯一标识符（UUIDs）
 #####################################
 
-API
-Reference
+
+API 参考
 *************
 
-..
-doxygengroup::
-bt_uuid
+.. doxygengroup:: bt_uuid

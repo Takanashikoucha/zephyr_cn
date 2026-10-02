@@ -899,7 +899,7 @@ west manifest 中定义的项目可以是 *非活动的* 或 *活动的*。
 被 ``manifest.group-filter`` 配置选项禁用。
 项目 ``bar`` 是活动的，因为 ``groupB`` 被启用。
 
-Example 5: Overriding a disabled group via configuration
+示例 5：通过配置覆盖一个被禁用的组
 --------------------------------------------------------
 
 整个 manifest 文件为：
@@ -935,7 +935,7 @@ manifest 文件中的 ``manifest: group-filter: [-groupA]`` 内容。
 
 因此，项目 ``foo`` 和 ``bar`` 都是活动的。
 
-Example 6: Overriding multiple disabled groups via configuration
+示例 6：通过配置覆盖多个被禁用的组
 ----------------------------------------------------------------
 
 整个 manifest 文件为：
@@ -971,7 +971,7 @@ Example 6: Overriding multiple disabled groups via configuration
 
 因此，项目 ``foo`` 和 ``bar`` 都是活动的。
 
-Example 7: Disabling multiple groups via configuration
+示例 7：通过配置禁用多个组
 ------------------------------------------------------
 
 整个 manifest 文件为：
@@ -1028,11 +1028,9 @@ Example 7: Disabling multiple groups via configuration
 - 你可以在 manifest 文件的
   ``manifest: group-filter:`` 值、
   工作区的 ``manifest.group-filter`` 配置选项
-  或两者中覆盖这一点
+  或两者中覆盖这一点。下面是一些示例。
 
-下面是一些示例。
-
-Example 1: no overrides
+示例 1：没有覆盖
 -----------------------
 
 你正在使用这个 :file:`parent/west.yml` manifest：
@@ -1075,7 +1073,7 @@ Example 1: no overrides
 由于 ``project-1`` 和 ``project-3`` 属于 ``unstable`` 组
 且不属于任何其他组，它们是非活动的。
 
-Example 2: overriding an imported ``group-filter`` via manifest
+示例 2：通过 manifest 覆盖导入的 ``group-filter``
 ---------------------------------------------------------------
 
 你正在使用这个 :file:`parent/west.yml` manifest：
@@ -1125,7 +1123,7 @@ Example 2: overriding an imported ``group-filter`` via manifest
 :file:`parent/west.yml` 指定的最终组过滤器为
 ``[+unstable,-optional]``。
 
-Example 3: overriding an imported ``group-filter`` via configuration
+示例 3：通过配置覆盖导入的 ``group-filter``
 --------------------------------------------------------------------
 
 你正在使用这个 :file:`parent/west.yml` manifest：
@@ -1201,7 +1199,7 @@ Example 3: overriding an imported ``group-filter`` via configuration
 ``submodules`` 键可以是布尔值或映射列表。
 我们按顺序描述它们。
 
-Option 1: Boolean
+选项 1：布尔值
 =================
 
 这是使用 ``submodules`` 最简单的方式。
@@ -1230,7 +1228,7 @@ Option 1: Boolean
 所有子模块。如果 ``bar`` 有任何子模块，
 它们会被忽略，因为 ``bar`` 没有 ``submodules`` 值。
 
-Option 2: List of mappings
+选项 2：映射列表
 ==========================
 
 ``submodules`` 键可以是一个映射列表，
@@ -1391,7 +1389,7 @@ West 按以下顺序从各个 manifest 文件解析
 
 .. _west-manifest-import-bool:
 
-Option 1: Boolean
+选项 1：布尔值
 =================
 
 这是使用 ``import`` 最简单的方式。
@@ -1427,7 +1425,7 @@ west 会从该项目根目录中的 :file:`west.yml` 文件
 
 .. _west-manifest-ex1.1:
 
-Example 1.1: Downstream of a Zephyr release
+示例 1.1：Zephyr 发布的下游
 -------------------------------------------
 
 你有一个源代码仓库，想配合 Zephyr v1.14.1 LTS 使用。
@@ -1486,7 +1484,7 @@ Example 1.1: Downstream of a Zephyr release
 
 .. _west-manifest-ex1.2:
 
-Example 1.2: "Rolling release" Zephyr downstream
+示例 1.2："滚动发布" Zephyr 下游
 ------------------------------------------------
 
 这与 :ref:`west-manifest-ex1.1` 类似，
@@ -1538,7 +1536,7 @@ Zephyr 项目中的最新变更。代价是运行
 
 .. _west-manifest-ex1.3:
 
-Example 1.3: Downstream of a Zephyr release, with module fork
+示例 1.3：Zephyr 发布的下游（带模块 fork）
 -------------------------------------------------------------
 
 这个 manifest 与 :ref:`west-manifest-ex1.1` 中的类似，
@@ -1609,7 +1607,7 @@ Example 1.3: Downstream of a Zephyr release, with module fork
 
 .. _west-manifest-import-path:
 
-Option 2: Relative path
+选项 2：相对路径
 =======================
 
 ``import`` 的值也可以是一个指向 manifest 文件或
@@ -1651,7 +1649,7 @@ Option 2: Relative path
 
 .. _west-manifest-ex2.1:
 
-Example 2.1: Downstream of a Zephyr release with explicit path
+示例 2.1：带显式路径的 Zephyr 发布下游
 --------------------------------------------------------------
 
 这是以显式方式编写与 :ref:`west-manifest-ex1.1`
@@ -1679,7 +1677,7 @@ Example 2.1: Downstream of a Zephyr release with explicit path
 
 .. _west-manifest-ex2.2:
 
-Example 2.2: Downstream with directory of manifest files
+示例 2.2：带 manifest 文件目录的下游
 --------------------------------------------------------
 
 你的 Zephyr 下游有很多额外的仓库。
@@ -1753,7 +1751,7 @@ Example 2.2: Downstream with directory of manifest files
 
 .. _west-manifest-ex2.3:
 
-Example 2.3: Continuous Integration overrides
+示例 2.3：持续集成覆盖
 ---------------------------------------------
 
 你的持续集成系统需要从开发者的 fork 而不是
@@ -1790,7 +1788,7 @@ CI 脚本在 :file:`my-repo/submanifests` 中
 
 .. _west-manifest-import-map:
 
-Option 3: Mapping
+选项 3：映射
 =================
 
 ``import`` 键还可以包含一个映射，
@@ -1825,7 +1823,7 @@ Option 3: Mapping
 
 .. _west-manifest-ex3.1:
 
-Example 3.1: Downstream with name allowlist
+示例 3.1：带名称允许列表的下游
 -------------------------------------------
 
 这里是一对 manifest 文件，代表主线和下游。
@@ -1888,7 +1886,7 @@ Example 3.1: Downstream with name allowlist
 
 .. _west-manifest-ex3.2:
 
-Example 3.2: Downstream with path allowlist
+示例 3.2：带路径允许列表的下游
 -------------------------------------------
 
 下面是一个示例，展示如何使用
@@ -1944,7 +1942,7 @@ Example 3.2: Downstream with path allowlist
 
 .. _west-manifest-ex3.3:
 
-Example 3.3: Downstream with path blocklist
+示例 3.3：带路径阻止列表的下游
 -------------------------------------------
 
 下面是一个示例，展示如何按工作区中的
@@ -2009,7 +2007,7 @@ Example 3.3: Downstream with path blocklist
 
 .. _west-manifest-ex3.4:
 
-Example 3.4: Import into a subdirectory
+示例 3.4：导入到子目录
 ---------------------------------------
 
 你想导入一个 manifest 及其项目，
@@ -2076,14 +2074,14 @@ Example 3.4: Import into a subdirectory
 
 .. _west-manifest-import-seq:
 
-Option 4: Sequence
+选项 4：序列
 ==================
 
 ``import`` 键还可以包含文件、目录和映射的序列。
 
 .. _west-manifest-ex4.1:
 
-Example 4.1: Downstream with sequence of manifest files
+示例 4.1：带 manifest 文件序列的下游
 -------------------------------------------------------
 
 这个示例 manifest 与 :ref:`west-manifest-ex2.2` 中的 manifest
@@ -2105,7 +2103,7 @@ Example 4.1: Downstream with sequence of manifest files
 
 .. _west-manifest-ex4.2:
 
-Example 4.2: Import order illustration
+示例 4.2：导入顺序示意
 --------------------------------------
 
 这个更复杂的示例展示了 west 导入 manifest 文件的顺序：
@@ -2217,10 +2215,7 @@ manifest 数据。如果 ``self-import`` 缺失，
 
 必要时该过程会递归。例如，如果 ``import-1``
 产生一个包含 ``import`` 键的 manifest 文件，
-它会先按相同规则递归解析，
-然后才进一步处理其内容。
-
-以下各节描述这些结果。
+它会先按相同规则递归解析，然后才进一步处理其内容。以下各节描述这些结果。
 
 项目（Projects）
 ----------------

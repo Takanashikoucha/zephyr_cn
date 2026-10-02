@@ -3,124 +3,103 @@
 Zyclictest
 ##########
 
-Zyclictest module 启用估算 realtime
-threads 的 worst case latencies。其可测量从
-hardware interrupt 到 service
-routine 再到 Zephyr thread 的时间。
+zyclictest 模块用于估算实时线程的最坏情况延迟。它可以测量从硬件中断到服务例程、再到 Zephyr 线程的时间。
 
-此 module 及其名称受 Linux 上的 cyclictest program 启发。
-因此其为 Zephyr cyclictest。
+该模块及其名称受到 Linux 上 cyclictest 程序的启发，因此它被称为 Zephyr 版 cyclictest。
 
-其思想为用 timer interrupt 作为 interrupt source（因为我们确切知道
-其发生的时间点。在 interrupt service routine 中
-取时间（并计算与 timer
-interrupt 的 programmed time 的差。
+其思路是使用定时器中断作为中断源，因为我们确切知道它发生的时间点。在中断服务例程中，我们记录时间并计算其与定时器中断编程时间的差值。
 
-另外 thread 也自行同步到 timer（并同样测量
-与 programmed timer 的差。
+此外，一个线程也会与定时器同步，并同样测量与编程定时器的差值。
 
-两个时间放入作为测量结束时打印的
-histogram 数据源的 array。
+这两个时间被放入一个数组中，作为测量结束时打印出的直方图的数据源。
 
-此测量以特定 interval time 循环进行。
+该测量以循环方式进行，具有固定的间隔时间。
 
-若有人想知道 priority <p> 的 task 的 worst case latency（
-则 application 须运行。其运行时（可启动
-zyclictest（priority 至少比被探测 application thread
-低一位。例如（若感兴趣的 thread 的
-application 的
-priority 为 -10（则须以 -11 或更低的
-priority 启动 zyclictest。
+如果有人想知道优先级为 <p> 的任务的最坏情况延迟，那么应用程序必须处于运行状态。在它运行期间，我们可以以比被测应用程序线程低至少一个数字的优先级启动 zyclictest。例如，如果我们关心的线程的应用程序优先级为 -10，那么我们需要以 -11 或更低的优先级启动 zyclictest。
 
-另一重要 argument 为 interval time。其不
-意味 interval 小于测量的 worst case latency。因此建议
-设置至少为期望或测量
-worst case latency 两倍的 interval。
+另一个重要参数是间隔时间。间隔不应小于所测量的最坏情况延迟。因此建议将间隔设置为预期或实测最坏情况延迟时间的至少两倍。
 
-若测量结束时指示有 overflows（则意味着
-histogram 范围内无确定性 worst case latency。
+如果测量结束时出现溢出指示，这意味着在直方图范围内不存在确定性的最坏情况延迟。
 
-为有意义的输出（建议设置
-:kconfig:option:`CONFIG_SYS_CLOCK_TICKS_PER_SEC` 至少为 1000000（这
-意味最小 resolution 为 1 microsecond。还需 tickless kernel
-(:kconfig:option:`CONFIG_TICKLESS_KERNEL`:。
+为了获得有意义的输出，建议将
+:kconfig:option:`CONFIG_SYS_CLOCK_TICKS_PER_SEC` 设置为至少 1000000，
+因为这意味着最小分辨率为 1 微秒。还需要无滴答内核
+（:kconfig:option:`CONFIG_TICKLESS_KERNEL`:）。
 
-Mode of operation
-*****************
+运行模式
+*********
 
-Zyclictest 可无固定 cycles 数量 free running 启动。
-此为默认。停止时打印至今的
-result。
+Zyclictest 可以以自由运行模式启动，不固定循环次数。
+这是默认模式。停止时会打印出迄今为止的结果。
 
-在 loop mode（option 以 -l <loops> 启动）中（zyclictest 运行
-预定义 cycles 数量。到达该数量时
-shell 有指示测试结束的消息。但可用 zyclictest stop -c
-提前取消测试。
+在循环模式（使用 -l <loops> 选项启动）中，zyclictest 运行
+预定义的循环次数。当循环次数达到时，shell 上会有一条
+消息指示测试结束。但测试可以
+使用 zyclictest stop -c 提前取消。
 
-Configuration
+配置
 *************
 
-用以下 options 配置此 module。
+使用以下选项配置该模块。
 
-* :kconfig:option:`CONFIG_ZYCLICTEST_SHELL`: 启用 shell command。
+* :kconfig:option:`CONFIG_ZYCLICTEST_SHELL`：启用 shell 命令。
 
 
-Usage
+用法
 *****
 
 zyclictest start [options]
-  -i <interval>  Interval in microseconds
-  -l <loops>     Use loop mode with predefined number of cycles
-  -p <prio>      Setup priority of Thread
+  -i <interval>  微秒为单位的间隔
+  -l <loops>     使用预定义循环次数的循环模式
+  -p <prio>      设置线程的优先级
 
 zyclictest stop [options]
-  -c             Cancel loop mode prematurely
-  -q             Quiet mode, print summary, but no histogram data
+  -c             提前取消循环模式
+  -q             静默模式，打印摘要但不打印直方图数据
 
-Example
+示例
 *******
 
-此示例中（想知道由 interrupt 唤醒（且作为
-priority -10 的 cooperative task 运行的 thread 的 worst case latency。
-期望 latency 小于 200 us。使用 free running mode。
+在本示例中，我们想知道一个线程的最坏情况延迟，该线程被中断唤醒，
+并以优先级 -10 作为协同任务运行。我们预期延迟小于 200 us。
+我们使用自由运行模式。
 
-1. 以 400 us 的 interval（期望
-worst case latency 两倍）和 -11 的 priority（比
-application thread 高一位）启动 zyclictest thread：
+1. 以 400 us 的间隔（预期最坏情况延迟的两倍）和 -11
+（比应用程序线程高一个数字）的优先级启动 zyclictest 线程：
 
    .. code-block:: console
 
-      zyclictest start -i 400 -p -11
+     zyclictest start -i 400 -p -11
 
-2. 做应测试的任何事....
+2. 执行任何需要测试的操作……
 
 3. 停止测量：
 
    .. code-block:: console
 
-      zyclictest stop
+     zyclictest stop
 
-   Zyclictest 输出：
+   zyclictest 的输出：
 
    ::
 
-      Count: 547329
-                         IRQ  Thread
-      Max-Latency:        21      27
-      Errors:              0       0
-      Overflow:            0       0
-      Histogram:
-      [...]
-       23                  0  547306
-       24                  0       2
-       25                  0       5
-       26                  0       5
-       27                  0       2
-       28                  0       0
-      [...]
+     Count: 547329
+                        IRQ  Thread
+     Max-Latency:        21      27
+     Errors:              0       0
+     Overflow:            0       0
+     Histogram:
+     [...]
+      23                  0  547306
+      24                  0       2
+      25                  0       5
+      26                  0       5
+      27                  0       2
+      28                  0       0
+     [...]
 
-4. 解释 result：
+4. 解读结果：
 
-   无 errors 且无 overflows（意味测量可用。
-   测试中有 547329 cycles。
-   Worst case interrupt latency 为 21 us（thread 为 27 us。
+   没有错误且没有溢出，意味着测量可以使用。
+   测试中共有 547329 个循环。
+   最坏情况中断延迟为 21 us，线程为 27 us。

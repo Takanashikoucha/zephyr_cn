@@ -1,14 +1,9 @@
 .. _bt_sdp:
 
-Service
-Discovery
-Protocol
-（SDP）
+服务发现协议（SDP）
 ################################
 
-API
-Reference
+API 参考
 **************
 
-.. doxygengroup::
-   bt_sdp
+.. doxygengroup:: bt_sdp

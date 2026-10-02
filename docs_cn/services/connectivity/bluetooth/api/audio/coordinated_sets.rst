@@ -1,14 +1,10 @@
 .. _bluetooth_coordinated_sets:
 
-Bluetooth
-Coordinated
-Sets
+Bluetooth 协调集
 ##########################
 
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   bt_csip
+.. doxygengroup:: bt_csip

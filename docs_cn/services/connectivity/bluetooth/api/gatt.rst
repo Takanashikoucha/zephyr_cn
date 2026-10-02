@@ -1,529 +1,83 @@
-.. _bt
-gatt:
+.. _bt_gatt:
 
-Generic
-Attribute
-Profile
-（GATT）
+
+通用属性配置（GATT）
 ################################
 
-GATT
-layer
-管理
-service
-database
-提供
-APIs
-用于
-service
-registration
-和
-attribute
-declaration。
+GATT 层管理服务数据库，提供服务注册和属性声明的 API。
 
-GATT
-Client
-向
-GATT
-Server
-发起
-commands
-和
-requests
-并
-可以
-接收
-server
-发送
-的
-responses、
-indications
-和
-notifications。
-它
-通过
-configuration
-option
+GATT 客户端向 GATT 服务器发起命令和请求，并可接收服务器发送的响应、指示和通知。它通过配置选项启用：
 :kconfig:option:`CONFIG_BT_GATT_CLIENT`
-启用。
 
-GATT
-Server
-接受
-来自
-GATT
-Client
-的
-commands
-和
-requests
-并
-向
-client
-发送
-responses、
-indications
-和
-notifications。
+GATT 服务器接受来自 GATT 客户端的传入命令和请求，并向客户端发送响应、指示和通知。
 
-Services
-可以
-用
-:c:func:`bt_gatt_service_register`
-API
-注册
-它
-接收
-:c:struct:`bt_gatt_service`
-struct
-提供
-service
-包含
-的
-attributes
-list。
-Helper
-macro
-:c:macro:`BT_GATT_SERVICE()`
-可以
-用
-来
-声明
-service。
+服务可以通过 :c:func:`bt_gatt_service_register` API 注册，该 API 接收 :c:struct:`bt_gatt_service` 结构，该结构提供服务包含的属性列表。辅助宏 :c:macro:`BT_GATT_SERVICE()` 可用于声明服务。
 
-Attributes
-可以
-用
-:c:struct:`bt_gatt_attr`
-struct
-或
-以下
-helper
-macros
-之一
-声明:
+属性可以使用 :c:struct:`bt_gatt_attr` 结构或以下辅助宏之一声明：
 
-:c:macro:`BT_GATT_PRIMARY_SERVICE`
-Declares
-a
-Primary
-Service.
+    :c:macro:`BT_GATT_PRIMARY_SERVICE`
+        声明主服务。
 
-:c:macro:`BT_GATT_SECONDARY_SERVICE`
-Declares
-a
-Secondary
-Service.
+    :c:macro:`BT_GATT_SECONDARY_SERVICE`
+        声明次级服务。
 
-:c:macro:`BT_GATT_INCLUDE_SERVICE`
-Declares
-a
-Include
-Service.
+    :c:macro:`BT_GATT_INCLUDE_SERVICE`
+        声明包含服务。
 
-:c:macro:`BT_GATT_CHARACTERISTIC`
-Declares
-a
-Characteristic.
+    :c:macro:`BT_GATT_CHARACTERISTIC`
+        声明特征。
 
-:c:macro:`BT_GATT_DESCRIPTOR`
-Declares
-a
-Descriptor.
+    :c:macro:`BT_GATT_DESCRIPTOR`
+        声明描述符。
 
-:c:macro:`BT_GATT_ATTRIBUTE`
-Declares
-an
-Attribute.
+    :c:macro:`BT_GATT_ATTRIBUTE`
+        声明属性。
 
-:c:macro:`BT_GATT_CCC`
-Declares
-a
-Client
-Characteristic
-Configuration.
+    :c:macro:`BT_GATT_CCC`
+        声明客户端特征配置。
 
-:c:macro:`BT_GATT_CEP`
-Declares
-a
-Characteristic
-Extended
-Properties.
+    :c:macro:`BT_GATT_CEP`
+        声明特征扩展属性。
 
-:c:macro:`BT_GATT_CUD`
-Declares
-a
-Characteristic
-User
-Format.
+    :c:macro:`BT_GATT_CUD`
+        声明特征用户格式。
 
-Each
-attribute
-contain
-a
-``uuid``、
-which
-describes
-their
-type、
-a
-``read``
-callback、
-a
-``write``
-callback
-and
-a
-set
-of
-permission.
-Both
-read
-and
-write
-callbacks
-can
-be
-set
-to
-NULL
-if
-the
-attribute
-permission
-don't
-allow
-their
-respective
-operations.
+每个属性包含一个 ``uuid``（描述其类型）、一个 ``read`` 回调、一个 ``write`` 回调和一组权限。如果属性权限不允许相应操作，read 和 write 回调都可以设置为 NULL。
 
-..
-note::
-32
-bit
-UUIDs
-are
-not
-supported
-in
-GATT.
-All
-32
-bit
-UUIDs
-shall
-be
-converted
-to
-128
-bit
-UUIDs
-when
-the
-UUID
-is
-contained
-in
-an
-ATT
-PDU.
+.. note::
+   GATT 中不支持 32 位 UUID。当 UUID 包含在 ATT PDU 中时，所有 32 位 UUID 必须转换为 128 位 UUID。
 
-..
-note::
-Attribute
-``read``
-and
-``write``
-callbacks
-are
-called
-directly
-from
-RX
-Thread
-thus
-it
-is
-not
-recommended
-to
-block
-for
-long
-periods
-of
-time
-in
-them.
+.. note::
+   属性的 ``read`` 和 ``write`` 回调直接从接收线程调用，因此不建议在其中长时间阻塞。
 
-Attribute
-value
-changes
-can
-be
-notified
-using
-:c:func:`bt_gatt_notify`
-API、
-alternatively
-there
-is
-:c:func:`bt_gatt_notify_cb`
-where
-it
-is
-possible
-to
-pass
-a
-callback
-to
-be
-called
-when
-it
-is
-necessary
-to
-know
-the
-exact
-instant
-when
-the
-data
-has
-been
-transmitted
-over
-the
-air.
-Indications
-are
-supported
-by
-:c:func:`bt_gatt_indicate`
-API.
+属性值变化可以使用 :c:func:`bt_gatt_notify` API 进行通知，也可以使用 :c:func:`bt_gatt_notify_cb`，后者允许传入一个回调，在需要知道数据确切何时通过空中传输时调用。指示由 :c:func:`bt_gatt_indicate` API 支持。
 
-Discover
-procedures
-can
-be
-initiated
-with
-the
-use
-of
-:c:func:`bt_gatt_discover`
-API
-which
-takes
-the
-:c:struct:`bt_gatt_discover_params`
-struct
-which
-describes
-the
-type
-of
-discovery.
-The
-parameters
-also
-serves
-as
-a
-filter
-when
-setting
-the
-``uuid``
-field
-only
-attributes
-which
-matches
-will
-be
-discovered、
-in
-contrast
-setting
-it
-to
-NULL
-allows
-all
-attributes
-to
-be
-discovered.
+发现过程可以使用 :c:func:`bt_gatt_discover` API 发起，该 API 接收 :c:struct:`bt_gatt_discover_params` 结构，该结构描述发现类型。参数还充当过滤器：设置 ``uuid`` 字段时仅发现匹配的属性，将其设置为 NULL 则允许发现所有属性。
 
-..
-note::
-Caching
-discovered
-attributes
-is
-not
-supported.
+.. note::
+   不支持缓存已发现的属性。
 
-Read
-procedures
-are
-supported
-by
-:c:func:`bt_gatt_read`
-API
-which
-takes
-the
-:c:struct:`bt_gatt_read_params`
-struct
-as
-parameters.
-In
-the
-parameters
-one
-or
-more
-attributes
-can
-be
-set、
-though
-setting
-multiple
-handles
-requires
-the
-option:
+读操作由 :c:func:`bt_gatt_read` API 支持，接收 :c:struct:`bt_gatt_read_params` 结构作为参数。参数中可设置一个或多个属性，但设置多个句柄需要选项：
 :kconfig:option:`CONFIG_BT_GATT_READ_MULTIPLE`
 
-Write
-procedures
-are
-supported
-by
-:c:func:`bt_gatt_write`
-API
-and
-takes
-:c:struct:`bt_gatt_write_params`
-struct
-as
-parameters.
-In
-case
-the
-write
-operation
-don't
-require
-a
-response
-:c:func:`bt_gatt_write_without_response`
-or
-:c:func:`bt_gatt_write_without_response_cb`
-APIs
-can
-be
-used、
-with
-the
-latter
-working
-similarly
-to
-:c:func:`bt_gatt_notify_cb`.
+写操作由 :c:func:`bt_gatt_write` API 支持，接收 :c:struct:`bt_gatt_write_params` 结构作为参数。如果写操作不需要响应，可以使用 :c:func:`bt_gatt_write_without_response` 或 :c:func:`bt_gatt_write_without_response_cb` API，后者的工作方式类似于 :c:func:`bt_gatt_notify_cb`。
 
-Subscriptions
-to
-notification
-and
-indication
-can
-be
-initiated
-with
-use
-of
-:c:func:`bt_gatt_subscribe`
-API
-which
-takes
-:c:struct:`bt_gatt_subscribe_params`
-as
-parameters.
-Multiple
-subscriptions
-to
-the
-same
-attribute
-are
-supported
-so
-there
-could
-be
-multiple
-``notify``
-callback
-being
-triggered
-for
-the
-same
-attribute.
-Subscriptions
-can
-be
-removed
-with
-use
-of
-:c:func:`bt_gatt_unsubscribe`
-API.
+对通知和指示的订阅可以使用 :c:func:`bt_gatt_subscribe` API 发起，该 API 接收 :c:struct:`bt_gatt_subscribe_params` 作为参数。支持对同一属性的多个订阅，因此同一属性可能触发多个 ``notify`` 回调。订阅可以使用 :c:func:`bt_gatt_unsubscribe` API 移除。
 
-..
-note::
-When
-subscriptions
-are
-removed
-``notify``
-callback
-is
-called
-with
-the
-data
-set
-to
-NULL.
+.. note::
+   移除订阅时，``notify`` 回调以数据设置为 NULL 的方式被调用。
 
-API
-Reference
+API 参考
 *************
 
-..
-doxygengroup::
-bt_gatt
+.. doxygengroup:: bt_gatt
 
-GATT
-Server
+GATT 服务器
 ===========
 
-..
-doxygengroup::
-bt_gatt_server
+.. doxygengroup:: bt_gatt_server
 
-GATT
-Client
+GATT 客户端
 ===========
 
-..
-doxygengroup::
-bt_gatt_client
+.. doxygengroup:: bt_gatt_client

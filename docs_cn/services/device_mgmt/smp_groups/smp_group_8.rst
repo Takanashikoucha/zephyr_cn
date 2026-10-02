@@ -1,187 +1,184 @@
 .. _mcumgr_smp_group_8:
 
-File
-system
-management
+File system management
 ######################
 
-File
-system
-management
-group
-provide
-commands
-它们
-allow
-upload
-和
-download
-files
-到/从
-device。
+The file system management group provides commands that allow to upload and download files
+to/from a device.
 
-File
-management
-group
-define
-以下
-commands：
+File management group defines following commands:
 
 .. table::
-    :align:
-    center
+    :align: center
 
     +-------------------+-----------------------------------------------+
-    |
-    ``Command
-    ID``
-    |
-    Command
-    description
-    |
+    | ``Command ID``    | Command description                           |
     +===================+===============================================+
-    |
-    ``0``
-    |
-    File
-    download/upload
-    |
+    | ``0``             | File download/upload                          |
     +-------------------+-----------------------------------------------+
-    |
-    ``1``
-    |
-    File
-    status
-    |
+    | ``1``             | File status                                   |
     +-------------------+-----------------------------------------------+
-    |
-    ``2``
-    |
-    File
-    hash/checksum
-    |
+    | ``2``             | File hash/checksum                            |
     +-------------------+-----------------------------------------------+
-    |
-    ``3``
-    |
-    Supported
-    file
-    hash/checksum
-    types
-    |
+    | ``3``             | Supported file hash/checksum types            |
     +-------------------+-----------------------------------------------+
-    |
-    ``4``
-    |
-    File
-    close
-    |
+    | ``4``             | File close                                    |
     +-------------------+-----------------------------------------------+
 
-File
-download
+File download
 *************
 
-Command
-allow
-从
-target
-device
-的
-specified
-path
-download
-existing
-file
-的
-contents。
-Client
-applications
-必须
-keep
-track
-它们
-已
-downloaded
-的
-data
-和
-它们
-在
-file
-中
-的
-position
-（MCUmgr
-也
-会
-cache
-这些）
-并
-issue
-subsequent
-的
-requests
-带
-modified
-的
-offset
-用于
-gather
-完整
-的
-file。
-Request
-不
-carry
-requested
-chunk
-的
-size
-size
-由
-application
-本身
-specified。
-注意
-file
-handles
-将
-保持
-open
-用于
-consecutive
-的
-requests
-（只要
-idle
-timeout
-不
-被
-reached
-且
-另
-一
-个
-transport
-不
-make
-use
-of
-用
-fs_mgmt
-upload/download
-files）
-但
-files
-不
-被
-exclusively
-
+Command allows to download contents of an existing file from specified path
+of a target device. Client applications must keep track of data they have
+already downloaded and where their position in the file is (MCUmgr will cache
+these also), and issue subsequent requests, with modified offset, to gather
+the entire file.
+Request does not carry size of requested chunk, the size is specified
+by application itself.
+Note that file handles will remain open for consecutive requests (as long as
+an idle timeout has not been reached and another transport does not make use
+of uploading/downloading files using fs_mgmt), but files are not exclusively
+owned by MCUmgr, for the time of download session, and may change between
+requests or even be removed.
 
 .. note::
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+    By default, all file upload/download requests are unconditionally allowed.
+    However, if the Kconfig option
+    :kconfig:option:`CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK` is enabled, then an
+    application can register a callback handler for
+    :c:enumerator:`MGMT_EVT_OP_FS_MGMT_FILE_ACCESS` (see
+    :ref:`MCUmgr callbacks <mcumgr_callbacks>`), which allows for allowing or
+    declining access to reading/writing a particular file, or for rewriting the
+    path supplied by the client.
+
+File download request
+=====================
+
+File download request header:
+
+.. table::
+    :align: center
+
+    +--------+--------------+----------------+
+    | ``OP`` | ``Group ID`` | ``Command ID`` |
+    +========+==============+================+
+    | ``0``  | ``8``        |  ``0``         |
+    +--------+--------------+----------------+
+
+CBOR data of request:
+
+.. code-block:: none
+
+    {
+        (str)"off" :  (uint)
+        (str)"name" : (str)
+    }
+
+where:
+
+.. table::
+    :align: center
+
+    +-----------------------+---------------------------------------------------+
+    | "off"                 | offset to start download at                       |
+    +-----------------------+---------------------------------------------------+
+    | "name"                | absolute path to a file                           |
+    +-----------------------+---------------------------------------------------+
+
+File download response
+======================
+
+File download response header:
+
+.. table::
+    :align: center
+
+    +--------+--------------+----------------+
+    | ``OP`` | ``Group ID`` | ``Command ID`` |
+    +========+==============+================+
+    | ``1``  | ``8``        |  ``0``         |
+    +--------+--------------+----------------+
+
+CBOR data of successful response:
+
+.. code-block:: none
+
+    {
+        (str)"off"      : (uint)
+        (str)"data"     : (byte str)
+        (str,opt)"len"  : (uint)
+    }
+
+In case of error the CBOR data takes the form:
+
+.. tabs::
+
+   .. group-tab:: SMP version 2
+
+      .. code-block:: none
+
+          {
+              (str)"err" : {
+                  (str)"group"    : (uint)
+                  (str)"rc"       : (uint)
+              }
+          }
+
+   .. group-tab:: SMP version 1 (and non-group SMP version 2)
+
+      .. code-block:: none
+
+          {
+              (str)"rc"       : (int)
+          }
+
+where:
+
+.. table::
+    :align: center
+
+    +------------------+-------------------------------------------------------------------------+
+    | "off"            | offset the response is for.                                             |
+    +------------------+-------------------------------------------------------------------------+
+    | "data"           | chunk of data read from file; it is CBOR encoded stream of bytes with   |
+    |                  | embedded size; "data" appears only in responses where "rc" is 0.        |
+    +------------------+-------------------------------------------------------------------------+
+    | "len"            | length of file, this field is only mandatory when "off" is 0.           |
+    +------------------+-------------------------------------------------------------------------+
+    | "err" -> "group" | :c:enum:`mcumgr_group_t` group of the group-based error code. Only      |
+    |                  | appears if an error is returned when using SMP version 2.               |
+    +------------------+-------------------------------------------------------------------------+
+    | "err" -> "rc"    | contains the index of the group-based error code. Only appears if       |
+    |                  | non-zero (error condition) when using SMP version 2.                    |
+    +------------------+-------------------------------------------------------------------------+
+    | "rc"             | :c:enum:`mcumgr_err_t` only appears if non-zero (error condition) when  |
+    |                  | using SMP version 1 or for SMP errors when using SMP version 2.         |
+    +------------------+-------------------------------------------------------------------------+
+
+File upload
+***********
+
+Allows to upload a file to a specified location. Command will automatically overwrite
+existing file or create a new one if it does not exist at specified path.
+The protocol supports stateless upload where each requests carries different chunk
+of a file and it is client side responsibility to track progress of upload.
+
+Note that file handles will remain open for consecutive requests (as long as
+an idle timeout has not been reached, but files are not exclusively owned by
+MCUmgr, for the time of download session, and may change between requests or
+even be removed. Note that file handles will remain open for consecutive
+requests (as long as an idle timeout has not been reached and another transport
+does not make use of uploading/downloading files using fs_mgmt), but files are
+not exclusively owned by MCUmgr, for the time of download session, and may
+change between requests or even be removed.
+
+.. note::
+    Weirdly, the current Zephyr implementation is half-stateless as is able to hold
+    single upload context, holding information on ongoing upload, that consists
+    of bool flag indicating in-progress upload, last successfully uploaded offset
+    and total length only.
+
 .. note::
 
     By default, all file upload/download requests are unconditionally allowed.

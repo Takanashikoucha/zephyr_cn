@@ -1,98 +1,97 @@
 .. _timing_noise_policy:
 
-Timing Noise CPU Frequency Scaling Policy
+时序噪声 CPU 频率调节策略
 #########################################
 
-Overview
+概述
 ########
 
-Timing noise policy 为周期性
-选择随机 performance state (P-state) 的 CPU frequency scaling policy。其意图为通过
-jitter CPU clock 注入 timing
-variability（这可扰乱假设稳定 frequency 的 naive cycle-count
-或 wall-clock 测量。
+时序噪声策略是一种周期性
+选择随机性能状态（P-state）的 CPU 频率调节策略。其目的是通过抖动 CPU 时钟注入时序
+变异性，从而干扰那些假设频率稳定的朴素周期计数
+或墙钟（wall-clock）测量。
 
-此为 randomized P-state policy。其非通用 side-channel
-countermeasure。
+这是一种随机化的 P-state 策略。它不是一般的侧信道
+对策措施。
 
-Primary Mitigation
+主要缓解手段
 ##################
 
-经 side-channel 泄漏审查的 constant-time 和 constant-flow 实现
-仍为对抗 timing 攻击的主要 mitigation。
-此 policy 不替代这些 practices。至多（其可能使
-特定类测量复杂化。
+经过审查、针对侧信道泄漏进行加固的
+常数时间（constant-time）和常数流程（constant-flow）实现仍然是对抗时序攻击的主要缓解手段。
+该策略不能替代这些做法。充其量，它可能只是让
+某一类测量变得更复杂。
 
-Attacker Model
+攻击者模型
 ##############
 
-此 policy 考虑以下 adversary：
+该策略考虑的攻击者：
 
-* 通过 cycle counters、wall-clock timers 或
-  类似 software-visible timestamps 观察相对执行时间
-* 依赖稳定 CPU frequency（使指令
-  count 或 data-dependent paths 的小差异在 trials 间仍可区分
+* 通过周期计数器、墙钟定时器或
+  类似的软件可见时间戳观察相对执行时间
+* 依赖稳定的 CPU 频率，使得指令
+  数量或数据依赖路径上的微小差异在多次试验之间仍然可区分
 
-Randomized P-state 选择不击败此类攻击。给定足够
-samples（attacker 常可平均掉 noise。Policy 仅
-使这些测量更不便且更不可重复。
+随机化 P-state 选择无法击败这样的攻击。给定足够
+多的样本，攻击者通常可以对噪声取平均加以消除。该策略只是
+让此类测量变得不那么方便、不那么可重复。
 
-Use Cases
+使用场景
 #########
 
-当 application 想在已健全的 software 之上添加额外 timing
-variability 作为次要层时（此 policy 可能有用。应
-将其视为扰乱某些 analyses 的方式（而非
-本身的安全 solution。
+当应用希望在已经可靠的软件之上
+增加一层额外的时序变异性时，该策略可能有用。它应当
+被视为干扰某些分析的手段，而不是
+单独的安全解决方案。
 
-其不适合：
+它不适合以下场景：
 
-* 需确定性执行时间的 Hard real-time systems
-* timing 可预测性为 safety case 一部分的 Safety-related systems
-* 不能容忍意外慢 P-states 的 Latency-sensitive workloads
-* 严格 power-budget designs（因为频繁 P-state 变更可能增加
-  平均 power 消耗
+* 需要确定性执行时间的硬实时系统
+* 时序可预测性是安全论证一部分的安全相关系统
+* 无法容忍意外慢速 P-state 的延迟敏感型负载
+* 严格的功耗预算设计，因为频繁的 P-state 变化可能增加
+  平均功耗
 
-Configuration
+配置
 #############
 
-启用 CPU frequency subsystem 并选择 timing noise policy：
+启用 CPU 频率子系统并选择时序噪声策略：
 
 .. code-block:: kconfig
 
    CONFIG_CPU_FREQ=y
    CONFIG_CPU_FREQ_POLICY_TIMING_NOISE=y
 
-Policy 用标准 CPU frequency subsystem update interval（
-配置为：
+该策略使用标准的 CPU 频率子系统更新间隔，
+通过以下配置设置：
 
 .. code-block:: kconfig
 
    CONFIG_CPU_FREQ_INTERVAL_MS=<interval>
 
-更小 update intervals 增加 timing variability（但也增加
-frequency transitions 数量。
+较小的更新间隔会增加时序变异性，但也会增加
+频率转换的次数。
 
-Random Number Generation
+随机数生成
 ########################
 
-Policy 用 :c:func:`sys_rand32_get()` 选择 performance states。
-选择 ``CONFIG_CPU_FREQ_POLICY_TIMING_NOISE`` 在有 hardware entropy source 的
-platforms 上启用 entropy driver。有 TRNG 时首选
-通过该 driver 路由 random draws：
+该策略使用 :c:func:`sys_rand32_get()` 选择性能状态。
+选择 ``CONFIG_CPU_FREQ_POLICY_TIMING_NOISE`` 会在具有硬件熵源的平台上
+启用熵源驱动程序。当有 TRNG（真随机数生成器）可用时，
+优先将随机数获取路由到该驱动程序：
 
 .. code-block:: kconfig
 
    CONFIG_ENTROPY_DEVICE_RANDOM_GENERATOR=y
 
-Limitations
+局限性
 ###########
 
-* 不消除 timing side channels
-* 不能补偿根本不安全的 software
-* 可能降低整体 system performance
-* 可能因频繁 performance state 变更增加 power 消耗
-* 对坚定或充分 instrumented 的 attacker 不提供任何保证
+* 它不能消除时序侧信道
+* 它无法弥补从根本上不安全的软件
+* 它可能降低整体系统性能
+* 它可能因频繁的性能状态变化而增加功耗
+* 它不能对蓄意或有充分检测手段的攻击者提供任何保证
 
-timing noise policy 示例参见
-:zephyr:code-sample:`cpu_freq_timing_noise` sample。
+时序噪声策略的示例参见
+:zephyr:code-sample:`cpu_freq_timing_noise` 示例。

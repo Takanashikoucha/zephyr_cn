@@ -1,34 +1,19 @@
 .. _bt_goep:
 
-Generic
-Object
-Exchange
-Profile
-（GOEP）
+通用对象交换配置文件（GOEP）
 ######################################
 
 
-API
-Reference
+API 参考
 *************
 
-Generic
-Object
-Exchange
-Profile
-（GOEP）
+通用对象交换配置文件（GOEP）
 =====================================
 
-.. doxygengroup::
-   bt_goep
+.. doxygengroup:: bt_goep
 
 
-IrDA
-Object
-Exchange
-Protocol
-（OBEX）
+IrDA 对象交换协议（OBEX）
 ====================================
 
-.. doxygengroup::
-   bt_obex
+.. doxygengroup:: bt_obex

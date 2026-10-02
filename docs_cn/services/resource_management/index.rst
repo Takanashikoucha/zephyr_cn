@@ -1,220 +1,43 @@
 .. _resource_mgmt:
 
-Resource
-Management
-###################
+资源管理
+###########
 
-有
-各种
-situations
-那里
-需要
-在
-runtime
-在
-多
-个
-clients
-之间
-coordinate
-resource
-use。
-这些
-包括
-power
-rails、
-clocks、
-其他
-peripherals、
-和
-binary
-的
-device
-power
-management。
-在
-multithreaded
-的
-systems
-中
-properly
-manage
-device
-的
-多
-个
-consumers
-的
-complexity
-特别是
-当
-transitions
-可能
-asynchronous
-时
-suggest
-一
-个
-shared
-的
-implementation
-是
-desirable
-的。
+在多种情况下，需要在运行时协调多个客户端对资源的使用。这些情况包括电源轨、时钟、其他外设以及二进制设备电源管理。在多线程系统中正确管理一个设备的多个消费者非常复杂，尤其是当状态转换可能是异步的时候，这表明采用共享实现是可取的。
 
-Zephyr
-provide
-managers
-用于
-several
-的
-coordination
-policies。
-这些
-managers
-被
-embedded
-到
-use
-它们
-用于
-specific
-functions
-的
-services
-中。
+Zephyr 为多种协调策略提供了管理器。这些管理器嵌入到使用它们执行特定功能的服务中。
 
 .. contents::
     :local:
-    :depth:
-    2
+    :depth: 2
 
 .. _resource_mgmt_onoff:
 
-On
-Off
-Manager
+开关管理器
 **************
 
-一
-个
-on
-off
-manager
-support
-任意
-数量
-的
-clients
-用于
-有
-binary
-state
-的
-service。
-Example
-的
-applications
-是
-power
-rails、
-clocks、
-和
-binary
-的
-device
-power
-management。
+开关管理器支持具有二进制状态的服务的任意数量客户端。典型应用包括电源轨、时钟和二进制设备电源管理。
 
-Manager
-有
-以下
-properties：
+该管理器具有以下属性：
 
-*
-Stable
-的
-states
-是
-off、
-on、
-和
-error。
-Service
-始终
-从
-off
-state
-begin。
-Service
-也
-可能
-在
-transition
-到
-给定
-的
-state
-中。
-*
-Core
-的
-operations
-是
-request
-（add
-一
-个
-dependency）
-和
-release
-（remove
-一
-个
-dependency）。
-Supporting
-的
-operations
-是
-reset
-（用于
-clear
-一
-个
-error
-state）
-和
-cancel
-（用于
-从
-in
-progress
-的
-transition
-reclaim
-client
-data）。
-Service
-根据
-calls
-到
-initiate
-这些
-operations
-的
-functions
-manage
-state。
-*
-当
-first
-个
-client
-request
-时
-service
-从
-off
-transition
-到
-on
+* 稳定状态包括关、开和错误。服务始终从关状态开始。服务也可能处于向某个状态转换的过程中。
+* 核心操作是请求（添加依赖项）和释放（移除依赖项）。辅助操作是复位（清除错误状态）和取消（从进行中的转换中回收客户端数据）。服务根据调用发起这些操作的函数来管理状态。
+* 当收到第一个客户端请求时，服务从关状态转换到开状态。
+* 当收到最后一个客户端释放时，服务从开状态转换到关状态。
+* 每个服务配置提供实现从关到开、从开到关以及可选地从错误状态到关的转换的函数。转换必须能够在线程和中断上下文中调用。
+* 请求和复位操作使用 :ref:`async_notification` 异步执行。两个操作都可以取消，但取消对进行中的转换没有影响。
+* 当向关状态转换正在进行时，开启请求可以排队：当服务成功关闭后，会立即再次开启（在上下文允许的情况下），并在启动完成时通知等待的客户端。
+
+请求采用引用计数，但不进行跟踪。这意味着客户端负责记录其请求是否被接受，并且仅在其之前成功完成请求的情况下才发起释放。不当使用 API 可能导致活跃客户端被排除，并且管理器不维护已获准请求的具体客户端记录。
+
+执行转换时的失败会被记录，并阻止进一步的请求或释放，直到管理器被复位。发现错误时，挂起的请求会收到通知（并被取消）。
+
+转换操作完成通知通过 :ref:`async_notification` 提供。
+
+希望跟踪所有服务状态变化的客户端和其他组件，包括服务开始关闭或进入错误状态的时间，可以通过调用 onoff_monitor_register() 注册监视器来接收状态转换通知。状态变化通知在发出与新状态相关的完成通知之前提供。
+
+.. note::
+
+    通用 API 可能由多个驱动程序实现，其中常见情况是异步的。开关客户端结构可能是通用 API 的合适解决方案。对于能够保证同步且与上下文无关的转换的驱动程序，可以使用 :c:struct:`onoff_sync_service` 及其支持 API，而不是 :c:struct:`onoff_manager`，只会带来很小的功能缩减（主要是不支持监视器 API）。
+
+.. doxygengroup:: resource_mgmt_onoff_apis

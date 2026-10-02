@@ -1,965 +1,260 @@
-.. _vulnerabilities
-2024:
+.. _vulnerabilities_2024:
 
-CVE
-2024
+CVE-2024
 ########
 
-:cve:`2024
-1638`
+:cve:`2024-1638`
 ----------------
 
-Bluetooth
-characteristic
-LESC
-security
-requirement
-not
-enforced
-without
-additional
-flags
+蓝牙特征 LESC 安全要求未在无额外标志的情况下强制执行
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-p6f3
-f63q
-5mc2
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-p6f3
-f63q
-5mc2>`_
+- `Zephyr 项目缺陷跟踪器 GHSA-p6f3-f63q-5mc2
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-p6f3-f63q-5mc2>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.6.0
+该问题已在 main 分支修复，将随 v3.6.0 发布
 
--
-`PR
-69170
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/69170>`_
+- `PR 69170 main 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/69170>`_
 
-:cve:`2024
-3077`
+:cve:`2024-3077`
 ----------------
 
-Bluetooth:
-Integer
-underflow
-in
-gatt
-find
-info
-rsp.
-A
-malicious
-Bluetooth
-LE
-device
-can
-crash
-Bluetooth
-LE
-victim
-device
-by
-sending
-malformed
-gatt
-packet.
+蓝牙：gatt_find_info_rsp 中的整数下溢。恶意蓝牙低功耗
+设备可通过发送格式错误的 gatt 数据包使受害蓝牙低功耗
+设备崩溃。
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-gmfv
-4vfh
-2mh8
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-gmfv
-4vfh
-2mh8>`_
+- `Zephyr 项目缺陷跟踪器 GHSA-gmfv-4vfh-2mh8
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-gmfv-4vfh-2mh8>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.7.0
+该问题已在 main 分支修复，将随 v3.7.0 发布
 
--
-`PR
-69396
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/69396>`_
+- `PR 69396 main 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/69396>`_
 
-:cve:`2024
-3332`
+:cve:`2024-3332`
 ----------------
 
-Bluetooth:
-DoS
-caused
-by
-null
-pointer
-dereference.
+蓝牙：空指针解引用导致的拒绝服务。
 
-A
-malicious
-Bluetooth
-LE
-device
-can
-send
-a
-specific
-order
-of
-packet
-sequence
-to
-cause
-a
-DoS
-attack
-on
-the
-victim
-Bluetooth
-LE
-device.
+恶意蓝牙低功耗设备可发送特定顺序的
+数据包序列对受害蓝牙低功耗设备发起拒绝服务攻击。
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-jmr9
-xw2v
-5vf4
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-jmr9
-xw2v
-5vf4>`_
+- `Zephyr 项目缺陷跟踪器 GHSA-jmr9-xw2v-5vf4
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-jmr9-xw2v-5vf4>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.7.0
+该问题已在 main 分支修复，将随 v3.7.0 发布
 
--
-`PR
-71030
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/71030>`_
+- `PR 71030 main 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/71030>`_
 
-:cve:`2024
-4785`
+
+:cve:`2024-4785`
 ----------------
 
-Bluetooth:
-Missing
-Check
-in
-LL
-CONNECTION
-UPDATE
-IND
-Packet
-Leads
-to
-Division
-by
-Zero
+蓝牙：LL_CONNECTION_UPDATE_IND 数据包中缺少检查导致除以零
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-xcr5
-5g98
-mchp
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-xcr5
-5g98
-mchp>`_
+- `Zephyr 项目缺陷跟踪器 GHSA-xcr5-5g98-mchp
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-xcr5-5g98-mchp>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.7.0
+该问题已在 main 分支修复，将随 v3.7.0 发布
 
--
-`PR
-72608
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/72608>`_
+- `PR 72608 main 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/72608>`_
 
-:cve:`2024
-5754`
+:cve:`2024-5754`
 ----------------
 
-BT:
-Encryption
-procedure
-host
-vulnerability
+BT：加密过程主机漏洞
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-gvv5
-66hw
-5qrc
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-gvv5
-66hw
-5qrc>`_
+- `Zephyr 项目缺陷跟踪器 GHSA-gvv5-66hw-5qrc
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-gvv5-66hw-5qrc>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.7.0
+该问题已在 main 分支修复，将随 v3.7.0 发布
 
--
-`PR
-7395
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/7395>`_
+- `PR 7395 main 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/7395>`_
 
--
-`PR
-74124
-fix
-for
-3.6
-<https://github.com/zephyrproject
-rtos/zephyr/pull/74124>`_
+- `PR 74124 3.6 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/74124>`_
 
--
-`PR
-74123
-fix
-for
-3.5
-<https://github.com/zephyrproject
-rtos/zephyr/pull/74123>`_
+- `PR 74123 3.5 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/74123>`_
 
--
-`PR
-74122
-fix
-for
-2.7
-<https://github.com/zephyrproject
-rtos/zephyr/pull/74122>`_
+- `PR 74122 2.7 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/74122>`_
 
-:cve:`2024
-5931`
+:cve:`2024-5931`
 ----------------
 
-BT:
-Unchecked
-user
-input
-in
-bap
-broadcast
-assistant
+BT：bap_broadcast_assistant 中未检查用户输入
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-r8h3
-64gp
-wv7f
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-r8h3
-64gp
-wv7f>`_
+- `Zephyr 项目缺陷跟踪器 GHSA-r8h3-64gp-wv7f
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-r8h3-64gp-wv7f>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.7.0
+该问题已在 main 分支修复，将随 v3.7.0 发布
 
--
-`PR
-74062
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/74062>`_
+- `PR 74062 main 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/74062>`_
 
--
-`PR
-77966
-fix
-for
-3.6
-<https://github.com/zephyrproject
-rtos/zephyr/pull/77966>`_
+- `PR 77966 3.6 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/77966>`_
 
-:cve:`2024
-6135`
+
+:cve:`2024-6135`
 ----------------
 
-BT
-Classic:
-Multiple
-missing
-buf
-length
-checks
+BT:Classic：多处缺少缓冲区长度检查
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-2mp4
-4g6f
-cqcx
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-2mp4
-4g6f
-cqcx>`_
+- `Zephyr 项目缺陷跟踪器 GHSA-2mp4-4g6f-cqcx
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-2mp4-4g6f-cqcx>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.7.0
+该问题已在 main 分支修复，将随 v3.7.0 发布
 
--
-`PR
-74283
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/74283>`_
+- `PR 74283 main 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/74283>`_
 
--
-`PR
-77964
-fix
-for
-3.6
-<https://github.com/zephyrproject
-rtos/zephyr/pull/77964>`_
+- `PR 77964 3.6 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/77964>`_
 
-:cve:`2024
-6137`
+:cve:`2024-6137`
 ----------------
 
-BT:
-Classic:
-SDP
-OOB
-access
-in
-get
-att
-search
-list
+BT: Classic：get_att_search_list 中的 SDP 越界访问
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-pm38
-7g85
-cf4f
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-pm38
-7g85
-cf4f>`_
+- `Zephyr 项目缺陷跟踪器 GHSA-pm38-7g85-cf4f
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-pm38-7g85-cf4f>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.7.0
+该问题已在 main 分支修复，将随 v3.7.0 发布
 
--
-`PR
-75575
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/75575>`_
+- `PR 75575 main 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/75575>`_
 
-:cve:`2024
-6258`
+:cve:`2024-6258`
 ----------------
 
-BT:
-Missing
-length
-checks
-of
-net
-buf
-in
-rfcomm
-handle
-data
+BT：rfcomm_handle_data 中 net_buf 缺少长度检查
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-7833
-fcpm
-3ggm
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-7833
-fcpm
-3ggm>`_
+- `Zephyr 项目缺陷跟踪器 GHSA-7833-fcpm-3ggm
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-7833-fcpm-3ggm>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.7.0
+该问题已在 main 分支修复，将随 v3.7.0 发布
 
--
-`PR
-74640
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/74640>`_
+- `PR 74640 main 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/74640>`_
 
-:cve:`2024
-6259`
+:cve:`2024-6259`
 ----------------
 
-BT:
-HCI:
-adv
-ext
-report
-Improper
-discarding
-in
-adv
-ext
-report
+BT：HCI：adv_ext_report 中 adv_ext_report 的不当丢弃
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-p5j7
-v26w
-wmcp
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-p5j7
-v26w
-wmcp>`_
+- `Zephyr 项目缺陷跟踪器 GHSA-p5j7-v26w-wmcp
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-p5j7-v26w-wmcp>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.7.0
+该问题已在 main 分支修复，将随 v3.7.0 发布
 
--
-`PR
-74639
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/74639>`_
+- `PR 74639 main 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/74639>`_
 
--
-`PR
-77960
-fix
-for
-3.6
-<https://github.com/zephyrproject
-rtos/zephyr/pull/77960>`_
+- `PR 77960 3.6 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/77960>`_
 
-:cve:`2024
-6442`
+:cve:`2024-6442`
 ----------------
 
-Bluetooth:
-ASCS
-Unchecked
-tailroom
-of
-the
-response
-buffer
+蓝牙：ASCS 响应缓冲区未检查尾部空间
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-m22j
-ccg7
-4v4h
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-m22j
-ccg7
-4v4h>`_
+- `Zephyr 项目缺陷跟踪器 GHSA-m22j-ccg7-4v4h
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-m22j-ccg7-4v4h>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.7.0
+该问题已在 main 分支修复，将随 v3.7.0 发布
 
--
-`PR
-74976
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/74976>`_
+- `PR 74976 main 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/74976>`_
 
--
-`PR
-77958
-fix
-for
-3.6
-<https://github.com/zephyrproject
-rtos/zephyr/pull/77958>`_
+- `PR 77958 3.6 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/77958>`_
 
-:cve:`2024
-6443`
+:cve:`2024-6443`
 ----------------
 
-zephyr:
-out
-of
-bound
-read
-in
-utf8
-trunc
+zephyr：utf8_trunc 中的越界读取
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-gg46
-3rh2
-v765
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-gg46
-3rh2
-v765>`_
+- `Zephyr 项目缺陷跟踪器 GHSA-gg46-3rh2-v765
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-gg46-3rh2-v765>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.7.0
+该问题已在 main 分支修复，将随 v3.7.0 发布
 
--
-`PR
-74949
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/74949>`_
+- `PR 74949 main 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/74949>`_
 
--
-`PR
-78286
-fix
-for
-3.6
-<https://github.com/zephyrproject
-rtos/zephyr/pull/78286>`_
+- `PR 78286 3.6 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/78286>`_
 
-:cve:`2024
-6444`
+:cve:`2024-6444`
 ----------------
 
-Bluetooth:
-ots:
-missing
-buffer
-length
-check
+蓝牙：ots：缺少缓冲区长度检查
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-qj4r
-chj6
-h7qp
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-qj4r
-chj6
-h7qp>`_
+- `Zephyr 项目缺陷跟踪器 GHSA-qj4r-chj6-h7qp
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-qj4r-chj6-h7qp>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.7.0
+该问题已在 main 分支修复，将随 v3.7.0 发布
 
--
-`PR
-74944
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/74944>`_
+- `PR 74944 main 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/74944>`_
 
--
-`PR
-77954
-fix
-for
-3.6
-<https://github.com/zephyrproject
-rtos/zephyr/pull/77954>`_
+- `PR 77954 3.6 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/77954>`_
 
-:cve:`2024
-8798`
+:cve:`2024-8798`
 ----------------
 
-Bluetooth:
-classic:
-avdtp:
-missing
-buffer
-length
-check
+蓝牙：classic：avdtp：缺少缓冲区长度检查
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-r7pm
-f93f
-f7fp
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-r7pm
-f93f
-f7fp>`_
+- `Zephyr 项目缺陷跟踪器 GHSA-r7pm-f93f-f7fp
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-r7pm-f93f-f7fp>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v4.0.0
+该问题已在 main 分支修复，将随 v4.0.0 发布
 
--
-`PR
-77969
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/77969>`_
+- `PR 77969 main 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/77969>`_
 
--
-`PR
-78409
-fix
-for
-3.7
-<https://github.com/zephyrproject
-rtos/zephyr/pull/78409>`_
+- `PR 78409 3.7 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/78409>`_
 
-:cve:`2024
-10395`
+:cve:`2024-10395`
 -----------------
 
-net:
-lib:
-http
-server:
-Buffer
-Under
-read
+net: lib: http_server：缓冲区下溢读取
 
-No
-proper
-validation
-of
-the
-length
-of
-user
-input
-in
-http
-server
-get
-content
-type
-from
-extension
-could
-cause
-a
-segmentation
-fault
-or
-crash
-by
-causing
-memory
-to
-be
-read
-outside
-of
-the
-bounds
-of
-the
-buffer.
+http_server_get_content_type_from_extension 中
+对用户输入长度未进行适当验证可能导致
+分段错误或崩溃，因为会导致读取
+超出缓冲区边界的内存。
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-hfww
-j92m
-x8fv
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-hfww
-j92m
-x8fv>`_
+- `Zephyr 项目缺陷跟踪器 GHSA-hfww-j92m-x8fv
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-hfww-j92m-x8fv>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v4.0.0
+该问题已在 main 分支修复，将随 v4.0.0 发布
 
--
-`PR
-80396
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/80396>`_
+- `PR 80396 main 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/80396>`_
 
-:cve:`2024
-11263`
+:cve:`2024-11263`
 -----------------
 
-arch:
-riscv:
-userspace:
-potential
-security
-risk
-when
-CONFIG
-RISCV
-GP
-y
+arch: riscv: userspace：CONFIG_RISCV_GP=y 时的潜在安全风险
 
-A
-rogue
-thread
-can
-corrupt
-the
-gp
-reg
-and
-cause
-the
-entire
-system
-to
-hard
-fault
-at
-best、
-at
-worst、
-it
-can
-potentially
-trick
-the
-system
-to
-access
-another
-set
-of
-random
-global
-symbols.
+恶意线程可破坏 gp 寄存器，最好导致整个系统硬故障，最坏情况下，
+它可能欺骗系统访问另一组随机全局符号。
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-jjf3
-7x72
-pqm9
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-jjf3
-7x72
-pqm9>`_
+- `Zephyr 项目缺陷跟踪器 GHSA-jjf3-7x72-pqm9
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-jjf3-7x72-pqm9>`_
 
-This
-has
-been
-fixed
-in
-main
-for
-v4.0.0
+该问题已在 main 分支修复，将随 v4.0.0 发布
 
--
-`PR
-81155
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/81155>`_
+- `PR 81155 main 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/81155>`_
 
--
-`PR
-81370
-fix
-for
-3.7
-<https://github.com/zephyrproject
-rtos/zephyr/pull/81370>`_
+- `PR 81370 3.7 分支修复
+  <https://github.com/zephyrproject-rtos/zephyr/pull/81370>`_

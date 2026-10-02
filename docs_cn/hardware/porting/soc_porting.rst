@@ -244,7 +244,7 @@ SoC 目录中有一个必需的 Kconfig 文件，以及两个可选文件：
 
 CPU 簇必须在 :file:`Kconfig.soc` 文件中提供额外的 Kconfig 设置。这通常以 ``SOC_<SOC_NAME>_<CLUSTER>`` 的形式出现，因此对于给定的 ``soc1`` 及其两个簇 ``clusterA`` 和 ``clusterB``，应如下所示：
 
-当 SoC 定义了 CPU 簇时
+当 SoC 定义了 CPU 簇时的 SoC
 
   .. code-block:: kconfig
 

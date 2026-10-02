@@ -1,32 +1,54 @@
 .. _vlan_interface:
 
-Virtual LAN (VLAN) Support
+虚拟局域网（VLAN）支持
 ##########################
 
 .. contents::
     :local:
     :depth: 2
 
-Overview
+概述
 ********
 
-`Virtual LAN <https://wikipedia.org/wiki/Virtual_LAN>`_（VLAN）为 data link layer（OSI layer 2）上分区和隔离的 computer network。对 ethernet network 这指 `IEEE 802.1Q <https://en.wikipedia.org/wiki/IEEE_802.1Q>`_
+`虚拟局域网 <https://wikipedia.org/wiki/Virtual_LAN>`_（VLAN）是
+数据链路层（OSI 第 2 层）上划分并隔离的计算机网络。
+对于以太网，这指的是
+`IEEE 802.1Q <https://en.wikipedia.org/wiki/IEEE_802.1Q>`_。
 
-在 Zephyr 中（每个独立 VLAN 建模为 virtual network interface。这意味着有对应系统中真实物理 ethernet port 的 ethernet network interface。为每个 VLAN 创建 virtual network interface（且此 virtual network interface 连接到 real network interface。这与 Linux 实现 VLANs 的方式类似。*eth0* 为 real network interface（*vlan0* 为运行在 *eth0* 之上的 virtual network interface。
+在 Zephyr 中，每个单独的 VLAN 都被建模为一个虚拟网络接口。
+这意味着存在一个对应系统中真实物理以太网端口的以太网网络接口。
+为每个 VLAN 创建一个虚拟网络接口，该虚拟网络接口连接到
+真实网络接口。这与 Linux 实现 VLAN 的方式类似。
+*eth0* 是真实网络接口，*vlan0* 是
+运行在 *eth0* 之上的虚拟网络接口。
 
-VLAN 支持须通过设置 :kconfig:option:`CONFIG_NET_VLAN` 和 :kconfig:option:`CONFIG_NET_VLAN_COUNT` option 在 compile time 启用（以反映系统中将有多少 network interfaces。例如（若有一个无 VLAN 支持的 network interface（两个有 VLAN 支持的（:kconfig:option:`CONFIG_NET_VLAN_COUNT` option 应设为 3。
+VLAN 支持必须在编译时通过设置选项
+:kconfig:option:`CONFIG_NET_VLAN` 和 :kconfig:option:`CONFIG_NET_VLAN_COUNT` 来启用，后者应反映
+系统中将有多少个网络接口。例如，如果有一个
+不带 VLAN 支持的网络接口和两个带 VLAN 支持的网络接口，
+则 :kconfig:option:`CONFIG_NET_VLAN_COUNT` 选项应设置为 3。
 
-即使 VLAN 在 :file:`prj.conf` file 中启用（VLAN 仍需 application 在 runtime 激活。VLAN API 提供 :c:func:`net_eth_vlan_enable` function 以执行此操作。Application 须将 network interface 和期望 VLAN tag 作为 parameter 传给该 function。给定 network interface 的 VLAN tagging 可用 :c:func:`net_eth_vlan_disable` function 禁用。Application 须自行配置 VLAN network interface（如设置 IP address 等。
+即使 VLAN 已在 :file:`prj.conf` 文件中启用，VLAN 仍需
+在运行时由应用激活。VLAN API 提供了一个
+:c:func:`net_eth_vlan_enable` 函数来实现这一点。应用需要
+将该函数参数设置为网络接口和所需的 VLAN 标签。
+可以使用
+:c:func:`net_eth_vlan_disable` 函数禁用
+特定网络接口的 VLAN 标记。应用需要
+自行配置 VLAN 网络接口，例如设置 IP 地址等。
 
-API 使用示例参见 :zephyr:code-sample:`VLAN sample application <vlan>`。该 sample application 的源代码可在 :zephyr_file:`samples/net/ethernet/vlan` 找到。
+有关 API 用法示例，还请参阅 :zephyr:code-sample:`VLAN 示例应用 <vlan>`。
+该示例应用的源代码位于
+:zephyr_file:`samples/net/ethernet/vlan`。
 
-Net-shell module 包含 *net vlan add* 和 *net vlan del* commands（可用于启用或禁用给定 network interface 的 VLAN tags。
+net-shell 模块包含 *net vlan add* 和 *net vlan del* 命令，
+可用于启用或禁用特定网络接口的 VLAN 标签。
 
-ethernet VLANs 更多信息参见 `IEEE 802.1Q spec`_。
+有关以太网 VLAN 的更多信息，请参阅 `IEEE 802.1Q 规范`_。
 
-.. _IEEE 802.1Q spec: https://ieeexplore.ieee.org/document/6991462/
+.. _IEEE 802.1Q 规范: https://ieeexplore.ieee.org/document/6991462/
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: vlan_api

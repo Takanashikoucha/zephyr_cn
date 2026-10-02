@@ -1,13 +1,9 @@
 .. _bt_att:
 
-Attribute
-Protocol
-（ATT）
+属性协议（ATT）
 ########################
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   bt_att
+.. doxygengroup:: bt_att

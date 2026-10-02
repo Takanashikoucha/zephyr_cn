@@ -5,229 +5,226 @@ Shell
 
 .. contents::
     :local:
-    :depth:
-    2
+    :depth: 2
 
 Overview
 ********
 
-这
-个
-module
-allow
-你
-create
-和
-handle
-一
-个
-shell
-带
-user
-defined
-的
-command
-set。
-你
-可以
-use
-它
-在
-examples
-中
-那里
-需要
-多
-于
-simple
-的
-button
-或
-LED
-的
-user
-interaction。
-这
-个
-module
-是
-一
-个
-Unix
-like
-的
-shell
-带
-以下
-features：
+This module allows you to create and handle a shell with a user-defined command
+set. You can use it in examples where more than simple button or LED user
+interaction is required. This module is a Unix-like shell with these features:
 
-*
-Support
-multiple
-的
-instances。
-*
-Advanced
-的
-cooperation
-与
-:ref:`logging_api`。
-*
-Support
-static
-和
-dynamic
-的
-commands。
-*
-Support
-dictionary
-的
-commands。
-*
-Smart
-的
-command
-completion
-用
-:kbd:`Tab`
-key。
-*
-Built
-in
-的
-commands:
-:command:`aliases`、
-:command:`clear`、
-:command:`shell`、
-:command:`colors`、
-:command:`echo`、
-:command:`history`
-和
-:command:`resize`。
-*
-View
-recently
-executed
-的
-commands
-用
-keys:
-:kbd:`↑`
-:kbd:`↓`
-或
-meta
-keys。
-*
-Text
-edition
-用
-keys:
-:kbd:`←`、
-:kbd:`→`、
-:kbd:`Backspace`、
-:kbd:`Delete`、
-:kbd:`End`、
-:kbd:`Home`、
-:kbd:`Insert`。
-*
-Support
-ANSI
-escape
-codes:
-``VT100``
-和
-``ESC[n~``
-用于
-cursor
-control
-和
-color
-printing。
-*
-Support
-editing
-multiline
-的
-commands。
-*
-Built
-in
-的
-handler
-用于
-display
-commands
-的
-help。
-*
-Support
-wildcards:
-``*``
-和
-``?``。
-*
-Support
-meta
-keys。
-*
-Support
-getopt
-和
-getopt_long。
-*
-Kconfig
-configuration
-用于
-optimize
-memory
-usage。
+* Support for multiple instances.
+* Advanced cooperation with the :ref:`logging_api`.
+* Support for static and dynamic commands.
+* Support for dictionary commands.
+* Smart command completion with the :kbd:`Tab` key.
+* Built-in commands: :command:`aliases`, :command:`clear`, :command:`shell`,
+  :command:`colors`, :command:`echo`, :command:`history` and
+  :command:`resize`.
+* Viewing recently executed commands using keys: :kbd:`↑` :kbd:`↓` or meta keys.
+* Text edition using keys: :kbd:`←`, :kbd:`→`, :kbd:`Backspace`,
+  :kbd:`Delete`, :kbd:`End`, :kbd:`Home`, :kbd:`Insert`.
+* Support for ANSI escape codes: ``VT100`` and ``ESC[n~`` for cursor control
+  and color printing.
+* Support for editing multiline commands.
+* Built-in handler to display help for the commands.
+* Support for wildcards: ``*`` and ``?``.
+* Support for meta keys.
+* Support for getopt and getopt_long.
+* Kconfig configuration to optimize memory usage.
 
 .. note::
-   Some
-   of
-   these
-   features
-   对
-   RAM
-   和
-   flash
-   usage
-   有
-   significant
-   的
-   impact
-   但
-   many
-   在
-   不
-   需要
-   时
-   可以
-   be
-   disabled。
-   要
-   default
-   到
-   options
-   它们
-   favor
-   reduced
-   RAM
-   和
-   flash
-   requirements
-   而
-   不
-   是
-   features
-   你
-   应该
+	Some of these features have a significant impact on RAM and flash usage,
+	but many can be disabled when not needed.  To default to options which
+	favor reduced RAM and flash requirements instead of features, you should
+	enable :kconfig:option:`CONFIG_SHELL_MINIMAL` and selectively enable just the
+	features you want.
 
+.. _backends:
+
+Backends
+********
+
+The module can be connected to any transport for command input and output.
+At this point, the following transport layers are implemented:
+
+* MQTT
+* Segger RTT
+* SMP
+* Telnet
+* UART
+* USB
+* Bluetooth LE (NUS)
+* RPMSG
+* DUMMY - not a physical transport layer.
+
+Telnet
+======
+
+Enabling :kconfig:option:`CONFIG_SHELL_BACKEND_TELNET` will allow users to use telnet
+as a shell backend. Connecting to it can be done using PuTTY or any ``telnet`` client.
+For example:
+
+.. code-block:: none
+
+  telnet <ip address> <port>
+
+By default the telnet client won't handle telnet commands and configuration. Although
+command support can be enabled with :kconfig:option:`CONFIG_SHELL_TELNET_SUPPORT_COMMAND`.
+This will give the telnet client access to a very limited set of supported commands but
+still can be turned on if needed. One of the command options it supports is the ``ECHO``
+option. This will allow the client to be in character mode (character at a time),
+similar to a UART backend in that regard. This will make the client send a character
+as soon as it is typed having the effect of increasing the network traffic
+considerably. For that cost, it will enable the line editing,
+`tab completion <tab-feature_>`_, and `history <history-feature_>`_
+features of the shell.
+
+USB CDC ACM
+===========
+
+To configure Shell USB CDC ACM backend, simply add the snippet ``cdc-acm-console``
+to your build:
+
+.. code-block:: console
+
+   west build -S cdc-acm-console [...]
+
+Details on the configuration settings are captured in the following files:
+
+- :zephyr_file:`snippets/cdc-acm-console/cdc-acm-console.conf`.
+- :zephyr_file:`snippets/cdc-acm-console/cdc-acm-console.overlay`.
+
+Bluetooth LE (NUS)
+==================
+
+To configure Bluetooth LE (NUS) backend, simply add the snippet ``nus-console``
+to your build:
+
+.. code-block:: console
+
+   west build -S nus-console [...]
+
+Details on the configuration settings are captured in the following files:
+
+- :zephyr_file:`snippets/nus-console/nus-console.conf`.
+- :zephyr_file:`snippets/nus-console/nus-console.overlay`.
+
+Segger RTT
+==========
+
+To configure Segger RTT backend, add the following configurations to your build:
+
+- :kconfig:option:`CONFIG_USE_SEGGER_RTT`
+- :kconfig:option:`CONFIG_SHELL_BACKEND_RTT`
+- :kconfig:option:`CONFIG_SHELL_BACKEND_SERIAL`
+
+Details on additional configuration settings are captured in:
+:zephyr_file:`samples/subsys/shell/shell_module/prj_minimal_rtt.conf`.
+
+.. _shell_rtt_west:
+
+Using west
+-----------
+
+Attach to and configure RTT with:
+
+.. code-block:: console
+
+   $ west rtt
 
 .. note::
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+   If your default runner does not have support for RTT, check your board's documentation page for
+   any other runners that support RTT. You may then use the ``--runner`` option to specify a
+   different runner.
+
+  .. code-block:: console
+
+     $ west rtt --runner <runner>
+
+.. _shell_rtt_putty:
+
+Using PuTTY
+-----------
+
+Use following procedure:
+
+* Open debug session and continue running the application.
+
+  .. code-block:: none
+
+     west attach
+
+* Open ``PuTTY``. Use telnet port 19021 and specific Terminal configuration. Set ``Local echo``
+  to ``Force off`` and ``Local line editing`` to ``Force off`` (see image below).
+
+
+.. image:: images/putty_rtt.png
+      :align: center
+      :alt: RTT PuTTY terminal configuration.
+
+* Now you should have a network connection to RTT that will let you enter input
+  to the shell.
+
+Connecting to Segger RTT via TCP (on macOS, for example)
+--------------------------------------------------------
+
+On macOS JLinkRTTClient won't let you enter input. Instead, please use following
+procedure:
+
+* Open up a first Terminal window and enter:
+
+  .. code-block:: none
+
+     JLinkRTTLogger -Device NRF52840_XXAA -RTTChannel 1 -if SWD -Speed 4000 ~/rtt.log
+
+  (change device if required)
+
+* Open up a second Terminal window and enter:
+
+  .. code-block:: none
+
+     nc localhost 19021
+
+* Now you should have a network connection to RTT that will let you enter input
+  to the shell. However, contrary to `PuTTY <shell_rtt_putty_>`_ some features like
+  ``Tab`` completion do not work.
+
+
+Commands
+********
+
+Shell commands are organized in a tree structure and grouped into the following
+types:
+
+* Root command (level 0): Gathered and alphabetically sorted in a dedicated
+  memory section.
+* Static subcommand (level > 0): Number and syntax must be known during compile
+  time. Created in the software module.
+* Dynamic subcommand (level > 0): Number and syntax does not need to be known
+  during compile time. Created in the software module.
+
+
+Commonly-used command groups
+============================
+
+The following list is a set of useful command groups and how to enable them:
+
+GPIO
+----
+
+- :kconfig:option:`CONFIG_GPIO`
+- :kconfig:option:`CONFIG_GPIO_SHELL`
+
+I2C
+---
+
+- :kconfig:option:`CONFIG_I2C`
+- :kconfig:option:`CONFIG_I2C_SHELL`
+
+Sensor
 ------
 
 - :kconfig:option:`CONFIG_SENSOR`

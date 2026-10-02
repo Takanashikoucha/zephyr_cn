@@ -1,171 +1,166 @@
 .. _mcumgr_smp_group_1:
 
-Application/software
-image
-management
-group
+Application/software image management group
 ###########################################
 
-Application/software
-image
-management
-group
-define
-以下
-commands：
+Application/software image management group defines following commands:
 
 .. table::
-    :align:
-    center
+    :align: center
 
     +-------------------+-----------------------------------------------+
-    |
-    ``Command
-    ID``
-    |
-    Command
-    description
-    |
+    | ``Command ID``    | Command description                           |
     +===================+===============================================+
-    |
-    ``0``
-    |
-    State
-    of
-    images
-    |
+    | ``0``             | State of images                               |
     +-------------------+-----------------------------------------------+
-    |
-    ``1``
-    |
-    Image
-    upload
-    |
+    | ``1``             | Image upload                                  |
     +-------------------+-----------------------------------------------+
-    |
-    ``2``
-    |
-    File
-    |
-    |
-    （reserved
-    but
-    not
-    supported
-    by
-    Zephyr）
-    |
+    | ``2``             | File                                          |
+    |                   | (reserved but not supported by Zephyr)        |
     +-------------------+-----------------------------------------------+
-    |
-    ``3``
-    |
-    Corelist
-    |
-    |
-    （reserved
-    but
-    not
-    supported
-    by
-    Zephyr）
-    |
+    | ``3``             | Corelist                                      |
+    |                   | (reserved but not supported by Zephyr)        |
     +-------------------+-----------------------------------------------+
-    |
-    ``4``
-    |
-    Coreload
-    |
-    |
-    （reserved
-    but
-    not
-    supported
-    by
-    Zephyr）
-    |
+    | ``4``             | Coreload                                      |
+    |                   | (reserved but not supported by Zephyr)        |
     +-------------------+-----------------------------------------------+
-    |
-    ``5``
-    |
-    Image
-    erase
-    |
+    | ``5``             | Image erase                                   |
     +-------------------+-----------------------------------------------+
-    |
-    ``6``
-    |
-    Slot
-    info
-    |
+    | ``6``             | Slot info                                     |
     +-------------------+-----------------------------------------------+
 
-Zephyr
-中
-"slots"
-和
-"images"
-的
-Notion
+Notion of "slots" and "images" in Zephyr
 ****************************************
 
-"Slot"
-和
-"image"
-的
-definition
-来自
-mcuboot
-那里
-"image"
-会
-consist
-of
-两
-个
-"slots"
-further
-named
-"primary"
-和
-"secondary"
-application
-supposed
-从
-"primary
-slot"
-run
-而
-update
-supposed
-被
-uploaded
-到
-"secondary
-slot"
-mcuboot
-负责
-在
-boot
-时
-swapping
-slots。
-这
-means
-一
-对
-slots
-dedicated
-给
-单
-个
-upgradable
-的
-application。
+The "slot" and "image" definition comes from mcuboot where "image" would
+consist of two "slots", further named "primary" and "secondary"; the application
+is supposed to run from the "primary slot" and update is supposed to be
+uploaded to the "secondary slot";  the mcuboot is responsible in swapping
+slots on boot.
+This means that pair of slots is dedicated to single upgradable application.
+In case of Zephyr this gets a little bit confusing because DTS will use
+"slot0_partition" and "slot1_partition", as label of ``fixed-partitions`` or
+``zephyr,mapped-partition`` dedicated
+to single application, but will name them as "image-0" and "image-1" respectively.
 
+Currently Zephyr supports at most two images, in which case mapping is as follows:
+
+.. table::
+    :align: center
+
+    +-------------+-------------------+---------------+
+    | Image       | Slot labels       | Slot  Names   |
+    +=============+===================+===============+
+    | 1           | "slot0_partition" |   "image-0"   |
+    |             | "slot1_partition" |   "image-1"   |
+    +-------------+-------------------+---------------+
+    | 2           | "slot2_partition" |   "image-2"   |
+    |             | "slot3_partition" |   "image-3"   |
+    +-------------+-------------------+---------------+
+
+State of images
+***************
+
+The command is used to set state of images and obtain list of images
+with their current state.
+
+Get state of images request
+===========================
+
+Get state of images request header fields:
+
+.. table::
+    :align: center
+
+    +--------+--------------+----------------+
+    | ``OP`` | ``Group ID`` | ``Command ID`` |
+    +========+==============+================+
+    | ``0``  | ``1``        |  ``0``         |
+    +--------+--------------+----------------+
+
+The command sends an empty CBOR map as data.
+
+.. _mcumgr_smp_protocol_op_1_grp_1_cmd_0:
+
+Get state of images response
+============================
+
+Get state of images response header fields:
+
+.. table::
+    :align: center
+
+    +--------+--------------+----------------+
+    | ``OP`` | ``Group ID`` | ``Command ID`` |
+    +========+==============+================+
+    | ``1``  | ``1``        |  ``0``         |
+    +--------+--------------+----------------+
 
 .. note::
+    Below definition of the response contains "image" field that has been marked
+    as optional(opt): the field may not appear in response when target application
+    does not support more than one image. The field is mandatory when application
+    supports more than one application image to allow identifying which image
+    information is listed.
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+A response will only contain information for valid images, if an image can not
+be identified as valid it is simply skipped.
+
+CBOR data of successful response:
+
+.. code-block:: none
+
+    {
+        (str)"images" : [
+            {
+                (str,opt)"image"        : (uint)
+                (str)"slot"             : (uint)
+                (str)"version"          : (str)
+                (str,opt*)"hash"        : (byte str)
+                (str,opt)"bootable"     : (bool)
+                (str,opt)"pending"      : (bool)
+                (str,opt)"confirmed"    : (bool)
+                (str,opt)"active"       : (bool)
+                (str,opt)"permanent"    : (bool)
+            }
+            ...
+        ]
+        (str,opt)"splitStatus" : (int)
+    }
+
+In case of error the CBOR data takes the form:
+
+.. tabs::
+
+   .. group-tab:: SMP version 2
+
+      .. code-block:: none
+
+          {
+              (str)"err" : {
+                  (str)"group"    : (uint)
+                  (str)"rc"       : (uint)
+              }
+          }
+
+   .. group-tab:: SMP version 1 (and non-group SMP version 2)
+
+      .. code-block:: none
+
+          {
+              (str)"rc"       : (int)
+              (str,opt)"rsn"  : (str)
+          }
+
+where:
+
+.. table::
+    :align: center
+
+    +------------------+-------------------------------------------------------------------------+
+    | "image"          | semi-optional image number; the field is not required when only one     |
+    |                  | image is supported by the running application.                          |
+    +------------------+-------------------------------------------------------------------------+
     | "slot"           | slot number within "image"; each image has two slots : primary (running |
     |                  | one) = 0 and secondary (for DFU dual-bank purposes) = 1.                |
     +------------------+-------------------------------------------------------------------------+

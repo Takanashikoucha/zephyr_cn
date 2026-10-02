@@ -3,280 +3,80 @@
 NVMe
 ####
 
-NVMe
-是
-一
-个
-standardized
-的
-logical
-device
-interface
-在
-PCIe
-bus
-上
-expose
-storage
-devices。
+NVMe 是 PCIe 总线上的标准化逻辑设备接口，用于暴露存储设备。
 
-NVMe
-controllers
-和
-disks
-被
-supported。
-Disks
-可以
-通过
-它们
-expose
-的
-:ref:`Disk
-Access
-API
-<disk_access_api>`
-被
-accessed
-并
-因此
-通过
-:ref:`File
-System
-API
-<file_system_api>`
-被
-used。
+支持 NVMe 控制器和磁盘。磁盘可以通过它们暴露的
+:ref:`Disk Access API <disk_access_api>` 访问，
+从而通过 :ref:`File System API <file_system_api>` 使用。
 
-Driver
-design
+驱动程序设计
 *************
 
-Driver
-被
-sliced
-up
-在
-3
-main
-parts：
+驱动程序分为 3 个主要部分：
 
--
-NVMe
-controller:
-:zephyr_file:`drivers/disk/nvme/nvme_controller.c`
--
-NVMe
-commands:
-:zephyr_file:`drivers/disk/nvme/nvme_cmd.c`
--
-NVMe
-namespace:
-:zephyr_file:`drivers/disk/nvme/nvme_namespace.c`
+- NVMe 控制器：:zephyr_file:`drivers/disk/nvme/nvme_controller.c`
+- NVMe 命令：:zephyr_file:`drivers/disk/nvme/nvme_cmd.c`
+- NVMe 命名空间：:zephyr_file:`drivers/disk/nvme/nvme_namespace.c`
 
-那里
-NVMe
-controller
-是
-device
-driver
-的
-root。
-这是
-将
-get
-device
-driver
-instances
-的
-那个。
-Note
-这
-只
-是
-DTS
-describes
-的
-NVMe
-controller
-且
-它
-的
-namespaces
-（disks）
-都
-没有。
-NVMe
-command
-是
-generic
-的
-logic
-被
-used
-用于
-与
-controller
-和
-它
-expose
-的
-namespaces
-communicate。
-Finally
-NVMe
-namespace
-是
-dedicated
-的
-part
-用于
-deal
-与
-一
-个
-actual
-的
-namespace
-它
-in
-turn
-enable
-applications
-通过
-Disk
-Access
-API
-:zephyr_file:`drivers/disk/nvme/nvme_disk.c`
-access
-每个
-namespace。
+其中 NVMe 控制器是设备驱动程序的根。它是获取设备驱动程序实例的部分。
+注意这仅仅是 DTS 描述的 NVMe 控制器，
+而不包括其任何命名空间（磁盘）。
+NVMe 命令是用于与控制器及其暴露的命名空间通信的通用逻辑。
+最后，NVMe 命名空间是专门用于处理实际命名空间的部分，
+进而使应用程序能够通过磁盘访问 API 访问每个命名空间
+:zephyr_file:`drivers/disk/nvme/nvme_disk.c`。
 
-如果
-一
-个
-controller
-expose
-多
-于
-1
-个
-namespace
-（disk）
-将
-可以
-raise
-built
-in
-的
-namespace
-support
-的
-amount
-通过
-tweaking
-configuration
-option
-CONFIG_NVME_MAX_NAMESPACES
-（see
-below）。
+如果一个控制器暴露多个命名空间（磁盘），
+可以通过调整配置选项 CONFIG_NVME_MAX_NAMESPACES
+来增加内置命名空间支持数量（见下文）。
 
-每个
-exposed
-的
-disk
-通过
-它
-related
-的
-disk_info
-structure
-将
-被
-distinguished
-由
-它
-的
-name
-它
-inherited
-从
-它
-related
-的
-namespace。
-As
-such
-disk
-name
-follow
-NVMe
-naming
-它
-是
-nvme<k>n<n>
-那里
-k
-是
-controller
-number
-且
-n
-是
-namespame
-number。
-Most
-of
-the
-time
-如果
-只
-有
-一
-个
-NVMe
-disk
-被
-plugged
-到
-system
-中
-将
-seen
-'nvme0n0'
-作为
-一
-个
-exposed
-的
-disk。
+每个暴露的磁盘通过其相关的 disk_info 结构体，
+由其从相关命名空间继承的名称来区分。因此，磁盘名称遵循 NVMe 命名规范，
+即 nvme<k>n<n>，其中 k 是控制器编号，
+n 是命名空间编号。大多数情况下，如果系统中只插入一个 NVMe 磁盘，
+会看到 'nvme0n0' 作为暴露的磁盘。
 
-NVMe
-configuration
+NVMe 配置
 ******************
 
 DTS
 ===
 
-任何
-expose
-一
-个
-NVMe
-disk
-的
-board
-应该
-provide
-一
-个
-DTS
-overlay
-用于
-enable
-它
-在
-Zephyr
-中
-的
-use
+任何暴露 NVMe 磁盘的板都应提供 DTS overlay 以启用其在 Zephyr 中的使用
+
+.. code-block:: devicetree
+
+    #include <zephyr/dt-bindings/pcie/pcie.h>
+    / {
+        pcie0 {
+            nvme0: nvme0 {
+                compatible = "nvme-controller";
+                vendor-id = <VENDOR_ID>;
+                device-id = <DEVICE_ID>;
+                status = "okay";
+            };
+        };
+    };
+
+其中 VENDOR_ID 和 DEVICE_ID 是暴露的 NVMe 控制器的值。
+
+选项
+=======
+
+* :kconfig:option:`CONFIG_NVME`
+
+请注意，NVME 需要目标支持 PCIe 多向量 MSI-X 才能正常工作。
+
+* :kconfig:option:`CONFIG_NVME_MAX_NAMESPACES`
+
+重要注意事项
+************************
+
+NVMe 规范强制要求数据缓冲区放置在双字（4 字节）对齐的地址。
+虽然这对于管理用户进程下方虚拟内存和动态分配的先进操作系统
+不是问题，但在 Zephyr 中，只要缓冲区地址
+直接映射到物理内存，这可能成为一个问题。
+
+因此，在此阶段，用户需要确保提供给
+:c:func:`disk_access_read` 和 :c:func:`disk_access_write` 的缓冲区地址
+是双字对齐的。

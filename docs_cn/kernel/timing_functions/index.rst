@@ -1,18 +1,18 @@
 .. _timing_functions:
 
-Executing Time Functions
+执行时间函数
 ########################
 
 时间函数可用于获取一段代码的执行时间，以辅助分析和优化。
 
 请注意，时间函数可能使用与默认内核定时器不同的定时器，所使用的定时器由架构、SoC 或板级配置指定。
 
-Configuration
+配置
 *************
 
 要允许使用时间函数，需要启用 :kconfig:option:`CONFIG_TIMING_FUNCTIONS`。
 
-Usage
+用法
 *****
 
 要收集时间信息：
@@ -33,7 +33,7 @@ Usage
 
 8. 调用 :c:func:`timing_stop` 发出结束收集时间信息的信号。这通常会停止定时器。
 
-Example
+示例
 -------
 
 下面展示一个如何使用时间函数的示例：
@@ -63,7 +63,7 @@ Example
        timing_stop();
    }
 
-API documentation
+API 文档
 *****************
 
 .. doxygengroup:: timing_api

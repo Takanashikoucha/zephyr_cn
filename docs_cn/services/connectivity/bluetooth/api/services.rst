@@ -1,60 +1,34 @@
-.. _bluetooth
-services:
+.. _bluetooth_services:
 
-Bluetooth
-standard
-services
+Bluetooth 标准服务
 ###########################
 
-Battery
-Service
+电池服务（Battery Service）
 ***************
 
-..
-doxygengroup::
-bt_bas
+.. doxygengroup:: bt_bas
 
-Current
-Time
-Service
+当前时间服务（Current Time Service）
 ********************
 
-..
-doxygengroup::
-bt_cts
+.. doxygengroup:: bt_cts
 
-Elapsed
-Time
-Service
+已流逝时间服务（Elapsed Time Service）
 ********************
 
-..
-doxygengroup::
-bt_ets
+.. doxygengroup:: bt_ets
 
-Heart
-Rate
-Service
+心率服务（Heart Rate Service）
 ******************
 
-..
-doxygengroup::
-bt_hrs
+.. doxygengroup:: bt_hrs
 
-Immediate
-Alert
-Service
+即时警报服务（Immediate Alert Service）
 ***********************
 
-..
-doxygengroup::
-bt_ias
+.. doxygengroup:: bt_ias
 
-Object
-Transfer
-Service
+对象传输服务（Object Transfer Service）
 ***********************
 
-..
-doxygengroup::
-bt_ots
+.. doxygengroup:: bt_ots

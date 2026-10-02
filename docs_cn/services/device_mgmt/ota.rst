@@ -3,140 +3,139 @@
 Over-the-Air Update
 ###################
 
-Overview
+概述
 ********
 
-Over-the-Air (OTA) Update 为用
-network connection 向 remote
-devices 交付 firmware updates 的方法。虽然名称暗示
-wireless
-connection（通过 wired connection（如 Ethernet）接收的
-updates 仍通常被称为 OTA updates。此方法需
-server
-infrastructure 来 host firmware binary 并实现
-update 可用时的 signaling 方法。Security 是 OTA updates 的
-concern；firmware
-binaries 应被
-cryptographically signed 并在升级前验证。
+空中下载（OTA）升级是一种通过网络连接向远程
+设备交付固件更新的方法。虽然名称暗示
+无线
+连接，但通过有线连接（如以太网）接收的
+更新仍通常被称为 OTA 升级。此方法需要
+服务器
+基础设施来托管固件二进制文件，并实现一种在
+更新可用时发出信号的方法。安全性是 OTA 升级的
+关注点；固件
+二进制文件应被
+加密签名并在升级前验证。
 
-:ref:`dfu` section 讨论用 MCUboot 升级
-Zephyr firmware。相同方法可作为
-OTA 的一部分使用。Binary 首先被
-下载到未占用的 code partition（通常命名为 ``slot1_partition``）（然后
-用 :ref:`mcuboot` process 升级。
+:ref:`dfu` 章节讨论使用 MCUboot 升级
+Zephyr 固件。相同的方法可作为
+OTA 的一部分使用。二进制文件首先被
+下载到未占用的代码分区（通常命名为 ``slot1_partition``），然后
+使用 :ref:`mcuboot` 流程升级。
 
-Examples of OTA
+OTA 示例
 ***************
 
 Golioth
 =======
 
-`Golioth`_ 为包含 OTA updates 的 IoT management platform。Devices
-配置为观察 Golioth Cloud 上可用的 firmware revisions。
-有新 version 可用时（device 下载并 flash
-binary。此
-implementation 中（cloud 与 device 间的 connection 用
-TLS/DTLS 保护（且
-signed firmware binary 在升级发生前由
+`Golioth`_ 是一个包含 OTA 升级的 IoT 管理平台。设备
+被配置为观察 Golioth Cloud 上可用的固件修订版本。
+当有新版本可用时，设备下载并烧录
+二进制文件。在
+此实现中，云与设备之间的连接使用
+TLS/DTLS 保护，且
+签名的固件二进制文件在升级发生前由
 MCUboot 确认。
 
-1. 可用的 sample 可在 `Golioth Firmware SDK repository`_ 找到
-2. `Golioth OTA documentation`_ 包含关于
-   versioning process 的完整 information
+1. 一个可用的示例可在 `Golioth Firmware SDK 仓库`_ 找到
+2. `Golioth OTA 文档`_ 包含关于
+版本管理流程的完整信息
 
-Plain HTTP download
-===================
+普通 HTTP 下载
+==================
 
-:ref:`fota_http` library 从任何 HTTP server 获取
-signed image（
-写入 secondary slot 并请求 swap。无需 management
-protocol 或专用 update server。MCUboot 在
-升级发生前验证 image
-signature。
+:ref:`fota_http` 库从任何 HTTP 服务器获取
+签名映像，
+写入次要槽并请求交换。无需管理
+协议或专用升级服务器。MCUboot 在
+升级发生前验证映像
+签名。
 
 Zephyr
-:zephyr:code-sample-category:`mgmt` section 包含
-:zephyr:code-sample:`fota-http` sample。
+:zephyr:code-sample-category:`mgmt` 章节包含
+:zephyr:code-sample:`fota-http` 示例。
 
 Eclipse hawkBit™
 ================
 
-`Eclipse hawkBit™`_ 为用
-polling 检测 firmware updates 的 REST api 的 update server framework。检测
-到新 update 时（binary
+`Eclipse hawkBit™`_ 是一个使用
+轮询 REST API 来检测固件更新的升级服务器框架。检测
+到新更新时，二进制文件
 被下载并安装。MCUboot 可用于
-升级 firmware 前验证
-signature。
+在升级固件前验证
+签名。
 
 Zephyr
-:zephyr:code-sample-category:`mgmt` section 包含
-:zephyr:code-sample:`hawkbit-api` sample。
+:zephyr:code-sample-category:`mgmt` 章节包含
+:zephyr:code-sample:`hawkbit-api` 示例。
 
 UpdateHub
 =========
 
-`UpdateHub`_ 为远程更新
-embedded devices 的 platform。Updates 可
-手动触发或通过 polling 监控。检测
-到新 update 时（binary
+`UpdateHub`_ 是一个远程更新
+嵌入式设备的平台。更新可
+手动触发或通过轮询监控。检测
+到新更新时，二进制文件
 被下载并安装。MCUboot 可用于
-升级 firmware 前验证
-signature。
+在升级固件前验证
+签名。
 
 Zephyr
-:zephyr:code-sample-category:`mgmt` section 包含
-:zephyr:code-sample:`updatehub-fota` sample。
+:zephyr:code-sample-category:`mgmt` 章节包含
+:zephyr:code-sample:`updatehub-fota` 示例。
 
-SMP Server
+SMP 服务器
 ==========
 
-Simple Management Protocol (SMP) server 可用于通过
-Bluetooth Low Energy (LE) 或 UDP 更新
-firmware。:ref:`mcu_mgr` 用于向
-remote device 发送
-signed
-firmware binary（其在升级发生前由
+简单管理协议（SMP）服务器可用于通过
+Bluetooth Low Energy（LE）或 UDP 更新
+固件。:ref:`mcu_mgr` 用于向
+远程设备发送
+签名
+固件二进制文件，其在升级发生前由
 MCUboot 验证。
 
 Zephyr
-:zephyr:code-sample-category:`mgmt` section 包含
-:zephyr:code-sample:`smp-svr` sample。
+:zephyr:code-sample-category:`mgmt` 章节包含
+:zephyr:code-sample:`smp-svr` 示例。
 
-Lightweight M2M (LwM2M)
-=======================
+轻量级 M2M（LwM2M）
+======================
 
-:ref:`lwm2m_interface` protocol 包含
-:kconfig:option:`CONFIG_LWM2M_FIRMWARE_UPDATE_OBJ_SUPPORT` 的 firmware update 支持。Devices
-用 DTLS 安全连接到
-LwM2M server。有
-:zephyr:code-sample:`lwm2m-client` sample（但
-其不演示 firmware update feature。
+:ref:`lwm2m_interface` 协议包含
+:kconfig:option:`CONFIG_LWM2M_FIRMWARE_UPDATE_OBJ_SUPPORT` 的固件升级支持。设备
+使用 DTLS 安全连接到
+LwM2M 服务器。有一个
+:zephyr:code-sample:`lwm2m-client` 示例，但
+其不演示固件升级功能。
 
 mender-mcu
 ==========
 
 `mender-mcu`_ 通过
-与 Zephyr 集成（使
-resource-constrained devices 上的 robust firmware updates 成为可能。其实现
-Update Module interface（并提供
-与 MCUboot 集成的默认 Update Module（以提供
-A/B updates。
-这允许 microcontroller units (MCUs) 执行原子、
-fail-safe 的 OTA
-updates（失败时自动 rollback。
+与 Zephyr 集成，使
+资源受限设备上的健壮固件升级成为可能。其实现
+Update Module 接口，并提供
+一个与 MCUboot 集成的默认 Update Module，以提供
+A/B 升级。
+这允许微控制器（MCU）执行原子、
+防故障的 OTA
+升级，失败时自动回滚。
 
 集成细节和示例参见 :ref:`external_module_mender_mcu`。
 
-Memfault and nRF Cloud powered by Memfault
+Memfault 和由 Memfault 驱动的 nRF Cloud
 ==========================================
 
-`Memfault`_ 为包含
-OTA management 的 IoT observability platform。Devices
+`Memfault`_ 是一个包含
+OTA 管理的 IoT 可观测性平台。设备
 周期性向
-Memfault 的 service check-in 以获取 OTA update（且
-update 可用时（下载并
-install
-binary。
+Memfault 的服务检查以获取 OTA 升级，且
+升级可用时，下载并
+安装
+二进制文件。
 
 总体集成细节和
 示例参见 :ref:`external_module_memfault_firmware_sdk`。

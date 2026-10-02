@@ -3,7 +3,7 @@
 .. _west-apis:
 .. _west-apis-west:
 
-West API
+West APIs
 #########
 
 本页记录 :ref:`west <west>` 提供的 Python API，

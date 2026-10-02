@@ -1,245 +1,50 @@
 .. _fcb_api:
 
-Flash
-Circular
-Buffer
-（FCB）
+Flash 循环缓冲区（FCB）
 ###########################
 
-Flash
-circular
-buffer
-provide
-一
-个
-abstraction
-通过
-它
-可以
-treat
-flash
-像
-一
-个
-FIFO。
-你
-append
-entries
-到
-end
-并
-从
-beginning
-read
-data。
+Flash 循环缓冲区提供了一种抽象，使你可以像 FIFO 一样使用 flash：向末尾追加条目，从开头读取数据。
 
-Description
+描述
 ***********
 
-Flash
-中
-的
-Entries
-contain
-entry
-的
-length、
-entry
-内
-的
-data、
-和
-entry
-contents
-上
-的
-checksum。
+flash 中的条目包含条目的长度、条目内的数据，以及对条目内容计算的校验和（checksum）。
 
-Entries
-在
-flash
-中
-的
-Storage
-以
-FIFO
-的
-方式
-done。
-当
-你
-request
-next
-个
-entry
-的
-space
-space
-被
-located
-在
-used
-area
-的
-end。
-当
-你
-start
-reading
-first
-个
-served
-的
-entry
-是
-flash
-中
-oldest
-的
-entry。
+条目在 flash 中的存储采用 FIFO 方式。当你为下一个条目申请空间时，空间位于已用区域的末尾。当你开始读取时，首先提供的是 flash 中最旧的条目。
 
-Entries
-可以
-被
-appended
-到
-area
-的
-end
-直到
-storage
-space
-被
-exhausted。
-你
-control
-next
-发生
-什么
-either
-erase
-oldest
-的
-block
-of
-data
-thereby
-freeing
-up
-some
-space
-或
-stop
-writing
-new
-data
-直到
-existing
-的
-data
-被
-collected。
-FCB
-treat
-underlying
-的
-storage
-像
-一
-个
-flash
-sectors
-的
-array
-当
-它
-erase
-old
-data
-时
-它
-这
-做
-一
-个
-sector
-一
-个
-sector
-地。
+条目可以不断追加到区域末尾，直到存储空间耗尽。接下来发生什么由你控制：要么擦除最旧的数据块以释放一些空间，要么停止写入新数据，直到现有数据被收集完毕。FCB 将底层存储视为一个 flash 扇区数组；擦除旧数据时，它一次擦除一个扇区。
 
-Flash
-中
-的
-Entries
-被
-checksummed。
-这
-是
-FCB
-detect
-writing
-entry
-到
-flash
-是否
-completed
-ok
-的
-方式。
-它
-将
-skip
-over
-entries
-它们
-没有
-valid
-的
-checksum。
+flash 中的条目都带有校验和。这就是 FCB 判断条目写入 flash 是否成功完成的方式。它会跳过校验和无效的条目。
 
-Usage
+使用
 *****
 
-要
-add
-一
-个
-entry
-到
-circular
-buffer:
+向循环缓冲区添加条目：
 
--
-Call
-:c:func:`fcb_append`
-get
-data
-可以
-被
-written
-的
-location。
-如果
-这
-因为
-lack
-of
-space
-fail
-你
-可以
-call
-:c:func:`fcb_rotate`
-erase
-oldest
-的
-sector
-它
-将
-make
-space。
-然后
-再次
-call
-:c:func:`fcb_append`。
+- 调用 :c:func:`fcb_append` 获取可以写入数据的位置。如果因空间不足而失败，可以调用 :c:func:`fcb_rotate` 擦除最旧的扇区以腾出空间，然后再次调用 :c:func:`fcb_append`。
+- 使用 :c:func:`flash_area_write` 写入条目内容。
+- 完成时调用 :c:func:`fcb_append_finish`。该函数通过计算校验和完成条目的写入。
+
+读取循环缓冲区的内容：
+
+- 传入回调函数指针，调用 :c:func:`fcb_walk`。
+- 在回调函数中，使用 :c:func:`flash_area_read` 从条目中拷贝数据。通过监视返回条目的区域指针，可以判断某个扇区内的所有数据是否已读取完毕。处理完该数据后，可以调用 :c:func:`fcb_rotate`。
+
+或者：
+
+- 以条目偏移 0 调用 :c:func:`fcb_getnext`，获取最旧条目的指针。
+- 使用 :c:func:`flash_area_read` 读取条目内容。
+- 以当前条目的指针调用 :c:func:`fcb_getnext` 获取下一个条目，依此类推。
+
+API 参考
+*************
+
+FCB 子系统的 API 由 ``fcb.h`` 提供：
+
+数据结构
+==============
+.. doxygengroup:: fcb_data_structures
+
+API 函数
+=============
+.. doxygengroup:: fcb_api

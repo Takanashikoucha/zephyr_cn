@@ -1,83 +1,83 @@
 .. _bluetooth_mesh_sar_cfg:
 
-Segmentation and reassembly (SAR)
+分段与重组（SAR）
 #################################
 
-Segmentation and reassembly (SAR) 提供在 mesh network 中处理较大 upper transport layer messages 的方式（以增强 Bluetooth Mesh throughput。Segmentation and reassembly 机制由 lower transport layer 使用。
+分段与重组（SAR）提供了一种在 mesh 网络中处理较大上层传输层消息的方式，其目的是提升 Bluetooth Mesh 的吞吐量。分段与重组机制由较低传输层使用。
 
-Lower transport layer 定义 upper transport layer PDUs 如何被 segmentation 和 reassembly 为多个 Lower Transport PDUs（并将其发送到 peer device 的 lower transport layer。若 Upper Transport PDU 适配（则在单个 Lower Transport PDU 中发送。对于不适配单个 Lower Transport PDU 的较长 packets（lower transport layer 执行 segmentation（将 Upper Transport PDU 分割为多个 segments。
+较低传输层定义了如何将上层传输层 PDU 分段并重组为多个 Lower Transport PDU，并将其发送到对等设备的较低传输层。如果 Upper Transport PDU 能够容纳，则在一个 Lower Transport PDU 中发送。对于无法容纳在单个 Lower Transport PDU 中的较长报文，较低传输层执行分段，将 Upper Transport PDU 拆分为多个分段。
 
-接收 device 上的 lower transport layer 在将其传递到 stack 上层之前将 segments reassembly 为单个 Upper Transport PDU。Segmented message 的 delivery 由接收 node 的 lower transport layer 确认（而 unsegmented message delivery 不确认。然而（适配单个 Lower Transport PDU 的 Upper Transport PDU 也可作为 single-segment segmented message 发送（当需要 lower transport layer 确认时。设置 ``send rel`` flag（参见 :c:struct:`bt_mesh_msg_ctx`）以使用可靠 message transmission 并确认 single-segment segmented messages。
+接收设备上的较低传输层在将报文向上传递到协议栈之前，会将各分段重组为单个 Upper Transport PDU。分段消息的投递由接收节点的较低传输层进行确认，而未分段消息的投递则不进行确认。不过，能够容纳在单个 Lower Transport PDU 中的 Upper Transport PDU 也可以作为单分段的分段消息发送，此时需要较低传输层进行确认。设置 ``send rel`` 标志（参见 :c:struct:`bt_mesh_msg_ctx`）以使用可靠消息传输，并对单分段的分段消息进行确认。
 
-Transport layer 能用其 SAR 机制传输最多 32 segments（最大 message（PDU）size 为 384 octets。要为 Bluetooth Mesh stack 配置 message size（使用以下 Kconfig options：
+传输层能够使用其 SAR 机制传输多达 32 个分段，最大消息（PDU）大小为 384 字节。要为 Bluetooth Mesh 协议栈配置消息大小，请使用以下 Kconfig 选项：
 
-* :kconfig:option:`CONFIG_BT_MESH_RX_SEG_MAX` 设置 incoming message 中 segments 的最大数。
-* :kconfig:option:`CONFIG_BT_MESH_TX_SEG_MAX` 设置 outgoing message 中 segments 的最大数。
+* :kconfig:option:`CONFIG_BT_MESH_RX_SEG_MAX` 用于设置接收消息中的最大分段数。
+* :kconfig:option:`CONFIG_BT_MESH_TX_SEG_MAX` 用于设置发送消息中的最大分段数。
 
-Kconfig options :kconfig:option:`CONFIG_BT_MESH_TX_SEG_MSG_COUNT` 和 :kconfig:option:`CONFIG_BT_MESH_RX_SEG_MSG_COUNT` 定义可同时处理多少个 outgoing 和 incoming segmented messages。当向同一 destination 发送多个 segmented messages 时（messages 被 queued 且一次发送一个。
+Kconfig 选项 :kconfig:option:`CONFIG_BT_MESH_TX_SEG_MSG_COUNT` 和 :kconfig:option:`CONFIG_BT_MESH_RX_SEG_MSG_COUNT` 定义了可以同时处理多少条发送和接收的分段消息。当向同一目的地发送多条分段消息时，这些消息会被排队并逐条发送。
 
-Incoming 和 outgoing segmented messages 共享同一 pool 以分配其 segments。此 pool size 通过 :kconfig:option:`CONFIG_BT_MESH_SEG_BUFS` Kconfig option 配置。Incoming 和 outgoing messages 在 transaction 开始时分配 segments。Outgoing segmented message 在 segments 被 receiver 确认后逐个释放（而 incoming message 在 message 完全接收后首先释放 segments。定义 buffers 大小时请记住此点。
+接收和发送的分段消息共享同一个用于分配其分段的池。该池的大小通过 :kconfig:option:`CONFIG_BT_MESH_SEG_BUFS` Kconfig 选项配置。接收和发送消息都在事务开始时分配分段。发送的分段消息在其分段被接收方确认后逐个释放这些分段，而接收消息则在该消息完全接收后首先释放这些分段。在定义缓冲区大小时请牢记这一点。
 
-SAR 不对每个 segment 的 access layer payload 施加额外 overhead。
+SAR 不会为每个分段在访问层负载上增加额外开销。
 
-Segmentation and reassembly (SAR) Configuration models
+分段与重组（SAR）配置模型
 ******************************************************
 
-自 Bluetooth Mesh Protocol Specification version 1.1 起（可使用 SAR Configuration models 通过 mesh network 配置 SAR 行为（如 intervals、timers 和 retransmission counters：
+从 Bluetooth Mesh 协议规范 1.1 版本开始，可以通过 SAR 配置模型在 mesh 网络上配置 SAR 行为，例如间隔、定时器和重传计数器：
 
 * :ref:`bluetooth_mesh_sar_cfg_cli`
 * :ref:`bluetooth_mesh_sar_cfg_srv`
 
-无论 node 上是否存在 SAR Configuration Server（以下 SAR 行为均适用。
+无论节点上是否存在 SAR 配置服务器，以下 SAR 行为均适用。
 
-Segments 的 transmission 由 segment transmission interval 分隔（参见 `SAR Segment Interval Step`_ state。可用于 segmentation and reassembly 的其他可配置 time intervals 和 delays：
+分段的传输之间以分段传输间隔分隔（参见 `SAR Segment Interval Step`_ 状态）。可用于分段与重组的其他可配置时间间隔和延迟包括：
 
-* Unicast retransmissions 之间的 interval（参见 states `SAR Unicast Retransmissions Interval Step`_ 和 `SAR Unicast Retransmissions Interval Increment`_）。
-* Multicast retransmissions 之间的 interval（参见 `SAR Multicast Retransmissions Interval Step`_ state）。
-* Segment reception interval（参见 `SAR Receiver Segment Interval Step`_ state）。
-* Acknowledgment delay increment（参见 `SAR Acknowledgment Delay Increment`_ state）。
+* 单播重传之间的间隔（参见状态 `SAR Unicast Retransmissions Interval Step`_ 和 `SAR Unicast Retransmissions Interval Increment`_）。
+* 组播重传之间的间隔（参见 `SAR Multicast Retransmissions Interval Step`_ 状态）。
+* 分段接收间隔（参见 `SAR Receiver Segment Interval Step`_ 状态）。
+* 确认延迟增量（参见 `SAR Acknowledgment Delay Increment`_ 状态）。
 
-当标记为 unacknowledged 的最后一个 segment 被传输时（lower transport layer 启动 retransmissions timer。SAR Unicast Retransmissions timer 的初始值取决于 message 的 TTL field 值。若 TTL field 值大于 ``0``（timer 初始值按以下公式设置：
+当最后一个被标记为未确认的分段被传输时，较低传输层启动一个重传定时器。SAR 单播重传定时器的初始值取决于该消息 TTL 字段的值。如果 TTL 字段值大于 ``0``，则定时器的初始值按以下公式设置：
 
 .. math::
 
    unicast~retransmissions~interval~step + unicast~retransmissions~interval~increment \times (TTL - 1)
 
 
-若 TTL field 值为 ``0``（timer 初始值设为 unicast retransmissions interval step。
+如果 TTL 字段值为 ``0``，定时器的初始值被设置为单播重传间隔步长。
 
-SAR Multicast Retransmissions timer 的初始值设为 multicast retransmissions interval。
+SAR 组播重传定时器的初始值被设置为组播重传间隔。
 
-当 lower transport layer 接收 message segment 时（启动 SAR Discard timer。Discard timer 指示 lower transport layer 在丢弃 segment 所属的 segmented message 前等待多久。SAR Discard timer 的初始值为 `SAR Discard Timeout`_ state 指示的 discard timeout 值。
+当较低传输层收到一个消息分段时，它启动一个 SAR 丢弃定时器。丢弃定时器表示较低传输层在丢弃该分段所属的分段消息之前等待多长时间。SAR 丢弃定时器的初始值是由 `SAR Discard Timeout`_ 状态指示的丢弃超时值。
 
-SAR Acknowledgment timer 持有在收到 segment 后发送 Segment Acknowledgment message 前的时间。SAR Acknowledgment timer 的初始值用以下公式计算：
+SAR 确认定时器保存的是在收到一个分段后、发送 Segment Acknowledgment 消息之前的时间。SAR 确认定时器的初始值使用以下公式计算：
 
 .. math::
 
    min(SegN + 0.5 , acknowledgment~delay~increment) \times segment~reception~interval
 
 
-``SegN`` field 值标识 Upper Transport PDU 被分割成的 segments 总数。
+``SegN`` 字段的值标识该 Upper Transport PDU 被分段的总段数。
 
-四个 counters 与 SAR 行为相关：
+有四个计数器与 SAR 行为相关：
 
-* 两个 unicast retransmissions counts（参见 `SAR Unicast Retransmissions Count`_ state 和 `SAR Unicast Retransmissions Without Progress Count`_ state）
-* Multicast retransmissions count（参见 `SAR Multicast Retransmissions Count`_ state）
-* Acknowledgment retransmissions count（参见 `SAR Acknowledgment Retransmissions Count`_ state）
+* 两个单播重传计数（参见 `SAR Unicast Retransmissions Count`_ 状态和 `SAR Unicast Retransmissions Without Progress Count`_ 状态）
+* 组播重传计数（参见 `SAR Multicast Retransmissions Count`_ 状态）
+* 确认重传计数（参见 `SAR Acknowledgment Retransmissions Count`_ 状态）
 
-若 transmission 中 segments 数高于 `SAR Segments Threshold`_ state 值（Segment Acknowledgment messages 用 `SAR Acknowledgment Retransmissions Count`_ state 值 retransmit。
+如果传输中的分段数高于 `SAR Segments Threshold`_ 状态的值，则 Segment Acknowledgment 消息会使用 `SAR Acknowledgment Retransmissions Count`_ 状态的值进行重传。
 
 .. _bt_mesh_sar_cfg_states:
 
-SAR states
+SAR 状态
 **********
 
-有两个与 segmentation and reassembly 相关的定义 states：
+有两个与分段与重组相关的状态：
 
-* SAR Transmitter state
-* SAR Receiver state
+* SAR 发射器状态
+* SAR 接收器状态
 
-SAR Transmitter state 是控制 segmented messages transmission 的数量和时序的 composite state。它包括以下 states：
+SAR 发射器状态是一个复合状态，用于控制分段消息传输的数量和时序。它包括以下状态：
 
 * SAR Segment Interval Step
 * SAR Unicast Retransmissions Count
@@ -87,7 +87,7 @@ SAR Transmitter state 是控制 segmented messages transmission 的数量和时�
 * SAR Multicast Retransmissions Count
 * SAR Multicast Retransmissions Interval Step
 
-SAR Receiver state 是控制 Segment Acknowledgment transmissions 的数量和时序以及 segmented message reassembly 丢弃的 composite state。它包括以下 states：
+SAR 接收器状态是一个复合状态，用于控制 Segment Acknowledgment 传输的数量和时序，以及分段消息重组的丢弃。它包括以下状态：
 
 * SAR Segments Threshold
 * SAR Discard Timeout
@@ -98,9 +98,9 @@ SAR Receiver state 是控制 Segment Acknowledgment transmissions 的数量和�
 SAR Segment Interval Step
 =========================
 
-SAR Segment Interval Step state 持有控制 segmented message 的 segments transmission 之间 interval 的值。Interval 以毫秒测量。
+SAR Segment Interval Step 状态保存一个值，用于控制分段消息各分段传输之间的间隔。该间隔以毫秒为单位测量。
 
-用 :kconfig:option:`CONFIG_BT_MESH_SAR_TX_SEG_INT_STEP` Kconfig option 设置默认值。Segment transmission interval 然后用以下公式计算：
+使用 :kconfig:option:`CONFIG_BT_MESH_SAR_TX_SEG_INT_STEP` Kconfig 选项设置默认值。分段传输间隔随后使用以下公式计算：
 
 .. math::
 
@@ -110,19 +110,19 @@ SAR Segment Interval Step state 持有控制 segmented message 的 segments tran
 SAR Unicast Retransmissions Count
 =================================
 
-SAR Unicast Retransmissions Count 持有定义向 unicast destination 的 segmented message 最大 retransmissions 数的值。用 :kconfig:option:`CONFIG_BT_MESH_SAR_TX_UNICAST_RETRANS_COUNT` Kconfig option 设置此 state 的默认值。
+SAR Unicast Retransmissions Count 保存一个值，用于定义向单播目的地重传分段消息的最大次数。使用 :kconfig:option:`CONFIG_BT_MESH_SAR_TX_UNICAST_RETRANS_COUNT` Kconfig 选项为该状态设置默认值。
 
 SAR Unicast Retransmissions Without Progress Count
 ==================================================
 
-此 state 持有定义向 unicast address 的 segmented message 最大 retransmissions 数的值（若在 timeout 期间未收到 acknowledgment 或收到已确认 segments 的 acknowledgment 则发送。用 Kconfig option :kconfig:option:`CONFIG_BT_MESH_SAR_TX_UNICAST_RETRANS_WITHOUT_PROG_COUNT` 设置最大 retransmissions 数。
+该状态保存一个值，用于定义向单播地址重传分段消息的最大次数：如果在超时期间未收到任何确认，或者收到了包含已确认分段的确认，则会发送该次数的重传。使用 Kconfig 选项 :kconfig:option:`CONFIG_BT_MESH_SAR_TX_UNICAST_RETRANS_WITHOUT_PROG_COUNT` 设置最大重传次数。
 
 SAR Unicast Retransmissions Interval Step
-=========================================
+========================================
 
-此 state 的值控制用于延迟向 unicast address 的 unacknowledged segments retransmissions 的 interval step。Interval step 以毫秒测量。
+该状态的值控制用于延迟向单播地址重传未确认分段所使用的间隔步长。该间隔步长以毫秒为单位测量。
 
-用 :kconfig:option:`CONFIG_BT_MESH_SAR_TX_UNICAST_RETRANS_INT_STEP` Kconfig option 设置默认值。此值然后用以下公式计算 interval step：
+使用 :kconfig:option:`CONFIG_BT_MESH_SAR_TX_UNICAST_RETRANS_INT_STEP` Kconfig 选项设置默认值。该值随后用于使用以下公式计算间隔步长：
 
 .. math::
 
@@ -130,11 +130,11 @@ SAR Unicast Retransmissions Interval Step
 
 
 SAR Unicast Retransmissions Interval Increment
-==============================================
+=============================================
 
-SAR Unicast Retransmissions Interval Increment 持有控制用于延迟向 unicast address 的 unacknowledged segments retransmissions 的 interval increment 的值。Increment 以毫秒测量。
+SAR Unicast Retransmissions Interval Increment 保存一个值，用于控制用于延迟向单播地址重传未确认分段所使用的间隔增量。该增量以毫秒为单位测量。
 
-用 Kconfig option :kconfig:option:`CONFIG_BT_MESH_SAR_TX_UNICAST_RETRANS_INT_INC` 设置默认值。Kconfig option 值用以下公式计算 increment：
+使用 Kconfig 选项 :kconfig:option:`CONFIG_BT_MESH_SAR_TX_UNICAST_RETRANS_INT_INC` 设置默认值。Kconfig 选项值用于使用以下公式计算增量：
 
 .. math::
 
@@ -144,14 +144,14 @@ SAR Unicast Retransmissions Interval Increment 持有控制用于延迟向 unica
 SAR Multicast Retransmissions Count
 ===================================
 
-此 state 持有控制向 multicast address 的 segmented message 总 retransmissions 数的值。用 Kconfig option :kconfig:option:`CONFIG_BT_MESH_SAR_TX_MULTICAST_RETRANS_COUNT` 设置总 retransmissions 数。
+该状态保存一个值，用于控制向组播地址重传分段消息的总次数。使用 Kconfig 选项 :kconfig:option:`CONFIG_BT_MESH_SAR_TX_MULTICAST_RETRANS_COUNT` 设置总重传次数。
 
 SAR Multicast Retransmissions Interval Step
-===========================================
+==========================================
 
-此 state 持有控制向 multicast address 的 segmented message 所有 segments retransmissions 之间 interval 的值。Interval 以毫秒测量。
+该状态保存一个值，用于控制向组播地址重传分段消息中所有分段之间的间隔。该间隔以毫秒为单位测量。
 
-用 Kconfig option :kconfig:option:`CONFIG_BT_MESH_SAR_TX_MULTICAST_RETRANS_INT` 设置用以下公式计算 interval 的默认值：
+使用 Kconfig 选项 :kconfig:option:`CONFIG_BT_MESH_SAR_TX_MULTICAST_RETRANS_INT` 设置默认值，该值用于使用以下公式计算间隔：
 
 .. math::
 
@@ -159,9 +159,9 @@ SAR Multicast Retransmissions Interval Step
 
 
 SAR Discard Timeout
-===================
+==================
 
-此 state 的值定义 lower transport layer 在收到 segmented message 的 segments 后丢弃该 segmented message 前等待的秒数。用 Kconfig option :kconfig:option:`CONFIG_BT_MESH_SAR_RX_DISCARD_TIMEOUT` 设置默认值。Discard timeout 用以下公式计算：
+该状态的值定义了较低传输层在收到分段消息的分段后、丢弃该分段消息之前等待的时间（以秒为单位）。使用 Kconfig 选项 :kconfig:option:`CONFIG_BT_MESH_SAR_RX_DISCARD_TIMEOUT` 设置默认值。丢弃超时将使用以下公式计算：
 
 .. math::
 
@@ -169,32 +169,32 @@ SAR Discard Timeout
 
 
 SAR Acknowledgment Delay Increment
-==================================
+=================================
 
-此 state 持有控制收到新 segment 后延迟 acknowledgment message transmission 的 interval 的 delay increment 的值。Increment 以 segments 测量。
+该状态保存一个值，用于控制在收到新分段后延迟发送确认消息所使用间隔的延迟增量。该增量以分段数为单位测量。
 
-用 Kconfig option :kconfig:option:`CONFIG_BT_MESH_SAR_RX_ACK_DELAY_INC` 设置默认值。Increment 值计算为 :math:`\verb|CONFIG_BT_MESH_SAR_RX_ACK_DELAY_INC| + 1.5`。
+使用 Kconfig 选项 :kconfig:option:`CONFIG_BT_MESH_SAR_RX_ACK_DELAY_INC` 设置默认值。增量值计算为 :math:`\verb|CONFIG_BT_MESH_SAR_RX_ACK_DELAY_INC| + 1.5`。
 
 SAR Segments Threshold
-======================
+=====================
 
-SAR Segments Threshold state 持有定义 acknowledgment retransmissions 的 segmented message segments 数阈值。用 Kconfig option :kconfig:option:`CONFIG_BT_MESH_SAR_RX_SEG_THRESHOLD` 设置阈值。
+SAR Segments Threshold 状态保存一个值，用于定义确认重传的分段数阈值。使用 Kconfig 选项 :kconfig:option:`CONFIG_BT_MESH_SAR_RX_SEG_THRESHOLD` 设置该阈值。
 
-当 segmented message 的 segments 数高于此阈值时（stack 将额外 retransmit 每个 acknowledgment message :kconfig:option:`CONFIG_BT_MESH_SAR_RX_ACK_RETRANS_COUNT` 值给出的次数。
+当分段消息的分段数超过该阈值时，协议栈将额外将每条确认消息重传 :kconfig:option:`CONFIG_BT_MESH_SAR_RX_ACK_RETRANS_COUNT` 值所给定的次数。
 
 SAR Acknowledgment Retransmissions Count
-========================================
+=======================================
 
-SAR Acknowledgment Retransmissions Count state 控制 lower transport layer 发送的 Segment Acknowledgment messages 的 retransmissions 数。它给出当 segmented message 中 segments size 高于 :kconfig:option:`CONFIG_BT_MESH_SAR_RX_SEG_THRESHOLD` 值时 stack 将额外发送的 acknowledgment message 总 retransmissions 数。
+SAR Acknowledgment Retransmissions Count 状态控制较低传输层发送的 Segment Acknowledgment 消息的重传次数。它给出当分段消息中分段的大小超过 :kconfig:option:`CONFIG_BT_MESH_SAR_RX_SEG_THRESHOLD` 值时，协议栈将额外发送的确认消息总重传次数。
 
-用 Kconfig option :kconfig:option:`CONFIG_BT_MESH_SAR_RX_ACK_RETRANS_COUNT` 设置此 state 的默认值。Segment Acknowledgment message 的最大 transmission 数为 :math:`\verb|CONFIG_BT_MESH_SAR_RX_ACK_RETRANS_COUNT| + 1`。
+使用 Kconfig 选项 :kconfig:option:`CONFIG_BT_MESH_SAR_RX_ACK_RETRANS_COUNT` 为该状态设置默认值。Segment Acknowledgment 消息的最大传输次数为 :math:`\verb|CONFIG_BT_MESH_SAR_RX_ACK_RETRANS_COUNT| + 1`。
 
 SAR Receiver Segment Interval Step
-==================================
+=================================
 
-SAR Receiver Segment Interval Step 定义用于收到新 segment 后延迟 acknowledgment message transmission 的 segments reception interval step。Interval 以毫秒测量。
+SAR Receiver Segment Interval Step 定义了用于在收到新分段后延迟发送确认消息的分段接收间隔步长。该间隔以毫秒为单位测量。
 
-用 Kconfig option :kconfig:option:`CONFIG_BT_MESH_SAR_RX_SEG_INT_STEP` 设置默认值并用以下公式计算 interval：
+使用 Kconfig 选项 :kconfig:option:`CONFIG_BT_MESH_SAR_RX_SEG_INT_STEP` 设置默认值，并使用以下公式计算间隔：
 
 .. math::
 

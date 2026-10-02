@@ -69,7 +69,7 @@ Arm Cortex-M 开发者指南
 +---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
 | 浮点服务                        |                                   |        N        |   N     |   N    |    Y      |    Y   |    N    |     Y      |   Y        |   Y        |
 +---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
-| DSP ISA                         |                                   |        N        |   N     |   N    |    Y      |    Y   |    N    |     Y      |   Y        |   Y        |
+| DSP 指令集                      |                                   |        N        |   N     |   N    |    Y      |    Y   |    N    |     Y      |   Y        |   Y        |
 +---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
 | **可信执行**                    |                                                                                                                                 |            |
 +---------------------------------+-----------------------------------+-----------------+---------+--------+-----------+--------+---------+------------+------------+------------+
@@ -429,12 +429,12 @@ Zephyr 构建时通过选择以下配置之一启用：
   处理器的构建才能完全使用此特性。
 - Zephyr 集成的 SDK 目前包含不支持 PACBTI 的 GCC 12.2，因此必须使用
   外部 GCC 工具链（推荐 14.3 或更高版本）进行 PACBTI 支持。
-  参考 `this document <https://docs.zephyrproject.org/latest/develop/toolchains/index.html>`_
+  参考 `本文档 <https://docs.zephyrproject.org/latest/develop/toolchains/index.html>`_
   了解如何设置工具链。
 
 有关 PACBTI 的更多信息，参考官方
-`Arm documentation <https://developer.arm.com/documentation/109576/latest/>`_
-以及 `Arm community blog <https://community.arm.com/arm-community-blogs/b/architectures-and-processors-blog/posts/armv8-1-m-pointer-authentication-and-branch-target-identification-extension>`_
+`Arm 文档 <https://developer.arm.com/documentation/109576/latest/>`_
+以及 `Arm 社区博客 <https://community.arm.com/arm-community-blogs/b/architectures-and-processors-blog/posts/armv8-1-m-pointer-authentication-and-branch-target-identification-extension>`_
 
 .. _arm_cortex_m_mpu_considerations:
 

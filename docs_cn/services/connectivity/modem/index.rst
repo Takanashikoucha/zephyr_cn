@@ -1,153 +1,241 @@
 .. _modem:
 
-Modem modules
+调制解调器模块
 #############
 
-此 service 提供与 modems 通信所需的 modules。
+本服务提供与调制解调器（modem）通信所需的模块。
 
-Modems 为 self-contained devices（实现执行 RF（Radio-Frequency）communication 所需的 hardware 和 software（包括 GNSS、Cellular、WiFi 等。
+调制解调器是自包含设备，实现了执行射频（RF）通信所需的硬件和
+软件，包括 GNSS、蜂窝（Cellular）、WiFi 等。
 
-Modem modules 使用 data-in/data-out pipes 动态互连（使其可独立测试且高度灵活（确保稳定性和可扩展性。
+调制解调器模块通过数据输入/数据输出管道（pipe）动态互连，
+使其可独立测试且高度灵活，确保稳定性和可扩展性。
 
-Modem pipe
+调制解调器管道
 **********
 
-此 module 用于以 thread-safe 方式抽象通过多种 mechanisms（如 UART 和 CMUX DLCI channels）的 data-in/data-out 通信。
+本模块用于以线程安全的方式，对 UART 和 CMUX DLCI 通道等多种
+机制上的数据输入/数据输出通信进行抽象。
 
-Modem backend 内部将包含 modem_pipe structure 的实例（连同抽象其底层 mechanism 所需的任何 buffers 和额外 structures。
+调制解调器后端内部包含一个 modem_pipe
+结构实例，以及抽象其底层机制所需的任何缓冲区和附加结构。
 
 .. image:: images/modem_pipes.svg
         :alt: Modem pipes
         :align: center
 
-Modem backend 初始化时返回其内部 modem_pipe structure 的 pointer（其将用于通过 modem pipe API 与 backend 交互。
+调制解调器后端初始化后会返回指向其内部 modem_pipe
+结构的指针，该指针将用于通过调制解调器管道 API
+与后端交互。
 
 .. doxygengroup:: modem_pipe
 
-Modem PPP
+调制解调器 PPP
 *********
 
-此 module 将 :ref:`net_l2_interface` 中描述的 L2 PPP network interface 定义并绑定到 modem backend。L2 PPP interface 发送和接收 network packets。这些 network packets 在通过 modem backend 传输前须用 PPP frames 包装。此 module 执行该包装。
+本模块将一个 L2 PPP 网络接口（描述见
+:ref:`net_l2_interface`）定义并绑定到调制解调器后端。L2 PPP 接口
+发送和接收网络数据包。这些网络数据包在通过调制解调器后端
+传输之前必须封装在 PPP 帧中。本模块
+执行该封装。
 
 .. doxygengroup:: modem_ppp
 
-Modem CMUX
+调制解调器 CMUX
 **********
 
-此 module 为按 3GPP 27.010 specification 的 CMUX 实现。CMUX 为 multiplexing protocol（允许多个 bi-directional data streams（称为 DLCI channels。Module 附加到单个 modem backend（暴露多个 modem backends（每个代表一个 DLCI channel。
+本模块是按 3GPP 27.010
+规范实现的 CMUX。CMUX 是一种复用协议，允许多个
+双向数据流，称为 DLCI 通道。本模块
+附加到单个调制解调器后端，并暴露多个调制解调器后端，
+每个代表一个 DLCI 通道。
 
-Protocol 定义简单 framing 以将每个 DLC 分割为小 data chunks。
+该协议定义了简单的帧结构，用于将每个 DLC 拆分为小块数据。
 
 .. image:: images/cmux_frame.svg
         :alt: CMUX basic frame
         :align: center
 
-Zephyr 实现 basic frame 类型（build-time 可配置 MTU size。
+Zephyr 实现了基础帧类型，MTU 大小可在编译时配置。
 
-Module 还为支持它的 modems 实现使用 CMUX Power Saving Command（PSC）的 power-saving。更多细节参见下文 :ref:`cmux-power-saving` section。
+本模块还为支持该功能的调制解调器实现了使用 CMUX 电源节省命令（PSC）的
+省电机制。更多细节见下文 :ref:`cmux-power-saving` 一节。
 
 .. doxygengroup:: modem_cmux
 
-Modem pipelink
+调制解调器 pipelink
 **************
 
-此 module 用于全局共享 modem pipes。此 module 旨在将 device drivers 中 modem pipes 的创建和 setup 与其用户解耦。参见 :zephyr_file:`drivers/modem/modem_at_shell.c` 和 :zephyr_file:`drivers/modem/modem_cellular.c` 作为如何在 device driver 和 application 之间使用 modem pipelink 的示例。
+本模块用于全局共享调制解调器管道。本模块旨在
+将设备驱动中调制解调器管道的创建与设置
+和管道的使用者解耦。参见
+:zephyr_file:`drivers/modem/modem_at_shell.c` 和
+:zephyr_file:`drivers/modem/modem_cellular.c` 了解如何在
+设备驱动与应用之间使用调制解调器 pipelink 的示例。
 
 .. doxygengroup:: modem_pipelink
 
-Modem chat
+调制解调器 chat
 **********
 
-此 module 实现与 modem 的 scripted AT command 通信。AT commands 组织为 **scripts**（每个 script 为 command–response exchanges 的序列。Module 通过 modem pipe 发送 command string（然后等待匹配预期 patterns 之一的 response。找到匹配时（调用带 parsed arguments 的可选 callback。
+本模块实现与调制解调器的脚本化 AT 命令通信。
+AT 命令组织为**脚本（script）**，每个脚本是一
+系列命令—响应交互。模块通过调制解调器管道发送一条
+命令字符串，然后等待匹配预期模式之一的
+响应。找到匹配时，会携带解析后的参数
+调用可选的回调函数。
 
-Scripts 用 :c:macro:`MODEM_CHAT_SCRIPT_DEFINE` 和 :c:macro:`MODEM_CHAT_SCRIPT_CMDS_DEFINE` macros 在 build time 定义。每个 script entry 将 request string 与一个或多个 :c:struct:`modem_chat_match` patterns 配对。Match patterns 通过指定 separator character（例如 ``","``）支持 argument parsing（使从 ``+CSQ: 20,99`` 等 responses 中提取 fields 容易。
+脚本在编译时使用 :c:macro:`MODEM_CHAT_SCRIPT_DEFINE`
+和 :c:macro:`MODEM_CHAT_SCRIPT_CMDS_DEFINE` 宏定义。每个脚本条目
+将一个请求字符串与一个或多个 :c:struct:`modem_chat_match`
+模式配对。匹配模式通过指定
+分隔符（例如 ``","``）支持参数解析，从而轻松
+从 ``+CSQ: 20,99`` 等响应中提取
+字段。
 
-除 scripted exchanges 外（module 持续监控 data stream 中的 **unsolicited** responses — modem 在无先前 command 时发送的 messages（例如 ``+CEREG:`` network registration updates。这些由 chat instance 初始化时注册的单独 match patterns 集合处理。
+除脚本化交互外，模块还会持续监控
+数据流中的**非请求（unsolicited）**响应——即调制解调器
+在没有先前命令时发送的消息（例如 ``+CEREG:`` 网络
+注册状态更新）。这些由 chat 实例初始化时注册的
+另一组匹配模式处理。
 
-Chat module 附加到任何 modem pipe（因此可交替通过 raw UART backend 或 CMUX DLCI channel 通信。
+chat 模块可附加到任何调制解调器管道，因此可以
+交替通过原始 UART 后端或 CMUX DLCI 通道
+进行通信。
 
 .. doxygengroup:: modem_chat
 
 .. _cellular-modem:
 
-Cellular Modem
+蜂窝调制解调器
 **************
 
-通用 cellular modem driver :zephyr_file:`drivers/modem/modem_cellular.c` 将上述所有 modules 组合以实现完整、hardware-agnostic 的 cellular data connection。其暴露标准 Zephyr network interface（使 applications 无需任何 modem-specific code 即可使用 :ref:`BSD sockets API <bsd_sockets_interface>`。
+通用蜂窝调制解调器驱动
+:zephyr_file:`drivers/modem/modem_cellular.c` 将上述所有
+模块组合起来，实现一个完整的、与硬件无关的
+蜂窝数据连接。它暴露一个标准 Zephyr 网络
+接口，使应用无需任何调制解调器专用代码即可使用 :ref:`BSD sockets API <bsd_sockets_interface>`。
 
-Architecture overview
+架构概览
 =====================
 
-Driver 将 modem modules 组装为分层 pipe architecture：
+驱动将调制解调器模块组装为分层管道架构：
 
-#. **UART backend** — :c:struct:`modem_backend_uart` 实例提供最低层 modem pipe。其将物理 UART peripheral 抽象为 modem pipe API（执行 thread-safe、interrupt-driven 的 transfers。
+#. **UART 后端** — :c:struct:`modem_backend_uart` 实例提供
+   最低层的调制解调器管道。它将物理 UART
+   外设抽象为调制解调器管道 API，执行线程安全的、
+   中断驱动的传输。
 
-#. **CMUX** — :c:struct:`modem_cmux` 实例附加到 UART pipe（按 3GPP 27.010 specification 将其 multiplex 为两个 DLCI channels。
+#. **CMUX** — :c:struct:`modem_cmux` 实例附加到 UART
+   管道，并按 3GPP 27.010
+   规范将其复用为两个 DLCI 通道。
 
-#. **DLCI channel 1（data）** — 此 pipe 在初始化期间承载 AT command traffic（或在 connection 建立后承载 PPP-framed IP data。
+#. **DLCI 通道 1（数据）** — 此管道在初始化期间承载
+   AT 命令流量，或在连接建立后承载
+   PPP 帧封装的 IP 数据。
 
-#. **DLCI channel 2（commands）** — 此 pipe 在 data connection 激活时专用于 AT command traffic（允许 driver 在不打断 data flow 的情况下查询 signal quality、registration status 和其他 parameters。
+#. **DLCI 通道 2（命令）** — 此管道在数据连接
+   激活时专用于 AT
+   命令流量，使驱动能够
+   查询信号质量、注册状态及其他
+   参数而不中断数据流。
 
-#. **Modem chat** — :c:struct:`modem_chat` 实例执行 AT command scripts。CMUX 启动前其直接附加到 UART pipe；之后其移到 DLCI 1 用于 initialization scripts（然后移到 DLCI 2 用于 periodic monitoring。
+#. **调制解调器 chat** — :c:struct:`modem_chat` 实例执行 AT
+   命令脚本。CMUX 启动前它直接附加到
+   UART 管道；之后移到 DLCI 1 用于初始化脚本，
+   然后移到 DLCI 2 用于周期性监控。
 
-#. **Modem PPP** — :c:struct:`modem_ppp` 实例将 Zephyr IP packets 包装为 PPP frames（通过 DLCI 1 发送。接收方向其剥离 PPP framing（将 packets 交付给 network stack。
+#. **调制解调器 PPP** — :c:struct:`modem_ppp` 实例将 Zephyr IP
+   数据包封装为 PPP 帧，并通过 DLCI 1 发送。在接收
+   方向，它剥离 PPP 帧封装，将数据包交付给
+   网络协议栈。
 
-两个 DLCI channels 的同时使用为关键使能：modem 可在 DLCI 1 上以全速传输 IP data（同时 driver 继续在 DLCI 2 上后台交换 AT commands。
+两个 DLCI 通道的同时使用是关键使能因素：
+调制解调器可以在 DLCI 1 上以全速传输 IP 数据，同时驱动
+继续在 DLCI 2 上后台交换 AT 命令。
 
-Connection lifecycle
+连接生命周期
 ====================
 
-Driver 围绕内部 state machine 构建（其经历以下 phases：
+驱动围绕一个内部状态机构建，依次
+经历以下阶段：
 
-Power-on and hardware reset
-----------------------------
+上电与硬件复位
+-----------------------------
 
-Driver 脉冲 modem 的 reset 和 power GPIOs（若在 Device Tree 中定义）（并等待 modem 变为 responsive。
+驱动脉冲调制解调器的复位和电源 GPIO（若在
+设备树中已定义），并等待调制解调器
+变为可响应状态。
 
-Initial AT configuration
+初始 AT 配置
 ------------------------
 
-Modem chat module 直接附加到 UART pipe（并运行 modem-specific 的 ``init_chat_script``。此 script 通常禁用 echo、查询 IMEI、model、firmware version（并配置 unsolicited response reporting。此阶段所有通信为 UART 上的 plain AT — CMUX 尚未激活。
+调制解调器 chat 模块直接附加到 UART 管道，并运行
+调制解调器专用的 ``init_chat_script``。该脚本通常禁用
+回显（echo）、查询 IMEI、型号、固件版本，并配置
+非请求响应上报。此阶段的所有通信都是
+UART 上的纯 AT 命令——CMUX 尚未激活。
 
-CMUX bring-up
+CMUX 启动
 --------------
 
-Init script 成功后（driver 发送 ``AT+CMUX`` 命令将 modem 切换到 multiplexed mode。CMUX module 附加到 UART pipe（并打开 DLCI 1 和 DLCI 2。从此所有通信在 CMUX 内 framing。
+init 脚本成功后，驱动发送 ``AT+CMUX``
+命令将调制解调器切换到复用模式。CMUX 模块
+附加到 UART 管道并打开 DLCI 1 和 DLCI 2。从这
+一点起，所有通信都封装在 CMUX 帧中。
 
-APN configuration and dialing
+APN 配置与拨号
 ------------------------------
 
-Driver 将 modem chat 附加到 DLCI 1（并运行动态构建的 APN script（``AT+CGDCONT``）后跟 dial script（``ATD*99#`` 或等效。成功时（modem 在 DLCI 1 上进入 data mode。
+驱动将调制解调器 chat 附加到 DLCI 1，并运行一个动态
+构建的 APN 脚本（``AT+CGDCONT``），随后运行拨号脚本
+（``ATD*99#`` 或等效命令）。成功后，调制解调器
+在 DLCI 1 上进入数据模式。
 
-Data connection
+数据连接
 ----------------
 
-Modem PPP module 附加到 DLCI 1 pipe（且 modem chat 移到 DLCI 2。Driver 在 ``+CEREG``（或 ``+CREG`` / ``+CGREG``）unsolicited response 指示 modem 已在 network 上注册时调用 ``net_if_carrier_on()``。
+调制解调器 PPP 模块附加到 DLCI 1 管道，调制解调器
+chat 移到 DLCI 2。当
+``+CEREG``（或 ``+CREG`` / ``+CGREG``）非请求响应指示
+调制解调器已在网络上注册时，驱动调用 ``net_if_carrier_on()``。
 
-此时 Zephyr network stack 在 DLCI 1 上协商 PPP session（且 application 可正常使用 sockets。同时（DLCI 2 上的 periodic chat scripts 监控 signal quality 和 registration status。
+此时，Zephyr 网络协议栈在 DLCI 1 上
+协商一个 PPP 会话，应用即可正常使用套接字。与此同时，
+DLCI 2 上的周期性 chat 脚本监控信号质量和
+注册状态。
 
-Shutdown
+关闭
 ---------
 
-Driver 运行 shutdown script（并脉冲 power-off GPIO 以干净地关闭 modem。State machine 返回 idle state。
+驱动运行关闭脚本，并脉冲断电 GPIO 以
+干净地关闭调制解调器。状态机返回空闲
+状态。
 
-Adding support for a new modem
+添加对新调制解调器的支持
 ==============================
 
-通用 cellular driver 使用通过 Device Tree compatible bindings 和关联 chat scripts 提供的 per-modem configuration。添加新 modem 需三个 artifacts：
+通用蜂窝驱动使用通过设备树兼容（compatible）绑定
+和关联 chat 脚本提供的每调制解调器配置。
+添加新调制解调器需要三个交付物：
 
-#. 包含通用 cellular modem base binding 的 **Device Tree binding**。
+#. 一个包含通用蜂窝调制解调器
+   基础绑定的**设备树绑定**。
 
-#. 定义 initialization、dialing、periodic monitoring 和（可选）shutdown 的 AT command 序列的 **Chat scripts**。
+#. 定义初始化、拨号、周期性监控
+   和（可选）关机 AT 命令序列的**chat 脚本**。
 
-#. 将 chat scripts 和 hardware configuration 绑定的 **device instantiation macro**。
+#. 一个将 chat 脚本与
+   硬件配置绑定在一起的**设备实例化宏**。
 
-Driver 自动处理所有 pipe plumbing、CMUX management、PPP framing 和 state machine logic。
+驱动自动处理所有管道布线、CMUX 管理、PPP 帧封装
+和状态机逻辑。
 
-Supported modems
+受支持的调制解调器
 ----------------
 
-以下 modems 已在 :zephyr_file:`drivers/modem/modem_cellular.c` 中支持：
+以下调制解调器已在
+:zephyr_file:`drivers/modem/modem_cellular.c` 中受支持：
 
 * Fibocom LE250
 * Quectel BG95、BG96
@@ -159,16 +247,30 @@ Supported modems
 * Nordic Semiconductor nRF91 SLM
 * Sequans GM02S
 
-每个支持的 modem 用同一组 macros（``MODEM_CHAT_SCRIPT_CMDS_DEFINE``、``MODEM_CHAT_SCRIPT_DEFINE``、``MODEM_CELLULAR_DEFINE_INSTANCE`` 等）定义。参见 :zephyr_file:`drivers/modem/modem_cellular.c` 作为 init、dial、periodic 和 shutdown chat scripts 的完整示例。所有 modems 共享的通用 base Device Tree properties 在 :zephyr_file:`dts/bindings/modem/zephyr,cellular-modem-device.yaml` 中文档化。
+每个受支持的调制解调器都使用同一组宏
+（``MODEM_CHAT_SCRIPT_CMDS_DEFINE``、``MODEM_CHAT_SCRIPT_DEFINE``、
+``MODEM_CELLULAR_DEFINE_INSTANCE`` 等）定义。参见
+:zephyr_file:`drivers/modem/modem_cellular.c` 了解 init、dial、periodic
+和 shutdown chat 脚本的完整示例。所有调制解调器
+共享的通用基础设备树属性在
+:zephyr_file:`dts/bindings/modem/zephyr,cellular-modem-device.yaml` 中有文档说明。
 
-Out-of-tree modem
+树外（Out-of-tree）调制解调器
 -----------------
 
-Driver macros 和 data structures 通过 :zephyr_file:`include/zephyr/drivers/modem/modem_cellular.h` 导出（因此完全新的 modem 可在 Zephyr tree **之外**定义 — 例如在 application source 中 — 而不修改任何 upstream files。这对为特定 use case 微调 AT command 序列或在提交 upstream 前开发新 modem 支持有用。
+驱动宏和数据结构通过
+:zephyr_file:`include/zephyr/drivers/modem/modem_cellular.h` 导出，
+因此可以完全在 Zephyr 树**之外**定义
+一个全新调制解调器——
+例如在应用源码中——而无需修改任何上游
+文件。这对于为特定用例微调 AT 命令序列，或
+在提交上游之前开发对新调制解调器的支持非常有用。
 
-从创建包含通用 base binding 的 Device Tree binding 开始（然后用 ``modem_cellular.h`` 中的 macros 编写 driver source file。以下三个文件即为所需全部。
+首先创建一个包含通用基础
+绑定的设备树绑定，然后使用
+``modem_cellular.h`` 中的宏编写驱动源文件。以下三个文件即为所需全部。
 
-**Device Tree binding** — ``app/dts/bindings/my,modem.yaml``：
+**设备树绑定** — ``app/dts/bindings/my,modem.yaml``：
 
 .. code-block:: yaml
 
@@ -176,7 +278,7 @@ Driver macros 和 data structures 通过 :zephyr_file:`include/zephyr/drivers/mo
 
    include: zephyr,cellular-modem-device.yaml
 
-**Device Tree overlay** — ``app.overlay``（部分）：
+**设备树 overlay** — ``app.overlay``（部分）：
 
 .. code-block:: devicetree
 
@@ -188,7 +290,7 @@ Driver macros 和 data structures 通过 :zephyr_file:`include/zephyr/drivers/mo
        };
    };
 
-**Driver source** — ``app/src/my_modem.c``：
+**驱动源文件** — ``app/src/my_modem.c``：
 
 .. code-block:: c
 
@@ -252,14 +354,22 @@ Driver macros 和 data structures 通过 :zephyr_file:`include/zephyr/drivers/mo
    DT_INST_FOREACH_STATUS_OKAY(MY_MODEM_DEVICE)
    #undef DT_DRV_COMPAT
 
-上述示例为最小化但足以在通用 cellular modem 上启动 PPP connection。参见 :zephyr_file:`drivers/modem/modem_cellular.c` 作为更完整的示例。
+上述示例是最小化的，但足以在通用蜂窝调制解调器上启动一个 PPP 连接。
+参见 :zephyr_file:`drivers/modem/modem_cellular.c` 了解更完整的示例。
 
-Board-specific init script
+板级专用 init 脚本
 ==========================
 
-Init、network 和 dial scripts 为 vendor-scoped（键控到 devicetree compatible）（因此使用相同 modem 的 boards 之间不同的 configuration（例如 RF tuner band routing（否则须 fork vendor driver。Board 可改用 :c:macro:`MODEM_CELLULAR_BOARD_INIT_DEFINE` 注册自己的 chat script。Script 在 CMUX 建立后且 APN 和 network configuration 前在 AT control channel 上运行。未注册 script 的 boards 不添加 ROM 或 RAM footprint。
+init、网络与拨号脚本是按厂商范围的（键控到设备树
+compatible），因此使用同一调制解调器的不同板级
+配置（例如射频调谐器频段路由）否则就需要
+分叉（fork）厂商驱动。板级可以改用
+:c:macro:`MODEM_CELLULAR_BOARD_INIT_DEFINE` 注册自己的 chat 脚本。该脚本在 CMUX 建立后、
+APN 和网络配置之前的 AT 控制通道上运行。
+未注册脚本的板级不会增加任何 ROM 或 RAM 开销。
 
-Driver 用推进 connect sequence 的 callback 覆盖 script 的 completion callback（因此 script 上设置的任何 callback 被忽略。
+驱动会用推进连接序列的回调
+覆盖脚本的完成回调，因此脚本上设置的任何回调都会被忽略。
 
 .. code-block:: c
 
@@ -272,44 +382,75 @@ Driver 用推进 connect sequence 的 callback 覆盖 script 的 completion call
 
 .. _cmux-power-saving:
 
-CMUX Power Saving
+CMUX 电源节省
 *****************
 
-3GPP TS 27.010 指定 CMUX 的 power saving mechanism（当 modem 支持时可在 Zephyr 中使用。
+3GPP TS 27.010 规定了 CMUX 的电源节省机制，当
+调制解调器支持时可在 Zephyr 中使用。
 
-Power saving mechanism 涵盖 specification 以下 sections：
+该电源节省机制涵盖规范中的以下章节：
 
 * 5.2.5 Inter-frame Fill
-* 5.4.6.3.2 Power Saving Control（PSC）message
+* 5.4.6.3.2 Power Saving Control (PSC) message
 * 5.4.7 Power Control and Wake-up Mechanisms
 
-Power saving mechanism 允许 CMUX module 使用的 UART device 的 runtime power management。当任何 DLCI channel 无 data 发送或接收时（CMUX module 在可配置 timeout 后进入 idle state。Idle state 中（CMUX module 向 modem 发送 Power Saving Control message（请求其进入 low power state。CMUX module 然后可关闭 pipe device（允许在启用 runtime power management 时关闭 UART device。
+该电源节省机制允许对 CMUX 模块
+使用的 UART 设备进行运行时电源管理。当所有
+DLCI 通道都没有数据需要发送或接收时，CMUX 模块会在
+可配置的超时后进入空闲状态。在空闲状态下，CMUX 模块会向
+调制解调器发送一条电源节省控制消息，
+请求其进入低功耗状态。随后 CMUX 模块
+可以关闭管道设备，从而在启用运行时电源管理时
+将 UART 设备断电。
 
-当任何 DLCI channel 有 data 发送或接收时（CMUX module 退出 idle state（通过发送 flag characters 唤醒 modem（直到从 modem 收到 flag character。
+当任何 DLCI 通道有数据需要发送或接收时，CMUX 模块
+会退出空闲状态，并通过发送标志字符（flag character）
+唤醒调制解调器，直到从调制解调器收到
+标志字符为止。
 
-对于从 CMUX 之外的 hardware line 而非通过 in-band protocol 驱动 sleep 和 wake 的 modems（``cmux-no-powersave-handshake`` property 使两半都 opt out 握手。Entry 时 CMUX 跳过 PSC frame exchange（直接转换到 power save。Exit 时 CMUX 跳过 flag-character exchange（pipe 重新打开后直接转换到 connected。下一个 outgoing frame 自行重新同步 framing。
+对于通过 CMUX 之外的硬件线路（而非带内协议）
+驱动休眠与唤醒的调制解调器，``cmux-no-powersave-handshake``
+属性使握手在两端都退出。进入时，CMUX 跳过
+PSC 帧交换，直接转入省电状态。退出时
+CMUX 跳过标志字符交换，管道
+重新打开后直接转入已连接状态。下一帧发出的
+帧会自行重新同步帧结构。
 
-某些 modems 仅当 DTR（Data Terminal Ready）signal 去断言时允许关闭 UART 电源。此情况下（支持 DTR 的 UART device 可与 CMUX module 一起使用以基于 UART 的 power state 控制 DTR signal。
+某些调制解调器仅在 DTR（Data Terminal Ready，数据终端就绪）
+信号被去断言时才允许将 UART 断电。在这种情况下，
+支持 DTR 的 UART 设备可以与 CMUX 模块
+配合使用，根据 UART 的电源状态控制 DTR 信号。
 
-UART 关闭时收到 incoming data 唤醒需要支持 RING signal 唤醒 host 的 modem。RING signal 由 modem driver 处理（其在检测到 RING signal 时打开 pipe device（允许 CMUX module 唤醒 modem 并处理 incoming data。
+UART 断电时通过 incoming 数据唤醒，需要一个支持
+RING 信号唤醒主机的调制解调器。
+RING 信号由调制解调器驱动处理，当检测到
+RING 信号时，它打开管道设备，
+使 CMUX 模块能够唤醒调制解调器并
+处理 incoming 数据。
 
-:zephyr_file:`subsys/modem/modem_cmux.c` module 用以下 state machine 实现 power saving mechanism。
+:zephyr_file:`subsys/modem/modem_cmux.c` 模块使用以下状态机实现电源节省机制。
 
 .. image:: images/cmux_state_machine.svg
         :alt: CMUX state machine when using power saving
         :align: center
 
-Connected state 内（``modem_cmux_process_received_byte()`` 须按 specification 5.2.5 Inter-frame Fill 描述回复重复 flag characters。Idle timer 保持运行（且每个发送或接收的 frame 清除。Timer 过期将启动转换到 power saving modes。
+在已连接（connected）状态内，``modem_cmux_process_received_byte()`` 须按规范 5.2.5 Inter-frame Fill 的描述回复重复的标志字符。
+空闲定时器保持运行，并在每发送或接收一帧时清零。定时器到期将触发向省电模式转换。
 
-POWERSAVE state 内（所有 DLC pipes 保持打开（但朝向 UART 的 pipe 被 blocked 或 closed（因此所有 data 在 CMUX ringbuffers 中缓冲以等待唤醒。此 state 内（重复 flag characters 也被回复（允许远端按 5.4.7 描述继续 wake-up procedure。若 pipe 被 closed（允许在启用 runtime power management 时关闭 UART device。
+在 POWERSAVE 状态内，所有 DLC 管道保持打开，但朝向 UART 的管道被阻塞或关闭，因此所有数据都缓存在 CMUX 环形缓冲区中等待唤醒。
+在此状态内，重复的标志字符同样会被回复，以便远端按 5.4.7 的描述继续执行唤醒流程。
+如果管道被关闭，则在启用运行时电源管理时允许将 UART 设备断电。
 
-CONNECTED state 中 idle timer 过期时（CMUX state machine 阻塞所有 DLC pipes（并发送 PSC command 使远端启动转换到 POWERSAVE state。PSC command 被回复时（CMUX 转换到 POWERSAVE mode。
+当 CONNECTED 状态的空闲定时器到期时，CMUX 状态机阻塞所有 DLC 管道，并发送 PSC 命令，使远端启动向 POWERSAVE 状态的转换。
+当 PSC 命令被回复时，CMUX 转入 POWERSAVE 模式。
 
-CONNECTED state 中（远端可能发送 PSC command 以启动转换到 power saving mode。CMUX 阻塞所有 DLC pipes（并发送 PSC response。TX buffers 清空时（CMUX 进入 POWERSAVE state。
+在 CONNECTED 状态内，远端可能发送 PSC 命令以启动向省电模式的转换。CMUX 阻塞所有 DLC 管道并发送 PSC 响应。
+当 TX 缓冲区清空后，CMUX 进入 POWERSAVE 状态。
 
-POWERSAVE state 中任何 DLC pipes 尝试发送 data 时（CMUX 缓冲它（并移到 WAKEUP state（其按 5.4.7 指定通过发送重复 flag characters 流启动 wake-up procedure。远端回复 flag characters 以指示其准备好接收 data。CMUX 然后停止发送 flag characters（并移回 CONNECTED state（恢复正常运行。
+当任何 DLC 管道在 POWERSAVE 状态期间尝试发送数据时，CMUX 将其缓存，并转入 WAKEUP 状态，按 5.4.7 的规定通过发送连续的标志字符流启动唤醒流程。
+远端回复标志字符，表示其已准备好接收数据。随后 CMUX 停止发送标志字符，转回 CONNECTED 状态，恢复正常运行。
 
-CMUX power saving mechanism 可用以下 Device Tree properties 配置：
+CMUX 电源节省机制可使用以下设备树属性进行配置：
 
 .. code-block:: yaml
 
@@ -328,8 +469,7 @@ CMUX power saving mechanism 可用以下 Device Tree properties 配置：
     description: Time in milliseconds after which CMUX will enter power save mode.
     default: 10000
 
-
-CMUX 带 power saving 的示例 Device Tree setup：
+CMUX 带电源节省的示例设备树配置：
 
 .. code-block:: devicetree
 
@@ -355,4 +495,5 @@ CMUX 带 power saving 的示例 Device Tree setup：
     };
   };
 
-上述示例展示支持 CMUX 和 PSC commands 的 modem 使用支持 DTR 的 UART device。DTR signal 用于控制 UART 的 power state。Modem 的 RING signal 用于在 modem 子系统关闭电源时唤醒它。
+上述示例展示了一个支持 DTR 的 UART 设备被一个支持 CMUX 和 PSC 命令的调制解调器使用。DTR 信号用于控制 UART 的电源状态。
+调制解调器的 RING 信号用于在其断电时唤醒调制解调器子系统。

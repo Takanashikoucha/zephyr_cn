@@ -1,20 +1,20 @@
 .. _lldp_interface:
 
-Link Layer Discovery Protocol
+链路层发现协议
 #############################
 
 .. contents::
     :local:
     :depth: 2
 
-Overview
+概述
 ********
 
-Link Layer Discovery Protocol（LLDP）是 network devices 用于在有线 Ethernet network 上 advertise 其 identity、capabilities 和 neighbors 的 vendor-neutral link layer protocol。
+链路层发现协议（LLDP）是一种厂商中立的链路层协议，用于网络设备在有线以太网上广播其身份、能力和邻居信息。
 
-更多信息参见此 `LLDP Wikipedia article <https://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol>`_。
+更多信息参见此 `LLDP 维基百科文章 <https://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol>`_。
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: lldp

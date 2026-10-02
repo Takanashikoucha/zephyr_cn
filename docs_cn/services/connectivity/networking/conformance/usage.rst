@@ -1,115 +1,153 @@
 .. _ttcn3_running:
 
-Running the conformance suites
+运行一致性测试套件
 ##############################
 
 .. contents::
     :local:
     :depth: 2
 
-Run 如下进行。Twister 构建并启动被测系统（harness 用 Titan 构建 TTCN-3 suite（suite 通过 tap interface 与运行中的 application 通信（且 Titan 的 verdict 成为 test result。
+运行如下进行。Twister 构建并启动被测系统，
+测试框架用 Titan 构建 TTCN-3 测试套件，测试套件通过
+tap 接口与运行中的应用通信，Titan 的判决成为
+测试结果。
 
-What a run needs
+运行需要什么
 ****************
 
-* **Titan 安装**（``TTCN3_DIR`` 指向其。参见 :ref:`ttcn3_installing_titan`。
-* **第三方 TTCN-3 modules**（用 :file:`ttcn3/fetch-modules.sh` 获取一次。其在 pinned commits 克隆（且不是 ``net-tools`` repository 的一部分。
-* **net-tools 的 checkout**（west workspace 已有：其在 :file:`west.yml` 的 ``tools`` group 下（该 group 未被过滤。
-* **make**（因为这是 Titan 构建 suite 的方式。
-* **``zeth`` interface**（或在 IP layer 以下工作的 suite 的 ``zethL2``。参见 :ref:`ttcn3_interfaces`。
-* **root**（对无法避免 privileged port 或 packet socket 的 suite。
-* **expect**（对通过 Titan 的 main controller 运行的 suite。
+* **Titan 安装**，``TTCN3_DIR`` 指向它。参见
+  :ref:`ttcn3_installing_titan`。
+* **第三方 TTCN-3 模块**，用
+  :file:`ttcn3/fetch-modules.sh` 获取一次。它们在固定的提交上克隆，
+  不是 ``net-tools`` 仓库的一部分。
+* **net-tools 的 checkout**，west 工作区已有：它
+  在 :file:`west.yml` 的 ``tools`` 组下，该组未被过滤。
+* **make**，因为这是 Titan 构建测试套件的方式。
+* **``zeth`` 接口**，或在 IP 层以下工作的测试套件用
+  ``zethL2``。参见 :ref:`ttcn3_interfaces`。
+* **root**，对无法避免特权端口或数据包套接字的测试套件。
+* **expect**，对通过 Titan 主控制器运行的测试套件。
 
-:ref:`ttcn3_suites` 列出哪些 suites 需要哪些（:zephyr_file:`scripts/net/run-conformance-tests.sh` ``--list`` 打印相同内容。
+:ref:`ttcn3_suites` 列出哪些测试套件需要哪些，
+:zephyr_file:`scripts/net/run-conformance-tests.sh` ``--list`` 打印相同内容。
 
-Harness 在设置 ``NET_TOOLS_BASE`` 时在其中查找 net-tools（否则在 ``ZEPHYR_BASE`` 相对的 :file:`../tools/net-tools/ttcn3`（然后高一个 directory。所有这些在构建任何东西前检查（且缺失部分以 reason 跳过 test 而非使其失败。
+测试框架在设置 ``NET_TOOLS_BASE`` 时在其中查找 net-tools，否则
+在 ``ZEPHYR_BASE`` 相对的 :file:`../tools/net-tools/ttcn3`，然后
+再高一个目录。所有这些在构建任何东西之前检查，
+缺失的部分以原因跳过测试而不是使其失败。
 
 .. _ttcn3_installing_titan:
 
-Installing Titan
+安装 Titan
 ****************
 
-大多数 distributions 打包 Titan（且 continuous integration 安装的就是其：
+大多数发行版打包了 Titan，持续集成安装的就是它：
 
 .. code-block:: console
 
    sudo apt install --no-install-recommends eclipse-titan expect
    export TTCN3_DIR=/usr
 
-打包版本落后于 suites 构建所对的 protocol modules（故若 suite 编译失败（改为从 source 构建当前 Titan。
+打包版本落后于测试套件构建所对的协议模块，因此
+如果测试套件编译失败，改为从源码构建当前 Titan。
 
-Building Titan from source
+从源码构建 Titan
 ==========================
 
-:file:`net-tools/docker/Dockerfile.ttcn3` 将 Titan 构建到 :file:`/opt/titan`（并作为手动执行（作为 container 或作为遵循的 recipe）的 reference。其为本地 option（而非 continuous integration 使用的。
+:file:`net-tools/docker/Dockerfile.ttcn3` 将 Titan 构建到 :file:`/opt/titan`，
+并作为手动执行（作为容器或作为遵循的
+配方）的参考。它是本地选项，不是持续集成使用的。
 
-手动构建的 Titan 须正确把握两件事。Titan 通过其 source tree 中的 :file:`Makefile.personal`（而非 ``configure`` script）配置（且那里的 ``TTCN3_DIR`` 为 install prefix。且 ``make install`` 须串行：runtime 的部分包含另一部分生成的 headers（且并行 make 丢失该 race。
+手动构建的 Titan 必须正确把握两件事。Titan 通过其
+源码树中的 :file:`Makefile.personal`（而不是 ``configure`` 脚本）配置，
+那里的 ``TTCN3_DIR`` 是安装前缀。并且 ``make install`` 必须
+串行：运行时的一部分包含另一部分生成的头文件，
+并行 make 会丢失该竞争。
 
-Running the suites with the script
+用脚本运行测试套件
 **********************************
 
-:zephyr_file:`scripts/net/run-conformance-tests.sh` 用一条 command 完成以下两节描述的内容（且是运行 suites 最简单的方式：其查找 net-tools（缺失时获取 modules（创建所选 suites 需要的 interfaces（所选 suite 需 root 时在 ``sudo`` 下重跑自身（运行一次 Twister（然后拆下 interfaces。
+:zephyr_file:`scripts/net/run-conformance-tests.sh` 用一条命令完成
+以下两节描述的内容，是运行测试套件最简单的方式：它
+查找 net-tools，缺失时获取模块，创建所选
+测试套件需要的接口，所选测试套件需要 root 时在 ``sudo`` 下重跑自身，
+运行一次 Twister，然后拆下接口。
 
 .. code-block:: console
 
    export TTCN3_DIR=/usr
    ./scripts/net/run-conformance-tests.sh
 
-命名 suites 仅运行其（在调试一个时保持非 privileged 的快速方式：
+命名测试套件仅运行它们，这是在调试一个时保持非
+特权的快速方式：
 
 .. code-block:: console
 
    ./scripts/net/run-conformance-tests.sh mdns dns
 
-``--list`` 显示 suites 及各自所需（``--keep`` 为下次 run 保持 interfaces（``--start`` 和 ``--stop`` 仅做该一半。``--help`` 列出其余（以及检测到的 directories。
+``--list`` 显示测试套件及各自所需，``--keep`` 为下次运行
+保持接口，``--start`` 和 ``--stop`` 仅做该一半。``--help`` 列出其余，
+以及检测到的目录。
 
-由于 privileged run 以 root 创建 files（script 在退出前将 Twister output directory 和 suite build directories 交还给调用 user。
+由于特权运行以 root 创建文件，脚本在退出前
+将 Twister 输出目录和测试套件构建目录交还给调用用户。
 
 .. _ttcn3_interfaces:
 
-Setting up the network interfaces
+设置网络接口
 *********************************
 
-Suites 用两个 tap interfaces（因为在 IP layer 以下工作的 suite 不能与为自己回答的 host 共享 link。
+测试套件使用两个 tap 接口，因为在 IP 层以下工作的
+测试套件不能与为自己回答的主机共享链路。
 
-``zeth``, the shared interface
+``zeth``，共享接口
 ==============================
 
-由通过 sockets 工作的 suites 使用（tester 为 link 上另一个 host：
+由通过套接字工作的测试套件使用，测试器只是
+链路上的另一个主机：
 
 .. code-block:: console
 
    cd $ZEPHYR_BASE/../tools/net-tools
    sudo ./net-setup.sh --config zeth.conf start
 
-Host 持有 ``192.0.2.2/24`` 和 ``2001:db8::2``；Zephyr 在 ``192.0.2.1`` 和 ``2001:db8::1`` 回答。用 ``stop`` 替代 ``start`` 拆下。
+主机持有 ``192.0.2.2/24`` 和 ``2001:db8::2``；Zephyr 在
+``192.0.2.1`` 和 ``2001:db8::1`` 回答。用 ``stop`` 替代
+``start`` 拆下。
 
-``zethL2``, the address-less interface
-======================================
+``zethL2``，无地址接口
+=====================================
 
-由在 IP layer 以下工作的 suites 使用：
+由在 IP 层以下工作的测试套件使用：
 
 .. code-block:: console
 
    sudo ./net-setup.sh --config zeth-l2.conf --iface zethL2 start
 
-此 interface 故意不赋予 IP address。Linux 除非被告知否则为任何 interface 上持有的任何 address 回答 address resolution 和 neighbour discovery（且来自 host 的回答与来自 Zephyr 的回答无法区分。Tester 讲 raw frames（故其无需自己的 address。
+此接口故意不赋予 IP 地址。Linux 除非被告知
+否则为任何接口上持有的任何地址回答地址解析
+和邻居发现，来自主机的回答与来自 Zephyr 的回答
+无法区分。测试器讲原始帧，因此
+它不需要自己的地址。
 
-Configuration 设置三个 sysctls 以阻止 host 加入：``arp_ignore=8`` 使其不为任何 local address 回答 address resolution（``arp_announce=2`` 使其从不以此 interface 不持有的 address 回答（``disable_ipv6=1`` 使无 neighbour advertisements 或 router solicitations。
+配置设置三个 sysctls 以阻止主机加入：
+``arp_ignore=8`` 使其不为任何本地地址回答地址解析，
+``arp_announce=2`` 使其从不以此接口不持有的地址回答，
+``disable_ipv6=1`` 使没有邻居通告或路由器请求。
 
 名称 ``zethL2`` 不可自由选择；参见 :ref:`ttcn3_test_network`。
 
-Running the suites with Twister
+用 Twister 运行测试套件
 *******************************
 
-获取第三方 modules 一次。Script 可安全重跑：
+获取第三方模块一次。脚本可安全重跑：
 
 .. code-block:: console
 
    cd $ZEPHYR_BASE/../tools/net-tools
    ./ttcn3/fetch-modules.sh
 
-然后运行 tests：
+然后运行测试：
 
 .. code-block:: console
 
@@ -117,35 +155,46 @@ Running the suites with Twister
    cd $ZEPHYR_BASE
    ./scripts/twister -p native_sim --enable-slow -T tests/net/conformance
 
-``--enable-slow`` 必需：suites 标记自己为 slow（因为完整 run 需数十分钟。``native_sim`` 为其允许的唯一 platform。
+``--enable-slow`` 是必需的：测试套件标记自己为慢，因为
+完整运行需要几十分钟。``native_sim`` 是它们允许的唯一平台。
 
-单个 suite 由其 test identifier 选择（为 ``net.conformance.<suite>``：
+单个测试套件由其测试标识符选择，为
+``net.conformance.<suite>``：
 
 .. code-block:: console
 
    ./scripts/twister -p native_sim --enable-slow -T tests/net/conformance \
        -s net.conformance.mdns
 
-其也带 ``net`` 和 ``conformance`` tags（故 ``--tag conformance`` 选取所有。
+它们也带 ``net`` 和 ``conformance`` 标签，因此 ``--tag conformance``
+选取所有。
 
-Running as root
-===============
+作为 root 运行
+==============
 
-某些 suites 须以 root 运行。DHCP 定义在 ports 67 和 68（且无其他方式移动（故 tester 无法避免绑定 privileged port；且从 link 读取 frames 需 packet socket。这些 tests 在权限不足时跳过自身。
+某些测试套件必须作为 root 运行。DHCP 定义在端口 67 和 68
+上没有其他方式移动，因此测试器无法避免绑定
+特权端口；并且从链路读取帧需要数据包套接字。这些
+测试在权限不足时跳过自身。
 
-用 ``sudo -E`` 使 ``TTCN3_DIR`` 和其余 environment 存活。Run 要么完全 privileged 要么完全不是——为何两者不可混合参见 :ref:`ttcn3_runner`。
+用 ``sudo -E`` 使 ``TTCN3_DIR`` 和其余环境存活。
+运行要么完全特权要么完全非特权 —— 为何两者不可混合参见 :ref:`ttcn3_runner`。
 
-Why a run is serial
+为什么运行是串行的
 ===================
 
-所有被测系统在同一 interface 上回答相同 address（故一次仅能运行一个 conformance test。其对 interface 取 exclusive lock（并相互等待（这意味着无论 Twister 给多少 jobs（整个 directory 的 run 为串行。
+所有被测系统在同一接口上回答相同地址，因此
+一次只能运行一个一致性测试。它们对接口
+取排他锁并相互等待，这意味着无论 Twister 给多少任务，
+整个目录的运行都是串行的。
 
 .. _ttcn3_running_by_hand:
 
-Running a suite by hand
+手动运行测试套件
 ***********************
 
-Twister 方便但绕路慢。编写或调试 suite 时（手动运行两半。
+Twister 方便但绕路慢。编写或调试测试套件时，
+手动运行两半。
 
 启动被测系统并让其运行：
 
@@ -155,7 +204,7 @@ Twister 方便但绕路慢。编写或调试 suite 时（手动运行两半。
    west build -p -b native_sim -d ../build/mdns tests/net/conformance/mdns
    ../build/mdns/zephyr/zephyr.exe
 
-构建并运行 suite 对其：
+构建并运行测试套件对其：
 
 .. code-block:: console
 
@@ -164,84 +213,107 @@ Twister 方便但绕路慢。编写或调试 suite 时（手动运行两半。
    cd suites/mdns/build
    ./mdns ../mdns.cfg
 
-对 test cases 创建 parallel test components 的 suite（改为通过 main controller 启动：
+对于测试用例创建并行测试组件的测试套件，改为通过
+主控制器启动：
 
 .. code-block:: console
 
    ttcn3_start ./coap ../coap.cfg
 
-单个 test case 通过命名运行：
+单个测试用例通过命名运行：
 
 .. code-block:: console
 
    ./mdns ../mdns.cfg MDNS_Suite.tc_a_query
 
-Addresses、interface 和 timeouts 均来自 suite configuration file 的 ``[MODULE_PARAMETERS]`` section（故 run 可通过编辑一个 file（而非 suite）移到不同 link。
+地址、接口和超时都来自测试套件配置文件
+的 ``[MODULE_PARAMETERS]`` 部分，因此运行
+可以通过编辑一个文件（而不是测试套件）移到不同的链路上。
 
-Harness 做而您须自己做的：将 Titan 的 library directory 放到 ``LD_LIBRARY_PATH``。
+测试框架做而你必须自己做的：将 Titan 的库
+目录放到 ``LD_LIBRARY_PATH`` 上。
 
 .. _ttcn3_verdicts:
 
-Reading the result
+读取结果
 ******************
 
-Titan run 以每个 verdict 的计数和 run 的 verdict 结束：
+Titan 运行以每个判决的计数和运行的判决结束：
 
 .. code-block:: console
 
    Verdict statistics: 0 none (0.00 %), 7 pass (100.00 %), 0 inconc (0.00 %), 0 fail (0.00 %), 0 error (0.00 %).
    Test execution summary: 7 test cases were executed. Overall verdict: pass
 
-``inconc`` 意味着 test case 无法得出结论（通常因为其依赖的某事未发生。其不是 pass。``error`` 意味着 suite 本身失败（而非被测系统。
+``inconc`` 意味着测试用例无法得出结论，通常因为
+它依赖的某事未发生。它不是通过。``error`` 意味着
+测试套件本身失败，而不是被测系统。
 
-证据在两处。Titan 将每个 suite 的 log 写入 build directory（命名来自 configuration file 的 ``LogFile`` 设置。Twister 在其 output directory 下写 :file:`twister_harness.log`（以 ``INFO`` 携带整个 suite output。
+证据在两处。Titan 将每个测试套件的日志写入
+构建目录，命名来自配置文件中的 ``LogFile`` 设置。Twister
+在其输出目录下写 :file:`twister_harness.log`，以 ``INFO``
+携带整个测试套件输出。
 
-When a suite is skipped
+测试套件何时被跳过
 ***********************
 
-Suite 所需的一切在构建任何东西前检查（且缺失部分跳过 test 而非使其失败。Reasons（按检查顺序）：
+测试套件所需的一切在构建任何东西之前检查，
+缺失的部分跳过测试而不是使其失败。原因，按检查
+顺序：
 
 .. list-table::
    :header-rows: 1
 
-   * - Reason
-     - What to do
+   * - 原因
+     - 该做什么
    * - ``TTCN3_DIR is unset``
      - 安装 Titan 并 export ``TTCN3_DIR``；参见 :ref:`ttcn3_installing_titan`
    * - ``make is not installed``
-     - 安装 make；Titan 用生成的 makefile 构建 suite
+     - 安装 make；Titan 用生成的 makefile 构建测试套件
    * - ``no TTCN-3 suites under ...``
      - 未找到 net-tools；设置 ``NET_TOOLS_BASE``
    * - ``... has no <suite> suite``
-     - net-tools checkout 早于 suite；更新其
+     - net-tools checkout 早于测试套件；更新它
    * - ``third party modules are missing``
      - 运行 :file:`ttcn3/fetch-modules.sh`
    * - ``the <iface> interface does not exist``
      - 用 :file:`net-setup.sh` 创建；参见 :ref:`ttcn3_interfaces`
    * - ``ttcn3_start is not in TTCN3_DIR/bin``
-     - 安装 ``expect`` 和带 main controller 的 Titan
+     - 安装 ``expect`` 和带主控制器的 Titan
    * - ``has to be run as root``
-     - 在 ``sudo -E`` 下重跑（或用 script
+     - 在 ``sudo -E`` 下重跑，或用脚本
 
-Troubleshooting
+故障排除
 ***************
 
-The suite does not compile
+测试套件无法编译
 ==========================
 
-几乎总是落后于 suite 构建所对 protocol modules 的打包 Titan。从 source 构建 Titan。
+几乎总是落后于测试套件构建所对协议模块的打包 Titan。
+从源码构建 Titan。
 
-The suite sees nothing and times out
+测试套件看不到任何内容并超时
 ====================================
 
-检查 application 和 suite 是否在同一 interface：IP 以下工作的 suite 要 ``zethL2``（且 application 须用命名相同 interface 的 ``host-interface`` property 构建（test 在 :file:`boards/native_sim.overlay` 中设置。若 host 在 link 上回答而非 Zephyr（``zethL2`` sysctls 未生效；用 ``sysctl net.ipv4.conf.zethL2.arp_ignore`` 确认。
+检查应用程序和测试套件是否在同一接口：在 IP 以下工作的
+测试套件需要 ``zethL2``，并且应用程序必须用命名
+相同接口的 ``host-interface`` 属性构建，测试在
+:file:`boards/native_sim.overlay` 中设置。如果主机
+在链路上回答而不是 Zephyr，``zethL2`` sysctls 未生效；
+用 ``sysctl net.ipv4.conf.zethL2.arp_ignore`` 确认。
 
-A run hangs or is cut off
+运行挂起或被切断
 =========================
 
-四个 timeouts 嵌套在 run 周围（哪个触发说明问题所在：application ready line 30 秒（suite build 1800 秒（suite run 600 秒（Twister test 整体 900 秒。超时 suite 连同其整个 process group 被杀死（故无 main controller 遗留。
+四个超时嵌套在运行周围，哪个触发说明问题所在：
+应用程序就绪行 30 秒，测试套件构建 1800 秒，
+测试套件运行 600 秒，Twister 测试整体 900 秒。
+超时的测试套件连同其整个进程组被杀死，因此
+没有主控制器遗留。
 
-Leftover state
-==============
+遗留状态
+=============
 
-用 :file:`net-setup.sh` 和 ``stop`` 拆下 interfaces。Tests 取的 lock 为 temporary directory 中名为 :file:`zephyr-net-conformance-<euid>.lock` 的 file；process 退出时释放（故过期的无害。
+用 :file:`net-setup.sh` 和 ``stop`` 拆下接口。
+测试取的锁是临时目录中名为 :file:`zephyr-net-conformance-<euid>.lock` 的文件；
+进程退出时释放，因此过期的无害。

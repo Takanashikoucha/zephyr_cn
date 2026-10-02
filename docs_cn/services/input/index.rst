@@ -1,354 +1,70 @@
 .. _input:
 
-Input
+输入
 #####
 
-Input
-subsystem
-提供
-将
-input
-events
-从
-input
-devices
-分发
-到
-application 的
-API。
+输入子系统提供了一个 API，用于将输入事件从输入设备分发到应用。
 
-Input Events
+输入事件
 ************
 
-Subsystem
-围绕
-:c:struct:`input_event`
-structure
-构建。Input
-event
-代表
-individual
-event
-entity 的
-变更（如
-单个
-button 的
-state（或
-单个
-axis 的
-movement。
+子系统围绕 :c:struct:`input_event` 结构构建。输入事件表示单个事件实体的变化，
+例如单个按钮的状态，或单个轴的运动。
 
-:c:struct:`input_event`
-structure
-描述
-specific
-event（并
-包含
-指示
-device
-到达
-stable
-state 的
-synchronization
-bit（如
-multi-axis
-device
-的
-多个
-axes 对应
-的
-events
-已
-报告
-时。
+:c:struct:`input_event` 结构描述具体事件，并包含一个同步位，
+指示设备到达稳定状态，例如当多轴设备的多个轴对应的事件已报告时。
 
-Input Devices
+输入设备
 *************
 
-Input
-device
-可
-用
-:c:func:`input_report`
-或
-任何
-相关
-function
-直接
-报告
-input
-events；如
-buttons
-或
-其他
-on-off
-input
-entities
-用
-:c:func:`input_report_key`。
+输入设备可使用 :c:func:`input_report` 或任何相关函数直接报告输入事件；
+例如按钮或其他开关输入实体会使用 :c:func:`input_report_key`。
 
-Complex
-devices
-可
-用
-多个
-events 的
-combination（并在
-output
-stable
-后
-设置
-``sync``
-bit。
+复杂设备可能使用多个事件的组合，并在输出稳定后设置 ``sync`` 位。
 
-``input_report*``
-functions
-接受
-:c:struct:`device`
-pointer（其
-用于
-指示
-哪个
-device
-报告
-了
-event（且
-可
-被
-subscribers
-用于
-仅
-接收
-来自
-特定
-device 的
-events。若
-event
-无
-关联
-的
-actual
-device（可
-设为
-``NULL``（此
-情况下
-仅
-无
-device
-filter 的
-subscribers
-接收
-event。
+``input_report*`` 函数接受 :c:struct:`device` 指针，用于指示哪个设备报告了事件，
+订阅者可据此仅接收来自特定设备的事件。如果没有与事件关联的实际设备，
+可将其设置为 ``NULL``，在这种情况下仅无设备过滤的订阅者会接收该事件。
 
-Application API
+应用 API
 ***************
 
-Application
-可
-用
-:c:macro:`INPUT_CALLBACK_DEFINE`
-macro
-注册
-callback。若
-指定
-device
-node（callback
-仅
-对
-来自
-特定
-device 的
-events
-调用（否则
-callback
-接收
-system
-中
-所有
-events。此
-为
-支持的
-唯一
-filtering
-类型（任何
-更
-complex 的
-filtering
-logic
-须
-在
-callback
-本身
-实现。
+应用可使用 :c:macro:`INPUT_CALLBACK_DEFINE` 宏注册回调。如果指定了设备节点，
+回调仅对来自特定设备的事件调用；否则回调将接收系统中所有事件。
+这是唯一支持的过滤类型，更复杂的过滤逻辑必须在回调本身中实现。
 
-Subsystem
-可
-同步
-运行
-或
-用
-event
-queue（取决于
-:kconfig:option:`CONFIG_INPUT_MODE`
-option。若
-用
-input
-thread（所有
-events
-加入
-queue（并在
-common
-``input``
-thread
-中
-执行。若
-不用
-thread（callbacks
-直接在
-input
-driver
-context
-中
-调用。
+子系统可同步运行或使用事件队列，取决于 :kconfig:option:`CONFIG_INPUT_MODE` 选项。
+如果使用输入线程，所有事件被添加到队列并在公共 ``input`` 线程中执行。
+如果不使用线程，回调直接在输入驱动上下文中调用。
 
-Synchronous
-mode
-可
-用于
-simple
-application
-以
-保持
-minimal
-footprint（或
-用于
-有
-既有
-event
-model 的
-complex
-application（其中
-callback
-仅为
-将
-event
-pipe
-回
-更
-complex
-application
-specific
-event
-system 的
-wrapper。
+同步模式可用于简单应用以保持最小占用，或用于具有现有事件模型的复杂应用，
+其中回调仅是将事件管道回更复杂的应用特定事件系统的包装器。
 
-HID code mapping
+HID 代码映射
 ****************
 
-Input
-devices 的
-common
-use
-case
-为
-用
-它们
-生成
-HID
-reports。为此（
-:c:func:`input_to_hid_code` 和
-:c:func:`input_to_hid_modifier`
-functions
-可
-用于
-将
-input
-codes
-map
-到
-HID
-codes
-和
-modifiers。
+输入设备的常见用例是用于生成 HID 报告。为此，
+:c:func:`input_to_hid_code` 和 :c:func:`input_to_hid_modifier` 函数
+可用于将输入代码映射到 HID 代码和修饰符。
 
-General Purpose Drivers
+通用驱动
 ***********************
 
-- :dtcompatible:`adc-keys`: 用于
-  连接
-  到
-  resistor
-  ladder 的
-  buttons。
-- :dtcompatible:`analog-axis`: 用于
-  连接
-  到
-  ADC
-  input 的
-  absolute
-  position
-  devices（thumbsticks、
-  sliders...）。
-- :dtcompatible:`gpio-kbd-matrix`: 用于
-  GPIO-connected
-  keyboard
-  matrices。
-- :dtcompatible:`gpio-keys`: 用于
-  直接
-  连接
-  到
-  GPIO 的
-  switches（
-  实现
-  button
-  debouncing。
-- :dtcompatible:`gpio-qdec`: 用于
-  GPIO-connected
-  quadrature
-  encoders。
-- :dtcompatible:`input-keymap`: 将
-  keyboard
-  matrix 的
-  row/col/touch
-  events
-  map
-  到
-  key
-  events。
-- :dtcompatible:`zephyr,input-longpress`: 监听
-  key
-  events（发出
-  short
-  和
-  long
-  press 的
-  events。
-- :dtcompatible:`zephyr,input-double-tap`: 监听
-  key
-  events（发出
-  input
-  double
-  taps 的
-  events（可选
-  single
-  taps
+- :dtcompatible:`adc-keys`：用于连接到电阻梯的按钮。
+- :dtcompatible:`analog-axis`：用于连接到 ADC 输入的绝对位置设备（摇杆、滑块...）。
+- :dtcompatible:`gpio-kbd-matrix`：用于 GPIO 连接的键盘矩阵。
+- :dtcompatible:`gpio-keys`：用于直接连接到 GPIO 的开关，实现按钮去抖动。
+- :dtcompatible:`gpio-qdec`：用于 GPIO 连接的正交编码器。
+- :dtcompatible:`input-keymap`：将键盘矩阵的行/列/touch 事件映射到按键事件。
+- :dtcompatible:`zephyr,input-longpress`：监听按键事件，为短按和长按发出事件。
+- :dtcompatible:`zephyr,input-double-tap`：监听按键事件，为输入双击和（可选）单击发出事件。
 - :dtcompatible:`zephyr,lvgl-button-input`
   :dtcompatible:`zephyr,lvgl-encoder-input`
   :dtcompatible:`zephyr,lvgl-keypad-input`
-  :dtcompatible:`zephyr,lvgl-pointer-input`: 监听
-  input
-  events（并将
-  它们
-  转换
-  为
-  各种
-  类型
-  的
-  LVGL
-  input
-  devices。
+  :dtcompatible:`zephyr,lvgl-pointer-input`：监听输入事件并将其转换为
+  各种类型的 LVGL 输入设备。
 
-Detailed Driver Documentation
+详细驱动文档
 *****************************
 
 .. toctree::
@@ -357,22 +73,22 @@ Detailed Driver Documentation
    gpio-kbd.rst
 
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: input_interface
 
-Input Event Definitions
+输入事件定义
 ***********************
 
 .. doxygengroup:: input_events
 
-Analog Axis API Reference
+模拟轴 API 参考
 *************************
 
 .. doxygengroup:: input_analog_axis
 
-Touchscreen API Reference
+触摸屏 API 参考
 *************************
 
 .. doxygengroup:: touch_events

@@ -230,7 +230,7 @@ Zephyr 维护者将决定何时实际移除该 API：
 发布说明、邮件列表、GitHub issues 和 pull-requests。
 
 如果移除该 API 不可行，维护者将继续支持迁移，
-并更新路线图，目标是移除该 API 在下一个发布版本中移除。
+并更新路线图，目标是在下一个发布版本中移除该 API。
 
 .. _`Zephyr TSC meeting`: https://github.com/zephyrproject-rtos/zephyr/wiki/Zephyr-Committee-and-Working-Group-Meetings#technical-steering-committee-tsc
 .. _`Zephyr Architecture meeting`: https://github.com/zephyrproject-rtos/zephyr/wiki/Architecture-Working-Group

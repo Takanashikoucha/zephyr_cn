@@ -1,15 +1,15 @@
 .. _bluetooth_connection_mgmt:
 
-Connection Management
+连接管理
 #####################
 
-Zephyr Bluetooth stack 使用称为 :c:struct:`bt_conn` 的 abstraction 表示与其他设备的 connections。此 struct 的内部不暴露给 application（但可用 :c:func:`bt_conn_get_info` API 获取有限信息（如 remote address。Connection objects 为 reference counted（且 application 预期在较长时期存储 connection pointer 时使用 :c:func:`bt_conn_ref` API（因为这确保 object 保持有效（即使 connection 断开。类似地（释放对 connection 的 reference 时使用 :c:func:`bt_conn_unref` API。
+Zephyr 蓝牙协议栈使用名为 :c:struct:`bt_conn` 的抽象来表示与其他设备的连接。该结构的内部不暴露给应用程序，但可以通过 :c:func:`bt_conn_get_info` API 获取有限信息（如远端地址）。连接对象采用引用计数，应用程序在较长时间存储连接指针时应使用 :c:func:`bt_conn_ref` API，因为这能确保对象保持有效（即使连接断开）。类似地，释放对连接的引用时应使用 :c:func:`bt_conn_unref` API。
 
-一个常见错误是忘记释放由 functions :c:func:`bt_conn_le_create` 和 :c:func:`bt_conn_le_create_synced` 创建的 connection object 的 reference。为防止此（使用 :kconfig:option:`CONFIG_BT_CONN_CHECK_NULL_BEFORE_CREATE` Kconfig option（其强制这些 functions 在传递给它们的 connection pointer 非 NULL 时返回 error。这有助于发现此类问题并避免由不释放 connection object 引起的 sporadic bugs。
+一个常见错误是忘记释放由 :c:func:`bt_conn_le_create` 和 :c:func:`bt_conn_le_create_synced` 函数创建的连接对象的引用。为防止此问题，请使用 :kconfig:option:`CONFIG_BT_CONN_CHECK_NULL_BEFORE_CREATE` Kconfig 选项，该选项强制这些函数在传入的连接指针非 NULL 时返回错误。这有助于发现此类问题，避免由未释放连接对象导致的偶发性错误。
 
-Application 可通过使用 :c:func:`bt_conn_cb_register` 或 :c:macro:`BT_CONN_CB_DEFINE` APIs 注册 :c:struct:`bt_conn_cb` struct 来跟踪 connections。此 struct 让 application 定义 connection & disconnection events 以及其他与 connection 相关 events（如 security level 或 connection parameters 变化）的 callbacks。作为 central 时（application 还通过 :c:func:`bt_conn_le_create` API 的返回值获取 connection object。
+应用程序可以通过使用 :c:func:`bt_conn_cb_register` 或 :c:macro:`BT_CONN_CB_DEFINE` API 注册 :c:struct:`bt_conn_cb` 结构来跟踪连接。该结构允许应用程序为连接和断开连接事件以及其他与连接相关的事件（如安全级别变化或连接参数变化）定义回调。作为中心设备时，应用程序还可以通过 :c:func:`bt_conn_le_create` API 的返回值获取连接对象。
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: bt_conn

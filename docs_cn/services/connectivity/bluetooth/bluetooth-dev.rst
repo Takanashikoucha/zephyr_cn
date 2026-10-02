@@ -1,1078 +1,164 @@
-.. _bluetooth
-dev:
+.. _bluetooth-dev:
 
-Application
-Development
+应用开发
 #######################
 
-Bluetooth
-applications
-用
-common
-的
-infrastructure
-和
-approach
-开发
-它
-在
-documentation
-的
-:ref:`application`
-section
-中
-被
-described。
+蓝牙应用使用文档 :ref:`application` 一节中描述的通用基础设施和方式开发。
 
-只
-与
-Bluetooth
-applications
-相关
-的
-额外
-information
-可以
-在
-这
-页
-找到。
+仅与蓝牙应用相关的附加信息可在本页找到。
 
-..
-contents::
-:
-local:
-:
-depth:
-2
+.. contents::
+    :local:
+    :depth: 2
 
-Thread
-safety
+线程安全
 *************
 
-Calling
-into
-the
-Bluetooth
-API
-is
-intended
-to
-be
-thread
-safe、
-unless
-otherwise
-noted
-in
-the
-documentation
-of
-the
-API
-function.
-The
-effort
-to
-ensure
-that
-this
-is
-the
-case
-for
-all
-API
-calls
-is
-an
-ongoing
-one、
-but
-the
-overall
-goal
-is
-formally
-stated
-in
-this
-paragraph.
-Bug
-reports
-and
-Pull
-Requests
-that
-move
-the
-subsystem
-in
-the
-direction
-of
-such
-goal
-are
-welcome.
+调用蓝牙 API 应当是线程安全的，除非 API 函数的文档中另有说明。确保所有 API 调用都满足这一点的努力仍在持续进行，但总体目标在本段中正式陈述。欢迎提交有助于推动子系统向该目标迈进的 Bug 报告和 Pull Request。
 
-.. _bluetooth
-hw
-setup:
+.. _bluetooth-hw-setup:
 
-Hardware
-setup
+硬件设置
 **************
 
-This
-section
-describes
-the
-options
-you
-have
-when
-building
-and
-debugging
-Bluetooth
-applications
-with
-Zephyr.
-Depending
-on
-the
-hardware
-that
-is
-available
-to
-you、
-the
-requirements
-you
-have
-and
-the
-type
-of
-development
-you
-prefer
-you
-may
-pick
-one
-or
-another
-setup
-to
-match
-your
-needs.
+本节描述在 Zephyr 中构建和调试蓝牙应用时你可选择的方案。根据你可用的硬件、你的需求以及你偏好的开发类型，你可以选择某一种或另一种设置来匹配你的需求。
 
-There
-are
-3
-possible
-setups:
+共有 3 种可能的设置：
 
-#.
-:ref:`Embedded
-<bluetooth
-hw
-setup
-embedded>`
-#.
-:ref:`External
-controller
-<bluetooth
-hw
-setup
-external
-ll>`
-:
-:ref:`QEMU
-host
-<bluetooth
-hw
-setup
-qemu
-host>`
-:
-:ref:`native
-sim
-host
-<bluetooth
-hw
-setup
-native
-sim
-host>`
-#.
-:ref:`Simulated
-nRF5x
-with
-BabbleSim
-<bluetooth
-hw
-setup
-bsim>`
+#. :ref:`嵌入式 <bluetooth-hw-setup-embedded>`
+#. :ref:`外部控制器 <bluetooth-hw-setup-external-ll>`
 
-.. _bluetooth
-hw
-setup
-embedded:
+   - :ref:`QEMU host <bluetooth-hw-setup-qemu-host>`
+   - :ref:`native_sim host <bluetooth-hw-setup-native-sim-host>`
 
-Embedded
+#. :ref:`使用 BabbleSim 的仿真 nRF5x <bluetooth-hw-setup-bsim>`
+
+.. _bluetooth-hw-setup-embedded:
+
+嵌入式
 ========
 
-This
-setup
-relies
-on
-all
-software
-running
-directly
-on
-the
-embedded
-platforms
-that
-the
-application
-is
-targeting.
-All
-the
-:ref:`bluetooth
-configs`
-and
-:ref:`bluetooth
-build
-types`
-are
-supported
-but
-you
-might
-need
-to
-build
-Zephyr
-more
-than
-once
-if
-you
-are
-using
-a
-dual
-chip
-configuration
-or
-if
-you
-have
-multiple
-cores
-in
-your
-SoC
-each
-running
-a
-different
-build
-type
-（e.g.、
-one
-running
-the
-Host、
-the
-other
-the
-Controller）.
+该设置依赖所有软件直接运行在应用所针对的嵌入式平台上。
+支持所有 :ref:`bluetooth-configs` 和 :ref:`bluetooth-build-types`，但如果你使用双芯片配置，或者你的 SoC 有多个核心且每个核心运行不同的构建类型（例如一个运行 Host，另一个运行 Controller），你可能需要多次构建 Zephyr。
 
-To
-start
-developing
-using
-this
-setup
-follow
-the
-:ref:`Getting
-Started
-Guide
-<getting
-started>`、
-choose
-one
-（or
-more
-if
-you
-are
-using
-a
-dual
-chip
-solution）
-boards
-that
-support
-Bluetooth
-and
-then
-:ref:`run
-the
-application
-<application_run_board>`).
+要开始使用该设置进行开发，请遵循 :ref:`入门指南
+<getting_started>`，选择一块（如果使用双芯片方案则选择多块）支持蓝牙的板子，然后 :ref:`运行应用
+<application_run_board>`)。
 
-There
-is
-a
-way
-to
-access
-the
-:ref:`HCI
-<bluetooth
-hci>`
-traffic
-between
-the
-Host
-and
-Controller、
-even
-if
-there
-is
-no
-physical
-transport.
-See
-:ref:`Embedded
-HCI
-tracing
-<bluetooth
-embedded
-hci
-tracing>`
-for
-instructions.
+有一种方式可以访问 Host 与 Controller 之间的 :ref:`HCI <bluetooth-hci>` 流量，即使没有物理传输层。说明参见 :ref:`嵌入式 HCI 跟踪 <bluetooth-embedded-hci-tracing>`。
 
-.. _bluetooth
-hw
-setup
-external
-ll:
+.. _bluetooth-hw-setup-external-ll:
 
-Host
-on
-Linux
-with
-an
-external
-Controller
+Linux 上的 Host 搭配外部 Controller
 =========================================
 
-..
-note::
-This
-is
-currently
-only
-available
-on
-GNU
-Linux
+.. note::
+   目前仅在 GNU/Linux 上可用
 
-This
-setup
-relies
-on
-a
-"dual
-chip"
-:ref:`configuration
-<bluetooth
-configs>`
-which
-is
-comprised
-of
-the
-following
-devices:
+该设置依赖“双芯片” :ref:`配置 <bluetooth-configs>`
+，由以下设备组成：
 
-#.
-A
-:ref:`Host
-only
-<bluetooth
-build
-types>`
-application
-running
-in
-the
-:ref:`QEMU
-<application_run_qemu>`
-emulator
-or
-the
-:zephyr:board:`native
-sim
-<native
-sim>`
-native
-port
-of
-Zephyr
-#.
-A
-Controller、
-which
-can
-be
-one
-of
-the
-following
-types:
-A
-commercially
-available
-Controller
-A
-:ref:`Controller
-only
-<bluetooth
-build
-types>`
-build
-of
-Zephyr
-A
-:ref:`Virtual
-controller
-<bluetooth
-virtual
-posix>`
+#. 运行在 :ref:`QEMU <application_run_qemu>` 模拟器或 Zephyr 的 :zephyr:board:`native_sim <native_sim>` 原生
+   移植上的 :ref:`仅 Host <bluetooth-build-types>` 应用
+#. 一个 Controller，可以是以下类型之一：
 
-..
-warning::
-Certain
-external
-Controllers
-are
-either
-unable
-to
-accept
-the
-Host
-to
-Controller
-flow
-control
-parameters
-that
-Zephyr
-sets
-by
-default
-（Qualcomm）
-or
-do
-not
-transmit
-any
-data
-from
-the
-Controller
-to
-the
-Host
-（Realtek）.
-If
-you
-see
-a
-message
-similar
-to::
-<wrn>
-bt
-hci
-core:
-opcode
-0x0c33
-status
-0x12
-when
-booting
-your
-sample
-of
-choice
-（make
-sure
-you
-have
-enabled
-:kconfig:option:`CONFIG_LOG`
-in
-your
-:file:`prj.conf`
-before
-running
-the
-sample）
-or
-if
-there
-is
-no
-data
-flowing
-from
-the
-Controller
-to
-the
-Host、
-then
-you
-need
-to
-disable
-Host
-to
-Controller
-flow
-control.
-To
-do
-so、
-set
-``CONFIG_BT_HCI_ACL_FLOW_CONTROL=n``
-in
-your
-:file:`prj.conf`.
+   * 商业可用的 Controller
+   * Zephyr 的 :ref:`仅 Controller <bluetooth-build-types>` 构建
+   * :ref:`虚拟控制器 <bluetooth_virtual_posix>`
 
-.. _bluetooth
-hw
-setup
-qemu
-host:
+.. warning::
+   某些外部 Controller 要么无法接受 Zephyr 默认设置的 Host 到
+   Controller 流控参数（Qualcomm），要么不从 Controller 向 Host 传输任何数据（Realtek）。如果你
+   在启动所选示例时看到类似::
+
+     <wrn> bt_hci_core: opcode 0x0c33 status 0x12
+
+   的消息（运行示例前请确保已在 :file:`prj.conf` 中启用
+   :kconfig:option:`CONFIG_LOG`），或者 Controller 到 Host 没有数据流动，则
+   你需要禁用 Host 到 Controller 的流控。为此，在 :file:`prj.conf` 中设置
+   ``CONFIG_BT_HCI_ACL_FLOW_CONTROL=n``。
+
+.. _bluetooth-hw-setup-qemu-host:
 
 QEMU
 ----
 
-You
-can
-run
-the
-Zephyr
-Host
-on
-the
-:ref:`QEMU
-emulator<application_run_qemu>`
-and
-have
-it
-interact
-with
-a
-physical
-external
-Bluetooth
-Controller.
+你可以在 :ref:`QEMU 模拟器<application_run_qemu>` 上运行 Zephyr Host，
+并让它与物理外部蓝牙 Controller 交互。
 
-Refer
-to
-:ref:`bluetooth_qemu
-native`
-for
-full
-instructions
-on
-how
-to
-build
-and
-run
-an
-application
-in
-this
-setup.
+有关如何在该设置下构建和运行应用的完整说明，参见 :ref:`bluetooth_qemu_native`。
 
-.. _bluetooth
-hw
-setup
-native
-sim
-host:
+.. _bluetooth-hw-setup-native-sim-host:
 
-native
-sim
+native_sim
 ----------
 
-..
-note::
-This
-is
-currently
-only
-available
-on
-GNU
-Linux
+.. note::
+   目前仅在 GNU/Linux 上可用
 
-The
-:zephyr:board:`native
-sim
-<native
-sim>`
-target
-builds
-your
-Zephyr
-application
-with
-the
-Zephyr
-kernel、
-and
-some
-minimal
-HW
-emulation
-as
-a
-native
-Linux
-executable.
+:zephyr:board:`native_sim <native_sim>` 目标使用 Zephyr 内核和少量硬件仿真，将你的 Zephyr 应用构建为原生 Linux 可执行文件。
 
-This
-executable
-is
-a
-normal
-Linux
-program、
-which
-can
-be
-debugged
-and
-instrumented
-like
-any
-other、
-and
-it
-communicates
-with
-a
-physical
-or
-virtual
-external
-Controller.
-Refer
-to:
+该可执行文件是一个普通的 Linux 程序，可以像其他任何程序一样进行调试和插桩，并与物理或虚拟外部 Controller 通信。参见：
 
-:ref:`bluetooth_qemu
-native`
-for
-the
-physical
-controller
-:ref:`bluetooth
-virtual
-posix`
-for
-the
-virtual
-controller
+- 物理控制器参见 :ref:`bluetooth_qemu_native`
+- 虚拟控制器参见 :ref:`bluetooth_virtual_posix`
 
-.. _bluetooth
-hw
-setup
-bsim:
+.. _bluetooth-hw-setup-bsim:
 
-Simulated
-nRF5x
-with
-BabbleSim
+使用 BabbleSim 的仿真 nRF5x
 ==============================
 
-..
-note::
-This
-is
-currently
-only
-available
-on
-GNU
-Linux
+.. note::
+   目前仅在 GNU/Linux 上可用
 
-The
-:ref:`nrf52_bsim
-<nrf52_bsim>`
-and
-:ref:`nrf5340bsim
-<nrf5340bsim>`
-boards、
-are
-simulated
-target
-boards
-which
-emulate
-the
-necessary
-peripherals
-of
-a
-nRF52
-53
-SOC
-to
-be
-able
-to
-develop
-and
-test
-Bluetooth
-LE
-applications.
-These
-boards、
-use:
-`BabbleSim`_
-to
-simulate
-the
-nRF5x
-modem
-and
-the
-radio
-environment.
-The
-POSIX
-arch
-and
-native
-simulator
-to
-emulate
-the
-processor、
-and
-run
-natively
-on
-your
-host.
-`Models
-of
-the
-nrf5x
-HW
-<https://github.com/BabbleSim/ext
-NRF_hw
-models/>`_
+:ref:`nrf52_bsim <nrf52_bsim>` 和 :ref:`nrf5340bsim <nrf5340bsim>` 板子
+是仿真目标板
+，仿真 nRF52/53 SoC 所需的必要外设，以便开发和测试蓝牙 LE 应用。
+这些板子使用：
 
-Just
-like
-with
-the
-:zephyr:board:`native
-sim
-<native
-sim>`
-target、
-the
-build
-result
-is
-a
-normal
-Linux
-executable.
-You
-can
-find
-more
-information
-on
-how
-to
-run
-simulations
-with
-one
-or
-several
-devices
-in
-either
-of
-:ref:`these
-boards's
-documentation
-<nrf52bsim_build
-and
-run>`.
+   * `BabbleSim`_ 仿真 nRF5x 调制解调器和射频环境。
+   * POSIX 架构和原生模拟器仿真处理器，并在你的主机上原生运行。
+   * `nrf5x HW 模型 <https://github.com/BabbleSim/ext_NRF_hw_models/>`_
 
-With
-the
-:ref:`nrf52_bsim
-<nrf52_bsim>`、
-typically
-you
-do
-:ref:`Combined
-builds
-<bluetooth
-build
-types>`、
-but
-it
-is
-also
-possible
-to
-build
-the
-controller
-with
-one
-of
-the
-:zephyr:code
-sample:`bluetooth_hci_uart`
-samples
-in
-one
-simulated
-device、
-and
-the
-host
-with
-the
-H4
-driver
-instead
-of
-the
-integrated
-controller
-in
-another
-simulated
-device.
+与 :zephyr:board:`native_sim <native_sim>` 目标一样，构建结果是一个普通的 Linux 可执行文件。
+有关如何运行单个或多个设备仿真的更多信息，可在 :ref:`这些板子的文档 <nrf52bsim_build_and_run>` 中找到。
 
-With
-the
-:ref:`nrf5340bsim
-<nrf5340bsim>`、
-you
-can
-build
-with
-either、
-both
-controller
-and
-host
-on
-its
-network
-core、
-or、
-with
-the
-network
-core
-running
-only
-the
-controller、
-the
-application
-core
-running
-the
-host
-and
-your
-application、
-and
-the
-HCI
-transport
-over
-IPC.
+使用 :ref:`nrf52_bsim <nrf52_bsim>` 时，通常进行 :ref:`组合构建
+<bluetooth-build-types>`，但也可以在另一个仿真设备上用 H4 驱动替代集成控制器构建 host，
+在一个仿真设备上用 :zephyr:code-sample:`bluetooth_hci_uart` 示例构建控制器。
 
-Initialization
+使用 :ref:`nrf5340bsim <nrf5340bsim>` 时，你可以选择在其网络核心上构建控制器和 host 两者，
+或者让网络核心仅运行控制器、应用核心运行 host 和你的应用，
+HCI 传输基于 IPC。
+
+初始化
 **************
 
-The
-Bluetooth
-subsystem
-is
-initialized
-using
-the
-:c:func:`bt_enable`
-function.
-The
-caller
-should
-ensure
-that
-function
-succeeds
-by
-checking
-the
-return
-code
-for
-errors.
-If
-a
-function
-pointer
-is
-passed
-to
-:c:func:`bt_enable`、
-the
-initialization
-happens
-asynchronously、
-and
-the
-completion
-is
-notified
-through
-the
-given
-function.
+蓝牙子系统使用 :c:func:`bt_enable`
+函数初始化。调用者应通过检查返回码是否有错误来确保该函数成功。如果向
+:c:func:`bt_enable` 传递了函数指针，则初始化异步进行，
+完成通过给定函数通知。
 
-Bluetooth
-Application
-Example
+蓝牙应用示例
 *****************************
 
-A
-simple
-Bluetooth
-beacon
-application
-is
-shown
-below.
-The
-application
-initializes
-the
-Bluetooth
-Subsystem
-and
-enables
-non
-connectable
-advertising、
-effectively
-acting
-as
-a
-Bluetooth
-Low
-Energy
-broadcaster.
+下面展示了一个简单的蓝牙 beacon 应用。该应用
+初始化蓝牙子系统并启用不可连接广播，
+实际上充当蓝牙低功耗广播器。
 
-..
-literalinclude::
-../../../../samples/bluetooth/beacon/src/main.c
-:
-language:
-c
-:
-lines:
-19
-:
-linenos:
+.. literalinclude:: ../../../../samples/bluetooth/beacon/src/main.c
+   :language: c
+   :lines: 19-
+   :linenos:
 
-The
-key
-APIs
-employed
-by
-the
-beacon
-sample
-are
-:c:func:`bt_enable`
-that's
-used
-to
-initialize
-Bluetooth
-and
-then
-:c:func:`bt_le_adv_start`
-that's
-used
-to
-start
-advertising
-a
-specific
-combination
-of
-advertising
-and
-scan
-response
-data.
+beacon 示例使用的关键 API 是 :c:func:`bt_enable`
+（用于初始化蓝牙），然后使用 :c:func:`bt_le_adv_start`
+（用于开始广播特定的广播数据与扫描响应数据的组合）。
 
-More
-Examples
+更多示例
 *************
 
-More
-:zephyr:code
-sample
-category:`sample
-Bluetooth
-applications
-<bluetooth>`
-are
-available
-in
-``samples/bluetooth/``.
+更多 :zephyr:code-sample-category:`蓝牙示例应用 <bluetooth>` 可在
+``samples/bluetooth/`` 中找到。
 
-..
-BabbleSim:
-https://babblesim.github.io/
+.. _BabbleSim: https://babblesim.github.io/

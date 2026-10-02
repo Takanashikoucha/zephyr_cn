@@ -1,1610 +1,440 @@
-Bluetooth:
-Classic:
-HFP
-Shell
+Bluetooth：经典：HFP Shell
 ###############################
 
-这
-document
-describe
-如何
-运行
-Bluetooth
-Classic
-HFP
-functionality。
-:code:`hfp`
-command
-expose
-Bluetooth
-Classic
-HFP
-Shell
-commands。
+本文档描述如何运行蓝牙经典 HFP 功能。
+:code:`hfp` 命令暴露了蓝牙经典 HFP Shell 命令。
 
-有
-两
-个
-sub
-commands
-:code:`hfp
-hf`
-和
-:code:`hfp
-ag`.
-The
-:code:`hfp
-hf`
-is
-for
-Hands
-Free
-Profile
-（HF）
-functionality
-and
-the
-:code:`hfp
-ag`
-is
-for
-Audio
-Gateway
-（AG）
-functionality.
+有两个子命令，:code:`hfp hf` 和 :code:`hfp ag`。
 
-Commands
+:code:`hfp hf` 用于免提配置文件（HF）功能，
+:code:`hfp ag` 用于音频网关（AG）功能。
+
+命令
 ********
 
-All
-commands
-can
-only
-be
-used
-after
-the
-ACL
-connection
-has
-been
-established
-except
-:code:`hfp
-hf
-reg`
-and
-:code:`hfp
-ag
-reg`.
+除 :code:`hfp hf reg` 和 :code:`hfp ag reg` 外，
+所有命令只能在 ACL 连接建立后使用。
 
-The
-:code:`hfp`
-commands:
+:code:`hfp` 命令：
 
-..
-code
-block::
-console
-uart:~$
-hfp
-hfp
-Bluetooth
-HFP
-shell
-commands
-Subcommands:
-hf
-:
-HFP
-HF
-shell
-commands
-ag
-:
-HFP
-AG
-shell
-commands
+.. code-block:: console
 
-The
-:code:`hfp
-hf`
-commands:
+   uart:~$ hfp
+   hfp - Bluetooth HFP shell commands
+   Subcommands:
+     hf  : HFP HF shell commands
+     ag  : HFP AG shell commands
 
-..
-code
-block::
-console
-uart:~$
-hfp
-hf
-hf
-HFP
-HF
-shell
-commands
-Subcommands:
-reg
-:
-[none]
-connect
-:
-<channel>
-disconnect
-:
-[none]
-sco
-disconnect
-:
-[none]
-cli
-:
-<enable/disable>
-vgm
-:
-<gain>
-vgs
-:
-<gain>
-operator
-:
-[none]
-audio
-connect
-:
-[none]
-auto
-select
-codec
-:
-<enable/disable>
-select
-codec
-:
-Codec
-ID
-set
-codecs
-:
-Codec
-ID
-Map
-accept
-:
-<call
-index>
-reject
-:
-<call
-index>
-terminate
-:
-<call
-index>
-hold
-incoming
-:
-<call
-index>
-query
-respond
-hold
-status
-:
-[none]
-number
-call
-:
-<phone
-number>
-memory
-dial
-:
-<memory
-location>
-redial
-:
-[none]
-turn
-off
-ecnr
-:
-[none]
-call
-waiting
-notify
-:
-<enable/disable>
-release
-all
-held
-:
-[none]
-set
-udub
-:
-[none]
-release
-active
-accept
-other
-:
-[none]
-hold
-active
-accept
-other
-:
-[none]
-join
-conversation
-:
-[none]
-explicit
-call
-transfer
-:
-[none]
-release
-specified
-call
-:
-<call
-index>
-private
-consultation
-mode
-:
-<call
-index>
-voice
-recognition
-:
-<activate/deactivate>
-ready
-to
-accept
-audio
-:
-[none]
-request
-phone
-number
-:
-[none]
-transmit
-dtmf
-code
-:
-<call
-index>
-<code（set
-0
-9、
-#、
-*、
-A
-D）>
-query
-subscriber
-:
-[none]
-indicator
-status
-:
-<Activate/deactivate
-AG
-indicators
-bitmap>
-enhanced
-safety
-:
-<enable/disable>
-battery
-:
-<level>
+:code:`hfp hf` 命令：
 
-The
-:code:`hfp
-ag`
-commands:
+.. code-block:: console
 
-..
-code
-block::
-console
-uart:~$
-hfp
-ag
-ag
-HFP
-AG
-shell
-commands
-Subcommands:
-reg
-:
-[none]
-connect
-:
-<channel>
-disconnect
-:
-[none]
-sco
-disconnect
-:
-[none]
-ongoing
-calls
-:
-<yes
-or
-no>
-set
-ongoing
-calls
-:
-<number>
-<type>
-<status>
-<dir>
-[all]
-remote
-incoming
-:
-<number>
-hold
-incoming
-:
-<number>
-remote
-reject
-:
-<call
-index>
-remote
-accept
-:
-<call
-index>
-remote
-terminate
-:
-<call
-index>
-remote
-ringing
-:
-<call
-index>
-outgoing
-:
-<number>
-reject
-:
-<call
-index>
-accept
-:
-<call
-index>
-hold
-:
-<call
-index>
-retrieve
-:
-<call
-index>
-terminate
-:
-<call
-index>
-vgm
-:
-<gain>
-vgs
-:
-<gain>
-operator
-:
-<mode>
-<operator>
-audio
-connect
-:
-<codec
-id>
-inband
-ringtone
-:
-<enable/disable>
-explicit
-call
-transfer
-:
-[none]
-voice
-recognition
-:
-<activate/deactivate>
-vre
-state
-:
-<[R
-ready][S
-send][P
-processing]>
-vre
-text
-:
-<[R
-ready][S
-send][P
-processing]>
-<id>
-<type>
-<operation>
-<text
-string>
-subscriber
-:
-<empty/notempty>
-signal
-strength
-:
-<signal
-strength>
-roaming
-status
-:
-<roaming
-status>
-battery
-level
-:
-<battery
-level>
-service
-availability
-:
-<yes/no>
-hf
-indicator
-:
-<indicator>
-<enable/disable>
+   uart:~$ hfp hf
+   hf - HFP HF shell commands
+   Subcommands:
+     reg                          : [none]
+     connect                      : <channel>
+     disconnect                   : [none]
+     sco_disconnect               : [none]
+     cli                          : <enable/disable>
+     vgm                          : <gain>
+     vgs                          : <gain>
+     operator                     : [none]
+     audio_connect                : [none]
+     auto_select_codec            : <enable/disable>
+     select_codec                 : Codec ID
+     set_codecs                   : Codec ID Map
+     accept                       : <call index>
+     reject                       : <call index>
+     terminate                    : <call index>
+     hold_incoming                : <call index>
+     query_respond_hold_status    : [none]
+     number_call                  : <phone number>
+     memory_dial                  : <memory location>
+     redial                       : [none]
+     turn_off_ecnr                : [none]
+     call_waiting_notify          : <enable/disable>
+     release_all_held             : [none]
+     set_udub                     : [none]
+     release_active_accept_other  : [none]
+     hold_active_accept_other     : [none]
+     join_conversation            : [none]
+     explicit_call_transfer       : [none]
+     release_specified_call       : <call index>
+     private_consultation_mode    : <call index>
+     voice_recognition            : <activate/deactivate>
+     ready_to_accept_audio        : [none]
+     request_phone_number         : [none]
+     transmit_dtmf_code           : <call index> <code(set 0-9, #,*,A-D)>
+     query_subscriber             : [none]
+     indicator_status             : <Activate/deactivate AG indicators bitmap>
+     enhanced_safety              : <enable/disable>
+     battery                      : <level>
 
-HFP
-AG
-SLC
+:code:`hfp ag` 命令：
+
+.. code-block:: console
+
+   uart:~$ hfp ag
+   ag - HFP AG shell commands
+   Subcommands:
+     reg                     : [none]
+     connect                 : <channel>
+     disconnect              : [none]
+     sco_disconnect          : [none]
+     ongoing_calls           : <yes or no>
+     set_ongoing_calls       : <number> <type> <status> <dir> [all]
+     remote_incoming         : <number>
+     hold_incoming           : <number>
+     remote_reject           : <call index>
+     remote_accept           : <call index>
+     remote_terminate        : <call index>
+     remote_ringing          : <call index>
+     outgoing                : <number>
+     reject                  : <call index>
+     accept                  : <call index>
+     hold                    : <call index>
+     retrieve                : <call index>
+     terminate               : <call index>
+     vgm                     : <gain>
+     vgs                     : <gain>
+     operator                : <mode> <operator>
+     audio_connect           : <codec id>
+     inband_ringtone         : <enable/disable>
+     explicit_call_transfer  : [none]
+     voice_recognition       : <activate/deactivate>
+     vre_state               : <[R-ready][S-send][P-processing]>
+     vre_text                : <[R-ready][S-send][P-processing]> <id> <type>
+                               <operation> <text string>
+     subscriber              : <empty/notempty>
+     signal_strength         : <signal strength>
+     roaming_status          : <roaming status>
+     battery_level           : <battery level>
+     service_availability    : <yes/no>
+     hf_indicator            : <indicator> <enable/disable>
+
+HFP AG SLC
 **********
 
-The
-:code:`hfp
-ag`
-subcommand
-provides
-functionality
-for
-HFP
-AG
-in
-Bluetooth
-Classic.
+:code:`hfp ag` 子命令提供蓝牙经典 HFP AG 功能。
 
-1.
-Register
-HFP
-AG:
+1. 注册 HFP AG：
 
-..
-code
-block::
-console
-uart:~$
-hfp
-ag
-reg
+.. code-block:: console
 
-2.
-Connect
-to
-HFP
-HF:
+   uart:~$ hfp ag reg
 
-..
-code
-block::
-console
-uart:~$
-hfp
-ag
-connect
-1
+2. 连接 HFP HF：
 
-3.
-Connection
-is
-established
-with
-the
-HF
-device:
+.. code-block:: console
 
-..
-code
-block::
-console
-Security
-changed:
-XX:XX:XX:XX:XX:XX
-level
-2
-AG
-received
-codec
-id
-bit
-map
-2
-AG
-connected
-AG
-received
-vgm
-0
-AG
-received
-vgs
-0
+   uart:~$ hfp ag connect 1
 
-4.
-Disconnect
-from
-HFP
-HF:
+3. 与 HF 设备建立连接：
 
-..
-code
-block::
-console
-uart:~$
-hfp
-ag
-disconnect
+.. code-block:: console
 
-5.
-Connection
-is
-broken:
+   Security changed: XX:XX:XX:XX:XX:XX level 2
+   AG received codec id bit map 2
+   AG connected
+   AG received vgm 0
+   AG received vgs 0
 
-..
-code
-block::
-console
-AG
-disconnected
+4. 断开 HFP HF：
 
-HFP
-HF
-SLC
+.. code-block:: console
+
+   uart:~$ hfp ag disconnect
+
+5. 连接断开：
+
+.. code-block:: console
+
+   AG disconnected
+
+
+HFP HF SLC
 **********
 
-The
-:code:`hfp
-hf`
-subcommand
-provides
-functionality
-for
-HFP
-HF
-in
-Bluetooth
-Classic.
+:code:`hfp hf` 子命令提供蓝牙经典 HFP HF 功能。
 
-1.
-Register
-HFP
-HF:
+1. 注册 HFP HF：
 
-..
-code
-block::
-console
-uart:~$
-hfp
-hf
-reg
+.. code-block:: console
 
-2.
-Connect
-to
-HFP
-AG:
+   uart:~$ hfp hf reg
 
-..
-code
-block::
-console
-uart:~$
-hfp
-hf
-connect
-2
+2. 连接 HFP AG：
 
-3.
-Connection
-is
-established
-with
-the
-AG
-device:
+.. code-block:: console
 
-..
-code
-block::
-console
-Security
-changed:
-XX:XX:XX:XX:XX:XX
-level
-2
-HF
-service
-0
-HF
-signal
-0
-HF
-roam
-0
-HF
-battery
-0
-HF
-ring:
-in
-band
-HF
-connected
+   uart:~$ hfp hf connect 2
 
-4.
-Disconnect
-from
-HFP
-HF:
+3. 与 AG 设备建立连接：
 
-..
-code
-block::
-console
-uart:~$
-hfp
-hf
-disconnect
+.. code-block:: console
 
-5.
-Connection
-is
-broken:
+   Security changed: XX:XX:XX:XX:XX:XX level 2
+   HF service 0
+   HF signal 0
+   HF roam 0
+   HF battery 0
+   HF ring: in-band
+   HF connected
 
-..
-code
-block::
-console
-HF
-disconnected
+4. 断开 HFP HF：
 
-Call
-outgoing
+.. code-block:: console
+
+   uart:~$ hfp hf disconnect
+
+5. 连接断开：
+
+.. code-block:: console
+
+   HF disconnected
+
+拨打呼叫
 *************
 
-Place
-a
-call
-with
-the
-Phone
-number
-supplied
-by
-the
-AG:
+使用 AG 提供的电话号码拨打呼叫：
 
-..
-tabs::
-..
-group
-tab::
-Outgoing
-Call
-Sequence
-on
-AG
-side
-..
-code
-block::
-console
-uart:~$
-hfp
-ag
-outgoing
-123456
-AG
-outgoing
-call
-0x20007690、
-number
-123456
-AG
-SCO
-connected
-0x20005248
-AG
-SCO
-info:
-SCO
-handle
-0x0008
-SCO
-air
-mode
-2
-SCO
-link
-type
-2
-uart:~$
-hfp
-ag
-remote
-ringing
-0
-AG
-call
-0x20007690
-start
-ringing
-mode
-1
-uart:~$
-hfp
-ag
-remote
-accept
-0
-AG
-call
-0x20007690
-accept
-..
-group
-tab::
-Outgoing
-Call
-Sequence
-on
-HF
-side
-..
-code
-block::
-console
-uart:~$
-hfp
-hf
-auto
-select
-codec
-enable
-HF
-call
-0x20007408
-outgoing
-codec
-negotiation:
-1
-codec
-auto
-selected:
-id
-1
-HF
-SCO
-connected
-0x20005248
-HF
-SCO
-info:
-SCO
-handle
-0x0008
-SCO
-air
-mode
-2
-SCO
-link
-type
-2
-HF
-remote
-call
-0x20007408
-start
-ringing
-HF
-call
-0x20007408
-accepted
+.. tabs::
 
-Place
-a
-call
-with
-the
-Phone
-number
-supplied
-by
-the
-HF:
+   .. group-tab:: Outgoing Call Sequence on AG side
 
-..
-tabs::
-..
-group
-tab::
-Outgoing
-Call
-Sequence
-on
-AG
-side
-..
-code
-block::
-console
-uart:~$
-AG
-number
-call
-AG
-outgoing
-call
-0x20007690、
-number
-123456789
-AG
-SCO
-connected
-0x20005248
-AG
-SCO
-info:
-SCO
-handle
-0x0008
-SCO
-air
-mode
-2
-SCO
-link
-type
-2
-uart:~$
-hfp
-ag
-remote
-ringing
-0
-AG
-call
-0x20007690
-start
-ringing
-mode
-1
-uart:~$
-hfp
-ag
-remote
-accept
-0
-AG
-call
-0x20007690
-accept
-..
-group
-tab::
-Outgoing
-Call
-Sequence
-on
-HF
-side
-..
-code
-block::
-console
-uart:~$
-hfp
-hf
-auto
-select
-codec
-enable
-uart:~$
-hfp
-hf
-number
-call
-123456789
-HF
-start
-dialing
-call:
-err
-0
-HF
-call
-0x20007408
-outgoing
-codec
-negotiation:
-1
-codec
-auto
-selected:
-id
-1
-HF
-SCO
-connected
-0x20005248
-HF
-SCO
-info:
-SCO
-handle
-0x0008
-SCO
-air
-mode
-2
-SCO
-link
-type
-2
-HF
-remote
-call
-0x20007408
-start
-ringing
-HF
-call
-0x20007408
-accepted
+      .. code-block:: console
 
-Call
-incoming
+         uart:~$ hfp ag outgoing 123456
+         AG outgoing call 0x20007690, number 123456
+         AG SCO connected 0x20005248
+         AG SCO info:
+           SCO handle 0x0008
+           SCO air mode 2
+           SCO link type 2
+         uart:~$ hfp ag remote_ringing 0
+         AG call 0x20007690 start ringing mode 1
+         uart:~$ hfp ag remote_accept 0
+         AG call 0x20007690 accept
+
+   .. group-tab:: Outgoing Call Sequence on HF side
+
+      .. code-block:: console
+
+         uart:~$ hfp hf auto_select_codec enable
+         HF call 0x20007408 outgoing
+         codec negotiation: 1
+         codec auto selected: id 1
+         HF SCO connected 0x20005248
+         HF SCO info:
+           SCO handle 0x0008
+           SCO air mode 2
+           SCO link type 2
+         HF remote call 0x20007408 start ringing
+         HF call 0x20007408 accepted
+
+使用 HF 提供的电话号码拨打呼叫：
+
+.. tabs::
+
+   .. group-tab:: Outgoing Call Sequence on AG side
+
+      .. code-block:: console
+
+         uart:~$
+         AG number call
+         AG outgoing call 0x20007690, number 123456789
+         AG SCO connected 0x20005248
+         AG SCO info:
+           SCO handle 0x0008
+           SCO air mode 2
+           SCO link type 2
+         uart:~$ hfp ag remote_ringing 0
+         AG call 0x20007690 start ringing mode 1
+         uart:~$ hfp ag remote_accept 0
+         AG call 0x20007690 accept
+
+   .. group-tab:: Outgoing Call Sequence on HF side
+
+      .. code-block:: console
+
+         uart:~$ hfp hf auto_select_codec enable
+         uart:~$ hfp hf number_call 123456789
+         HF start dialing call: err 0
+         HF call 0x20007408 outgoing
+         codec negotiation: 1
+         codec auto selected: id 1
+         HF SCO connected 0x20005248
+         HF SCO info:
+           SCO handle 0x0008
+           SCO air mode 2
+           SCO link type 2
+         HF remote call 0x20007408 start ringing
+         HF call 0x20007408 accepted
+
+接听来电
 *************
 
-Answer
-incoming
-call
-from
-the
-AG:
+从 AG 接听来电：
 
-..
-tabs::
-..
-group
-tab::
-Incoming
-Call
-Sequence
-on
-AG
-side
-..
-code
-block::
-console
-uart:~$
-hfp
-ag
-remote
-incoming
-123456
-AG
-incoming
-call
-0x20007690、
-number
-123456
-AG
-call
-0x20007690
-start
-ringing
-mode
-1
-AG
-SCO
-connected
-0x20005248
-AG
-SCO
-info:
-SCO
-handle
-0x0008
-SCO
-air
-mode
-2
-SCO
-link
-type
-2
-uart:~$
-hfp
-ag
-accept
-0
-AG
-call
-0x20007690
-accept
-..
-group
-tab::
-Incoming
-Call
-Sequence
-on
-HF
-side
-..
-code
-block::
-console
-uart:~$
-hfp
-hf
-auto
-select
-codec
-enable
-HF
-call
-0x20007408
-incoming
-codec
-negotiation:
-1
-codec
-auto
-selected:
-id
-1
-HF
-SCO
-connected
-0x20005248
-HF
-SCO
-info:
-SCO
-handle
-0x0008
-SCO
-air
-mode
-2
-SCO
-link
-type
-2
-HF
-call
-0x20007408
-ring
-HF
-call
-0x20007408
-CLIP
-123456
-0
-HF
-call
-0x20007408
-ring
-HF
-call
-0x20007408
-CLIP
-123456
-0
-HF
-call
-0x20007408
-ring
-HF
-call
-0x20007408
-CLIP
-123456
-0
-HF
-call
-0x20007408
-ring
-HF
-call
-0x20007408
-CLIP
-123456
-0
-HF
-call
-0x20007408
-ring
-HF
-call
-0x20007408
-CLIP
-123456
-0
-HF
-call
-0x20007408
-ring
-HF
-call
-0x20007408
-CLIP
-123456
-0
-HF
-call
-0x20007408
-ring
-HF
-call
-0x20007408
-CLIP
-123456
-0
-HF
-call
-0x20007408
-ring
-HF
-call
-0x20007408
-CLIP
-123456
-0
-HF
-call
-0x20007408
-ring
-HF
-call
-0x20007408
-CLIP
-123456
-0
-HF
-call
-0x20007408
-ring
-HF
-call
-0x20007408
-CLIP
-123456
-0
-HF
-call
-0x20007408
-accepted
+.. tabs::
 
-Answer
-incoming
-call
-from
-the
-HF:
+   .. group-tab:: Incoming Call Sequence on AG side
 
-..
-tabs::
-..
-group
-tab::
-Incoming
-Call
-Sequence
-on
-AG
-side
-..
-code
-block::
-console
-uart:~$
-hfp
-ag
-remote
-incoming
-123456
-AG
-incoming
-call
-0x20007690、
-number
-123456
-AG
-codec
-negotiation
-result
-0
-AG
-call
-0x20007690
-start
-ringing
-mode
-1
-AG
-SCO
-connected
-0x20005248
-AG
-SCO
-info:
-SCO
-handle
-0x0008
-SCO
-air
-mode
-2
-SCO
-link
-type
-2
-AG
-call
-0x20007690
-accept
-..
-group
-tab::
-Incoming
-Call
-Sequence
-on
-HF
-side
-..
-code
-block::
-console
-uart:~$
-hfp
-hf
-auto
-select
-codec
-enable
-HF
-call
-0x20007408
-incoming
-codec
-negotiation:
-1
-codec
-auto
-selected:
-id
-1
-HF
-SCO
-connected
-0x20005248
-HF
-SCO
-info:
-SCO
-handle
-0x0008
-SCO
-air
-mode
-2
-SCO
-link
-type
-2
-HF
-call
-0x20007408
-ring
-HF
-call
-0x20007408
-CLIP
-123456
-0
-HF
-call
-0x20007408
-ring
-HF
-call
-0x20007408
-CLIP
-123456
-0
-HF
-call
-0x20007408
-ring
-HF
-call
-0x20007408
-CLIP
-123456
-0
-HF
-call
-0x20007408
-ring
-HF
-call
-0x20007408
-CLIP
-123456
-0
-HF
-call
-0x20007408
-ring
-HF
-call
-0x20007408
-CLIP
-123456
-0
-uart:~$
-hfp
-hf
-accept
-0
-HF
-call
-0x20007408
-accepted
+      .. code-block:: console
 
-Call
-termination
+         uart:~$ hfp ag remote_incoming 123456
+         AG incoming call 0x20007690, number 123456
+         AG call 0x20007690 start ringing mode 1
+         AG SCO connected 0x20005248
+         AG SCO info:
+           SCO handle 0x0008
+           SCO air mode 2
+           SCO link type 2
+         uart:~$ hfp ag accept 0
+         AG call 0x20007690 accept
+
+   .. group-tab:: Incoming Call Sequence on HF side
+
+      .. code-block:: console
+
+         uart:~$ hfp hf auto_select_codec enable
+         HF call 0x20007408 incoming
+         codec negotiation: 1
+         codec auto selected: id 1
+         HF SCO connected 0x20005248
+         HF SCO info:
+           SCO handle 0x0008
+           SCO air mode 2
+           SCO link type 2
+         HF call 0x20007408 ring
+         HF call 0x20007408 CLIP 123456 0
+         HF call 0x20007408 ring
+         HF call 0x20007408 CLIP 123456 0
+         HF call 0x20007408 ring
+         HF call 0x20007408 CLIP 123456 0
+         HF call 0x20007408 ring
+         HF call 0x20007408 CLIP 123456 0
+         HF call 0x20007408 ring
+         HF call 0x20007408 CLIP 123456 0
+         HF call 0x20007408 ring
+         HF call 0x20007408 CLIP 123456 0
+         HF call 0x20007408 ring
+         HF call 0x20007408 CLIP 123456 0
+         HF call 0x20007408 ring
+         HF call 0x20007408 CLIP 123456 0
+         HF call 0x20007408 ring
+         HF call 0x20007408 CLIP 123456 0
+         HF call 0x20007408 ring
+         HF call 0x20007408 CLIP 123456 0
+         HF call 0x20007408 accepted
+
+从 HF 接听来电：
+
+.. tabs::
+
+   .. group-tab:: Incoming Call Sequence on AG side
+
+      .. code-block:: console
+
+         uart:~$ hfp ag remote_incoming 123456
+         AG incoming call 0x20007690, number 123456
+         AG codec negotiation result 0
+         AG call 0x20007690 start ringing mode 1
+         AG SCO connected 0x20005248
+         AG SCO info:
+           SCO handle 0x0008
+           SCO air mode 2
+           SCO link type 2
+         AG call 0x20007690 accept
+
+   .. group-tab:: Incoming Call Sequence on HF side
+
+      .. code-block:: console
+
+         uart:~$ hfp hf auto_select_codec enable
+         HF call 0x20007408 incoming
+         codec negotiation: 1
+         codec auto selected: id 1
+         HF SCO connected 0x20005248
+         HF SCO info:
+           SCO handle 0x0008
+           SCO air mode 2
+           SCO link type 2
+         HF call 0x20007408 ring
+         HF call 0x20007408 CLIP 123456 0
+         HF call 0x20007408 ring
+         HF call 0x20007408 CLIP 123456 0
+         HF call 0x20007408 ring
+         HF call 0x20007408 CLIP 123456 0
+         HF call 0x20007408 ring
+         HF call 0x20007408 CLIP 123456 0
+         HF call 0x20007408 ring
+         HF call 0x20007408 CLIP 123456 0
+         HF call 0x20007408 ring
+         HF call 0x20007408 CLIP 123456 0
+         uart:~$ hfp hf accept 0
+         HF call 0x20007408 accepted
+
+结束呼叫
 ****************
 
-After
-the
-call
-（outgoing
-or
-incoming）
-is
-accepted、
-it
-can
-be
-terminated
-from
-either
-the
-AG
-（Audio
-Gateway）
-or
-HF
-（Hands
-Free）
-side.
+呼叫（拨打或接听）被接听后，
+可以从 AG（音频网关）或 HF（免提）任一侧结束。
 
-Terminate
-a
-call
-process
-from
-the
-AG:
+从 AG 结束呼叫：
 
-..
-tabs::
-..
-group
-tab::
-Call
-termination
-on
-AG
-side
-..
-code
-block::
-console
-uart:~$
-hfp
-ag
-terminate
-0
-AG
-call
-0x20007690
-terminate
-AG
-SCO
-disconnected
-0x20005248
-（reason
-22）
-..
-group
-tab::
-Call
-termination
-on
-HF
-side
-..
-code
-block::
-console
-HF
-call
-0x20007408
-terminated
-HF
-SCO
-disconnected
-0x20005248
-（reason
-22）
+.. tabs::
 
-Terminate
-a
-call
-process
-from
-the
-HF:
+   .. group-tab:: Call termination on AG side
 
-..
-tabs::
-..
-group
-tab::
-Call
-termination
-on
-AG
-side
-..
-code
-block::
-console
-AG
-call
-0x20007690
-terminate
-AG
-SCO
-disconnected
-0x20005248
-（reason
-22）
-..
-group
-tab::
-Call
-termination
-on
-HF
-side
-..
-code
-block::
-console
-uart:~$
-hfp
-hf
-terminate
-0
-HF
-call
-0x20007408
-terminated
-HF
-SCO
-disconnected
-0x20005248
-（reason
-22）
+      .. code-block:: console
 
-Terminate
-a
-call
-process
-from
-the
-remote:
+         uart:~$ hfp ag terminate 0
+         AG call 0x20007690 terminate
+         AG SCO disconnected 0x20005248 (reason 22)
 
-..
-tabs::
-..
-group
-tab::
-Call
-termination
-on
-AG
-side
-..
-code
-block::
-console
-uart:~$
-hfp
-ag
-remote
-terminate
-0
-AG
-call
-0x20007690
-terminate
-AG
-SCO
-disconnected
-0x20005248
-（reason
-22）
-..
-group
-tab::
-Call
-termination
-on
-HF
-side
-..
-code
-block::
-console
-HF
-call
-0x20007408
-terminated
-HF
-SCO
-disconnected
-0x20005248
-（reason
-22）
+   .. group-tab:: Call termination on HF side
+
+      .. code-block:: console
+
+         HF call 0x20007408 terminated
+         HF SCO disconnected 0x20005248 (reason 22)
+
+从 HF 结束呼叫：
+
+.. tabs::
+
+   .. group-tab:: Call termination on AG side
+
+      .. code-block:: console
+
+         AG call 0x20007690 terminate
+         AG SCO disconnected 0x20005248 (reason 22)
+
+   .. group-tab:: Call termination on HF side
+
+      .. code-block:: console
+
+         uart:~$ hfp hf terminate 0
+         HF call 0x20007408 terminated
+         HF SCO disconnected 0x20005248 (reason 22)
+
+从远端结束呼叫：
+
+.. tabs::
+
+   .. group-tab:: Call termination on AG side
+
+      .. code-block:: console
+
+         uart:~$ hfp ag remote_terminate 0
+         AG call 0x20007690 terminate
+         AG SCO disconnected 0x20005248 (reason 22)
+
+   .. group-tab:: Call termination on HF side
+
+      .. code-block:: console
+
+         HF call 0x20007408 terminated
+         HF SCO disconnected 0x20005248 (reason 22)

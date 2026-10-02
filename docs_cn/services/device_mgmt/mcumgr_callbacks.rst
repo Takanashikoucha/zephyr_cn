@@ -3,38 +3,37 @@
 MCUmgr Callbacks
 ################
 
-Overview
+概述
 ********
 
-MCUmgr 有可定制 callback/notification system（允许 application
-（和 module）code 接收感兴趣的 MCUmgr events 的 callbacks（并
-对其作出反应（或向提供控制该 action 是否应被允许的 calling function
-返回 status code。一个示例为
-fs_mgmt group（其中 file access 可被 gate（
-callback 允许 application 检查 request path（并允许或
-拒绝对该 file 的 access（或可将提供的 path 重写为
-不同 path 以支持透明 file redirection。
+MCUmgr 有一个可定制的回调/通知系统，允许应用程序
+（和模块）代码接收它们感兴趣的 MCUmgr 事件的回调，
+并对这些事件作出反应，或者向调用函数返回状态码，
+以控制该操作是否应被允许。一个例子是
+fs_mgmt 组，其中文件访问可以被门控，
+回调允许应用程序检查请求路径，并允许或
+拒绝对该文件的访问，或者可以将提供的路径重写为
+不同的路径，以支持透明的文件重定向。
 
-Implementation
+实现
 **************
 
-Enabling
+启用
 ========
 
-基础 callback/notification system 可用
-:kconfig:option:`CONFIG_MCUMGR_MGMT_NOTIFICATION_HOOKS` 启用（其将
-registration 和 notification system 编译进
-code。默认不提供任何
-callbacks（因为 build 支持的 callbacks 还须
-通过启用所需 callbacks 的 Kconfigs 选择（细节
-参见 :ref:`mcumgr_cb_events`。然后可声明
-:c:type:`mgmt_cb` type 定义的 callback function（并通过
-在 :c:struct:`mgmt_callback` structure 中为期望
-event 调用 :c:func:`mgmt_callback_register` 注册。Handlers 按
-注册顺序调用。
+基础回调/通知系统可以使用
+:kconfig:option:`CONFIG_MCUMGR_MGMT_NOTIFICATION_HOOKS` 启用，它会将
+注册和通知系统编译进代码。默认不会提供任何
+回调，因为构建所支持的回调还须
+通过启用所需回调的 Kconfig 来选择（详见
+:ref:`mcumgr_cb_events`）。然后可以声明
+一个 :c:type:`mgmt_cb` 类型定义的回调函数，并通过
+在 :c:struct:`mgmt_callback` 结构体中为期望的
+事件调用 :c:func:`mgmt_callback_register` 来注册。处理器按
+注册顺序被调用。
 
-启用 system 后（可按如下方式在
-application code 中设置并定义基本 handler：
+启用该系统后，可以在
+应用程序代码中按如下方式设置并定义一个基本处理器：
 
 .. code-block:: c
 
@@ -63,29 +62,29 @@ application code 中设置并定义基本 handler：
         mgmt_callback_register(&my_callback);
     }
 
-此 code 注册 :c:enumerator:`MGMT_EVT_OP_CMD_DONE`
-event 的 handler（其在 MCUmgr command 处理并
-生成 output 后调用（注意须启用
+此代码为 :c:enumerator:`MGMT_EVT_OP_CMD_DONE`
+事件注册了一个处理器，它会在 MCUmgr 命令被处理并
+生成输出后被调用，注意这要求启用
 :kconfig:option:`CONFIG_MCUMGR_SMP_COMMAND_STATUS_HOOKS` 才能接收
-此 callback。
+此回调。
 
-可设置多个 callbacks 用单个 function 作为
-common callback（且每个 event 可用许多不同 functions（通过
-每个 group 注册一次（或可用
-``MGMT_EVT_OP_*_ALL`` events 之一启用整个 group 的所有
-notifications（或 handler 可用
+可以设置多个回调来使用单个函数作为
+公共回调，并且每个事件可以使用许多不同的函数，通过
+为每个组注册一次，或者可以使用
+``MGMT_EVT_OP_*_ALL`` 事件之一来启用整个组的所有
+通知，或者处理器可以使用
 :c:enumerator:`MGMT_EVT_OP_ALL` 为每个
-notification 设置。设置
-handlers 时（仅能组合同一 group 中的 events（例如
-5 个 img_mgmt callbacks 可用单个 registration 调用设置（但
-还要
-setup os_mgmt callback 的 callback 须作为单独
-registration 完成。Group IDs 为数值递增（event IDs 为 bitmask values（
-故有此限制。
+通知设置。设置
+处理器时，只能组合同一个组中的事件，例如
+可以用单个注册调用设置 5 个 img_mgmt 回调，但
+如果要
+再设置一个 os_mgmt 回调，必须作为单独的
+注册来完成。组 ID 是数值递增的，事件 ID 是位掩码值，
+因此有此限制。
 
-例如（以下 registration 被允许（其用单个 callback function 在
-单个 registration 中注册 3
-个 SMP events：
+例如，以下注册是被允许的，它用单个回调函数在
+单个注册中注册了 3
+个 SMP 事件：
 
 .. code-block:: c
 
@@ -95,9 +94,9 @@ registration 完成。Group IDs 为数值递增（event IDs 为 bitmask values�
                             MGMT_EVT_OP_CMD_DONE);
     mgmt_callback_register(&my_callback);
 
-以下 code 不被允许（且将导致 undefined operation（因为
-其将 IMG management group 与 OS management group 混合（其中
-group **非** bitmask value（仅 event 是：
+以下代码不被允许，并且会导致未定义行为，因为
+它混合了 IMG 管理组和 OS 管理组，其中
+组 **不是** 位掩码值，只有事件才是：
 
 .. code-block:: c
 
@@ -108,38 +107,38 @@ group **非** bitmask value（仅 event 是：
 
 .. _mcumgr_cb_events:
 
-Events
+事件
 ======
 
-Events 可通过启用相应 Kconfig option 选择：
+事件可以通过启用相应的 Kconfig 选项来选择：
 
  - :kconfig:option:`CONFIG_MCUMGR_SMP_COMMAND_STATUS_HOOKS`
-    MCUmgr command status (:c:enumerator:`MGMT_EVT_OP_CMD_RECV`、
-    :c:enumerator:`MGMT_EVT_OP_CMD_STATUS`、
-    :c:enumerator:`MGMT_EVT_OP_CMD_DONE`)
+   MCUmgr 命令状态（:c:enumerator:`MGMT_EVT_OP_CMD_RECV`、
+   :c:enumerator:`MGMT_EVT_OP_CMD_STATUS`、
+   :c:enumerator:`MGMT_EVT_OP_CMD_DONE`）
  - :kconfig:option:`CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK`
-    fs_mgmt file access (:c:enumerator:`MGMT_EVT_OP_FS_MGMT_FILE_ACCESS`)
+   fs_mgmt 文件访问（:c:enumerator:`MGMT_EVT_OP_FS_MGMT_FILE_ACCESS`）
  - :kconfig:option:`CONFIG_MCUMGR_GRP_IMG_UPLOAD_CHECK_HOOK`
-    img_mgmt upload check (:c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_CHUNK`)
+   img_mgmt 上传检查（:c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_CHUNK`）
  - :kconfig:option:`CONFIG_MCUMGR_GRP_IMG_STATUS_HOOKS`
-    img_mgmt upload status (:c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_STOPPED`、
-    :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_STARTED`、
-    :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_PENDING`、
-    :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_CONFIRMED`)
+   img_mgmt 上传状态（:c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_STOPPED`、
+   :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_STARTED`、
+   :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_PENDING`、
+   :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_CONFIRMED`）
  - :kconfig:option:`CONFIG_MCUMGR_GRP_OS_RESET_HOOK`
-    os_mgmt reset check (:c:enumerator:`MGMT_EVT_OP_OS_MGMT_RESET`)
+   os_mgmt 复位检查（:c:enumerator:`MGMT_EVT_OP_OS_MGMT_RESET`）
  - :kconfig:option:`CONFIG_MCUMGR_GRP_SETTINGS_ACCESS_HOOK`
-    settings_mgmt access (:c:enumerator:`MGMT_EVT_OP_SETTINGS_MGMT_ACCESS`)
+   settings_mgmt 访问（:c:enumerator:`MGMT_EVT_OP_SETTINGS_MGMT_ACCESS`）
 
-Actions
+操作
 =======
 
-某些 callbacks 期望返回 status 以允许或 disallow operation（
-示例为允许或拒绝 file access 的 fs_mgmt access hook。这些
-handlers 中（handler 返回的第一个非 OK error code 将返回给
-MCUmgr client。
+某些回调期望返回一个状态码来允许或禁止一个操作，
+例如允许或拒绝文件访问的 fs_mgmt 访问钩子。对于这些
+处理器，处理器返回的第一个非 OK 错误码将被返回给
+MCUmgr 客户端。
 
-选择性拒绝 file access 的示例：
+选择性拒绝文件访问的示例：
 
 .. code-block:: c
 
@@ -190,30 +189,28 @@ MCUmgr client。
         mgmt_callback_register(&my_callback);
     }
 
-此 code 注册
-:c:enumerator:`MGMT_EVT_OP_FS_MGMT_FILE_ACCESS` event 的 handler（其在
-收到 fs_mgmt file read/write command 后调用（以检查对
-file 的 access 是否应被允许（注意须启用
+此代码为
+:c:enumerator:`MGMT_EVT_OP_FS_MGMT_FILE_ACCESS` 事件注册了一个处理器，它会在
+收到 fs_mgmt 文件读/写命令后被调用，以检查对
+该文件的访问是否应被允许，注意这要求启用
 :kconfig:option:`CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK` 才能接收
-此 callback。
-可返回两种类型的 errors：``rc`` parameter 可设为
-:c:enum:`mcumgr_err_t` error code（且返回
-:c:enumerator:`MGMT_CB_ERROR_RC`（或可将 ``group`` 值设为
-group（``rc``
-值设为 group error code（并返回 :c:enumerator:`MGMT_CB_ERROR_ERR` 设置
-group error code（MCUmgr
-protocol version 2 引入。
+此回调。
+可以返回两种类型的错误：``rc`` 参数可设为
+一个 :c:enum:`mcumgr_err_t` 错误码并返回
+:c:enumerator:`MGMT_CB_ERROR_RC`，或者可以设置组错误码（由 MCUmgr
+协议版本 2 引入），方法是将 ``group`` 值设为
+该组，将 ``rc`` 值设为组错误码，并返回 :c:enumerator:`MGMT_CB_ERROR_ERR`。
 
-MCUmgr Command Callback Usage/Adding New Event Types
+MCUmgr 命令回调的使用/添加新事件类型
 ====================================================
 
-要为 MCUmgr command 添加 callback（可
-用 event ID 调用 :c:func:`mgmt_callback_notify`（可选
-data struct 传递给 callback（可被 handlers 修改。若无需传回
-data（
-可用 ``NULL`` 替代（且 data size 设为 0。
+要为 MCUmgr 命令添加回调，可以
+使用事件 ID 调用 :c:func:`mgmt_callback_notify`，可选地
+传回一个数据结构给回调（可被处理器修改）。如果无需传回
+数据，
+可用 ``NULL`` 替代，并将数据大小设为 0。
 
-MCUmgr command handler 示例：
+一个 MCUmgr 命令处理器示例：
 
 .. code-block:: c
 
@@ -277,68 +274,68 @@ MCUmgr command handler 示例：
         return rc;
     }
 
-若 callback 无需 response（函数调用可被
-cast 为 void。
+如果回调无需响应，函数调用可以
+被强制转换为 void。
 
 .. _mcumgr_cb_migration:
 
-Migration
+迁移
 *********
 
-若有使用 Zephyr 3.2
-及更早版本中前 callback system(s) 的既有 code（则须迁移到
-新 system。迁移
-code 时（以下 callback registration functions 须迁移为
-用 :c:func:`mgmt_callback_register` 注册 callbacks（注意
+如果存在使用 Zephyr 3.2
+及更早版本中旧回调系统的既有代码，则需要迁移到
+新系统。迁移
+代码时，以下回调注册函数需要迁移为
+使用 :c:func:`mgmt_callback_register` 注册回调（注意
 :kconfig:option:`CONFIG_MCUMGR_MGMT_NOTIFICATION_HOOKS` 须
-设置
-以启用新 notification system（除任何迁移外）：
+被设置
+以启用新的通知系统，除了任何迁移之外）：
 
  * mgmt_evt
-    用 :c:enumerator:`MGMT_EVT_OP_CMD_RECV`、
-    :c:enumerator:`MGMT_EVT_OP_CMD_STATUS` 或
-    :c:enumerator:`MGMT_EVT_OP_CMD_DONE` 作为同名 events 的
-    drop-in replacements（其中提供的 data 为 :c:struct:`mgmt_evt_op_cmd_arg`。
-    须设置 :kconfig:option:`CONFIG_MCUMGR_SMP_COMMAND_STATUS_HOOKS`。
+   使用 :c:enumerator:`MGMT_EVT_OP_CMD_RECV`、
+   :c:enumerator:`MGMT_EVT_OP_CMD_STATUS` 或
+   :c:enumerator:`MGMT_EVT_OP_CMD_DONE` 作为同名事件的
+   直接替换，其中提供的数据为 :c:struct:`mgmt_evt_op_cmd_arg`。
+   须设置 :kconfig:option:`CONFIG_MCUMGR_SMP_COMMAND_STATUS_HOOKS`。
  * fs_mgmt_register_evt_cb
-    用 :c:enumerator:`MGMT_EVT_OP_FS_MGMT_FILE_ACCESS`（其中提供的
-    data 为 :c:struct:`fs_mgmt_file_access`。不返回 true 允许
-    action 或 false 拒绝（而须返回 MCUmgr result code（
-    :c:enumerator:`MGMT_ERR_EOK` 允许
-    action（其他任何 return code
-    将其 disallow 并向 client 返回该 code
-    (:c:enumerator:`MGMT_ERR_EACCESSDENIED` 可用于 access denied
-    error。须设置 :kconfig:option:`CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK`。
+   使用 :c:enumerator:`MGMT_EVT_OP_FS_MGMT_FILE_ACCESS`，其中提供的
+   数据为 :c:struct:`fs_mgmt_file_access`。不再返回 true 允许
+   操作或 false 拒绝，而须返回一个 MCUmgr 结果码，
+   :c:enumerator:`MGMT_ERR_EOK` 允许
+   操作，其他任何返回码
+   将禁止该操作并向客户端返回该码
+   （:c:enumerator:`MGMT_ERR_EACCESSDENIED` 可用于访问被拒绝
+   错误）。须设置 :kconfig:option:`CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK`。
  * img_mgmt_register_callbacks
-    若用 ``dfu_started_cb`` 则用
-    :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_STARTED`（
-    若用 ``dfu_stopped_cb`` 则用
-    :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_STOPPED`（
-    若用 ``dfu_pending_cb`` 则用
-    :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_PENDING`（
-    若用 ``dfu_confirmed_cb`` 则用
-    :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_CONFIRMED`。这些
-    callbacks 无任何 return status。
-    须设置 :kconfig:option:`CONFIG_MCUMGR_GRP_IMG_STATUS_HOOKS`。
+   若使用了 ``dfu_started_cb``，则使用
+   :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_STARTED`；
+   若使用了 ``dfu_stopped_cb``，则使用
+   :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_STOPPED`；
+   若使用了 ``dfu_pending_cb``，则使用
+   :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_PENDING`；
+   若使用了 ``dfu_confirmed_cb``，则使用
+   :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_CONFIRMED`。这些
+   回调没有任何返回状态。
+   须设置 :kconfig:option:`CONFIG_MCUMGR_GRP_IMG_STATUS_HOOKS`。
  * img_mgmt_set_upload_cb
-    用 :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_CHUNK`（其中提供的
-    data 为 :c:struct:`img_mgmt_upload_check`。不返回 true 允许
-    action 或 false 拒绝（而须返回 MCUmgr result code（
-    :c:enumerator:`MGMT_ERR_EOK` 允许
-    action（其他任何 return code
-    将其 disallow 并向 client 返回该 code
-    (:c:enumerator:`MGMT_ERR_EACCESSDENIED` 可用于 access denied
-    error。须设置 :kconfig:option:`CONFIG_MCUMGR_GRP_IMG_UPLOAD_CHECK_HOOK`。
+   使用 :c:enumerator:`MGMT_EVT_OP_IMG_MGMT_DFU_CHUNK`，其中提供的
+   数据为 :c:struct:`img_mgmt_upload_check`。不再返回 true 允许
+   操作或 false 拒绝，而须返回一个 MCUmgr 结果码，
+   :c:enumerator:`MGMT_ERR_EOK` 允许
+   操作，其他任何返回码
+   将禁止该操作并向客户端返回该码
+   （:c:enumerator:`MGMT_ERR_EACCESSDENIED` 可用于访问被拒绝
+   错误）。须设置 :kconfig:option:`CONFIG_MCUMGR_GRP_IMG_UPLOAD_CHECK_HOOK`。
  * os_mgmt_register_reset_evt_cb
-    用 :c:enumerator:`MGMT_EVT_OP_OS_MGMT_RESET`。不返回 true 允许
-    action 或 false 拒绝（而须返回 MCUmgr result code（
-    :c:enumerator:`MGMT_ERR_EOK` 允许
-    action（其他任何 return code
-    将其 disallow 并向 client 返回该 code
-    (:c:enumerator:`MGMT_ERR_EACCESSDENIED` 可用于 access denied
-    error。须设置 :kconfig:option:`CONFIG_MCUMGR_GRP_OS_RESET_HOOK`。
+   使用 :c:enumerator:`MGMT_EVT_OP_OS_MGMT_RESET`。不再返回 true 允许
+   操作或 false 拒绝，而须返回一个 MCUmgr 结果码，
+   :c:enumerator:`MGMT_ERR_EOK` 允许
+   操作，其他任何返回码
+   将禁止该操作并向客户端返回该码
+   （:c:enumerator:`MGMT_ERR_EACCESSDENIED` 可用于访问被拒绝
+   错误）。须设置 :kconfig:option:`CONFIG_MCUMGR_GRP_OS_RESET_HOOK`。
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: mcumgr_callback_api

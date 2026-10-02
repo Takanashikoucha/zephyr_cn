@@ -1,239 +1,33 @@
-.. _bluetooth
-mesh
-models
-priv
-beacon
-srv:
+.. _bluetooth_mesh_models_priv_beacon_srv:
 
-Private
-Beacon
-Server
+私有信标服务器
 #####################
 
-Private
-Beacon
-Server
-model
-是
-Bluetooth
-mesh
-specification
-定义
-的
-foundation
-model。
-它
-通过
-:kconfig:option:`CONFIG_BT_MESH_PRIV_BEACON_SRV`
-option
-启用。
+私有信标服务器模型是蓝牙 Mesh 规范定义的基础模型。通过
+:kconfig:option:`CONFIG_BT_MESH_PRIV_BEACON_SRV` 选项启用。
 
-The
-Private
-Beacon
-Server
-model
-is
-introduced
-in
-the
-Bluetooth
-Mesh
-Protocol
-Specification
-version
-1.1、
-and
-controls
-the
-mesh
-node's
-Private
-Beacon
-state、
-Private
-GATT
-Proxy
-state
-and
-Private
-Node
-Identity
-state.
+私有信标服务器模型引入于蓝牙 Mesh 协议规范
+版本 1.1，控制 Mesh 节点的私有信标状态、
+私有 GATT 代理状态和私有节点身份状态。
 
-The
-Private
-Beacons
-feature
-adds
-privacy
-to
-the
-different
-Bluetooth
-Mesh
-beacons
-by
-periodically
-randomizing
-the
-beacon
-input
-data.
-This
-protects
-the
-mesh
-node
-from
-being
-tracked
-by
-devices
-outside
-the
-mesh
-network、
-and
-hides
-the
-network's
-IV
-index、
-IV
-update
-and
-the
-Key
-Refresh
-state.
-The
-Private
-Beacon
-Server
-must
-be
-instantiated
-for
-the
-device
-to
-support
-sending
-of
-the
-private
-beacons、
-but
-the
-node
-will
-process
-received
-private
-beacons
-without
-it.
+私有信标功能通过定期随机化信标输入数据为不同的蓝牙 Mesh 信标添加隐私。这保护
+Mesh 节点不被 Mesh 网络外的设备跟踪，并隐藏
+网络的 IV 索引、IV 更新和密钥刷新状态。私有信标服务器
+必须实例化才能使设备支持发送私有信标，
+但节点可以在没有它的情况下处理接收的私有信标。
 
-The
-Private
-Beacon
-Server
-does
-not
-have
-an
-API
-of
-its
-own、
-but
-relies
-on
-a
-:ref:`bluetooth_mesh_models_priv_beacon_cli`
-to
-control
-it.
-The
-Private
-Beacon
-Server
-model
-only
-accepts
-messages
-encrypted
-with
-the
-node's
-device
-key.
+私有信标服务器没有自己的 API，但依赖于
+:ref:`bluetooth_mesh_models_priv_beacon_cli` 来控制。私有信标
+服务器模型只接受使用节点设备密钥加密的消息。
 
-The
-application
-can
-configure
-the
-initial
-parameters
-of
-the
-Private
-Beacon
-Server
-model
-through
-the
-:c:struct:`bt_mesh_priv_beacon_srv`
-instance
-passed
-to
-:c:macro:`BT_MESH_MODEL_PRIV_BEACON_SRV`.
-Note
-that
-if
-the
-mesh
-node
-stored
-changes
-to
-this
-configuration
-in
-the
-settings
-subsystem、
-the
-initial
-values
-may
-be
-overwritten
-upon
-loading.
+应用程序可以通过传递给
+:c:macro:`BT_MESH_MODEL_PRIV_BEACON_SRV` 的 :c:struct:`bt_mesh_priv_beacon_srv` 实例配置私有信标
+服务器模型的初始参数。注意，如果 Mesh 节点在设置子系统中存储了
+对此配置的更改，初始值可能在加载时被覆盖。
 
-If
-present、
-the
-Private
-Beacon
-Server
-model
-must
-only
-be
-instantiated
-on
-the
-primary
-element.
+如果存在，私有信标服务器模型只能实例化在主元素上。
 
-API
-reference
+API 参考
 *************
 
-..
-doxygengroup::
-bt_mesh_priv_beacon_srv
+.. doxygengroup:: bt_mesh_priv_beacon_srv

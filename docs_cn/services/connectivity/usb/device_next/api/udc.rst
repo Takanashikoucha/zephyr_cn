@@ -1,18 +1,13 @@
 .. _udc_api:
 
-USB device controller (UDC) driver API
+USB 设备控制器（UDC）驱动 API
 ######################################
 
-USB device controller driver API 描述在
-:zephyr_file:`include/zephyr/drivers/usb/udc.h` 中（称为
-``UDC driver`` API。
+USB 设备控制器驱动 API 描述在 :zephyr_file:`include/zephyr/drivers/usb/udc.h` 中，称为 ``UDC 驱动`` API。
 
-UDC driver API 不稳定（且可能不经通知变更。
-其为 :ref:`usb_dc_api` 的替代。若要移植现有
-driver 到 UDC driver API（或添加新 driver（请用
-:zephyr_file:`drivers/usb/udc/udc_skeleton.c` 作为起点。
+UDC 驱动 API 是不稳定的，可能会在不通知的情况下变更。它是 :ref:`usb_dc_api` 的替代方案。如果您希望将现有驱动移植到 UDC 驱动 API，或添加新驱动，请使用 :zephyr_file:`drivers/usb/udc/udc_skeleton.c` 作为起点。
 
-API reference
+API 参考
 *************
 
 .. doxygengroup:: udc_api

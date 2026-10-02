@@ -1,932 +1,250 @@
-.. _autopts
-win10:
+.. _autopts-win10:
 
-AutoPTS
-on
-Windows
-10
-with
-nRF52
-board
+在 Windows 10 上使用 nRF52 板卡的 AutoPTS
 #######################################
 
-这
-个
-tutorial
-展示
-如何
-setup
-AutoPTS
-client
-和
-server
-都
-运行
-在
-Windows
-10
-上。
-我们
-用
-WSL1
-带
-Ubuntu
-只
-是
-为了
-build
-Zephyr
-project
-到
-elf
-file
-因为
-Zephyr
-SDK
-还
-不
-可用
-于
-Windows。
-Tutorial
-covers
-only
-nrf52840dk.
+本教程介绍如何搭建 AutoPTS 客户端和服务器，使两者都运行在
+Windows 10 上。我们使用 WSL1 搭配 Ubuntu，仅用于将 Zephyr 项目
+构建为 elf 文件，因为 Zephyr SDK 在 Windows 上尚不可用。
+本教程仅涵盖 nrf52840dk。
 
-..
-contents::
-:
-local:
-:
-depth:
-2
+.. contents::
+    :local:
+    :depth: 2
 
-Update
-Windows
-and
-drivers
+更新 Windows 和驱动程序
 ===========================
 
-Update
-Windows
-in:
+按以下路径更新 Windows：
 
-Start
-Settings
-Update
-&
-Security
-Windows
-Update
+开始 -> 设置 -> 更新和安全 -> Windows 更新
 
-Update
-drivers、
-following
-the
-instructions
-from
-your
-hardware
-vendor.
+更新驱动程序，请按照你的硬件厂商的说明操作。
 
-Install
-Python
-3
+安装 Python 3
 =================
 
-Download
-and
-install
-`Python
-3
-<https://www.python.org/downloads/>`_.
-Setup
-was
-tested
-with
-versions
->=3.8.
-Let
-the
-installer
-add
-the
-Python
-installation
-directory
-to
-the
-PATH
-and
-disable
-the
-path
-length
-limitation.
+下载并安装 `Python 3 <https://www.python.org/downloads/>`_。
+本教程在 >=3.8 版本上测试通过。让安装程序将 Python
+安装目录添加到 PATH，并禁用路径长度限制。
 
-..
-image::
-install
-python1.png
-:
-height:
-300
-:
-width:
-450
-:
-align:
-center
+.. image:: install_python1.png
+   :height: 300
+   :width: 450
+   :align: center
 
-..
-image::
-install
-python2.png
-:
-height:
-300
-:
-width:
-450
-:
-align:
-center
+.. image:: install_python2.png
+   :height: 300
+   :width: 450
+   :align: center
 
-Install
-Git
+安装 Git
+===========
+
+下载并安装 `Git <https://git-scm.com/downloads>`_。
+安装期间启用选项：Enable experimental support for pseudo
+consoles。我们将使用 Git Bash 作为 Windows 终端。
+
+.. image:: install_git.png
+   :height: 350
+   :width: 400
+   :align: center
+
+安装 PTS 8
 =============
 
-Download
-and
-install
-`Git
-<https://git
-scm.com/downloads>`_.
-During
-installation
-enable
-option:
-Enable
-experimental
-support
-for
-pseudo
-consoles.
-We
-will
-use
-Git
-Bash
-as
-Windows
-terminal.
+从 https://www.bluetooth.org 安装最新的 PTS。记得从
+安装目录安装驱动程序
+"C:/Program Files (x86)/Bluetooth SIG/Bluetooth PTS/PTS Driver/win64/CSRBlueCoreUSB.inf"
 
-..
-image::
-install
-git.png
-:
-height:
-350
-:
-width:
-400
-:
-align:
-center
+.. image:: install_pts_drivers.png
+   :height: 250
+   :width: 850
+   :align: center
 
-Install
-PTS
-8
-=============
+.. note::
 
-Install
-latest
-PTS
-from
-https://www.bluetooth.org.
-Remember
-to
-install
-drivers
-from
-installation
-directory
-"C:/Program
-Files
-（x86）/Bluetooth
-SIG/Bluetooth
-PTS/PTS
-Driver/win64/CSRBlueCoreUSB.inf"
+    从 PTS 8.0.1 开始，不再包含 Bluetooth Protocol Viewer。
+    因此要捕获 Bluetooth 事件，你必须单独下载它。
 
-..
-image::
-install
-pts
-drivers.png
-:
-height:
-250
-:
-width:
-850
-:
-align:
-center
-
-..
-note::
-Starting
-with
-PTS
-8.0.1
-the
-Bluetooth
-Protocol
-Viewer
-is
-no
-longer
-included.
-So
-to
-capture
-Bluetooth
-events、
-you
-have
-to
-download
-it
-separately.
-
-Setup
-Zephyr
-project
-for
-Windows
+为 Windows 搭建 Zephyr 项目
 =================================
 
-Perform
-Windows
-setup
-from
-:ref:`Getting
-Started
-Guide
-<getting
-started>`.
+执行 :ref:`Getting Started Guide <getting_started>` 中的 Windows 搭建步骤。
 
-Install
-nrftools
+安装 nrftools
 =================
 
-On
-Windows
-download
-latest
-nrftools
-（version
->=
-10.12.1）
-from
-site
-https://www.nordicsemi.com/Software
-and
-tools/Development
-Tools/nRF
-Command
-Line
-Tools/Download
-and
-run
-default
-install.
+在 Windows 上从网站
+https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download 下载最新的 nrftools（版本 >= 10.12.1），
+并运行默认安装。
 
-..
-image::
-download
-nrftools
-windows.png
-:
-height:
-350
-:
-width:
-500
-:
-align:
-center
+.. image:: download_nrftools_windows.png
+   :height: 350
+   :width: 500
+   :align: center
 
-Connect
-devices
+连接设备
 ================
 
-..
-image::
-devices
-1.png
-:
-height:
-400
-:
-width:
-600
-:
-align:
-center
+.. image:: devices_1.png
+   :height: 400
+   :width: 600
+   :align: center
 
-..
-image::
-devices
-2.png
-:
-height:
-700
-:
-width:
-500
-:
-align:
-center
+.. image:: devices_2.png
+   :height: 700
+   :width: 500
+   :align: center
 
-Flash
-board
-=============
+烧录板卡
+============
 
-In
-Device
-Manager
-find
-COM
-port
-of
-your
-nrf
-board.
-In
-my
-case
-it
-is
-COM3.
+在设备管理器中找到你的 nrf 板卡的 COM 端口。在我的情况下是 COM3。
 
-..
-image::
-device
-manager.png
-:
-height:
-400
-:
-width:
-450
-:
-align:
-center
+.. image:: device_manager.png
+   :height: 400
+   :width: 450
+   :align: center
 
-In
-Git
-Bash、
-go
-to
-zephyrproject
+在 Git Bash 中，进入 zephyrproject
 
-..
-code
-block::
-cd
-~/zephyrproject
+.. code-block::
 
-Build
-the
-auto
-pts
-tester
-app
+    cd ~/zephyrproject
 
-..
-code
-block::
-west
-build
--p
-auto
--b
-nrf52840dk/nrf52840
-zephyr/tests/bluetooth/tester/
+构建 auto-pts tester 应用
 
-You
-can
-display
-flashing
-options
-with:
+.. code-block::
 
-..
-code
-block::
-west
-flash
---help
+    west build -p auto -b nrf52840dk/nrf52840 zephyr/tests/bluetooth/tester/
 
-and
-flash
-board
-with
-built
-earlier
-elf
-file:
+你可以用以下命令显示烧录选项：
 
-..
-code
-block::
-west
-flash
---no
-rebuild
---board
-dir
-/dev/ttyS2
---elf
-file
-~/zephyrproject/build/zephyr/zephyr.elf
+.. code-block::
 
-Note
-that
-west
-does
-not
-accept
-COMs、
-so
-use
-/dev/ttyS2
-as
-the
-COM3
-equivalent、
-/dev/ttyS2
-as
-the
-COM3
-equivalent、
-etc.（/dev/ttyS
-+
-decremented
-COM
-number）.
+    west flash --help
 
-Setup
-auto
-pts
-project
+并用之前构建的 elf 文件烧录板卡：
+
+.. code-block::
+
+    west flash --no-rebuild --board-dir /dev/ttyS2 --elf-file ~/zephyrproject/build/zephyr/zephyr.elf
+
+注意 west 不接受 COM 端口，因此使用 /dev/ttyS2 作为 COM3 的等价物，
+/dev/ttyS2 作为 COM3 的等价物，依此类推（/dev/ttyS + 递减的 COM 编号）。
+
+搭建 auto-pts 项目
 =======================
 
-In
-Git
-Bash、
-clone
-project
-repo:
+在 Git Bash 中克隆项目仓库：
 
-..
-code
-block::
-git
-clone
-https://github.com/auto
-pts/auto
-pts.git
+.. code-block::
 
-Go
-into
-the
-project
-folder:
+    git clone https://github.com/auto-pts/auto-pts.git
 
-..
-code
-block::
-cd
-auto
-pts
+进入项目文件夹：
 
-Install
-required
-python
-modules:
+.. code-block::
 
-..
-code
-block::
-pip3
-install
---user
-wheel
-pip3
-install
---user
--r
-autoptsserver
-requirements.txt
-pip3
-install
---user
--r
-autoptsclient
-requirements.txt
+    cd auto-pts
 
-Install
-socat.exe
+安装所需的 python 模块：
+
+.. code-block::
+
+   pip3 install --user wheel
+   pip3 install --user -r autoptsserver_requirements.txt
+   pip3 install --user -r autoptsclient_requirements.txt
+
+安装 socat.exe
+==================
+
+从 https://sourceforge.net/projects/unix-utils/files/socat/1.7.3.2/ 下载并解压 socat.exe
+到文件夹 ~/socat-1.7.3.2-1-x86_64/。
+
+.. image:: download_socat.png
+   :height: 400
+   :width: 450
+   :align: center
+
+将 socat.exe 所在目录的路径添加到 PATH：
+
+.. image:: add_socat_to_path.png
+   :height: 400
+   :width: 450
+   :align: center
+
+运行 AutoPTS
 ================
 
-Download
-and
-extract
-socat.exe
-from
-https://sourceforge.net/projects/unix
-utils/files/socat/1.7.3.2/
-into
-folder
-~/socat
-1.7.3.2
-1
-x86
-64/.
+服务器和客户端默认将运行在 localhost 地址上。运行服务器：
 
-..
-image::
-download
-socat.png
-:
-height:
-400
-:
-width:
-450
-:
-align:
-center
+.. code-block::
 
-Add
-path
-to
-directory
-of
-socat.exe
-to
-PATH:
+    python ./autoptsserver.py -S 65000
 
-..
-image::
-add
-socat
-to
-path.png
-:
-height:
-400
-:
-width:
-450
-:
-align:
-center
+.. image:: autoptsserver_run.png
+   :height: 200
+   :width: 800
+   :align: center
 
-Running
-AutoPTS
+.. note::
+
+    如果全新搭建后出现错误 "ImportError: No module named pywintypes"，
+    请卸载并重新安装 pywin32 模块：
+
+    .. code-block::
+
+        pip install --upgrade --force-reinstall pywin32
+
+运行客户端：
+
+.. code-block::
+
+    python ./autoptsclient-zephyr.py zephyr-master ~/zephyrproject/build/zephyr/zephyr.elf -t COM3 -b nrf52 -S 65000 -C 65001
+
+.. image:: autoptsclient_run.png
+   :height: 200
+   :width: 800
+   :align: center
+
+首次运行时，当 Windows 询问时，允许通过防火墙连接：
+
+.. image:: allow_firewall.png
+   :height: 450
+   :width: 600
+   :align: center
+
+故障排除
 ================
 
-Server
-and
-client
-by
-default
-will
-run
-on
-localhost
-address.
-Run
-server:
+- "运行真实硬件测试模式时，我只遇到 BTP TIMEOUT。"
 
-..
-code
-block::
-python
-./autoptsserver.py
--S
-65000
+这是 auto-pts 客户端与板卡之间连接的问题。可能有多种原因。尝试：
 
-..
-image::
-autoptsserver
-run.png
-:
-height:
-200
-:
-width:
-800
-:
-align:
-center
+- 使用以下命令清理你的 auto-pts 和 zephyr 仓库
 
-..
-note::
-If
-the
-error
-"ImportError:
-No
-module
-named
-pywintypes"
-appeared
-after
-the
-fresh
-setup、
-uninstall
-and
-install
-the
-pywin32
-module:
-..
-code
-block::
-pip
-install
---upgrade
---force
-reinstall
-pywin32
+.. warning::
 
-Run
-client:
+    该命令将强制不可逆地删除仓库中所有未提交的文件。
 
-..
-code
-block::
-python
-./autoptsclient
-zephyr.py
-zephyr
-master
-~/zephyrproject/build/zephyr/zephyr.elf
--t
-COM3
--b
-nrf52
--S
-65000
--C
-65001
+.. code-block::
 
-..
-image::
-autoptsclient
-run.png
-:
-height:
-200
-:
-width:
-800
-:
-align:
-center
+    git clean -fdx
 
-At
-the
-first
-run、
-when
-Windows
-asks、
-enable
-connection
-through
-firewall:
+然后重新构建并烧录 tester elf。
 
-..
-image::
-allow
-firewall.png
-:
-height:
-450
-:
-width:
-600
-:
-align:
-center
+- 如果你在虚拟机上搭建了 Windows，检查 guest 扩展是否正确安装，或将虚拟机设置中的 USB 兼容性模式改为 USB 2.0。
 
-Troubleshooting
-================
+- 检查防火墙是否没有阻止 python.exe 或 socat.exe。
 
-"When
-running
-actual
-hardware
-test
-mode、
-I
-have
-only
-BTP
-TIMEOUTs."
+- 检查板卡在重启后是否发送 ready 事件（十六进制 00 00 80 ff 00 00）。使用例如 PuTTy 以正确的 COM 和波特率打开与板卡的串行连接。板卡复位后你应该能在控制台中看到一些字符串。
 
-This
-is
-a
-problem
-with
-connection
-between
-auto
-pts
-client
-and
-board.
-There
-are
-many
-possible
-causes.
-Try:
+- 检查 socat.exe 是否创建到板卡的隧道。在控制台中运行
 
-Clean
-your
-auto
-pts
-and
-zephyr
-repos
-with
+.. code-block::
 
-..
-warning::
-This
-command
-will
-force
-the
-irreversible
-removal
-of
-all
-uncommitted
-files
-in
-the
-repo.
+    socat.exe -x -v tcp-listen:65123 /dev/ttyS2,raw,b115200
 
-..
-code
-block::
-git
-clean
-fdx
-
-then
-build
-and
-flash
-tester
-elf
-again.
-
-If
-you
-have
-set
-up
-Windows
-on
-virtual
-machine、
-check
-if
-guest
-extensions
-are
-installed
-properly
-or
-change
-USB
-compatibility
-mode
-in
-VM
-settings
-to
-USB
-2.0.
-
-Check、
-if
-firewall
-in
-not
-blocking
-python.exe
-or
-socat.exe.
-
-Check
-if
-board
-sends
-ready
-event
-after
-restart
-（hex
-00
-00
-80
-ff
-00
-00）.
-Open
-serial
-connection
-to
-board
-with
-e.g.
-PuTTy
-with
-proper
-COM
-and
-baud
-rate.
-After
-board
-reset
-you
-should
-see
-some
-strings
-in
-console.
-
-Check
-if
-socat.exe
-creates
-tunnel
-to
-board.
-Run
-in
-console
-
-..
-code
-block::
-socat.exe
--x
--v
-tcp
-listen:65123
-/dev/ttyS2、raw、b115200
-
-where
-/dev/ttyS2
-is
-the
-COM3
-equivalent.
-Open
-PuTTY、
-set
-connection
-type
-to
-Raw、
-IP
-to
-127.0.0.1、
-port
-to
-65123.
-After
-board
-reset
-you
-should
-see
-some
-strings
-in
-console.
+其中 /dev/ttyS2 是 COM3 的等价物。打开 PuTTY，将连接类型设为 Raw，IP 设为 127.0.0.1，端口设为 65123。板卡复位后你应该能在控制台中看到一些字符串。

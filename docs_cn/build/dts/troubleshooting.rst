@@ -3,315 +3,70 @@
 设备树故障排除
 ##########################
 
-以下是
-修复
-行为
-异常
-的
-设备树
-相关
-代码
-的
-一些
-技巧。
+以下是修复行为异常的设备树相关代码的一些技巧。
 
-其他
-"HOWTO"
-风格
-信息
-见
-:ref:`dt-howtos`。
+其他"HOWTO"风格的信息见 :ref:`dt-howtos`。
 
 .. _dt-trouble-try-pristine:
 
-用
-干净
-的
-构建
-目录
-再
-试
-一次
+用干净的构建目录再试一次
 *****************************************
 
-.. important:: 先
-   试
-   这个，
-   在
-   做
-   其他
-   任何
-   事情
-   之前。
+.. important:: 先试这个，在做其他任何事情之前。
 
-示例
-见
-:ref:`west-building-pristine`，
-或
-直接
-删除
-整个
-构建
-目录
-再
-重试。
+示例见 :ref:`west-building-pristine`，或直接删除整个构建目录再重试。
 
-这是
-通用
-建议，
-对
-调试
-设备树
-问题
-特别
-适用，
-因为
-输出
-在
-CMake 配置
-阶段
-创建，
-当
-其
-输入
-之一
-更改
-时
-不
-总是
-重新
-生成。
+这是一条通用建议，对调试设备树问题特别适用，因为输出文件是在 CMake 配置阶段创建的，当其输入之一变化时并不总是重新生成。
 
-使用
-设备树
-诊断
-工具
-（DT Doctor）
+使用设备树诊断工具（DT Doctor）
 *******************************************
 
-有
-一个
-可选
-的
-设备树
-诊断
-工具
-可
-帮助
-诊断
-设备树
-问题。
-它
-可以
-通过
-向
-:ref:`west build <west-building>`
-传递
-``-DZEPHYR_SCA_VARIANT=dtdoctor`` 参数
-启用。
+有一个可选的设备树诊断工具可帮助诊断设备树问题。它可以通过向
+:ref:`west build <west-building>` 传递 ``-DZEPHYR_SCA_VARIANT=dtdoctor`` 参数启用。
 
-更多
-信息
-见
-:ref:`dtdoctor`。
+更多信息见 :ref:`dtdoctor`。
 
-确保
-包含了
-<devicetree.h>
+确保包含了 <devicetree.h>
 ************************************
 
-与
-Kconfig 符号
-不同，
-:file:`devicetree.h` 头
-文件
-必须
-显式
-包含。
+与 Kconfig 符号不同，:file:`devicetree.h` 头文件必须显式包含。
 
-许多
-Zephyr 头
-文件
-依赖
-设备树
-信息，
-因此
-包含
-其他
-某些
-API 可能
-传递
-地
-包含
-:file:`devicetree.h`，
-但
-这
-不
-保证。
+许多 Zephyr 头文件依赖设备树信息，所以包含其他某些 API 可能传递地包含
+:file:`devicetree.h`，但这并不保证。
 
-未
-定义
-引用
-``__device_dts_ord_<N>``
+未定义引用 ``__device_dts_ord_<N>``
 ***********************************************
 
-这
-通常
-发生
-在
-像
-这样
-的
-行
-上：
+这通常发生在像这样的一行上：
 
 .. code-block:: c
 
    const struct device *dev = DEVICE_DT_GET(NODE_ID);
 
-其中
-``NODE_ID`` 是
-有效
-的
-:ref:`节点
-标识符 <dt-node-identifiers>`，
-但
-没有
-设备
-驱动
-为
-此
-设备树
-节点
-分配
-``struct device``。
-因此
-你
-得到
-链接器
-错误，
-因为
-你
-在
-请求
-一个
-未
-定义
-设备
-的
-指针。
+其中 ``NODE_ID`` 是有效的 :ref:`节点标识符 <dt-node-identifiers>`，但没有设备驱动
+为这个设备树节点分配了 ``struct device``。因此你会得到链接器错误，因为你在
+请求一个未定义设备的指针。
 
-要
-修复，
-你
-需要
-确保：
+要修复它，你需要确保：
 
-1. 节点
-   已
-   启用：
-   节点
-   必须
-   有
-   ``status = "okay";``。
+1. 节点已启用：节点必须有 ``status = "okay";``。
 
-   （记住，
-   缺失
-   ``status`` 属性
-   意味着
-   与
-   ``status
-   = "okay";`` 相同；
-   关于
-   ``status`` 的
-   更多
-   信息
-   见
-   :ref:`dt-important-props`）。
+   （记住，缺失 ``status`` 属性意味着与 ``status = "okay";`` 相同；关于
+   ``status`` 的更多信息见 :ref:`dt-important-props`）。
 
-2. 负责
-   分配
-   ``struct device`` 的
-   设备
-   驱动
-   已
-   启用。
-   即，
-   使
-   构建
-   系统
-   将
-   驱动
-   源
-   编译
-   到
-   应用
-   中
-   的
-   Kconfig 选项
-   需要
-   设置
-   为
-   ``y``。
+2. 负责分配 ``struct device`` 的设备驱动已启用。也就是说，使构建系统把驱动
+   源文件编译进你的应用的 Kconfig 选项需要设置为 ``y``。
 
-   （关于
-   设置
-   Kconfig 选项
-   的
-   更多
-   信息
-   见
-   :ref:`setting_configuration_values`。）
+   （关于设置 Kconfig 选项的更多信息见 :ref:`setting_configuration_values`。）
 
-下面，
-``<build>`` 指
-你的
-构建
-目录。
+下面，``<build>`` 指你的构建目录。
 
-**确保
-节点
-已
-启用**：
+**确保节点已启用**：
 
-要
-找到
-需要
-检查
-的
-设备树
-节点，
-使用
-链接器
-错误
-中
-的
-数字
-``<N>``。
-在
-:file:`<build>/zephyr/include/generated/zephyr/devicetree_generated.h`
-顶部
-的
-节点
-列表
-中
-查找
-这个
-数字。
-例如，
-如果
-``<N>`` 是
-15，
-你的
-:file:`devicetree_generated.h` 文件
-看起来
-像
-这样，
-你
-感兴趣
-的
-节点
-是
+要找到需要检查的设备树节点，使用链接器错误中的数字 ``<N>``。在
+:file:`<build>/zephyr/include/generated/zephyr/devicetree_generated.h` 顶部的
+节点列表中查找这个数字。例如，如果 ``<N>`` 是 15，且你的
+:file:`devicetree_generated.h` 文件看起来像这样，你感兴趣的节点就是
 ``/soc/i2c@deadbeef``：
 
 .. code-block:: none
@@ -332,51 +87,13 @@ API 可能
     *   15  /soc/i2c@deadbeef
    [...]
 
-现在
-在
-:file:`<build>/zephyr/zephyr.dts` 中
-查找
-这个
-节点，
-它
-是
-你的
-应用
-构建
-的
-最终
-设备树。
-（信息
-和
-示例
-见
-:ref:`get-devicetree-outputs`。）
+现在在 :file:`<build>/zephyr/zephyr.dts` 中查找这个节点，它是你的应用构建的
+最终设备树。（信息和示例见 :ref:`get-devicetree-outputs`。）
 
-如果
-节点
-在
-:file:`zephyr.dts` 中
-有
-``status = "disabled";``，
-那么
-你
-需要
-通过
-设置
-``status = "okay";`` 来
-启用
-它，
-可能
-通过
-使用
-设备树
-:ref:`覆盖 <set-devicetree-overlays>`。
-例如，
-如果
-:file:`zephyr.dts`
-看起来
-像
-这样：
+如果节点在 :file:`zephyr.dts` 中有 ``status = "disabled";``，那么你需要通过
+设置 ``status = "okay";`` 来启用它，可能通过使用设备树
+:ref:`覆盖 <set-devicetree-overlays>`。例如，如果 :file:`zephyr.dts` 看起来
+像这样：
 
 .. code-block:: DTS
 
@@ -384,16 +101,7 @@ API 可能
            status = "disabled";
    };
 
-那么
-你
-应该
-将
-这个
-放入
-你的
-设备树
-覆盖
-并
+那么你应该把这个放入你的设备树覆盖中，并
 :ref:`dt-trouble-try-pristine`：
 
 .. code-block:: DTS
@@ -402,189 +110,31 @@ API 可能
            status = "okay";
    };
 
-确保
-重新
-构建
-后
-你
-在
-:file:`zephyr.dts` 中
-看到
-``status = "okay";``。
+确保重新构建后你在 :file:`zephyr.dts` 中看到了 ``status = "okay";``。
 
-**确保
-设备
-驱动
-已
-启用**：
+**确保设备驱动已启用**：
 
-第一步
-是
-弄清楚
-哪个
-设备
-驱动
-负责
-处理
-你的
-设备树
-节点
-并
-为其
-分配
-设备。
-要
-做到
-这一点，
-你
-需要
-从
-设备树
-节点
-中
-的
-``compatible`` 属性
-开始，
-找到
-为
-该
-compatible
-分配
-``struct device`` 实例
-的
-驱动。
+第一步是弄清楚哪个设备驱动负责处理你的设备树节点并为其分配设备。要做到这一点，
+你需要从设备树节点中的 ``compatible`` 属性开始，找到为那个 compatible 分配
+``struct device`` 实例的驱动。
 
-如果
-你
-不熟悉
-设备
-如何
-基于
-compatible 属性
-从
-设备树
-节点
-分配，
-ZDS 2021 演讲
-`A deep dive into the Zephyr
-2.5 device model`_
-可能
-是
-一个
-有用
-的
-起点，
-连同
-:ref:`device_model_api` 页面。
-关于
-``compatible`` 的
-更多
-信息
-见
-:ref:`dt-important-props` 和
-设备树
-规范。
+如果你不熟悉设备如何基于 compatible 属性从设备树节点分配，ZDS 2021 演讲
+`A deep dive into the Zephyr 2.5 device model`_ 可能是一个有用的起点，连同
+:ref:`device_model_api` 页面。关于 ``compatible`` 的更多信息见
+:ref:`dt-important-props` 和设备树规范。
 
 .. _A deep dive into the Zephyr 2.5 device model:
    https://www.youtube.com/watch?v=sWaxQyIgEBY
 
-目前
-没有
-关于
-存在
-哪些
-设备
-驱动
-以及
-它们
-关联
-哪些
-设备树
-compatible 的
-文档。
-你
-将
-必须
-通过
-阅读
-源
-代码
-来
-弄清楚
-这
-一点：
+目前没有关于存在哪些设备驱动以及它们关联哪些设备树 compatible 的文档。你必须
+通过阅读源代码来弄清楚这一点：
 
-- 在
-  :zephyr_file:`drivers` 中
-  查找
-  对应
-  你的
-  设备
-  实现
-  的
-  API 的
-  合适
-  子
-  目录
-- 在
-  该
-  目录
-  内
-  查找
-  相关
-  文件，
-  直到
-  你
-  弄清楚
-  驱动
-  是
-  什么，
-  或
-  意识到
-  没有
-  这样
-  的
-  驱动。
+- 在 :zephyr_file:`drivers` 中查找对应你的设备实现的 API 的合适子目录
+- 在该目录内查找相关文件，直到你弄清楚驱动是什么，或意识到没有这样的驱动。
 
-通常
-（但
-不
-总是），
-你
-可以
-通过
-查找
-将
-``DT_DRV_COMPAT`` 宏
-设置
-为
-匹配
-节点
-``compatible`` 属性
-（小写
-且
-特殊
-字符
-转换
-为
-下划线）
-的
-文件
-来
-找到
-驱动。
-例如，
-如果
-你的
-节点
-compatible 是
-``vnd,foo-device``，
-查找
-有
-这
-行
-的
-文件：
+通常（但不总是），你可以通过查找将 ``DT_DRV_COMPAT`` 宏设置为匹配你的节点
+``compatible`` 属性（小写且特殊字符转换为下划线）的文件来找到驱动。例如，如果
+你的节点 compatible 是 ``vnd,foo-device``，查找有这一行的文件：
 
 .. code-block:: C
 
@@ -592,70 +142,13 @@ compatible 是
 
 .. important::
 
-   这
-   **不
-   总是
-   有效**，
-   因为
-   不
-   是
-   所有
-   驱动
-   都
-   使用
-   ``DT_DRV_COMPAT``。
+   这**并不总是有效**，因为不是所有驱动都使用 ``DT_DRV_COMPAT``。
 
-如果
-你
-找到
-一个
-驱动，
-接下来
-你
-需要
-确保
-编译
-它的
-Kconfig 选项
-已
-启用。
-（如果
-你
-没
-找到
-驱动，
-且
-你
-确定
-compatible 属性
-正确，
-那么
-你
-需要
-编写
-一个
-驱动。
-编写
-驱动
-超出
-本
-文档
-页面
-的
-范围。）
+如果你找到了一个驱动，接下来你需要确保编译它的 Kconfig 选项已启用。（如果你
+没找到驱动，且你确定 compatible 属性正确，那么你需要编写一个驱动。编写驱动
+超出本文档页面的范围。）
 
-继续
-上面
-的
-示例，
-如果
-你的
-设备树
-节点
-现在
-看起来
-像
-这样：
+继续上面的示例，如果你的设备树节点现在看起来像这样：
 
 .. code-block:: DTS
 
@@ -664,283 +157,54 @@ compatible 属性
            status = "okay";
    };
 
-那么
-你
-会
-在
-:zephyr_file:`drivers/i2c` 内
-查找
-处理
-compatible ``nordic,nrf-twim`` 的
-驱动
-文件。
-在
-这种
-情况
-下，
-那
-是
-:zephyr_file:`drivers/i2c/i2c_nrfx_twim.c`。
-注意
-即使
-在
-``DT_DRV_COMPAT`` 未
-设置
-的
-情况
-下，
-你
-也
-可以
-使用
-像
-驱动
-文件
-名
-这样
-的
-信息
-作为
-线索。
+那么你会在 :zephyr_file:`drivers/i2c` 内查找处理 compatible
+``nordic,nrf-twim`` 的驱动文件。在这种情况下，那是
+:zephyr_file:`drivers/i2c/i2c_nrfx_twim.c`。注意即使 ``DT_DRV_COMPAT`` 未
+设置，你也可以使用像驱动文件名这样的信息作为线索。
 
-一旦
-知道
-要
-启用
-的
-驱动，
-你
-需要
-确保
-其
-Kconfig 选项
-设置
-为
-``y``。
-你
-可以
-通过
-在
-驱动
-子
-目录
-的
-:file:`CMakeLists.txt` 文件
-中
-查找
-类似
-这
-行
-的
-行
-来
-弄清楚
-需要
-哪个
-Kconfig 选项。
-继续
-上面
-的
-示例，
-:zephyr_file:`drivers/i2c/CMakeLists.txt` 有
-一
-行
-看起来
-像
-这样：
+一旦知道要启用的驱动，你需要确保其 Kconfig 选项设置为 ``y``。你可以通过在
+驱动子目录的 :file:`CMakeLists.txt` 文件中查找类似这一行的行来弄清楚需要哪个
+Kconfig 选项。继续上面的示例，:zephyr_file:`drivers/i2c/CMakeLists.txt` 有
+一行看起来像这样：
 
 .. code-block:: cmake
 
    zephyr_library_sources_ifdef(CONFIG_NRFX_TWIM       i2c_nrfx_twim.c)
 
-这
-意味着
-:kconfig:option:`CONFIG_NRFX_TWIM` 必须
-在
-:file:`<build>/zephyr/.config` 文件
-中
-设置
-为
-``y``。
+这意味着 :kconfig:option:`CONFIG_NRFX_TWIM` 必须在
+:file:`<build>/zephyr/.config` 文件中设置为 ``y``。
 
-如果
-你的
-驱动
-Kconfig 未
-设置
-为
-``y``，
-你
-需要
-弄清楚
-需要
-做
-什么
-才能
-实现
-它。
-通常，
-一旦
-你
-启用
-设备树
-节点
-就
-会
-自动
-发生。
-否则，
-有时
-只需
-在
-应用
-的
-:file:`prj.conf` 文件
-中
-添加
-像
-这样
-的
-行
-然后
-确保
-:ref:`dt-trouble-try-pristine` 就
-行：
+如果你的驱动的 Kconfig 未设置为 ``y``，你需要弄清楚需要做些什么才能实现它。
+通常，一旦你启用设备树节点就会自动发生。否则，有时只需在应用的
+:file:`prj.conf` 文件中添加像这样的一行，然后确保
+:ref:`dt-trouble-try-pristine` 就行：
 
 .. code-block:: cfg
 
    CONFIG_FOO=y
 
-其中
-``CONFIG_FOO`` 是
-:file:`CMakeLists.txt` 使用
-的
-决定
-是否
-编译
-驱动
-的
-选项。
+其中 ``CONFIG_FOO`` 是 :file:`CMakeLists.txt` 用来决定是否编译驱动的选项。
 
-不过，
-可能
-还有
-其他
-问题
-挡
-在
-你
-面前，
-如
-未
-满足
-的
-Kconfig
-依赖，
-你
-也
-必须
-在
-启用
-驱动
-之前
-启用
-它们。
+不过，可能还有其他问题挡在你面前，如未满足的 Kconfig 依赖，你也必须在启用
+驱动之前先启用它们。
 
-咨询
-定义
-``CONFIG_FOO`` 的
-Kconfig 文件
-（针对
-你的
-``FOO`` 值）
-获取
-更多
-信息。
+查阅定义 ``CONFIG_FOO`` 的 Kconfig 文件（针对你的 ``FOO`` 值）获取更多信息。
 
 .. _dt-use-the-right-names:
 
-确保
-你
-使用
-的
-是
-正确
-的
-名称
+确保你使用的是正确的名称
 **************************************
 
 记住：
 
-- 在
-  C/C++ 中，
-  设备树
-  名称
-  必须
-  小写
-  且
-  特殊
-  字符
-  必须
-  转换
-  为
-  下划线。
-  Zephyr 生成
-  的
-  设备树
-  头
-  将
-  DTS 名称
-  按
-  此
-  方式
-  转换
-  为
-  基于
-  预处理器
-  的
-  ``<devicetree.h>`` API 使用
-  的
-  C 令牌。
-- 在
-  覆盖
-  中，
-  使用
-  设备树
-  节点
-  和
-  属性
-  名称
-  的
-  方式
-  与
-  它们
-  在
-  任何
-  DTS 文件
-  中
-  出现
-  的
-  方式
-  相同。
-  Zephyr 覆盖
-  只是
-  DTS 片段。
+- 在 C/C++ 中，设备树名称必须小写且特殊字符必须转换为下划线。Zephyr 生成的
+  设备树头文件将 DTS 名称按此方式转换为基于预处理器的 ``<devicetree.h>`` API
+  使用的 C 令牌。
+- 在覆盖中，使用设备树节点和属性名称的方式与它们在任何 DTS 文件中出现的方式
+  相同。Zephyr 覆盖只是 DTS 片段。
 
-例如，
-如果
-你
-想
-在
-C/C++ 文件
-中
-**获取**
-路径
-为
-``/soc/i2c@12340000`` 的
-节点
-的
-``clock-frequency`` 属性：
+例如，如果你想**获取**路径为 ``/soc/i2c@12340000`` 的节点的
+``clock-frequency`` 属性，在一个 C/C++ 文件中：
 
 .. code-block:: c
 
@@ -957,16 +221,7 @@ C/C++ 文件
    #define MY_CLOCK_FREQ DT_PROP(DT_PATH(soc, i2c_1234000), clock_frequency)
    /*                                           ^               ^           */
 
-如果
-你
-想
-在
-设备树
-覆盖
-中
-**设置**
-该
-属性：
+如果你想**设置**该属性，在一个设备树覆盖中：
 
 .. code-block:: none
 
@@ -984,243 +239,63 @@ C/C++ 文件
    	clock-frequency = <115200>;
    };
 
-查看
-预处理器
-输出
+查看预处理器输出
 *******************************
 
-要
-保存
-预处理器
-输出
-文件，
-启用
-:kconfig:option:`CONFIG_COMPILER_SAVE_TEMPS` 选项。
-例如，
-要
-用
-west
-构建
-:zephyr:code-sample:`hello_world` 并
-设置
-此
-选项，
-使用：
+要保存预处理器输出文件，启用 :kconfig:option:`CONFIG_COMPILER_SAVE_TEMPS`
+选项。例如，要用 west 构建 :zephyr:code-sample:`hello_world` 并设置此选项，使用：
 
 .. code-block:: sh
 
    west build -b BOARD samples/hello_world -- -DCONFIG_COMPILER_SAVE_TEMPS=y
 
-这
-会为
-每个
-源
-文件
-:file:`foo.c` 在
-构建
-目录
-中
-创建
-名为
-:file:`foo.c.i` 的
-预处理器
-输出
-文件。
+这会为每个源文件 :file:`foo.c` 在构建目录中创建一个名为 :file:`foo.c.i` 的
+预处理器输出文件。
 
-然后
-你
-可以
-在
-构建
-目录
-中
-搜索
-文件
-查看
-设备树
-宏
-展开
-为
-什么。
-例如，
-在
-macOS 和
-Linux 上，
-使用
-``find`` 查找
-:file:`main.c.i`：
+然后你可以在构建目录中搜索该文件，查看你的设备树宏展开为什么。例如，在 macOS
+和 Linux 上，使用 ``find`` 查找 :file:`main.c.i`：
 
 .. code-block:: sh
 
    $ find build -name main.c.i
    build/CMakeFiles/app.dir/src/main.c.i
 
-打开
-之前
-通常
-最
-简单
-的
-做法
-是
-对
-结果
-运行
-风格
-格式化
-器。
-例如，
-要
-使用
-``clang-format`` 就地
-重新
-格式化
-文件：
+打开之前通常最简单的做法是先对结果运行一个风格格式化工具。例如，要使用
+``clang-format`` 就地重新格式化文件：
 
 .. code-block:: sh
 
    clang-format -i build/CMakeFiles/app.dir/src/main.c.i
 
-然后
-你
-可以
-在
-你
-喜欢
-的
-编辑器
-中
-打开
-文件
-查看
-预处理
-后
-的
-最终
-C 结果。
+然后你可以在你喜欢的编辑器中打开文件，查看预处理后的最终 C 结果。
 
-不要
-跟踪
-宏
-展开
+不要跟踪宏展开
 ****************************
 
-设备树
-错误
-的
-编译器
-消息
-有时
-可能
-非常
-长。
-这
-通常
-发生
-在
-编译器
-为
-复杂
-宏
-展开
-的
-每个
-步骤
-打印
-消息
-（有
-若干
-中间
-展开
-步骤）
-时。
+设备树错误的编译器消息有时可能非常长。这通常发生在编译器为复杂宏展开的每个
+步骤打印消息（有若干中间展开步骤）时。
 
-要
-防止
-编译器
-这样做，
-你
-可以
-禁用
-:kconfig:option:`CONFIG_COMPILER_TRACK_MACRO_EXPANSION` 选项。
-这
-通常
-将
-输出
-减少
-为
-每个
-错误
-一
-条
-消息。
+要防止编译器这样做，你可以禁用
+:kconfig:option:`CONFIG_COMPILER_TRACK_MACRO_EXPANSION` 选项。这通常将输出
+减少为每个错误一条消息。
 
-例如，
-要
-用
-west
-构建
-:zephyr:code-sample:`hello_world` 并
-禁用
-此
-选项，
-使用：
+例如，要用 west 构建 :zephyr:code-sample:`hello_world` 并禁用此选项，使用：
 
 .. code-block:: sh
 
    west build -b BOARD samples/hello_world -- -DCONFIG_COMPILER_TRACK_MACRO_EXPANSION=n
 
-验证
-属性
+验证属性
 *******************
 
-如果
-你
-在
-读取
-节点
-属性
-时
-得到
-编译
-错误，
-检查
-你的
-节点
-标识符
-和
-属性。
-例如，
-如果
-你
-在
-看起来
-像
-这样
-的
-行
-上
-得到
-构建
-错误：
+如果你在读取节点属性时得到编译错误，检查你的节点标识符和属性。例如，如果你在
+看起来像这样的一行上得到构建错误：
 
 .. code-block:: c
 
    int baud_rate = DT_PROP(DT_NODELABEL(my_serial), current_speed);
 
-尝试
-通过
-向
-文件
-添加
-这
-段
-并
-重新
-编译
-来
-检查
-节点：
+尝试通过向文件添加这段并重新编译来检查节点：
 
 .. code-block:: c
 
@@ -1228,148 +303,34 @@ west
    #error "whoops"
    #endif
 
-如果
-重新
-构建
-时
-你
-看到
-"whoops" 错误
-消息，
-节点
-标识符
-没有
-引用
-有效
-节点。
-:ref:`get-devicetree-outputs` 并
-从
-那里
-调试。
+如果你重新构建时看到 "whoops" 错误消息，节点标识符没有引用有效节点。
+:ref:`get-devicetree-outputs` 并从这里开始调试。
 
-如果
-你
-没
-看到
-"whoops" 错误
-消息，
-接下来
-检查
-什么
-的
-一些
-提示：
+如果你没看到 "whoops" 错误消息，接下来检查什么的几个提示：
 
-- 你
-  :ref:`dt-use-the-right-names` 了吗？
-- :ref:`属性
-  存在 <dt-checking-property-exists>` 吗？
-- 节点
-  有
-  :ref:`匹配
-  的
-  绑定 <dt-bindings>` 吗？
-- 绑定
-  定义
-  该
-  属性
-  吗？
+- 你 :ref:`dt-use-the-right-names` 了吗？
+- :ref:`属性存在 <dt-checking-property-exists>` 吗？
+- 节点有 :ref:`匹配的绑定 <dt-bindings>` 吗？
+- 绑定定义该属性吗？
 
 .. _missing-dt-binding:
 
-检查
-缺失
-的
-绑定
+检查缺失的绑定
 **************************
 
-绑定
-信息
-见
-:ref:`dt-bindings`，
-Zephyr 内置
-绑定
-信息
-见
+绑定信息见 :ref:`dt-bindings`，Zephyr 内置绑定信息见
 :ref:`devicetree_binding_index`。
 
-如果
-构建
-无法
-为
-节点
-:ref:`dts-find-binding`，
-那么
-要么
-节点
-的
-``compatible`` 属性
-未
-定义，
-要么
-其
-值
-没有
-匹配
-的
-绑定。
-如果
-属性
-已
-设置，
-检查
-其
-名称
-中
-的
-拼写
-错误。
-在
-设备树
-源
-文件
-中，
-``compatible`` 应
-看起来
-像
-``"vnd,some-device"`` --
+如果构建无法为节点 :ref:`dts-find-binding`，那么要么节点的 ``compatible``
+属性未定义，要么其值没有匹配的绑定。如果属性已设置，检查其名称中的拼写错误。
+在设备树源文件中，``compatible`` 应看起来像 ``"vnd,some-device"`` --
 :ref:`dt-use-the-right-names`。
 
-如果
-你的
-绑定
-文件
-不在
-:file:`zephyr/dts` 下，
-可能
-需要
-设置
-:ref:`DTS_ROOT <dts_root>`；
-见
-:ref:`dt-where-bindings-are-located`。
+如果你的绑定文件不在 :file:`zephyr/dts` 下，你可能需要设置
+:ref:`DTS_ROOT <dts_root>`；见 :ref:`dt-where-bindings-are-located`。
 
-``DT_INST_()`` API 的
-错误
+``DT_INST_()`` API 的错误
 ***************************
 
-如果
-你
-使用
-像
-:c:func:`DT_INST_PROP` 这样
-的
-API，
-必须
-将
-``DT_DRV_COMPAT`` 定义
-为
-你
-感兴趣
-的
-compatible 的
-小写
-加
-下划线
-版本。
-见
-:ref:`dt-create-devices-inst`。
+如果你使用像 :c:func:`DT_INST_PROP` 这样的 API，必须将 ``DT_DRV_COMPAT`` 定义
+为你感兴趣的 compatible 的小写加下划线版本。见 :ref:`dt-create-devices-inst`。

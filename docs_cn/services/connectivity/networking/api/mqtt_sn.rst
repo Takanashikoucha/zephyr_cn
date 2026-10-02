@@ -7,41 +7,43 @@ MQTT-SN
     :local:
     :depth: 2
 
-Overview
+概述
 ********
 
-MQTT-SN 为知名 MQTT protocol 的 variant - 参见 :ref:`mqtt_socket_interface`。
+MQTT-SN 是知名 MQTT 协议的一个变体 - 参见 :ref:`mqtt_socket_interface`。
 
-与 MQTT 不同（MQTT-SN 不需要 TCP transport（而是设计用于任何 message-based transport。最初其主要为 ZigBee 创建（但其他如 Bluetooth、UDP 甚至 UART 也可同样使用。
+与 MQTT 不同，MQTT-SN 不需要 TCP 传输，而是设计用于任何基于消息的传输。最初，它主要是为 ZigBee 创建的，但其他如 Bluetooth、UDP 甚至 UART 也可以同样使用。
 
-Zephyr 提供构建于 BSD sockets API 之上的 MQTT-SN client library。Library 可用 :kconfig:option:`CONFIG_MQTT_SN_LIB` Kconfig option 启用（且可按 per-client 配置（支持 MQTT-SN version 1.2。Zephyr MQTT-SN 实现可用于任何 message-based transport（但 UDP 支持已内置。
+Zephyr 提供了一个基于 BSD 套接字 API 构建的 MQTT-SN 客户端库。该库可以通过 :kconfig:option:`CONFIG_MQTT_SN_LIB` Kconfig 选项启用，并按客户端进行配置，支持 MQTT-SN 版本 1.2。Zephyr MQTT-SN 实现可用于任何基于消息的传输，但 UDP 支持已内置。
 
-MQTT-SN clients 需要连接 MQTT-SN gateway。这些 gateways 在 MQTT-SN 和 MQTT 之间转换。Eclipse Paho project 提供 MQTT-SN gateway 的实现（但其他也可用。https://www.eclipse.org/paho/index.php?page=components/mqtt-sn-transparent-gateway/index.php
+MQTT-SN 客户端需要一个 MQTT-SN 网关来连接。这些网关在 MQTT-SN 和 MQTT 之间进行转换。Eclipse Paho 项目提供了一个 MQTT-SN 网关的实现，但还有其他可用的。
+https://www.eclipse.org/paho/index.php?page=components/mqtt-sn-transparent-gateway/index.php
 
-MQTT-SN spec v1.2 可在此找到：https://www.oasis-open.org/committees/download.php/66091/MQTT-SN_spec_v1.2.pdf
+MQTT-SN 规范 v1.2 可在此找到：
+https://www.oasis-open.org/committees/download.php/66091/MQTT-SN_spec_v1.2.pdf
 
-Sample usage
+使用示例
 ************
 
-要创建 MQTT-SN client（须定义 client context structure 和 buffers：
+要创建一个 MQTT-SN 客户端，需要定义客户端上下文结构和缓冲区：
 
 .. code-block:: c
 
-   /* Buffers for MQTT client. */
+   /* MQTT 客户端缓冲区。 */
    static uint8_t rx_buffer[256];
    static uint8_t tx_buffer[256];
 
-   /* MQTT-SN client context */
+   /* MQTT-SN 客户端上下文 */
    static struct mqtt_sn_client client;
 
-Application 中可创建多个 MQTT-SN client instances（并独立管理。此外（还需要 transport 的 structure。Library 已附带 UDP 的示例实现。
+应用程序中可以创建多个 MQTT-SN 客户端实例并独立管理。此外，还需要一个传输结构。该库已经附带了一个 UDP 的示例实现。
 
 .. code-block:: c
 
-   /* MQTT Broker address information. */
+   /* MQTT 代理地址信息。 */
    static struct mqtt_sn_transport tp;
 
-MQTT-SN library 用 callback 通知 clients 某些 events。
+MQTT-SN 库使用回调通知客户端某些事件。
 
 .. code-block:: c
 
@@ -50,13 +52,13 @@ MQTT-SN library 用 callback 通知 clients 某些 events。
    {
       switch(evt->type) {
       {
-         /* Handle events here. */
+         /* 在此处处理事件。 */
       }
    }
 
-可能 events 的列表参见 :ref:`mqtt_sn_api_reference`。
+有关可能事件的列表，参见 :ref:`mqtt_sn_api_reference`。
 
-Client context structure 须在使用前初始化并设置。UDP transport 的示例 configuration 如下：
+客户端上下文结构需要在使用前进行初始化和配置。以下是 UDP 传输的示例配置：
 
 .. code-block:: c
 
@@ -70,54 +72,57 @@ Client context structure 须在使用前初始化并设置。UDP transport 的�
 
    mqtt_sn_client_init(&client, &client_id, &tp.tp, evt_cb, tx_buf, sizeof(tx_buf), rx_buf, sizeof(rx_buf));
 
-Configuration 设置后（须定义要连接的 gateway 的 network address。MQTT-SN protocol 提供通过 advertisement 或 search mechanism 发现 gateways 的功能。User 应至少执行以下步骤之一以定义 library 的 Gateway：
+配置完成后，必须定义要连接的网关的网络地址。MQTT-SN 协议提供了通过广播或搜索机制发现网关的功能。用户应至少执行以下步骤之一来为库定义网关：
 
-* 调用 :c:func:`mqtt_sn_add_gw` function 手动定义 Gateway address。
+* 调用 :c:func:`mqtt_sn_add_gw` 函数手动定义网关地址。
 * 等待 :c:enumerator:`MQTT_SN_EVT_ADVERTISE`。
-* 调用 :c:func:`mqtt_sn_search` function（并等待 :c:enumerator:`MQTT_SN_EVT_GWINFO` callback。确保周期性调用 :c:func:`mqtt_sn_input` function 以处理 incoming messages。
+* 调用 :c:func:`mqtt_sn_search` 函数并等待 :c:enumerator:`MQTT_SN_EVT_GWINFO` 回调。
+  确保定期调用 :c:func:`mqtt_sn_input` 函数处理传入消息。
 
-:c:func:`mqtt_sn_search` function 调用示例：
-
-.. code-block:: c
-
-	err = mqtt_sn_search(&mqtt_client, 1);
-	k_sleep(K_SECONDS(10));
-	err = mqtt_sn_input(&mqtt_client);
-	__ASSERT(err == 0, "mqtt_sn_search() failed %d", err);
-
-Gateway address 定义或找到后（MQTT-SN client 可连接 gateway。调用 :c:func:`mqtt_sn_connect` function（其发送 ``CONNECT`` MQTT-SN message。Application 应周期性调用 :c:func:`mqtt_sn_input` function 以处理收到的 response。若 application 知道未收到 data（例如使用 Bluetooth 时）（无需调用 :c:func:`mqtt_sn_input`。注意 :c:func:`mqtt_sn_input` 为非阻塞 function（若 transport struct 包含 :c:func:`poll` compatible function pointer。若 connection 成功（:c:enumerator:`MQTT_SN_EVT_CONNECTED` 通过 callback function 通知 application。
+:c:func:`mqtt_sn_search` 函数调用示例：
 
 .. code-block:: c
 
-	err = mqtt_sn_connect(&client, false, true);
-	__ASSERT(err == 0, "mqtt_sn_connect() failed %d", err);
+ 	err = mqtt_sn_search(&mqtt_client, 1);
+ 	k_sleep(K_SECONDS(10));
+ 	err = mqtt_sn_input(&mqtt_client);
+ 	__ASSERT(err == 0, "mqtt_sn_search() failed %d", err);
 
-	while (1) {
-		mqtt_sn_input(&client);
-		if (connected) {
-			mqtt_sn_publish(&client, MQTT_SN_QOS_0, &topic_p, false, &pubdata);
-		}
-		k_sleep(K_MSEC(500));
-	}
+网关地址定义或找到后，MQTT-SN 客户端可以连接到网关。调用 :c:func:`mqtt_sn_connect` 函数，该函数将发送 ``CONNECT`` MQTT-SN 消息。应用程序应定期调用 :c:func:`mqtt_sn_input` 函数处理收到的响应。如果应用程序知道没有收到数据（例如使用 Bluetooth 时），则无需调用 :c:func:`mqtt_sn_input`。注意，如果传输结构包含 :c:func:`poll` 兼容的函数指针，:c:func:`mqtt_sn_input` 是非阻塞函数。
+如果连接成功，:c:enumerator:`MQTT_SN_EVT_CONNECTED` 将通过回调函数通知应用程序。
 
-上述代码片段中（gateway 在 publish messages 前连接。若 connection 在 MQTT 层失败或发生 timeout（connection 被中止（并返回 error。
+.. code-block:: c
 
-Connection 建立后（application 需周期性调用 :c:func:`mqtt_input` function 以处理 incoming data。另一方面（connection upkeep 用 k_work item 自动完成。若收到 MQTT message（MQTT callback function 被调用（并通知适当 event。
+ 	err = mqtt_sn_connect(&client, false, true);
+ 	__ASSERT(err == 0, "mqtt_sn_connect() failed %d", err);
 
-Connection 可调用 :c:func:`mqtt_sn_disconnect` function 关闭。但这对 transport 无影响。若要关闭 transport（例如 socket（调用 :c:func:`mqtt_sn_client_deinit`（其也 deinit transport。
+ 	while (1) {
+ 		mqtt_sn_input(&client);
+ 		if (connected) {
+ 			mqtt_sn_publish(&client, MQTT_SN_QOS_0, &topic_p, false, &pubdata);
+ 		}
+ 		k_sleep(K_MSEC(500));
+ 	}
 
-Zephyr 提供利用 MQTT-SN client API 的 sample code。更多信息参见 :zephyr:code-sample:`mqtt-sn-publisher`。
+在上述代码片段中，网关在发布消息之前已连接。如果连接在 MQTT 层失败或发生超时，连接将被中止并返回错误。
 
-Deviations from the standard
+连接建立后，应用程序需要定期调用 :c:func:`mqtt_input` 函数处理传入数据。另一方面，连接维护使用 k_work 项自动完成。
+如果收到 MQTT 消息，将调用 MQTT 回调函数并通知相应事件。
+
+通过调用 :c:func:`mqtt_sn_disconnect` 函数可以关闭连接。但是，这对传输没有影响。如果要关闭传输（例如套接字），调用 :c:func:`mqtt_sn_client_deinit`，该函数也会反初始化传输。
+
+Zephyr 提供了使用 MQTT-SN 客户端 API 的示例代码。更多信息参见 :zephyr:code-sample:`mqtt-sn-publisher`。
+
+与标准的不同
 ****************************
 
-Protocol 的某些部分尚未在 library 中支持。
+协议的某些部分尚未在库中支持。
 
-* Forwarder Encapsulation
+* 转发器封装
 
 .. _mqtt_sn_api_reference:
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: mqtt_sn_socket

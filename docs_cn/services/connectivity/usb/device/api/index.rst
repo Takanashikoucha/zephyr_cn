@@ -1,15 +1,10 @@
 .. _usb_api:
 
-USB
-device
-support
-APIs
-（deprecated）
+USB 设备支持 API（已弃用）
 ####################################
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    usb_dc.rst
    usb_device.rst

@@ -1,33 +1,23 @@
 .. _bluetooth_media:
 
-Bluetooth
-Media
+Bluetooth 媒体
 ###############
 
 
-API
-Reference
+API 参考
 *************
 
-Media
-Control
-Service
+媒体控制服务
 =====================
 
-.. doxygengroup::
-   bt_mcs
+.. doxygengroup:: bt_mcs
 
-Media
-Proxy
+媒体代理
+===========
+
+.. doxygengroup:: bt_media_proxy
+
+媒体控制客户端
 ===================
 
-.. doxygengroup::
-   bt_media_proxy
-
-Media
-Control
-Client
-===================
-
-.. doxygengroup::
-   bt_mcc
+.. doxygengroup:: bt_mcc

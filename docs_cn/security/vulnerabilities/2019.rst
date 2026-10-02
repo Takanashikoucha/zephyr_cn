@@ -1,86 +1,18 @@
-.. _vulnerabilities
-2019:
+.. _vulnerabilities_2019:
 
-CVE
-2019
+CVE-2019
 ########
 
-:cve:`2019
-9506`
+:cve:`2019-9506`
 ----------------
 
-The
-Bluetooth
-BR
-EDR
-specification
-up
-to
-and
-including
-version
-5.1
-permits
-sufficiently
-low
-encryption
-key
-length
-and
-does
-not
-prevent
-an
-attacker
-from
-influencing
-the
-key
-length
-negotiation.
-This
-allows
-practical
-brute
-force
-attacks
-（aka
-"KNOB"）
-that
-can
-decrypt
-traffic
-and
-inject
-arbitrary
-ciphertext
-without
-the
-victim
-noticing.
+蓝牙 BR/EDR 规范（包括 5.1 版本及更早版本）允许足够低的加密密钥长度，并且不阻止攻击者影响密钥长度协商。这使得实际的暴力破解攻击（又称"KNOB"）成为可能，攻击者可以解密流量并注入任意密文，而受害者不会察觉。
 
--
-`Zephyr
-project
-bug
-tracker
-ZEPSEC
-20
-<https://zephyrprojectsec.atlassian.net/browse/ZEPSEC
-20>`_
+- `Zephyr 项目 bug 跟踪器 ZEPSEC-20
+  <https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-20>`_
 
--
-`PR18702
-fix
-for
-v1.14.0
-<https://github.com/zephyrproject
-rtos/zephyr/pull/18702>`_
+- `PR18702 修复 v1.14.0
+  <https://github.com/zephyrproject-rtos/zephyr/pull/18702>`_
 
--
-`PR18659
-fix
-for
-v2.0.0
-<https://github.com/zephyrproject
-rtos/zephyr/pull/18659>`_
+- `PR18659 修复 v2.0.0
+  <https://github.com/zephyrproject-rtos/zephyr/pull/18659>`_

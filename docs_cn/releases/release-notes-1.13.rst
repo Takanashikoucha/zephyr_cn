@@ -17,8 +17,7 @@ Zephyr Kernel 1.13.0
 * 链路层发现协议（LLDP）TX 支持
 * 使用 BSD socket API 支持 TLS 和 DTLS
 * 支持链路层多播名称解析（LLMNR）
-* 引入重新设计的 ADC API 并更新 Nordic、NXP、Atmel 和
-  Synopsys DesignWare 驱动
+* 引入重新设计的 ADC API 并更新 Nordic、NXP、Atmel 和 Synopsys DesignWare 驱动
 * 支持 OS 驱动的电源管理框架
 * Arm TrustZone 在 Armv8-M 上的基本支持
 
@@ -78,8 +77,7 @@ Boards & SoC Support
 Drivers and Sensors
 *******************
 
-* adc：引入重新设计的 API 并更新 Nordic、NXP、Atmel 和
-  Synopsys DesignWare 驱动
+* adc：引入重新设计的 API 并更新 Nordic、NXP、Atmel 和 Synopsys DesignWare 驱动
 * audio：添加 TLV320DAC310x 音频 DAC 驱动
 * can：为 STM32L432 添加 can 支持
 * clock_control：添加 STM32F7 系列时钟控制
@@ -149,8 +147,7 @@ Networking
 * 在 DHCPv4 中捕获网络接口 ON 和 OFF 事件，
   如果重新连接则更新地址租约
 * 移除等待新网络缓冲可用时的永久超时
-* 将网络接口 up/down 命令从 net-shell 中继到
-  native_posix 以太网驱动的 Linux 主机
+* 将网络接口 up/down 命令从 net-shell 中继到 native_posix 以太网驱动的 Linux 主机
 * 支持 Bluetooth IPSP 的节点无需加入 IPv6 被请求节点多播组
 * 允许为 native_posix 以太网驱动启动外部程序。
   例如，当创建 zeth 时可以启动 wireshark
@@ -164,8 +161,7 @@ Networking
 * 在 native_posix、NXP mcux 和 Atmel GMAC 以太网驱动中启用 gPTP 支持。
   native_posix 以太网驱动的 gPTP 支持仅用于测试目的
 * 将网络配置（net_config）库从 net_app 库中拆分。
-  （此更改要求更新应用配置以引用对应的
-  NET_CONFIG_* 选项而非 NET_APP_*）
+  （此更改要求更新应用配置以引用对应的 NET_CONFIG_* 选项而非 NET_APP_*）
 * 将所有第 2 层（L2）网络代码移到 subsys/net/l2 目录
 * 在发送 TCP SYN 请求时添加 MSS 选项
 * 通过在我们的接收窗口为 0 时处理零窗口探测来修复 TCP
@@ -184,14 +180,11 @@ Networking
 * 修复 NXP MCUX 以太网驱动以检测载波丢失事件
 * 将 native API echo-server/echo-client 示例移植到 BSD sockets API，
   带 TLS/DTLS 支持
-* 在 echo-client 和 echo-server 示例应用中
-  优雅地处理 out-of-buf 情况
-  TLS/DTLS support.
+* 在 echo-client 和 echo-server 示例应用中优雅地处理 out-of-buf 情况
 Bluetooth
 *********
 
 * 使用刷新的 BT_GATT_CHARACTERISTIC 宏实现新的用户友好服务填充
-*********
 * 为 native_posix 开发板添加 Bluetooth 硬件支持，
   允许开发者使用原生 POSIX 架构配合 Bluetooth
 * 添加解析广播数据的新辅助 API
@@ -202,7 +195,6 @@ Bluetooth
 * 添加新功能以支持使用单个控制器的多个本地身份
 * 为 nRF52x 系列添加新的开发板特定 mesh 示例，
   实现以下模型：
-  controller.
   - Generic OnOff 客户端和服务器
   - Generic Level 客户端和服务器
   - Generic Power OnOff 客户端和服务器
@@ -216,13 +208,11 @@ Bluetooth
 * 新的 HCI 驱动 quirks API 以支持需要不常见重置序列的控制器
 * Host：GATT 和 SMP 的多个 bug 修复
 * Mesh：多个 bug 修复
-  nRF5x hardware.
 Build and Infrastructure
 ************************
 * Kconfig：移除冗余的 "default n" 属性
 * cmake：用 ZEPHYR_BASE 替换 PROJECT_SOURCE_DIR
 * Kconfig：切换到改进的 globbing 语句
-* Mesh: Multiple bug fixes.
 Libraries / Subsystems
 ***********************
 * Tracing：基本支持 SEGGER systemview
@@ -245,46 +235,27 @@ HALs
 * ext：hal：nordic：将 nrfx 更新到版本 1.1.0
 * net：drivers：wifi：SimpleLink WiFi 卸载驱动（仅 wifi_mgmt）
 * ext/hal/nxp/imx：导入 nxp imx6 freertos bsp
-* hal: stm32f2x: Add HAL for the STM32F2x series
 Documentation
 *************
 * 将简化和更易于维护的主题应用于文档。
-  最新和之前四个发布版本重新生成并发布到
-  https://docs.zephyrproject.org
+  最新和之前四个发布版本重新生成并发布到 https://docs.zephyrproject.org
 * 更新贡献指南
-* 文档的一般组织清理和拼写检查，包括从
-  Kconfig 文件和 doxygen API 注释生成的内容
-* 文档的一般改进，跟随代码、
-  实现更改，并支持新功能、开发板和示例
+* 文档的一般组织清理和拼写检查，包括从 Kconfig 文件和 doxygen API 注释生成的内容
+* 文档的一般改进，跟随代码实现更改，并支持新功能、开发板和示例
 * 文档生成现在支持 Windows 主机系统
   （之前仅支持 linux 文档生成）
 * 现在可以创建文档的 PDF 版本
-  https://docs.zephyrproject.org
 Tests and Samples
 *****************
 * 增强基准测试以支持用户空间
 * 改进内核的测试覆盖
-  implementation changes, and in support of new features, boards, and
 Issue Related Items
 *******************
-  (previously only linux doc generation was supported).
 自上次 1.12.0 标记发布以来解决了以下 GitHub issue：
 
 
 .. comment  列表派生自 GitHub Issue 查询：...
    * :github:`issuenumber` - issue 标题
-* Enhanced benchmarks to support userspace
-* Improve test coverage for the kernel
-
-
-Issue Related Items
-*******************
-
-These GitHub issues were addressed since the previous 1.12.0 tagged
-release:
-
-.. comment  List derived from GitHub Issue query: ...
-   * :github:`issuenumber` - issue title
 
 * :github:`9862` - tests/drivers/build_all#test_build_sensors_a_m @ quark_se_c1000_devboard:x86 BUILD failed
 * :github:`9857` - tests/cmsis_rtos_v1 - test_signal_events_signalled results in Assertion failure on all targets with PR#9856

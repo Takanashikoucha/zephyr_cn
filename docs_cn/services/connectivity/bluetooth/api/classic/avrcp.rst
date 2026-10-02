@@ -1,17 +1,10 @@
 .. _bt_avrcp:
 
-Audio
-Video
-Remote
-Control
-Profile
-（AVRCP）
+音视频远程控制配置文件（AVRCP）
 ##########################################
 
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   bt_avrcp
+.. doxygengroup:: bt_avrcp

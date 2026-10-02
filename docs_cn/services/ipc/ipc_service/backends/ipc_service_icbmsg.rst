@@ -3,580 +3,85 @@
 ICMsg with dynamically allocated buffers backend
 ################################################
 
-通过
-此
-backend
-传输
-的
-Data
-在
-shared
-memory 上
-动态
-分配
-的
-buffers
-中
-travel。
-Allocation
-thread
-safe（且
-可
-从
-任何
-context
-发生。
-Backend
-支持：
+通过该 backend 传输的数据在共享内存中动态分配的缓冲区中传输。分配是线程安全的，可以从任何上下文进行。该 backend 支持：
 
-* Multiple
-  endpoints。
-* No-copy
-  sending。
-* Holding
-  RX
-  buffers。
-* 从
-  interrupt
-  context
-  sending。
-* 两
-  级
-  endpoint
-  priorities。
-* Statistics
-  和
-  带
-  utilization
-  report 的
-  optional
-  shell
-  command
-* 最多
-  32
-  blocks。
-* Data
-  cache
-  support。
-* Low
-  memory
-  footprint（约
-  2
-  kB
-  的
-  code。
+* 多个 endpoints。
+* No-copy 发送。
+* 持有 RX 缓冲区。
+* 从中断上下文发送。
+* 两级 endpoint 优先级。
+* 统计和可选的带利用率报告的 shell 命令
+* 最多支持 32 个块。
+* 数据缓存支持。
+* 低内存占用（约 2 kB 代码）。
 
 Overview
 ========
 
-每
-direction
-保留
-一个
-shared
-memory
-region（且
-每
-region
-分为
-两部分。
-一
-部分
-形成
-fixed
-size
-buffers 的
-pool（且
-allocator
-从
-pool
-中
-相邻
-buffers
-构建
-variable
-size
-buffer。
-另
-一
-部分
-用于
-由
-两个
-message
-queues（每
-direction
-一个）组成
-的
-control
-path。
-有
-sender
-写入
-且
-receiver
-读取
-的
-producer
-queue（以及
-receiver
-写入
-且
-sender
-读取
-的
-consumer
-queue。
-Producer
-queue
-有
-下一
-message 的
-location（pool
-内）信息。
-Consumer
-queue
-有
-consumed
-message 的
-location（pool
-内）信息。
+对于每个方向，都会保留一个共享内存区域，每个区域被分为两部分。一部分形成一个固定大小缓冲区的池，分配器从池中相邻的缓冲区构建可变大小的缓冲区。另一部分用于由两个消息队列（每个方向各一个）组成的控制路径。存在一个生产者队列，由发送方写入、接收方读取；以及一个消费者队列，由接收方写入、发送方读取。生产者队列包含下一条消息位置（在池内）的信息。消费者队列包含已消费消息位置（在池内）的信息。
 
-Data
-sending
-process
-如下：
+数据发送流程如下：
 
-* Sender
-  从
-  pool
-  分配
-  一个
-  或
-  多个
-  blocks。
-  若
-  不够
-  sequential
-  blocks（thread
-  context
-  用
-  parameter
-  提供
-  的
-  timeout
-  等待（其
-  也
-  包含
-  K_FOREVER
-  和
-  K_NO_WAIT。
-* 分配
-  的
-  blocks
-  填入
-  data。
-  第一
-  block
-  开头
-  有
-  32
-  bit
-  message
-  header（含
-  length、
-  endpoint
-  ID
-  和
-  own
-  block
-  index。
-  对
-  zero-copy
-  case（由
-  caller
-  做（否则
-  自动
-  copy。
-  此
-  期间
-  其他
-  threads
-  不
-  被
-  任何
-  方式
-  blocked（只要
-  有
-  足够
-  free
-  blocks
-  供
-  它们。
-  它们
-  可
-  分配、
-  发送
-  data
-  并
-  接收
-  data。
-* 带
-  message
-  开头
-  的
-  block
-  index
-  写入
-  producer
-  queue。
-  Endpoint
-  的
-  priority
-  信息
-  追加
-  到
-  block
-  index。
-  :kconfig:option:`CONFIG_IPC_SERVICE_BACKEND_ICBMSG_MAX_ACTIVE_COUNT`
-  定义
-  queue
-  中
-  slots
-  数量。
-  Mailbox
-  notification
-  发送
-  给
-  receiver。
-* Receiver
-  读取
-  producer
-  queue。
-  更高
-  prioriy
-  messages
-  先
-  处理。
-  可
-  按
-  期望
-  持有
-  data。
-  同样（其他
-  threads
-  不
-  被
-  blocked（只要
-  有
-  足够
-  free
-  blocks
-  供
-  它们。
-* 不再
-  需要
-  data
-  时（receiver
-  将
-  block
-  index
-  写入
-  consumer
-  queue。
-* Sender
-  通过
-  读取
-  consumer
-  queue
-  并
-  释放
-  buffers
-  执行
-  garbage
-  collection。
-  发送
-  任何
-  message
-  后
-  或
-  无
-  available
-  buffers
-  时
-  执行
-  garbage
-  collection。
+* 发送方从池中分配一个或多个块。
+  如果连续块不足，线程上下文会使用参数中提供的超时进行等待，该参数还包括 K_FOREVER 和 K_NO_WAIT。
+* 已分配的块被填入数据。
+  第一个块的开头有一个 32 位消息头，包含长度、endpoint ID 和自身块索引。
+  对于零拷贝情况，这由调用方完成；否则会自动复制。
+  在此期间，只要空闲块足够，其他线程就不会以任何方式被阻塞。
+  它们可以分配、发送数据和接收数据。
+* 带有消息开头的块索引被写入生产者队列。
+  endpoint 的优先级信息附加在块索引之后。
+  :kconfig:option:`CONFIG_IPC_SERVICE_BACKEND_ICBMSG_MAX_ACTIVE_COUNT` 定义了队列中的槽位数量。
+  向接收方发送 mailbox 通知。
+* 接收方读取生产者队列。优先级更高的消息优先处理。
+  它可以根据需要持有数据。
+  同样，只要空闲块足够，其他线程就不会被阻塞。
+* 当不再需要数据时，接收方将块索引写入消费者队列。
+* 发送方通过读取消费者队列并释放缓冲区来执行垃圾回收。
+  垃圾回收在发送任何消息之后或没有可用缓冲区时执行。
 
 Configuration
 =============
 
-Backend
-用
-Kconfig
-和
-devicetree
-配置。
+该 backend 通过 Kconfig 和 devicetree 进行配置。
 
-有
-以下
-Kconfig
-options：
+有以下 Kconfig 选项：
 
-:kconfig:option:`CONFIG_IPC_SERVICE_BACKEND_ICBMSG_NUM_EP` -
-  注册
-  endpoints
-  的
-  最大
-  数量。
+:kconfig:option:`CONFIG_IPC_SERVICE_BACKEND_ICBMSG_NUM_EP` - 已注册 endpoint 的最大数量。
 
-:kconfig:option:`CONFIG_IPC_SERVICE_BACKEND_ICBMSG_MAX_ACTIVE_COUNT` -
-  queues
-  中
-  slots
-  数量。
+:kconfig:option:`CONFIG_IPC_SERVICE_BACKEND_ICBMSG_MAX_ACTIVE_COUNT` - 队列中的槽位数量。
 
-:kconfig:option:`CONFIG_IPC_SERVICE_BACKEND_ICBMSG_DEINIT` -
-  支持
-  deregistration
-  和
-  closing。
+:kconfig:option:`CONFIG_IPC_SERVICE_BACKEND_ICBMSG_DEINIT` - 支持注销和关闭。
 
-:kconfig:option:`CONFIG_IPC_SERVICE_BACKEND_ICBMSG_SHELL` -
-  支持
-  shell
-  command。
+:kconfig:option:`CONFIG_IPC_SERVICE_BACKEND_ICBMSG_SHELL` - 支持 shell 命令。
 
-配置
-backend
-时（做
-以下：
+配置该 backend 时，请执行以下操作：
 
-* 若
-  至少
-  一个
-  core
-  在
-  shared
-  memory
-  上
-  用
-  data
-  cache（设置
-  ``dcache-alignment``
-  value。
-  其
-  须
-  为
-  通信
-  双方
-  的
-  invalidation
-  或
-  write-back
-  size
-  的
-  最大
-  value。
-  若
-  通信
-  双方
-  均
-  不
-  在
-  shared
-  memory
-  上
-  用
-  data
-  cache（可
-  跳过。
-* 定义
-  两个
-  memory
-  regions（并
-  分配
-  给
-  实例
-  的
-  ``tx-region``
-  和
-  ``rx-region``。
-  确保
-  用于
-  data
-  exchange
-  的
-  memory
-  regions
-  唯一（不
-  与
-  任何
-  其他
-  region
-  重叠）且
-  两个
-  domains（或
-  CPUs）可
-  访问。
-* 用
-  ``tx-blocks``
-  和
-  ``rx-blocks``
-  为
-  每
-  region
-  定义
-  allocable
-  blocks
-  数量。
-* 定义
-  MBOX
-  devices
-  以
-  发送
-  告知
-  另一
-  domain（或
-  CPU）已
-  写入
-  data 的
-  signal。
-  确保
-  另一
-  domain（或
-  CPU）可
-  接收
-  signal。
+* 如果至少一个 core 在共享内存上使用数据缓存，请设置 ``dcache-alignment`` 值。
+  这必须是通信双方失效或写回大小的最大值。
+  如果通信双方都不在共享内存上使用数据缓存，则可以跳过。
+* 定义两个内存区域，并将它们分配给 instance 的 ``tx-region`` 和 ``rx-region``。
+  确保用于数据交换的内存区域是唯一的（不与其他任何区域重叠），并且两个 domains（或 CPUs）都可以访问。
+* 使用 ``tx-blocks`` 和 ``rx-blocks`` 为每个区域定义可分配块的数量。
+* 定义 MBOX 设备，用于发送通知其他 domain（或 CPU）已写入数据的信号。
+  确保其他 domain（或 CPU）能够接收该信号。
 
 .. caution::
 
-    确保
-    设置
-    正确
-    的
-    ``dcache-alignment``
-    value。
-    最初（错误
-    value
-    可能
-    不
-    显示
-    任何
-    signs（这
-    可能
-    给
-    一切
-    工作
-    的
-    错误
-    印象。
-    Unstable
-    behavior
-    迟早
-    会
-    出现。
+    请确保你设置了正确的 ``dcache-alignment`` 值。
+    起初，错误的值可能不会表现出任何征兆，这可能会给人一切正常的错误印象。
+    不稳定的行为迟早会出现。
 
-若
-用
-``dcache-alignment``（则
-blocks
-数量
-的
-configuration
-应
-仔细
-选择
-以
-避免
-memory
-的
-inefficient
-usage。
-这是因为
-blocks
-对齐
-到
-cache
-alignment（且
-若
-blocks
-数量
-非
-cache
-alignment 的
-multiple（最后
-block
-将
-不
-被
-高效
-使用。
-这是因为
-blocks
-和
-control
-data
-对齐
-到
-cache
-alignment。
-例如（若
-``dcache-alignment``
-为
-32（且
-一
-direction
-用
-1024
-bytes
-的
-shared
-memory。
-Control
-data
-占
-64
-bytes（且
-剩
-960
-bytes
-供
-buffers。
-用
-16
-blocks
-将
-导致
-每
-block
-32
-bytes（因
-cache
-alignment。
-用
-15
-blocks
-将
-导致
-每
-block
-64
-bytes（因
-cache
-alignment）（memory
-utilization
-好
-得多。
+如果使用 ``dcache-alignment``，则应仔细选择块数量的配置，以避免内存使用效率低下。
+这是因为块按缓存对齐方式对齐，如果块数量不是缓存对齐的倍数，则最后一个块将无法被高效使用。
+这是因为块和控制数据都按缓存对齐方式对齐。
+例如，如果 ``dcache-alignment`` 为 32，且一个方向使用 1024 字节共享内存。
+控制数据将占用 64 字节，剩余 960 字节用于缓冲区。
+使用 16 个块将导致每块 32 字节（由于缓存对齐）。
+使用 15 个块将导致每块 64 字节（由于缓存对齐），内存利用率要好得多。
 
 
-参见
-以下
-一
-instance
-的
-configuration
-示例：
+参见以下某个 instance 的配置示例：
 
 .. code-block:: devicetree
 
@@ -605,41 +110,14 @@ configuration
    };
 
 
-须
-为
-通信
-另一
-侧（domain
-或
-CPU）提供
-类似
-configuration。
-Swap
-MBOX
-channels、
-memory
-regions（``tx-region``
-和
-``rx-region``）及
-block
-count（``tx-blocks``
-和
-``rx-blocks``）。
+你必须为通信的另一方（domain 或 CPU）提供类似的配置。
+交换 MBOX 通道、内存区域（``tx-region`` 和 ``rx-region``）以及块数量（``tx-blocks`` 和 ``rx-blocks``）。
 
 Limitations
 ===========
 
-* 期望
-  通信
-  双方
-  相同
-  endianness。
-* 不
-  支持
-  检测
-  unexpected
-  remote
-  reset。
+* 预期通信双方的字节序（endianness）相同。
+* 不支持检测意外的远程重置。
 
 Samples
 =======
@@ -649,233 +127,66 @@ Samples
 Detailed Protocol Specification
 ===============================
 
-ICBMsg
-protocol
-用
-shared
-memory 上
-动态
-分配
-的
-blocks
-传输
-messages。
+ICBMsg 协议使用动态分配的共享内存块来传输消息。
 
 Shared Memory Organization
 --------------------------
 
-ICBMsg
-用
-两个
-shared
-memory
-regions：``rx-region``
-用于
-message
-receiving（``tx-region``
-用于
-message
-transmission。
-Regions
-不
-需
-相邻、
-按
-任何
-specific
-order
-放置
-或
-相同
-size。
-这些
-regions
-在
-每
-core
-上
-互换。
+ICBMsg 使用两个共享内存区域：``rx-region`` 用于接收消息，``tx-region`` 用于传输消息。
+这些区域不需要彼此相邻、按特定顺序放置或大小相同。
+这些区域在每个 core 上是互换的。
 
-每
-shared
-memory
-region
-分为
-以下
-两部分：
+每个共享内存区域被分为以下两部分：
 
-* **Control
-  area** - 保留
-  给
-  producer
-  和
-  consumer
-  queues 的
-  area。
-* **Blocks
-  area** - 包含
-  携带
-  messages
-  content 的
-  allocatable
-  blocks 的
-  area。
-  此
-  area
-  分为
-  对齐
-  到
-  cache
-  boundaries 的
-  even-sized
-  blocks。
+* **控制区** - 由生产者和消费者队列保留的区域。
+* **块区** - 包含承载消息内容的可分配块的区域。
+  该区域被分为大小相等、按缓存边界对齐的块。
 
-每
-area
-的
-location
-按
-cache
-boundary
-requirements
-计算（以
-允许
-optimal
-region
-usage。
-用
-以下
-algorithm
-计算：
+每个区域的位置经过计算，以满足缓存边界要求并实现区域的最优使用。
+使用以下算法进行计算：
 
-Inputs：
+输入：
 
-* ``region_begin``、``region_end`` -
-  Region
-  的
-  boundaries。
-* ``local_blocks`` -
-  此
-  region
-  中
-  blocks
-  数量。
-* ``remote_blocks`` -
-  相反
-  region
-  中
-  blocks
-  数量。
-* ``alignment`` -
-  Memory
-  cache
-  alignment。
+* ``region_begin``、``region_end`` - 区域的边界。
+* ``local_blocks`` - 该区域中的块数。
+* ``remote_blocks`` - 相对区域中的块数。
+* ``alignment`` - 内存缓存对齐值。
 
-Algorithm：
+算法：
 
-#. 将
-   region
-   boundaries
-   对齐
-   到
-   cache：
+#. 将区域边界对齐到缓存：
 
    * ``region_begin_aligned = ROUND_UP(region_begin, alignment)``
    * ``region_end_aligned = ROUND_DOWN(region_end, alignment)``
    * ``region_size_aligned = region_end_aligned - region_begin_aligned``
 
-#. 计算
-   control
-   area
-   所需
-   最小
-   size：
+#. 计算控制区所需的最小大小：
 
-   * 每
-     queue
-     有
-     :kconfig:option:`IPC_SERVICE_BACKEND_ICBMSG_MAX_ACTIVE_COUNT`
-     bytes
-     和
-     8
-     byte
-     queue
-     header。
-   * 通常
-     control
-     data
-     每
-     direction
-     占
-     少于
-     64
-     bytes。
+   * 每个队列有 :kconfig:option:`IPC_SERVICE_BACKEND_ICBMSG_MAX_ACTIVE_COUNT` 字节和 8 字节队列头。
+   * 通常每个方向的控制数据占用不到 64 字节。
 
-#. 计算
-   block
-   area
-   的
-   available
-   size。注意
-   因
-   block
-   alignment
-   实际
-   size
-   可能
-   更小：
+#. 计算块区的可用大小。注意，由于块对齐，实际大小可能更小：
 
    ``blocks_area_available_size = region_size_aligned - control_area``
 
-#. 计算
-   单个
-   block
-   size：
+#. 计算单个块的大小：
 
    ``block_size = ROUND_DOWN(blocks_area_available_size / local_blocks, alignment)``
 
-#. 计算
-   实际
-   block
-   area
-   size：
+#. 计算块区的实际大小：
 
    ``blocks_area_size = block_size * local_blocks``
 
-#. 计算
-   block
-   area
-   start
-   address：
+#. 计算块区的起始地址：
 
    ``blocks_area_begin = region_end_aligned - blocks_area_size``
 
-Result：
+结果：
 
-* ``region_begin_aligned`` -
-  ICMsg
-  area
-  的
-  start。
-* ``blocks_area_begin`` -
-  ICMsg
-  area
-  的
-  End
-  和
-  block
-  area
-  的
-  start。
-* ``block_size`` -
-  单个
-  block
-  size。
-* ``region_end_aligned`` -
-  blocks
-  area
-  的
-  End。
+* ``region_begin_aligned`` - ICMsg 区域的起始位置。
+* ``blocks_area_begin`` - ICMsg 区域的结束位置和块区的起始位置。
+* ``block_size`` - 单个块的大小。
+* ``region_end_aligned`` - 块区的结束位置。
 
 .. image:: icbmsg_memory.svg
    :align: center
@@ -885,175 +196,31 @@ Result：
 Message Transfer
 ----------------
 
-ICBMsg
-用
-以下
-两种
-message
-types：
+ICBMsg 使用以下两种类型的消息：
 
-* **Control
-  message** - 如
-  binding
-  或
-  unbinding 的
-  messages。
-* **Data
-  message** - 携带
-  实际
-  user
-  data 的
-  message。
+* **控制消息** - 如绑定或解绑之类的消息。
+* **数据消息** - 承载实际用户数据的消息。
 
-它们
-服务
-不同
-purposes（但
-lifetime
-和
-flow
-相同。
-以下
-steps
-描述
-它：
+它们服务于不同的目的，但其生命周期和流程相同。
+以下步骤描述了该流程：
 
-#. Sender
-   想
-   发送
-   含
-   ``K``
-   bytes 的
-   message。
-#. Sender
-   从其
-   ``tx-region``
-   blocks
-   area
-   保留
-   可
-   容纳
-   至少
-   ``K
-   +
-   4``
-   bytes 的
-   blocks。
-   额外
-   ``+
-   4``
-   bytes
-   保留
-   给
-   header。
-   Blocks
-   须
-   continuous（一个
-   接
-   一个）。
-   Sender
-   负责
-   block
-   allocation
-   management。
-   若
-   blocks
-   不
-   available（thread
-   context
-   可能
-   block（且
-   interrupt
-   context
-   返回
-   error。
-#. Sender
-   填入
-   header。
-#. Sender
-   用
-   其
-   data
-   填入
-   blocks
-   的
-   剩余
-   部分。
-   Unused
-   space
-   忽略。
-#. Sender
-   将
-   message
-   写入
-   producer
-   queue（并
-   发送
-   mailbox
-   signal。
-#. Receiver
-   在
-   mailbox
-   interrupt
-   context
-   中
-   执行
-   mailbox
-   callback（并
-   读取
-   producer
-   queue。
-#. Receiver
-   读取
-   block
-   index（并
-   在其
-   ``rx-region``
-   内
-   定位
-   message。
-#. Receiver
-   读取
-   endpoint
-   和
-   message
-   length（并
-   处理
-   message。
-#. Receiver
-   通过
-   将
-   其
-   block
-   index
-   写入
-   consumer
-   queue
-   消费
-   message。
-   不
-   发送
-   mailbox
-   signal。
-#. Sender
-   每次
-   sending
-   后
-   或
-   sending
-   失败
-   时
-   检查
-   consume
-   queue。
-   Messages
-   从
-   consumer
-   queue
-   读取（并
-   释放
-   到
-   pool。
+#. 发送方想要发送一条包含 ``K`` 字节的消息。
+#. 发送方从其 ``tx-region`` 块区中保留能够容纳至少 ``K + 4`` 字节的块。
+   额外的 ``+ 4`` 字节保留给头部。
+   块必须是连续的（一个接一个）。
+   发送方负责块分配管理。
+   如果没有可用块，则线程上下文可能阻塞，而中断上下文将返回错误。
+#. 发送方填充头部。
+#. 发送方用其数据填充块的剩余部分。
+   未使用的空间被忽略。
+#. 发送方将消息写入生产者队列并发送 mailbox 信号。
+#. 接收方在 mailbox 中断上下文中执行 mailbox 回调并读取生产者队列。
+#. 接收方读取块索引并在其 ``rx-region`` 中定位消息。
+#. 接收方读取 endpoint 和消息长度并处理该消息。
+#. 接收方通过将其块索引写入消费者队列来消费该消息。
+   不发送 mailbox 信号。
+#. 发送方在每次发送之后或发送失败时检查消费者队列。
+   消息从消费者队列中读取并释放回池中。
 
 .. image:: icbmsg_message.svg
    :align: center
@@ -1063,229 +230,36 @@ steps
 Binding Instances
 -----------------
 
-Backend
-instance
-open
-时
-发送
-bound
-message（其
-含
-64
-bit
-magic
-number。
-Mailbox
-callback
-启用（且
-instance
-等待
-bound
-message。
-接收
-bound
-message
-后（instance
-bind
-到
-remote
-instance（且
-endpoints
-可
-注册。
+当 backend instance 被打开时，它会发送一条包含 64 位 magic number 的 bound 消息。
+Mailbox 回调被启用，instance 等待 bound 消息。
+在收到 bound 消息后，instance 与远程 instance 绑定，然后可以注册 endpoints。
 
 Binding Endpoint
 ----------------
 
-Endpoint
-binding
-message
-含
-endpoint
-name 的
-SHA
-和
-endpoint
-ID（其
-为
-endpoint
-data 的
-local
-array
-中
-的
-index。
+endpoint 绑定消息包含 endpoint 名称的 SHA 和 endpoint ID，后者是 endpoint 数据所在本地数组中的索引。
 
-有
-两种
-可能
-scenarios：
+有两种可能的场景：
 
-* Remote
-  instance
-  在
-  endpoint
-  注册
-  前
-  发送
-  了
-  其
-  binding
-  message。
-* Endpoint
-  在
-  接收
-  remote
-  instance
-  的
-  binding
-  message
-  前
-  注册。
+* 远程 instance 在该 endpoint 注册之前发送了该 endpoint 的绑定消息。
+* 该 endpoint 在收到远程 instance 的绑定消息之前被注册。
 
-接收
-binding
-message
-时（SHA
-与
-endpoint
-data
-array
-中
-存储
-的
-SHA
-比较。
-若
-找到
-match（意味
-endpoint
-已
-被
-local
-instance
-注册。
-Endpoint
-ID
-存储
-在
-endpoint
-data
-中（且
-bound
-callback
-调用。
-若
-未
-找到
-match（则
-找到
-empty
-slot（且
-endpoint
-ID
-和
-SHA
-存储
-在
-available
-slot。
+当收到绑定消息时，SHA 与 endpoint 数据数组中存储的 SHA 进行比较。
+如果找到匹配，则意味着该 endpoint 已被本地 instance 注册。
+endpoint ID 存储在 endpoint 数据中，并调用 bound 回调。
+如果未找到匹配，则找到空槽位，并将 endpoint ID 和 SHA 存储在可用槽位中。
 
-Endpoint
-注册
-时（name
-的
-SHA
-计算（并
-与
-endpoint
-data
-array
-中
-存储
-的
-SHA
-比较。
-若
-找到
-match（意味
-该
-endpoint 的
-remote
-binding
-message
-已
-接收。
-此
-情况下（binding
-message
-发送
-给
-remote
-instance（且
-bound
-callback
-调用。
-若
-未
-找到
-match（则
-找到
-empty
-slot（且
-endpoint
-ID
-和
-SHA
-存储
-在
-available
-slot。
-Binding
-message
-发送
-给
-remote
-instance（但
-endpoints
-尚
-未
-bound。
+当 endpoint 被注册时，计算名称的 SHA 并与 endpoint 数据数组中存储的 SHA 进行比较。
+如果找到匹配，则意味着该 endpoint 的远程绑定消息已收到。
+在这种情况下，向远程 instance 发送绑定消息并调用 bound 回调。
+如果未找到匹配，则找到空槽位，并将 endpoint ID 和 SHA 存储在可用槽位中。
+向远程 instance 发送绑定消息，但 endpoints 尚未绑定。
 
-稍后（remote
-endpoint
-ID
-用于
-data
-message
-以
-识别
-endpoint。
+稍后，远程 endpoint ID 用于数据消息以标识该 endpoint。
 
 Unbinding Endpoint
 ------------------
 
-Endpoint
-unregister
-时
-发送
-unbinding
-control
-message。
-Endpoint
-从
-endpoint
-data
-array
-移除。
-接收
-unbinding
-message
-时（endpoint
-slot
-标记
-为
-empty（且
-unbinding
-callback
-调用。
+当 endpoint 被注销时，会发送一条 unbinding 控制消息。
+该 endpoint 从 endpoint 数据数组中移除。
+当收到 unbinding 消息时，endpoint 槽位被标记为空，并调用 unbinding 回调。

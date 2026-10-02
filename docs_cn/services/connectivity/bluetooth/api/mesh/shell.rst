@@ -1,192 +1,187 @@
 .. _bluetooth_mesh_shell:
 
-Bluetooth
-Mesh
-Shell
+Bluetooth Mesh Shell
 ####################
 
-Bluetooth
-Mesh
-shell
-subsystem
-为
-:ref:`shell_api`
-module
-提供
-一
-组
-Bluetooth
-Mesh
-shell
-commands。
-它
-允许
-通过
-interactive
-interface
-测试
-和
-explore
-Bluetooth
-Mesh
-API
-而
-不
-需要
-写
-一
-个
-application。
+The Bluetooth Mesh shell subsystem provides a set of Bluetooth Mesh shell commands for the
+:ref:`shell_api` module. It allows for testing and exploring the Bluetooth Mesh API through an
+interactive interface, without having to write an application.
 
-Bluetooth
-Mesh
-shell
-interface
-提供
-对
-大多数
-Bluetooth
-Mesh
-features
-的
-access
-包括
-provisioning、
-configuration、
-和
-message
-sending。
+The Bluetooth Mesh shell interface provides access to most Bluetooth Mesh features, including
+provisioning, configuration, and message sending.
 
 Prerequisites
 *************
 
-Bluetooth
-Mesh
-shell
-subsystem
-依赖
-application
-创建
-composition
-data
-并
-做
-mesh
-initialization。
+The Bluetooth Mesh shell subsystem depends on the application to create the composition data and do
+the mesh initialization.
 
 Application
 ***********
 
-Bluetooth
-Mesh
-shell
-subsystem
-最
-容易
-通过
-``tests/bluetooth/mesh_shell``
-下
-的
-Bluetooth
-Mesh
-shell
-application
-使用。
-参考
-:ref:`shell_api`
-获取
-如何
-connect
-和
-与
-Bluetooth
-Mesh
-shell
-application
-交互
-的
-information。
+The Bluetooth Mesh shell subsystem is most easily used through the Bluetooth Mesh shell application
+under ``tests/bluetooth/mesh_shell``. See :ref:`shell_api` for information on how to connect and
+interact with the Bluetooth Mesh shell application.
 
-Basic
-usage
+Basic usage
 ***********
 
-Bluetooth
-Mesh
-shell
-subsystem
-添加
-单
-个
-``mesh``
-command
-它
-hold
-一
-组
-sub
-commands。
-每
-次
-device
-boot
-up
-时
-确保
-在
-调用
-其他
-Bluetooth
-Mesh
-shell
-commands
-之前
-调用
-``mesh
-init``::
+The Bluetooth Mesh shell subsystem adds a single ``mesh`` command, which holds a set of
+sub-commands. Every time the device boots up, make sure to call ``mesh init`` before any of the
+other Bluetooth Mesh shell commands can be called::
 
-   uart:~$
-   mesh
-   init
+	uart:~$ mesh init
 
-这
-是
-为
-了
-确保
-所有
-可用
-的
-log
-都
-被
-printed
-到
-shell
-output。
+This is done to ensure that all available log will be printed to the shell output.
 
 Provisioning
-================
+============
 
-Mesh
-node
-必须
-被
-provisioned
-才能
-成为
-network
-的
-部分。
-这
-只
-在
-first
+The mesh node must be provisioned to become part of the network. This is only necessary the first
+time the device boots up, as the device will remember its provisioning data between reboots.
 
+The simplest way to provision the device is through self-provisioning. To do this the user must
+provision the device with the default network key and address ``0x0001``, execute::
+
+	uart:~$ mesh prov local 0 0x0001
+
+Since all mesh nodes use the same values for the default network key, this can be done on multiple
+devices, as long as they're assigned non-overlapping unicast addresses. Alternatively, to provision
+the device into an existing network, the unprovisioned beacon can be enabled with
+``mesh prov pb-adv on`` or ``mesh prov pb-gatt on``. The beacons can be picked up by an external
+provisioner, which can provision the node into its network.
+
+Once the mesh node is part of a network, its transmission parameters can be controlled by the
+general configuration commands:
+
+* To set the destination address, call ``mesh target dst <Addr>``.
+* To set the network key index, call ``mesh target net <NetKeyIdx>``.
+* To set the application key index, call ``mesh target app <AppKeyIdx>``.
+
+By default, the transmission parameters are set to send messages to the provisioned address and
+network key.
+
+Configuration
+=============
+
+By setting the destination address to the local unicast address (``0x0001`` in the
+``mesh prov local`` command above), we can perform self-configuration through any of the
+:ref:`bluetooth_mesh_shell_cfg_cli` commands.
+
+A good first step is to read out the node's own composition data::
+
+	uart:~$ mesh models cfg get-comp
+
+This prints a list of the composition data of the node, including a list of its model IDs.
+
+Next, since the device has no application keys by default, it's a good idea to add one::
+
+	uart:~$ mesh models cfg appkey add 0 0
+
+Message sending
+===============
+
+With an application key added (see above), the mesh node's transition parameters are all valid, and
+the Bluetooth Mesh shell can send raw mesh messages through the network.
+
+For example, to send a Generic OnOff Set message, call::
+
+	uart:~$ mesh test net-send 82020100
 
 .. note::
+	All multibyte fields model messages are in little endian, except the opcode.
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+The message will be sent to the current destination address, using the current network and
+application key indexes. As the destination address points to the local unicast address by default,
+the device will only send packets to itself. To change the destination address to the All Nodes
+broadcast address, call::
+
+	uart:~$ mesh target dst 0xffff
+
+With the destination address set to ``0xffff``, any other mesh nodes in the network with the
+configured network and application keys will receive and process the messages we send.
+
+.. note::
+	To change the configuration of the device, the destination address must be set back to the
+	local unicast address before issuing any configuration commands.
+
+Sending raw mesh packets is a good way to test model message handler implementations during
+development, as it can be done without having to implement the sending model. By default, only the
+reception of the model messages can be tested this way, as the Bluetooth Mesh shell only includes
+the foundation models. To receive a packet in the mesh node, you have to add a model with a valid
+opcode handler list to the composition data in ``subsys/bluetooth/mesh/shell.c``, and print the
+incoming message to the shell in the handler callback.
+
+Parameter formats
+*****************
+
+The Bluetooth Mesh shell commands are parsed with a variety of formats:
+
+.. list-table:: Parameter formats
+	:widths: 1 4 2
+	:header-rows: 1
+
+	* - Type
+	  - Description
+	  - Example
+	* - Integers
+	  - The default format unless something else is specified. Can be either decimal or
+	    hexadecimal.
+	  - ``1234``, ``0xabcd01234``
+	* - Hexstrings
+	  - For raw byte arrays, like UUIDs, key values and message payloads, the parameters should
+	    be formatted as an unbroken string of hexadecimal values without any prefix.
+	  - ``deadbeef01234``
+	* - Booleans
+	  - Boolean values are denoted in the API documentation as ``<val(off, on)>``.
+	  - ``on``, ``off``, ``enabled``, ``disabled``, ``1``, ``0``
+
+Commands
+********
+
+The Bluetooth Mesh shell implements a large set of commands. Some of the commands accept parameters,
+which are mentioned in brackets after the command name. For example,
+``mesh lpn set <value: off, on>``. Mandatory parameters are marked with angle brackets (e.g.
+``<NetKeyIdx>``), and optional parameters are marked with square brackets (e.g. ``[DstAddr]``).
+
+The Bluetooth Mesh shell commands are divided into the following groups:
+
+.. contents::
+	:depth: 1
+	:local:
+
+.. note::
+	Some commands depend on specific features being enabled in the compile time configuration of
+	the application. Not all features are enabled by default. The list of available Bluetooth
+	mesh shell commands can be shown in the shell by calling ``mesh`` without any arguments.
+
+General configuration
+=====================
+
+``mesh init``
+-------------
+
+	Initialize the mesh shell. This command must be run before any other mesh command.
+
+``mesh reset-local``
+--------------------
+
+	Reset the local mesh node to its initial unprovisioned state. This command will also clear
+	the Configuration Database (CDB) if present.
+
+Target
+======
+
+The target commands enables the user to monitor and set the target destination address, network
+index and application index for the shell. These parameters are used by several commands, like
+provisioning, Configuration Client, etc.
+
+``mesh target dst [DstAddr]``
+-----------------------------
+
+	Get or set the message destination address. The destination address determines where mesh
+	packets are sent with the shell, but has no effect on modules outside the shell's control.
+
 	* ``DstAddr``: If present, sets the new 16-bit mesh destination address. If omitted, the current destination address is printed.
 
 

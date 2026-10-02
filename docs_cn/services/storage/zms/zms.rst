@@ -1,314 +1,329 @@
 .. _zms_api:
 
-Zephyr
-Memory
-Storage
-（ZMS）
+Zephyr Memory Storage (ZMS)
 ###########################
 
-Zephyr
-Memory
-Storage
-是
-一
-个
-new
-的
-key
-value
-storage
-system
-它
-designed
-用于
-与
-所有
-types
-的
-non
-volatile
-storage
-technologies
-work。
-它
-support
-classical
-的
-on
-chip
-NOR
-flash
-以及
-new
-的
-technologies
-like
-RRAM
-和
-MRAM
-它们
-根本
-不
-require
-separate
-的
-erase
-operation
-也就是说
-这些
-types
-的
-devices
-上
-的
-data
-可以
-directly
-被
-overwritten
-at
-any
-time。
+Zephyr Memory Storage is a new key-value storage system that is designed to work with all types
+of non-volatile storage technologies. It supports classical on-chip NOR flash as well as new
+technologies like RRAM and MRAM that do not require a separate erase operation at all, that is,
+data on these types of devices can be overwritten directly at any time.
 
-General
-behavior
+General behavior
 ****************
 
-ZMS
-将
-memory
-space
-divided
-成
-sectors
-（minimum
-2）
-且
-每个
-sector
-被
-filled
-with
-key
-value
-pairs
-直到
-它
-full。
+ZMS divides the memory space into sectors (minimum 2), and each sector is filled with key-value
+pairs until it is full.
 
-Key
-value
-pair
-被
-divided
-成
-two
-parts：
+The key-value pair is divided into two parts:
 
--
-Key
-part
-被
-written
-在
-一
-个
-ATE
-（Allocation
-Table
-Entry）
-called
-"ID
-ATE"
-中
-它
-stored
-从
-sector
-的
-bottom
-start。
--
-Value
-part
-被
-defined
-作为
-"data"
-且
-被
-stored
-raw
-从
-sector
-的
-top
-start。
+- The key part is written in an ATE (Allocation Table Entry) called "ID-ATE" which is stored
+  starting from the bottom of the sector.
+- The value part is defined as "data" and is stored raw starting from the top of the sector.
 
-Additionally
-对
-每个
-sector
-我们
-stored
-在
-last
-的
-positions
-的
-header
-ATEs
-它们
-是
-ATEs
-用于
-sector
-describe
-它
-的
-status
-（closed、
-open）
-和
-当前
-的
-ZMS
-version
-所需
-的。
+Additionally, for each sector we store at the last positions header ATEs which are ATEs that
+are needed for the sector to describe its status (closed, open) and the current version of ZMS.
 
-当
-current
-的
-sector
-full
-时
-我们
-first
-verify
-following
-的
-sector
-是
-empty
-的
-我们
-garbage
-collect
-sector
-N+2
-（那里
-N
-是
-current
-的
-sector
-number）
-通过
-将
-valid
-的
-ATEs
-move
-到
-N+1
-的
-empty
-sector
-我们
-erase
-garbage
-collected
-的
-sector
-然后
-我们
-close
-current
-的
-sector
-通过
-writing
-一
-个
-garbage_collect_done
-ATE
-和
-close
-ATE
-（header
-entries
-之一）。
-Afterwards
-我们
-move
-forward
-到
-next
-的
-sector
-并
-start
-writing
-entries
-again。
+When the current sector is full we verify first that the following sector is empty, we garbage
+collect the sector N+2 (where N is the current sector number) by moving the valid ATEs to the
+N+1 empty sector, we erase the garbage-collected sector and then we close the current sector by
+writing a garbage_collect_done ATE and the close ATE (one of the header entries).
+Afterwards we move forward to the next sector and start writing entries again.
 
-这
-个
-behavior
-被
-repeated
-直到
-它
-reaches
-partition
-的
-end。
-然后
-它
-从
-first
-个
-sector
-start
-again
-在
-garbage
-collect
-它
-并
-erase
-它
-的
-content
-之后。
+This behavior is repeated until it reaches the end of the partition. Then it starts again from
+the first sector after garbage collecting it and erasing its content.
 
-Composition
-of
-a
-sector
+Composition of a sector
 =======================
 
-一
-个
-sector
-被
-organized
-成
-这
-个
-form
-（example
-带
-3
-sectors）：
+A sector is organized in this form (example with 3 sectors):
 
 .. list-table::
+   :widths: 25 25 25
+   :header-rows: 1
 
+   * - Sector 0 (closed)
+     - Sector 1 (open)
+     - Sector 2 (empty)
+   * - Data_a0
+     - Data_b0
+     - Data_c0
+   * - Data_a1
+     - Data_b1
+     - Data_c1
+   * - Data_a2
+     - Data_b2
+     - Data_c2
+   * - GC_done
+     -    .
+     -    .
+   * -    .
+     -    .
+     -    .
+   * -    .
+     -    .
+     -    .
+   * -    .
+     - ID ATE_b2
+     - ID ATE_c2
+   * - ID ATE_a2
+     - ID ATE_b1
+     - ID ATE_c1
+   * - ID ATE_a1
+     - ID ATE_b0
+     - ID ATE_c0
+   * - ID ATE_a0
+     - GC_done ATE
+     - GC_done ATE
+   * - Close ATE (cyc=1)
+     - Close ATE (cyc=1)
+     - Close ATE (cyc=1)
+   * - Empty ATE (cyc=1)
+     - Empty ATE (cyc=2)
+     - Empty ATE (cyc=2)
 
-.. note::
+Definition of each element in the sector
+========================================
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+``Empty ATE`` is written when erasing a sector (last position of the sector).
+
+``Close ATE`` is written when closing a sector (second to last position of the sector).
+
+``GC_done ATE`` is written to indicate that the next sector has already been garbage-collected.
+This ATE could be at any position of the sector.
+
+``ID ATE`` contains a key of type :c:type:`zms_id_t` and describes where the data is stored, its
+size and its CRC32.
+
+``Data`` is the actual value associated to the ID-ATE.
+
+How does ZMS work?
+******************
+
+Mounting the storage system
+===========================
+
+Mounting the storage system starts by getting the flash parameters, checking that the file system
+properties are correct (sector_size, sector_count ...) then calling the zms_init function to
+make the storage ready.
+
+By default, :c:func:`zms_mount` returns an error if the partition cannot be mounted.
+For recovery-oriented use cases, :c:func:`zms_mount_force` can be used to automatically
+wipe and reinitialize the partition when the first mount attempt fails.
+
+Mount flags
+-----------
+
+ZMS mount behavior can be controlled with optional flags in ``zms_fs.mount_flags``.
+
+- Default behavior (no optional flags set, ``mount_flags = 0``): if the partition is erased and no valid
+  ZMS header is found, :c:func:`zms_mount` formats the partition by creating the
+  initial ZMS header.
+- ``ZMS_MOUNT_FLAG_NO_FORMAT``: if the partition is erased and no valid ZMS
+  header is found, :c:func:`zms_mount` does not format the partition and returns
+  ``-ENOTSUP``.
+
+To mount the filesystem the following elements in the :c:struct:`zms_fs` structure must be initialized:
+
+.. code-block:: c
+
+	struct zms_fs {
+		/** File system offset in flash **/
+		off_t offset;
+
+		/** Storage system is split into sectors, each sector size must be multiple of
+		 * erase-blocks if the device has erase capabilities
+		 */
+		uint32_t sector_size;
+		/** Number of sectors in the file system */
+		uint32_t sector_count;
+
+		/** Optional mount behavior flags (enum zms_mount_flags) */
+		uint32_t mount_flags;
+
+		/** Flash device runtime structure */
+		const struct device *flash_device;
+	};
+
+Initialization
+==============
+
+As ZMS has a fast-forward write mechanism, it must find the last sector and the last pointer of
+the entry where it stopped the last time.
+It must look for a closed sector followed by an open one, then within the open sector, it finds
+(recovers) the last written ATE.
+After that, it checks that the sector after this one is empty, or it will erase it.
+
+ZMS ID/data write
+=================
+
+To avoid rewriting the same data with the same ID again, ZMS must look in all the sectors if the
+same ID exists and then compares its data. If the data is identical, no write is performed.
+If it must perform a write, then an ATE and the data (if the operation is not a delete) are written
+in the sector.
+If the sector is full (cannot hold the current data + ATE), ZMS has to move to the next sector,
+garbage collect the sector after the newly opened one then erase it.
+
+ZMS ID/data read (with history)
+===============================
+
+By default ZMS looks for the last data with the same ID by browsing through all stored ATEs from
+the most recent ones to the oldest ones. If it finds a valid ATE with a matching ID it retrieves
+its data and returns the number of bytes that were read.
+If a history count is provided and different than 0, older data with same ID is retrieved.
+
+ZMS entry enumeration (iterator API)
+====================================
+
+Applications can enumerate stored entries without supplying a predefined list of IDs.
+This is useful when IDs are derived from payload data (for example packed addresses) and the
+application does not keep a separate index in flash.
+
+This API family is generally used at boot, when the application rebuilds its in-memory state from
+the ID/length metadata persisted in ZMS.
+
+The iterator API consists of:
+
+- :c:func:`zms_iter_init` to initialize iterator state.
+- :c:func:`zms_iter_init_with_config` to initialize iterator state with optional ID mask and
+  inclusive ID range and predicate filters.
+- :c:func:`zms_iter_next` to retrieve one live entry (unique ID) at a time.
+- :c:func:`zms_iter_next_all` to retrieve all matching entries (full history, including delete markers).
+
+Choosing between :c:func:`zms_iter_next` and :c:func:`zms_iter_next_all`
+--------------------------------------------------------------------------
+
+- :c:func:`zms_iter_next` returns unique live ``(id, len)`` pairs:
+
+  - Sector/header entries are skipped.
+  - Delete markers (entries with ``len == 0``) are skipped.
+  - If the same ID appears multiple times in storage history, only the newest valid occurrence is
+    returned.
+  - To guarantee uniqueness, ZMS checks for newer entries of each candidate ID, which can require
+    additional scanning.
+
+- :c:func:`zms_iter_next_all` is faster and returns all matching ``(id, len)`` pairs as encountered:
+
+  - Historical entries for the same ID are returned.
+  - Delete markers (entries with ``len == 0``) are returned.
+  - No uniqueness filtering is performed.
+  - The application is responsible for filtering/compacting the returned pairs according to its
+    own policy.
+
+  Use :c:func:`zms_iter_init_with_config` when you want to enumerate only IDs matching a bitmask,
+  a specific inclusive ID range, a predicate callback, or any combination of those filters.
+
+Iterator return values
+----------------------
+
+Calling either :c:func:`zms_iter_next` or :c:func:`zms_iter_next_all` returns:
+
+- ``1`` when an entry is found; output arguments contain ID and data length.
+- ``0`` when there are no more entries to enumerate.
+- Negative errno on error (for example ``-EINVAL``, ``-EIO``, ``-ENXIO``).
+
+The iterator always reports metadata (ID and length). In addition, when the caller provides a
+non-NULL ``data`` buffer, the iterator also copies the entry's content directly into it, but
+only for entries small enough to be stored inside the ATE. For larger entries, or when no
+buffer is provided, the data must be read explicitly using :c:func:`zms_read` for the latest
+value, or :c:func:`zms_read_hist` for older revisions.
+
+.. _zms_iterator_concurrency:
+
+Concurrency and snapshot behavior
+---------------------------------
+
+The iterator captures a traversal boundary when :c:func:`zms_iter_init` is called.
+Entries written after initialization are not part of that traversal.
+
+Do not call :c:func:`zms_write` (including delete operations) on the same :c:struct:`zms_fs`
+between two iterator-step calls (:c:func:`zms_iter_next` or :c:func:`zms_iter_next_all`).
+If a write triggers garbage collection while iterating, iterator behavior is undefined.
+This rule applies to the thread doing the iteration regardless of locking: taking the lock
+described below only keeps *other* threads from writing during the traversal.
+
+Locking out concurrent writers
+------------------------------
+
+:c:struct:`zms_fs` exposes its internal write lock as a plain ``struct k_mutex zms_lock``
+field. :c:func:`zms_write` and :c:func:`zms_delete` take this mutex internally for the
+duration of the write. An application with multiple threads sharing the same
+:c:struct:`zms_fs` can hold this same mutex across an entire iteration to block writes
+from *other* threads for as long as the traversal boundary must stay valid:
+
+.. code-block:: c
+
+  k_mutex_lock(&fs.zms_lock, K_FOREVER);
+
+  rc = zms_iter_init(&fs, &iter);
+  /* ... */
+
+  while ((rc = zms_iter_next(&fs, &iter, &id, &len, NULL, 0)) == 1) {
+    /* ... */
+  }
+
+  k_mutex_unlock(&fs.zms_lock);
+
+Usage example
+-------------
+
+.. code-block:: c
+
+  struct zms_iter iter;
+  bool predicate_id_not_2(zms_id_t id)
+  {
+    return id != (zms_id_t)2;
+  }
+
+  struct zms_iter_config iter_config = {
+    .mask_id = (zms_id_t)0x03,
+    .min_id = (zms_id_t)0x01,
+    .max_id = (zms_id_t)0x03,
+    .use_mask = true,
+    .use_range = true,
+    .use_predicate = true,
+    .predicate_func = predicate_id_not_2,
+  };
+  zms_id_t id;
+  size_t len;
+  uint8_t data[ZMS_DATA_IN_ATE_SIZE];
+  int rc;
+
+  /* Block writes from other threads for the duration of the traversal. */
+  k_mutex_lock(&fs.zms_lock, K_FOREVER);
+
+  rc = zms_iter_init_with_config(&fs, &iter, &iter_config);
+  if (rc) {
+    /* handle error */
+  }
+
+  while ((rc = zms_iter_next(&fs, &iter, &id, &len, data, sizeof(data))) == 1) {
+    /* id: entry ID matching configured mask/range/predicate, len: current stored size */
+    /* data: filled with the entry's content when it is small enough to be
+     * stored directly inside the ATE; otherwise left untouched, in which case
+     * zms_read() must be used to fetch it.
+     */
+    printk("id=0x%llx len=%zu\n", (unsigned long long)id, len);
+  }
+
+  k_mutex_unlock(&fs.zms_lock);
+
+  if (rc < 0) {
+    /* handle iterator error */
+  }
+
+The optional ``data``/``data_len`` arguments can be set to ``NULL``/``0`` when only the
+``(id, len)`` pairs are needed. When a buffer is provided, only the data that ZMS stores
+directly inside the ATE is copied; larger entries must still be retrieved with
+:c:func:`zms_read`.
+
+Zero-initialize :c:struct:`zms_iter_config` or leave ``use_mask``, ``use_range``, and
+``use_predicate`` disabled to keep the default behavior: accept all IDs and the full
+``zms_id_t`` range.
+
+To determine how many revisions exist for an ID returned by the iterator,
+call :c:func:`zms_read_hist` with increasing ``cnt`` until ``-ENOENT`` is returned.
+
+ZMS free space calculation
 ==========================
 
 ZMS can also return the free space remaining in the partition.

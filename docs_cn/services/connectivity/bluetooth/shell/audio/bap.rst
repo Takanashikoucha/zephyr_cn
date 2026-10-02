@@ -1,141 +1,138 @@
 .. _bluetooth_shell_audio:
 
-Bluetooth:
-Basic
-Audio
-Profile
-Shell
+Bluetooth: Basic Audio Profile Shell
 ####################################
 
-这
-document
-describe
-如何
-运行
-Basic
-Audio
-Profile
-functionality
-它
-包括：
+This document describes how to run Basic Audio Profile functionality which
+includes:
 
-   -
-   Capabilities
-   and
-   Endpoint
-   discovery
-   -
-   Audio
-   Stream
-   Endpoint
-   procedures
+  - Capabilities and Endpoint discovery
+  - Audio Stream Endpoint procedures
 
 Commands
 ********
 
-.. code-block::
-   console
+.. code-block:: console
 
-   bap
-   --help
+   bap --help
    Subcommands:
-      init
-                   :
-      [ase_sink_count,
-      ase_source_count]
-      select_broadcast
-       :
-      <stream>
-      create_broadcast
-       :
-      [preset
-      <preset_name>]
-      [enc
-      <broadcast_code>]
-      start_broadcast
-       :
-      stop_broadcast
-       :
-      delete_broadcast
-       :
-      create_broadcast_sink
-      :
-      0x<broadcast_id>
-      create_sink_by_name
-    :
-      <broadcast_name>
-      sync_broadcast
-       :
-      0x<bis_index>
-      [[[0x<bis_index>]
-      0x<bis_index>]
-      ...]
-                          [bcode
-      <broadcast
-      code>
-      ||
-      bcode_str
-      <broadcast
-      code
-      as
-      string>]
-      stop_broadcast_sink
-    :
-      Stops
-      broadcast
-      sink
-      term_broadcast_sink
-    :
-      discover
-               :
-      [dir:
-      sink,
-      source]
-      config
-                 :
-      <direction:
-      sink,
-      source>
-      <index>
-      [loc
-      <loc_bits>]
-                          [preset
-      <preset_name>]
-      stream_qos
-             :
-      interval
-      [framing]
-      [latency]
-      [pd]
-      [sdu]
-      [phy]
-      [rtn]
-      qos
-                    :
-      Send
-      QoS
-      configure
-      for
-      Unicast
-      Group
-      enable
-                 :
-      [context]
-      connect
-              :
-      Connect
-      the
-      CIS
-      of
-      the
-      stream
+      init                   : [ase_sink_count, ase_source_count]
+      select_broadcast       : <stream>
+      create_broadcast       : [preset <preset_name>] [enc <broadcast_code>]
+      start_broadcast        :
+      stop_broadcast         :
+      delete_broadcast       :
+      create_broadcast_sink  : 0x<broadcast_id>
+      create_sink_by_name    : <broadcast_name>
+      sync_broadcast         : 0x<bis_index> [[[0x<bis_index>] 0x<bis_index>] ...]
+                              [bcode <broadcast code> || bcode_str <broadcast code
+                              as string>]
+      stop_broadcast_sink    : Stops broadcast sink
+      term_broadcast_sink    :
+      discover               : [dir: sink, source]
+      config                 : <direction: sink, source> <index> [loc <loc_bits>]
+                              [preset <preset_name>]
+      stream_qos             : interval [framing] [latency] [pd] [sdu] [phy] [rtn]
+      qos                    : Send QoS configure for Unicast Group
+      enable                 : [context]
+      connect                : Connect the CIS of the stream
       stop
       list
+      print_ase_info         : Print ASE info for default connection
+      metadata               : [context]
+      start
+      disable
+      release
+      select_unicast         : <stream>
+      preset                 : <sink, source, broadcast> [preset]
+                              [config
+                                    [freq <frequency>]
+                                    [dur <duration>]
+                                    [chan_alloc <location>]
+                                    [frame_len <frame length>]
+                                    [frame_blks <frame blocks>]]
+                              [meta
+                                    [pref_ctx <context>]
+                                    [stream_ctx <context>]
+                                    [program_info <program info>]
+                                    [lang <ISO 639-3 lang>]
+                                    [ccid_list <ccids>]
+                                    [parental_rating <rating>]
+                                    [program_info_uri <URI>]
+                                    [audio_active_state <state>]
+                                    [bcast_flag]
+                                    [extended <meta>]
+                                    [vendor <meta>]]
+      send                   : Send to Audio Stream [data]
+      stats                  : Sets or gets the statistics reporting interval in # of
+                              packets (set 0 to disable)
+      set_location           : <direction: sink, source> <location bitmask>
+      set_context            : <direction: sink, source><context bitmask> <type:
+                              supported, available>
 
 
-.. note::
+.. csv-table:: State Machine Transitions
+   :header: "Command", "Depends", "Allowed States", "Next States"
+   :widths: auto
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+   "init","none","any","none"
+   "discover","init","any","any"
+   "config","discover","idle/codec-configured/qos-configured","codec-configured"
+   "qos","config","codec-configured/qos-configured","qos-configured"
+   "enable","qos","qos-configured","enabling"
+   "connect","qos/enable","qos-configured/enabling","qos-configured/enabling"
+   "[start]","enable/connect","enabling","streaming"
+   "disable","enable", "enabling/streaming","disabling"
+   "[stop]","disable","disabling","qos-configure/idle"
+   "release","config","any","releasing/codec-configure/idle"
+   "list","none","any","none"
+   "select_unicast","none","any","none"
+   "send","enable","streaming","none"
+
+Example Central
+***************
+
+Connect and establish a sink stream:
+
+.. code-block:: console
+
+   uart:~$ bt init
+   uart:~$ bap init
+   uart:~$ bt connect <address>
+   uart:~$ gatt exchange-mtu
+   uart:~$ bap discover sink
+   uart:~$ bap config sink 0
+   uart:~$ bap qos
+   uart:~$ bap enable
+   uart:~$ bap connect
+
+Connect and establish a source stream:
+
+.. code-block:: console
+
+   uart:~$ bt init
+   uart:~$ bap init
+   uart:~$ bt connect <address>
+   uart:~$ gatt exchange-mtu
+   uart:~$ bap discover source
+   uart:~$ bap config source 0
+   uart:~$ bap qos
+   uart:~$ bap enable
+   uart:~$ bap connect
+   uart:~$ bap start
+
+Disconnect and release:
+
+.. code-block:: console
+
+   uart:~$ bap disable
+   uart:~$ bap release
+
+Example Peripheral
+******************
+
+Listen:
+
 .. code-block:: console
 
    uart:~$ bt init

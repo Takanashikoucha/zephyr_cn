@@ -92,16 +92,16 @@ CMake 如下打印输入和输出文件位置：
 
 .. code-block:: c
 
-   /* 选项 1：按节点标签 */
+   /* Option 1: by node label */
    #define MY_SERIAL DT_NODELABEL(serial0)
 
-   /* 选项 2：按别名 */
+   /* Option 2: by alias */
    #define MY_SERIAL DT_ALIAS(my_serial)
 
-   /* 选项 3：按 chosen 节点 */
+   /* Option 3: by chosen node */
    #define MY_SERIAL DT_CHOSEN(zephyr_console)
 
-   /* 选项 4：按路径 */
+   /* Option 4: by path */
    #define MY_SERIAL DT_PATH(soc, serial_40002000)
 
 有了节点标识符后，有两种方式继续。
@@ -184,12 +184,8 @@ shell 应用中的用户输入。在这种情况下，
 很可能意味着设备的
 初始化函数失败。启用日志记录
 或调试驱动代码可能有助于此类情况。
-注意你还可以使用 :c:func:`device_get_binding`
-在运行时获取引用。
-如果返回 ``NULL``，
-可能意味着
-该设备的驱动初始化失败或
-该设备不存在。
+注意你还可以使用 :c:func:`device_get_binding` 在运行时获取引用。
+如果返回 ``NULL``，可能意味着该设备的驱动初始化失败或该设备不存在。
 
 .. _dts-find-binding:
 
@@ -388,7 +384,7 @@ Chosen 节点工作方式相同。例如：
 
 .. code-block:: devicetree
 
-   /* SPI 设备示例 */
+   /* SPI device example */
    &spi1 {
    	my_spi_device: temp-sensor@0 {
    		compatible = "...";
@@ -403,7 +399,7 @@ Chosen 节点工作方式相同。例如：
    	};
    };
 
-   /* I2C 设备示例 */
+   /* I2C device example */
    &i2c2 {
    	my_i2c_device: touchscreen@76 {
    		compatible = "...";
@@ -478,10 +474,7 @@ Chosen 节点工作方式相同。例如：
   属性中的值。这允许用户使用
   :ref:`设备树覆盖 <use-dt-overlays>` 配置驱动。
 
-如何做到此点的示例如下。
-假设你已实现
-设备特定的配置和数据结构
-及 API 函数，如下所示：
+如何做到此点的示例如下。假设你已实现设备特定的配置和数据结构及 API 函数，如下所示：
 
 .. code-block:: c
 
@@ -731,13 +724,8 @@ API 访问设备树节点数据。
 依赖开发板特定设备的应用
 **************************************************
 
-允许应用代码
-在多个开发板上不做修改运行的
-一种方式是
-支持设备树别名
-来指定硬件特定部分，
-如 :zephyr:code-sample:`blinky` 示例
-所做的那样。
+允许应用代码在多个开发板上不做修改运行的一种方式是支持设备树别名来指定硬件特定部分，
+如 :zephyr:code-sample:`blinky` 示例所做的那样。
 然后应用可以在
 :ref:`BOARD.dts <devicetree-in-out-files>` 文件中
 或通过 :ref:`设备树

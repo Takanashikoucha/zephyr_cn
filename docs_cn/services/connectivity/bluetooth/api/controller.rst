@@ -1,13 +1,10 @@
 .. _bluetooth_controller:
 
-Bluetooth
-Controller
+蓝牙控制器
 ####################
 
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   bt_ctrl
+.. doxygengroup:: bt_ctrl

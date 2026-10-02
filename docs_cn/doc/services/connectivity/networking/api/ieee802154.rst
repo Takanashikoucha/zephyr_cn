@@ -1,0 +1,163 @@
+.. _ieee802154_interface:
+
+IEEE 802.15.4
+#############
+
+.. contents::
+    :local:
+    :depth: 2
+
+简介
+****
+
+IEEE 802.15.4 是一项技术标准，定义了低速率无线个人局域网（LR-WPAN）的运行方式。有关该标准的更详细说明，请参阅 `IEEE 802.15.4 维基百科文章
+<https://en.wikipedia.org/wiki/IEEE_802.15.4>`_。
+
+该标准的最新版本可通过 `IEEE GET 计划
+<https://ieeexplore.ieee.org/browse/standards/get-program/page/series?id=68>`_ 获取。
+您需要创建一个免费的 IEEE 账户，然后即可下载。
+
+目前我们遵循 IEEE 802.15.4-2020 规范。该版本与 IEEE 802.15.4-2015 向后兼容，Thread 协议栈中包含了 2015 版本的部分内容。2020 版本还包含此前已纳入标准的扩展，即 IEEE 802.15.4g（SUN FSK）和 IEEE 802.15.4e（TSCH），它们与工业物联网和自动化相关。有关 UWB 测距技术的最新进展，请参阅 IEEE 802.15.4z，该扩展尚未纳入标准主线。
+
+文档中引用标准的章节时，均指 IEEE 802.15.4-2020 的章节、表格和图编号——除非另有说明。
+
+Zephyr 同时支持原生 IEEE 802.15.4 和 6LoWPAN 上的 Thread。Zephyr 的
+:ref:`thread_protocol_interface` 实现基于 `OpenThread
+<https://openthread.io/>`_。原生 IEEE 802.15.4 使用 6LoWPAN 中的 IPv6 报头压缩。
+
+支持的驱动程序
+*****************
+
+Zephyr 包含针对各种硬件平台的多个树内 IEEE 802.15.4 无线电驱动程序。下表概述了所有可用驱动程序、其厂商、支持的频段、总线接口，以及用于启用每个驱动程序的 Kconfig 选项。
+
+.. list-table:: IEEE 802.15.4 树内无线电驱动程序
+   :header-rows: 1
+   :widths: 15 15 30 15 10
+
+   * - 驱动程序
+     - 厂商
+     - 兼容字符串
+     - 频段
+     - 总线
+   * - CC1200
+     - Texas Instruments
+     - :dtcompatible:`ti,cc1200`
+     - Sub-GHz
+     - SPI
+   * - CC13xx/CC26xx
+     - Texas Instruments
+     - :dtcompatible:`ti,cc13xx-cc26xx-ieee802154`
+     - 2.4 GHz
+     - 片内
+   * - CC13xx/CC26xx Sub-GHz
+     - Texas Instruments
+     - :dtcompatible:`ti,cc13xx-cc26xx-ieee802154-subghz`
+     - Sub-GHz
+     - 片内
+   * - CC2520
+     - Texas Instruments
+     - :dtcompatible:`ti,cc2520`
+     - 2.4 GHz
+     - SPI
+   * - DW1000
+     - Decawave (Qorvo)
+     - :dtcompatible:`decawave,dw1000`
+     - UWB（3.5–6.5 GHz）
+     - SPI
+   * - ESP32
+     - Espressif
+     - :dtcompatible:`espressif,esp32-ieee802154`
+     - 2.4 GHz
+     - 片内
+   * - KW41Z
+     - NXP
+     - :dtcompatible:`nxp,kw41z-ieee802154`
+     - 2.4 GHz
+     - 片内
+   * - MCR20A
+     - NXP
+     - :dtcompatible:`nxp,mcr20a`
+     - 2.4 GHz
+     - SPI
+   * - MCXW
+     - NXP
+     - :dtcompatible:`nxp,mcxw-ieee802154`
+     - 2.4 GHz
+     - 片内
+   * - nRF5
+     - Nordic Semiconductor
+     - :dtcompatible:`nordic,nrf-ieee802154`
+     - 2.4 GHz
+     - 片内
+   * - RF2XX (AT86RF2xx)
+     - Atmel (Microchip)
+     - :dtcompatible:`atmel,rf2xx`
+     - 2.4 GHz / Sub-GHz
+     - SPI
+   * - STM32WBA
+     - STMicroelectronics
+     - :dtcompatible:`st,stm32wba-ieee802154`
+     - 2.4 GHz
+     - 片内
+   * - Telink B91
+     - Telink Semiconductor
+     - :dtcompatible:`telink,b91-zb`
+     - 2.4 GHz
+     - 片内
+   * - UART Pipe
+     - 虚拟（QEMU）
+     - :dtcompatible:`zephyr,ieee802154-uart-pipe`
+     - 不适用（模拟）
+     - UART
+
+.. note::
+   UART Pipe 驱动程序是一个用于在 QEMU 环境中测试 IEEE 802.15.4 网络功能的虚拟驱动程序。它不用于真实无线电硬件。
+
+有关每个驱动程序的详细配置选项，请参阅 :zephyr_file:`drivers/ieee802154/` 中对应的 Kconfig 文件。
+
+API 参考
+*************
+
+IEEE 802.15.4 API 概述
+==========================
+
+面向所有读者，对整个 IEEE 802.15.4 子系统及其所有 API、配置和用户接口进行介绍和概述。
+
+.. doxygengroup:: ieee802154
+
+
+.. _ieee802154_mgmt_api:
+
+IEEE 802.15.4 管理 API
+===========================
+
+这是面向 IEEE 802.15.4 **应用程序开发者**的主要子系统专用 API，因为它允许在运行时配置 IEEE 802.15.4 子系统。对应用程序开发者而言，其他相关接口是典型的 shell、socket、Kconfig 和 devicetree API，可通过 Zephyr 的通用子系统无关文档访问。请注意查找其中的 IEEE802154/ieee802154 前缀。
+
+.. doxygengroup:: ieee802154_mgmt
+
+
+.. _ieee802154_driver_api:
+
+IEEE 802.15.4 驱动程序 API
+========================
+
+这是面向 IEEE 802.15.4 **驱动程序开发者**的主要 API。
+
+.. doxygengroup:: ieee802154_driver
+
+
+.. _ieee802154_l2_api:
+
+IEEE 802.15.4 L2 / 原生协议栈 API
+==================================
+
+本文档描述 IEEE 802.15.4 L2 原生协议栈，应用程序和驱动程序都不会直接访问它。它由 Zephyr 的上层网络层（L3+）、其套接字和网络上下文抽象在内部调用。因此，该 API 仅面向 IEEE 802.15.4 **子系统贡献者**。
+
+.. doxygengroup:: ieee802154_l2
+
+OpenThread L2 适配层 API
+==================================
+
+Zephyr 的 OpenThread L2 平台适配层将外部的 OpenThread 协议栈与 Zephyr 的与协议无关的 IEEE 802.15.4 驱动程序 API 粘合在一起。该 API 仅面向 OpenThread L2 **子系统贡献者**。
+
+OpenThread API 是 :ref:`thread_protocol_interface` 子系统的一部分，并在该子系统中进行了文档说明。

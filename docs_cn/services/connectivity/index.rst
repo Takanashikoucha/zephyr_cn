@@ -1,12 +1,11 @@
 .. _connectivity:
 .. _connectivity_services:
 
-Connectivity
+连接性
 ############
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    networking/index.rst
    bluetooth/index.rst

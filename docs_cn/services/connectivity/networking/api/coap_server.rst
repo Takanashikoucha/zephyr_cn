@@ -1,28 +1,39 @@
 .. _coap_server_interface:
 
-CoAP server
+CoAP 服务器
 ###########
 
 .. contents::
     :local:
     :depth: 2
 
-Overview
+概述
 ********
 
-Zephyr 附带 batteries-included 的 CoAP server（其使用 services 监听 CoAP requests。CoAP services 处理通过 sockets 的通信（并将 requests 传递给注册的 CoAP resources。
+Zephyr 自带一个功能完备（batteries-included）的 CoAP 服务器，
+它通过服务（service）监听 CoAP
+请求。CoAP 服务负责处理通过套接字的通信，
+并将请求传递给已注册的
+CoAP 资源。
 
-Setup
+设置
 *****
 
-需一些 configuration 以确保 services 可用 CoAP server 启动。您的项目中应启用 :kconfig:option:`CONFIG_COAP_SERVER` option：
+需要进行一些配置，以确保服务
+能够通过 CoAP 服务器启动。
+项目中应启用 :kconfig:option:`CONFIG_COAP_SERVER` 选项：
 
 .. code-block:: cfg
     :caption: ``prj.conf``
 
     CONFIG_COAP_SERVER=y
 
-所有 services 被添加到预定义的 linker section（且每个 service 的所有 resources 也获得各自的 linker sections。若您有 service ``my_service``（其须以 ``coap_resource_`` 为前缀（并添加到 linker file：
+所有服务都被添加到预定义的连接器（linker）段中，
+每个服务的所有资源也会
+获得各自的连接器段。
+如果您有一个服务 ``my_service``，
+它必须以 ``coap_resource_`` 为前缀，
+并添加到连接器文件中：
 
 .. code-block:: c
     :caption: ``sections-ram.ld``
@@ -31,7 +42,8 @@ Setup
 
     ITERABLE_SECTION_RAM(coap_resource_my_service, Z_LINK_ITERABLE_SUBALIGN)
 
-用 CMake 将此 linker file 添加到您的 application：
+使用 CMake 将该连接器文件
+添加到您的应用中：
 
 .. code-block:: cmake
     :caption: ``CMakeLists.txt``
@@ -43,7 +55,8 @@ Setup
     zephyr_iterable_section(NAME coap_resource_my_service
                             GROUP DATA_REGION ${XIP_ALIGN_WITH_INPUT})
 
-现在可将 service 定义为 application 的一部分：
+现在，您可以将服务
+定义为应用的一部分：
 
 .. code-block:: c
 
@@ -55,12 +68,16 @@ Setup
 
 .. note::
 
-    用 ``COAP_SERVICE_AUTOSTART`` flag 定义的 services 将与 CoAP server thread 一起启动。Services 可分别用 ``coap_service_start`` 和 ``coap_service_stop`` 手动启动和停止。
+    使用 ``COAP_SERVICE_AUTOSTART`` 标志定义的服务
+    会随 CoAP
+    服务器线程一起启动。服务
+    可分别使用 ``coap_service_start`` 和
+    ``coap_service_stop`` 手动启动和停止。
 
-Sample Usage
+示例用法
 ************
 
-以下是注册到 service 的 CoAP resource 的示例：
+以下是注册到服务的 CoAP 资源示例：
 
 .. code-block:: c
 
@@ -116,12 +133,18 @@ Sample Usage
 
 .. note::
 
-    如上述示例所示（CoAP resource handler 可返回 response codes 使 server 以 empty ACK response 响应。
+    如上述示例所示，CoAP 资源处理函数
+    可以返回响应码，
+    让服务器以空 ACK 响应进行回复。
 
-Observable resources
+可观察（Observable）资源
 ********************
 
-CoAP server 提供解析 observe requests 的逻辑（并用 CoAP services 的 runtime data 存储它们。使用 temperature sensor 的示例可如下：
+CoAP 服务器提供解析 observe（观察）请求的逻辑，
+并使用 CoAP 服务的运行时数据
+存储这些请求。
+一个使用温度传感器的
+示例可以如下：
 
 .. code-block:: c
 
@@ -218,10 +241,12 @@ CoAP server 提供解析 observe requests 的逻辑（并用 CoAP services 的 r
         k_work_reschedule(&temp_work, K_SECONDS(1));
     }
 
-CoAP Events
+CoAP 事件
 ***********
 
-启用 :kconfig:option:`CONFIG_NET_MGMT_EVENT` 后（user 可注册 CoAP events。以下示例仅在 event 发生时打印。
+启用 :kconfig:option:`CONFIG_NET_MGMT_EVENT` 后，
+用户可以注册 CoAP 事件。
+以下示例仅在事件发生时打印信息。
 
 .. code-block:: c
 
@@ -265,12 +290,16 @@ CoAP Events
 
     NET_MGMT_REGISTER_EVENT_HANDLER(coap_events, COAP_EVENTS_SET, coap_event_handler, NULL);
 
-CoRE Link Format
+CoRE 链接格式
 ****************
 
-:kconfig:option:`CONFIG_COAP_SERVER_WELL_KNOWN_CORE` option 启用 server 处理 ``.well-known/core`` GET requests。这允许 clients 获取指向该 server 中托管的其他 resources 的 hypermedia links 列表。
+:kconfig:option:`CONFIG_COAP_SERVER_WELL_KNOWN_CORE` 选项
+启用服务器对
+``.well-known/core`` GET 请求的处理。
+这允许客户端获取指向该服务器上
+托管的其他资源的超媒体（hypermedia）链接列表。
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: coap_service

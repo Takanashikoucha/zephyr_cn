@@ -1,37 +1,12 @@
 .. _seialization_reference:
 
-Serialization
+序列化
 #############
 
-Zephyr
-有
-对
-several
-data
-serialization
-subsystems
-的
-support。
-它们
-可
-被
-used
-用于
-encode/decode
-structured
-的
-data
-带
-known
-的
-format
-on
-the
-wire。
+Zephyr 支持多种数据序列化子系统。这些子系统可用于对具有已知格式的在线结构化数据进行编码/解码。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    cbor.rst
    json.rst

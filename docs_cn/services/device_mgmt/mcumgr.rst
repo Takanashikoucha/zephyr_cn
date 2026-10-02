@@ -3,47 +3,48 @@
 MCUmgr
 #######
 
-Overview
+概述
 ********
 
-Management subsystem 允许远程管理
-Zephyr-enabled devices。可用以下 management operations：
+管理子系统允许远程管理基于 Zephyr 的设备。
+可用的管理操作如下：
 
-* :ref:`OS management<mcumgr_smp_group_0>`
-* :ref:`Image management<mcumgr_smp_group_1>`
-* :ref:`Statistics management<mcumgr_smp_group_2>`
-* :ref:`Settings (config) management<mcumgr_smp_group_3>`
-* :ref:`File system management<mcumgr_smp_group_8>`
-* :ref:`Shell management<mcumgr_smp_group_9>`
-* :ref:`Enumeration management<mcumgr_smp_group_10>`
-* :ref:`Transport management<mcumgr_smp_group_11>`
-* :ref:`Zephyr basic management<mcumgr_smp_group_63>`
+* :ref:`OS 管理<mcumgr_smp_group_0>`
+* :ref:`映像管理<mcumgr_smp_group_1>`
+* :ref:`统计管理<mcumgr_smp_group_2>`
+* :ref:`设置（配置）管理<mcumgr_smp_group_3>`
+* :ref:`文件系统管理<mcumgr_smp_group_8>`
+* :ref:`shell 管理<mcumgr_smp_group_9>`
+* :ref:`枚举管理<mcumgr_smp_group_10>`
+* :ref:`传输管理<mcumgr_smp_group_11>`
+* :ref:`Zephyr 基础管理<mcumgr_smp_group_63>`
 
-Management subsystem 基于 `MCUmgr`_ 提供的 Simple Management Protocol (SMP)（
-其为开源 project（提供跨多个 real-time operating
-systems 可移植的 management subsystem。
+管理子系统基于 `MCUmgr`_ 提供的简单管理协议（SMP），
+它是一个开源项目，提供一个
+可移植到多个实时操作系统的
+管理子系统。
 
-Management subsystem 位于 Zephyr tree 内的 :zephyr_file:`subsys/mgmt/`。
+管理子系统位于 Zephyr 树内的 :zephyr_file:`subsys/mgmt/`。
 
-另外（有提供
-Bluetooth LE 和 serial 上 management functionality 的 :zephyr:code-sample:`sample <smp-svr>` server。
+另外，还有一个 :zephyr:code-sample:`sample <smp-svr>` 服务器，提供
+基于 Bluetooth LE 和串口的
+管理功能。
 
 .. _mcumgr_transports:
 
-Supported transports
+支持的传输
 ********************
 
-MCUmgr 在 Zephyr in-tree 支持广泛 transports（additional transports 可
-添加并提交 upstream（或
-在 downstream projects 中 out-of-tree 使用（而无需
-fork Zephyr repository。
+MCUmgr 在 Zephyr 树内支持广泛的传输，额外的传输可以
+被添加并提交到上游，或者在下游项目中树外使用，而无需
+fork Zephyr 仓库。
 
-Zephyr 支持以下 transports：
+Zephyr 支持以下传输：
 
 +------------+--------------------------------------------------------+----------------------------------------------------------------------------+-----------------+----------------------------------------------------------------+
-| Name       | Kconfigs                                               | Extra details                                                              | Mode support    | :ref:`Transport group management support<mcumgr_smp_group_11>` |
+| 名称       | Kconfig                                                | 其他细节                                                                   | 模式支持        | :ref:`传输组管理支持<mcumgr_smp_group_11>` |
 |            |                                                        |                                                                            +--------+--------+----------+-----------------------------------------------------+
-|            |                                                        |                                                                            | Server | Client | Incoming | Outgoing                                            |
+|            |                                                        |                                                                            | 服务器 | 客户端 | 传入 | 传出                                            |
 +============+========================================================+============================================================================+========+========+==========+=====================================================+
 | UART       | :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_UART`         | :ref:`UART SMP over console encoding <mcumgr_smp_transport_uart>`          | ✓      |        | ✓        | ✓                                                   |
 +------------+--------------------------------------------------------+----------------------------------------------------------------------------+--------+--------+----------+-----------------------------------------------------+
@@ -53,68 +54,68 @@ Zephyr 支持以下 transports：
 +------------+--------------------------------------------------------+----------------------------------------------------------------------------+--------+--------+----------+-----------------------------------------------------+
 | Bluetooth  | :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_BT`           | :ref:`Bluetooth Low Energy <mcumgr_smp_transport_ble>`                     | ✓      |        | ✓        | ✓                                                   |
 +------------+--------------------------------------------------------+----------------------------------------------------------------------------+--------+--------+----------+-----------------------------------------------------+
-| UDP (IPv4) | :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_UDP` and |br| | Optional DTLS support                                                      | ✓      |        | ✕        | ✕                                                   |
+| UDP (IPv4) | :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_UDP` 和 |br| | 可选的 DTLS 支持                                                            | ✓      |        | ✕        | ✕                                                   |
 |            | :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_UDP_IPV4`     |                                                                            |        |        |          |                                                     |
 +------------+--------------------------------------------------------+----------------------------------------------------------------------------+--------+--------+----------+-----------------------------------------------------+
-| UDP (IPv6) | :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_UDP` and |br| | Optional DTLS support                                                      | ✓      |        | ✕        | ✕                                                   |
+| UDP (IPv6) | :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_UDP` 和 |br| | 可选的 DTLS 支持                                                            | ✓      |        | ✕        | ✕                                                   |
 |            | :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_UDP_IPV6`     |                                                                            |        |        |          |                                                     |
 +------------+--------------------------------------------------------+----------------------------------------------------------------------------+--------+--------+----------+-----------------------------------------------------+
 | LoRaWAN    | :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_LORAWAN`      |                                                                            | ✓      |        | ✕        | ✕                                                   |
 +------------+--------------------------------------------------------+----------------------------------------------------------------------------+--------+--------+----------+-----------------------------------------------------+
 | SPI        | :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_SPI`          |                                                                            | ✓      |        | ✕        | ✕                                                   |
 +------------+--------------------------------------------------------+----------------------------------------------------------------------------+--------+--------+----------+-----------------------------------------------------+
-| *The following are designed for usage in tests:*                                                                                                                                                                                    |
+| *以下专为测试使用而设计：*                                                                                                                                                                                    |
 +------------+--------------------------------------------------------+----------------------------------------------------------------------------+--------+--------+----------+-----------------------------------------------------+
-| Dummy      | :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_DUMMY`        | Virtual                                                                    | ✓      |        | ✓        | ✓                                                   |
+| Dummy      | :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_DUMMY`        | 虚拟                                                                       | ✓      |        | ✓        | ✓                                                   |
 +------------+--------------------------------------------------------+----------------------------------------------------------------------------+--------+--------+----------+-----------------------------------------------------+
-| Raw Dummy  | :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_RAW_DUMMY`    | :ref:`UART SMP over console encoding <mcumgr_smp_transport_uart>`, virtual | ✓      |        | ✓        | ✓                                                   |
+| Raw Dummy  | :kconfig:option:`CONFIG_MCUMGR_TRANSPORT_RAW_DUMMY`    | :ref:`UART SMP over console encoding <mcumgr_smp_transport_uart>`，虚拟 | ✓      |        | ✓        | ✓                                                   |
 +------------+--------------------------------------------------------+----------------------------------------------------------------------------+--------+--------+----------+-----------------------------------------------------+
 
 .. _mcumgr_tools_libraries:
 
-Tools/libraries
+工具/库
 ***************
 
-有各种可用的 tools 和 libraries（使
-device 上可使用 MCUmgr functionality（如下所列。注意这些
-tools 非 Zephyr
-project 的一部分或与之相关。
+有各种可用的工具和库，可在设备上使用 MCUmgr 功能，
+如下所列。注意这些工具
+不是 Zephyr
+项目的一部分，也不与其相关。
 
 .. only:: html
 
-    .. table:: Tools and Libraries for MCUmgr
+    .. table:: MCUmgr 的工具和库
         :align: center
 
         +--------------------------------------------------------------------------------+-------------------------------------------+---------------------------------------------------------+---------------------------------------------------------------------+---------------+------------+------------+
-        | Name                                                                           | OS support                                | Transports                                              | Groups                                                              | Type          | Language   | License    |
+        | 名称                                                                           | 操作系统支持                              | 传输                                                    | 组                                                                  | 类型          | 语言       | 许可证     |
         |                                                                                +---------+-------+-----+--------+----------+--------+--------------+-----------+-----+---------+-----+----+-----+------+----------+----+-------+------+-----------+--------+               |            |            |
-        |                                                                                | Windows | Linux | mac | Mobile | Embedded | Serial | Serial (raw) | Bluetooth | UDP | LoRaWAN | SPI | OS | IMG | Stat | Settings | FS | Shell | Enum | Transport | Zephyr |               |            |            |
+        |                                                                                | Windows | Linux | mac | 移动 | 嵌入式 | 串口 | 串口（原始） | Bluetooth | UDP | LoRaWAN | SPI | OS | IMG | Stat | Settings | FS | Shell | Enum | Transport | Zephyr |               |            |            |
         +================================================================================+=========+=======+=====+========+==========+========+==============+===========+=====+=========+=====+====+=====+======+==========+====+=======+======+===========+========+===============+============+------------+
-        | `AuTerm <https://github.com/thedjnK/AuTerm/>`_                                 | ✓       | ✓     | ✓   | ✕      | ✕        | ✓      | ✓            | ✓         | ✓   | ✓       | ✕   | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✓    | ✕         | ✓      | Application   | C++ (Qt)   | GPL-3.0    |
+        | `AuTerm <https://github.com/thedjnK/AuTerm/>`_                                 | ✓       | ✓     | ✓   | ✕      | ✕        | ✓      | ✓            | ✓         | ✓   | ✓       | ✕   | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✓    | ✕         | ✓      | 应用程序   | C++ (Qt)   | GPL-3.0    |
         +--------------------------------------------------------------------------------+---------+-------+-----+--------+----------+--------+--------------+-----------+-----+---------+-----+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+------------+
-        | `mcumgr-client <https://github.com/vouch-opensource/mcumgr-client/>`_          | ✓       | ✓     | ✓   | ✕      | ✕        | ✓      | ✕            | ✕         | ✓   | ✕       | ✕   | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✕    | ✕         | ✕      | Application   | Rust       | Apache-2.0 |
+        | `mcumgr-client <https://github.com/vouch-opensource/mcumgr-client/>`_          | ✓       | ✓     | ✓   | ✕      | ✕        | ✓      | ✕            | ✕         | ✓   | ✕       | ✕   | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✕    | ✕         | ✕      | 应用程序   | Rust       | Apache-2.0 |
         +--------------------------------------------------------------------------------+---------+-------+-----+--------+----------+--------+--------------+-----------+-----+---------+-----+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+------------+
-        | `mcumgr-web <https://github.com/boogie/mcumgr-web/>`_                          | ✓       | ✓     | ✓   | ✕      | ✕        | ✕      | ✕            | ✓         | ✕   | ✕       | ✕   | ✕  | ✓   | ✕    | ✕        | ✕  | ✕     | ✕    | ✕         | ✕      | Web page      | Javascript | MIT        |
-        |                                                                                |         |       |     |        |          |        |              |           |     |         |     |    |     |      |          |    |       |      |           |        | (chrome only) |            |            |
+        | `mcumgr-web <https://github.com/boogie/mcumgr-web/>`_                          | ✓       | ✓     | ✓   | ✕      | ✕        | ✕      | ✕            | ✓         | ✕   | ✕       | ✕   | ✕  | ✓   | ✕    | ✕        | ✕  | ✕     | ✕    | ✕         | ✕      | 网页      | Javascript | MIT        |
+        |                                                                                |         |       |     |        |          |        |              |           |     |         |     |    |     |      |          |    |       |      |           |        | （仅 chrome） |            |            |
         +--------------------------------------------------------------------------------+---------+-------+-----+--------+----------+--------+--------------+-----------+-----+---------+-----+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+------------+
-        | `mcumgr-mac <https://github.com/boogie/mcumgr-mac/>`_                          | ✕       | ✕     | ✓   | ✕      | ✕        | ✕      | ✕            | ✓         | ✕   | ✕       | ✕   | ✓  | ✓   | ✕    | ✕        | ✕  | ✕     | ✕    | ✕         | ✕      | Application   | Rust       | MIT        |
+        | `mcumgr-mac <https://github.com/boogie/mcumgr-mac/>`_                          | ✕       | ✕     | ✓   | ✕      | ✕        | ✕      | ✕            | ✓         | ✕   | ✕       | ✕   | ✓  | ✓   | ✕    | ✕        | ✕  | ✕     | ✕    | ✕         | ✕      | 应用程序   | Rust       | MIT        |
         +--------------------------------------------------------------------------------+---------+-------+-----+--------+----------+--------+--------------+-----------+-----+---------+-----+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+------------+
-        | nRF Connect Device Manager: |br|                                               | ✕       | ✕     | ✕   | ✓      | ✕        | ✕      | ✕            | ✓         | ✕   | ✕       | ✕   | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✕    | ✕         | ✓      | Library and   | Java,      | Apache-2.0 |
-        | `Android                                                                       |         |       |     |        |          |        |              |           |     |         |     |    |     |      |          |    |       |      |           |        | application   | Kotlin,    |            |
+        | nRF Connect Device Manager: |br|                                               | ✕       | ✕     | ✕   | ✓      | ✕        | ✕      | ✕            | ✓         | ✕   | ✕       | ✕   | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✕    | ✕         | ✓      | 库和       | Java,      | Apache-2.0 |
+        | `Android                                                                       |         |       |     |        |          |        |              |           |     |         |     |    |     |      |          |    |       |      |           |        | 应用程序   | Kotlin,    |            |
         | <https://github.com/NordicSemiconductor/Android-nRF-Connect-Device-Manager/>`_ |         |       |     |        |          |        |              |           |     |         |     |    |     |      |          |    |       |      |           |        |               | Swift      |            |
-        | and `iOS                                                                       |         |       |     |        |          |        |              |           |     |         |     |    |     |      |          |    |       |      |           |        |               |            |            |
+        | 和 `iOS                                                                       |         |       |     |        |          |        |              |           |     |         |     |    |     |      |          |    |       |      |           |        |               |            |            |
         | <https://github.com/NordicSemiconductor/IOS-nRF-Connect-Device-Manager>`_      |         |       |     |        |          |        |              |           |     |         |     |    |     |      |          |    |       |      |           |        |               |            |            |
         +--------------------------------------------------------------------------------+---------+-------+-----+--------+----------+--------+--------------+-----------+-----+---------+-----+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+------------+
-        | `smp <https://pypi.org/project/smp/>`_                                         | ✓       | ✓     | ✓   | ✓      | ✕        | N/A    | N/A          | N/A       | N/A | N/A     | N/A | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✓    | ✕         | ✓      | Library       | Python     | Apache-2.0 |
+        | `smp <https://pypi.org/project/smp/>`_                                         | ✓       | ✓     | ✓   | ✓      | ✕        | N/A    | N/A          | N/A       | N/A | N/A     | N/A | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✓    | ✕         | ✓      | 库         | Python     | Apache-2.0 |
         +--------------------------------------------------------------------------------+---------+-------+-----+--------+----------+--------+--------------+-----------+-----+---------+-----+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+------------+
-        | `smpclient <https://pypi.org/project/smpclient/>`_                             | ✓       | ✓     | ✓   | ✕      | ✕        | ✓      | ✕            | ✓         | ✓   | ✕       | ✕   | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✓    | ✕         | ✓      | Library       | Python     | Apache-2.0 |
+        | `smpclient <https://pypi.org/project/smpclient/>`_                             | ✓       | ✓     | ✓   | ✕      | ✕        | ✓      | ✕            | ✓         | ✓   | ✕       | ✕   | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✓    | ✕         | ✓      | 库         | Python     | Apache-2.0 |
         +--------------------------------------------------------------------------------+---------+-------+-----+--------+----------+--------+--------------+-----------+-----+---------+-----+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+------------+
-        | `smpmgr <https://pypi.org/project/smpmgr/>`_                                   | ✓       | ✓     | ✓   | ✕      | ✕        | ✓      | ✕            | ✓         | ✓   | ✕       | ✕   | ✓  | ✓   | ✓    | ✕        | ✓  | ✓     | ✓    | ✕         | ✕      | Application   | Python     | Apache-2.0 |
+        | `smpmgr <https://pypi.org/project/smpmgr/>`_                                   | ✓       | ✓     | ✓   | ✕      | ✕        | ✓      | ✕            | ✓         | ✓   | ✕       | ✕   | ✓  | ✓   | ✓    | ✕        | ✓  | ✓     | ✓    | ✕         | ✕      | 应用程序   | Python     | Apache-2.0 |
         +--------------------------------------------------------------------------------+---------+-------+-----+--------+----------+--------+--------------+-----------+-----+---------+-----+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+------------+
-        | `mcumgr-toolkit <https://github.com/Finomnis/mcumgr-toolkit/>`_ |br|           | ✓       | ✓     | ✓   | ✕      | ✕        | ✓      | ✕            | ✓         | ✓   | ✕       | ✕   | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✓    | ✕         | ✓      | Library and   | Rust,      | Apache-2.0 |
-        | (CLI: `mcumgrctl <https://crates.io/crates/mcumgrctl/>`_)                      |         |       |     |        |          |        |              |           |     |         |     |    |     |      |          |    |       |      |           |        | application   | Python     |            |
+        | `mcumgr-toolkit <https://github.com/Finomnis/mcumgr-toolkit/>`_ |br|           | ✓       | ✓     | ✓   | ✕      | ✕        | ✓      | ✕            | ✓         | ✓   | ✕       | ✕   | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✓    | ✕         | ✓      | 库和       | Rust,      | Apache-2.0 |
+        | （CLI: `mcumgrctl <https://crates.io/crates/mcumgrctl/>`_）                     |         |       |     |        |          |        |              |           |     |         |     |    |     |      |          |    |       |      |           |        | 应用程序   | Python     |            |
         +--------------------------------------------------------------------------------+---------+-------+-----+--------+----------+--------+--------------+-----------+-----+---------+-----+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+------------+
-        | Zephyr MCUmgr client (in-tree)                                                 | ✕       | ✓     | ✕   | ✕      | ✓        | ✓      | ✓            | ✕         | ✕   | ✕       | ✕   | ✓  | ✓   | ✕    | ✕        | ✕  | ✕     | ✕    | ✕         | ✕      | Library       | C          | Apache-2.0 |
+        | Zephyr MCUmgr 客户端（树内）                                                 | ✕       | ✓     | ✕   | ✕      | ✓        | ✓      | ✓            | ✕         | ✕   | ✕       | ✕   | ✓  | ✓   | ✕    | ✕        | ✕  | ✕     | ✕    | ✕         | ✕      | 库         | C          | Apache-2.0 |
         +--------------------------------------------------------------------------------+---------+-------+-----+--------+----------+--------+--------------+-----------+-----+---------+-----+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+------------+
 
 .. only:: latex
@@ -123,55 +124,55 @@ project 的一部分或与之相关。
 
        \begin{landscape}
 
-    .. table:: Tools and Libraries for MCUmgr
+    .. table:: MCUmgr 的工具和库
         :align: center
 
         +--------------------------------------------------------------------------------+---------------+--------------------+---------------------------------------------------------------------+---------------+------------+
-        | Name                                                                           | OS support    | Transports         | Groups                                                              | Type          | Language   |
+        | 名称                                                                           | 操作系统支持  | 传输               | 组                                                                  | 类型          | 语言       |
         |                                                                                |               |                    +----+-----+------+----------+----+-------+------+-----------+--------+               |            |
         |                                                                                |               |                    | OS | IMG | Stat | Settings | FS | Shell | Enum | Transport | Zephyr |               |            |
         +================================================================================+===============+====================+====+=====+======+==========+====+=======+======+===========+========+===============+============+
-        | `AuTerm <https://github.com/thedjnK/AuTerm/>`_                                 | Windows, |br| | Serial, |br|       | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✓    | ✕         | ✓      | App           | C++ (Qt)   |
+        | `AuTerm <https://github.com/thedjnK/AuTerm/>`_                                 | Windows, |br| | Serial, |br|       | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✓    | ✕         | ✓      | 应用程序   | C++ (Qt)   |
         |                                                                                | Linux, |br|   | Serial (raw), |br| |    |     |      |          |    |       |      |           |        |               |            |
         |                                                                                | macOS         | Bluetooth, |br|    |    |     |      |          |    |       |      |           |        |               |            |
         |                                                                                |               | UDP, |br|          |    |     |      |          |    |       |      |           |        |               |            |
         |                                                                                |               | LoRaWAN            |    |     |      |          |    |       |      |           |        |               |            |
         +--------------------------------------------------------------------------------+---------------+--------------------+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+
-        | `mcumgr-client <https://github.com/vouch-opensource/mcumgr-client/>`_          | Windows, |br| | Serial             | ✕  | ✓   | ✕    | ✕        | ✕  | ✕     | ✕    | ✕         | ✕      | App           | Rust       |
+        | `mcumgr-client <https://github.com/vouch-opensource/mcumgr-client/>`_          | Windows, |br| | Serial             | ✕  | ✓   | ✕    | ✕        | ✕  | ✕     | ✕    | ✕         | ✕      | 应用程序   | Rust       |
         |                                                                                | Linux, |br|   |                    |    |     |      |          |    |       |      |           |        |               |            |
         |                                                                                | macOS         |                    |    |     |      |          |    |       |      |           |        |               |            |
         +--------------------------------------------------------------------------------+---------------+--------------------+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+
-        | `mcumgr-web <https://github.com/boogie/mcumgr-web/>`_                          | Windows, |br| | Bluetooth          | ✕  | ✓   | ✕    | ✕        | ✕  | ✕     | ✕    | ✕         | ✕      | Web (chrome   | Javascript |
+        | `mcumgr-web <https://github.com/boogie/mcumgr-web/>`_                          | Windows, |br| | Bluetooth          | ✕  | ✓   | ✕    | ✕        | ✕  | ✕     | ✕    | ✕         | ✕      | 网页（仅 chrome | Javascript |
         |                                                                                | Linux, |br|   |                    |    |     |      |          |    |       |      |           |        |               |            |
         |                                                                                | macOS         |                    |    |     |      |          |    |       |      |           |        |               |            |
         +--------------------------------------------------------------------------------+---------------+--------------------+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+
-        | `mcumgr-mac <https://github.com/boogie/mcumgr-mac/>`_                          | macOS         | Bluetooth          | ✓  | ✓   | ✕    | ✕        | ✕  | ✕     | ✕    | ✕         | ✕      | App           | Rust       |
+        | `mcumgr-mac <https://github.com/boogie/mcumgr-mac/>`_                          | macOS         | Bluetooth          | ✓  | ✓   | ✕    | ✕        | ✕  | ✕     | ✕    | ✕         | ✕      | 应用程序   | Rust       |
         +--------------------------------------------------------------------------------+---------------+--------------------+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+
-        | nRF Connect Device Manager: |br|                                               | iOS, |br|     | Bluetooth          | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✕    | ✕         | ✓      | Library, App  | Java,      |
+        | nRF Connect Device Manager: |br|                                               | iOS, |br|     | Bluetooth          | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✕    | ✕         | ✓      | 库、应用程序 | Java,      |
         | `Android                                                                       | Android       |                    |    |     |      |          |    |       |      |           |        |               | Kotlin,    |
         | <https://github.com/NordicSemiconductor/Android-nRF-Connect-Device-Manager/>`_ |               |                    |    |     |      |          |    |       |      |           |        |               | Swift      |
-        | and `iOS                                                                       |               |                    |    |     |      |          |    |       |      |           |        |               |            |
+        | 和 `iOS                                                                       |               |                    |    |     |      |          |    |       |      |           |        |               |            |
         | <https://github.com/NordicSemiconductor/IOS-nRF-Connect-Device-Manager>`_      |               |                    |    |     |      |          |    |       |      |           |        |               |            |
         +--------------------------------------------------------------------------------+---------------+--------------------+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+
-        | `smp <https://pypi.org/project/smp/>`_                                         | Windows, |br| | N/A                | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✓    | ✕         | ✓      | Library       | Python     |
+        | `smp <https://pypi.org/project/smp/>`_                                         | Windows, |br| | N/A                | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✓    | ✕         | ✓      | 库         | Python     |
         |                                                                                | Linux, |br|   |                    |    |     |      |          |    |       |      |           |        |               |            |
         |                                                                                | macOS, |br|   |                    |    |     |      |          |    |       |      |           |        |               |            |
         |                                                                                | iOS, |br|     |                    |    |     |      |          |    |       |      |           |        |               |            |
         |                                                                                | Android       |                    |    |     |      |          |    |       |      |           |        |               |            |
         +--------------------------------------------------------------------------------+---------------+--------------------+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+
-        | `smpclient <https://pypi.org/project/smpclient/>`_                             | Windows, |br| | Serial, |br|       | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✓    | ✕         | ✓      | Library       | Python     |
+        | `smpclient <https://pypi.org/project/smpclient/>`_                             | Windows, |br| | Serial, |br|       | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✓    | ✕         | ✓      | 库         | Python     |
         |                                                                                | Linux, |br|   | Bluetooth, |br|    |    |     |      |          |    |       |      |           |        |               |            |
         |                                                                                | macOS         | UDP                |    |     |      |          |    |       |      |           |        |               |            |
         +--------------------------------------------------------------------------------+---------------+--------------------+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+
-        | `smpmgr <https://pypi.org/project/smpmgr/>`_                                   | Windows, |br| | Serial, |br|       | ✓  | ✓   | ✓    | ✕        | ✓  | ✓     | ✓    | ✕         | ✕      | App           | Python     |
+        | `smpmgr <https://pypi.org/project/smpmgr/>`_                                   | Windows, |br| | Serial, |br|       | ✓  | ✓   | ✓    | ✕        | ✓  | ✓     | ✓    | ✕         | ✕      | 应用程序   | Python     |
         |                                                                                | Linux, |br|   | Bluetooth, |br|    |    |     |      |          |    |       |      |           |        |               |            |
         |                                                                                | macOS         | UDP                |    |     |      |          |    |       |      |           |        |               |            |
         +--------------------------------------------------------------------------------+---------------+--------------------+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+
-        | `mcumgr-toolkit <https://github.com/Finomnis/mcumgr-toolkit/>`_ |br|           | Windows, |br| | Serial, |br|       | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✓    | ✕         | ✓      | Library, App  | Rust,      |
-        | (CLI: `mcumgrctl <https://crates.io/crates/mcumgrctl/>`_)                      | Linux, |br|   | Bluetooth, |br|    |    |     |      |          |    |       |      |           |        |               | Python     |
+        | `mcumgr-toolkit <https://github.com/Finomnis/mcumgr-toolkit/>`_ |br|           | Windows, |br| | Serial, |br|       | ✓  | ✓   | ✓    | ✓        | ✓  | ✓     | ✓    | ✕         | ✓      | 库、应用程序 | Rust,      |
+        | （CLI: `mcumgrctl <https://crates.io/crates/mcumgrctl/>`_）                     | Linux, |br|   | Bluetooth, |br|    |    |     |      |          |    |       |      |           |        |               | Python     |
         |                                                                                | macOS         | UDP                |    |     |      |          |    |       |      |           |        |               |            |
         +--------------------------------------------------------------------------------+---------------+--------------------+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+
-        | Zephyr MCUmgr client (in-tree)                                                 | Linux, |br|   | Serial, |br|       | ✓  | ✓   | ✕    | ✕        | ✕  | ✕     | ✕    | ✕         | ✕      | Library       | C          |
+        | Zephyr MCUmgr 客户端（树内）                                                 | Linux, |br|   | Serial, |br|       | ✓  | ✓   | ✕    | ✕        | ✕  | ✕     | ✕    | ✕         | ✕      | 库         | C          |
         |                                                                                | Zephyr        | Serial (raw)       |    |     |      |          |    |       |      |           |        |               |            |
         +--------------------------------------------------------------------------------+---------------+--------------------+----+-----+------+----------+----+-------+------+-----------+--------+---------------+------------+
 
@@ -179,49 +180,48 @@ project 的一部分或与之相关。
 
         \end{landscape}
 
-注意特定 group 的 tick 表示 code 对该 group 的基本支持（
-可能该 group 的并非所有 commands/features 都被实现支持。
+注意，某个组的勾号表示代码对该组的基本支持，
+可能该组的并非所有命令/功能都被实现所支持。
 
 .. _mcumgr_jlink_ob_virtual_msd:
 
-J-Link Virtual MSD Interaction Note
+J-Link 虚拟 MSD 交互说明
 ***********************************
 
-在既有 CDC 又有 MSC (virtual
-Mass
-Storage Device（也称 drag-and-drop) 支持的 J-Link OB 存在的 boards 上（MSD
-functionality 可
-因 J-Link firmware 中 USB
-endpoints 的配置方式（如
-:zephyr:board:`nrf52840dk` board 上）（由于
-限制最大 packet size（最可能在用
-image
-management commands 更新 firmware 时发生）而使
-CDC UART port 上的 MCUmgr commands 无法工作。此问题
-可通过禁用 J-Link device 上的 MSD functionality 解决（按
+在存在 J-Link OB 的板卡上，如果该 J-Link OB 同时具有 CDC 和 MSC（虚拟
+大容量存储设备，也称为拖放）支持，MSD
+功能可能
+由于 J-Link 固件中 USB
+端点的配置方式（例如在
+:zephyr:board:`nrf52840dk` 板卡上），由于
+限制了最大数据包大小（最可能在使用
+映像
+管理命令更新固件时发生），而使
+CDC UART 端口上的 MCUmgr 命令无法工作。此问题
+可通过禁用 J-Link 设备上的 MSD 功能解决，按照
 :ref:`nordic_segger_msd` 的
-instructions 禁用 MSD 支持。
+说明禁用 MSD 支持。
 
-Bootloader Integration
+引导加载程序集成
 **********************
 
-:ref:`dfu` subsystem 将 management subsystem 与
-bootloader 集成（提供向
-device 发送并升级 Zephyr image 的能力。
+:ref:`dfu` 子系统将管理子系统与
+引导加载程序集成，提供向
+设备发送并升级 Zephyr 映像的能力。
 
-当前仅支持 MCUboot bootloader。更多信息参见 :ref:`mcuboot`。
+当前仅支持 MCUboot 引导加载程序。更多信息参见 :ref:`mcuboot`。
 
 .. _MCUmgr: https://github.com/apache/mynewt-mcumgr
 .. _MCUboot design: https://github.com/mcu-tools/mcuboot/blob/main/docs/design.md
 
-Discord channel
+Discord 频道
 ***************
 
-欢迎 Developers！
+欢迎开发者！
 
-* Discord mcumgr channel: https://discord.com/invite/Ck7jw53nU2
+* Discord mcumgr 频道：https://discord.com/invite/Ck7jw53nU2
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: mcumgr_mgmt_api

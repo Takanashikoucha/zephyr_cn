@@ -1,26 +1,10 @@
 .. _frameworks:
 
-Frameworks
+框架
 ##########
 
-此
-section
-涵盖
-帮助
-structure
-application
-logic、
-runtime
-加载
-code、
-stream
-media 和
-model
-sensors 的
-high-level
-frameworks
-和
-libraries。
+本节涵盖帮助组织应用逻辑、在运行时加载代码、
+流式传输媒体和建模传感器的高层框架和库。
 
 .. toctree::
    :maxdepth: 1

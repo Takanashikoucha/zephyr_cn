@@ -1,183 +1,177 @@
 .. _mcumgr_smp_group_2:
 
-Statistics
-management
+Statistics management
 #####################
 
-Statistics
-management
-allow
-obtain
-Zephyr
-的
-Statistics
-subsystem
-gathered
-的
-data
-它
-用
-:kconfig:option:`CONFIG_STATS`
-enabled。
+统计管理用于获取由 Zephyr 的统计子系统
+收集的数据，该子系统用 :kconfig:option:`CONFIG_STATS` 启用。
 
-Statistics
-management
-group
-define
-commands：
+统计管理组定义以下命令：
 
 .. table::
-    :align:
-    center
+   :align: center
 
-    +-------------------+-----------------------------------------------+
-    |
-    ``Command
-    ID``
-    |
-    Command
-    description
-    |
-    +===================+===============================================+
-    |
-    ``0``
-    |
-    Group
-    data
-    |
-    +-------------------+-----------------------------------------------+
-    |
-    ``1``
-    |
-    List
-    groups
-    |
-    +-------------------+-----------------------------------------------+
+   +-------------------+-----------------------------------------------+
+   | ``Command ID``    | 命令描述                                       |
+   +===================+===============================================+
+   | ``0``             | 组数据                                         |
+   +-------------------+-----------------------------------------------+
+   | ``1``             | 列出组                                         |
+   +-------------------+-----------------------------------------------+
 
-Statistics:
-group
-data
+Statistics: 组数据
 **********************
 
-这
-个
-command
-被
-used
-用于
-obtain
-由
-name
-specified
-的
-group
-的
-data。
-Name
-是
-一
-个
-group
-name
-它
-被
-registered
-用
-:c:macro:`STATS_INIT_AND_REG`
-macro
-或
-:c:func:`stats_init_and_reg`
-function
-call
-在
-gather
-statistics
-的
-module
-中。
+该命令用于获取由名称指定的组的数据。
+该名称是已注册的组名称之一，用
+:c:macro:`STATS_INIT_AND_REG` 宏或 :c:func:`stats_init_and_reg` 函数
+调用注册，位于收集统计信息的模块中。
 
-Statistics:
-group
-data
-request
-==================================
+Statistics: 组数据请求
+==============================
 
-Statistics
-group
-data
-request
-header：
+统计组数据请求头：
 
 .. table::
-    :align:
-    center
+   :align: center
 
-    +--------+--------------+----------------+
-    |
-    ``OP``
-    |
-    ``Group
-    ID``
-    |
-    ``Command
-    ID``
-    |
-    +========+==============+================+
+   +--------+--------------+----------------+
+   | ``OP`` | ``Group ID`` | ``Command ID`` |
+   +========+==============+================+
+   | ``0``  | ``2``        |  ``0``         |
+   +--------+--------------+----------------+
 
+请求的 CBOR 数据：
 
-.. note::
+.. code-block:: none
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-    |                  | appears if an error is returned when using SMP version 2.               |
-    +------------------+-------------------------------------------------------------------------+
-    | "err" -> "rc"    | contains the index of the group-based error code. Only appears if       |
-    |                  | non-zero (error condition) when using SMP version 2.                    |
-    +------------------+-------------------------------------------------------------------------+
-    | "rc"             | :c:enum:`mcumgr_err_t` only appears if non-zero (error condition) when  |
-    |                  | using SMP version 1 or for SMP errors when using SMP version 2.         |
-    +------------------+-------------------------------------------------------------------------+
+    {
+        (str)"name" :  (str)
+    }
 
-Statistics: list of groups
+其中：
+
+.. table::
+   :align: center
+
+   +-----------------------+---------------------------------------------------+
+   | "name"                | 组名称。                                          |
+   +-----------------------+---------------------------------------------------+
+
+Statistics: 组数据响应
+==============================
+
+统计组数据响应头：
+
+.. table::
+   :align: center
+
+   +--------+--------------+----------------+
+   | ``OP`` | ``Group ID`` | ``Command ID`` |
+   +========+==============+================+
+   | ``1``  | ``2``        |  ``0``         |
+   +--------+--------------+----------------+
+
+成功响应的 CBOR 数据：
+
+.. code-block:: none
+
+    {
+        (str)"name"     : (str)
+        (str)"fields"   : {
+            (str)<entry_name> : (uint)
+            ...
+        }
+    }
+
+出错时 CBOR 数据的形式为：
+
+.. tabs::
+
+   .. group-tab:: SMP 版本 2
+
+     .. code-block:: none
+
+         {
+             (str)"err" : {
+                 (str)"group"    : (uint)
+                 (str)"rc"       : (uint)
+             }
+         }
+
+   .. group-tab:: SMP 版本 1（和非组的 SMP 版本 2）
+
+     .. code-block:: none
+
+         {
+             (str)"rc"       : (int)
+         }
+
+其中：
+
+.. table::
+   :align: center
+
+   +------------------+-------------------------------------------------------------------------+
+   | "name"           | 这是响应包含其数据的组的名称。                                           |
+   +------------------+-------------------------------------------------------------------------+
+   | "fields"         | 这是组内条目的映射，由成对项组成，其中条目                             |
+   |                  | 名称映射到其在统计信息中表示的值。                                       |
+   +------------------+-------------------------------------------------------------------------+
+   | <entry_name>     | 单个条目到值的映射；该值在 CBOR 意义上                                   |
+   |                  | 硬编码为无符号整数类型。                                                 |
+   +------------------+-------------------------------------------------------------------------+
+   | "err" -> "group" | :c:enum:`mcumgr_group_t` 基于组的错误码所属的组。仅在                   |
+   |                  | 使用 SMP 版本 2 时返回错误才出现。                                       |
+   +------------------+-------------------------------------------------------------------------+
+   | "err" -> "rc"    | 包含基于组的错误码的索引。仅在使用 SMP 版本 2 时                        |
+   |                  | 非零（错误状态）才出现。                                                 |
+   +------------------+-------------------------------------------------------------------------+
+   | "rc"             | :c:enum:`mcumgr_err_t`，仅在使用 SMP 版本 1 时非零（错误状态）          |
+   |                  | 或在使用 SMP 版本 2 时遇到 SMP 错误才出现。                             |
+   +------------------+-------------------------------------------------------------------------+
+
+Statistics: 组列表
 **************************
 
-The command is used to obtain list of groups of statistics that are gathered
-on a device. This is a list of names as given to groups with
-:c:macro:`STATS_INIT_AND_REG` macro or :c:func:`stats_init_and_reg` function
-calls, within module that gathers the statistics; this means that this command
-may be considered optional as it is known during compilation what groups will
-be included into build and listing them is not needed prior to issuing a query.
+该命令用于获取设备上收集的统计信息组的
+列表。这是用
+:c:macro:`STATS_INIT_AND_REG` 宏或 :c:func:`stats_init_and_reg` 函数
+调用赋给组的名称的列表，位于收集统计信息的模块中；这意味着
+此命令可被视为可选的，因为在编译期间已知哪些组
+将被包含到构建中，在发出查询之前无需列出它们。
 
-Statistics: list of groups request
+Statistics: 组列表请求
 ==================================
 
-Statistics group list request header:
+统计组列表请求头：
 
 .. table::
-    :align: center
+   :align: center
 
-    +--------+--------------+----------------+
-    | ``OP`` | ``Group ID`` | ``Command ID`` |
-    +========+==============+================+
-    | ``0``  | ``2``        |  ``1``         |
-    +--------+--------------+----------------+
+   +--------+--------------+----------------+
+   | ``OP`` | ``Group ID`` | ``Command ID`` |
+   +========+==============+================+
+   | ``0``  | ``2``        |  ``1``         |
+   +--------+--------------+----------------+
 
-The command sends an empty CBOR map as data.
+该命令发送一个空 CBOR 映射作为数据。
 
-Statistics: list of groups response
-===================================
+Statistics: 组列表响应
+==================================
 
-Statistics group list request header:
+统计组列表请求头：
 
 .. table::
-    :align: center
+   :align: center
 
-    +--------+--------------+----------------+
-    | ``OP`` | ``Group ID`` | ``Command ID`` |
-    +========+==============+================+
-    | ``1``  | ``2``        |  ``1``         |
-    +--------+--------------+----------------+
+   +--------+--------------+----------------+
+   | ``OP`` | ``Group ID`` | ``Command ID`` |
+   +========+==============+================+
+   | ``1``  | ``2``        |  ``1``         |
+   +--------+--------------+----------------+
 
-CBOR data of successful response:
+成功响应的 CBOR 数据：
 
 .. code-block:: none
 
@@ -187,45 +181,44 @@ CBOR data of successful response:
         ]
     }
 
-In case of error the CBOR data takes the form:
-
+出错时 CBOR 数据的形式为：
 
 .. tabs::
 
-   .. group-tab:: SMP version 2
+   .. group-tab:: SMP 版本 2
 
-      .. code-block:: none
+     .. code-block:: none
 
-          {
-              (str)"err" : {
-                  (str)"group"    : (uint)
-                  (str)"rc"       : (uint)
-              }
-          }
+         {
+             (str)"err" : {
+                 (str)"group"    : (uint)
+                 (str)"rc"       : (uint)
+             }
+         }
 
-   .. group-tab:: SMP version 1 (and non-group SMP version 2)
+   .. group-tab:: SMP 版本 1（和非组的 SMP 版本 2）
 
-      .. code-block:: none
+     .. code-block:: none
 
-          {
-              (str)"rc"       : (int)
-          }
+         {
+             (str)"rc"       : (int)
+         }
 
-where:
+其中：
 
 .. table::
-    :align: center
+   :align: center
 
-    +------------------+-------------------------------------------------------------------------+
-    | "stat_list"      | array of strings representing group names; this array may be empty if   |
-    |                  | there are no groups.                                                    |
-    +------------------+-------------------------------------------------------------------------+
-    | "err" -> "group" | :c:enum:`mcumgr_group_t` group of the group-based error code. Only      |
-    |                  | appears if an error is returned when using SMP version 2.               |
-    +------------------+-------------------------------------------------------------------------+
-    | "err" -> "rc"    | contains the index of the group-based error code. Only appears if       |
-    |                  | non-zero (error condition) when using SMP version 2.                    |
-    +------------------+-------------------------------------------------------------------------+
-    | "rc"             | :c:enum:`mcumgr_err_t` only appears if non-zero (error condition) when  |
-    |                  | using SMP version 1 or for SMP errors when using SMP version 2.         |
-    +------------------+-------------------------------------------------------------------------+
+   +------------------+-------------------------------------------------------------------------+
+   | "stat_list"      | 表示组名称的字符串数组；如果没有组，                                     |
+   |                  | 此数组可能为空。                                                         |
+   +------------------+-------------------------------------------------------------------------+
+   | "err" -> "group" | :c:enum:`mcumgr_group_t` 基于组的错误码所属的组。仅在                   |
+   |                  | 使用 SMP 版本 2 时返回错误才出现。                                       |
+   +------------------+-------------------------------------------------------------------------+
+   | "err" -> "rc"    | 包含基于组的错误码的索引。仅在使用 SMP 版本 2 时                        |
+   |                  | 非零（错误状态）才出现。                                                 |
+   +------------------+-------------------------------------------------------------------------+
+   | "rc"             | :c:enum:`mcumgr_err_t`，仅在使用 SMP 版本 1 时非零（错误状态）          |
+   |                  | 或在使用 SMP 版本 2 时遇到 SMP 错误才出现。                             |
+   +------------------+-------------------------------------------------------------------------+

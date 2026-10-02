@@ -1,2094 +1,354 @@
-.. _bluetooth
-le
-host:
+.. _bluetooth_le_host:
 
-LE
-Host
+LE Host
 #######
 
-Bluetooth
-Host
-实现
-所有
-的
-higher
-level
-的
-protocols
-和
-profiles
-最
-重要
-的
-是
-为
-applications
-提供
-high
-level
-的
-API。
-以下
-diagram
-depict
-host
-的
-main
-protocol
-&
-profile
-layers。
+蓝牙 Host 实现了所有高层协议和配置文件，最重要的是，它为应用提供高层 API。下图展示了 host 的主要协议与配置文件层次。
 
-..
-figure::
-img/ble
-host
-layers.png
-:
-align:
-center
-:
-alt:
-Bluetooth
-Host
-protocol
-&
-profile
-layers
-Bluetooth
-Host
-protocol
-&
-profile
-layers.
+.. figure:: img/ble_host_layers.png
+   :align: center
+   :alt: Bluetooth Host protocol & profile layers
 
-Lowest
-down
-in
-the
-host
-stack
-sits
-a
-so
-called
-HCI
-driver、
-which
-is
-responsible
-for
-abstracting
-away
-the
-details
-of
-the
-HCI
-transport.
-It
-provides
-a
-basic
-API
-for
-delivering
-data
-from
-the
-controller
-to
-the
-host、
-and
-vice
-versa.
+   蓝牙 Host 协议与配置文件层次。
 
-Perhaps
-the
-most
-important
-block
-above
-the
-HCI
-handling
-is
-the
-Generic
-Access
-Profile
-（GAP）.
-GAP
-simplifies
-Bluetooth
-LE
-access
-by
-defining
-four
-distinct
-roles
-of
-Bluetooth
-usage:
+Host 协议栈最底层是一个所谓的 HCI 驱动，负责屏蔽 HCI 传输的细节。它提供了一个基础 API，用于在控制器与 host 之间双向传递数据。
 
-Connection
-oriented
-roles
-Peripheral
-（e.g.
-a
-smart
-sensor、
-often
-with
-a
-limited
-user
-interface）
-Central
-（typically
-a
-mobile
-phone
-or
-a
-PC）
-Connection
-less
-roles
-Broadcaster
-（sending
-out
-Bluetooth
-LE
-advertisements、
-e.g.
-a
-smart
-beacon）
-Observer
-（scanning
-for
-Bluetooth
-LE
-advertisements）
+也许在 HCI 处理之上最重要的模块是通用访问配置文件（GAP）。GAP 通过定义四种不同的蓝牙使用角色来简化蓝牙 LE 访问：
 
-Each
-role
-comes
-with
-its
-own
-build
-time
-configuration
-option:
-:kconfig:option:`CONFIG_BT_PERIPHERAL`、
-:kconfig:option:`CONFIG_BT_CENTRAL`、
-:kconfig:option:`CONFIG_BT_BROADCASTER`
-&
-:kconfig:option:`CONFIG_BT_OBSERVER`.
-Of
-the
-connection
-oriented
-roles
-central
-implicitly
-enables
-observer
-role、
-and
-peripheral
-implicitly
-enables
-broadcaster
-role.
-Usually
-the
-first
-step
-when
-creating
-an
-application
-is
-to
-decide
-which
-roles
-are
-needed
-and
-go
-from
-there.
-Bluetooth
-Mesh
-is
-a
-slightly
-special
-case、
-requiring
-at
-least
-the
-observer
-and
-broadcaster
-roles、
-and
-possibly
-also
-the
-Peripheral
-role.
-This
-will
-be
-described
-in
-more
-detail
-in
-a
-later
-section.
+* 面向连接的角色
 
-Peripheral
-role
-=================
+  * Peripheral（外围设备，例如智能传感器，通常具有有限的用户界面）
 
-Most
-Zephyr
-based
-Bluetooth
-LE
-devices
-will
-most
-likely
-be
-peripheral
-role
-devices.
-This
-means
-that
-they
-perform
-connectable
-advertising
-and
-expose
-one
-or
-more
-GATT
-services.
-After
-registering
-services
-using
-the
-:c:func:`bt_gatt_service_register`
-API
-the
-application
-will
-typically
-start
-connectable
-advertising
-using
-the
-:c:func:`bt_le_adv_start`
-API.
+  * Central（中心设备，通常是手机或 PC）
 
-There
-are
-several
-peripheral
-sample
-applications
-available
-in
-the
-tree、
-such
-as
-:zephyr_file:`samples/bluetooth/peripheral
-hr`.
+* 非连接的角色
 
-Central
-role
-=============
+  * Broadcaster（广播器，发送蓝牙 LE 广播，例如智能 beacon）
 
-Central
-role
-may
-not
-be
-as
-common
-for
-Zephyr
-based
-devices
-as
-peripheral
-role、
-but
-it
-is
-still
-a
-plausible
-one
-and
-equally
-well
-supported
-in
-Zephyr.
-Rather
-than
-accepting
-connections
-from
-other
-devices
-a
-central
-role
-device
-will
-scan
-for
-available
-peripheral
-device
-and
-choose
-one
-to
-connect
-to.
-Once
-connected、
-a
-central
-will
-typically
-act
-as
-a
-GATT
-client、
-first
-performing
-discovery
-of
-available
-services
-and
-then
-accessing
-one
-or
-more
-supported
-services.
+  * Observer（观察者，扫描蓝牙 LE 广播）
 
-To
-initially
-discover
-a
-device
-to
-connect
-to
-the
-application
-will
-likely
-use
-the
-:c:func:`bt_le_scan_start`
-API、
-wait
-for
-an
-appropriate
-device
-to
-be
-found
-（using
-the
-scan
-callback）
-stop
-scanning
-using
-:c:func:`bt_le_scan_stop`
-and
-then
-connect
-to
-the
-device
-using
-:c:func:`bt_conn_le_create`.
+每个角色都带有自己的构建时配置选项：
+:kconfig:option:`CONFIG_BT_PERIPHERAL`、:kconfig:option:`CONFIG_BT_CENTRAL`、
+:kconfig:option:`CONFIG_BT_BROADCASTER` 与 :kconfig:option:`CONFIG_BT_OBSERVER`。在
+面向连接的角色中，central 隐式启用 observer 角色，
+peripheral 隐式启用 broadcaster 角色。通常创建应用的第一步
+是决定需要哪些角色，然后从那里开始。蓝牙 Mesh 是一个略特殊的案例，至少需要
+observer 和 broadcaster 角色，可能还需要
+Peripheral 角色。这将在后续章节中更详细地描述。
 
-There
-are
-some
-sample
-applications
-for
-the
-central
-role
-available
-in
-the
-tree、
-such
-as
-:zephyr_file:`samples/bluetooth/central
-hr`.
-
-Observer
-role
-==============
-
-An
-observer
-role
-device
-will
-use
-the
-:c:func:`bt_le_scan_start`
-API
-to
-scan
-for
-device、
-but
-it
-will
-not
-connect
-to
-any
-of
-them.
-Instead
-it
-will
-simply
-utilize
-the
-advertising
-data
-of
-found
-devices、
-combining
-it
-optionally
-with
-the
-received
-signal
-strength
-（RSSI）.
-
-Broadcaster
-role
+Peripheral 角色
 ================
 
-A
-broadcaster
-role
-device
-will
-use
-the
-:c:func:`bt_le_adv_start`
-API
-to
-advertise
-specific
-advertising
-data、
-but
-the
-type
-of
-advertising
-will
-be
-non
-connectable、
-i.e.
-other
-device
-will
-not
-be
-able
-to
-connect
-to
-it.
+大多数基于 Zephyr 的蓝牙 LE 设备很可能都是 peripheral 角色
+设备。这意味着它们执行可连接广播并暴露一个或多个 GATT 服务。使用
+:c:func:`bt_gatt_service_register` API 注册服务后，应用通常会
+使用 :c:func:`bt_le_adv_start` API 开始可连接广播。
 
-Connections
+树中有多个 peripheral 示例应用可用，
+例如 :zephyr_file:`samples/bluetooth/peripheral_hr`。
+
+Central 角色
+============
+
+对于基于 Zephyr 的设备，central 角色可能不如 peripheral
+角色常见，但它仍然是一个合理的选择，并且在
+Zephyr 中同样得到良好支持。central 角色设备不是接受来自其他设备的连接，而是扫描可用的 peripheral 设备并选择其中一个
+进行连接。连接后，central 通常充当 GATT
+客户端，首先发现可用的服务，然后
+访问一个或多个受支持的服务。
+
+为了最初发现要连接的设备，应用很可能
+使用 :c:func:`bt_le_scan_start` API，等待找到合适的设备
+（使用扫描回调），使用
+:c:func:`bt_le_scan_stop` 停止扫描，然后使用
+:c:func:`bt_conn_le_create` 连接到该设备。
+
+树中有一些 central 角色的示例应用可用，
+例如 :zephyr_file:`samples/bluetooth/central_hr`。
+
+Observer 角色
 =============
 
-Connection
-handling
-and
-the
-related
-APIs
-can
-be
-found
-in
-the
-:ref:`Connection
-Management
-<bluetooth_connection_mgmt>`
-section.
+observer 角色设备会使用 :c:func:`bt_le_scan_start` API
+扫描设备，但不会连接到任何设备。相反，它会
+简单地利用所发现设备的广播数据，可选地与接收信号强度（RSSI）结合使用。
 
-.. _bluetooth
-callback
-contexts:
+Broadcaster 角色
+================
 
-Callback
-execution
-contexts
+broadcaster 角色设备会使用 :c:func:`bt_le_adv_start` API
+广播特定的广播数据，但广播类型将
+是不可连接的，即其他设备无法连接到它。
+
+连接
+==========
+
+连接处理和相关 API 可在
+:ref:`连接管理 <bluetooth_connection_mgmt>` 一节中找到。
+
+.. _bluetooth_callback_contexts:
+
+回调执行上下文
 ===========================
 
-The
-Host
-delivers
-events
-to
-the
-application
-through
-registered
-callbacks、
-for
-example
-those
-in
-:c:struct:`bt_conn_cb`、
-:c:struct:`bt_le_scan_cb`
-or
-:c:struct:`bt_l2cap_chan_ops`.
-Unless
-documented
-otherwise、
-these
-callbacks
-are
-invoked
-from
-a
-thread
-context、
-never
-from
-an
-ISR.
-Most
-run
-in
-a
-context
-internal
-to
-the
-stack、
-but
-some
-are
-today
-invoked
-synchronously
-from
-within
-the
-API
-call
-that
-triggers
-them、
-and
-so
-run
-in
-the
-calling
-thread:
-for
-example
-:c:func:`bt_unpair`
-invokes
-``bond
-deleted``、
-and
-:c:func:`bt_gatt_unsubscribe`
-can
-invoke
-``notify``
-with
-``NULL``
-data、
-before
-returning.
-Neither
-behavior
-is
-part
-of
-the
-API:
-a
-callback
-delivered
-synchronously
-today
-may
-be
-deferred
-to
-a
-stack
-internal
-context
-in
-a
-future
-release、
-or
-vice
-versa、
-and
-the
-specific
-thread
-has
-changed
-between
-releases
-before
-and
-may
-change
-again.
-Applications
-should
-rely
-only
-on
-the
-guarantees
-above、
-not
-on
-being
-called
-from、
-or
-before
-the
-return
-of、
-anything
-in
-particular.
+Host 通过注册的回调将事件传递给应用，
+例如 :c:struct:`bt_conn_cb`、:c:struct:`bt_le_scan_cb` 或
+:c:struct:`bt_l2cap_chan_ops` 中的回调。除非文档另有说明，这些回调
+从线程上下文调用，绝不从中断服务程序（ISR）调用。大多数在协议栈内部上下文中运行，但有些目前从触发它们的 API 调用内部同步调用，
+因此运行在调用线程中：
+例如 :c:func:`bt_unpair` 调用 ``bond_deleted``，
+:c:func:`bt_gatt_unsubscribe` 可以用 ``NULL`` 数据调用 ``notify``，
+然后返回。两种行为都不属于 API 的一部分：当前同步传递的回调
+可能在未来的版本中延迟到协议栈内部上下文，
+或者反过来，具体的线程在之前的版本之间已经变化过，
+未来也可能再次变化。应用只应依赖上述保证，
+而不是依赖从任何特定内容调用，或在其返回之前被调用。
 
-When
-a
-callback
-runs
-in
-a
-context
-internal
-to
-the
-stack、
-that
-context
-is
-shared
-with
-the
-stack's
-own
-processing:
-time
-spent
-in
-the
-callback
-delays
-other
-Bluetooth
-activity、
-and
-blocking
-carries
-an
-additional
-risk、
-since
-a
-wait
-that
-only
-Bluetooth
-processing
-itself
-can
-satisfy
-becomes
-a
-deadlock、
-because
-that
-processing
-cannot
-proceed
-until
-the
-callback
-returns.
-The
-classic
-example
-is
-allocating
-a
-buffer
-with
-``K_FOREVER``
-from
-a
-pool
-that
-is
-replenished
-by
-the
-same
-context
-that
-runs
-the
-callback.
-As
-applications
-cannot
-rely
-on
-which
-context
-a
-given
-callback
-uses、
-the
-practices
-below
-apply
-to
-every
-callback.
+当回调在协议栈内部上下文中运行时，该上下文
+与协议栈自身的处理共享：在回调中花费的时间会延迟
+其他蓝牙活动，阻塞则带有额外风险，因为
+只有蓝牙处理本身才能满足的等待会变成死锁，
+因为该处理在回调返回之前无法继续。
+经典例子是从由运行回调的同一上下文补充的池中
+以 ``K_FOREVER`` 分配缓冲区。由于
+应用无法依赖给定回调使用哪个上下文，以下做法
+适用于每个回调。
 
-Calling
-Bluetooth
-APIs
-from
-callbacks
-is
-common
-and
-supported、
-even
-though
-most
-of
-them
-may
-block;
-the
-blocking
-risk
-is
-then
-managed
-rather
-than
-avoided:
+从回调中调用蓝牙 API 很常见且受支持，即使
+其中大多数可能会阻塞；阻塞风险通过管理而非
+规避来处理：
 
-Keep
-callbacks
-short、
-and
-defer
-work
-that
-is
-long
-running
-or
-blocks
-indefinitely
-to
-an
-application
-owned
-thread
-or
-work
-queue.
-Prefer
-allocations
-with
-``K_NO_WAIT``
-or
-a
-bounded
-timeout
-over
-``K_FOREVER``、
-and
-handle
-the
-failure.
-Size
-buffer
-pools
-（for
-example
-:kconfig:option:`CONFIG_BT_L2CAP_TX_BUF_COUNT`
-or
-:kconfig:option:`CONFIG_BT_ATT_TX_COUNT`）
-so
-that
-allocations
-made
-from
-callbacks
-do
-not
-have
-to
-wait.
+* 保持回调简短，将长时间运行或无限阻塞的工作
+  延迟到应用拥有的线程或工作队列。
+* 优先使用 ``K_NO_WAIT`` 或有界超时的分配，
+  而非 ``K_FOREVER``，并处理失败。
+* 将缓冲区池（例如 :kconfig:option:`CONFIG_BT_L2CAP_TX_BUF_COUNT`
+  或 :kconfig:option:`CONFIG_BT_ATT_TX_COUNT`）的尺寸设置为
+  从回调中进行的分配无需等待。
 
-Security
-=========
+安全
+========
 
-To
-achieve
-a
-secure
-relationship
-between
-two
-Bluetooth
-devices
-a
-process
-called
-pairing
-is
-used.
-This
-process
-can
-either
-be
-triggered
-implicitly
-through
-the
-security
-properties
-of
-GATT
-services、
-or
-explicitly
-using
-the
-:c:func:`bt_conn_set_security`
-API
-on
-a
-connection
-object.
+要在两个蓝牙设备之间建立安全关系，
+使用一个称为配对的过程。该过程可以通过
+GATT 服务的安全属性隐式触发，
+或使用 :c:func:`bt_conn_set_security` API 在连接对象上显式触发。
 
-To
-achieve
-a
-higher
-security
-level、
-and
-protect
-against
-Man
-In
-The
-Middle
-（MITM）
-attacks、
-it
-is
-recommended
-to
-use
-some
-out
-of
-band
-channel
-during
-the
-pairing.
-If
-the
-devices
-have
-a
-sufficient
-user
-interface
-this
-"channel"
-is
-the
-user
-itself.
-The
-capabilities
-of
-the
-device
-are
-registered
-using
-the
-:c:func:`bt_conn_auth_cb_register`
-API.
-The
-:c:struct:`bt_conn_auth_cb`
-struct
-that's
-passed
-to
-this
-API
-has
-a
-set
-of
-optional
-callbacks
-that
-can
-be
-used
-during
-the
-pairing
-if
-the
-device
-lacks
-some
-feature
-the
-corresponding
-callback
-may
-be
-set
-to
-NULL.
-For
-example、
-if
-the
-device
-does
-not
-have
-an
-input
-method
-but
-does
-have
-a
-display、
-the
-``passkey
-entry``
-and
-``passkey
-confirm``
-callbacks
-would
-be
-set
-to
-NULL、
-but
-the
-``passkey
-display``
-would
-be
-set
-to
-a
-callback
-capable
-of
-displaying
-a
-passkey
-to
-the
-user.
+要达到更高的安全级别并保护
+免受中间人（MITM）攻击，建议在配对期间使用某个
+带外信道。如果设备具有足够的
+用户界面，该“信道”就是用户本身。设备的
+能力使用 :c:func:`bt_conn_auth_cb_register`
+API 注册。传递给该 API 的 :c:struct:`bt_conn_auth_cb` 结构体
+有一组可选回调，可在配对期间使用——如果
+设备缺少某个功能，对应的回调可设置为 NULL。
+例如，如果设备没有输入方式但有
+显示屏，``passkey_entry`` 和 ``passkey_confirm`` 回调将
+设置为 NULL，但 ``passkey_display`` 将设置为
+能够向用户显示口令的回调。
 
-Depending
-on
-the
-local
-and
-remote
-security
-requirements
-&
-capabilities、
-there
-are
-four
-possible
-security
-levels
-that
-can
-be
-reached:
+根据本地和远程的安全需求与能力，
+有四种可以达到的安全级别：
 
-:c:enumerator:`BT_SECURITY_L1`
-No
-encryption
-and
-no
-authentication.
-:c:enumerator:`BT_SECURITY_L2`
-Encryption
-but
-no
-authentication
-（no
-MITM
-protection）.
-:c:enumerator:`BT_SECURITY_L3`
-Encryption
-and
-authentication
-using
-the
-legacy
-pairing
-method
-from
-Bluetooth
-4.0
-and
-4.1.
-:c:enumerator:`BT_SECURITY_L4`
-Encryption
-and
-authentication
-using
-the
-LE
-Secure
-Connections
-feature
-available
-since
-Bluetooth
-4.2.
+    :c:enumerator:`BT_SECURITY_L1`
+        无加密且无认证。
 
-..
-note::
-Mesh
-has
-its
-own
-security
-solution
-through
-a
-process
-called
-provisioning.
-It
-follows
-a
-similar
-procedure
-as
-pairing、
-but
-is
-done
-using
-separate
-mesh
-specific
-APIs.
+    :c:enumerator:`BT_SECURITY_L2`
+        有加密但无认证（无 MITM 保护）。
+
+    :c:enumerator:`BT_SECURITY_L3`
+        使用 Bluetooth 4.0 和 4.1 的遗留配对方法进行
+        加密和认证。
+
+    :c:enumerator:`BT_SECURITY_L4`
+        使用自 Bluetooth 4.2 起可用的 LE Secure Connections
+        特性进行加密和认证。
+
+.. note::
+   Mesh 通过一个称为
+   配准的过程拥有自己的安全解决方案。它遵循
+   与配对类似的流程，但使用
+   单独的 mesh 专属 API 完成。
 
 L2CAP
 =====
 
-L2CAP
-stands
-for
-the
-Logical
-Link
-Control
-and
-Adaptation
-Protocol.
-It
-is
-a
-common
-layer
-for
-all
-communication
-over
-Bluetooth
-connections、
-however
-an
-application
-comes
-in
-direct
-contact
-with
-it
-only
-when
-using
-it
-in
-the
-so
-called
-Connection
-oriented
-Channels
-（CoC）
-mode.
-More
-information
-on
-this
-can
-be
-found
-in
-the
-:ref:`L2CAP
-API
-section
-<bt_l2cap>`.
+L2CAP 代表逻辑链路控制与适配协议。它是
+所有蓝牙连接通信的公共层，但
+应用仅在使用所谓的面向连接信道（CoC）模式与其直接接触时才会接触到它。有关
+此的更多信息可在 :ref:`L2CAP API 一节 <bt_l2cap>` 中找到。
 
-Terminology
--------------
+术语
+-----------
 
-The
-definitions
-are
-from
-the
-Core
-Specification
-version
-5.4、
-volume
-3、
-part
-A
-1.4.
+定义来自 Core Specification 5.4 版，卷 3，部分 A
+1.4。
 
-..
-list
-table::
-:
-header
-rows:
-1
-Term
-Description
-Upper
-layer
-Layer
-above
-L2CAP、
-it
-exchanges
-data
-in
-form
-of
-SDUs.
-It
-may
-be
-an
-application
-or
-a
-higher
-level
-protocol.
-Lower
-layer
-Layer
-below
-L2CAP、
-it
-exchanges
-data
-in
-form
-of
-PDUs
-（or
-fragments）.
-It
-is
-usually
-the
-HCI.
-Service
-Data
-Unit
-（SDU）
-Packet
-of
-data
-that
-L2CAP
-exchanges
-with
-the
-upper
-layer.
-This
-term
-is
-relevant
-only
-in
-Enhanced
-Retransmission
-mode、
-Streaming
-mode、
-Retransmission
-mode
-and
-Flow
-Control
-Mode、
-not
-in
-Basic
-L2CAP
-mode.
-Protocol
-Data
-Unit
-（PDU）
-Packet
-of
-data
-containing
-L2CAP
-data.
-PDUs
-always
-start
-with
-Basic
-L2CAP
-header.
-Types
-of
-PDUs
-for
-LE:
-:ref:`B
-frames
-<bluetooth_l2cap_b_frame>`
-and
-:ref:`K
-frames
-<bluetooth_l2cap_k_frame>`.
-Types
-of
-PDUs
-for
-BR/EDR:
-I
-frames、
-S
-frames、
-C
-frames
-and
-G
-frames.
-Maximum
-Transmission
-Unit
-（MTU）
-Maximum
-size
-of
-an
-SDU
-that
-the
-upper
-layer
-is
-capable
-of
-accepting.
-Maximum
-Payload
-Size
-（MPS）
-Maximum
-payload
-size
-that
-the
-L2CAP
-layer
-is
-capable
-of
-accepting.
-In
-Basic
-L2CAP
-mode、
-the
-MTU
-size
-is
-equal
-to
-MPS.
-In
-credit
-based
-channels
-without
-segmentation、
-the
-MTU
-is
-MPS
-minus
-2.
-Basic
-L2CAP
-header
-Present
-at
-the
-beginning
-of
-each
-PDU.
-It
-contains
-two
-fields、
-the
-PDU
-length
-and
-the
-Channel
-Identifier
-（CID）.
+.. list-table::
+   :header-rows: 1
 
-PDU
-Types
+   * - 术语
+     - 描述
+
+   * - 上层
+     - L2CAP 之上的层，以 SDU 形式交换数据。它可能是
+       应用或更高层协议。
+
+   * - 下层
+     - L2CAP 之下的层，以 PDU（或片段）形式交换数据。它
+       通常是 HCI。
+
+   * - 服务数据单元（SDU）
+     - L2CAP 与上层交换的数据包。
+
+       该术语仅在增强重传模式、流模式、重传模式和流量控制模式下相关，在基本 L2CAP 模式下不相关。
+
+   * - 协议数据单元（PDU）
+     - 包含 L2CAP 数据的数据包。PDU 总是以基本 L2CAP
+       头部开始。
+
+       LE 的 PDU 类型：:ref:`B 帧 <bluetooth_l2cap_b_frame>` 和
+       :ref:`K 帧 <bluetooth_l2cap_k_frame>`。
+
+       BR/EDR 的 PDU 类型：I 帧、S 帧、C 帧和 G 帧。
+
+   * - 最大传输单元（MTU）
+     - 上层能够接受的 SDU 最大尺寸。
+
+   * - 最大载荷尺寸（MPS）
+     - L2CAP 层能够接受的最大载荷尺寸。
+
+       在基本 L2CAP 模式下，MTU 尺寸等于 MPS。在无分段信用制
+       信道中，MTU 为 MPS 减 2。
+
+   * - 基本 L2CAP 头部
+     - 位于每个 PDU 的开头。它包含两个字段，PDU
+       长度和信道标识符（CID）。
+
+PDU 类型
 ---------
 
-.. _bluetooth
-l2cap
-b
-frame:
+.. _bluetooth_l2cap_b_frame:
 
-B
-frame:
-Basic
-information
-frame
+B 帧：基本信息帧
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-PDU
-used
-in
-Basic
-L2CAP
-mode.
-It
-contains
-the
-payload
-received
-from
-the
-upper
-layer
-or
-delivered
-to
-the
-upper
-layer
-as
-its
-payload.
 
-..
-image::
-img/l2cap
-b
-frame.drawio.svg
-:
-align:
-center
-:
-width:
-45%
-:
-alt:
-Representation
-of
-a
-B
-frame
-PDU.
-The
-PDU
-is
-split
-into
-two
-rectangles、
-the
-first
-one
-being
-the
-L2CAP
-header、
-its
-size
-is
-4
-octets
-and
-its
-made
-of
-the
-PDU
-length
-and
-the
-channel
-ID.
-The
-second
-rectangle
-represents
-the
-information
-payload
-and
-its
-size
-is
-less
-or
-equal
-to
-MPS.
+在基本 L2CAP 模式下使用的 PDU。它包含从上层
+接收的载荷，或作为其载荷交付给上层的载荷。
 
-.. _bluetooth
-l2cap
-k
-frame:
+.. image:: img/l2cap_b_frame.drawio.svg
+   :align: center
+   :width: 45%
+   :alt: B 帧 PDU 的表示。PDU 分为两个矩形，
+         第一个是 L2CAP 头部，其尺寸为 4 个八位组，
+         由 PDU 长度和信道 ID 组成。第二个矩形表示
+         信息载荷，其尺寸小于或等于 MPS。
 
-K
-frame:
-Credit
-based
-frame
-^^^^^^^^^^^^^^^^^^^^^^
-PDU
-used
-in
-LE
-Credit
-Based
-Flow
-Control
-mode
-and
-Enhanced
-Credit
-Based
-Flow
-Control
-mode.
-It
-contains
-a
-SDU
-segment
-and
-additional
-protocol
-information.
+.. _bluetooth_l2cap_k_frame:
 
-..
-image::
-img/l2cap
-k
-frame
-1.drawio.svg
-:
-width:
-45%
-:
-alt:
-Representation
-of
-a
-starting
-K
-frame
-PDU.
-The
-PDU
-is
-split
-into
-three
-rectangles、
-the
-first
-one
-being
-the
-L2CAP
-header、
-its
-size
-is
-4
-octets
-and
-its
-made
-of
-the
-PDU
-length
-and
-the
-channel
-ID.
-The
-second
-rectangle
-represents
-the
-L2CAP
-SDU
-length、
-its
-size
-is
-2
-octets.
-The
-third
-rectangle
-represents
-the
-information
-payload
-and
-its
-size
-is
-less
-or
-equal
-to
-MPS
-minus
-2
-octets.
-The
-information
-payload
-contains
-the
-L2CAP
-SDU.
+K 帧：信用制帧
+^^^^^^^^^^^^^^^^^^^^^^^
 
-..
-image::
-img/l2cap
-k
-frame.drawio.svg
-:
-align:
-right
-:
-width:
-45%
-:
-alt:
-Representation
-of
-K
-frames
-PDUs
-after
-the
-starting
-one.
-The
-PDU
-is
-split
-into
-two
-rectangles、
-the
-first
-one
-being
-the
-L2CAP
-header、
-its
-size
-is
-4
-octets
-and
-its
-made
-of
-the
-PDU
-length
-and
-the
-channel
-ID.
-The
-second
-rectangle
-represents
-the
-information
-payload
-and
-its
-size
-is
-less
-or
-equal
-to
-MPS.
-The
-information
-payload
-contains
-the
-L2CAP
-SDU.
+在 LE 信用制流量控制模式和增强信用制流量
+控制模式下使用的 PDU。它包含一个 SDU 片段和
+附加协议信息。
 
-Relevant
-Kconfig
+.. image:: img/l2cap_k_frame_1.drawio.svg
+   :width: 45%
+   :alt: 起始 K 帧 PDU 的表示。PDU 分为三个
+         矩形，第一个是 L2CAP 头部，其尺寸为 4 个八位组
+         ，由 PDU 长度和信道 ID 组成。第二个矩形
+         表示 L2CAP SDU 长度，其尺寸为 2 个八位组。第三个
+         矩形表示信息载荷，其尺寸小于或
+         等于 MPS 减 2 个八位组。信息载荷包含 L2CAP
+         SDU。
+
+.. image:: img/l2cap_k_frame.drawio.svg
+   :align: right
+   :width: 45%
+   :alt: 起始 K 帧之后的 K 帧 PDUs 的表示。PDU 分为
+         两个矩形，第一个是 L2CAP 头部，其尺寸为 4 个
+         八位组，由 PDU 长度和信道 ID 组成。第二个
+         矩形表示信息载荷，其尺寸小于或
+         等于 MPS。信息载荷包含 L2CAP SDU。
+
+相关 Kconfig
 ----------------
 
-..
-list
-table::
-:
-header
-rows:
-1
-Kconfig
-symbol
-Description
-:kconfig:option:`CONFIG_BT_BUF_ACL_RX_SIZE`
-Represents
-the
-MPS
-:kconfig:option:`CONFIG_BT_L2CAP_TX_MTU`
-Represents
-the
-L2CAP
-MTU
-:kconfig:option:`CONFIG_BT_L2CAP_DYNAMIC_CHANNEL`
-Enables
-LE
-Credit
-Based
-Flow
-Control
-and
-thus
-the
-stack
-may
-use
-:ref:`K
-frame
-<bluetooth_l2cap_k_frame>`
-PDUs
+.. list-table::
+   :header-rows: 1
+
+   * - Kconfig 符号
+     - 描述
+
+   * - :kconfig:option:`CONFIG_BT_BUF_ACL_RX_SIZE`
+     - 代表 MPS
+
+   * - :kconfig:option:`CONFIG_BT_L2CAP_TX_MTU`
+     - 代表 L2CAP MTU
+
+   * - :kconfig:option:`CONFIG_BT_L2CAP_DYNAMIC_CHANNEL`
+     - 启用 LE 信用制流量控制，从而使协议栈可能使用
+       :ref:`K 帧 <bluetooth_l2cap_k_frame>` PDU
 
 GATT
 ====
 
-The
-Generic
-Attribute
-Profile
-is
-the
-most
-common
-means
-of
-communication
-over
-LE
-connections.
-A
-more
-detailed
-description
-of
-this
-layer
-and
-the
-API
-reference
-can
-be
-found
-in
-the
-:ref:`GATT
-API
-reference
-section
-<bt_gatt>`.
+通用属性配置文件是在 LE 连接上进行通信的最常见方式。有关该层更详细的描述
+以及 API 参考可在
+:ref:`GATT API 参考一节 <bt_gatt>` 中找到。
 
-ATT
-timeout
--------------
+ATT 超时
+-----------
 
-If
-the
-peer
-device
-does
-not
-respond
-to
-an
-ATT
-request
-（such
-as
-read
-or
-write）
-within
-the
-ATT
-timeout、
-the
-host
-will
-automatically
-initiate
-a
-disconnect.
-This
-simplifies
-error
-handling
-by
-reducing
-rare
-failure
-conditions
-to
-a
-common
-disconnection、
-allowing
-developers
-to
-manage
-unexpected
-disconnects
-without
-special
-cases
-for
-ATT
-timeouts.
+如果对端设备未在 ATT 超时内响应 ATT 请求（如读或写），
+host 将自动发起断开连接。这通过
+将罕见故障条件减少为常见断开来简化错误处理，
+使开发者无需为 ATT 超时设置特殊情况即可管理意外断开。
 
-..
-image::
-img/att
-timeout.svg
-:
-align:
-center
-:
-alt:
-ATT
-timeout
+.. image:: img/att_timeout.svg
+   :align: center
+   :alt: ATT timeout
 
 Mesh
 ====
 
-Mesh
-is
-a
-little
-bit
-special
-when
-it
-comes
-to
-the
-needed
-GAP
-roles.
-By
-default、
-mesh
-requires
-both
-observer
-and
-broadcaster
-role
-to
-be
-enabled.
-If
-the
-optional
-GATT
-Proxy
-feature
-is
-desired、
-then
-peripheral
-role
-should
-also
-be
-enabled.
+在所需 GAP 角色方面，Mesh 略特殊。
+默认情况下，mesh 需要同时启用 observer 和 broadcaster 角色。
+如果希望使用可选的 GATT Proxy 特性，则
+还应启用 peripheral 角色。
 
-The
-API
-reference
-for
-mesh
-can
-be
-found
-in
-the
-:ref:`Mesh
-API
-reference
-section
-<bluetooth_mesh>`.
+mesh 的 API 参考可在
+:ref:`Mesh API 参考一节 <bluetooth_mesh>` 中找到。
 
-LE
-Audio
+LE Audio
 ========
-The
-LE
-audio
-is
-a
-set
-of
-profiles
-and
-services
-that
-utilizes
-GATT
-and
-Isochronous
-Channel
-to
-provide
-audio
-over
-Bluetooth
-Low
-Energy.
-The
-architecture
-and
-API
-references
-can
-be
-found
-in
-:ref:`Bluetooth
-Audio
-Architecture
-<bluetooth_le_audio_arch>`.
+LE audio 是一组利用 GATT 和
+等时信道在蓝牙低功耗上提供音频的配置和服务。
+架构和 API 参考可在
+:ref:`蓝牙音频架构 <bluetooth_le_audio_arch>` 中找到。
 
-.. _bluetooth
-persistent
-storage:
 
-Persistent
-storage
+.. _bluetooth-persistent-storage:
+
+持久存储
 ==================
 
-The
-Bluetooth
-host
-stack
-uses
-the
-settings
-subsystem
-to
-implement
-persistent
-storage
-to
-flash.
-This
-requires
-the
-presence
-of
-a
-flash
-driver
-and
-a
-designated
-"storage"
-partition
-on
-flash.
-A
-typical
-set
-of
-configuration
-options
-needed
-will
-look
-something
-like
-the
-following:
+蓝牙 host 协议栈使用 settings 子系统实现
+到 flash 的持久存储。这需要存在 flash
+驱动和 flash 上指定的“storage”分区。所需的一组
+典型配置选项大致如下：
 
-..
-code
-block::
-cfg
-CONFIG_BT_SETTINGS=y
-CONFIG_FLASH=y
-CONFIG_FLASH_PAGE_LAYOUT=y
-CONFIG_FLASH_MAP=y
-CONFIG_NVS=y
-CONFIG_SETTINGS=y
+  .. code-block:: cfg
 
-Once
-enabled、
-it
-is
-the
-responsibility
-of
-the
-application
-to
-call
-settings_load()
-after
-having
-initialized
-Bluetooth
-（using
-the
-:c:func:`bt_enable`
-API）.
+    CONFIG_BT_SETTINGS=y
+    CONFIG_FLASH=y
+    CONFIG_FLASH_PAGE_LAYOUT=y
+    CONFIG_FLASH_MAP=y
+    CONFIG_NVS=y
+    CONFIG_SETTINGS=y
+
+启用后，由应用负责在初始化蓝牙
+（使用
+:c:func:`bt_enable` API）之后调用
+settings_load()。

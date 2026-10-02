@@ -29,7 +29,7 @@ mender-mcu 采用 Apache-2.0 许可。
        - name: mender-mcu
          url: https://github.com/mendersoftware/mender-mcu
          revision: main
-         path: modules/mender-mcu # 根据需要调整路径
+         path: modules/mender-mcu # adjust the path as needed
 
 更详细的步骤和 API 文档请参阅 `mender-mcu 文档`_。`Zephyr 参考项目`_ 提供了一个示例参考集成。
 

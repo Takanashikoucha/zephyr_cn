@@ -1,129 +1,44 @@
-.. _bluetooth
-mesh
-models:
+.. _bluetooth_mesh_models:
 
-Mesh
-models
+Mesh 模型
 ###########
 
-Foundation
-models
+基础模型
 *****************
 
-The
-Bluetooth
-Mesh
-specification
-defines
-foundation
-models
-that
-can
-be
-used
-by
-network
-administrators
-to
-configure
-and
-diagnose
-mesh
-nodes.
+蓝牙 Mesh 规范定义了可由网络管理员用于配置和诊断 Mesh 节点的基础模型。
 
-..
-toctree::
-:
-maxdepth:
-1
+.. toctree::
+   :maxdepth: 1
 
-brg
-cfg
-cli
-brg
-cfg
-srv
-cfg
-cli
-cfg
-srv
-health
-cli
-health
-srv
-lcd
-cli
-lcd
-srv
-od
-cli
-od
-srv
-op
-agg
-cli
-op
-agg
-srv
-priv
-beacon
-cli
-priv
-beacon
-srv
-rpr
-cli
-rpr
-srv
-sar
-cfg
-cli
-sar
-cfg
-srv
-srpl
-cli
-srpl
-srv
+   brg_cfg_cli
+   brg_cfg_srv
+   cfg_cli
+   cfg_srv
+   health_cli
+   health_srv
+   lcd_cli
+   lcd_srv
+   od_cli
+   od_srv
+   op_agg_cli
+   op_agg_srv
+   priv_beacon_cli
+   priv_beacon_srv
+   rpr_cli
+   rpr_srv
+   sar_cfg_cli
+   sar_cfg_srv
+   srpl_cli
+   srpl_srv
 
-Model
-specification
-models
+模型规范模型
 **************************
 
-In
-addition
-to
-the
-foundation
-models
-defined
-in
-the
-Bluetooth
-Mesh
-specification、
-the
-Bluetooth
-Mesh
-Model
-Specification
-defines
-several
-models、
-some
-of
-which
-are
-implemented
-in
-Zephyr:
+除蓝牙 Mesh 规范中定义的基础模型外，蓝牙 Mesh 模型规范还定义了一些模型，其中一些已在 Zephyr 中实现：
 
-..
-toctree::
-:
-maxdepth:
-1
+.. toctree::
+   :maxdepth: 1
 
-blob
-dfu
+   blob
+   dfu

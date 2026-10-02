@@ -1,240 +1,358 @@
 .. _bluetooth_le_audio_arch:
 
-LE
-Audio
-Stack
+LE Audio Stack
 ##############
 
 .. graphviz::
-   :caption:
-   Bluetooth
-   Audio
-   Architecture
+   :caption: Bluetooth Audio Architecture
 
-   digraph
-   bluetooth_audio_arch
-   {
-      r
-      [shape=record,
-      width=5,
-      height=3
-         label="{{TMAP
-      |
-      HAP
-      |
-      PBP
-      |
-      GMAP
-      |
-      ...}
-      |
-               GAF
-      |
-               {{{
-      GATT
-      |
-      GAP
-      }
-      |
-      Low
-      level
-      protocols
-      (L2CAP,
-      ATT,
-      etc.)}
-      |
-      GAP
-      |
-      ISO}
-               |
-      HCI
-      Driver
-      (USB,
-      UART,
-      SPI,
-      virtual,
-      etc.)}"
+   digraph bluetooth_audio_arch {
+      r [shape=record, width=5, height=3
+         label="{{TMAP | HAP | PBP | GMAP | ...} |
+                  GAF |
+                  {{{ GATT | GAP } | Low-level protocols (L2CAP, ATT, etc.)} | GAP | ISO}
+                  | HCI Driver (USB, UART, SPI, virtual, etc.)}"
          ];
    }
 
-Overall
-design
+Overall design
 **************
 
-LE
-Audio
-stack
-的
-overall
-design
-是
-implementation
-尽可能
-遵循
-specifications
-既
-在
-structure
-方面
-也
-在
-naming
-方面。
-大多数
-API
-functions
-以
-specification
-acronym
-为
-prefix
-（例如
-``bt_bap``
-用于
-Basic
-Audio
-Profile
-（BAP）
-和
-``bt_vcp``
-用于
-Volume
-Control
-Profile
-（VCP））。
-Functions
-然后
-根据
-适用
-情况
-以
-每个
-profile
-的
-特定
-role
-为
-prefix
-（例如
-:c:func:`bt_bap_unicast_client_discover`
-和
-:c:func:`bt_vcp_vol_rend_set_vol`）。
-通常
-每个
-profile
-或
-service
-specifications
-定义
-的
-procedure
-有
-一
-个
-function
-以及
-不
-对应
-procedures
-的
-额外
-helper
-或
-meta
-functions。
+The overall design of the LE Audio stack is that the implementation follows the specifications
+as closely as possible,
+both in terms of structure but also naming.
+Most API functions are prefixed by the specification acronym
+(e.g. ``bt_bap`` for the Basic Audio Profile (BAP) and ``bt_vcp`` for the Volume Control Profile
+(VCP)). The functions are then further prefixed with the specific role from each profile where
+applicable (e.g. :c:func:`bt_bap_unicast_client_discover` and :c:func:`bt_vcp_vol_rend_set_vol`).
+There are usually a function per procedure defined by the profile or service specifications,
+and additional helper or meta functions that do not correspond to procedures.
 
-Files
-的
-structure
-通常
-也
-遵循
-这
-个
-其中
-BAP
-相关
-的
-files
-以
-``bap``
-为
-prefix
-VCP
-相关
-的
-files
-以
-``vcp``
-为
-prefix。
-如果
-file
-对
-特定
-的
-profile
-role
-特定
-role
-也
-嵌入
-在
-file
-name
-中。
+The structure of the files generally also follow this,
+where BAP related files are prefixed with ``bap`` and VCP related files are prefixed with ``vcp``.
+If the file is specific for a profile role, the role is also embedded in the file name.
 
-Generic
-Audio
-Framework
-（GAF）
+Generic Audio Framework (GAF)
 *****************************
-Generic
-Audio
-Framework
-（GAF）
-被
-考虑
-为
-Bluetooth
-LE
-Audio
-architecture
-的
-middleware。
-GAF
-包含
-profiles
-和
-services
-允许
-higher
-layer
-applications
-和
-profiles
-setup
-streams、
-change
-volume、
-control
-media
-和
-telephony
-以及
-更多。
-GAF
-build
-在
-GATT、
-GAP
-和
-isochronous
+The Generic Audio Framework (GAF) is considered the middleware of the Bluetooth
+LE Audio architecture. The GAF contains the profiles and services that allows
+higher layer applications and profiles to set up streams, change volume, control
+media and telephony and more. The GAF builds on GATT, GAP and isochronous
+channels (ISO).
 
+GAF uses GAP to connect, advertise and synchronize to other devices.
+GAF uses GATT to configure streams, associate streams with content
+(e.g. media or telephony), control volume and more.
+GAF uses ISO for the audio streams themselves, both as unicast (connected)
+audio streams or broadcast (unconnected) audio streams.
 
-.. note::
+GAF mandates the use of the LC3 codec, but also supports other codecs.
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+.. graphviz::
+   :caption: Generic Audio Framework (GAF)
+
+   digraph gaf {
+      node [shape=record];
+      edge [style=invis];
+      compound=true;
+      nodesep=0.1;
+
+      subgraph hap_layer {
+         cluster=true;
+         label="HAP";
+         HAS;
+         BAS [style=dashed];
+         IAS [style=dashed];
+      }
+
+      subgraph pbp_layer {
+         cluster=true;
+         label="PBP";
+         PBS[style=invis]; // Make it possible to treat PBP like the others
+      }
+
+      subgraph tmap_layer {
+         cluster=true;
+         label="TMAP";
+         TMAS;
+      }
+
+      subgraph gmap_layer {
+         cluster=true;
+         label="GMAP";
+         GMAS;
+      }
+
+      subgraph gaf_layer {
+         cluster=true;
+         label="Generic Audio Framework";
+
+         subgraph transition_and_coordination_control_layer {
+            cluster=true;
+            label="Transition and Coordination Control";
+            style=dashed;
+
+            subgraph cap_layer {
+               cluster=true;
+               style=solid;
+               label="CAP";
+               CAS;
+            }
+
+            subgraph csip_layer {
+               cluster=true;
+               style=solid;
+               label="CSIP";
+               CSIS;
+            }
+         }
+
+         subgraph stream_control_layer {
+            cluster=true;
+            label="Stream Control";
+            style=dashed;
+
+            subgraph bap_layer {
+               cluster=true;
+               label="BAP";
+               style=solid;
+               PACS [style=dashed];
+               ASCS [style=dashed];
+               BASS [style=dashed];
+            }
+         }
+
+         subgraph content_control_layer {
+            cluster=true;
+            label="Content Control";
+            style=dashed;
+
+            subgraph mcp_layer {
+               cluster=true;
+               label="MCP";
+               style=solid;
+               MCS;
+            }
+
+            subgraph ccp_layer {
+               cluster=true;
+               label="CCP";
+               style=solid;
+               TBS;
+            }
+         }
+
+         subgraph rendering_and_capture_control_layer {
+            cluster=true;
+            label="Rendering and Capture Control";
+            style=dashed;
+
+            subgraph micp_layer {
+               cluster=true;
+               label="MICP";
+               style=solid;
+               MICS;
+               MICP_AICS [style=dashed];
+            }
+
+            subgraph vcp_layer {
+               cluster=true;
+               label="VCP";
+               style=solid;
+               VCS;
+               VOCS [style=dashed];
+               VCP_AICS [style=dashed];
+            }
+         }
+      }
+
+      HAS -> CAS;
+      PBS -> CAS;
+      TMAS -> CAS;
+      GMAS -> CAS;
+
+      CAS -> MCS;
+      CAS -> TBS;
+      CAS -> ASCS;
+      CAS -> PACS;
+      CAS -> BASS;
+      CAS -> MICS;
+      CAS -> MICP_AICS;
+      CAS -> VCS;
+      CAS -> VOCS;
+      CAS -> VCP_AICS;
+
+      CSIS -> MCS;
+      CSIS -> TBS;
+      CSIS -> ASCS;
+      CSIS -> PACS;
+      CSIS -> BASS;
+      CSIS -> MICS;
+      CSIS -> MICP_AICS;
+      CSIS -> VCS;
+      CSIS -> VOCS;
+      CSIS -> VCP_AICS;
+   }
+
+The top-level profiles TMAP and HAP are not part of the GAF, but rather provide
+top-level requirements for how to use the GAF.
+
+GAF and the top layer profiles have been implemented in Zephyr with the following structure.
+
+.. graphviz::
+   :caption: Zephyr Generic Audio Framework
+
+   digraph gaf {
+      node [shape=record];
+      edge [style=invis];
+      compound=true;
+      nodesep=0.1;
+
+      subgraph hap_layer {
+         cluster=true;
+         label="HAP";
+         HAS_H [label="has.h"];
+         BAS_H [label="bas.h"];
+         IAS_H [label="ias.h"];
+      }
+
+      subgraph pbp_layer {
+         cluster=true;
+         label="PBP";
+         PBP_H [label="pbp.h"]; // Make it possible to treat PBP like the others
+      }
+
+      subgraph tmap_layer {
+         cluster=true;
+         label="TMAP";
+         TMAP_H [label="tmap.h"];
+      }
+
+      subgraph gmap_layer {
+         cluster=true;
+         label="GMAP";
+         GMAP_H [label="gmap.h"];
+         GMAP_PRESET_H [label="gmap_lc3_preset.h"];
+      }
+
+      subgraph gaf_layer {
+         cluster=true;
+         label="Generic Audio Framework";
+         AUDIO_H [label="audio.h"];
+         LC3_H [label="lc3.h"];
+
+         subgraph transition_and_coordination_control_layer {
+            cluster=true;
+            label="Transition and Coordination Control";
+            style=dashed;
+
+            subgraph cap_layer {
+               cluster=true;
+               style=solid;
+               label="CAP";
+               CAP_H [label="cap.h"];
+            }
+
+            subgraph csip_layer {
+               cluster=true;
+               style=solid;
+               label="CSIP";
+               CSIP_H [label="csip.h"];
+            }
+         }
+
+         subgraph stream_control_layer {
+            cluster=true;
+            label="Stream Control";
+            style=dashed;
+
+            subgraph bap_layer {
+               cluster=true;
+               label="BAP";
+               style=solid;
+               PACS_H [label="pacs.h"];
+               BAP_H [label="bap.h"];
+               BAP_PRESET_H [label="bap_lc3_preset.h"];
+            }
+         }
+
+         subgraph content_control_layer {
+            cluster=true;
+            label="Content Control";
+            style=dashed;
+
+            subgraph mcp_layer {
+               cluster=true;
+               label="MCP";
+               style=solid;
+               MCS_H [label="mcs.h"];
+               MCC_H [label="mcc.h"];
+               MP_H [label="media_proxy.h"];
+            }
+
+            subgraph ccp_layer {
+               cluster=true;
+               label="CCP";
+               style=solid;
+               CCP_H [label="ccp.h"];
+               TBS_H [label="tbs.h"];
+            }
+         }
+
+         subgraph rendering_and_capture_control_layer {
+            cluster=true;
+            label="Rendering and Capture Control";
+            style=dashed;
+
+            subgraph micp_layer {
+               cluster=true;
+               label="MICP";
+               style=solid;
+               MICP_H [label="micp.h"];
+               AICS_H [label="aics.h"];
+            }
+
+            subgraph vcp_layer {
+               cluster=true;
+               label="VCP";
+               style=solid;
+               VCP_H [label="vcp.h"];
+               VOCS_H [label="vocs.h"];
+               AICS_H [label="aics.h"];
+            }
+         }
+      }
+
+      HAS_H -> CAP_H;
+      PBP_H -> CAP_H;
+      TMAP_H -> CAP_H;
+      GMAP_H -> CAP_H;
+      GMAP_PRESET_H -> CAP_H;
+
+      CAP_H -> MCS_H;
+      CAP_H -> MCC_H;
+      CAP_H -> MP_H;
+      CAP_H -> CCP_H;
+      CAP_H -> TBS_H;
+      CAP_H -> BAP_H;
+      CAP_H -> BAP_PRESET_H;
+      CAP_H -> PACS_H;
+      CAP_H -> MICP_H;
+      CAP_H -> VCP_H;
+
+      CSIP_H -> MCS_H;
+      CSIP_H -> MCC_H;
+      CSIP_H -> MP_H;
+      CSIP_H -> CCP_H;
+      CSIP_H -> TBS_H;
+      CSIP_H -> BAP_H;
+      CSIP_H -> BAP_PRESET_H;
+      CSIP_H -> PACS_H;
+      CSIP_H -> MICP_H;
+      CSIP_H -> VCP_H;
+   }
+
+Profile Dependencies
 ====================
 
 The LE Audio profiles depend on other profiles and services, as outlined in the following tables.

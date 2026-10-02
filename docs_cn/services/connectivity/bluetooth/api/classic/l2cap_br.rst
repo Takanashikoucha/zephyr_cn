@@ -1,545 +1,121 @@
-.. _bt
-l2cap
-br:
+.. _bt_l2cap_br:
 
-Bluetooth
-Logical
-Link
-Control
-and
-Adaptation
-Protocol
-（L2CAP）
-for
-BR
-EDR
+用于 BR/EDR 的 Bluetooth 逻辑链路控制和适配协议（L2CAP）
 #########################################################################
 
-L2CAP
-BR
-EDR
-提供
-Bluetooth
-Classic
-L2CAP
-（Logical
-Link
-Control
-and
-Adaptation
-Protocol）
-features
-的
-支持
-包括
-ECHO
-request
-response
-和
-connectionless
-data
-channels。
+L2CAP BR/EDR 提供对 Bluetooth Classic L2CAP（逻辑链路控制和适配协议）特性的支持，包括 ECHO 请求/响应和无连接数据通道。
 
-ECHO
-Request
-Response
+ECHO 请求/响应
 *********************
 
-L2CAP
-ECHO
-feature
-允许
-通过
-发送
-ECHO
-requests
-和
-接收
-ECHO
-responses
-来
-测试
-connection。
-Applications
-可以
-注册
-callbacks
-来
-监控
-ECHO
-packets
-和
-发送
-ECHO
-data。
-该
-feature
-通过
-配置
-选项
-:kconfig:option:`CONFIG_BT_CLASSIC`
-启用。
+L2CAP ECHO 特性允许通过发送 ECHO 请求并接收 ECHO 响应来测试连接。
+应用程序可以注册回调以监视 ECHO 数据包并发送 ECHO 数据。
+该特性通过配置选项启用：:kconfig:option:`CONFIG_BT_CLASSIC`。
 
-Registering
-ECHO
-Callbacks
+注册 ECHO 回调
 ==========================
 
-To
-monitor
-ECHO
-request
-response
-packets、
-register
-a
-:c:struct:`bt
-l2cap
-br
-echo
-cb`
-callback
-structure:
+要监视 ECHO 请求/响应数据包，请注册 :c:struct:`bt_l2cap_br_echo_cb` 回调
+结构体：
 
-..
-code
-block::
-c
+.. code-block:: c
 
-static
-void
-echo
-req
-cb（struct
-bt
-conn
-*conn、
-uint8
-t
-identifier、
-struct
-net
-buf
-*buf）
-{
-/*
-Handle
-ECHO
-request
-*/
-}
+    static void echo_req_cb(struct bt_conn *conn, uint8_t identifier, struct net_buf *buf)
+    {
+        /* Handle ECHO request */
+    }
 
-static
-void
-echo
-rsp
-cb（struct
-bt
-conn
-*conn、
-struct
-net
-buf
-*buf）
-{
-/*
-Handle
-ECHO
-response
-*/
-}
+    static void echo_rsp_cb(struct bt_conn *conn, struct net_buf *buf)
+    {
+        /* Handle ECHO response */
+    }
 
-static
-struct
-bt
-l2cap
-br
-echo
-cb
-echo
-cb
-=
-{
-.req
-=
-echo
-req
-cb、
-.rsp
-=
-echo
-rsp
-cb、
-};
+    static struct bt_l2cap_br_echo_cb echo_cb = {
+        .req = echo_req_cb,
+        .rsp = echo_rsp_cb,
+    };
 
-bt
-l2cap
-br
-echo
-cb
-register（&echo
-cb）;
+    bt_l2cap_br_echo_cb_register(&echo_cb);
 
-Sending
-ECHO
-Request
+发送 ECHO 请求
 ====================
 
-To
-send
-an
-ECHO
-request、
-allocate
-a
-buffer
-with
-:c:macro:`BT
-L2CAP
-BR
-ECHO
-REQ
-RESERVE`
-bytes
-reserved
-for
-the
-L2CAP
-header:
+要发送 ECHO 请求，请分配一个为 L2CAP 头部保留 :c:macro:`BT_L2CAP_BR_ECHO_REQ_RESERVE`
+字节的缓冲区：
 
-..
-code
-block::
-c
+.. code-block:: c
 
-struct
-net
-buf
-*buf;
+    struct net_buf *buf;
 
-buf
-=
-net
-buf
-alloc（&pool、
-K
-FOREVER）;
-net
-buf
-reserve（buf、
-BT
-L2CAP
-BR
-ECHO
-REQ
-RESERVE）;
-net
-buf
-add
-mem（buf、
-data、
-data
-len）;
+    buf = net_buf_alloc(&pool, K_FOREVER);
+    net_buf_reserve(buf, BT_L2CAP_BR_ECHO_REQ_RESERVE);
+    net_buf_add_mem(buf, data, data_len);
 
-bt
-l2cap
-br
-echo
-req（conn、
-buf）;
+    bt_l2cap_br_echo_req(conn, buf);
 
-Sending
-ECHO
-Response
-=====================
+发送 ECHO 响应
+====================
 
-To
-send
-an
-ECHO
-response
-（typically
-in
-response
-to
-a
-received
-ECHO
-request）
-allocate
-a
-buffer
-with
-:c:macro:`BT
-L2CAP
-BR
-ECHO
-RSP
-RESERVE`
-bytes
-reserved
-for
-the
-L2CAP
-header:
+要发送 ECHO 响应（通常用于响应接收到的 ECHO 请求），请分配一个为 L2CAP 头部保留
+:c:macro:`BT_L2CAP_BR_ECHO_RSP_RESERVE` 字节的缓冲区：
 
-..
-code
-block::
-c
+.. code-block:: c
 
-struct
-net
-buf
-*buf;
+    struct net_buf *buf;
 
-buf
-=
-net
-buf
-alloc（&pool、
-K
-FOREVER）;
-net
-buf
-reserve（buf、
-BT
-L2CAP
-BR
-ECHO
-RSP
-RESERVE）;
-net
-buf
-add
-mem（buf、
-data、
-data
-len）;
+    buf = net_buf_alloc(&pool, K_FOREVER);
+    net_buf_reserve(buf, BT_L2CAP_BR_ECHO_RSP_RESERVE);
+    net_buf_add_mem(buf, data, data_len);
 
-bt
-l2cap
-br
-echo
-rsp（conn、
-buf）;
+    bt_l2cap_br_echo_rsp(conn, buf);
 
-The
-identifier
-parameter
-must
-match
-the
-identifier
-from
-the
-received
-ECHO
-request
-to
-properly
-correlate
-the
-response
-with
-the
-request.
+identifier 参数必须与接收到的 ECHO 请求中的 identifier 相匹配，以便正确
+将响应与请求关联起来。
 
-Connectionless
-Data
-Channel
+无连接数据通道
 ***************************
 
-The
-connectionless
-data
-channel
-allows
-sending
-and
-receiving
-data
-to
-from
-a
-specific
-PSM
-（Protocol
-Service
-Multiplexer）
-without
-establishing
-a
-connection
-oriented
-L2CAP
-channel.
-The
-feature
-is
-enabled
-through
-the
-configuration
-option:
-:kconfig:option:`CONFIG_BT_L2CAP_CONNLESS`.
+无连接数据通道允许向特定 PSM
+（协议/服务复用器）发送和接收数据，而无需建立面向连接的 L2CAP 通道。
+该特性通过配置选项启用：:kconfig:option:`CONFIG_BT_L2CAP_CONNLESS`。
 
-Registering
-Connectionless
-Callbacks
-==================================
+注册无连接回调
+====================================
 
-To
-receive
-connectionless
-data、
-register
-a
-:c:struct:`bt
-l2cap
-br
-connless
-cb`
-callback
-structure:
+要接收无连接数据，请注册 :c:struct:`bt_l2cap_br_connless_cb` 回调结构体：
 
-..
-code
-block::
-c
+.. code-block:: c
 
-static
-void
-connless
-recv
-cb（struct
-bt
-conn
-*conn、
-uint16
-t
-psm、
-struct
-net
-buf
-*buf）
-{
-/*
-Handle
-received
-connectionless
-data
-*/
-}
+    static void connless_recv_cb(struct bt_conn *conn, uint16_t psm, struct net_buf *buf)
+    {
+        /* Handle received connectionless data */
+    }
 
-static
-struct
-bt
-l2cap
-br
-connless
-cb
-connless
-cb
-=
-{
-.psm
-=
-MY
-PSM、
-/*
-Or
-0
-to
-receive
-all
-*/
-.sec
-level
-=
-BT
-SECURITY
-L1、
-.recv
-=
-connless
-recv
-cb、
-};
+    static struct bt_l2cap_br_connless_cb connless_cb = {
+        .psm = MY_PSM,  /* Or 0 to receive all */
+        .sec_level = BT_SECURITY_L1,
+        .recv = connless_recv_cb,
+    };
 
-bt
-l2cap
-br
-connless
-register（&connless
-cb）;
+    bt_l2cap_br_connless_register(&connless_cb);
 
-Sending
-Connectionless
-Data
+发送无连接数据
 ===========================
 
-To
-send
-connectionless
-data、
-allocate
-a
-buffer
-with
-:c:macro:`BT
-L2CAP
-CONNLESS
-RESERVE`
-bytes
-reserved:
+要发送无连接数据，请分配一个保留了 :c:macro:`BT_L2CAP_CONNLESS_RESERVE`
+字节的缓冲区：
 
-..
-code
-block::
-c
+.. code-block:: c
 
-struct
-net
-buf
-*buf;
+    struct net_buf *buf;
 
-buf
-=
-net
-buf
-alloc（&pool、
-K
-FOREVER）;
-net
-buf
-reserve（buf、
-BT
-L2CAP
-CONNLESS
-RESERVE）;
-net
-buf
-add
-mem（buf、
-data、
-data
-len）;
+    buf = net_buf_alloc(&pool, K_FOREVER);
+    net_buf_reserve(buf, BT_L2CAP_CONNLESS_RESERVE);
+    net_buf_add_mem(buf, data, data_len);
 
-bt
-l2cap
-br
-connless
-send（conn、
-psm、
-buf）;
+    bt_l2cap_br_connless_send(conn, psm, buf);
 
-API
-Reference
+API 参考
 *************
 
-..
-doxygengroup::
-bt
-l2cap
-br
+.. doxygengroup:: bt_l2cap_br

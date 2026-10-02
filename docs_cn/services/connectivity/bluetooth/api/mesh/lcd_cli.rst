@@ -1,143 +1,17 @@
-.. _bluetooth
-mesh
-lcd
-cli:
+.. _bluetooth_mesh_lcd_cli:
 
-Large
-Composition
-Data
-Client
+大型 Composition Data 客户端
 #############################
 
-Large
-Composition
-Data
-Client
-model
-是
-Bluetooth
-Mesh
-specification
-定义
-的
-foundation
-model。
-该
-model
-是
-optional
-的
-通过
-:kconfig:option:`CONFIG_BT_MESH_LARGE_COMP_DATA_CLI`
-option
-启用。
+大型 Composition Data 客户端模型是蓝牙 Mesh 规范定义的基础模型。该模型是可选的，通过 :kconfig:option:`CONFIG_BT_MESH_LARGE_COMP_DATA_CLI` 选项启用。
 
-The
-Large
-Composition
-Data
-Client
-model
-was
-introduced
-in
-the
-Bluetooth
-Mesh
-Protocol
-Specification
-version
-1.1、
-and
-supports
-the
-functionality
-of
-reading
-pages
-of
-Composition
-Data
-that
-do
-not
-fit
-in
-a
-Config
-Composition
-Data
-Status
-message
-and
-reading
-the
-metadata
-of
-the
-model
-instances
-on
-a
-node
-that
-supports
-the
-:ref:`bluetooth_mesh_lcd_srv`
-model.
+大型 Composition Data 客户端模型引入于蓝牙 Mesh 协议规范版本 1.1，支持读取无法容纳在 Config Composition Data Status 消息中的 Composition Data 页，以及读取支持 :ref:`bluetooth_mesh_lcd_srv` 模型的节点上模型实例的元数据。
 
-The
-Large
-Composition
-Data
-Client
-model
-communicates
-with
-a
-Large
-Composition
-Data
-Server
-model
-using
-the
-device
-key
-of
-the
-node
-containing
-the
-target
-Large
-Composition
-Data
-Server
-model
-instance.
+大型 Composition Data 客户端模型使用包含目标大型 Composition Data 服务器模型实例的节点的设备密钥与大型 Composition Data 服务器模型通信。
 
-If
-present、
-the
-Large
-Composition
-Data
-Client
-model
-must
-only
-be
-instantiated
-on
-the
-primary
-element.
+如果存在，大型 Composition Data 客户端模型只能在主元素上实例化。
 
-API
-reference
+API 参考
 *************
 
-..
-doxygengroup::
-bt_mesh_large_comp_data_cli
+.. doxygengroup:: bt_mesh_large_comp_data_cli

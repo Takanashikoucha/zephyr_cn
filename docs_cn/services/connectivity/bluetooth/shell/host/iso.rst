@@ -1,429 +1,128 @@
-Bluetooth:
-Isochronous
-Channels
-Shell
+Bluetooth: 等时信道外壳
 #####################################
 
-Commands
+命令
 ********
 
-.. code-block::
-   console
+.. code-block:: console
 
-   iso
-   --help
-   iso
-   -
-   Bluetooth
-   ISO
-   shell
-   commands
+   iso --help
+   iso - Bluetooth ISO shell commands
    Subcommands:
-      cig_create
-   :[dir=tx,rx,txrx]
-      [interval]
-      [packing]
-      [framing]
-      [latency]
-      [sdu]
-                  [phy]
-      [rtn]
-      cig_term
-    :Terminate
-      the
-      CIG
-      connect
-     :Connect
-      ISO
-      Channel
-      listen
-      :<dir=tx,rx,txrx>
-      [security
-      level]
-      send
-        :Send
-      to
-      ISO
-      Channel
-      [count]
-      disconnect
-   :Disconnect
-      ISO
-      Channel
-      create-big
-   :Create
-      a
-      BIG
-      as
-      a
-      broadcaster
-      [enc
-      <broadcast
-      code>]
-      broadcast
-    :Broadcast
-      on
-      ISO
-      channels
-      sync-big
-    :Synchronize
-      to
-      a
-      BIG
-      as
-      a
-      receiver
-      <BIS
-      bitfield>
-      [mse]
-      [timeout]
-                  [enc
-      <broadcast
-      code>]
-      term-big
-    :Terminate
-      a
-      BIG
+      cig_create  :[dir=tx,rx,txrx] [interval] [packing] [framing] [latency] [sdu]
+                  [phy] [rtn]
+      cig_term    :Terminate the CIG
+      connect     :Connect ISO Channel
+      listen      :<dir=tx,rx,txrx> [security level]
+      send        :Send to ISO Channel [count]
+      disconnect  :Disconnect ISO Channel
+      create-big  :Create a BIG as a broadcaster [enc <broadcast code>]
+      broadcast   :Broadcast on ISO channels
+      sync-big    :Synchronize to a BIG as a receiver <BIS bitfield> [mse] [timeout]
+                  [enc <broadcast code>]
+      term-big    :Terminate a BIG
 
-Unicast
-examples
+
+单播示例
 ****************
+1. [中心设备] 创建 CIG：
 
-1.
-[Central]
-创建
-CIG：
+需要已建立连接：
 
-需要
-已
-连接：
+.. code-block:: console
 
-.. code-block::
-   console
+   uart:~$ iso cig_create
+   CIG created
 
-   uart:~$
-   iso
-   cig_create
-   CIG
-   created
+2. [外围设备] 监听 ISO 连接
 
-2.
-[Peripheral]
-监听
-ISO
-连接
+.. code-block:: console
 
-.. code-block::
-   console
+   uart:~$ iso listen txrx
 
-   uart:~$
-   iso
-   listen
-   txrx
+3. [中心设备] 连接 ISO 信道：
 
-3.
-[Central]
-连接
-ISO
-通道：
+.. code-block:: console
 
-.. code-block::
-   console
+   uart:~$ iso connect
+   ISO Connect pending...
+   ISO Channel 0x20000f88 connected
 
-   uart:~$
-   iso
-   connect
-   ISO
-   Connect
-   pending...
-   ISO
-   Channel
-   0x20000f88
-   connected
+4. 发送数据：
 
-4.
-发送
-数据：
+.. code-block:: console
 
-.. code-block::
-   console
+   uart:~$ iso send
+   send: 40 bytes of data
+   ISO sending...
 
-   uart:~$
-   iso
-   send
-   send:
-   40
-   bytes
-   of
-   data
-   ISO
-   sending...
 
-5.
-断开
-ISO
-通道：
+5. 断开 ISO 信道：
 
-.. code-block::
-   console
+.. code-block:: console
 
-   uart:~$
-   iso
-   disconnect
-   ISO
-   Disconnect
-   pending...
-   ISO
-   Channel
-   0x20000f88
-   disconnected
-   with
-   reason
-   0x16
+   uart:~$ iso disconnect
+   ISO Disconnect pending...
+   ISO Channel 0x20000f88 disconnected with reason 0x16
 
-Broadcast
-examples
+
+广播示例
 ******************
 
-Setting
-up
-broadcaster
+设置广播器
 ======================
 
-.. code-block::
-   console
+.. code-block:: console
 
+   uart:~$ bt init
+   Bluetooth initialized
+   uart:~$ bt adv-create nconn-nscan ext-adv
+   Created adv id: 0, adv: 0x200025d0
+   uart:~$ bt per-adv-param
+   uart:~$ iso create-big
+   BIG created
+   ISO Channel 0x200008c0 connected
    uart:~$
-   bt
-   init
-   Bluetooth
-   initialized
+   uart:~$ bt adv-start
+   Advertiser[0] 0x200025d0 set started
    uart:~$
-   bt
-   adv-create
-   nconn-nscan
-   ext-adv
-   Created
-   adv
-   id:
-   0,
-   adv:
-   0x200025d0
+   uart:~$ bt per-adv on
+   Periodic advertising started
    uart:~$
-   bt
-   per-adv-param
-   uart:~$
-   iso
-   create-big
-   BIG
-   created
-   ISO
-   Channel
-   0x200008c0
-   connected
-   uart:~$
-   uart:~$
-   bt
-   adv-start
-   Advertiser[0]
-   0x200025d0
-   set
-   started
-   uart:~$
-   uart:~$
-   bt
-   per-adv
-   on
-   Periodic
-   advertising
-   started
-   uart:~$
-   uart:~$
-   iso
-   broadcast
-   send:
-   247
-   bytes
-   of
-   data
-   with
-   PSN
-   4350
-   ISO
-   broadcasting...
+   uart:~$ iso broadcast
+   send: 247 bytes of data with PSN 4350
+   ISO broadcasting...
 
-如果
-需要
-加密
-广播
-，
-则
-可以
-提供
-广播
-码
-作为
+如果需要加密广播，可以按如下方式提供广播码：
 
-.. code-block::
-   console
+.. code-block:: console
 
-   uart:~$
-   iso
-   create-big
-   enc
-   00112233445566778899aabbccddffff
-   BIG
-   created
+   uart:~$ iso create-big enc 00112233445566778899aabbccddffff
+   BIG created
 
-Setting
-up
-sync
-receiver
+设置同步接收器
 ========================
 
-.. code-block::
-   console
+.. code-block:: console
 
-   uart:~$
-   bt
-   init
-   Bluetooth
-   initialized
-   uart:~$
-   bt
-   scan
-   on
-   [DEVICE]:
-   R:42:0F:7A:40:AE:21,
-   AD
-   evt
-   type
-   5,
-   RSSI
-   -27
-   C:0
-   S:0
-   D:0
-   SR:0
-   E:1
-   Prim:
-   LE
-   1M,
-   Secn:
-   LE
-   2M,
-   Interval:
-   0x0780
-   (2400000
-   us),
-   SID:
-   0x0
-   uart:~$
-   bt
-   per-adv-sync-create
-   R:42:0F:7A:40:AE:21
-   0
-   Per
-   adv
-   sync
-   pending
-   PER_ADV_SYNC[0]:
-   [DEVICE]:
-   R:42:0F:7A:40:AE:21
-   synced,
-   Interval
-   0x0780
-   (2400000
-   us),
-   PHY
-   LE
-   2M,
-   SD
-   0x0000,
-   PAST
-   peer
-   not
-   present
-   PER_ADV_SYNC[0]:
-   [DEVICE]:
-   R:42:0F:7A:40:AE:21,
-   tx_power
-   127,
-   RSSI
-   -28,
-   CTE
-   0,
-   data
-   length
-   0
-   BIG_INFO
-   PER_ADV_SYNC[0]:
-   [DEVICE]:
-   R:42:0F:7A:40:AE:21,
-   sid
-   0x00,
-   num_bis
-   1,
-   nse
-   0x04,
-   interval
-   0x0008
-   (10000
-   us),
-   bn
-   0x01,
-   pto
-   0x01,
-   irc
-   0x03,
-   max_pdu
-   0x00f7,
-   sdu_interval
-   0x2710,
-   max_sdu
-   0x00f7,
-   phy
-   LE
-   2M,
-   framing
-   0x00,
-   not
-   encrypted
-   uart:~$
-   iso
-   sync-big
-   1
-   BIG
-   syncing
-   ISO
-   Channel
-   0x200008c0
-   connected
+   uart:~$ bt init
+   Bluetooth initialized
+   uart:~$ bt scan on
+   [DEVICE]: R:42:0F:7A:40:AE:21, AD evt type 5, RSSI -27  C:0 S:0 D:0 SR:0 E:1 Prim: LE 1M, Secn: LE 2M, Interval: 0x0780 (2400000 us), SID: 0x0
+   uart:~$ bt per-adv-sync-create R:42:0F:7A:40:AE:21 0
+   Per adv sync pending
+   PER_ADV_SYNC[0]: [DEVICE]: R:42:0F:7A:40:AE:21 synced, Interval 0x0780 (2400000 us), PHY LE 2M, SD 0x0000, PAST peer not present
+   PER_ADV_SYNC[0]: [DEVICE]: R:42:0F:7A:40:AE:21, tx_power 127, RSSI -28, CTE 0, data length 0
+   BIG_INFO PER_ADV_SYNC[0]: [DEVICE]: R:42:0F:7A:40:AE:21, sid 0x00, num_bis 1, nse 0x04, interval 0x0008 (10000 us), bn 0x01, pto 0x01, irc 0x03, max_pdu 0x00f7, sdu_interval 0x2710, max_sdu 0x00f7, phy LE 2M, framing 0x00, not encrypted
+   uart:~$ iso sync-big 1
+   BIG syncing
+   ISO Channel 0x200008c0 connected
 
-如果
-需要
-加密
-广播
-，
-则
-可以
-提供
-广播
-码
-作为
 
-.. code-block::
-   console
+如果需要加密广播，可以按如下方式提供广播码：
 
-   uart:~$
-   iso
-   sync-big
-   1
-   enc
-   00112233445566778899aabbccddffff
-   BIG
-   syncing
-   ISO
-   Channel
-   0x200008c0
-   connected
+.. code-block:: console
+
+   uart:~$ iso sync-big 1 enc 00112233445566778899aabbccddffff
+   BIG syncing
+   ISO Channel 0x200008c0 connected

@@ -82,7 +82,6 @@ Zephyr 暴露了若干钩子（描述于 :zephyr_file:`include/zephyr/platform/h
     在调用此钩子之前无需建立有效的栈。
     但是，钩子在返回前允许覆盖栈指针。
     体系结构特定的代码不得期望 :c:func:`soc_early_reset_hook` 调用期间栈指针寄存器的值被保留。
-
     在具有多个栈指针的体系结构上，通常有一个可直接访问的*"主"*栈指针
     和若干*"次"*栈指针寄存器。
     :c:func:`soc_early_reset_hook` 的实现可以覆盖*"主"*栈指针，

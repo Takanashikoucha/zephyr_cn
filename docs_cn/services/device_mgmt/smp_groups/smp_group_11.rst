@@ -1,131 +1,126 @@
 .. _mcumgr_smp_group_11:
 
-Transport
-Management
-Group
+Transport Management Group
 ##########################
 
-Transport
-management
-group
-define
-以下
-commands：
+Transport management group defines the following commands:
 
 .. table::
-    :align:
-    center
+    :align: center
 
     +----------------+------------------------------------+
-    |
-    ``Command
-    ID``
-    |
-    Command
-    description
-    |
+    | ``Command ID`` | Command description                |
     +================+====================================+
-    |
-    ``0``
-    |
-    Connect
-    （bridge）
-    transport
-    |
+    | ``0``          | Connect (bridge) transport         |
     +----------------+------------------------------------+
-    |
-    ``1``
-    |
-    Disconnect
-    bridged
-    transport
-    |
+    | ``1``          | Disconnect bridged transport       |
     +----------------+------------------------------------+
-    |
-    ``2``
-    |
-    Fetch
-    bridge/transport
-    status
-    |
+    | ``2``          | Fetch bridge/transport status      |
     +----------------+------------------------------------+
-    |
-    ``6``
-    |
-    List
-    transports
-    |
+    | ``6``          | List transports                    |
     +----------------+------------------------------------+
-    |
-    ``7``
-    |
-    Details
-    on
-    transport
-    modes
-    |
+    | ``7``          | Details on transport modes         |
     +----------------+------------------------------------+
-    |
-    ``8``
-    |
-    Details
-    on
-    transport
-    configuration
-    |
+    | ``8``          | Details on transport configuration |
     +----------------+------------------------------------+
 
 .. note::
-    Transport
-    management
-    是
-    experimental
-    的
-    并
-    subject
-    to
-    change
-    without
-    notice。
+    Transport management is experimental and subject to change without notice.
 
-Connect
-（bridge）
-transport
-command
+Connect (bridge) transport command
 **********************************
 
-Bridge
-received
-MCUmgr
-packet
-的
-transport
-到
-另
-一
-个
-MCUmgr
-transport。
+Bridge the transport which received the MCUmgr packet to another MCUmgr transport.
 
-Connect
-（bridge）
-transport
-request
+Connect (bridge) transport request
 ==================================
 
-Connect
-（bridge）
-transport
-request
-header
-fields：
+Connect (bridge) transport request header fields:
 
 .. table::
+    :align: center
 
+    +--------+--------------+----------------+
+    | ``OP`` | ``Group ID`` | ``Command ID`` |
+    +========+==============+================+
+    | ``2``  | ``11``       | ``0``          |
+    +--------+--------------+----------------+
 
-.. note::
+CBOR data of request:
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+.. code-block:: none
+
+    {
+        (str)"transport" : (uint)
+        (str,opt)"mode"  : (uint)
+        ...
+    }
+
+where:
+
+.. table::
+    :align: center
+
+    +-------------+--------------------------------------------------------------+
+    | "transport" | :c:enum:`smp_transport_type` contains the tranport type for  |
+    |             | which to bridge (connect) from the transport to.             |
+    +-------------+--------------------------------------------------------------+
+    | "mode"      | contains the configuration mode of the transport to use, may |
+    |             | be omitted to use the default value of 0.                    |
+    +-------------+--------------------------------------------------------------+
+    | ...         | there might be additional fields that the transport requires |
+    |             | in order to make a connection, these are not described here  |
+    |             | as are transport-specific.                                   |
+    +-------------+--------------------------------------------------------------+
+
+Connect (bridge) transport response
+===================================
+
+Connect (bridge) transport response header fields:
+
+.. table::
+    :align: center
+
+    +--------+--------------+----------------+
+    | ``OP`` | ``Group ID`` | ``Command ID`` |
+    +========+==============+================+
+    | ``3``  | ``11``       | ``0``          |
+    +--------+--------------+----------------+
+
+The command sends an empty CBOR map as data if successful.
+In case of error the CBOR data takes the form:
+
+.. tabs::
+
+   .. group-tab:: SMP version 2
+
+      .. code-block:: none
+
+          {
+              (str)"err" : {
+                  (str)"group"    : (uint)
+                  (str)"rc"       : (uint)
+              }
+          }
+
+   .. group-tab:: SMP version 1
+
+      .. code-block:: none
+
+          {
+              (str)"rc"       : (int)
+          }
+
+where:
+
+.. table::
+    :align: center
+
+    +------------------+-------------------------------------------------------------------------+
+    | "err" -> "group" | :c:enum:`mcumgr_group_t` group of the group-based error code. Only      |
+    |                  | appears if an error is returned when using SMP version 2.               |
+    +------------------+-------------------------------------------------------------------------+
+    | "err" -> "rc"    | contains the index of the group-based error code. Only appears if       |
     |                  | non-zero (error condition) when using SMP version 2.                    |
     +------------------+-------------------------------------------------------------------------+
     | "rc"             | :c:enum:`mcumgr_err_t` only appears if non-zero (error condition) when  |

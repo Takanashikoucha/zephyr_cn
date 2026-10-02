@@ -1,5735 +1,1177 @@
 :orphan:
 
 ..
-What
-goes
-here:
-removed
-/
-deprecated
-apis、
-new
-boards、
-new
-drivers、
-notable
-features.
-如果
-你
-feel
-something
-new
-can
-be
-useful
-to
-a
-user、
-put
-it
-under
-"Other
-Enhancements"
-in
-the
-first
-paragraph、
-如果
-你
-feel
-something
-is
-worth
-mentioning
-in
-the
-project
-media
-（release
-blog
-post、
-release
-livestream）
-put
-it
-under
-"Major
-enhancement".
+  此处应包含：移除/弃用的 API、新开发板、新驱动、显著功能。如果你认为某个新功能对用户有用，
+  请将其放在第一段"其他增强"下；如果你认为某内容值得在项目媒体（发布博客、发布直播）中提及，
+  请将其放在"主要增强"下。
 ..
-如果
-你
-are
-describing
-a
-feature
-or
-functionality、
-consider
-adding
-it
-to
-the
-actual
-project
-documentation
-rather
-than
-the
-release
-notes、
-so
-that
-the
-information
-does
-not
-get
-lost
-in
-time.
+  如果你在描述某个功能或特性，考虑将其添加到实际项目文档中，而非发布说明，这样信息才不会随时间丢失。
 ..
-No
-list
-of
-bugfixes、
-minor
-changes、
-those
-are
-already
-in
-the
-git
-log、
-this
-is
-not
-a
-changelog.
+  不要列出 bug 修复和小更改，它们已在 git log 中，这不是变更日志。
 ..
-Does
-the
-entry
-have
-a
-link
-that
-contains
-the
-details?
-Just
-add
-the
-link、
-如果
-你
-think
-it
-needs
-more
-details、
-put
-them
-in
-the
-content
-that
-shows
-up
-on
-the
-link.
+  条目是否有包含详情的链接？直接添加链接即可，如果你认为需要更多细节，
+  请将其放在链接显示的内容中。
 ..
-Are
-you
-thinking
-about
-generating
-this?
-Don't
-put
-anything
-at
-all.
+  你是否在考虑自动生成此内容？什么都不要放。
 ..
-Does
-the
-thing
-require
-the
-user
-to
-change
-their
-application?
-Put
-it
-on
-the
-migration
-guide
-instead.
-（TODO:
-move
-the
-removed
-APIs
-section
-in
-the
-migration
-guide）
+  该条目是否要求用户更改其应用程序？请将其放到迁移指南中。（TODO：将移除的 API 部分移到迁移指南）
 
 .. _zephyr_4.4:
 
-Zephyr
-4.4.0
+Zephyr 4.4.0
 ############
 
-我们
-pleased
-to
-announce
-Zephyr
-version
-4.4.0
-的
-release。
+我们很高兴宣布 Zephyr 4.4.0 版本的发布。
 
-这
-个
-release
-的
-Major
-enhancements
-包括：
+本次发布的主要增强功能包括：
 
-**OpenRISC
-support**
-Zephyr
-now
-supports
-the
-:zephyr:board
-catalog:`OpenRISC
-architecture
-<#arch
-openrisc>`.
+**OpenRISC 支持**
+  Zephyr 现在支持 :zephyr:board-catalog:`OpenRISC 架构 <#arch=openrisc>`。
 
-**Toolchain
-updates:
-Zephyr
-SDK
-1.0
-and
-C17**
-Zephyr
-4.4
-is
-the
-first
-release
-to
-support
-:ref:`Zephyr
-SDK
-1.0
-<toolchain_zephyr_sdk>`、
-with
-an
-upgraded
-GNU
-toolchain、
-experimental
-Clang
-LLVM
-support、
-and
-multi
-platform
-QEMU
-and
-OpenOCD
-host
-tools.
+**工具链更新：Zephyr SDK 1.0 和 C17**
+  Zephyr 4.4 是第一个支持 :ref:`Zephyr SDK 1.0 <toolchain_zephyr_sdk>` 的发布版本，
+  具有升级的 GNU 工具链、实验性 Clang/LLVM 支持，以及多平台 QEMU 和 OpenOCD
+  主机工具。
 
-Zephyr
-now
-defaults
-to
-C17
-as
-its
-minimum
-required
-C
-standard
-version.
+  Zephyr 现在默认以 C17 作为其最低要求的 C 标准版本。
 
-**Networking
-enhancements**
-The
-Wi
-Fi
-management
-stack
-now
-supports
-:ref:`wifi_mgmt_p2p`、
-allowing
-devices
-to
-discover
-and
-connect
-directly
-without
-a
-traditional
-access
-point.
+**网络增强**
+  Wi-Fi 管理栈现在支持 :ref:`wifi_mgmt_p2p`，允许设备发现并直接连接，
+  而无需传统接入点。
 
-The
-networking
-stack
-also
-adds
-support
-for
-:zephyr:code
-sample:`WireGuard
-VPN
-<wireguard
-vpn>`、
-enabling
-secure、
-low
-overhead
-tunneling.
+  网络栈还添加了对 :zephyr:code-sample:`WireGuard VPN <wireguard-vpn>` 的支持，
+  实现安全、低开销的隧道传输。
 
-**USB
-host**
-Experimental
-USB
-host
-support
-has
-been
-significantly
-expanded
-with
-a
-new
-host
-class
-driver
-framework
-and
-support
-for
-:abbr:`UVC
-（USB
-Video
-Class）`
-cameras
-on
-Zephyr
-devices
-acting
-as
-USB
-hosts.
+**USB 主机**
+  实验性 USB 主机支持已大幅扩展，引入了新的主机类驱动框架，
+  并支持在作为 USB 主机的 Zephyr 设备上使用 :abbr:`UVC（USB 视频类）` 摄像头。
 
-**New
-driver
-classes**
-Zephyr
-4.4
-adds
-several
-new
-driver
-APIs、
-including:
+**新驱动类**
+  Zephyr 4.4 添加了几个新的驱动 API，包括：
 
--
-:ref:`One
-Time
-Programmable
-（OTP）
-memory
-devices
-<otp>`
-for
-provisioning
-and
-reading
-permanent
-device
-data、
+  - :ref:`一次性可编程（OTP）内存设备 <otp>`，用于配置和读取永久设备数据，
 
--
-A
-:ref:`biometrics
-API
-<biometrics_api>`
-for
-integrating
-biometric
-sensors
-such
-as
-fingerprint
-scanners
-or
-facial
-recognition
-systems、
-and
+  - :ref:`生物识别 API <biometrics_api>`，用于集成生物识别传感器，如指纹
+    扫描仪或面部识别系统，以及
 
--
-A
-:ref:`Wake
-up
-Controller
-（WUC）
-API
-<wuc_api>`
-for
-managing
-wake
-up
-sources
-that
-can
-bring
-the
-system
-out
-of
-low
-power
-states.
+  - :ref:`唤醒控制器（WUC）API <wuc_api>`，用于管理可将系统从低功耗状态
+    唤醒的唤醒源。
 
-**Zbus
-async
-listeners
-and
-proxy
-agents**
-Zbus
-async
-listeners
-enable
-non
-blocking
-observer
-callbacks
-via
-workqueues.
+**Zbus 异步监听器和代理代理**
+  Zbus 异步监听器通过工作队列启用非阻塞观察者回调。
 
-:ref:`Zbus
-proxy
-agents
-<zbus_proxy_agent>`
-extend
-publish
-subscribe
-messaging
-across
-CPU
-and
-domain
-boundaries
-over
-IPC.
+  :ref:`Zbus 代理代理 <zbus_proxy_agent>` 通过 IPC 跨 CPU 和域边界
+  扩展发布-订阅消息传递。
 
-**Pressure
-based
-CPU
-frequency
-scaling**
-The
-experimental
-:ref:`CPU
-frequency
-scaling
-<cpu_freq>`
-subsystem
-now
-includes
-a
-:ref:`pressure
-based
-policy
-<pressure_policy>`
-that
-adjusts
-CPU
-frequency
-according
-to
-scheduler
-load.
+**基于压力的 CPU 频率调节**
+  实验性 :ref:`CPU 频率调节 <cpu_freq>` 子系统现在包含
+  :ref:`基于压力的策略 <pressure_policy>`，根据调度器负载调整 CPU 频率。
 
-**ARM
-Cortex
-M
-context
-switching
-performance
-improvements**
-A
-new
-context
-switch
-implementation
-for
-ARM
-Cortex
-M、
-enabled
-via
-:kconfig:option:`CONFIG_USE_SWITCH`、
-delivers
-significant
-performance
-improvements.
+**ARM Cortex-M 上下文切换性能改进**
+  新的 ARM Cortex-M 上下文切换实现，通过
+  :kconfig:option:`CONFIG_USE_SWITCH` 启用，带来了显著的性能改进。
 
-**NAND
-flash
-support**
-A
-new
-Flash
-Translation
-Layer
-（FTL）
-disk
-driver
-（:dtcompatible:`zephyr、ftl
-dhara`）
-provides
-wear
-leveling
-and
-bad
-block
-management
-and
-enables
-NAND
-flash
-memories
-to
-be
-utilized
-as
-standard
-disk
-devices.
+**NAND 闪存支持**
+  新的闪存转换层（FTL）磁盘驱动（:dtcompatible:`zephyr,ftl-dhara`）提供磨损
+  均衡和坏块管理，并使 NAND 闪存内存可作为标准磁盘设备使用。
 
-**Developer
-experience
-improvements**
-Several
-new
-tools
-have
-been
-introduced
-to
-help
-with
-common
-development
-and
-troubleshooting
-tasks:
+**开发者体验改进**
+  引入了几个新工具来帮助常见的开发和问题排查任务：
 
--
-:ref:`dtdoctor`
-to
-help
-diagnose
-Devicetree
-build
-errors.
--
-:ref:`traceconfig
-<kconfig_traceconfig>`
-build
-target
-to
-help
-understand
-where
-Kconfig
-symbols
-come
-from
-and
-their
-final
-values.
--
-:ref:`Interactive
-footprint
-charts
-<footprint_tools_plot>`
-to
-visualize
-RAM
-ROM
-usage
-of
-an
-application.
+  - :ref:`dtdoctor` 用于帮助诊断设备树构建错误。
+  - :ref:`traceconfig <kconfig_traceconfig>` 构建目标用于帮助理解 Kconfig 符号的来源
+    及其最终值。
+  - :ref:`交互式占用率图表 <footprint_tools_plot>` 用于可视化应用程序的 RAM/ROM 使用情况。
 
-**Expanded
-Board
-Support**
-Support
-for
-120
-:ref:`new
-boards
-<boards_added_in_zephyr_4_4>`
-and
-50
-:ref:`new
-shields
-<shields_added_in_zephyr_4_4>`
-has
-been
-added
-in
-this
-release.
+**扩展的板级支持**
+  本次发布新增了对 120 块 :ref:`新开发板 <boards_added_in_zephyr_4_4>` 和 45 个
+  :ref:`新盾牌 <shields_added_in_zephyr_4_4>` 的支持。
 
-An
-overview
-of
-the
-changes
-required
-or
-recommended
-when
-migrating
-your
-application
-from
-Zephyr
-v4.3.0
-to
-Zephyr
-v4.4.0
-can
-be
-found
-in
-the
-separate
-:ref:`migration
-guide
-<migration_4.4>`.
+从 Zephyr v4.3.0 迁移到 Zephyr v4.4.0 时所需或建议的更改概述可在单独的 :ref:`迁移指南 <migration_4.4>` 中找到。
 
-以下
-sections
-provide
-detailed
-的
-lists
-of
-changes
-by
-component。
+以下章节按组件提供详细的更改列表。
 
-Security
-Vulnerability
-Related
+安全漏洞相关
 ******************************
 
-以下
-的
-CVEs
-被
-这
-个
-release
-addressed:
+本次发布解决了以下 CVE：
 
-*
-:cve:`2025
-9408`
-`Zephyr
-project
-bug
-tracker
-GHSA
-3r6j
-5mp3
-75wr
-<https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-3r6j-5mp3-75wr>`_
-*
-:cve:`2025
-9557`:
-Under
-embargo
-until
-2025
-11
-24
-*
-:cve:`2025
-9558`:
-Under
-embargo
-until
-2025
-11
-24
-*
-:cve:`2025
-12035`:
-Under
-embargo
-until
-2025
-12
-13
-*
-:cve:`2025
-12899`:
-Under
-embargo
-until
-2026
-01
-28
-*
-:cve:`2025
-59438`
-`Padding
-oracle
-through
-timing
-of
-cipher
-error
-reporting
-<https://mbed-tls.readthedocs.io/en/latest/security-advisories/mbedtls-security-advisory-2025-10-invalid-padding-error/>`_
-*
-:cve:`2025
-54764`
-`Side
-channel
-in
-RSA
-key
-generation
-and
-operations
-（SSBleed、
-M
-Step）
-<https://mbed-tls.readthedocs.io/en/latest/security-advisories/mbedtls-security-advisory-2025-10-ssbleed-mstep/>`_
+* :cve:`2025-12890` `蓝牙：外设：对格式错误的连接请求处理不当
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-8hrf-pfww-83v9>`_
+* :cve:`2025-27809` `TLS 客户端可能无意中跳过服务器身份验证
+  <https://mbed-tls.readthedocs.io/en/latest/security-advisories/mbedtls-security-advisory-2025-03-1/>`_
+* :cve:`2025-27810` `TLS 握手中的潜在身份验证绕过
+  <https://mbed-tls.readthedocs.io/en/latest/security-advisories/mbedtls-security-advisory-2025-03-2/>`_
+* :cve:`2025-2962` `dns_copy_qname 中的无限循环
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-2qp5-c2vq-g2ww>`_
+* :cve:`2025-52496` `AESNI 支持检测中的竞态条件
+  <https://mbed-tls.readthedocs.io/en/latest/security-advisories/mbedtls-security-advisory-2025-06-1/>`_
+* :cve:`2025-52497` `解析 PEM 加密材料时的堆缓冲区下溢读取
+  <https://mbed-tls.readthedocs.io/en/latest/security-advisories/mbedtls-security-advisory-2025-06-2/>`_
+* :cve:`2025-49600` `LMS 验证中未检查的返回值允许签名绕过
+  <https://mbed-tls.readthedocs.io/en/latest/security-advisories/mbedtls-security-advisory-2025-06-3/>`_
+* :cve:`2025-49601` `mbedtls_lms_import_public_key() 中的越界读取
+  <https://mbed-tls.readthedocs.io/en/latest/security-advisories/mbedtls-security-advisory-2025-06-4/>`_
+* :cve:`2025-49087` `带 PKCS#7 填充的分组密码解密的时序侧信道
+  <https://mbed-tls.readthedocs.io/en/latest/security-advisories/mbedtls-security-advisory-2025-06-5/>`_
+* :cve:`2025-48965` `使用 mbedtls_asn1_store_named_data() 后的空指针解引用
+  <https://mbed-tls.readthedocs.io/en/latest/security-advisories/mbedtls-security-advisory-2025-06-6/>`_
+* :cve:`2025-47917` `mbedtls_x509_string_to_names() 中误导性的内存管理
+  <https://mbed-tls.readthedocs.io/en/latest/security-advisories/mbedtls-security-advisory-2025-06-7/>`_
+* :cve:`2025-7403`：截至 2025-09-05 处于保密期
 
-More
-detailed
-的
-information
-可以
-found
-在:
+更详细的信息可在以下地址找到：
 https://docs.zephyrproject.org/latest/security/vulnerabilities.html
 
-API
-Changes
+API 更改
 ***********
 
-..
-Only
-removed、
-deprecated
-and
-new
-APIs、
-changes
-go
-in
-migration
-guide.
-
-*
-Crypto
-
-*
-The
-input
-buffer
-in
-:c:struct:`hash_pkt`
-is
-now
-constant
-
-Removed
-APIs
-and
-options
+移除的 API 和选项
 ========================
 
-*
-The
-TinyCrypt
-library
-was
-removed
-as
-the
-upstream
-version
-is
-no
-longer
-maintained.
-PSA
-Crypto
-API
-is
-now
-the
-recommended
-cryptographic
-library
-for
-Zephyr.
-*
-The
-legacy
-pipe
-object
-API
-was
-removed.
-Use
-the
-new
-pipe
-API
-instead.
-*
-``bt_le_set_auto_conn``
-*
-``CONFIG_BT_BUF_ACL_RX_COUNT``
-*
-``ok``
-enum
-value
-has
-now
-been
-removed
-completely
-from
-``base.yaml``
-binding
-``status``
-property
-in
-Devicetree.
-*
-STM32
-LPTIM
-clock
-source
-selection
-through
-Kconfig
-was
-removed.
-Devicetree
-must
-now
-be
-used
-instead.
-Affected
-Kconfig
-symbols:
-:kconfig:option:`CONFIG_STM32_LPTIM_CLOCK_LSI`
-/
-:kconfig:option:`CONFIG_STM32_LPTIM_CLOCK_LSE`
+* 已移除 :kconfig:option:`CONFIG_I3C_USE_GROUP_ADDR` 以及对 I3C 设备组地址的支持。
 
-Deprecated
-APIs
-and
-options
+* 已移除 ``--disable-unrecognized-section-test`` Twister 选项。该测试已移除，
+  该选项成为默认行为。
+
+* 已移除弃用的 ``kscan`` 子系统。
+
+* 已移除 :dtcompatible:`meas,ms5837` 并用 :dtcompatible:`meas,ms5837-30ba`
+  和 :dtcompatible:`meas,ms5837-02ba` 取代。
+
+* 已从 :c:struct:`video_driver_api` 中移除 ``get_ctrl`` 驱动 API。
+
+* 已移除 ``CONFIG_NET_PKT_BUF_DATA_POOL_SIZE`` 和 ``CONFIG_NET_TCP_ACK_TIMEOUT``
+  网络选项。
+
+* 已移除 :kconfig:option:`CONFIG_BT_CONN_TX_MAX` Kconfig 选项。待处理
+  TX 缓冲区的数量现在与 :kconfig:option:`CONFIG_BT_BUF_ACL_TX_COUNT` Kconfig
+  选项对齐。
+
+* 已移除 :kconfig:option:`CONFIG_CRYPTO_TINYCRYPT_SHIM` Kconfig 选项。它
+  自 Zephyr 4.0 起已弃用，用户被建议迁移到替代
+  加密后端。
+
+* 已移除 :kconfig:option:`CONFIG_BT_MESH_USES_TINYCRYPT` Kconfig 选项。它
+  自 Zephyr 4.0 起已弃用。用户被建议使用
+  :kconfig:option:`CONFIG_BT_MESH_USES_MBEDTLS_PSA` 或
+  :kconfig:option:`CONFIG_BT_MESH_USES_TFM_PSA` 替代。
+
+* 已移除 :kconfig:option:`CONFIG_NET_L2_ETHERNET` 和
+  :kconfig:option:`CONFIG_NET_L2_ETHERNET_FRAME_FILTER` 选项。
+
+弃用的 API 和选项
 ===========================
 
-*
-:dtcompatible:`maxim、ds3231`
-is
-deprecated
-in
-favor
-of
-:dtcompatible:`maxim、ds3231
-rtc`.
-*
-Providing
-a
-third
-argument
-to
-:c:macro:`SPI_CONFIG_DT`、
-:c:macro:`SPI_CONFIG_DT_INST`、
-:c:macro:`SPI_DT_SPEC_GET`、
-:c:macro:`SPI_DT_SPEC_INST_GET`
-is
-deprecated.
-Providing
-a
-second
-argument
-to
-:c:macro:`SPI_CS_CONTROL_INIT`
-is
-deprecated.
-Use
-new
-DT
-properties
-``spi
-cs
-setup
-delay
-ns``
-and
-``spi
-cs
-hold
-delay
-ns``
-to
-specify
-delay
-instead.
+* 调度器 Kconfig 选项 CONFIG_SCHED_DUMB 和 CONFIG_WAITQ_DUMB 已
+  重命名并弃用。请改用 :kconfig:option:`CONFIG_SCHED_SIMPLE` 和
+  :kconfig:option:`CONFIG_WAITQ_SIMPLE`。
 
-*
-:c:enum:`bt_hci_bus`
-was
-deprecated
-as
-it
-was
-not
-used.
-:c:macro:`BT_DT_HCI_BUS_GET`
-should
-be
-used
-instead.
+* :kconfig:option:`CONFIG_LWM2M_ENGINE_MESSAGE_HEADER_SIZE` Kconfig 选项已被移除。
+  所需的头大小应包含在消息大小中，使用
+  :kconfig:option:`CONFIG_LWM2M_COAP_MAX_MSG_SIZE` 配置。应特别注意确保
+  使用的 CoAP 块大小（:kconfig:option:`CONFIG_LWM2M_COAP_BLOCK_SIZE`）
+  能够容纳带头的给定消息大小。之前的头空间为 48 字节。
 
-*
-:kconfig:option:`CONFIG_BT_AUTO_PHY_UPDATE`
-was
-deprecated
-and
-has
-been
-replaced
-with
-role
-specific
-（central
-vs
-peripheral）
-options
-that
-allow
-specifying
-exactly
-which
-PHY
-is
-preferred
-for
-automatic
-updates.
+* TLS 凭据类型 ``TLS_CREDENTIAL_SERVER_CERTIFICATE`` 已重命名并
+  弃用，请改用 :c:enumerator:`TLS_CREDENTIAL_PUBLIC_CERTIFICATE`。
 
-*
-:kconfig:option:`CONFIG_POSIX_READER_WRITER_LOCKS`
-is
-deprecated.
-Use
-:kconfig:option:`CONFIG_POSIX_RW_LOCKS`
-instead.
+* ``arduino_uno_r4_minima`` 和 ``arduino_uno_r4_wifi`` 板级目标已弃用，
+  改为带有修订版本的新 ``arduino_uno_r4`` 板
+  （``arduino_uno_r4@minima`` 和 ``arduino_uno_r4@wifi``）。
 
-*
-:kconfig:option:`CONFIG_JWT_SIGN_RSA_LEGACY`
-is
-deprecated.
-Please
-switch
-to
-the
-PSA
-Crypto
-API
-based
-alternative
-（i.e.
-:kconfig:option:`CONFIG_JWT_SIGN_RSA_PSA`）.
+* ``esp32c6_devkitc`` 板级目标已弃用并重命名为
+  ``esp32c6_devkitc/esp32c6/hpcore``。
 
-*
-RISCV's
-:kconfig:option:`CONFIG_EXTRA_EXCEPTION_INFO`
-is
-deprecated.
-Use
-:kconfig:option:`CONFIG_EXCEPTION_DEBUG`
-instead.
+* ``xiao_esp32c6`` 板级目标已弃用并重命名为
+  ``xiao_esp32c6/esp32c6/hpcore``。
 
-New
-APIs
-and
-options
-==================
+* :kconfig:option:`CONFIG_HAWKBIT_DDI_NO_SECURITY` Kconfig 选项已
+  弃用，因为 hawkBit 服务器在 0.8.0 版本中已移除对匿名身份验证的支持。
+
+* 遗留 USB 设备栈已弃用，将在 Zephyr 4.5 中移除。
+  请改用新的 :ref:`USB 设备栈 <usb_device_stack_next>`。
+
+* :kconfig:option:`CONFIG_NET_L2_ETHERNET` 已弃用。
+
+本次发布中的稳定 API 更改
+=================================
+
+* ``net_mgmt`` 事件处理器 :c:type:`net_mgmt_event_handler_t`
+  和请求处理器 :c:type:`net_mgmt_request_handler_t` 的 API 签名已更改。事件值
+  类型从 ``uint32_t`` 更改为 ``uint64_t``。
+
+新的 API 和选项
+====================
 
 ..
-Link
-to
-new
-APIs
-here、
-in
-a
-group
-if
-you
-think
-it's
-necessary、
-no
-need
-to
-get
-fancy
-just
-list
-the
-link、
-that
-should
-contain
-the
-documentation.
-如果
-你
-feel
-like
-you
-need
-to
-add
-more
-details、
-add
-them
-in
-the
-API
-documentation
-code
-instead.
-
-..
-zephyr
-keep
-sorted
-start
-re
-（^
-*
-\w）
-
-*
-Architectures
-
-*
-:kconfig:option:`CONFIG_ARCH_HAS_HW_SHADOW_STACK`
-*
-:kconfig:option:`CONFIG_SRAM_SW_ISR_TABLE`
-
-*
-x86
-Intel
-CET
-support
-
-*
-:kconfig:option:`CONFIG_X86_CET`
-*
-:kconfig:option:`CONFIG_X86_CET_IBT`
-*
-:kconfig:option:`CONFIG_X86_CET_SHADOW_STACK_ALIGNMENT`
-*
-:kconfig:option:`CONFIG_X86_CET_SOC_PREPARE_SHADOW_STACK_SWITCH`
-*
-:kconfig:option:`CONFIG_X86_CET_VERIFY_KERNEL_SHADOW_STACK`
-
-*
-ARM
-（Cortex
-M）
-system
-state
-save
-/
-restore
-primitives
-
-*
-:c:func:`z_arm_save_scb_context`
-/
-:c:func:`z_arm_restore_scb_context`
-*
-:c:func:`z_arm_save_mpu_context`
-/
-:c:func:`z_arm_restore_mpu_context`
-*
-Existing
-:c:func:`z_arm_save_fp_context`
-and
-:c:func:`z_arm_save_fp_context`
-have
-also
-been
-updated
-
-*
-Xtensa
-
-*
-:kconfig:option:`CONFIG_XTENSA_HIFI_SHARING_MODEL`
-*
-:kconfig:option:`CONFIG_XTENSA_EAGER_HIFI_SHARING`
-*
-:kconfig:option:`CONFIG_XTENSA_LAZY_HIFI_SHARING`
-*
-:kconfig:option:`CONFIG_XTENSA_EXCEPTION_ENTER_GDB`
-
-*
-Bluetooth
-
-*
-Audio
-
-*
-:c:struct:`bt_audio_codec_cfg`
-now
-contains
-a
-target_latency
-and
-a
-target_phy
-option
-*
-:c:func:`bt_bap_broadcast_source_foreach_stream`
-*
-:c:func:`bt_cap_initiator_broadcast_foreach_stream`
-*
-:c:struct:`bt_bap_stream`
-now
-contains
-an
-``iso``
-field
-as
-a
-reference
-to
-the
-ISO
-channel
-*
-:c:func:`bt_bap_unicast_group_get_info`
-*
-:c:func:`bt_cap_unicast_group_get_info`
-*
-:c:func:`bt_bap_unicast_client_unregister_cb`
-
-*
-Host
-
-*
-:c:struct:`bt_iso_unicast_info`
-now
-contains
-a
-``cig_id``
-and
-a
-``cis_id``
-field
-*
-:c:struct:`bt_iso_broadcaster_info`
-now
-contains
-a
-``big_handle``
-and
-a
-``bis_number``
-field
-*
-:c:struct:`bt_iso_sync_receiver_info`
-now
-contains
-a
-``big_handle``
-and
-a
-``bis_number``
-field
-*
-:c:struct:`bt_le_ext_adv_info`
-now
-contains
-an
-``sid``
-field
-with
-the
-Advertising
-Set
-ID.
-*
-:kconfig:option:`CONFIG_BT_AUTO_PHY_PERIPHERAL_NONE`
-*
-:kconfig:option:`CONFIG_BT_AUTO_PHY_PERIPHERAL_1M`
-*
-:kconfig:option:`CONFIG_BT_AUTO_PHY_PERIPHERAL_2M`
-*
-:kconfig:option:`CONFIG_BT_AUTO_PHY_PERIPHERAL_CODED`
-*
-:kconfig:option:`CONFIG_BT_AUTO_PHY_CENTRAL_NONE`
-*
-:kconfig:option:`CONFIG_BT_AUTO_PHY_CENTRAL_1M`
-*
-:kconfig:option:`CONFIG_BT_AUTO_PHY_CENTRAL_2M`
-*
-:kconfig:option:`CONFIG_BT_AUTO_PHY_CENTRAL_CODED`
-
-*
-CPUFreq
-
-*
-Introduced
-experimental
-dynamic
-CPU
-frequency
-scaling
-subsystem
-
-*
-:kconfig:option:`CONFIG_CPU_FREQ`
-
-*
-Cellular
-
-*
-:c:enumerator:`CELLULAR_EVENT_MODEM_COMMS_CHECK_RESULT`
-
-*
-Crypto
-
-*
-:kconfig:option:`CONFIG_MBEDTLS_PSA_CRYPTO_BUILTIN_KEYS`
-
-*
-Display
-
-*
-:c:enumerator:`PIXEL_FORMAT_AL_88`
-
-*
-SDL
-
-*
-:kconfig:option:`CONFIG_SDL_DISPLAY_DEFAULT_PIXEL_FORMAT_AL_88`
-*
-:kconfig:option:`CONFIG_SDL_DISPLAY_COLOR_TINT`
-
-*
-Ethernet
-
-*
-The
-devicetree
-property
-``default
-speeds``
-was
-added
-to
-most
-of
-the
-ethernet
-phys
-to
-configure
-the
-advertised
-speeds
-for
-auto
-negotiation
-during
-initialization
-of
-the
-driver.
-
-*
-Haptics
-
-*
-:kconfig:option:`CONFIG_HAPTICS_SHELL`
-
-*
-Instrumentation
-subsystem
-
-*
-Introduced
-instrumentation
-subsystem
-
-*
-:kconfig:option:`CONFIG_INSTRUMENTATION`
-*
-:kconfig:option:`CONFIG_INSTRUMENTATION_MODE_CALLGRAPH`
-*
-:kconfig:option:`CONFIG_INSTRUMENTATION_MODE_CALLGRAPH_BUFFER_SIZE`
-*
-:kconfig:option:`CONFIG_INSTRUMENTATION_MODE_CALLGRAPH_BUFFER_OVERWRITE`
-*
-:kconfig:option:`CONFIG_INSTRUMENTATION_MODE_STATISTICAL`
-*
-:kconfig:option:`CONFIG_INSTRUMENTATION_MODE_STATISTICAL_MAX_NUM_FUNC`
-*
-:kconfig:option:`CONFIG_INSTRUMENTATION_MODE_STATISTICAL_MAX_CALL_DEPTH`
-*
-:kconfig:option:`CONFIG_INSTRUMENTATION_TRIGGER_FUNCTION`
-*
-:kconfig:option:`CONFIG_INSTRUMENTATION_STOPPER_FUNCTION`
-*
-:kconfig:option:`CONFIG_INSTRUMENTATION_EXCLUDE_FUNCTION_LIST`
-*
-:kconfig:option:`CONFIG_INSTRUMENTATION_EXCLUDE_FILE_LIST`
-*
-:c:struct:`instr_header`
-*
-:c:struct:`instr_event_context`
-*
-:c:struct:`instr_record`
-*
-:c:func:`instr_tracing_supported`
-*
-:c:func:`instr_profiling_supported`
-*
-:c:func:`instr_fundamentals_initialized`
-*
-:c:func:`instr_init`
-*
-:c:func:`instr_initialized`
-*
-:c:func:`instr_enabled`
-*
-:c:func:`instr_enable`
-*
-:c:func:`instr_disable`
-*
-:c:func:`instr_turn_on`
-*
-:c:func:`instr_turn_off`
-*
-:c:func:`instr_turned_on`
-*
-:c:func:`instr_trace_enabled`
-*
-:c:func:`instr_profile_enabled`
-*
-:c:func:`instr_dump_buffer_uart`
-*
-:c:func:`instr_dump_deltas_uart`
-*
-:c:func:`instr_event_handler`
-*
-:c:func:`instr_set_trigger_func`
-*
-:c:func:`instr_set_stop_func`
-*
-:c:func:`instr_get_trigger_func`
-*
-:c:func:`instr_get_stop_func`
-
-*
-Kernel
-
-*
-:kconfig:option:`CONFIG_HW_SHADOW_STACK`
-*
-:kconfig:option:`CONFIG_HW_SHADOW_STACK_ALLOW_REUSE`
-*
-:kconfig:option:`CONFIG_HW_SHADOW_STACK_MIN_SIZE`
-*
-:kconfig:option:`CONFIG_HW_SHADOW_STACK_PERCENTAGE_SIZE`
-*
-:c:macro:`K_THREAD_HW_SHADOW_STACK_SIZE`
-*
-:c:macro:`K_KERNEL_HW_SHADOW_STACK_DECLARE`
-*
-:c:macro:`K_KERNEL_HW_SHADOW_STACK_ARRAY_DECLARE`
-*
-:c:macro:`K_THREAD_HW_SHADOW_STACK_DEFINE`
-*
-:c:macro:`K_THREAD_HW_SHADOW_STACK_ARRAY_DEFINE`
-*
-:c:macro:`K_THREAD_HW_SHADOW_STACK_ATTACH`
-*
-:c:macro:`k_thread_hw_shadow_stack_attach`
-
-*
-LVGL
-（Light
-and
-Versatile
-Graphics
-Library）
-
-*
-:kconfig:option:`CONFIG_LV_Z_MEMORY_POOL_ZEPHYR_REGION`
-*
-:kconfig:option:`CONFIG_LV_Z_MEMORY_POOL_ZEPHYR_REGION_NAME`
-*
-:kconfig:option:`CONFIG_LV_Z_VDB_ZEPHYR_REGION`
-*
-:kconfig:option:`CONFIG_LV_Z_VDB_ZEPHYR_REGION_NAME`
-
-*
-Logging:
-
-*
-:kconfig:option:`CONFIG_LOG_BACKEND_SWO_SYNC_PACKETS`
-
-*
-Added
-options
-to
-skip
-timestamp
-and
-level
-in
-log
-backends.
-
-*
-:kconfig:option:`CONFIG_LOG_BACKEND_SHOW_TIMESTAMP`
-*
-:kconfig:option:`CONFIG_LOG_BACKEND_SHOW_LEVEL`
-
-*
-Added
-rate
-limited
-logging
-macros
-to
-prevent
-log
-flooding
-when
-messages
-are
-generated
-frequently.
-
-*
-:c:macro:`LOG_ERR_RATELIMIT`
--
-Rate
-limited
-error
-logging
-macro
-（convenience）
-*
-:c:macro:`LOG_WRN_RATELIMIT`
--
-Rate
-limited
-warning
-logging
-macro
-（convenience）
-*
-:c:macro:`LOG_INF_RATELIMIT`
--
-Rate
-limited
-info
-logging
-macro
-（convenience）
-*
-:c:macro:`LOG_DBG_RATELIMIT`
--
-Rate
-limited
-debug
-logging
-macro
-（convenience）
-*
-:c:macro:`LOG_HEXDUMP_ERR_RATELIMIT`
--
-Rate
-limited
-error
-hexdump
-macro
-（convenience）
-*
-:c:macro:`LOG_HEXDUMP_WRN_RATELIMIT`
--
-Rate
-limited
-warning
-hexdump
-macro
-（convenience）
-*
-:c:macro:`LOG_HEXDUMP_INF_RATELIMIT`
--
-Rate
-limited
-info
-hexdump
-macro
-（convenience）
-*
-:c:macro:`LOG_HEXDUMP_DBG_RATELIMIT`
--
-Rate
-limited
-debug
-hexdump
-macro
-（convenience）
-*
-:c:macro:`LOG_ERR_RATELIMIT_RATE`
--
-Rate
-limited
-error
-logging
-macro
-（explicit
-rate）
-*
-:c:macro:`LOG_WRN_RATELIMIT_RATE`
--
-Rate
-limited
-warning
-logging
-macro
-（explicit
-rate）
-*
-:c:macro:`LOG_INF_RATELIMIT_RATE`
--
-Rate
-limited
-info
-logging
-macro
-（explicit
-rate）
-*
-:c:macro:`LOG_DBG_RATELIMIT_RATE`
--
-Rate
-limited
-debug
-logging
-macro
-（explicit
-rate）
-*
-:c:macro:`LOG_HEXDUMP_ERR_RATELIMIT_RATE`
--
-Rate
-limited
-error
-hexdump
-macro
-（explicit
-rate）
-*
-:c:macro:`LOG_HEXDUMP_WRN_RATELIMIT_RATE`
--
-Rate
-limited
-warning
-hexdump
-macro
-（explicit
-rate）
-*
-:c:macro:`LOG_HEXDUMP_INF_RATELIMIT_RATE`
--
-Rate
-limited
-info
-hexdump
-macro
-（explicit
-rate）
-*
-:c:macro:`LOG_HEXDUMP_DBG_RATELIMIT_RATE`
--
-Rate
-limited
-debug
-hexdump
-macro
-（explicit
-rate）
-
-*
-Management
-
-*
-hawkBit
-
-*
-:kconfig:option:`CONFIG_HAWKBIT_REBOOT_NONE`
-*
-:kconfig:option:`CONFIG_HAWKBIT_CONFIRM_IMG_ON_INIT`
-*
-:kconfig:option:`CONFIG_HAWKBIT_ERASE_SECOND_SLOT_ON_CONFIRM`
-
-*
-MCUmgr
-
-*
-:kconfig:option:`CONFIG_MCUMGR_TRANSPORT_UDP_DTLS`
-*
-:kconfig:option:`CONFIG_MCUMGR_GRP_IMG_ALLOW_CONFIRM_NON_ACTIVE_SLOT`
-
-*
-Modem
-
-*
-:kconfig:option:`CONFIG_MODEM_DEDICATED_WORKQUEUE`
-
-*
-NVMEM
-
-*
-Introduced
-:ref:`Non
-Volatile
-Memory
-（NVMEM）
-<nvmem>`
-subsystem
-
-*
-:kconfig:option:`CONFIG_NVMEM`
-*
-:kconfig:option:`CONFIG_NVMEM_EEPROM`
-*
-:c:struct:`nvmem_cell`
-*
-:c:func:`nvmem_cell_read`
-*
-:c:func:`nvmem_cell_write`
-*
-:c:func:`nvmem_cell_is_ready`
-*
-:c:macro:`NVMEM_CELL_GET_BY_NAME`
--
-and
-variants
-*
-:c:macro:`NVMEM_CELL_GET_BY_IDX`
--
-and
-variants
-
-*
-Networking
-
-*
-CoAP
-
-*
-:c:struct:`coap_client_response_data`
-*
-:c:member:`coap_client_request.payload_cb`
-*
-:kconfig:option:`CONFIG_COAP_CLIENT_MAX_PATH_LENGTH`
-*
-:kconfig:option:`CONFIG_COAP_CLIENT_MAX_EXTRA_OPTIONS`
-
-*
-Connection
-manager
-
-*
-:c:macro:`NET_EVENT_CONN_IF_IDLE_TIMEOUT`
-*
-:c:func:`conn_mgr_if_set_idle_timeout`
-*
-:c:func:`conn_mgr_if_get_idle_timeout`
-*
-:c:func:`conn_mgr_if_used`
-
-*
-DNS
-
-*
-:c:enumerator:`DNS_QUERY_TYPE_CNAME`
-*
-:c:enumerator:`DNS_QUERY_TYPE_TXT`
-*
-:c:enumerator:`DNS_QUERY_TYPE_SRV`
-*
-:c:func:`dns_resolve_enable_packet_forwarding`
-*
-:c:func:`dns_resolve_remove_server_addresses`
-
-*
-HTTP
-
-*
-:kconfig:option:`CONFIG_HTTP_SERVER_STATIC_FS_RESPONSE_SIZE`
-*
-:c:struct:`http_service_config`
-
-*
-IPv6
-
-*
-:kconfig:option:`CONFIG_NET_IPV6_NS_TIMEOUT`
-*
-:c:func:`net_ipv6_get_addr_mcast_scope`
-
-*
-LwM2M
-
-*
-:c:type:`lwm2m_cache_filter_cb_t`
-*
-:c:func:`lwm2m_set_cache_filter`
-
-*
-MQTT
-SN
-
-*
-:c:func:`mqtt_sn_predefine_topic`
-*
-:c:func:`mqtt_sn_update_will_topic`
-*
-:c:func:`mqtt_sn_update_will_message`
-*
-:c:func:`mqtt_sn_define_short_topic`
-
-*
-Misc
-
-*
-:kconfig:option:`CONFIG_NET_LATMON`
-*
-:kconfig:option:`CONFIG_NETMIDI2_HOST`
-*
-:kconfig:option:`CONFIG_OCPP`
-*
-:c:member:`npf_rule.priority`
-*
-:c:macro:`NPF_PRIORITY`
-*
-:kconfig:option:`CONFIG_NET_CONFIG_CLOCK_SNTP_SET_RTC`
-*
-:c:func:`ppp_peer_async_control_character_map`
-
-*
-OpenThread
-
-*
-:kconfig:option:`CONFIG_OPENTHREAD_ZEPHYR_BORDER_ROUTER`
-*
-:kconfig:option:`CONFIG_OPENTHREAD_BORDER_ROUTING_DHCP6_PD_CLIENT`
-*
-:kconfig:option:`CONFIG_OPENTHREAD_CHANNEL_MONITOR_AUTO_START`
-*
-:kconfig:option:`CONFIG_OPENTHREAD_MAC_BEACON_PAYLOAD_PARSING`
-*
-:kconfig:option:`CONFIG_OPENTHREAD_MULTIPLE_INSTANCE_NUM`
-*
-:kconfig:option:`CONFIG_OPENTHREAD_PLATFORM_RADIO_COEX_ENABLE`
-*
-:kconfig:option:`CONFIG_OPENTHREAD_PLATFORM_USEC_TIMER`
-*
-:kconfig:option:`CONFIG_OPENTHREAD_RCP_RESTORATION_MAX_COUNT`
-*
-:kconfig:option:`CONFIG_OPENTHREAD_SRP_SERVER_FAST_START`
-*
-:kconfig:option:`CONFIG_OPENTHREAD_TREL_MANAGE_DNSSD`
-
-*
-Sockets
-
-*
-:c:func:`zsock_listen`
-now
-implements
-the
-``backlog``
-parameter
-support.
-The
-TCP
-server
-socket
-will
-limit
-the
-number
-of
-pending
-incoming
-connections
-to
-that
-value.
-*
-:c:macro:`IP_RECVTTL`
-*
-:c:macro:`IPV6_PKTINFO`
-*
-:c:macro:`IPV6_RECVHOPLIMIT`
-*
-:c:macro:`IPV6_HOPLIMIT`
-
-*
-Wi
-Fi
-
-*
-:kconfig:option:`CONFIG_WIFI_NM_WPA_SUPPLICANT_DEBUG_SHOW_KEYS`
-*
-Set
-enterprise
-crypto
-insecure
-because
-certificate
-validation
-is
-disabled.
-*
-If
-the
-usage
-mode
-option
-has
-AP
-enabled、
-then
-automatically
-enable
-AP
-mode.
-*
-Add
-configuration
-options
-for
-background
-scanning
-（bgscan）
-in
-wpa
-supplicant.
-*
-Add
-support
-for
-multiple
-virtual
-interfaces
-（VIF）.
-
-*
-Newlib
-
-*
-:kconfig:option:`CONFIG_NEWLIB_LIBC_USE_POSIX_LIMITS_H`
-
-*
-Opamp
-
-*
-Introduced
-opamp
-device
-driver
-APIs
-selected
-with
-:kconfig:option:`CONFIG_OPAMP`.
-It
-supports
-initial
-configuration
-through
-Devicetree
-and
-runtime
-configuration
-through
-vendor
-specific
-APIs.
-*
-Added
-support
-for
-NXP
-OPAMP
-:dtcompatible:`nxp、opamp`.
-*
-Added
-support
-for
-NXP
-OPAMP
-FAST
-:dtcompatible:`nxp、opamp
-fast`.
-
-*
-Power
-management
-
-*
-:c:func:`pm_device_driver_deinit`
-*
-:kconfig:option:`CONFIG_PM_DEVICE_RUNTIME_DEFAULT_ENABLE`
-*
-:kconfig:option:`CONFIG_PM_S2RAM`
-has
-been
-refactored
-to
-be
-promptless.
-The
-application
-now
-only
-needs
-to
-enable
-any
-"suspend
-to
-ram"
-power
-state
-in
-the
-Devicetree.
-*
-The
-:kconfig:option:`PM_S2RAM_CUSTOM_MARKING`
-has
-been
-renamed
-to
-:kconfig:option:`HAS_PM_S2RAM_CUSTOM_MARKING`
-and
-refactored
-to
-be
-promptless.
-This
-option
-is
-now
-selected
-by
-SoCs
-if
-they
-need
-it
-for
-their
-"suspend
-to
-ram"
-implementations.
-
-*
-Settings
-
-*
-:kconfig:option:`CONFIG_SETTINGS_TFM_ITS`
-
-*
-Shell
-
-*
-MQTT
-backend
-
-*
-:kconfig:option:`CONFIG_SHELL_MQTT_TOPIC_RX_ID`
-*
-:kconfig:option:`CONFIG_SHELL_MQTT_TOPIC_TX_ID`
-*
-:kconfig:option:`CONFIG_SHELL_MQTT_CONNECT_TIMEOUT_MS`
-*
-:kconfig:option:`CONFIG_SHELL_MQTT_WORK_DELAY_MS`
-*
-:kconfig:option:`CONFIG_SHELL_MQTT_LISTEN_TIMEOUT_MS`
-
-*
-State
-Machine
-Framework
-
-*
-:c:func:`smf_get_current_leaf_state`
-*
-:c:func:`smf_get_current_executing_state`
-
-*
-Storage
-
-*
-:kconfig:option:`CONFIG_FILE_SYSTEM_SHELL_LS_SIZE`
-
-*
-Sys
-
-*
-:c:func:`sys_count_bits`
-
-*
-Task
-Watchdog
-
-*
-:kconfig:option:`CONFIG_TASK_WDT_DUMMY`
-
-*
-Toolchain
-
-*
-:c:macro:`__deprecated_version`
-
-*
-USB
-
-*
-Video
-
-*
-:c:func:`uvc_add_format`
-
-*
-Video
-
-*
-:c:member:`video_format.size`
-field
-*
-:c:func:`video_estimate_fmt_size`
-*
-:c:func:`video_transfer_buffer`
-
-..
-zephyr
-keep
-sorted
-stop
+  在此处链接新 API，如果你认为有必要可以分组，无需花哨，
+  只需列出链接，其中应包含文档。如果你认为需要添加更多细节，
+  请将其添加到 API 文档代码中。
+
+* 架构
+
+  * :kconfig:option:`CONFIG_OPENRISC`
+  * :kconfig:option:`CONFIG_RISCV_ISA_RV64`
+  * :kconfig:option:`CONFIG_RISCV_ISA_ZICBOM`
+  * :kconfig:option:`CONFIG_RISCV_ISA_ZICBOZ`
+  * :kconfig:option:`CONFIG_RISCV_ISA_ZICBOZ`
+
+* 蓝牙
+
+  * 音频
+
+    * :c:macro:`BT_BAP_ADV_PARAM_CONN_QUICK`
+    * :c:macro:`BT_BAP_ADV_PARAM_CONN_REDUCED`
+    * :c:macro:`BT_BAP_CONN_PARAM_SHORT_7_5`
+    * :c:macro:`BT_BAP_CONN_PARAM_SHORT_10`
+    * :c:macro:`BT_BAP_CONN_PARAM_RELAXED`
+    * :c:macro:`BT_BAP_ADV_PARAM_BROADCAST_FAST`
+    * :c:macro:`BT_BAP_ADV_PARAM_BROADCAST_SLOW`
+    * :c:macro:`BT_BAP_PER_ADV_PARAM_BROADCAST_FAST`
+    * :c:macro:`BT_BAP_PER_ADV_PARAM_BROADCAST_SLOW`
+    * :c:func:`bt_csip_set_member_set_size_and_rank`
+    * :c:func:`bt_csip_set_member_get_info`
+    * :c:func:`bt_bap_unicast_group_foreach_stream`
+    * :c:func:`bt_cap_unicast_group_create`
+    * :c:func:`bt_cap_unicast_group_reconfig`
+    * :c:func:`bt_cap_unicast_group_add_streams`
+    * :c:func:`bt_cap_unicast_group_delete`
+    * :c:func:`bt_cap_unicast_group_foreach_stream`
+
+  * 主机
+
+    * :c:func:`bt_le_get_local_features`
+    * :c:func:`bt_le_bond_exists`
+    * :c:func:`bt_br_bond_exists`
+    * :c:func:`bt_conn_lookup_addr_br`
+    * :c:func:`bt_conn_get_dst_br`
+    * LE 连接子评分不再是实验性的。
+    * 从 :c:func:`bt_unpair` 中移除经典绑定信息的删除，并添加
+      :c:func:`bt_br_unpair`。
+    * 从 :c:func:`bt_foreach_bond` 中移除经典绑定信息的查询，并添加
+      :c:func:`bt_br_foreach_bond`。
+    * 为 :c:func:`bt_br_set_discoverable` 添加新参数 ``limited`` 以支持经典的
+      有限可发现模式。
+    * 为经典 L2CAP 启用重传和流量控制，包括
+      :kconfig:option:`CONFIG_BT_L2CAP_RET`、:kconfig:option:`CONFIG_BT_L2CAP_FC`、
+      :kconfig:option:`CONFIG_BT_L2CAP_ENH_RET` 和 :kconfig:option:`CONFIG_BT_L2CAP_STREAM`。
+    * :c:func:`bt_avrcp_get_cap`
+    * 改进经典免提单元，包括
+      :kconfig:option:`CONFIG_BT_HFP_HF_CODEC_NEG`、:kconfig:option:`CONFIG_BT_HFP_HF_ECNR`、
+      :kconfig:option:`CONFIG_BT_HFP_HF_3WAY_CALL`、:kconfig:option:`CONFIG_BT_HFP_HF_ECS`、
+      :kconfig:option:`CONFIG_BT_HFP_HF_ECC`、:kconfig:option:`CONFIG_BT_HFP_HF_VOICE_RECG_TEXT`、
+      :kconfig:option:`CONFIG_BT_HFP_HF_ENH_VOICE_RECG`、
+      :kconfig:option:`CONFIG_BT_HFP_HF_VOICE_RECG`、
+      :kconfig:option:`CONFIG_BT_HFP_HF_HF_INDICATORS`、
+      :kconfig:option:`CONFIG_BT_HFP_HF_HF_INDICATOR_ENH_SAFETY` 和
+      :kconfig:option:`CONFIG_BT_HFP_HF_HF_INDICATOR_BATTERY`。
+    * 改进经典免提音频网关，包括
+      :kconfig:option:`CONFIG_BT_HFP_AG_CODEC_NEG`、:kconfig:option:`CONFIG_BT_HFP_AG_ECNR`、
+      :kconfig:option:`CONFIG_BT_HFP_AG_3WAY_CALL`、:kconfig:option:`CONFIG_BT_HFP_AG_ECS`、
+      :kconfig:option:`CONFIG_BT_HFP_AG_ECC`、:kconfig:option:`CONFIG_BT_HFP_AG_VOICE_RECG_TEXT`、
+      :kconfig:option:`CONFIG_BT_HFP_AG_ENH_VOICE_RECG`、
+      :kconfig:option:`CONFIG_BT_HFP_AG_VOICE_TAG`、
+      :kconfig:option:`CONFIG_BT_HFP_AG_HF_INDICATORS`、
+      :kconfig:option:`CONFIG_BT_HFP_AG_HF_INDICATOR_ENH_SAFETY`、
+      :kconfig:option:`CONFIG_BT_HFP_AG_HF_INDICATOR_BATTERY` 和
+      :kconfig:option:`CONFIG_BT_HFP_AG_REJECT_CALL`。
+    * 为 :c:struct:`bt_hfp_ag_cb` 添加回调函数 ``get_ongoing_call()``。
+    * :c:func:`bt_hfp_ag_ongoing_calls`
+    * 支持经典 L2CAP 信令回声请求和响应功能，包括
+      :c:struct:`bt_l2cap_br_echo_cb`、:c:func:`bt_l2cap_br_echo_cb_register`、
+      :c:func:`bt_l2cap_br_echo_cb_unregister`、:c:func:`bt_l2cap_br_echo_req` 和
+      :c:func:`bt_l2cap_br_echo_rsp`。
+    * :c:func:`bt_a2dp_get_conn`
+    * :c:func:`bt_rfcomm_send_rpn_cmd`
+
+* 构建系统
+
+  * Sysbuild
+
+    * 使用
+      :kconfig:option:`SB_CONFIG_MCUBOOT_MODE_FIRMWARE_UPDATER`
+      为固件加载器镜像设置/选择支持已添加到 sysbuild
+      通过 ``SB_CONFIG_FIRMWARE_LOADER``，例如 :kconfig:option:`SB_CONFIG_FIRMWARE_LOADER_IMAGE_SMP_SVR`
+      用于选择 :zephyr:code-sample:`smp-svr`。
+    * 使用
+      :kconfig:option:`SB_CONFIG_MCUBOOT_MODE_SINGLE_APP_RAM_LOAD`
+      为 sysbuild 添加单应用 RAM 加载支持。
+
+* 计数器
+
+  * :c:func:`counter_reset`
+
+* 调试
+
+  * 核心转储
+
+    * :kconfig:option:`CONFIG_DEBUG_COREDUMP_THREAD_STACK_TOP`，当选择 :kconfig:option:`CONFIG_DEBUG_COREDUMP_MEMORY_DUMP_MIN` 时为 ARM Cortex M 默认启用。
+    * :kconfig:option:`CONFIG_DEBUG_COREDUMP_BACKEND_IN_MEMORY`
+    * :kconfig:option:`CONFIG_DEBUG_COREDUMP_BACKEND_IN_MEMORY_SIZE`
+
+* 显示
+
+    * 添加了 :c:func:`display_clear` API 以允许以标准化方式清除显示内容。
+    * 字符帧缓冲（CFB）子系统现在支持通过 :c:func:`cfb_draw_circle` 绘制圆形。
+
+* I2C
+
+  * :c:func:`i2c_configure_dt`。
+  * :c:macro:`I2C_DEVICE_DT_DEINIT_DEFINE`
+  * :c:macro:`I2C_DEVICE_DT_INST_DEINIT_DEFINE`
+
+* I3C
+
+  * :kconfig:option:`CONFIG_I3C_MODE`
+  * :kconfig:option:`CONFIG_I3C_CONTROLLER_ROLE_ONLY`
+  * :kconfig:option:`CONFIG_I3C_TARGET_ROLE_ONLY`
+  * :kconfig:option:`CONFIG_I3C_DUAL_ROLE`
+  * :c:func:`i3c_ccc_do_rstdaa`
+
+* 内核
+
+  * :c:macro:`K_TIMEOUT_ABS_SEC`
+  * :c:func:`timespec_add`
+  * :c:func:`timespec_compare`
+  * :c:func:`timespec_equal`
+  * :c:func:`timespec_is_valid`
+  * :c:func:`timespec_negate`
+  * :c:func:`timespec_normalize`
+  * :c:func:`timespec_from_timeout`
+  * :c:func:`timespec_to_timeout`
+  * :c:func:`k_heap_array_get`
+
+* LVGL（Light and Versatile Graphics Library）
+
+    * LVGL 模块已同步到 v9.3，带来了许多上游改进和新功能。
+    * LVGL 子系统现在支持多个同时显示，包括正确的输入设备到显示绑定。
+    * 为 SSD1327、SSD1320、SSD1322 和 ST75256 等显示添加了 L8/Y8 像素格式支持。
+    * :kconfig:option:`CONFIG_LV_Z_COLOR_MONO_HW_INVERSION`
+
+* LoRaWAN
+
+   * :c:func:`lorawan_request_link_check`
+
+* 管理
+
+  * MCUmgr
+
+    * 使用
+      :kconfig:option:`CONFIG_MCUBOOT_BOOTLOADER_MODE_FIRMWARE_UPDATER`
+      为镜像管理组添加固件加载器支持。
+    * 使用
+      :kconfig:option:`CONFIG_MCUMGR_GRP_OS_RESET_BOOT_MODE`
+      为 OS 组重置命令添加可选启动模式（使用保留启动模式）。
+
+* 网络：
+
+  * CoAP
+
+    * :c:macro:`COAPS_SERVICE_DEFINE`
+
+  * DHCPv4
+
+    * :kconfig:option:`CONFIG_NET_DHCPV4_INIT_REBOOT`
+
+  * DNS
+
+    * :c:func:`dns_resolve_service`
+    * :c:func:`dns_resolve_reconfigure_with_interfaces`
+
+  * HTTP
+
+    * :kconfig:option:`CONFIG_HTTP_SERVER_COMPRESSION`
+
+  * IPv4
+
+    * :kconfig:option:`CONFIG_NET_IPV4_MTU`
+
+  * LwM2M
+
+    * :kconfig:option:`CONFIG_LWM2M_SERVER_BOOTSTRAP_ON_FAIL`
+    * 实现了大于、小于和步进观察属性处理
+      （参见 :kconfig:option:`CONFIG_LWM2M_MAX_NOTIFIED_NUMERICAL_RES_TRACKED`）。
+
+  * 杂项
+
+    * :c:func:`net_if_oper_state_change_time`
+
+  * MQTT
+
+    * :kconfig:option:`CONFIG_MQTT_VERSION_5_0`
+    * :c:member:`mqtt_transport.if_name`
+
+  * OpenThread
+
+    * 将 OpenThread 相关 Kconfig 选项从 :zephyr_file:`subsys/net/l2/openthread/Kconfig`
+      移动到 :zephyr_file:`modules/openthread/Kconfig`。
+    * 重构了 OpenThread 网络 API，参见
+      :ref:`迁移指南 <migration_4.4>` 的 OpenThread 部分。
+    * :kconfig:option:`CONFIG_OPENTHREAD_SYS_INIT`
+    * :kconfig:option:`CONFIG_OPENTHREAD_SYS_INIT_PRIORITY`
+
+  * SNTP
+
+    * :c:func:`sntp_init_async`
+    * :c:func:`sntp_send_async`
+    * :c:func:`sntp_read_async`
+    * :c:func:`sntp_close_async`
+
+  * 套接字
+
+    * :kconfig:option:`CONFIG_NET_SOCKETS_INET_RAW`
+    * :c:func:`socket_offload_dns_enable`
+    * 为 :ref:`socket_service_interface` 库添加了新的文档页面。
+    * 新的套接字选项：
+
+      * :c:macro:`IP_MULTICAST_LOOP`
+      * :c:macro:`IPV6_MULTICAST_LOOP`
+      * :c:macro:`TLS_CERT_VERIFY_RESULT`
+
+  * Wi-Fi
+
+    * :kconfig:option:`CONFIG_WIFI_USAGE_MODE`
+    * 在 Wi-Fi 管理文档中添加了新的部分
+      （``doc/connectivity/networking/api/wifi.rst``），包含使用 FreeRADIUS 脚本
+      为 Wi-Fi 生成测试证书的逐步说明。这有助于用户在自己的测试环境中
+      复现该过程。
+    * 将 hostap IPC 机制从 socketpair 更改为 k_fifo。根据启用的 Wi-Fi 配置选项，
+      使用原生 Wi-Fi 栈时最多可节省 6-8 kB 内存。
+
+  * zperf
+
+    * :kconfig:option:`CONFIG_ZPERF_SESSION_PER_THREAD`
+    * :c:member:`zperf_upload_params.data_loader`
+    * :kconfig:option:`CONFIG_NET_ZPERF_SERVER`
+
+* PCIe
+
+   * :kconfig:option:`CONFIG_NVME_PRP_PAGE_SIZE`
+
+* 电源管理
+
+    * :kconfig:option:`CONFIG_PM_DEVICE_RUNTIME_USE_SYSTEM_WQ`
+    * :kconfig:option:`CONFIG_PM_DEVICE_RUNTIME_USE_DEDICATED_WQ`
+    * :kconfig:option:`CONFIG_PM_DEVICE_DRIVER_NEEDS_DEDICATED_WQ`
+    * :kconfig:option:`CONFIG_PM_DEVICE_RUNTIME_DEDICATED_WQ_STACK_SIZE`
+    * :kconfig:option:`CONFIG_PM_DEVICE_RUNTIME_DEDICATED_WQ_PRIO`
+    * :kconfig:option:`CONFIG_PM_DEVICE_RUNTIME_DEDICATED_WQ_INIT_PRIO`
+    * :kconfig:option:`CONFIG_PM_DEVICE_RUNTIME_ASYNC`
+
+* SPI
+
+  * :c:macro:`SPI_DEVICE_DT_DEINIT_DEFINE`
+  * :c:macro:`SPI_DEVICE_DT_INST_DEINIT_DEFINE`
+
+* 传感器
+
+  * :c:func:`sensor_value_to_deci`
+  * :c:func:`sensor_value_to_centi`
+
+* 步进电机
+
+  * :c:func:`stepper_stop()`
+
+* 存储
+
+  * :c:func:`flash_area_copy()`
+
+* Sys
+
+  * :c:func:`util_eq`
+  * :c:func:`util_memeq`
+  * :c:func:`sys_clock_gettime`
+  * :c:func:`sys_clock_settime`
+  * :c:func:`sys_clock_nanosleep`
+
+* USB
+
+  * :c:func:`uvc_set_video_dev`
+
+* UpdateHub
+
+  * :c:func:`updatehub_report_error`
+
+* 视频
+
+  * :c:type:`video_api_ctrl_t`
+  * :c:func:`video_query_ctrl`
+  * :c:func:`video_print_ctrl`
+  * :c:type:`video_api_selection_t`
+  * :c:func:`video_set_selection`
+  * :c:func:`video_get_selection`
+  * :ref:`video-sw-generator <snippet-video-sw-generator>`
+  * :c:func:`video_get_csi_link_freq`
+  * :c:macro:`VIDEO_CID_LINK_FREQ`
+  * :c:macro:`VIDEO_CID_AUTO_WHITE_BALANCE` 以及 BASE 控制类的其他控制。
+  * :c:macro:`VIDEO_CID_EXPOSURE_ABSOLUTE` 以及 CAMERA 控制类的其他控制。
+  * :c:macro:`VIDEO_PIX_FMT_Y10` 和 ``Y12``、``Y14``、``Y16`` 变体
+  * :c:macro:`VIDEO_PIX_FMT_SRGGB10P` 和 ``12P``、``14P`` 变体，适用于所有 4 种 bayer 变体。
+  * :c:member:`video_buffer.index` 字段
+  * :c:member:`video_ctrl_query.int_menu` 字段
+  * :c:macro:`VIDEO_MIPI_CSI2_DT_NULL` 和其他 MIPI 标准值
+
+* ZBus
+
+  * Zbus 随着 API 版本 v1.0.0 的发布而达到稳定状态。
+  * 运行时观察者现在可以在无堆的情况下工作。现在可以在静态、动态
+    和无分配之间为运行时观察者节点进行选择。
+  * 使用 :kconfig:option:`CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_NONE` 的运行时观察者必须使用
+    新函数 :c:func:`zbus_chan_add_obs_with_node`。
+
+  * :kconfig:option:`CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_DYNAMIC`
+  * :kconfig:option:`CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC`
+  * :kconfig:option:`CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_NONE`
+  * :kconfig:option:`CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_POOL_SIZE`
 
 .. _boards_added_in_zephyr_4_4:
 
-New
-Boards
+新开发板
 **********
 
 ..
-You
-may
-update
-this
-list
-as
-you
-contribute
-a
-new
-board
-during
-the
-release
-cycle、
-in
-order
-to
-make
-it
-visible
-to
-people
-who
-might
-be
-looking
-at
-the
-working
-draft
-of
-the
-release
-notes.
-However、
-note
-that
-this
-list
-will
-be
-recomputed
-at
-the
-time
-of
-the
-release、
-so
-you
-don't
-*have*
-to
-update
-it.
-In
-any
-case、
-just
-link
-the
-board、
-further
-details
-go
-in
-the
-board
-description.
-
-*
-Adafruit
-Industries、
-LLC
-
-*
-:zephyr:board:`adafruit_feather_adalogger_rp2040`
-（``adafruit_feather_adalogger_rp2040``）
-*
-:zephyr:board:`adafruit_feather_canbus_rp2040`
-（``adafruit_feather_canbus_rp2040``）
-*
-:zephyr:board:`adafruit_feather_esp32`
-（``adafruit_feather_esp32``）
-*
-:zephyr:board:`adafruit_feather_rfm95_rp2040`
-（``adafruit_feather_rfm95_rp2040``）
-*
-:zephyr:board:`adafruit_feather_rp2040`
-（``adafruit_feather_rp2040``）
-*
-:zephyr:board:`adafruit_itsybitsy_rp2040`
-（``adafruit_itsybitsy_rp2040``）
-*
-:zephyr:board:`adafruit_metro_rp2040`
-（``adafruit_metro_rp2040``）
-*
-:zephyr:board:`adafruit_metro_rp2350`
-（``adafruit_metro_rp2350``）
-*
-:zephyr:board:`adafruit_trinkey_qt2040`
-（``adafruit_trinkey_qt2040``）
-
-*
-Advanced
-Micro
-Devices
-（AMD）.
-Inc.
-
-*
-:zephyr:board:`versalnet_apu`
-（``versalnet_apu``）
-
-*
-Ai
-Thinker
-Co.、
-Ltd.
-
-*
-:zephyr:board:`ai_m62_12f_kit`
-（``ai_m62_12f_kit``）
-*
-:zephyr:board:`esp32_cam`
-（``esp32_cam``）
-
-*
-Ambiq
-Micro、
-Inc.
-
-*
-:zephyr:board:`apollo2_evb`
-（``apollo2_evb``）
-
-*
-Analog
-Devices、
-Inc.
-
-*
-:zephyr:board:`max32658evkit`
-（``max32658evkit``）
-
-*
-Arduino
-
-*
-:zephyr:board:`arduino_uno_q`
-（``arduino_uno_q``）
-
-*
-Core
-Devices
-LLC
-
-*
-:zephyr:board:`p2d`
-（``p2d``）
-*
-:zephyr:board:`pt2`
-（``pt2``）
-
-*
-DFRobot
-
-*
-:zephyr:board:`beetle_rp2040`
-（``beetle_rp2040``）
-
-*
-Doctors
-of
-Intelligence
-&
-Technology
-
-*
-:zephyr:board:`dt_xt_zb1_devkit`
-（``dt_xt_zb1_devkit``）
-
-*
-Egis
-Technology
-Inc
-
-*
-:zephyr:board:`egis_et171`
-（``egis_et171``）
-
-*
-Espressif
-Systems
-
-*
-:zephyr:board:`esp32h2_devkitm`
-（``esp32h2_devkitm``）
-
-*
-FANKE
-Technology
-Co.、
-Ltd.
-
-*
-:zephyr:board:`fk723m1_zgt6`
-（``fk723m1_zgt6``）
-
-*
-Firefly
-
-*
-:zephyr:board:`roc_rk3588_pc`
-（``roc_rk3588_pc``）
-
-*
-FoBE
-Studio
-
-*
-:zephyr:board:`quill_nrf52840_mesh`
-（``quill_nrf52840_mesh``）
-
-*
-Guangdong
-Embedsky
-Technology
-Co.、
-Ltd.
-
-*
-:zephyr:board:`tq_h503a`
-（``tq_h503a``）
-
-*
-Infineon
-Technologies
-
-*
-:zephyr:board:`kit_psc3m5_evk`
-（``kit_psc3m5_evk``）
-*
-:zephyr:board:`kit_pse84_ai`
-（``kit_pse84_ai``）
-*
-:zephyr:board:`kit_pse84_eval`
-（``kit_pse84_eval``）
-
-*
-Intel
-Corporation
-
-*
-:zephyr:board:`intel_ptl_h_crb`
-（``intel_ptl_h_crb``）
-
-*
-Microchip
-Technology
-Inc.
-
-*
-:zephyr:board:`pic32cm_jh01_cnano`
-（``pic32cm_jh01_cnano``）
-*
-:zephyr:board:`pic32cm_jh01_cpro`
-（``pic32cm_jh01_cpro``）
-*
-:zephyr:board:`pic32cx_sg61_cult`
-（``pic32cx_sg61_cult``）
-*
-:zephyr:board:`pic32cz_ca80_cult`
-（``pic32cz_ca80_cult``）
-*
-:zephyr:board:`sam_e54_xpro`
-（``sam_e54_xpro``）
-*
-:zephyr:board:`sama7d65_curiosity`
-（``sama7d65_curiosity``）
-
-*
-Nuvoton
-Technology
-Corporation
-
-*
-:zephyr:board:`numaker_m3334ki`
-（``numaker_m3334ki``）
-*
-:zephyr:board:`numaker_m5531`
-（``numaker_m5531``）
-
-*
-NXP
-Semiconductors
-
-*
-:zephyr:board:`frdm_imx91`
-（``frdm_imx91``）
-*
-:zephyr:board:`frdm_imx93`
-（``frdm_imx93``）
-*
-:zephyr:board:`frdm_k32l2b3`
-（``frdm_k32l2b3``）
-*
-:zephyr:board:`frdm_mcxa344`
-（``frdm_mcxa344``）
-*
-:zephyr:board:`frdm_mcxa266`
-（``frdm_mcxa266``）
-*
-:zephyr:board:`frdm_mcxa346`
-（``frdm_mcxa346``）
-*
-:zephyr:board:`frdm_mcxa366`
-（``frdm_mcxa366``）
-*
-:zephyr:board:`frdm_mcxe247`
-（``frdm_mcxe247``）
-*
-:zephyr:board:`frdm_mcxe31b`
-（``frdm_mcxe31b``）
-*
-:zephyr:board:`frdm_mcxw23`
-（``frdm_mcxw23``）
-*
-:zephyr:board:`imx91_qsb`
-（``imx91_qsb``）
-*
-:zephyr:board:`imx95_evk_15x15`
-（``imx95_evk_15x15``）
-*
-:zephyr:board:`mcx_n9xx_evk`
-（``mcx_n9xx_evk``）
-*
-:zephyr:board:`mcx_n5xx_evk`
-（``mcx_n5xx_evk``）
-*
-:zephyr:board:`mcxw23_evk`
-（``mcxw23_evk``）
-
-*
-Panasonic
-Corporation
-
-*
-:zephyr:board:`panb611evb`
-（``panb611evb``）
-
-*
-PCB
-Cupid
-
-*
-:zephyr:board:`glyph_c6`
-（``glyph_c6``）
-
-*
-RAKwireless
-Technology
-Limited
-
-*
-:zephyr:board:`rak3112`
-（``rak3112``）
-
-*
-Raspberry
-Pi
-Foundation
-
-*
-:zephyr:board:`rpi_debug_probe`
-（``rpi_debug_probe``）
-
-*
-Renesas
-Electronics
-Corporation
-
-*
-:zephyr:board:`ek_ra4c1`
-（``ek_ra4c1``）
-*
-:zephyr:board:`ek_ra8d2`
-（``ek_ra8d2``）
-*
-:zephyr:board:`ek_ra8m2`
-（``ek_ra8m2``）
-*
-:zephyr:board:`ek_rx261`
-（``ek_rx261``）
-*
-:zephyr:board:`fpb_rx261`
-（``fpb_rx261``）
-*
-:zephyr:board:`mcb_rx26t`
-（``mcb_rx26t``）
-*
-:zephyr:board:`mck_ra8t2`
-（``mck_ra8t2``）
-*
-:zephyr:board:`rssk_ra2l1`
-（``rssk_ra2l1``）
-
-*
-Seeed
-Technology
-Co.、
-Ltd
-
-*
-:zephyr:board:`wio_wm1110_dev_kit`
-（``wio_wm1110_dev_kit``）
-*
-:zephyr:board:`xiao_nrf54l15`
-（``xiao_nrf54l15``）
-
-*
-Shanghai
-Ruiside
-Electronic
-Technology
-Co.、
-Ltd.
-
-*
-:zephyr:board:`art_pi`
-（``art_pi``）
-
-*
-Shenzhen
-Holyiot
-Technology
-Co.、
-Ltd.
-
-*
-:zephyr:board:`holyiot_yj17095`
-（``holyiot_yj17095``）
-
-*
-SiFli
-Technologies（Nanjing）
-Co.、
-Ltd
-
-*
-:zephyr:board:`sf32lb52_devkit_lcd`
-（``sf32lb52_devkit_lcd``）
-
-*
-Silicon
-Laboratories
-
-*
-:zephyr:board:`bgm220_ek4314a`
-（``bgm220_ek4314a``）
-*
-:zephyr:board:`pg23_pk2504a`
-（``pg23_pk2504a``）
-*
-:zephyr:board:`pg28_pk2506a`
-（``pg28_pk2506a``）
-*
-:zephyr:board:`siwx917_dk2605a`
-（``siwx917_dk2605a``）
-*
-:zephyr:board:`bg22_ek4108a`
-（``bg22_ek4108a``）
-*
-:zephyr:board:`xg22_ek2710a`
-（``xg22_ek2710a``）
-*
-:zephyr:board:`mgm260p_ek2713a`
-（``mgm260p_ek2713a``）
-*
-:zephyr:board:`pg26_ek2711a`
-（``pg26_ek2711a``）
-*
-:zephyr:board:`xg26_ek2709a`
-（``xg26_ek2709a``）
-*
-:zephyr:board:`bg29_rb4420a`
-（``bg29_rb4420a``）
-*
-:zephyr:board:`slwrb4182a`
-（``slwrb4182a``）
-*
-:zephyr:board:`slwrb4311a`
-（``slwrb4311a``）
-*
-:zephyr:board:`xg24_rb4186c`
-（``xg24_rb4186c``）
-*
-:zephyr:board:`xg24_rb4187c`
-（``xg24_rb4187c``）
-*
-:zephyr:board:`xgm240_rb4316a`
-（``xgm240_rb4316a``）
-*
-:zephyr:board:`xgm240_rb4317a`
-（``xgm240_rb4317a``）
-*
-:zephyr:board:`mgm260p_rb4350a`
-（``mgm260p_rb4350a``）
-*
-:zephyr:board:`xg26_rb4118a`
-（``xg26_rb4118a``）
-*
-:zephyr:board:`xg26_rb4120a`
-（``xg26_rb4120a``）
-*
-:zephyr:board:`bg27_rb4110b`
-（``bg27_rb4110b``）
-*
-:zephyr:board:`bg27_rb4111b`
-（``bg27_rb4111b``）
-*
-:zephyr:board:`xg27_rb4194a`
-（``xg27_rb4194a``）
-*
-:zephyr:board:`xg28_rb4401c`
-（``xg28_rb4401c``）
-
-*
-SparkFun
-Electronics
-
-*
-:zephyr:board:`sparkfun_samd21_breakout`
-（``sparkfun_samd21_breakout``）
-
-*
-SteelSeries
-
-*
-:zephyr:board:`apex_pro_mini`
-（``apex_pro_mini``）
-
-*
-STMicroelectronics
-
-*
-:zephyr:board:`nucleo_c092rc`
-（``nucleo_c092rc``）
-*
-:zephyr:board:`stm32mp257f_dk`
-（``stm32mp257f_dk``）
-*
-:zephyr:board:`stm32wba65i_dk1`
-（``stm32wba65i_dk1``）
-
-*
-Texas
-Instruments
-
-*
-:zephyr:board:`lp_mspm0g3519`
-（``lp_mspm0g3519``）
-*
-:zephyr:board:`lp_mspm0l2228`
-（``lp_mspm0l2228``）
-
-*
-Toradex
-AG
-
-*
-:zephyr:board:`verdin_am62`
-（``verdin_am62``）
-
-*
-Waveshare
-Electronics
-
-*
-:zephyr:board:`rp2040_geek`
-（``rp2040_geek``）
-*
-:zephyr:board:`rp2040_keyboard_3`
-（``rp2040_keyboard_3``）
-*
-:zephyr:board:`rp2040_matrix`
-（``rp2040_matrix``）
-
-*
-WeAct
-Studio
-
-*
-:zephyr:board:`blackpill_h523ce`
-（``blackpill_h523ce``）
-*
-:zephyr:board:`blackpill_u585ci`
-（``blackpill_u585ci``）
-*
-:zephyr:board:`weact_esp32c3_mini`
-（``weact_esp32c3_mini``）
-*
-:zephyr:board:`weact_esp32c6_mini`
-（``weact_esp32c6_mini``）
-*
-:zephyr:board:`weact_esp32s3_mini`
-（``weact_esp32s3_mini``）
-*
-:zephyr:board:`weact_stm32g030_core`
-（``weact_stm32g030_core``）
-*
-:zephyr:board:`weact_stm32wb55_core`
-（``weact_stm32wb55_core``）
-*
-:zephyr:board:`weact_esp32s3_b`
-（``weact_esp32s3_b``）
+  你可以在发布周期中贡献新开发板时更新此列表，以便让可能正在查看发布说明工作草稿的人看到。
+  但请注意，此列表将在发布时重新计算，因此你*不必*更新它。
+  无论如何，只需链接开发板，更多细节放在开发板描述中。
+
+* Adafruit Industries, LLC
+
+   * :zephyr:board:`adafruit_feather_esp32s2`（``adafruit_feather_esp32s2``）
+   * :zephyr:board:`adafruit_feather_esp32s2_tft`（``adafruit_feather_esp32s2_tft``）
+   * :zephyr:board:`adafruit_feather_esp32s2_tft_reverse`（``adafruit_feather_esp32s2_tft_reverse``）
+   * :zephyr:board:`adafruit_feather_esp32s3`（``adafruit_feather_esp32s3``）
+   * :zephyr:board:`adafruit_feather_esp32s3_tft`（``adafruit_feather_esp32s3_tft``）
+   * :zephyr:board:`adafruit_feather_esp32s3_tft_reverse`（``adafruit_feather_esp32s3_tft_reverse``）
+
+* Advanced Micro Devices (AMD), Inc.
+
+   * :zephyr:board:`versal2_rpu`（``versal2_rpu``）
+   * :zephyr:board:`versalnet_rpu`（``versalnet_rpu``）
+
+* Aesc Silicon
+
+   * :zephyr:board:`elemrv_flask_n`（``elemrv``）
+
+* Ai-Thinker Co., Ltd.
+
+   * :zephyr:board:`ai_wb2_12f_kit`（``ai_wb2_12f_kit``）
+
+* Ambiq Micro, Inc.
+
+   * :zephyr:board:`apollo510_evb`（``apollo510_evb``）
+
+* Analog Devices, Inc.
+
+   * :zephyr:board:`max32657evkit`（``max32657evkit``）
+
+* Arduino
+
+   * :zephyr:board:`arduino_nano_matter`（``arduino_nano_matter``）
+   * :zephyr:board:`arduino_portenta_c33`（``arduino_portenta_c33``）
+
+* ARM Ltd.
+
+   * :zephyr:board:`mps4`（``mps4``）
+
+* BeagleBoard.org Foundation
+
+   * :zephyr:board:`pocketbeagle_2`（``pocketbeagle_2``）
+
+* Blues Wireless
+
+   * :zephyr:board:`cygnet`（``cygnet``）
+
+* Bouffalo Lab (Nanjing) Co., Ltd.
+
+   * :zephyr:board:`bl604e_iot_dvk`（``bl604e_iot_dvk``）
+
+* Doctors of Intelligence & Technology
+
+   * :zephyr:board:`dt_bl10_devkit`（``dt_bl10_devkit``）
+
+* ENE Technology, Inc.
+
+   * :zephyr:board:`kb1062_evb`（``kb1062_evb``）
+
+* Espressif Systems
+
+   * :zephyr:board:`esp32_devkitc`（``esp32_devkitc``）
+
+* Ezurio
+
+   * :zephyr:board:`bl54l15_dvk`（``bl54l15_dvk``）
+   * ``bl54l15u_dvk``
+
+* FANKE Technology Co., Ltd.
+
+   * :zephyr:board:`fk743m5_xih6`（``fk743m5_xih6``）
+
+* IAR Systems AB
+
+   * :zephyr:board:`stm32f429ii_aca`（``stm32f429ii_aca``）
+
+* Infineon Technologies
+
+   * :zephyr:board:`kit_xmc72_evk`（``kit_xmc72_evk``）
+
+* Intel Corporation
+
+   * :zephyr:board:`intel_btl_s_crb`（``intel_btl_s_crb``）
+
+* ITE Tech. Inc.
+
+   * ``it515xx_evb``
+
+* KWS Computersysteme Gmbh
+
+   * :zephyr:board:`pico2_spe`（``pico2_spe``）
+   * :zephyr:board:`pico_spe`（``pico_spe``）
+
+* Lilygo Shenzhen Xinyuan Electronic Technology Co., Ltd
+
+   * :zephyr:board:`tdongle_s3`（``tdongle_s3``）
+   * :zephyr:board:`ttgo_tbeam`（``ttgo_tbeam``）
+   * :zephyr:board:`ttgo_toiplus`（``ttgo_toiplus``）
+   * :zephyr:board:`twatch_s3`（``twatch_s3``）
+
+* M5Stack
+
+   * :zephyr:board:`m5stack_fire`（``m5stack_fire``）
+
+* Microchip Technology Inc.
+
+   * :zephyr:board:`mec_assy6941`（``mec_assy6941``）
+   * :zephyr:board:`sama7g54_ek`（``sama7g54_ek``）
+
+* MikroElektronika d.o.o.
+
+   * :zephyr:board:`mikroe_quail`（``mikroe_quail``）
+
+* Nordic Semiconductor
+
+   * :zephyr:board:`nrf54lm20dk`（``nrf54lm20dk``）
+
+* Nuvoton Technology Corporation
+
+   * :zephyr:board:`npck3m8k_evb`（``npck3m8k_evb``）
+   * :zephyr:board:`numaker_m55m1`（``numaker_m55m1``）
+
+* NXP Semiconductors
+
+   * :zephyr:board:`frdm_mcxa153`（``frdm_mcxa153``）
+   * :zephyr:board:`imx943_evk`（``imx943_evk``）
+   * :zephyr:board:`mcx_n9xx_evk`（``mcx_n9xx_evk``）
+   * :zephyr:board:`s32k148_evb`（``s32k148_evb``）
+
+* Octavo Systems LLC
+
+   * :zephyr:board:`osd32mp1_brk`（``osd32mp1_brk``）
+
+* OpenHW Group
+
+   * :zephyr:board:`cv32a6_genesys_2`（``cv32a6_genesys_2``）
+   * :zephyr:board:`cv64a6_genesys_2`（``cv64a6_genesys_2``）
+
+* Pimoroni Ltd.
+
+   * :zephyr:board:`pico_plus2`（``pico_plus2``）
+
+* QEMU
+
+   * :zephyr:board:`qemu_rx`（``qemu_rx``）
+
+* Raytac Corporation
+
+   * :zephyr:board:`raytac_an54lq_db_15`（``raytac_an54lq_db_15``）
+   * :zephyr:board:`raytac_an7002q_db`（``raytac_an7002q_db``）
+   * :zephyr:board:`raytac_mdbt50q_cx_40_dongle`（``raytac_mdbt50q_cx_40_dongle``）
+
+* Renesas Electronics Corporation
+
+   * :zephyr:board:`ek_ra8p1`（``ek_ra8p1``）
+   * :zephyr:board:`rsk_rx130`（``rsk_rx130``）
+   * :zephyr:board:`rza2m_evk`（``rza2m_evk``）
+   * :zephyr:board:`rza3ul_smarc`（``rza3ul_smarc``）
+   * :zephyr:board:`rzg2l_smarc`（``rzg2l_smarc``）
+   * :zephyr:board:`rzg2lc_smarc`（``rzg2lc_smarc``）
+   * :zephyr:board:`rzg2ul_smarc`（``rzg2ul_smarc``）
+   * :zephyr:board:`rzn2l_rsk`（``rzn2l_rsk``）
+   * :zephyr:board:`rzt2l_rsk`（``rzt2l_rsk``）
+   * :zephyr:board:`rzt2m_rsk`（``rzt2m_rsk``）
+   * :zephyr:board:`rzv2h_evk`（``rzv2h_evk``）
+   * :zephyr:board:`rzv2l_smarc`（``rzv2l_smarc``）
+   * :zephyr:board:`rzv2n_evk`（``rzv2n_evk``）
+
+* Seeed Technology Co., Ltd
+
+   * :zephyr:board:`xiao_mg24`（``xiao_mg24``）
+   * :zephyr:board:`xiao_ra4m1`（``xiao_ra4m1``）
+
+* sensry.io
+
+   * :zephyr:board:`ganymed_sk`（``ganymed_sk``）
+
+* Shanghai Ruiside Electronic Technology Co., Ltd.
+
+   * :zephyr:board:`art_pi2`（``art_pi2``）
+   * :zephyr:board:`ra8d1_vision_board`（``ra8d1_vision_board``）
+
+* Silicon Laboratories
+
+   * :zephyr:board:`siwx917_rb4342a`（``siwx917_rb4342a``）
+   * :zephyr:board:`slwrb4180b`（``slwrb4180b``）
+
+* Space Cubics, LLC
+
+   * :zephyr:board:`scobc_a1`（``scobc_a1``）
+
+* STMicroelectronics
+
+   * :zephyr:board:`nucleo_f439zi`（``nucleo_f439zi``）
+   * :zephyr:board:`nucleo_u385rg_q`（``nucleo_u385rg_q``）
+   * :zephyr:board:`nucleo_wba65ri`（``nucleo_wba65ri``）
+   * :zephyr:board:`stm32h757i_eval`（``stm32h757i_eval``）
+   * :zephyr:board:`stm32mp135f_dk`（``stm32mp135f_dk``）
+   * :zephyr:board:`stm32mp257f_ev1`（``stm32mp257f_ev1``）
+   * :zephyr:board:`stm32u5g9j_dk1`（``stm32u5g9j_dk1``）
+   * :zephyr:board:`stm32u5g9j_dk2`（``stm32u5g9j_dk2``）
+
+* Texas Instruments
+
+   * :zephyr:board:`am243x_evm`（``am243x_evm``）
+   * :zephyr:board:`lp_mspm0g3507`（``lp_mspm0g3507``）
+   * :zephyr:board:`sk_am64`（``sk_am64``）
+
+* u-blox
+
+   * :zephyr:board:`ubx_evk_iris_w1`（``ubx_evk_iris_w1``）
+
+* Variscite Ltd.
+
+   * :zephyr:board:`imx8mp_var_dart`（``imx8mp_var_dart``）
+   * :zephyr:board:`imx8mp_var_som`（``imx8mp_var_som``）
+   * :zephyr:board:`imx93_var_dart`（``imx93_var_dart``）
+   * :zephyr:board:`imx93_var_som`（``imx93_var_som``）
+
+* Waveshare Electronics
+
+   * :zephyr:board:`esp32s3_matrix`（``esp32s3_matrix``）
+   * :zephyr:board:`rp2040_plus`（``rp2040_plus``）
+
+* WeAct Studio
+
+   * :zephyr:board:`bluepillplus_ch32v203`（``bluepillplus_ch32v203``）
+   * :zephyr:board:`weact_stm32f446_core`（``weact_stm32f446_core``）
+
+* WinChipHead
+
+   * :zephyr:board:`ch32v003f4p6_dev_board`（``ch32v003f4p6_dev_board``）
+   * :zephyr:board:`ch32v006evt`（``ch32v006evt``）
+   * :zephyr:board:`ch32v303vct6_evt`（``ch32v303vct6_evt``）
+   * :zephyr:board:`linkw`（``linkw``）
+
+* WIZnet Co., Ltd.
+
+   * :zephyr:board:`w5500_evb_pico2`（``w5500_evb_pico2``）
+
+* Würth Elektronik GmbH.
+
+   * :zephyr:board:`ophelia4ev`（``ophelia4ev``）
 
 .. _shields_added_in_zephyr_4_4:
 
-New
-shields
-============
+新盾牌
+=============
 
-*
-:ref:`Adafruit
-24LC32
-EEPROM
-Shield
-<adafruit_24lc32>`
-*
-:ref:`Adafruit
-AHT20
-Shield
-<adafruit_aht20>`
-*
-:ref:`Adafruit
-APDS9960
-Shield
-<adafruit_apds9960>`
-*
-:ref:`Adafruit
-DPS310
-Shield
-<adafruit_dps310>`
-*
-:ref:`Adafruit
-DRV2605L
-Shield
-<adafruit_drv2605l>`
-*
-:ref:`Adafruit
-FeatherWing
-128x32
-OLED
-Shield
-<adafruit_featherwing_128x32_oled>`
-*
-:ref:`Adafruit
-HT16K33
-LED
-Matrix
-Shield
-<adafruit_ht16k33>`
-*
-:ref:`Adafruit
-I2C
-to
-8
-Channel
-Solenoid
-Driver
-Shield
-<adafruit_8chan_solenoid>`
-*
-:ref:`Adafruit
-INA219
-Shield
-<adafruit_ina219>`
-*
-:ref:`Adafruit
-INA237
-Shield
-<adafruit_ina237>`
-*
-:ref:`Adafruit
-LIS2MDL
-Shield
-<adafruit_lis2mdl>`
-*
-:ref:`Adafruit
-LIS3DH
-Shield
-<adafruit_lis3dh>`
-*
-:ref:`Adafruit
-LTR
-329
-Shield
-<adafruit_ltr329>`
-*
-:ref:`Adafruit
-MCP9808
-Shield
-<adafruit_mcp9808>`
-*
-:ref:`Adafruit
-PCF8523
-Shield
-<adafruit_pcf8523>`
-*
-:ref:`Adafruit
-TSL2591
-Shield
-<adafruit_tsl2591>`
-*
-:ref:`Adafruit
-VCNL4040
-Shield
-<adafruit_vcnl4040>`
-*
-:ref:`Adafruit
-VEML7700
-Shield
-<adafruit_veml7700>`
-*
-:ref:`ArduCam
-CU450
-OV5640
-Camera
-Module
-<arducam_cu450_ov5640>`
-*
-:ref:`Arduino
-Modulino
-Movement
-<arduino_modulino_movement>`
-*
-:ref:`Arduino
-Modulino
-Thermo
-<arduino_modulino_thermo>`
-*
-:ref:`MikroElektronika
-3D
-Hall
-3
-Click
-<mikroe_3d_hall_3_click_shield>`
-*
-:ref:`MikroElektronika
-Air
-Quality
-3
-Click
-<mikroe_air_quality_3_click_shield>`
-*
-:ref:`MikroElektronika
-Ambient
-2
-Click
-<mikroe_ambient_2_click_shield>`
-*
-:ref:`MikroElektronika
-H
-Bridge
-4
-Click
-<mikroe_h_bridge_4_click_shield>`
-*
-:ref:`MikroElektronika
-Illuminance
-Click
-<mikroe_illuminance_click_shield>`
-*
-:ref:`MikroElektronika
-IR
-Gesture
-Click
-<mikroe_ir_gesture_click_shield>`
-*
-:ref:`MikroElektronika
-LSM6DSL
-Click
-<mikroe_lsm6dsl_click_shield>`
-*
-:ref:`MikroElektronika
-Pressure
-3
-Click
-<mikroe_pressure_3_click_shield>`
-*
-:ref:`MikroElektronika
-Proximity
-9
-Click
-<mikroe_proximity_9_click_shield>`
-*
-:ref:`MikroElektronika
-RTC
-18
-Click
-<mikroe_rtc_18_click_shield>`
-*
-:ref:`Nordic
-nPM1304
-EK
-<npm1304_ek>`
-*
-:ref:`Olimex
-SHIELD
-MIDI
-<olimex_shield_midi>`
-*
-:ref:`Renesas
-EK
-RA8D1
-to
-RTK7EKA6M3B00001BU
-Display
-Adapter
-<ek_ra8d1_rtk7eka6m3b00001bu>`
-*
-:ref:`Renesas
-RTK0EG0019B01002BJ
-Capacitive
-Touch
-Application
-Shield
-<rtk0eg0019b01002bj>`
-*
-:ref:`Sierra
-Wireless
-HL
-RC
-Module
-Evaluation
-Kit
-Shield
-<swir_hl78xx_ev_kit>`
-*
-:ref:`Sparkfun
-Environmental
-Combo
-Shield
-with
-ENS160
-and
-BME280
-<sparkfun_environmental_combo>`
-*
-:ref:`Sparkfun
-RV8803
-Shield
-<sparkfun_rv8803>`
-*
-:ref:`Sparkfun
-SHTC3
-Shield
-<sparkfun_shtc3>`
+* :ref:`Arduino Giga 显示盾牌 <arduino_giga_display_shield>`
+* :ref:`Arduino Modulino 按钮 <arduino_modulino_buttons>`
+* :ref:`Arduino Modulino 智能 LED <arduino_modulino_pixels>`
+* :ref:`DVP 20 针 OV7670 <dvp_20pin_ov7670>`
+* :ref:`EVAL AD4052 ARDZ <eval_ad4052_ardz>`
+* :ref:`EVAL ADXL367 ARDZ <eval_adxl367_ardz>`
+* :ref:`M5Stack Cardputer <m5stack_cardputer>`
+* :ref:`MikroElektronika LTE IoT10 Click <mikroe_lte_iot10_click_shield>`
+* :ref:`MikroElektronika 步进 18 Click <mikroe_stepper_18_click_shield>`
+* :ref:`MikroElektronika 步进 19 Click <mikroe_stepper_19_click_shield>`
+* :ref:`NPM2100 评估套件 <npm2100_ek>`
+* :ref:`NXP ADTJA1101 <nxp_adtja1101>`
+* :ref:`NXP M2 WiFi BT <nxp_m2_wifi_bt>`
+* :ref:`OpenThread RCP Arduino <openthread_rcp_arduino_shield>`
+* :ref:`RTK7 EKA6M3B00001BU <rtk7eka6m3b00001bu>`
+* :ref:`RTKLCDPAR1S00001BE 显示屏 <rtklcdpar1s00001be>`
+* :ref:`ST B-CAMS-IMX-MB1854 <st_b_cams_imx_mb1854>`
+* :ref:`ST MB1897 摄像头模块 <st_mb1897_cam>`
+* :ref:`ST STM32F4DIS CAM <st_stm32f4dis_cam>`
+* :ref:`Waveshare Pico LCD 1.14 <waveshare_pico_lcd_1_14>`
+* :ref:`Waveshare Pico OLED 1.3 <waveshare_pico_oled_1_3>`
+* :ref:`X-Nucleo-GFX01M2 <x_nucleo_gfx01m2_shield>`
 
-New
-Drivers
+新驱动
 ***********
 
 ..
-Same
-as
-above
-for
-boards、
-this
-will
-also
-be
-recomputed
-at
-the
-time
-of
-the
-release.
-Just
-link
-the
-driver、
-further
-details
-go
-in
-the
-binding
-description
-
-*
-:abbr:`ADC
-（Analog
-to
-Digital
-Converter）`
-
-*
-:dtcompatible:`adi、ad4170
-adc`
-（:github:`100934`）
-*
-:dtcompatible:`adi、ad4190
-adc`
-（:github:`100934`）
-*
-:dtcompatible:`adi、ad4195
-adc`
-（:github:`100934`）
-*
-:dtcompatible:`adi、max32
-adc
-b
-me18`
-（:github:`100934`）
-*
-:dtcompatible:`infineon、autanalog
-sar
-adc`
-（:github:`100934`）
-*
-:dtcompatible:`infineon、hppass
-sar
-adc`
-（:github:`100934`）
-*
-:dtcompatible:`nxp、sar
-adc`
-（:github:`100934`）
-*
-:dtcompatible:`renesas、rx
-adc`
-（:github:`100934`）
-*
-:dtcompatible:`renesas、rz
-adc
-c`
-（:github:`100934`）
-*
-:dtcompatible:`silabs、iadc`
-（:github:`100934`）
-
-*
-ARM
-architecture
-
-*
-:dtcompatible:`microchip、sercom
-g1`
-（:github:`100934`）
-*
-:dtcompatible:`nuvoton、numaker
-npu`
-（:github:`100934`）
-*
-:dtcompatible:`renesas、ra
-npu`
-（:github:`100934`）
-
-*
-Audio
-
-*
-:dtcompatible:`dlg、da7212`
-（:github:`100934`）
-*
-:dtcompatible:`nxp、micfil`
-（:github:`100934`）
-
-*
-Auxiliary
-Display
-
-*
-:dtcompatible:`titanmec、tm1637`
-（:github:`100934`）
-
-*
-Cache
-
-*
-:dtcompatible:`bflb、l1c`
-（:github:`100934`）
-
-*
-Charger
-
-*
-:dtcompatible:`nxp、pca9422
-charger`
-（:github:`100934`）
-
-*
-Clock
-control
-
-*
-:dtcompatible:`bflb、bl61x
-clock
-controller`
-（:github:`100934`）
-*
-:dtcompatible:`bflb、bl70x
-clock
-controller`
-（:github:`100934`）
-*
-:dtcompatible:`infineon、fixed
-clock`
-（:github:`100934`）
-*
-:dtcompatible:`infineon、fixed
-factor
-clock`
-（:github:`100934`）
-*
-:dtcompatible:`infineon、peri
-div`
-（:github:`100934`）
-*
-:dtcompatible:`mediatek、mt818x
-cpuclock`
-（:github:`100934`）
-*
-:dtcompatible:`microchip、sam
-d5x
-e5x
-clock`
-（:github:`100934`）
-*
-:dtcompatible:`nordic、nrf
-iron
-hsfll
-local`
-（:github:`100934`）
-*
-:dtcompatible:`nxp、mc
-cgm`
-（:github:`100934`）
-*
-:dtcompatible:`renesas、ra
-cgc
-utasel`
-（:github:`100934`）
-*
-:dtcompatible:`renesas、rz
-cgc`
-（:github:`100934`）
-*
-:dtcompatible:`sifli、sf32lb
-rcc
-clk`
-（:github:`100934`）
-*
-:dtcompatible:`st、stm32f4
-rcc`
-（:github:`100934`）
-*
-:dtcompatible:`st、stm32fx
-pllsai
-clock`
-（:github:`100934`）
-*
-:dtcompatible:`st、stm32h5
-rcc`
-（:github:`100934`）
-*
-:dtcompatible:`st、stm32l0
-hsi
-clock`
-（:github:`100934`）
-*
-:dtcompatible:`st、stm32l4
-pllsai
-clock`
-（:github:`100934`）
-*
-:dtcompatible:`ti、cc23x0
-lf
-xosc`
-（:github:`100934`）
-
-*
-Comparator
-
-*
-:dtcompatible:`nxp、cmp`
-（:github:`100934`）
-*
-:dtcompatible:`renesas、ra
-lvd`
-（:github:`100934`）
-*
-:dtcompatible:`renesas、rx
-lvd`
-（:github:`100934`）
-*
-:dtcompatible:`st、stm32
-comp`
-（:github:`100934`）
-*
-:dtcompatible:`st、stm32g4
-comp`
-（:github:`100934`）
-*
-:dtcompatible:`st、stm32h7
-comp`
-（:github:`100934`）
-
-*
-Counter
-
-*
-:dtcompatible:`infineon、tcpwm
-counter`
-（:github:`100934`）
-*
-:dtcompatible:`microchip、tcc
-g1`
-（:github:`100934`）
-*
-:dtcompatible:`nxp、imx
-snvs
-rtc`
-（:github:`100934`）
-*
-:dtcompatible:`nxp、lpit`
-（:github:`100934`）
-*
-:dtcompatible:`nxp、lpit
-channel`
-（:github:`100934`）
-*
-:dtcompatible:`nxp、stm`
-（:github:`100934`）
-*
-:dtcompatible:`renesas、rz
-cmtw
-counter`
-（:github:`100934`）
-
-*
-CPU
-
-*
-:dtcompatible:`adi、max32
-rv32`
-（:github:`97309`）
-*
-:dtcompatible:`arm、cortex
-a320`
-（:github:`96852`）
-*
-:dtcompatible:`arm、cortex
-a510`
-（:github:`96852`）
-*
-:dtcompatible:`arm、cortex
-a7`
-（:github:`101582`）
-*
-:dtcompatible:`arm、cortex
-a9`
-（:github:`101582`）
-*
-:dtcompatible:`cdns、swerv、s400`
-（:github:`102288`）
-*
-:dtcompatible:`cdns、swerv、s420`
-（:github:`102288`）
-*
-:dtcompatible:`intel、wildcat
-lake`
-（:github:`99205`）
-*
-:dtcompatible:`riscv`
-（:github:`105006`）
-*
-:dtcompatible:`spinalhdl、vexriscv`
-（:github:`97925`）
-
-*
-:abbr:`CRC
-（Cyclic
-Redundancy
-Check）`
-
-*
-:dtcompatible:`nxp、crc`
-（:github:`100875`）
-*
-:dtcompatible:`nxp、lpc
-crc`
-（:github:`101528`）
-*
-:dtcompatible:`sifli、sf32lb
-crc`
-（:github:`98997`）
-*
-:dtcompatible:`silabs、gpcrc`
-（:github:`104471`）
-*
-:dtcompatible:`st、stm32
-crc`
-（:github:`105302`）
-
-*
-Cryptographic
-accelerator
-
-*
-:dtcompatible:`bflb、sec
-eng
-aes`
-（:github:`104371`）
-*
-:dtcompatible:`bflb、sec
-eng
-sha`
-（:github:`104371`）
-*
-:dtcompatible:`bflb、sec
-eng
-trng`
-（:github:`104349`）
-*
-:dtcompatible:`microchip、aes
-g1`
-（:github:`105389`）
-*
-:dtcompatible:`microchip、sha
-g1
-crypto`
-（:github:`98894`）
-*
-:dtcompatible:`nxp、s32
-crypto
-hse
-mu`
-（:github:`79351`）
-*
-:dtcompatible:`raspberrypi、pico
-sha256`
-（:github:`85036`）
-*
-:dtcompatible:`sifli、sf32lb
-crypto`
-（:github:`100583`）
-
-*
-:abbr:`DAC
-（Digital
-to
-Analog
-Converter）`
-
-*
-:dtcompatible:`microchip、dac
-g1`
-（:github:`101431`）
-*
-:dtcompatible:`nxp、hpdac`
-（:github:`104642`）
-*
-:dtcompatible:`ti、dac5311`
-（:github:`90811`）
-*
-:dtcompatible:`ti、dac6311`
-（:github:`90811`）
-*
-:dtcompatible:`ti、dac7311`
-（:github:`90811`）
-*
-:dtcompatible:`ti、dac8311`
-（:github:`90811`）
-*
-:dtcompatible:`ti、dac8411`
-（:github:`90811`）
-*
-:dtcompatible:`zephyr、dac
-emul`
-（:github:`100306`）
-
-*
-Disk
-
-*
-:dtcompatible:`zephyr、ftl
-dhara`
-（:github:`100858`）
-
-*
-Display
-
-*
-:dtcompatible:`eink、ac057tc1`
-（:github:`104142`）
-*
-:dtcompatible:`ilitek、ili9163c`
-（:github:`104071`）
-*
-:dtcompatible:`nxp、imx
-lcdifv2`
-（:github:`103646`）
-*
-:dtcompatible:`qemu、ramfb`
-（:github:`103887`）
-*
-:dtcompatible:`sifli、sf32lb
-lc
-dc`
-（:github:`99549`）
-*
-:dtcompatible:`sitronix、st7586s`
-（:github:`103296`）
-*
-:dtcompatible:`solomon、ssd1325`
-（:github:`102128`）
-*
-:dtcompatible:`waveshare、dsi2dpi`
-（:github:`100140`）
-
-*
-:abbr:`DMA
-（Direct
-Memory
-Access）`
-
-*
-:dtcompatible:`infineon、dmac`
-（:github:`101583`）
-*
-:dtcompatible:`microchip、dmac
-g1
-dma`
-（:github:`96300`）
-*
-:dtcompatible:`microchip、dmac
-g2
-dma`
-（:github:`104404`）
-*
-:dtcompatible:`nxp、4ch
-dma`
-（:github:`97841`）
-
-*
-:abbr:`EDAC
-（Error
-Detection
-and
-Correction）`
-
-*
-:dtcompatible:`nxp、eim`
-（:github:`94111`）
-*
-:dtcompatible:`nxp、erm`
-（:github:`94111`）
-
-*
-Ethernet
-
-*
-:dtcompatible:`davicom、dm9051`
-（:github:`104715`）
-*
-:dtcompatible:`ethernet
-phy
-fixed
-link`
-（:github:`100454`）
-*
-:dtcompatible:`maxlinear、gpy111`
-（:github:`100995`）
-*
-:dtcompatible:`microchip、lan8742`
-（:github:`96134`）
-*
-:dtcompatible:`motorcomm、yt8521`
-（:github:`97535`）
-*
-:dtcompatible:`motorcomm、yt8531`
-（:github:`104945`）
-*
-:dtcompatible:`nxp、t1s
-phy`
-（:github:`105033`）
-*
-:dtcompatible:`renesas、ra
-eswm`
-（:github:`100995`）
-*
-:dtcompatible:`renesas、ra
-ethernet
-rmac`
-（:github:`100995`）
-*
-:dtcompatible:`renesas、ra
-mdio
-rmac`
-（:github:`100995`）
-*
-:dtcompatible:`st、stm32h5
-ethernet`
-（:github:`100910`）
-*
-:dtcompatible:`st、stm32mp13
-ethernet`
-（:github:`96134`）
-*
-:dtcompatible:`wch、ethernet`
-（:github:`101390`）
-*
-:dtcompatible:`wch、ethernet
-controller`
-（:github:`101390`）
-*
-:dtcompatible:`wch、mdio`
-（:github:`101390`）
-*
-:dtcompatible:`wiznet、w6100`
-（:github:`101753`）
-*
-:dtcompatible:`xlnx、xps
-ethernetlite
-1.00.a`
-（:github:`95073`）
-*
-:dtcompatible:`xlnx、xps
-ethernetlite
-1.00.a
-mac`
-（:github:`95073`）
-*
-:dtcompatible:`xlnx、xps
-ethernetlite
-1.00.a
-mdio`
-（:github:`103944`）
-*
-:dtcompatible:`xlnx、xps
-ethernetlite
-3.00.a`
-（:github:`95073`）
-*
-:dtcompatible:`xlnx、xps
-ethernetlite
-3.00.a
-mac`
-（:github:`95073`）
-*
-:dtcompatible:`xlnx、xps
-ethernetlite
-3.00.a
-mdio`
-（:github:`103944`）
-
-*
-Firmware
-
-*
-:dtcompatible:`arm、scmi
-smc`
-（:github:`103584`）
-*
-:dtcompatible:`arm、scmi
-system`
-（:github:`99037`）
-*
-:dtcompatible:`qemu、fw
-cfg
-ioport`
-（:github:`103717`）
-*
-:dtcompatible:`qemu、fw
-cfg
-mmio`
-（:github:`103717`）
-
-*
-Flash
-controller
-
-*
-:dtcompatible:`nxp、c40
-flash
-controller`
-（:github:`97401`）
-*
-:dtcompatible:`renesas、rza2m
-qspi
-spibsc`
-（:github:`102175`）
-*
-:dtcompatible:`st、stm32c5
-flash
-controller`
-（:github:`105577`）
-
-*
-Fuel
-gauge
-
-*
-:dtcompatible:`hycon、hy4245`
-（:github:`105006`）
-
-*
-:abbr:`GNSS
-（Global
-Navigation
-Satellite
-System）`
-
-*
-:dtcompatible:`globaltop、pa6h`
-（:github:`104789`）
-
-*
-:abbr:`GPIO
-（General
-Purpose
-Input
-Output）`
-
-*
-:dtcompatible:`elan、em32
-gpio`
-（:github:`97843`）
-*
-:dtcompatible:`espressif、esp
-threadbr
-header`
-（:github:`99704`）
-*
-:dtcompatible:`infineon、cyw43
-gpio`
-（:github:`104728`）
-*
-:dtcompatible:`infineon、shared
-gpio`
-（:github:`105081`）
-*
-:dtcompatible:`microchip、xpro
-header`
-（:github:`98043`）
-*
-:dtcompatible:`nordic、expansion
-board
-header`
-（:github:`104138`）
-*
-:dtcompatible:`nxp、sc18is606
-gpio`
-（:github:`100743`）
-*
-:dtcompatible:`realtek、ameba
-gpio`
-（:github:`78036`）
-*
-:dtcompatible:`realtek、bee
-gpio`
-（:github:`102691`）
-*
-:dtcompatible:`renesas、rz
-gpio
-common`
-（:github:`101256`）
-*
-:dtcompatible:`renesas、rz
-gpio
-common
-v2`
-（:github:`101256`）
-*
-:dtcompatible:`renesas、rz
-gpio
-common
-v3`
-（:github:`104804`）
-*
-:dtcompatible:`solderedelectronics、easyc
-connector`
-（:github:`104919`）
-
-*
-Haptics
-
-*
-:dtcompatible:`cirrus、cs40l5x`
-（:github:`100042`）
-
-*
-Hardware
-information
-
-*
-:dtcompatible:`microchip、hwinfo
-g1`
-（:github:`100147`）
-*
-:dtcompatible:`nxp、rcm
-hwinfo`
-（:github:`102490`）
-*
-:dtcompatible:`nxp、sim
-uuid`
-（:github:`102490`）
-
-*
-Hardware
-spinlock
-
-*
-:dtcompatible:`nxp、sema42`
-（:github:`101499`）
-
-*
-:abbr:`I2C
-（Inter
-Integrated
-Circuit）`
-
-*
-:dtcompatible:`bflb、i2c`
-（:github:`98364`）
-*
-:dtcompatible:`microchip、sercom
-g1
-i2c`
-（:github:`98385`）
-*
-:dtcompatible:`renesas、rza2m
-riic`
-（:github:`100513`）
-*
-:dtcompatible:`sifli、sf32lb
-i2c`
-（:github:`96316`）
-
-*
-:abbr:`I2S
-（Inter
-IC
-Sound）`
-
-*
-:dtcompatible:`adi、max32
-i2s`
-（:github:`91508`）
-*
-:dtcompatible:`infineon、i2s`
-（:github:`100606`）
-
-*
-Input
-
-*
-:dtcompatible:`adafruit、seesaw
-gamepad`
-（:github:`105508`）
-*
-:dtcompatible:`bflb、irx`
-（:github:`100600`）
-*
-:dtcompatible:`chipsemi、chsc6540`
-（:github:`104710`）
-*
-:dtcompatible:`focaltech、ft6146`
-（:github:`96330`）
-*
-:dtcompatible:`hynitron、cst8xx`
-（:github:`105348`）
-*
-:dtcompatible:`nxp、tsi
-input`
-（:github:`103116`）
-*
-:dtcompatible:`parade、tma525b`
-（:github:`101254`）
-*
-:dtcompatible:`realtek、bee
-keyscan`
-（:github:`105110`）
-*
-:dtcompatible:`wch、ch9350l`
-（:github:`101976`）
-
-*
-Interrupt
-controller
-
-*
-:dtcompatible:`adi、max32
-rv32
-intc`
-（:github:`97309`）
-*
-:dtcompatible:`cdns、swerv
-pic`
-（:github:`102288`）
-*
-:dtcompatible:`microchip、aic
-g1
-intc`
-（:github:`101016`）
-*
-:dtcompatible:`microchip、eic
-g1
-intc`
-（:github:`100928`）
-*
-:dtcompatible:`nxp、gint`
-（:github:`100240`）
-*
-:dtcompatible:`opencores、or1k
-pic
-level`
-（:github:`98160`）
-*
-:dtcompatible:`renesas、rx
-grp
-intc`
-（:github:`96451`）
-*
-:dtcompatible:`renesas、rz
-icu
-v2`
-（:github:`104804`）
-*
-:dtcompatible:`renesas、rz
-intc
-v2`
-（:github:`101256`）
-*
-:dtcompatible:`renesas、rz
-tint`
-（:github:`101256`）
-*
-:dtcompatible:`riscv、aplic`
-（:github:`104730`）
-*
-:dtcompatible:`riscv、imsic`
-（:github:`102055`）
-
-*
-:abbr:`LED
-（Light
-Emitting
-Diode）`
-
-*
-:dtcompatible:`issi、is31fl3197`
-（:github:`96821`）
-*
-:dtcompatible:`sct、sct2024`
-（:github:`98698`）
-
-*
-LoRa
-
-*
-:dtcompatible:`semtech、llcc68`
-（:github:`100705`）
-*
-:dtcompatible:`semtech、sx1268`
-（:github:`100705`）
-*
-:dtcompatible:`semtech、sx1278`
-（:github:`100705`）
-
-*
-Mailbox
-
-*
-:dtcompatible:`adi、mbox
-max32
-sema`
-（:github:`104547`）
-*
-:dtcompatible:`raspberrypi、pico
-mbox`
-（:github:`94502`）
-*
-:dtcompatible:`xlnx、mbox
-versal
-ipi
-mailbox`
-（:github:`92768`）
-
-*
-:abbr:`MCTP
-（Management
-Component
-Transport
-Protocol）`
-
-*
-:dtcompatible:`zephyr、mctp
-i3c
-controller`
-（:github:`105006`）
-*
-:dtcompatible:`zephyr、mctp
-i3c
-endpoint`
-（:github:`105006`）
-*
-:dtcompatible:`zephyr、mctp
-i3c
-target`
-（:github:`105006`）
-
-*
-Memory
-controller
-
-*
-:dtcompatible:`adi、max32
-backup
-sram`
-（:github:`104528`）
-
-*
-:abbr:`MFD
-（Multi
-Function
-Device）`
-
-*
-:dtcompatible:`adi、max2221x`
-（:github:`97584`）
-*
-:dtcompatible:`microcrystal、rv3032
-mfd`
-（:github:`98918`）
-*
-:dtcompatible:`nordic、npm10xx`
-（:github:`105447`）
-
-*
-:abbr:`MIPI
-DBI
-（Mobile
-Industry
-Processor
-Interface
-Display
-Bus
-Interface）`
-
-*
-:dtcompatible:`bflb、dbi`
-（:github:`98752`）
-*
-:dtcompatible:`espressif、esp32
-lcd
-cam
-mipi
-dbi`
-（:github:`99863`）
-*
-:dtcompatible:`raspberrypi、pico
-mipi
-dbi
-pio`
-（:github:`91350`）
-*
-:dtcompatible:`sifli、sf32lb
-lc
-dc
-mipi
-dbi`
-（:github:`99549`）
-
-*
-Miscellaneous
-
-*
-:dtcompatible:`adi、max2221x
-misc`
-（:github:`97584`）
-*
-:dtcompatible:`espressif、esp32
-lcd
-cam`
-（:github:`99863`）
-*
-:dtcompatible:`nordic、axon`
-（:github:`102160`）
-*
-:dtcompatible:`raspberrypi、pico
-sio`
-（:github:`94502`）
-*
-:dtcompatible:`renesas、ra
-drw`
-（:github:`97163`）
-*
-:dtcompatible:`renesas、ra
-sau`
-（:github:`102379`）
-*
-:dtcompatible:`renesas、ra
-sau
-channel`
-（:github:`102379`）
-*
-:dtcompatible:`skyworks、sky13348`
-（:github:`102321`）
-*
-:dtcompatible:`st、stm32
-npu
-cache`
-（:github:`102232`）
-
-*
-Modem
-
-*
-:dtcompatible:`st、st87mxx`
-（:github:`100366`）
-
-*
-Multi
-bit
-SPI
-
-*
-:dtcompatible:`st、stm32
-ospi
-controller`
-（:github:`96670`）
-*
-:dtcompatible:`st、stm32
-qspi
-controller`
-（:github:`96670`）
-*
-:dtcompatible:`st、stm32
-xspi
-controller`
-（:github:`96670`）
-
-*
-:abbr:`MTD
-（Memory
-Technology
-Device）`
-
-*
-:dtcompatible:`jedec、spi
-nand`
-（:github:`100845`）
-*
-:dtcompatible:`mxicy、mx25u`
-（:github:`104357`）
-*
-:dtcompatible:`netsol、s3axx04`
-（:github:`97867`）
-*
-:dtcompatible:`nxp、c40
-flash`
-（:github:`97401`）
-*
-:dtcompatible:`nxp、imx
-flexspi
-is66wvs8m8`
-（:github:`100976`）
-*
-:dtcompatible:`nxp、s32
-xspi
-device`
-（:github:`101487`）
-*
-:dtcompatible:`nxp、s32
-xspi
-hyperram`
-（:github:`101487`）
-*
-:dtcompatible:`zephyr、mapped
-partition`
-（:github:`104398`）
-
-*
-:abbr:`OPAMP
-（Operational
-Amplifier）`
-
-*
-:dtcompatible:`st、stm32
-opamp`
-（:github:`99181`）
-*
-:dtcompatible:`st、stm32g4
-opamp`
-（:github:`99181`）
-
-*
-:abbr:`OTP
-（One
-Time
-Programmable）`
-Memory
-
-*
-:dtcompatible:`nxp、ocotp`
-（:github:`103089`）
-*
-:dtcompatible:`sifli、sf32lb
-efuse`
-（:github:`101926`）
-*
-:dtcompatible:`st、stm32
-bsec`
-（:github:`102403`）
-*
-:dtcompatible:`st、stm32
-nvm
-otp`
-（:github:`102976`）
-*
-:dtcompatible:`zephyr、otp
-emul`
-（:github:`101292`）
-
-*
-:abbr:`P
-state
-（Performance
-State）`
-
-*
-:dtcompatible:`nxp、mcxn
-pstate`
-（:github:`105006`）
-
-*
-Pin
-control
-
-*
-:dtcompatible:`alif、pinctrl`
-（:github:`101244`）
-*
-:dtcompatible:`brcm、bcm2711
-pinctrl`
-（:github:`101008`）
-*
-:dtcompatible:`nxp、s32k5
-pinctrl`
-（:github:`100803`）
-*
-:dtcompatible:`realtek、ameba
-pinctrl`
-（:github:`78036`）
-*
-:dtcompatible:`realtek、bee
-pinctrl`
-（:github:`102691`）
-*
-:dtcompatible:`realtek、rts5817
-pinctrl`
-（:github:`91486`）
-*
-:dtcompatible:`renesas、ra0
-pinctrl
-pfs`
-（:github:`102379`）
-*
-:dtcompatible:`st、stm32h5
-pinctrl`
-（:github:`105856`）
-*
-:dtcompatible:`syna、sr100
-pinctrl`
-（:github:`100172`）
-
-*
-Power
-management
-CPU
-operations
-
-*
-:dtcompatible:`arm、fvp
-pwrc`
-（:github:`96852`）
-
-*
-Power
-management
-
-*
-:dtcompatible:`bflb、power
-controller`
-（:github:`102063`）
-*
-:dtcompatible:`st、stm32
-dualreg
-pwr`
-（:github:`99171`）
-*
-:dtcompatible:`st、stm32
-iocell`
-（:github:`100539`）
-*
-:dtcompatible:`st、stm32h5
-iocell`
-（:github:`104599`）
-*
-:dtcompatible:`st、stm32h7
-pwr`
-（:github:`99171`）
-*
-:dtcompatible:`st、stm32h7rs
-pwr`
-（:github:`99171`）
-*
-:dtcompatible:`st、stm32u5
-pwr`
-（:github:`100319`）
-*
-:dtcompatible:`st、stm32wba
-pwr`
-（:github:`105279`）
-
-*
-Power
-domain
-
-*
-:dtcompatible:`arm、scmi
-power
-domain`
-（:github:`102370`）
-
-*
-:abbr:`PS
-2
-（Personal
-System
-2）`
-
-*
-:dtcompatible:`ite、it51xxx
-ps2`
-（:github:`102790`）
-
-*
-:abbr:`PWM
-（Pulse
-Width
-Modulation）`
-
-*
-:dtcompatible:`adi、max2221x
-pwm`
-（:github:`97584`）
-*
-:dtcompatible:`bflb、pwm
-1`
-（:github:`99195`）
-*
-:dtcompatible:`bflb、pwm
-2`
-（:github:`99195`）
-*
-:dtcompatible:`elan、em32
-pwm`
-（:github:`97843`）
-*
-:dtcompatible:`microchip、tc
-g1
-pwm`
-（:github:`100070`）
-*
-:dtcompatible:`renesas、rza2m
-gpt
-pwm`
-（:github:`100932`）
-*
-:dtcompatible:`sifli、sf32lb
-atim
-pwm`
-（:github:`100137`）
-*
-:dtcompatible:`sifli、sf32lb
-gpt
-pwm`
-（:github:`99362`）
-
-*
-Regulator
-
-*
-:dtcompatible:`arduino、modulino
-latch
-relay`
-（:github:`104466`）
-*
-:dtcompatible:`bflb、aon
-regulator`
-（:github:`102063`）
-*
-:dtcompatible:`bflb、rt
-regulator`
-（:github:`102063`）
-*
-:dtcompatible:`bflb、soc
-regulator`
-（:github:`102063`）
-*
-:dtcompatible:`espressif、esp32
-regulator`
-（:github:`105076`）
-*
-:dtcompatible:`nordic、npm10xx
-regulator`
-（:github:`105562`）
-*
-:dtcompatible:`nordic、vregusb
-regulator`
-（:github:`97642`）
-*
-:dtcompatible:`st、stm32
-vrefbuf`
-（:github:`99304`）
-*
-:dtcompatible:`ti、tps55287`
-（:github:`98662`）
-
-*
-Reset
-controller
-
-*
-:dtcompatible:`focaltech、ft9001
-cpm
-rctl`
-（:github:`95959`）
-*
-:dtcompatible:`realtek、rts5817
-reset`
-（:github:`91486`）
-*
-:dtcompatible:`syna、sr100
-reset`
-（:github:`100172`）
-
-*
-:abbr:`RNG
-（Random
-Number
-Generator）`
-
-*
-:dtcompatible:`gd、gd32
-trng`
-（:github:`101559`）
-*
-:dtcompatible:`microchip、trng
-g1
-entropy`
-（:github:`99183`）
-*
-:dtcompatible:`raspberrypi、pico
-rng`
-（:github:`83346`）
-*
-:dtcompatible:`renesas、ra
-rsip
-e50d
-trng`
-（:github:`100995`）
-*
-:dtcompatible:`sifli、sf32lb
-trng`
-（:github:`98467`）
-*
-:dtcompatible:`ti、mspm0
-trng`
-（:github:`94733`）
-*
-:dtcompatible:`wch、rng`
-（:github:`101390`）
-
-*
-:abbr:`RTC
-（Real
-Time
-Clock）`
-
-*
-:dtcompatible:`adi、max31331`
-（:github:`100508`）
-*
-:dtcompatible:`maxim、ds1302`
-（:github:`103964`）
-*
-:dtcompatible:`microchip、rtc
-g1`
-（:github:`99144`）
-*
-:dtcompatible:`microchip、rtc
-g2`
-（:github:`99889`）
-*
-:dtcompatible:`nxp、rtc
-jdp`
-（:github:`98114`）
-
-*
-:abbr:`SDHC
-（Secure
-Digital
-Host
-Controller）`
-
-*
-:dtcompatible:`infineon、sdhc
-sdio`
-（:github:`100644`）
-*
-:dtcompatible:`litex、mmc`
-（:github:`93816`）
-
-*
-Sensors
-
-*
-:dtcompatible:`adi、ade7978`
-（:github:`104030`）
-*
-:dtcompatible:`adi、adt7410`
-（:github:`105009`）
-*
-:dtcompatible:`adi、adt7422`
-（:github:`105009`）
-*
-:dtcompatible:`adi、adxl355`
-（:github:`103387`）
-*
-:dtcompatible:`adi、max30210`
-（:github:`100511`）
-*
-:dtcompatible:`ams、as5048`
-（:github:`100382`）
-*
-:dtcompatible:`ams、as6221`
-（:github:`94899`）
-*
-:dtcompatible:`avia、hx711
-spi`
-（:github:`104416`）
-*
-:dtcompatible:`iclegend、s3km1110`
-（:github:`104279`）
-*
-:dtcompatible:`invensense、icm45605`
-（:github:`101061`）
-*
-:dtcompatible:`invensense、icm45605s`
-（:github:`101061`）
-*
-:dtcompatible:`invensense、icm45686s`
-（:github:`101061`）
-*
-:dtcompatible:`invensense、icm45688p`
-（:github:`101061`）
-*
-:dtcompatible:`liteon、ltr553`
-（:github:`101669`）
-*
-:dtcompatible:`microcrystal、rv3032
-temp`
-（:github:`98918`）
-*
-:dtcompatible:`nordic、npm10xx
-adc`
-（:github:`105597`）
-*
-:dtcompatible:`nuvoton、npcx
-adc
-v2t`
-（:github:`105006`）
-*
-:dtcompatible:`nxp、mcux
-qdc`
-（:github:`104880`）
-*
-:dtcompatible:`nxp、tempsense`
-（:github:`101525`）
-*
-:dtcompatible:`qst、qmi8658a`
-（:github:`104345`）
-*
-:dtcompatible:`sensirion、stcc4`
-（:github:`104929`）
-*
-:dtcompatible:`sifli、sf32lb
-tsen`
-（:github:`99463`）
-*
-:dtcompatible:`st、ism6hg256x`
-（:github:`95802`）
-*
-:dtcompatible:`st、lsm6dsv320x`
-（:github:`95802`）
-*
-:dtcompatible:`st、lsm6dsv80x`
-（:github:`95802`）
-*
-:dtcompatible:`ti、ina232`
-（:github:`98791`）
-*
-:dtcompatible:`ti、opt3004`
-（:github:`99387`）
-
-*
-Serial
-controller
-
-*
-:dtcompatible:`focaltech、ft9001
-usart`
-（:github:`95959`）
-*
-:dtcompatible:`microchip、dbgu
-g1
-uart`
-（:github:`101016`）
-*
-:dtcompatible:`realtek、ameba
-loguart`
-（:github:`78036`）
-*
-:dtcompatible:`realtek、bee
-uart`
-（:github:`102691`）
-*
-:dtcompatible:`renesas、ra
-uart
-sau`
-（:github:`102379`）
-*
-:dtcompatible:`rpmsg
-uart`
-（:github:`98463`）
-
-*
-:abbr:`SPI
-（Serial
-Peripheral
-Interface）`
-
-*
-:dtcompatible:`bflb、spi`
-（:github:`94752`）
-*
-:dtcompatible:`infineon、spi`
-（:github:`100644`）
-*
-:dtcompatible:`microchip、sercom
-g1
-spi`
-（:github:`101864`）
-*
-:dtcompatible:`realtek、rts5912
-spi`
-（:github:`96006`）
-*
-:dtcompatible:`renesas、ra
-spi
-sci`
-（:github:`97339`）
-*
-:dtcompatible:`renesas、ra
-spi
-sci
-b`
-（:github:`95014`）
-*
-:dtcompatible:`sensry、sy1xx
-spi`
-（:github:`102323`）
-*
-:dtcompatible:`sifli、sf32lb
-spi`
-（:github:`97626`）
-
-*
-Stepper
-
-*
-:dtcompatible:`adi、tmc50xx
-stepper
-ctrl`
-（:github:`101001`）
-*
-:dtcompatible:`adi、tmc50xx
-stepper
-driver`
-（:github:`101001`）
-*
-:dtcompatible:`adi、tmc51xx
-stepper
-ctrl`
-（:github:`101001`）
-*
-:dtcompatible:`adi、tmc51xx
-stepper
-driver`
-（:github:`101001`）
-*
-:dtcompatible:`adi、tmcm3216`
-（:github:`104508`）
-*
-:dtcompatible:`adi、tmcm3216
-stepper
-ctrl`
-（:github:`104508`）
-*
-:dtcompatible:`adi、tmcm3216
-stepper
-driver`
-（:github:`104508`）
-*
-:dtcompatible:`zephyr、fake
-stepper
-ctrl`
-（:github:`101001`）
-*
-:dtcompatible:`zephyr、fake
-stepper
-driver`
-（:github:`101001`）
-*
-:dtcompatible:`zephyr、gpio
-step
-dir
-stepper
-ctrl`
-（:github:`101001`）
-*
-:dtcompatible:`zephyr、h
-bridge
-stepper
-ctrl`
-（:github:`101001`）
-
-*
-System
-controller
-
-*
-:dtcompatible:`ti、control
-module`
-（:github:`103330`）
-
-*
-Timer
-
-*
-:dtcompatible:`adi、max32
-rv32
-sys
-timer`
-（:github:`97309`）
-*
-:dtcompatible:`adi、max32
-wut
-timer`
-（:github:`104687`）
-*
-:dtcompatible:`arm、armv7
-timer`
-（:github:`99675`）
-*
-:dtcompatible:`infineon、cat1
-lp
-timer
-pdl`
-（:github:`97831`）
-*
-:dtcompatible:`infineon、lp
-timer`
-（:github:`100644`）
-*
-:dtcompatible:`realtek、bee
-basic
-timer`
-（:github:`104805`）
-*
-:dtcompatible:`realtek、bee
-enhanced
-timer`
-（:github:`104805`）
-*
-:dtcompatible:`realtek、bee
-timer`
-（:github:`104805`）
-*
-:dtcompatible:`renesas、rza2m
-gpt`
-（:github:`100932`）
-*
-:dtcompatible:`renesas、rza2m
-ostm
-timer`
-（:github:`100934`）
-*
-:dtcompatible:`sifli、sf32lb
-atim`
-（:github:`100137`）
-*
-:dtcompatible:`sifli、sf32lb
-gptim`
-（:github:`99362`）
-
-*
-:abbr:`UAOL
-（USB
-Audio
-Offload
-Link）`
-
-*
-:dtcompatible:`intel、adsp
-uaol`
-（:github:`104137`）
-*
-:dtcompatible:`intel、uaol
-dai`
-（:github:`104137`）
-
-*
-USB
-
-*
-:dtcompatible:`atmel、sam
-udp`
-（:github:`102041`）
-*
-:dtcompatible:`bflb、udc
-1`
-（:github:`104244`）
-*
-:dtcompatible:`nordic、nrf
-usbhs
-wrapper`
-（:github:`97642`）
-*
-:dtcompatible:`nuvoton、numaker
-hsusbd`
-（:github:`95709`）
-
-*
-USB
-Type
-C
-
-*
-:dtcompatible:`zephyr、usb
-c
-pwrctrl`
-（:github:`103883`）
-
-*
-Video
-
-*
-:dtcompatible:`arducam、mega`
-（:github:`96234`）
-*
-:dtcompatible:`himax、hm0360`
-（:github:`94904`）
-*
-:dtcompatible:`ovti、ov5642`
-（:github:`97106`）
-*
-:dtcompatible:`ovti、ov7675`
-（:github:`96319`）
-*
-:dtcompatible:`sony、imx219`
-（:github:`101754`）
-
-*
-Wakeup
-Controller
-
-*
-:dtcompatible:`nxp、llwu`
-（:github:`100559`）
-
-*
-Watchdog
-
-*
-:dtcompatible:`adi、max42500
-watchdog`
-（:github:`102929`）
-*
-:dtcompatible:`bflb、wdt`
-（:github:`104243`）
-*
-:dtcompatible:`microchip、wdt
-g1`
-（:github:`101335`）
-*
-:dtcompatible:`realtek、rts5817
-watchdog`
-（:github:`91486`）
-
-*
-Wi
-Fi
-
-*
-:dtcompatible:`nordic、nrf7120
-wifi`
-（:github:`104055`）
-
-*
-:abbr:`XSPI
-（Expanded
-Serial
-Peripheral
-Interface）`
-
-*
-:dtcompatible:`nxp、s32
-xspi`
-（:github:`101487`）
-*
-:dtcompatible:`nxp、s32
-xspi
-sfp
-frad`
-（:github:`101487`）
-*
-:dtcompatible:`nxp、s32
-xspi
-sfp
-mdad`
-（:github:`101487`）
-*
-:dtcompatible:`st、stm32
-xspim`
-（:github:`104943`）
-
-New
-Samples
+  与开发板相同，此列表也将在发布时重新计算。
+  只需链接驱动，更多细节放在绑定描述中
+
+* :abbr:`ADC（模数转换器）`
+
+   * :dtcompatible:`adi,ad4050-adc` (:github:`97309`)
+   * :dtcompatible:`adi,ad4052-adc` (:github:`97309`)
+   * :dtcompatible:`adi,ad4130-adc` (:github:`97309`)
+   * :dtcompatible:`ene,kb106x-adc` (:github:`100875`)
+   * :dtcompatible:`ite,it51xxx-adc` (:github:`100875`)
+   * :dtcompatible:`microchip,mcp356xr` (:github:`105389`)
+   * :dtcompatible:`realtek,rts5912-adc` (:github:`100875`)
+   * :dtcompatible:`renesas,rz-adc` (:github:`100934`)
+   * :dtcompatible:`silabs,siwx91x-adc` (:github:`104471`)
+   * :dtcompatible:`ti,am335x-adc` (:github:`105389`)
+   * :dtcompatible:`ti,cc23x0-adc` (:github:`105389`)
+   * :dtcompatible:`wch,adc` (:github:`101390`)
+
+* 音频
+
+   * :dtcompatible:`ambiq,pdm` (:github:`97309`)
+   * :dtcompatible:`maxim,max98091` (:github:`105389`)
+   * :dtcompatible:`ti,pcm1681` (:github:`105389`)
+   * :dtcompatible:`ti,tlv320aic3110` (:github:`105389`)
+   * :dtcompatible:`wolfson,wm8962` (:github:`105389`)
+
+* 辅助显示
+
+   * :dtcompatible:`gpio-7-segment` (:github:`100306`)
+
+* :abbr:`CAN（控制器局域网）`
+
+   * :dtcompatible:`adi,max32-can` (:github:`97309`)
+   * :dtcompatible:`renesas,rz-canfd` (:github:`100934`)
+   * :dtcompatible:`renesas,rz-canfd-global` (:github:`100934`)
+
+* 充电器
+
+   * :dtcompatible:`ti,bq25713` (:github:`105389`)
+   * :dtcompatible:`x-powers,axp2101-charger` (:github:`105389`)
+
+* 时钟控制
+
+   * :dtcompatible:`bflb,bclk` (:github:`104349`)
+   * :dtcompatible:`bflb,bl60x-clock-controller` (:github:`104349`)
+   * :dtcompatible:`bflb,bl60x-pll` (:github:`104349`)
+   * :dtcompatible:`bflb,bl60x-root-clk` (:github:`104349`)
+   * :dtcompatible:`bflb,clock-controller` (:github:`104349`)
+   * :dtcompatible:`ite,it51xxx-ecpm` (:github:`100875`)
+   * :dtcompatible:`microchip,sam-pmc` (:github:`105389`)
+   * :dtcompatible:`microchip,sama7g5-sckc` (:github:`105389`)
+   * :dtcompatible:`nordic,nrf51-hfxo` (:github:`104471`)
+   * :dtcompatible:`nordic,nrf52-hfxo` (:github:`104471`)
+   * :dtcompatible:`nordic,nrf54l-hfxo` (:github:`104471`)
+   * :dtcompatible:`nordic,nrfs-audiopll` (:github:`104471`)
+   * :dtcompatible:`renesas,rx-cgc-pclk` (:github:`100934`)
+   * :dtcompatible:`renesas,rx-cgc-pclk-block` (:github:`100934`)
+   * :dtcompatible:`renesas,rx-cgc-pll` (:github:`100934`)
+   * :dtcompatible:`renesas,rx-cgc-root-clock` (:github:`100934`)
+   * :dtcompatible:`renesas,rza2m-cpg` (:github:`100934`)
+   * :dtcompatible:`st,stm32mp13-cpu-clock-mux` (:github:`96134`)
+   * :dtcompatible:`st,stm32mp13-pll-clock` (:github:`96134`)
+   * :dtcompatible:`st,stm32mp2-rcc` (:github:`96134`)
+   * :dtcompatible:`st,stm32u3-msi-clock` (:github:`96134`)
+   * :dtcompatible:`ti,mspm0-clk` (:github:`105389`)
+   * :dtcompatible:`ti,mspm0-osc` (:github:`105389`)
+   * :dtcompatible:`ti,mspm0-pll` (:github:`105389`)
+   * :dtcompatible:`wch,ch32v20x_30x-pll-clock` (:github:`101390`)
+
+* 比较器
+
+   * :dtcompatible:`ite,it51xxx-vcmp` (:github:`100875`)
+   * :dtcompatible:`renesas,ra-acmphs` (:github:`100934`)
+   * :dtcompatible:`renesas,ra-acmphs-global` (:github:`100934`)
+
+* 计数器
+
+   * :dtcompatible:`adi,max32-wut` (:github:`97309`)
+   * :dtcompatible:`espressif,esp32-counter` (:github:`105389`)
+   * :dtcompatible:`ite,it51xxx-counter` (:github:`100875`)
+   * :dtcompatible:`ite,it8xxx2-counter` (:github:`100875`)
+   * :dtcompatible:`neorv32,gptmr` (:github:`105006`)
+   * :dtcompatible:`realtek,rts5912-timer` (:github:`100875`)
+   * :dtcompatible:`ti,cc23x0-lgpt` (:github:`105389`)
+   * :dtcompatible:`ti,cc23x0-rtc` (:github:`105389`)
+   * :dtcompatible:`ti,mspm0-timer-counter` (:github:`105389`)
+   * :dtcompatible:`wch,gptm` (:github:`101390`)
+   * :dtcompatible:`zephyr,native-sim-counter` (:github:`100306`)
+
+* CPU
+
+   * :dtcompatible:`adi,max32-rv32` (:github:`97309`)
+   * :dtcompatible:`arm,cortex-a320` (:github:`96852`)
+   * :dtcompatible:`arm,cortex-a510` (:github:`96852`)
+   * :dtcompatible:`arm,cortex-a7` (:github:`101582`)
+   * :dtcompatible:`arm,cortex-a9` (:github:`101582`)
+   * :dtcompatible:`cdns,swerv,s400` (:github:`102288`)
+   * :dtcompatible:`cdns,swerv,s420` (:github:`102288`)
+   * :dtcompatible:`intel,wildcat-lake` (:github:`99205`)
+   * :dtcompatible:`riscv` (:github:`105006`)
+   * :dtcompatible:`spinalhdl,vexriscv` (:github:`97925`)
+
+* :abbr:`CRC（循环冗余校验）`
+
+   * :dtcompatible:`nxp,crc` (:github:`100875`)
+   * :dtcompatible:`nxp,lpc-crc` (:github:`101528`)
+   * :dtcompatible:`sifli,sf32lb-crc` (:github:`98997`)
+   * :dtcompatible:`silabs,gpcrc` (:github:`104471`)
+   * :dtcompatible:`st,stm32-crc` (:github:`105302`)
+
+* 加密加速器
+
+   * :dtcompatible:`bflb,sec-eng-aes` (:github:`104371`)
+   * :dtcompatible:`bflb,sec-eng-sha` (:github:`104371`)
+   * :dtcompatible:`bflb,sec-eng-trng` (:github:`104349`)
+   * :dtcompatible:`microchip,aes-g1` (:github:`105389`)
+   * :dtcompatible:`microchip,sha-g1-crypto` (:github:`98894`)
+   * :dtcompatible:`nxp,s32-crypto-hse-mu` (:github:`79351`)
+   * :dtcompatible:`raspberrypi,pico-sha256` (:github:`85036`)
+   * :dtcompatible:`sifli,sf32lb-crypto` (:github:`100583`)
+
+* :abbr:`DAC（数模转换器）`
+
+   * :dtcompatible:`microchip,dac-g1` (:github:`101431`)
+   * :dtcompatible:`nxp,hpdac` (:github:`104642`)
+   * :dtcompatible:`ti,dac5311` (:github:`90811`)
+   * :dtcompatible:`ti,dac6311` (:github:`90811`)
+   * :dtcompatible:`ti,dac7311` (:github:`90811`)
+   * :dtcompatible:`ti,dac8311` (:github:`90811`)
+   * :dtcompatible:`ti,dac8411` (:github:`90811`)
+   * :dtcompatible:`zephyr,dac-emul` (:github:`100306`)
+
+* 磁盘
+
+   * :dtcompatible:`zephyr,ftl-dhara` (:github:`100858`)
+
+* 显示
+
+   * :dtcompatible:`eink,ac057tc1` (:github:`104142`)
+   * :dtcompatible:`ilitek,ili9163c` (:github:`104071`)
+   * :dtcompatible:`nxp,imx-lcdifv2` (:github:`103646`)
+   * :dtcompatible:`qemu,ramfb` (:github:`103887`)
+   * :dtcompatible:`sifli,sf32lb-lcdc` (:github:`99549`)
+   * :dtcompatible:`sitronix,st7586s` (:github:`103296`)
+   * :dtcompatible:`solomon,ssd1325` (:github:`102128`)
+   * :dtcompatible:`waveshare,dsi2dpi` (:github:`100140`)
+
+* :abbr:`DMA（直接内存访问）`
+
+   * :dtcompatible:`infineon,dmac` (:github:`101583`)
+   * :dtcompatible:`microchip,dmac-g1-dma` (:github:`96300`)
+   * :dtcompatible:`microchip,dmac-g2-dma` (:github:`104404`)
+   * :dtcompatible:`nxp,4ch-dma` (:github:`97841`)
+
+* :abbr:`EDAC（错误检测与纠正）`
+
+   * :dtcompatible:`nxp,eim` (:github:`94111`)
+   * :dtcompatible:`nxp,erm` (:github:`94111`)
+
+* 以太网
+
+   * :dtcompatible:`davicom,dm9051` (:github:`104715`)
+   * :dtcompatible:`ethernet-phy-fixed-link` (:github:`100454`)
+   * :dtcompatible:`maxlinear,gpy111` (:github:`100995`)
+   * :dtcompatible:`microchip,lan8742` (:github:`96134`)
+   * :dtcompatible:`motorcomm,yt8521` (:github:`97535`)
+   * :dtcompatible:`motorcomm,yt8531` (:github:`104945`)
+   * :dtcompatible:`nxp,t1s-phy` (:github:`105033`)
+   * :dtcompatible:`renesas,ra-eswm` (:github:`100995`)
+   * :dtcompatible:`renesas,ra-ethernet-rmac` (:github:`100995`)
+   * :dtcompatible:`renesas,ra-mdio-rmac` (:github:`100995`)
+   * :dtcompatible:`st,stm32h5-ethernet` (:github:`100910`)
+   * :dtcompatible:`st,stm32mp13-ethernet` (:github:`96134`)
+   * :dtcompatible:`wch,ethernet` (:github:`101390`)
+   * :dtcompatible:`wch,ethernet-controller` (:github:`101390`)
+   * :dtcompatible:`wch,mdio` (:github:`101390`)
+   * :dtcompatible:`wiznet,w6100` (:github:`101753`)
+   * :dtcompatible:`xlnx,xps-ethernetlite-1.00.a` (:github:`95073`)
+   * :dtcompatible:`xlnx,xps-ethernetlite-1.00.a-mac` (:github:`95073`)
+   * :dtcompatible:`xlnx,xps-ethernetlite-1.00.a-mdio` (:github:`103944`)
+   * :dtcompatible:`xlnx,xps-ethernetlite-3.00.a` (:github:`95073`)
+   * :dtcompatible:`xlnx,xps-ethernetlite-3.00.a-mac` (:github:`95073`)
+   * :dtcompatible:`xlnx,xps-ethernetlite-3.00.a-mdio` (:github:`103944`)
+
+新示例
 ***********
 
-*
-:zephyr:code
-sample:`6dof_fifo_stream`
-（renamed
-from
-``stream_fifo``）
-*
-:zephyr:code
-sample:`accel_stream`
-（renamed
-from
-``accel_polling``）
-*
-:zephyr:code
-sample:`adc_stream`
-*
-:zephyr:code
-sample:`amp_talk`
-*
-:zephyr:code
-sample:`at_client`
-*
-:zephyr:code
-sample:`bflb
-bl61x
-wo
-uart`
-*
-:zephyr:code
-sample:`ble_peripheral_ans`
-*
-:zephyr:code
-sample:`ble_peripheral_ets`
-*
-:zephyr:code
-sample:`ble_peripheral_gap_svc`
-*
-:zephyr:code
-sample:`bluetooth_a2dp_sink`
-*
-:zephyr:code
-sample:`bluetooth_a2dp_source`
-*
-:zephyr:code
-sample:`bluetooth_l2cap_coc_acceptor`
-*
-:zephyr:code
-sample:`bluetooth_l2cap_coc_initiator`
-*
-:zephyr:code
-sample:`bridge`
-*
-:zephyr:code
-sample:`button_interrupt`
-*
-:zephyr:code
-sample:`capture`
-*
-:zephyr:code
-sample:`coap
-upload`
-*
-:zephyr:code
-sample:`codec`
-*
-:zephyr:code
-sample:`cpu_freq_on_demand`
-*
-:zephyr:code
-sample:`cpu_freq_pressure`
-*
-:zephyr:code
-sample:`crc_drivers`
-*
-:zephyr:code
-sample:`crc_subsys`
-*
-:zephyr:code
-sample:`cs40l5x`
-*
-:zephyr:code
-sample:`device_pm`
-*
-:zephyr:code
-sample:`dsa`
-*
-:zephyr:code
-sample:`event`
-*
-:zephyr:code
-sample:`ext2
-fstab`
-*
-:zephyr:code
-sample:`fingerprint
-sensor`
-*
-:zephyr:code
-sample:`flash_ipm`
-*
-:zephyr:code
-sample:`frdm_mcxa156_lpdac_opamp_lpadc`
-*
-:zephyr:code
-sample:`ftp
-client`
-*
-:zephyr:code
-sample:`hello_hl78xx`
-*
-:zephyr:code
-sample:`hwspinlock`
-*
-:zephyr:code
-sample:`instrumentation`
-*
-:zephyr:code
-sample:`is31fl319x`
-*
-:zephyr:code
-sample:`latmon
-client`
-*
-:zephyr:code
-sample:`lp
-gpio
-wakeup`
-*
-:zephyr:code
-sample:`lp
-timer
-wakeup`
-*
-:zephyr:code
-sample:`max32664c`
-*
-:zephyr:code
-sample:`mctp_i2c_bus_endpoint`
-*
-PMCI
-MCTP
-over
-I2C
-+
-GPIO
-（``mctp_i2c_bus_owner``）
-*
-:zephyr:code
-sample:`mctp_i3c_bus_endpoint`
-*
-PMCI
-MCTP
-over
-I3C
-（``mctp_i3c_bus_owner``）
-*
-:zephyr:code
-sample:`mctp
-usb
-endpoint`
-*
-:zephyr:code
-sample:`msg_queue`
-*
-:zephyr:code
-sample:`mtch9010`
-*
-:zephyr:code
-sample:`netmidi2`
-*
-:zephyr:code
-sample:`nrf_clock_control`
-*
-:zephyr:code
-sample:`ocpp`
-*
-:zephyr:code
-sample:`opamp_output_measure`
-*
-:zephyr:code
-sample:`openthread
-border
-router`
-*
-:zephyr:code
-sample:`pico
-w
-wifi
-led`
-*
-:zephyr:code
-sample:`producer_consumer`
-*
-:zephyr:code
-sample:`quality
-of
-service`
-*
-:zephyr:code
-sample:`red
-black
-tree`
-*
-:zephyr:code
-sample:`regulator_shell`
-*
-:zephyr:code
-sample:`renesas_lvd`
-*
-:zephyr:code
-sample:`rtk0eg0019b01002bj`
-*
-:zephyr:code
-sample:`s3km1110`
-*
-:zephyr:code
-sample:`scmi`
-*
-:zephyr:code
-sample:`sct2024`
-*
-:zephyr:code
-sample:`shell
-devmem
-load`
-*
-:zephyr:code
-sample:`stm32_pwm_mastermode`
-*
-:zephyr:code
-sample:`t1s`
-*
-:zephyr:code
-sample:`tmcm3216`
-*
-:zephyr:code
-sample:`usb
-c
-drp`
-*
-:zephyr:code
-sample:`usb
-host
-uvc`
-*
-:zephyr:code
-sample:`veml6046`
-*
-:zephyr:code
-sample:`virtiofs`
-*
-:zephyr:code
-sample:`wireguard
-vpn`
-*
-:zephyr:code
-sample:`zbus
-async
-listeners`
-*
-:zephyr:code
-sample:`zbus
-proxy
-agent
-ipc`
-*
-:zephyr:code
-sample:`ztest_benchmark`
-
 ..
-Same
-as
-above、
-this
-will
-also
-be
-recomputed
-at
-the
-time
-of
-the
-release.
-Just
-link
-the
-sample、
-further
-details
-go
-in
-the
-sample
-documentation
-itself.
+  与开发板和驱动相同，此列表也将在发布时重新计算。
+  只需链接示例，更多细节放在示例文档本身中。
 
-Devicetree
+* :zephyr:code-sample:`amp_audio_loopback`
+* :zephyr:code-sample:`amp_audio_output`
+* :zephyr:code-sample:`amp_blinky`
+* :zephyr:code-sample:`amp_mbox`
+* :zephyr:code-sample:`auxdisplay_digits`
+* :zephyr:code-sample:`bmg160`
+* :zephyr:code-sample:`debug-ulp`
+* :zephyr:code-sample:`distance_polling`
+* :zephyr:code-sample:`echo-ulp`
+* :zephyr:code-sample:`fatfs-fstab`
+* :zephyr:code-sample:`fuel_gauge`
+* :zephyr:code-sample:`heart_rate`
+* :zephyr:code-sample:`interrupt-ulp`
+* :zephyr:code-sample:`light_sensor_polling`
+* :zephyr:code-sample:`lvgl-multi-display`
+* :zephyr:code-sample:`min-heap`
+* :zephyr:code-sample:`mspi-timing-scan`
+* :zephyr:code-sample:`net-pkt-filter`
+* :zephyr:code-sample:`nrf_ironside_update`
+* :zephyr:code-sample:`paj7620_gesture`
+* :zephyr:code-sample:`pressure_interrupt`
+* :zephyr:code-sample:`pressure_polling`
+* :zephyr:code-sample:`psi5`
+* :zephyr:code-sample:`renesas-elc`
+* :zephyr:code-sample:`renesas_comparator`
+* :zephyr:code-sample:`rz-openamp-linux-zephyr`
+* :zephyr:code-sample:`sent`
+* :zephyr:code-sample:`spis-wakeup`
+* :zephyr:code-sample:`stepper`
+* :zephyr:code-sample:`stream_drdy`
+* :zephyr:code-sample:`uart_async`
+* :zephyr:code-sample:`usb-cdc-acm-bridge`
+* :zephyr:code-sample:`uuid`
+* :zephyr:code-sample:`uvc`
+* :zephyr:code-sample:`veml6031`
+
+设备树
 **********
 
-*
-Migration
-guide:
-:ref:`migration_4.4_devicetree`
+* 迁移指南：:ref:`migration_4.4_devicetree`
 
-*
-New
-macros
-for
-reg
-property
-iteration
-（:github:`104223`）
+* 用于 reg 属性迭代的新宏（:github:`104223`）
 
-*
-:c:macro:`DT_FOREACH_REG`
-*
-:c:macro:`DT_FOREACH_REG_SEP`
-*
-:c:macro:`DT_FOREACH_REG_VARGS`
-*
-:c:macro:`DT_FOREACH_REG_SEP_VARGS`
-*
-Instance
-number
-based
-variants
-of
-each、
-e.g.
-:c:macro:`DT_INST_FOREACH_REG`
+  * :c:macro:`DT_FOREACH_REG`
+  * :c:macro:`DT_FOREACH_REG_SEP`
+  * :c:macro:`DT_FOREACH_REG_VARGS`
+  * :c:macro:`DT_FOREACH_REG_SEP_VARGS`
+  * 每个宏的实例编号变体，例如 :c:macro:`DT_INST_FOREACH_REG`
 
-*
-Definitions
-for
-``*
-map``
-related
-properties
-（:github:`87595`）
-provide
-first
-class
-support
-for
-nexus
-nodes
-and
-specifier
-mappings.
-See
-Devicetree
-Specification
-v0.4
-section
-2.5
-for
-more
-details
-on
-these
-properties.
+* ``*-map`` 相关属性的定义（:github:`87595`）
+  为 nexus 节点和说明符映射提供一级支持。
+  有关这些属性的更多细节，请参见设备树规范 v0.4 第 2.5 节。
 
-*
-New
-:dtcompatible:`zephyr、mapped
-partition`
-binding
-and
-associated
-APIs
-for
-memory
-mapped
-flash
-partitions.
-This
-is
-a
-successor
-to
-the
-existing
-:dtcompatible:`fixed
-partitions`
-binding
+* 新的 :dtcompatible:`zephyr,mapped-partition` 绑定及相关的
+  内存映射闪存分区 API。这是现有
+  :dtcompatible:`fixed-partitions` 绑定的继任者
 
-*
-Bindings
-are
-no
-longer
-allowed
-to
-specify
-any
-default
-values
-for
-the
-``status``、
-``#address
-cells``
-and
-``#size
-cells``
-properties.
+* 绑定不再允许为 ``status``、``#address-cells`` 和
+  ``#size-cells`` 属性指定任何默认值。
 
-*
-:c:macro:`DT_CHILD_BY_UNIT_ADDR_INT`
+* :c:macro:`DT_CHILD_BY_UNIT_ADDR_INT`
 
-*
-:c:macro:`DT_INST_CHILD_BY_UNIT_ADDR_INT`
+* :c:macro:`DT_INST_CHILD_BY_UNIT_ADDR_INT`
 
 Kconfig
 *******
 
-*
-Added
-new
-preprocessor
-function
-``dt_highest_controller_irq_number``
-（:github:`104819`）
+* 添加了新的预处理器函数 ``dt_highest_controller_irq_number``（:github:`104819`）
 
-Kernel
+内核
 ******
 
-*
-Dropped
-CONFIG_SCHED_DUMB
-and
-CONFIG_WAITQ_DUMB
-options
-which
-were
-deprecated
-in
-Zephyr
-4.2.0
+* 移除了在 Zephyr 4.2.0 中已弃用的 CONFIG_SCHED_DUMB 和
+  CONFIG_WAITQ_DUMB 选项
 
-*
-Added
-tiered
-heap
-hardening
-with
-:kconfig:option:`CONFIG_SYS_HEAP_HARDENING`
-（Basic、
-Moderate、
-Full、
-Extreme）
-providing
-progressive
-levels
-of
-runtime
-corruption
-detection
-for
-:c:func:`sys_heap_alloc`
-and
-:c:func:`sys_heap_free`、
-including
-double
-free
-detection、
-neighbor
-consistency
-checks、
-and
-optional
-per
-chunk
-canaries
-（:github:`104999`）.
+* 通过 :kconfig:option:`CONFIG_SYS_HEAP_HARDENING` 添加了分层堆强化
+  （Basic、Moderate、Full、Extreme），为 :c:func:`sys_heap_alloc` 和
+  :c:func:`sys_heap_free` 提供渐进级别的运行时损坏检测，
+  包括双重释放检测、邻居一致性检查，以及可选的
+  每块金丝雀（:github:`104999`）。
 
-*
-:ref:`cleanup_api`
+* :ref:`cleanup_api`
 
-*
-:c:macro:`SCOPE_VAR_DEFINE`
-*
-:c:macro:`SCOPE_GUARD_DEFINE`
-*
-:c:macro:`SCOPE_DEFER_DEFINE`
-*
-:c:macro:`scope_var`
-*
-:c:macro:`scope_var_init`
-*
-:c:macro:`scope_guard`
-*
-:c:macro:`scope_defer`
+  * :c:macro:`SCOPE_VAR_DEFINE`
+  * :c:macro:`SCOPE_GUARD_DEFINE`
+  * :c:macro:`SCOPE_DEFER_DEFINE`
+  * :c:macro:`scope_var`
+  * :c:macro:`scope_var_init`
+  * :c:macro:`scope_guard`
+  * :c:macro:`scope_defer`
 
-Libraries
-/
-Subsystems
+库 / 子系统
 **********************
 
-*
-LoRa
-LoRaWAN
+* LoRa/LoRaWAN
 
-*
-:c:func:`lora_airtime`
-*
-Added
-Channel
-Activity
-Detection
-（CAD）
-support
-to
-the
-LoRa
-API:
-:c:func:`lora_cad`、
-:c:func:`lora_cad_async`.
-CAD
-parameters
-and
-LBT
-mode
-are
-configured
-via
-:c:struct:`lora_modem_config`.
-*
-Added
-:c:func:`lora_recv_duty_cycle`
-for
-hardware
-driven
-wake
-on
-radio
-（RX
-duty
-cycling）.
+   * :c:func:`lora_airtime`
+   * 为 LoRa API 添加了信道活动检测（CAD）支持：
+     :c:func:`lora_cad`、:c:func:`lora_cad_async`。
+     CAD 参数和 LBT 模式通过
+     :c:struct:`lora_modem_config` 配置。
+   * 添加了 :c:func:`lora_recv_duty_cycle` 用于硬件驱动的
+     无线电唤醒（RX 占空比循环）。
 
-*
-Mbed
-TLS
+* Mbed TLS
 
-*
-Added
-:kconfig:option:`CONFIG_MBEDTLS_VERSION_C`
-to
-simplify
-the
-export
-of
-version
-information
-from
-Mbed
-TLS.
-If
-enabled、
-the
-:c:func:`mbedtls_version_get_number（）`
-function
-will
-be
-available.
+  * 添加了 :kconfig:option:`CONFIG_MBEDTLS_VERSION_C` 以简化
+    Mbed TLS 的版本信息导出。启用后，
+    :c:func:`mbedtls_version_get_number()` 函数将可用。
 
-*
-Mbed
-TLS
-has
-been
-upgraded
-to
-version
-4.1.0.
-From
-now
-on
-this
-repo
-will
-only
-include
-TLS
-and
-X.509、
-while
-crypto
-support
-was
-moved
-to
-TF
-PSA
-Crypto.
-A
-new
-west
-module
-has
-been
-introduced
-for
-the
-latter
-and
-it's
-based
-on
-upstream
-release
-1.1.0.
-Release
-notes
-for
-both
-projects
-can
-be
-found
-here:
+  * Mbed TLS 已升级到 4.1.0 版本。从现在开始，该仓库将仅包含 TLS
+    和 X.509，而加密支持已移至 TF-PSA-Crypto。
+    为后者引入了一个新的 west 模块，基于上游发布 1.1.0。
+    两个项目的发布说明可在以下地址找到：
 
-*
-https://github.com/Mbed
-TLS/mbedtls/releases/tag/mbedtls
-4.1.0
-*
-https://github.com/Mbed
-TLS/TF
-PSA
-Crypto/releases/tag/tf
-psa
-crypto
-1.1.0
+    * https://github.com/Mbed-TLS/mbedtls/releases/tag/mbedtls-4.1.0
+    * https://github.com/Mbed-TLS/TF-PSA-Crypto/releases/tag/tf-psa-crypto-1.1.0
 
-*
-Zbus
+* Zbus
 
-*
-Added
-async
-listener
-support.
-Async
-listeners
-execute
-in
-a
-workqueue
-context
-instead
-of
-the
-publisher's
-thread、
-enabling
-non
-blocking
-operations
-without
-requiring
-a
-dedicated
-subscriber
-thread.
-*
-Added
-:zephyr:code
-sample:`zbus
-async
-listeners`.
-*
-Added
-experimental
-proxy
-agent
-communication
-with
-IPC
-backend
-support
-for
-forwarding
-channel
-data
-across
-domains.
-*
-Added
-:zephyr:code
-sample:`zbus
-proxy
-agent
-ipc`.
-*
-Added
-the
-:c:func:`zbus_chan_from_name`
-function.
-Retrieve
-a
-zbus
-channel
-from
-its
-name
-string.
-*
-Added
-the
-:c:func:`zbus_async_listener_set_work_queue`
-function.
-Set
-the
-work
-queue
-for
-an
-async
-listener.
-*
-Added
-the
-:c:func:`zbus_chan_pub_stats_msg_age`
-function.
-Get
-the
-message
-age
-in
-milliseconds
-since
-the
-last
-publish.
-*
-Clarified
-observer
-priority
-documentation
-and
-fixed
-spelling
-and
-grammar.
-*
-Updated
-observer
-types
-image
-in
-documentation.
-*
-Filtered
-out
-tests
-that
-are
-not
-SMP
-aware.
+   * 添加了异步监听器支持。异步监听器在工作队列上下文中执行，
+     而非发布者的线程中，从而启用非阻塞操作，
+     而无需专用的订阅者线程。
+   * 添加了 :zephyr:code-sample:`zbus-async-listeners`。
+   * 添加了实验性代理代理通信，带有 IPC 后端支持，
+     用于跨域转发信道数据。
+   * 添加了 :zephyr:code-sample:`zbus-proxy-agent-ipc`。
+   * 添加了 :c:func:`zbus_chan_from_name` 函数。
+     从其名称字符串获取 zbus 信道。
+   * 添加了 :c:func:`zbus_async_listener_set_work_queue` 函数。
+     为异步监听器设置工作队列。
+   * 添加了 :c:func:`zbus_chan_pub_stats_msg_age` 函数。
+     获取自上次发布以来的消息年龄（毫秒）。
+   * 澄清了观察者优先级文档并修复了拼写和语法。
+   * 更新了文档中的观察者类型图像。
+   * 过滤掉了不支持 SMP 的测试。
 
-Other
-notable
-changes
+其他显著更改
 *********************
 
-*
-TF
-M
-was
-updated
-to
-version
-2.2.2
-（from
-2.2.0）.
-The
-release
-notes
-can
-be
-found
-at:
-
-*
-https://trustedfirmware
-m.readthedocs.io/en/tf
-mv2.2.2/releases/2.2.1.html
-*
-https://trustedfirmware
-m.readthedocs.io/en/tf
-mv2.2.2/releases/2.2.2.html
-
-*
-TF
-M
-NS
-interface
-headers
-are
-now
-automatically
-available
-to
-non
-secure
-applications
-via
-the
-``zephyr_interface``
-CMake
-library、
-removing
-the
-need
-to
-explicitly
-link
-against
-``tfm_api``.
-
-*
-NXP
-SoC
-DTSI
-files
-have
-been
-reorganized
-by
-moving
-them
-into
-family
-specific
-subdirectories
-under
-``dts/arm/nxp``.
-
-*
-:zephyr:board:`native_sim`
-based
-targets
-can
-now
-be
-:ref:`cross
-compiled
-<posix_arch_cross_compile>`
-（:github:`100182`）
-
 ..
-Any
-more
-descriptive
-subsystem
-or
-driver
-changes.
-Do
-you
-really
-want
-to
-write
-a
-paragraph
-or
-is
-it
-enough
-to
-link
-to
-the
-api
-/
-driver
-/
-Kconfig
-/
-board
-page
-above?
+  更多描述性的子系统或驱动更改。你真的想写一段话，
+  还是只需链接到上面的 api/驱动/Kconfig/开发板页面就足够了？
+
+* 添加了对 Armv8.1-M MPU 的 PXN（特权执行禁止）属性的支持。
+  使用此功能后，``__ramfunc`` 和 ``__ram_text_reloc`` 的 MPU 属性被修改，
+  使得如果以 ``CONFIG_ARM_MPU_PXN`` 和 ``CONFIG_USERSPACE`` 编译，
+  这些区域将设置 PXN 属性。
+  这导致从这些区域执行的代码行为发生变化，因为
+  如果这些区域设置了 pxn 属性，则无法在特权模式下执行。
+
+* 移除了对 Nucleo WBA52CG 开发板（``nucleo_wba52cg``）的支持，
+  因为它是 NRND（不推荐用于新设计）且自 2023 年 7 月的 1.1.0 版本起
+  不再受 STM32CubeWBA 支持。
+  建议改为迁移到 :zephyr:board:`nucleo_wba55cg`（``nucleo_wba55cg``）。
+
+* 将 Mbed TLS 更新到 3.6.5 版本（从 3.6.4）。该版本的发布说明可在以下链接找到：
+
+  * https://github.com/Mbed-TLS/mbedtls/releases/tag/mbedtls-3.6.5
+
+* 将 TF-M 更新到 2.2.2 版本（从 2.2.0）。发布说明可在以下地址找到：
+
+  * https://trustedfirmware-m.readthedocs.io/en/tf-mv2.2.2/releases/2.2.1.html
+  * https://trustedfirmware-m.readthedocs.io/en/tf-mv2.2.2/releases/2.2.2.html
+
+* TF-M NS 接口头文件现在通过 ``zephyr_interface`` CMake 库自动提供给
+  非安全应用程序，无需显式链接 ``tfm_api``。
+
+* NXP SoC DTSI 文件已通过将其移动到 ``dts/arm/nxp`` 下的
+  特定于系列的子目录进行重新组织。
+
+* 基于 :zephyr:board:`native_sim` 的目标现在可以 :ref:`交叉编译 <posix_arch_cross_compile>`
+  （:github:`100182`）

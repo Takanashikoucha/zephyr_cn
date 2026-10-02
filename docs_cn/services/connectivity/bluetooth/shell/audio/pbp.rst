@@ -1,12 +1,15 @@
-Bluetooth: Public Broadcast Profile Shell
+Bluetooth：公共广播配置文件 Shell
 #########################################
 
-此文档描述如何运行 Public Broadcast Profile 功能。PBP 没有关联的 service。其目的是启用更快、更高效地发现正在以常用 codec 配置传输 audio 的 Broadcast Sources。
+本文档描述如何运行公共广播配置文件功能。
+PBP 没有关联的服务。其目的是启用更快、更高效地发现
+正在以常用编解码器配置传输音频的广播源。
 
-Using the PBP Shell
+使用 PBP Shell
 *******************
 
-当 Bluetooth stack 已初始化（:code:`bt init`）时（Public Broadcast Profile 已就绪运行。要设置 Public Broadcast Announcement features（调用 :code:`pbp set_features`。
+当蓝牙协议栈已初始化（:code:`bt init`）后，公共广播配置文件即可运行。
+要设置公共广播公告功能，调用 :code:`pbp set_features`。
 
 .. code-block:: console
 

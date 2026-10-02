@@ -6,317 +6,45 @@ Instrumentation
 Overview
 ********
 
-Instrumentation
-subsystem
-提供
-Zephyr
-applications
-的
-compiler-managed
-runtime
-system
-instrumentation
-capabilities。其
-允许
-developers
-trace
-function
-calls、
-observe
-context
-switches（并
-用
-minimal
-manual
-instrumentation
-effort
-profile
-application
-performance。
+instrumentation（插桩）子系统为 Zephyr 应用提供由编译器管理的运行时系统插桩能力。它使开发者能够跟踪函数调用、观察上下文切换，并以最少的插桩工作量来分析应用性能。
 
-与
-提供
-RTOS-aware
-tracing
-和
-structured
-event
-APIs 的
-:ref:`tracing <tracing>`
-subsystem
-不同（instrumentation
-subsystem
-在
-更低
-level
-运作（利用
-compiler
-instrumentation
-hooks。此
-approach
-使
-捕获
-几乎
-任何
-function
-entry
-和
-exit
-events
-成为
-可能（而
-无需
-在
-code
-中
-手动
-tracing
-calls。
+与 :ref:`tracing <tracing>` 子系统（提供 RTOS 感知的结构化事件 API 跟踪）不同，instrumentation 子系统工作在更低的层次，它利用编译器插桩钩子来实现。这种方式使得无需在代码中手动编写跟踪调用，即可捕获几乎任何函数的进入和退出事件。
 
 .. admonition:: Tracing vs. Instrumentation
    :class: hint
 
-   **何时
-   用
-   Tracing**：需
-   RTOS-aware
-   event
-   tracing
-   （如
-   thread
-   switches、
-   semaphore
-   operations
-   等）且
-   想
-   minimize
-   overhead
-   时
-   选择
-   tracing
-   subsystem。
+   **何时使用 Tracing**：当你需要 RTOS 感知的事件跟踪（例如线程切换、信号量操作等）并希望最小化开销时，选择 tracing 子系统。
 
-   **何时
-   用
-   Instrumentation**：需
-   function-level
-   execution 的
-   detailed
-   view
-   以
-   更好
-   理解
-   code
-   flow（或
-   不
-   添加
-   manual
-   trace
-   points
-   而
-   识别
-   performance
-   bottlenecks
-   时
-   选择
-   instrumentation。
+   **何时使用 Instrumentation**：当你需要函数级别的详细执行视图以更好地理解代码流程，或在不添加手动跟踪点的情况下识别性能瓶颈时，选择 instrumentation。
 
-Instrumentation
-subsystem
-依赖
-compiler
-对
-automatic
-function
-instrumentation 的
-支持。启用
-后（compiler
-自动
-在
-application
-中
-每个
-function（显式
-标记
-``__no_instrumentation__`` 的
-除外）的
-entry
-和
-exit
-插入
-对
-special
-instrumentation
-handler
-functions 的
-calls。当前（仅
-支持
-带
-``-finstrument-functions``
-compiler
-flag 的
-GCC。
+instrumentation 子系统依赖编译器对自动函数插桩的支持。启用后，编译器会自动在应用中每个函数的入口和出口处插入对特殊插桩处理函数的调用（显式标记为 ``__no_instrumentation__`` 的函数除外）。目前仅支持使用 ``-finstrument-functions`` 编译器标志的 GCC。
 
-Subsystem
-在
-RAM
-initialization
-后
-自动
-初始化（并
-用
-trigger/stopper
-functions
-控制
-何时
-recording
-active。默认
-trigger
-和
-stopper
-functions
-均
-设为
-``main()``（可
-通过
-Kconfig
-配置）（意味
-instrumentation
-捕获
-从
-``main()``
-开始
-到
-其
-返回
-的
-整个
-execution。
+该子系统在 RAM 初始化完成后自动初始化，并使用触发器/停止器函数来控制记录何时处于激活状态。默认的触发器和停止器函数都设置为 ``main()``（可通过 Kconfig 配置），这意味着插桩会捕获从 ``main()`` 开始直到其返回的整个执行过程。
 
-Recorded
-data
-存储
-在
-RAM 中（且
-得益于
-暴露
-一组
-simple
-commands 的
-UART
-backend（可
-从
-host
-computer
-访问。
-:zephyr_file:`scripts/instrumentation/zaru.py`
-script
-允许
-通过
-high-level
-command-line
-interface
-执行
-这些
-commands（并
-使
-以
-适合
-further
-analysis（如
-用
-`Perfetto`_）的
-format
-获取
-data
-变
-容易。
+记录的数据存储在 RAM 中，可以通过一个 UART 后端从主机计算机访问，该后端暴露了一组简单的命令。:zephyr_file:`scripts/instrumentation/zaru.py` 脚本允许通过高层命令行界面执行这些命令，并轻松获取适合进一步分析（例如使用 `Perfetto`_）格式的数据。
 
 Operational Modes
 *****************
 
-Instrumentation
-subsystem
-支持
-可
-独立
-或
-一起
-启用
-的
-两种
-modes：
+instrumentation 子系统支持两种可独立或同时启用的模式：
 
 Callgraph Mode (Tracing)
 ========================
 
-Callgraph
-mode（
-:kconfig:option:`CONFIG_INSTRUMENTATION_MODE_CALLGRAPH`
-启用）中（
-subsystem
-在
-memory
-buffer
-中
-记录
-带
-timestamps
-和
-context
-information 的
-function
-entry
-和
-exit
-events。这
-使
-以下
-成为
-可能：
+在调用图模式（通过 :kconfig:option:`CONFIG_INSTRUMENTATION_MODE_CALLGRAPH` 启用）下，子系统将函数进入和退出事件连同时间戳和上下文信息一起记录到内存缓冲区中。这可以实现：
 
-- 重建
-  完整
-  function
-  call
-  graph
-- 观察
-  thread
-  context
-  switches
-- 分析
-  execution
-  flow
-  和
-  timing
-  relationships
+- 重建完整的函数调用图
+- 观察线程上下文切换
+- 分析执行流程和时序关系
 
-Trace
-buffer
-可
-以
-ring
-buffer
-mode（默认（覆盖
-旧
-entries）或
-fixed
-buffer
-mode（满
-时
-停止）运行。Buffer
-size
-可
-通过
-:kconfig:option:`CONFIG_INSTRUMENTATION_MODE_CALLGRAPH_TRACE_BUFFER_SIZE`
-配置。
+跟踪缓冲区可以工作于环形缓冲区模式（默认，覆盖旧条目）或固定缓冲区模式（写满后停止）。缓冲区大小可通过 :kconfig:option:`CONFIG_INSTRUMENTATION_MODE_CALLGRAPH_TRACE_BUFFER_SIZE` 配置。
 
 .. code-block:: console
-   :caption: Example of callgraph mode output. See :ref:`zaru_usage` for more details.
+   :caption: 调用图模式输出示例。更多详情请参见 :ref:`zaru_usage`。
 
    $ ./scripts/instrumentation/zaru.py trace
 
-      Thread Name      Thread ID  CPU  Mode     Timestamp          Function(s)
+     Thread Name      Thread ID  CPU  Mode     Timestamp          Function(s)
    ------------------------------------------------------------------------------------------------
                ... (truncated) ...
 
@@ -359,41 +87,11 @@ size
 Statistical Mode (Profiling)
 ============================
 
-Statistical
-mode（
-:kconfig:option:`CONFIG_INSTRUMENTATION_MODE_STATISTICAL`
-启用）中（
-subsystem
-累积
-trigger
-和
-stopper
-points 间
-执行的
-每个
-unique
-function 的
-timing
-statistics。这
-提供
-每
-function 的
-total
-execution
-time（并
-帮助
-识别
-performance
-bottlenecks。Subsystem
-跟踪
-最多
-:kconfig:option:`CONFIG_INSTRUMENTATION_MODE_STATISTICAL_MAX_NUM_FUNC`
-unique
-functions。
+在统计模式（通过 :kconfig:option:`CONFIG_INSTRUMENTATION_MODE_STATISTICAL` 启用）下，子系统会累积触发点和停止点之间执行的每个唯一函数的计时统计数据。这提供了每个函数的总执行时间，有助于识别性能瓶颈。子系统最多可跟踪 :kconfig:option:`CONFIG_INSTRUMENTATION_MODE_STATISTICAL_MAX_NUM_FUNC` 个唯一函数。
 
 .. code-block:: console
-   :caption: Example of statistical mode output (top 10 most expensive functions). See
-             :ref:`zaru_usage` for more details.
+   :caption: 统计模式输出示例（开销最大的前 10 个函数）。更多详情请参见
+             :ref:`zaru_usage`。
 
    $ ./scripts/instrumentation/zaru.py profile -n 10
 
@@ -411,54 +109,17 @@ functions。
 Configuration
 *************
 
-用
-以下
-启用
-instrumentation：
+通过以下方式启用 instrumentation：
 
 .. code-block:: cfg
 
    CONFIG_INSTRUMENTATION=y
-   CONFIG_INSTRUMENTATION_MODE_CALLGRAPH=y    # For tracing
-   CONFIG_INSTRUMENTATION_MODE_STATISTICAL=y  # For profiling
+   CONFIG_INSTRUMENTATION_MODE_CALLGRAPH=y    # 用于 tracing
+   CONFIG_INSTRUMENTATION_MODE_STATISTICAL=y  # 用于 profiling
 
-Instrumentation
-subsystem
-通过
-UART
-console
-与
-target
-device
-通信。确保
-``zephyr_console``
-chosen
-node
-指向
-期望
-UART
-controller。
+instrumentation 子系统通过 UART 控制台与目标设备通信。请确保 ``zephyr_console`` chosen 节点指向所需的 UART 控制器。
 
-:ref:`Retained memory <retention_api>`
-使
-trigger/stopper
-function
-addresses
-跨
-reboots
-持久。此
-feature
-可选（
-:kconfig:option:`CONFIG_INSTRUMENTATION_DYNAMIC_TRIGGER`
-Kconfig
-option
-启用。启用
-后（devicetree
-须
-指定
-retained
-memory
-region：
+:ref:`Retained memory <retention_api>` 可使触发器/停止器函数地址在重启后保持。该功能是可选的，通过 :kconfig:option:`CONFIG_INSTRUMENTATION_DYNAMIC_TRIGGER` Kconfig 选项启用。启用后，设备树必须指定一个保留内存区域：
 
 .. code-block:: devicetree
 
@@ -486,249 +147,55 @@ region：
        reg = <0x20000000 DT_SIZE_K(255)>;
    };
 
-完整
-configuration
-示例
-参见
-:zephyr:code-sample:`instrumentation`
-sample。
-Additional
-options
-包括
-buffer
-sizes、
-trigger
-functions 和
-function/file
-exclusion
-lists（参见
-以
-:kconfig:option-regex:`CONFIG_INSTRUMENTATION_*`
-开头的
-Kconfig
-options）。
+完整的配置示例请参见 :zephyr:code-sample:`instrumentation` 示例。其他选项包括缓冲区大小、触发函数以及函数/文件排除列表（参见以 :kconfig:option-regex:`CONFIG_INSTRUMENTATION_*` 开头的 Kconfig 选项）。
 
 .. _zaru_usage:
 
 ``zaru.py`` Usage
 *****************
 
-``zaru.py``
-command-line
-tool（位于
-:zephyr_file:`scripts/instrumentation/zaru.py`）
-提供
-控制
-instrumentation
-并
-通过
-UART
-从
-target
-提取
-data 的
-interface。
+``zaru.py`` 命令行工具（位于 :zephyr_file:`scripts/instrumentation/zaru.py`）提供了控制 instrumentation 并通过 UART 从目标设备提取数据的接口。
 
-Tool
-提供
-若干
-commands：
+该工具提供多个命令：
 
-- ``status``：检查
-  target
-  device
-  是否
-  支持
+- ``status``：检查目标设备是否支持
 
-  - callgraph
-    (tracing)
-    mode
-  - statistical
-    (profiling)
-    mode
-  - dynamic
-    trigger/stopper
-    functions
-    configuration
+  - callgraph（tracing）模式
+  - statistical（profiling）模式
+  - 动态触发器/停止器函数配置
 
-- ``trace``：捕获
-  并
-  显示
-  function
-  call
-  traces。
-- ``profile``：捕获
-  并
-  显示
-  function
-  profiling
-  data。
-- ``reboot``：重启
-  target
-  device。
+- ``trace``：捕获并显示函数调用跟踪。
+- ``profile``：捕获并显示函数性能分析数据。
+- ``reboot``：重启目标设备。
 
-可
-运行
-``zaru.py <command> --help``
-获取
-每个
-command 的
-help。
+你可以通过运行 ``zaru.py <command> --help`` 获取每个命令的帮助。
 
-默认（``zaru.py``
-尝试
-用
-``/dev/ttyACM0``
-连接
-target
-device。可
-用
-``--serial``
-option
-指定
-不同
-serial
-port：
+默认情况下，``zaru.py`` 尝试使用 ``/dev/ttyACM0`` 连接目标设备。你可以使用 ``--serial`` 选项指定其他串口：
 
 .. code-block:: console
 
    $ ./scripts/instrumentation/zaru.py --serial /dev/ttyACM1 status
 
-``--build-dir``
-option
-可
-用于
-指定
-Zephyr
-build
-directory（其
-用于
-定位
-ELF
-file
-以
-做
-symbol
-resolution。未
-提供
-时（``zaru.py``
-尝试
-自动
-查找。
+``--build-dir`` 选项可用于指定 Zephyr 构建目录，这对于定位用于符号解析的 ELF 文件是必需的。如果未提供，``zaru.py`` 将尝试自动查找。
 
-详细
-usage
-instructions
-参见
-:zephyr:code-sample:`instrumentation`
-sample
-documentation。
+详细的使用说明请参见 :zephyr:code-sample:`instrumentation` 示例文档。
 
 Limitations and Considerations
 ******************************
 
-Compiler
-support
-  Instrumentation
-  subsystem
-  需
-  带
-  ``-finstrument-functions``
-  支持的
-  GCC。其他
-  compilers
-  不
-  支持。
+Compiler support
+  instrumentation 子系统需要支持 ``-finstrument-functions`` 的 GCC。不支持其他编译器。
 
-Stack
-size
-requirements
-  Instrumentation
-  为
-  每个
-  function
-  call
-  添加
-  overhead（这
-  增加
-  stack
-  usage。很可能
-  需
-  增加
-  thread
-  stack
-  sizes
-  以
-  容纳
-  instrumentation
-  handlers
-  和
-  nested
-  function
-  calls
-  所需
-  的
-  额外
-  space。
+Stack size requirements
+  插桩会为每个函数调用增加开销，从而增加栈使用量。你可能需要增大线程栈大小，以适应插桩处理函数和嵌套函数调用所需的额外空间。
 
-Execution
-overhead
-  所有
-  function
-  calls
-  产生
-  instrumentation
-  overhead。Code
-  size
-  因
-  添加
-  的
-  instrumentation
-  calls
-  而
-  增加（且
-  performance
-  受
-  影响。
+Execution overhead
+  所有函数调用都会产生插桩开销。由于增加了插桩调用，代码体积会增大，性能也会受到影响。
 
-Initialization
-constraints
-  RAM
-  initialization
-  前
-  运行
-  的
-  code（如
-  early
-  boot
-  functions）不
-  被
-  捕获（因其
-  在
-  instrumentation
-  subsystem
-  初始化
-  前
-  运行。
+Initialization constraints
+  在 RAM 初始化之前运行的代码（例如早期启动函数）不会被捕获，因为它在 instrumentation 子系统初始化之前运行。
 
-为
-减少
-overhead（用
-trigger/stopper
-functions
-仅
-instrument
-感兴趣
-的
-code
-regions（并
-用
-:kconfig:option:`CONFIG_INSTRUMENTATION_EXCLUDE_FUNCTION_LIST`
-和
-:kconfig:option:`CONFIG_INSTRUMENTATION_EXCLUDE_FILE_LIST`
-排除
-performance-critical
-functions。
+为减少开销，请使用触发器/停止器函数仅对感兴趣的代码区域进行插桩，并通过 :kconfig:option:`CONFIG_INSTRUMENTATION_EXCLUDE_FUNCTION_LIST` 和 :kconfig:option:`CONFIG_INSTRUMENTATION_EXCLUDE_FILE_LIST` 排除性能关键函数。
 
 API Reference
 *************

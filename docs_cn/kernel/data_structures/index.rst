@@ -28,13 +28,5 @@ Zephyr 提供了一组通用的基础数据结构库，
 .. toctree::
    :maxdepth: 1
 
-   slist.rst
-   dlist.rst
-   mpsc_pbuf.rst
-   spsc_pbuf.rst
-   rbtree.rst
-   ring_buffers.rst
-   mpsc_lockfree.rst
-   spsc_lockfree.rst
-   min_heap.rst
-   ringq.rst
+   slist.rst dlist.rst mpsc_pbuf.rst spsc_pbuf.rst rbtree.rst
+   ring_buffers.rst mpsc_lockfree.rst spsc_lockfree.rst min_heap.rst ringq.rst

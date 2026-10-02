@@ -1,144 +1,17 @@
-.. _bluetooth
-mesh
-models
-cfg
-cli:
+.. _bluetooth_mesh_models_cfg_cli:
 
-Configuration
-Client
+Configuration Client
 ####################
 
-Configuration
-Client
-model
-是
-Bluetooth
-Mesh
-specification
-定义
-的
-foundation
-model。
-它
-提供
-配置
-mesh
-node
-大多数
-parameters
-的
-functionality
-包括
-encryption
-keys、
-model
-configuration
-和
-feature
-enabling。
+Configuration Client model 是由 Bluetooth Mesh 规范定义的基础 model。它提供配置 mesh 节点大多数参数的功能，包括加密密钥、model 配置和功能启用。
 
-The
-Configuration
-Client
-model
-communicates
-with
-a
-:ref:`bluetooth_mesh_models_cfg_srv`
-model
-using
-the
-device
-key
-of
-the
-target
-node.
-The
-Configuration
-Client
-model
-may
-communicate
-with
-servers
-on
-other
-nodes
-or
-self
-configure
-through
-the
-local
-Configuration
-Server
-model.
+Configuration Client model 使用目标节点的设备密钥与 :ref:`bluetooth_mesh_models_cfg_srv` model 通信。Configuration Client model 可与其他节点上的 server 通信，或通过本地 Configuration Server model 进行自配置。
 
-All
-configuration
-functions
-in
-the
-Configuration
-Client
-API
-have
-``net
-idx``
-and
-``addr``
-as
-their
-first
-parameters.
-These
-should
-be
-set
-to
-the
-network
-index
-and
-primary
-unicast
-address
-that
-the
-target
-node
-was
-provisioned
-with.
+Configuration Client API 中的所有配置函数都以 ``net_idx`` 和 ``addr`` 作为其第一个参数。这些参数应设置为目标节点配准时所使用的网络索引和主单播地址。
 
-The
-Configuration
-Client
-model
-is
-optional、
-and
-it
-must
-only
-be
-instantiated
-on
-the
-primary
-element
-if
-present
-in
-the
-Composition
-Data.
+Configuration Client model 是可选的，如果存在于 Composition Data 中，则只能在主 element 上实例化。
 
-API
-reference
+API reference
 *************
 
-..
-doxygengroup::
-bt_mesh_cfg_cli
+.. doxygengroup:: bt_mesh_cfg_cli

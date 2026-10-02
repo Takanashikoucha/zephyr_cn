@@ -644,7 +644,7 @@
 
 默认情况下，运行时统计使用默认内核
 定时器收集。对于某些架构、SoC 或板，
-有通过 timing 函数可用更高分辨率的定时器。
+有可通过计时函数使用的更高分辨率定时器。
 可以使用 :kconfig:option:`CONFIG_THREAD_RUNTIME_STATS_USE_TIMING_FUNCTIONS`
 启用这些定时器的使用。
 

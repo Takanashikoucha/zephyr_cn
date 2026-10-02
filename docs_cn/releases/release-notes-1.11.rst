@@ -10,7 +10,6 @@ Zephyr Kernel 1.11.0
 本次发布的主要增强包括：
 
 * x86、ARC 和 Arm 上的线程级内存保护、用户空间和内存域
-  domains
 * Xtensa 架构上的对称多处理（SMP）支持
 * 初始 Armv8-M 架构支持
 * Microsoft Windows 上的原生开发环境
@@ -20,7 +19,6 @@ Zephyr Kernel 1.11.0
 * 使用 MCUmgr 通过 BLE 进行固件空中（FOTA）更新
 * 用于受限设备的轻量级闪存存储层
 * 为许多已支持的平台添加额外的 SoC、平台和驱动支持
-  platforms.
 
 以下各节提供按组件分类的更改详细列表。
 
@@ -69,8 +67,7 @@ Boards
   * nucleo_f429zi
   * stm32f072_eval
   * stm32f072b_disco
-* 移除 Panther 开发板支持，包括 boards/x86/panther 和
-  boards/arc/panther_ss
+* 移除 Panther 开发板支持，包括 boards/x86/panther 和 boards/arc/panther_ss
 * 重构 dts.fixup 使通用 SoC 相关修复位于 arch/<*>/soc
   开发板 dts.fixup 仅用于开发板特定项目
 
@@ -123,7 +120,6 @@ Bluetooth
 
 * 控制器的多个修复
 * 借助专用分片池修复潜在的连接传输死锁问题
-  of a dedicated fragment pool
 * Mesh 支持的多个修复
 * 为 Mesh 添加测试自动化（用于 tests/bluetooth/tester）
 
@@ -182,7 +178,6 @@ Issue Related Items
 *******************
 
 自上次 1.10.0 标记发布以来解决了以下 GitHub issue：
-release:
 
 .. comment  列表派生自 GitHub Issue 查询：...
 

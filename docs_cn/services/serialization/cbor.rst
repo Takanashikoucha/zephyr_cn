@@ -3,90 +3,18 @@
 CBOR
 ####
 
-`CBOR
-<https://cbor.io/>`_
-（Concise
-Binary
-Object
-Representation）
-是
-一
-个
-data
-format
-它
-的
-design
-goals
-包括
-extremely
-small
-的
-code
-size
-的
-possibility、
-fairly
-small
-的
-message
-size、
-和
-extensibility
-而
-不
-需要
-version
-negotiation。
+`CBOR <https://cbor.io/>`_（Concise Binary Object Representation，简洁二进制对象表示）是一种数据格式，其设计目标包括极小的代码尺寸可能性、相当小的消息尺寸，以及无需版本协商即可扩展。
 
-Zephyr
-通过
-`zcbor`_
-library
-provide
-对
-CBOR
-的
-support
-它
-被
-pulled
-in
-作为
-一
-个
-West
-module。
+Zephyr 通过 `zcbor`_ 库提供对 CBOR 的支持，该库作为 West 模块引入。
 
-Configuration
+配置
 *************
 
-要
-enable
-CBOR
-support
-enable
-:kconfig:option:`CONFIG_ZCBOR`
-Kconfig
-option。
+要启用 CBOR 支持，请启用 :kconfig:option:`CONFIG_ZCBOR` Kconfig 选项。
 
-API
-Reference
+API 参考
 *************
 
-Zcbor
-library
-provide
-它
-自己
-的
-API
-documentation
-参考
-它
-获取
-更多
-information。
+zcbor 库提供自己的 API 文档，请参考它获取更多信息。
 
-.. _`zcbor`:
-   https://github.com/zephyrproject-rtos/zcbor
+.. _`zcbor`: https://github.com/zephyrproject-rtos/zcbor

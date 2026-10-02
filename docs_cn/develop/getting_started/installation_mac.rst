@@ -1,12 +1,12 @@
 .. _mac-setup-alts:
 
 macOS 替代设置说明
-##################
+####################################
 
 .. _mac-gatekeeper:
 
 关于 Gatekeeper 的重要说明
-**************************
+*******************************
 
 从 macOS 10.15 Catalina 开始，从 macOS Terminal 应用
 （或任何其他终端仿真器）启动的应用程序，
@@ -32,9 +32,9 @@ macOS 默认不允许你从 Terminal 执行它们。
 .. _macOS Gatekeeper: https://en.wikipedia.org/wiki/Gatekeeper_(macOS)
 
 MacPorts 用户的额外说明
-**********************
+***********************************
 
-虽然 MacPorts 未被本指南官方支持，
+虽然 虽然 MacPorts 未被本指南官方支持，
 但你可以使用 MacPorts 代替 Homebrew
 来获取 macOS 上的所有所需依赖项。
 另外注意，你可能需要安装 ``rust`` 和 ``cargo``，

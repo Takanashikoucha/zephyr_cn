@@ -1,15 +1,10 @@
 .. _bluetooth_volume:
 
-Bluetooth
-Audio
-Volume
-Control
+Bluetooth 音频音量控制
 ##############################
 
 
-API
-Reference
+API 参考
 *************
 
-.. doxygengroup::
-   bt_vcp
+.. doxygengroup:: bt_vcp

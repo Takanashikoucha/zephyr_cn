@@ -1,773 +1,233 @@
 .. _safety_requirements:
 
-Safety
-Requirements
+安全需求
 ###################
 
-Introduction
+引言
 ************
 
-The
-safety
-committee
-leads
-the
-effort
-to
-gather
-requirements
-that
-reflect
-the
-**actual**
-state
-of
-the
-implementation
-following
-the
-:ref:`route
-3s
-<general_safety_scope>`
-approach
-of
-the
-project's
-safety
-effort.
-The
-goal
-is
-**NOT**
-to
-create
-new
-requirements
-to
-request
-additional
-features
-for
-the
-project.
+安全委员会牵头收集反映实现 **实际** 状态的需求，
+遵循项目安全工作的 :ref:`route 3s <general_safety_scope>` 方法。
+其目标 **不是** 创建新需求来为项目提出额外功能。
 
-The
-requirements
-are
-gathered
-in
-the
-separate
-repository:
-`Requirement
-repository
+需求汇集于单独的仓库：
+`Requirement repository
 <https://github.com/zephyrproject-rtos/reqmgmt>`__
 
-The
-current
-rendered
-version
-of
-the
-Requirement
-Repository's
-content
-can
-be
-found
-at
-`Zephyr
-Project
-Requirements
-<https://zephyrproject-rtos.github.io/reqmgmt/>`__.
+需求仓库内容的当前渲染版本可在 `Zephyr Project Requirements <https://zephyrproject-rtos.github.io/reqmgmt/>`__ 中找到。
 
-Objectives
-of
-Requirements
-Management
-in
-the
-Zephyr
-Project
+Zephyr 项目中需求管理的目标
 ***********************************************************
-In
-the
-development
-and
-for
-documentation
-of
-implemented
-or
-expected
-functionality、
-effective
-Requirements
-Management
-is
-essential
-to
-ensure
-that
-the
-Zephyr
-RTOS
-meets
-its
-intended
-purpose、
-performs
-reliably
-under
-its
-constraints、
-and
-can
-be
-integrated
-easily
-both
-with
-hardware
-platforms、
-within
-an
-embedded
-software
-stack
-and
-software
-application
-layers.
+在功能开发及其文档编写过程中，有效的需求管理
+对于确保 Zephyr RTOS 满足其预期用途、在其约束条件下可靠运行，
+以及能够轻松地与硬件平台、嵌入式软件栈和软件应用层集成，至关重要。
 
-Requirements
-Management
-provides
-a
-structured
-approach
-to
-capturing、
-organizing、
-and
-tracing
-the
-needs
-and
-expectations
-of
-stakeholders
-through
-a
-system's
-lifecycle.
-The
-documentation
-provided
-in
-the
-`project's
-docs
+需求管理提供了一种结构化方法，用于在整个系统生命周期中捕获、组织并追溯
+利益相关方的需求和期望。
+`项目文档
 <https://docs.zephyrproject.org/latest/index.html>`__
-already
-emphasizes
-implementation
-details、
-from
-kernel
-functionality、
-to
-API
-configuration
-options
-and
-specific
-module
-behavior.
-While
-this
-is
-essential
-for
-developers、
-relying
-solely
-on
-low
-level
-documentation
-can
-lead
-to
-fragmented
-understanding、
-limited
-traceability、
-and
-difficulty
-scaling
-or
-certifying
-a
-final
-system
-using
-Zephyr
-RTOS.
+中提供的文档已经强调了实现细节，从内核功能、API 配置选项到具体模块行为。
+这对开发者固然必不可少，但仅依赖底层文档可能导致理解碎片化、可追溯性有限，
+并给使用 Zephyr RTOS 的最终系统的扩展或认证带来困难。
 
-To
-enhance
-this
-understanding
-and
-add
-value
-for
-non
-coding
-roles
-like
-product
-owners、
-software
-architects、
-quality
-management、
-safety
-management
-and
-assessors、
-the
-Zephyr
-Project
-needs
-to
-have
-higher
-level
-requirements
-that
-describe
-overall
-functionality、
-structure
-and
-implementation
-constraints.
+为增强这种理解，并为产品负责人、软件架构师、质量管理、安全管理及评估人员等非编码角色增加价值，
+Zephyr 项目需要拥有更高层次的需求，用于描述整体功能、结构和实现约束。
 
-Guideline
-to
-Requirements
-Management
+需求管理指南
 ************************************
 
-Below
-are
-the
-guidelines
-for
-the
-requirements
-repository
-and
-the
-expectations
-regarding
-suitable
-requirement
-structure
-and
-syntax
-when
-adding
-requirements
-to
-the
-repository.
+以下是需求仓库的指南，以及向仓库添加需求时对合适的需求结构与语法的期望。
 
-Note:
-these
-are
-the
-guidelines
-to
-create
-requirements
-in
-the
-requirements
-repository、
-which
-is
-not
-written
-using
-.rst
-like
-the
-docs
-published
-to
-the
-Zephyr
-users.
-To
-learn
-more
-about
-the
-guidelines
-to
-create
-the
-docs、
-please
-refer
-to
-:ref:`doc_guidelines`
+注意：这些是在需求仓库中创建需求的指南，该仓库不像发布给 Zephyr 用户的文档那样使用 .rst 编写。
+要了解创建文档的指南，请参见 :ref:`doc_guidelines`
 
-Scope
+范围
 =====
 
-The
-initial
-scope
-of
-the
-requirements
-covers
-the
-KERNEL
-functionalities.
-Requirements
-for
-non
-kernel
-functionality
-are
-also
-welcome、
-but
-currently
-not
-the
-focus.
+需求的初始范围涵盖 KERNEL 功能。
+也欢迎针对非内核功能的需求，但目前不是重点。
 
-Managing
-Zephyr
-Requirements:
-Structure、
-Tools、
-and
-Grammar
+Zephyr 需求管理：结构、工具与语法
 ===========================================================
 
-Levels
-of
-requirements
-in
-the
-repository
+仓库中的需求层级
 ----------------------------------------
-The
-safety
-working
-group
-has
-evaluated
-a
-suitable
-approach
-to
-enhance
-the
-existing
-low
-level
-descriptions
-with
-requirements.
-For
-this
-a
-two
-level
-structure
-of
-requirements
-has
-been
-created
-on
-top
-of
-the
-existing
-documentation
-structure、
-System
-Requirements
-at
-the
-highest
-level
-to
-define
-overarching
-capabilities
-of
-the
-Zephyr
-RTOS
-as
-a
-whole、
-and
-Software
-Requirements
-to
-break
-down
-the
-System
-Requirements'
-expectations
-into
-detailed
-specifications
-for
-individual
-components
-within
-the
-RTOS.
+安全工作组评估了一种合适的方法，用需求来增强现有的低层级描述。
+为此，在现有文档结构之上创建了一个两层的需求结构：最高层级为系统需求（System Requirements），
+用于定义 Zephyr RTOS 整体的统领性能力；
+软件需求（Software Requirements）则用于将系统需求的期望拆解为 RTOS 内部各个组件的详细规范。
 
-System
-Requirements
-System
-requirements
-describe
-the
-behavior
-of
-the
-Zephyr
-RTOS
-（=
-the
-system
-here）.
-They
-describe
-the
-functionality
-and
-constraints
-of
-the
-Zephyr
-RTOS
-from
-a
-high
-level
-perspective、
-without
-going
-into
-details
-of
-the
-functionality
-itself.
+系统需求
+  系统需求描述 Zephyr RTOS（即此处的"系统"）的行为。
+  它们从高层视角描述 Zephyr RTOS 的功能与约束，
+  而不深入功能本身的细节。
 
-Software
-Requirements
-Software
-requirements
-describe
-the
-behavior
-of
-individual
-components
-within
-the
-Zephyr
-RTOS.
-They
-break
-down
-the
-System
-Requirements'
-expectations
-into
-detailed
-specifications
-for
-individual
-components
-within
-the
-RTOS.
+  系统需求的目的是对 Zephyr RTOS 当前已实现的功能
+  获得一个概览。
 
-Tools
-=====
+  这些需求从功能、性能和接口层面阐述 RTOS 必须达成的目标——
+  例如确定性的任务调度、中断处理延迟、内存占用上限，
+  以及符合行业标准。
+  系统需求作为设计决策和验证准则的基础。
 
-The
-requirements
-are
-managed
-in
-the
-`reqmgmt
-<https://github.com/zephyrproject-rtos/reqmgmt>`__
-repository
-using
-`StrictDoc
-<https://github.com/strictdoc-project/strictdoc>`__.
+  创建这些需求时，如果撰写者已具备 Zephyr RTOS
+  项目的知识，和/或了解 RTOS 特有的需求与约束，将会很有帮助。
 
-StrictDoc
-is
-a
-lightweight
-tool
-for
-writing、
-organizing、
-and
-publishing
-structured
-requirements.
-It
-supports
-the
-following
-features:
+软件需求
+  在系统需求层之下，软件需求将系统级需求细化到更细粒度的层级。
+  这些组件级需求将系统级期望拆解为 RTOS 内部各个组件的详细规范。
+  这些组件包括调度器、内存管理器和进程间通信机制等模块。
 
--
-Authoring
-requirements
-in
-a
-simple、
-text
-based
-format
--
-Linking
-requirements
-to
-verification
-artifacts
--
-Generating
-browsable
-HTML
-documentation
--
-Running
-a
-local
-web
-interface
-for
-editing
-and
-review
+  软件需求描述每个组件的行为、接口和约束，确保它们共同达成系统级目标。
+  这些需求定义该功能应能执行的具体动作以及
+  该功能的行为，使得每条需求都能通过测试、分析和/或检查来验证。
 
-Grammar
-=======
+  该层级的需求在其定义上仍必须不含实现细节。实现定义应放在文档中；如果文档中尚未包含，
+  则需作为本次需求创建工作的另一项任务补充进去。
 
-The
-requirements
-in
-the
-repository
-are
-written
-in
-a
-specific
-grammar
-that
-is
-defined
-in
-the
-:file:`*.sgra`
-files.
-This
-grammar
-defines
-the
-formal
-structure
-of
-a
-requirement、
-including
-the
-required
-fields
-and
-their
-types.
+需求管理工具链
+---------------------------------
 
-The
-following
-is
-an
-example
-of
-a
-requirement
-in
-the
-repository:
+需求仓库：
+~~~~~~~~~~~~~~~~~~~~~~~
+`Requirement repository <https://github.com/zephyrproject-rtos/reqmgmt>`__
+代表了 Zephyr 对需求管理的结构化方法，目前聚焦于在其
+目标安全认证范围内创建需求，但不局限于该范围。
 
-..
-code
-block::
-text
+要使用本仓库，请遵循 GitHub 常规的分支与拉取请求工作流。
+本仓库的拉取请求目前由安全工作组（safety working group）成员审查，
+且至少需要以下角色之一批准才能合并：Zephyr Safety Manager、Zephyr Safety Chair 或 Zephyr Safety Architect。
 
-[REQUIREMENT]
-UID:
-ZEP
-SRS
-17
-1
-STATUS:
-Draft
-TYPE:
-Functional
-COMPONENT:
-File
-System
-TITLE:
-Create
-file
-STATEMENT:
->>>
-Zephyr
-shall
-provide
-file
-create
-capabilities
-for
-files
-on
-the
-file
-system.
-<<<
+需求工具：
+~~~~~~~~~~~~~~~~~~~~
+我们使用工具 `StrictDoc`_ 来编写、关联并渲染
+Zephyr 项目需求可浏览的 .html 版本。
 
-Characteristics
-of
-a
-good
-requirement
+StrictDoc 是一个轻量级的开源工具，用于编写、浏览和导出结构化需求。
+它支持层级化需求、可追溯性，以及用于轻松审查的 HTML 导出。
+
+需求使用 StrictDoc 自身的 markdown 语法编写。
+
+对于偏好所见即所得方式编辑的用户，StrictDoc 的 .html 导出也可以使用 StrictDoc 的本地服务器进行编辑。
+
+要搭建你的工具链，请跳转到 :ref:`getting_started_with_safety_requirements` 章节。
+
+
+需求验证：
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+新增和变更的需求（即针对需求仓库的 PR 中的内容）需要通过审查来验证。
+审查意见可以直接记录在 PR 审查过程中的评论中。
+需求审查必须同时考虑技术正确性，以及需求必须按某些准则创建的正式要求。
+
+有关检查清单和正式期望的更多细节，可参见 :ref:`safety_requirements_checklist`。
+在 Zephyr 项目的测试中，必须评估实现对需求所描述功能的遵循情况。
+
+需求语法元素术语表
+-----------------------------------------
+所有需求都必须使用已定义的语法：
+
+.. list-table:: StrictDoc 中捕获的需求结构
+   :widths: 20 80
+   :header-rows: 1
+
+   * - 属性
+     - 描述
+
+   * - UID
+     - 用于识别该需求的唯一 ID。由 StrictDoc 自动分配。
+
+   * - STATUS
+     - 描述需求的状态。Draft（草稿）、Approved（已批准）、Retired（已退役）
+
+   * - TYPE
+     - Functional（功能性的）、Non-functional（非功能性的）
+
+   * - COMPONENT
+     - 该需求应实现于其中的组件
+
+   * - REFERENCE
+     - 指向父和/或子需求的引用
+
+   * - TITLE
+     - 需求的描述性标题。使用简短精炼的需求标题。
+
+   * - STATEMENT
+     - 需求的描述
+
+   * - USER_STORY
+     - 描述该需求的用户故事（可选，仅当它能为需求陈述增加额外价值时才添加）
+
+
+需求 UID（唯一标识符）处理
+--------------------------------------------
+
+用于管理需求的工具 `StrictDoc`_ 负责
+处理与每条需求关联的唯一标识符（UID）。要管理
+UID，请遵循以下步骤：
+
+#. 不要为新增需求添加需求 UID 和 UID 字段
+#. 完成新增需求的工作后，执行：``strictDoc manage auto-uid .``
+#. 如有需要，在新分配 UID 的需求之间建立关联
+
+完成上述步骤后，需求即准备就绪，可以创建拉取请求。
+PR 中的 CI 会检查需求 UID 是否有效，或是否存在重复。
+如果 PR 中存在重复，需要通过 rebase 并重新执行
+上述步骤来解决。
+
+
+一致性
+-----------
+
+所有需求之间应保持语言与用词的一致性。
+（参见：`Syntax`_）
+
+同样建议参考 `Requirement repository
+<https://github.com/zephyrproject-rtos/reqmgmt>`__ 中已存在的既有需求，
+以及该仓库 PR 中正在进行的讨论，以体会在此语境下什么做法是合理的。
+
+
+拉取请求：需求仓库
+-----------------------------------
+
+* 遵循 Zephyr 项目的 :ref:`contribute_guidelines`。
+
+  * 只要它们适用于需求仓库。
+
+* 避免创建同时包含琐碎变更和非琐碎变更的大型提交。
+
+* 避免在同一提交中移动和修改需求。
+
+
+一条好需求的特征
 ----------------------------------------
 
-*
-Unambiguous
-*
-Verifiable
-（e.g.
-testable
-for
-functional
-requirements）
-*
-Clear
-（concise、
-brief、
-simple、
-precise）
-*
-Correct
-*
-Understandable
-*
-Feasible
-（realistic、
-possible）
-*
-Independent
-*
-Atomic
-*
-Necessary
-*
-Implementation
-free
-（abstract）
+* 无歧义
+* 可验证（例如功能需求可测试）
+* 清晰（简洁、简明、简单、精确）
+* 正确
+* 可理解
+* 可行（现实的、可能的）
+* 独立
+* 原子
+* 必要
+* 不含实现细节（抽象的）
 
-Characteristics
-of
-a
-set
-of
-requirements
+
+一组需求的特征
 ----------------------------------------
 
-*
-Complete
-*
-Consistent
-*
-Non
-redundant
+* 完整
+* 一致
+* 无冗余
 
-Syntax
+语法
 ======
 
-*
-Use
-of
-a
-recognized
-Requirements
-Syntax
-is
-recommended.
+* 建议使用被认可的需求语法。
 
-*
-`EARS
-<https://alistairmavin.com/ears/>`_
-is
-a
-good
-reference.
-Particularly
-if
-you
-are
-unfamiliar
-with
-requirements
-writing.
+  * `EARS <https://alistairmavin.com/ears/>`_ 是一个很好的参考，特别是当你对
+    需求编写不熟悉时。
 
-*
-Other
-formats
-are
-accepted
-as
-long
-as
-the
-characteristics
-of
-a
-requirement
-from
-above
-are
-met.
+  * 只要满足上述需求的各项特征，其他格式也可被接受。
 
-..
-_StrictDoc:
-https://strictdoc.readthedocs.io/en/stable/
+.. _StrictDoc: https://strictdoc.readthedocs.io/en/stable/

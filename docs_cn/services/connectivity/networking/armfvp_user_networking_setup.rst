@@ -1,34 +1,48 @@
 .. _networking_with_armfvp:
 
-Networking with Arm FVP User Mode
+使用 Arm FVP 用户模式进行网络
 #################################
 
 .. contents::
     :local:
     :depth: 2
 
-此页面旨在作为对使用 Arm FVP user mode networking 与 Zephyr 感兴趣者的起点。
+此页面旨在作为对使用 Arm FVP 用户模式网络与 Zephyr 感兴趣者的起点。
 
-Introduction
+介绍
 *************
 
-User mode networking 模拟内置 IP router 和 DHCP server（并在 guest 和 host 之间路由 TCP 和 UDP traffic。其用 host 的 user mode socket layer 与其他 hosts 通信。这允许使用大量 IP network services（无需 administrative privileges（或无需在安装 model 运行的 host 上安装单独 driver。
+用户模式网络模拟内置 IP 路由器和 DHCP 服务器，并在客户机和主机之间
+路由 TCP 和 UDP 流量。它使用主机的用户模式套接字
+层与其他主机通信。这允许使用
+大量 IP 网络服务，无需管理
+权限，也无需在运行模型的主机上安装单独的驱动程序。
 
-默认（Arm FVP 使用 ``172.20.51.0/24`` network（并在 ``172.20.51.254`` 运行 gateway。此 gateway 还作为 GOS 的 DHCP server（允许其自动分配 IP address ``172.20.51.1``。
+默认情况下，Arm FVP 使用 ``172.20.51.0/24`` 网络，并在
+``172.20.51.254`` 运行网关。此网关还作为 GOS 的 DHCP 服务器，
+允许其自动分配 IP 地址 ``172.20.51.1``。
 
-Arm FVP user mode networking 更多细节可从 https://developer.arm.com/documentation/100964/latest/Introduction-to-Fast-Models/User-mode-networking 获取。
+关于 Arm FVP 用户模式网络的更多细节可从以下链接获取：
+https://developer.arm.com/documentation/100964/latest/Introduction-to-Fast-Models/User-mode-networking
 
-Using Arm FVP User Mode Networking with Zephyr
+在 Zephyr 中使用 Arm FVP 用户模式网络
 ***********************************************
 
-Arm FVP user mode networking 可在任何 applications 中启用（且无需在 host system 上任何 configurations。此 feature 已在 DHCPv4 client sample 中启用。参见 :zephyr:code-sample:`dhcpv4-client` sample application。
+Arm FVP 用户模式网络可以在任何应用程序中启用，并且
+不需要在主机系统上进行任何配置。此功能已在
+DHCPv4 客户端示例中启用。
+参见 :zephyr:code-sample:`dhcpv4-client` 示例应用程序。
 
-Limitations
+限制
 *************
 
-* 可用 TCP 和 UDP over IP（但不可用 ICMP（ping）。
-* User mode networking 不支持将 host 上的 UDP ports 转发到 model。
-* 仅可在 private network 内使用 DHCP。
-* 仅可通过将 host 上的 TCP ports 映射到 model 建立 inward connections。这对用 NAT 提供 host connectivity 的所有 implementations 通用。
-* 需 privileged source ports 的 operations（例如默认配置下的 NFS）不工作。
-* 若 setup 失败（或 parameter 语法不正确（无 error 报告。
+* 可以使用 IP 上的 TCP 和 UDP，但不能使用 ICMP（ping）。
+* 用户模式网络不支持将主机上的 UDP 端口转发到
+  模型。
+* 只能在私有网络内使用 DHCP。
+* 只能通过将主机上的 TCP 端口映射到模型来
+  建立入站连接。这对所有使用 NAT 提供主机
+  连接的实现都是通用的。
+* 需要特权源端口的操作，例如默认配置下的 NFS，不起作用。
+* 如果设置失败或参数语法不正确，没有错误
+  报告。

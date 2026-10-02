@@ -1,95 +1,101 @@
 .. _lib_wifi_credentials:
 
-Wi-Fi credentials Library
+Wi-Fi 凭据库
 #########################
 
 .. contents::
    :local:
    :depth: 2
 
-Wi-Fi credentials library 提供加载和存储 Wi-Fi® network credentials 的手段。
+Wi-Fi 凭据库提供了加载和存储 Wi-Fi® 网络凭据的手段。
 
-Overview
+概述
 ********
 
-此 library 用 Zephyr 的 settings subsystem 或 Platform Security Architecture（PSA）Internal Trusted Storage（ITS）存储 credentials。其还在 RAM 中持有 SSIDs 列表（以 SSIDs 作为 keys 提供 dictionary-like access。
+该库使用 Zephyr 的 settings 子系统或平台安全架构（PSA）内部可信存储（ITS）来存储凭据。
+它还在 RAM 中维护一个 SSID 列表，以便使用 SSID 作为键提供类似字典的访问。
 
-Configuration
+配置
 *************
 
-要用 Wi-Fi credentials library（启用 :kconfig:option:`CONFIG_WIFI_CREDENTIALS` Kconfig option。
+要使用 Wi-Fi 凭据库，请启用 :kconfig:option:`CONFIG_WIFI_CREDENTIALS` Kconfig 选项。
 
-可用以下 options 选择 backend：
+可以使用以下选项选择后端：
 
-* :kconfig:option:`CONFIG_WIFI_CREDENTIALS_BACKEND_PSA` - 非 secure targets（含 TF-M partition（non-minimal TF-M profile type）的默认 option。
-* :kconfig:option:`CONFIG_WIFI_CREDENTIALS_BACKEND_SETTINGS` - secure targets 的默认 option。
+* :kconfig:option:`CONFIG_WIFI_CREDENTIALS_BACKEND_PSA` - 非安全目标（包含 TF-M 分区的目标，即非最小化 TF-M profile 类型）的默认选项。
+* :kconfig:option:`CONFIG_WIFI_CREDENTIALS_BACKEND_SETTINGS` - 安全目标的默认选项。
 
-要用 :kconfig:option:`CONFIG_WIFI_CREDENTIALS_MAX_ENTRIES` Kconfig option 配置最大 networks 数。
+要配置网络的最大数量，请使用 :kconfig:option:`CONFIG_WIFI_CREDENTIALS_MAX_ENTRIES` Kconfig 选项。
 
-IEEE 802.11 standard 未指定 SAE passwords 的最大长度。要更改默认值（用 :kconfig:option:`CONFIG_WIFI_CREDENTIALS_SAE_PASSWORD_LENGTH` Kconfig option。
+IEEE 802.11 标准未规定 SAE 密码的最大长度。
+要更改默认值，请使用 :kconfig:option:`CONFIG_WIFI_CREDENTIALS_SAE_PASSWORD_LENGTH` Kconfig 选项。
 
-Adding credentials
+添加凭据
 ******************
 
-可用 :c:func:`wifi_credentials_set_personal` 和 :c:func:`wifi_credentials_set_personal_struct` functions 添加 credentials。前者从给定 fields 构建内部使用的 struct（后者直接接受 struct。若两次添加相同 SSID 的 credentials（较旧的 entry 被覆盖。
+你可以使用 :c:func:`wifi_credentials_set_personal` 和 :c:func:`wifi_credentials_set_personal_struct` 函数添加凭据。
+前者从给定字段构建内部使用的结构体，后者直接接收结构体。
+如果你两次添加具有相同 SSID 的凭据，较旧的条目将被覆盖。
 
-Querying credentials
+查询凭据
 ********************
 
-用 SSID（可用 :c:func:`wifi_credentials_get_by_ssid_personal` 和 :c:func:`wifi_credentials_get_by_ssid_personal_struct` functions 查询 credentials。
+借助 SSID，你可以使用 :c:func:`wifi_credentials_get_by_ssid_personal` 和 :c:func:`wifi_credentials_get_by_ssid_personal_struct` 函数查询凭据。
 
-可用 :c:func:`wifi_credentials_for_each_ssid` function 遍历所有存储的 credentials。遍历时删除或覆盖 credentials 是允许的（因为这些 operations 不更改内部 indices。
+你可以使用 :c:func:`wifi_credentials_for_each_ssid` 函数遍历所有已存储的凭据。
+允许在遍历过程中删除或覆盖凭据，因为这些操作不会改变内部索引。
 
-Removing credentials
+删除凭据
 ********************
 
-可用 :c:func:`wifi_credentials_delete_by_ssid` function 移除 credentials。
+你可以使用 :c:func:`wifi_credentials_delete_by_ssid` 函数删除凭据。
 
-Shell commands
+Shell 命令
 **************
 
-``wifi cred`` 为 Wi-Fi command line 的扩展。其添加以下 subcommands 以与 Wi-Fi credentials library 交互：
+``wifi cred`` 是 Wi-Fi 命令行的扩展。
+它添加了以下子命令，用于与 Wi-Fi 凭据库交互：
 
-.. list-table:: Wi-Fi credentials shell subcommands
+.. list-table:: Wi-Fi 凭据 shell 子命令
    :header-rows: 1
 
-   * - Subcommands
-     - Description
+   * - 子命令
+     - 说明
    * - add
-     - | 用以下 parameters 向 credentials storage 添加 network：
+     - | 使用以下参数向凭据存储添加一个网络：
        | <-s --ssid \"<SSID>\">: SSID。
-       | [-c --channel]: 需扫描以连接的 Channel。0:any channel
-       | [-b, --band] 0: any band (2:2.4GHz, 5:5GHz, 6:6GHz)
-       | [-p, --passphrase]: Passphrase（仅对 secure SSIDs 有效）
-       | [-k, --key-mgmt]: Key management type。
+       | [-c --channel]: 连接时需要扫描的信道。0:任意信道
+       | [-b, --band] 0: 任意频段（2:2.4GHz, 5:5GHz, 6:6GHz）
+       | [-p, --passphrase]: 密码（仅对安全 SSID 有效）
+       | [-k, --key-mgmt]: 密钥管理类型。
        | 0:None, 1:WPA2-PSK, 2:WPA2-PSK-256, 3:SAE-HNP, 4:SAE-H2E, 5:SAE-AUTO, 6:WAPI,"
        | " 7:EAP-TLS, 8:WEP, 9: WPA-PSK, 10: WPA-Auto-Personal, 11: DPP
-       | [-w, --ieee-80211w]: MFP（optional: 须指定 security type）
-       | : 0:Disable, 1:Optional, 2:Required。
-       | [-m, --bssid]: AP 的 MAC address（BSSID）。
-       | [-t, --timeout]: 连接尝试须失败的时长。
-       | [-a, --identity]: Enterprise mode 的 Identity。
-       | [-K, --key-passwd]: Enterprise mode 的 Private key passwd。
-       | [-h, --help]: 打印 connect command 的 help。
+       | [-w, --ieee-80211w]: MFP（可选：需要指定安全类型）
+       | : 0:Disable, 1:Optional, 2:Required.
+       | [-m, --bssid]: AP 的 MAC 地址（BSSID）。
+       | [-t, --timeout]: 连接尝试需要失败之前的持续时间。
+       | [-a, --identity]: 企业模式的身份。
+       | [-K, --key-passwd]: 企业模式的私钥密码。
+       | [-h, --help]: 打印 connect 命令的帮助信息。
    * - delete <SSID>
-     - 从 credentials storage 移除 network。
+     - 从凭据存储中删除网络。
    * - list
-     - 列出 credential storage 中的 networks。
+     - 列出凭据存储中的网络。
    * - auto_connect
-     - 自动连接到任何存储的 network。
+     - 自动连接到任意已存储的网络。
 
-Limitations
+限制
 ***********
 
-Library 有以下 limitations：
+该库具有以下限制：
 
-* 虽然 IEEE 802.11 standard 允许（此 library 不支持 zero-length SSIDs。
-* Wi-Fi Protected Access（WPA）Enterprise credentials 仅部分支持。
-* 存储的 networks 数在 compile time 固定。
+* 尽管 IEEE 802.11 标准允许，但该库不支持零长度 SSID。
+* Wi-Fi 保护访问（WPA）企业凭据仅得到部分支持。
+* 存储的网络数量在编译时固定。
 
-API documentation
+API 文档
 *****************
 
-以下 section 提供 Zephyr 中可用 Wi-Fi credentials API 的概述和 reference：
+以下章节概述了 Zephyr 中可用的 Wi-Fi 凭据 API 并提供了参考：
 
 .. doxygengroup:: wifi_credentials

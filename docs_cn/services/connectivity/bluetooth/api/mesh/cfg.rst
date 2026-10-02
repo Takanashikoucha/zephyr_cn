@@ -3,12 +3,12 @@
 Runtime Configuration
 #####################
 
-Runtime configuration API 允许 applications 直接更改其 runtime configuration（而不通过 Configuration models。
+运行时配置 API 允许应用程序直接更改其运行时配置，而不通过 Configuration model。
 
-Bluetooth Mesh nodes 通常由带 :ref:`bluetooth_mesh_models_cfg_cli` model 的 central network configurator device 配置。每个 mesh node 实例化 :ref:`bluetooth_mesh_models_cfg_srv` model（Configuration Client 可与其中通信以更改 node configuration。在某些情况下（mesh node 无法依赖 Configuration Client 检测或确定 local constraints（如低 battery 或 topology 变化。对这些 scenarios（此 API 可用于本地更改 configuration。
+Bluetooth Mesh 节点通常由带有 :ref:`bluetooth_mesh_models_cfg_cli` model 的中央网络配置器设备配置。每个 mesh 节点实例化一个 :ref:`bluetooth_mesh_models_cfg_srv` model，Configuration Client 可与该 model 通信以更改节点配置。在某些情况下，mesh 节点无法依赖 Configuration Client 检测或确定本地约束，例如低电量或拓扑变化。对于这些场景，可使用该 API 在本地更改配置。
 
 .. note::
-   Node 被 provisioned 之前的 runtime configuration 更改不会存储在 :ref:`persistent storage <bluetooth_mesh_persistent_storage>` 中。
+   节点配准之前的运行时配置更改不会存储在 :ref:`persistent storage <bluetooth_mesh_persistent_storage>` 中。
 
 API reference
 *************

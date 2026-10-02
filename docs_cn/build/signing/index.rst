@@ -1,114 +1,21 @@
 .. _build-signing:
 
-签名
-二进制
+签名二进制文件
 ################
 
-二进制
-文件
-可以
-选择
-作为
-构建
-的
-一部分
-自动
-签名，
-使用
-CMake 代码，
-也
-可以
-使用
-``west sign`` 来
-签名
-二进制
-文件，
-本页
-描述
-前者，
-后者
-在
-:ref:`west-sign` 中
-记录。
+二进制文件可以选择在构建时自动使用 CMake 代码进行签名，也可以使用 ``west sign`` 来签名二进制文件。
+本页描述前者，后者记录在 :ref:`west-sign` 中。
 
 MCUboot / imgtool
 *****************
 
-Zephyr 构建
-系统
-对
-使用
-`imgtool`_ 程序
-（由
-其
-开发者
-提供）
-为
-`MCUboot`_ 引导
-加载器
-使用
-的
-二进制
-文件
-签名
-有
-特殊
-支持。
-你
-可以
-通过
-设置
-一些
-Kconfig 选项
-在
-一个
-步骤
-中
-构建
-并
-签名
-这种
-类型
-的
-应用
-二进制
-文件。
-如果
-你
-这样
-做，
-``west flash`` 将
-使用
-签名
-的
-二进制
-文件。
+Zephyr 构建系统对使用其开发者提供的 `imgtool`_ 程序为 `MCUboot`_ 引导加载器签名二进制文件有特殊支持。
+你可以通过设置一些 Kconfig 选项，在一个步骤中构建并签名这种类型的应用二进制文件。
+如果你这样做，``west flash`` 将使用签名后的二进制文件。
 
-这里
-是
-一个
-示例
-工作
-流程，
-构建
-并
-烧录
-MCUboot，
-以及
-:zephyr:code-sample:`hello_world` 应用
-用于
-MCUboot 的
-链
-加载。
-从
-你在
-:ref:`getting_started` 中
-创建
-的
-:file:`zephyrproject` 工作区
-运行
-这些
-命令：
+这里是一个示例工作流程，构建并烧录 MCUboot，以及供 MCUboot 链加载的
+:zephyr:code-sample:`hello_world` 应用。从你在 :ref:`getting_started` 中创建的
+:file:`zephyrproject` 工作区运行这些命令：
 
 .. code-block:: console
 
@@ -117,230 +24,33 @@ MCUboot 的
 
    west flash -d build-hello-signed
 
-上面
-命令
-的
-注意
-事项：
+上面命令的注意事项：
 
-- ``YOUR_BOARD`` 应该
-  更改
-  以
-  匹配
-  你的
-  开发板
-- 签名
-  密钥
-  值
-  是
-  MCUboot
-  为
-  开发
-  和
-  测试
-  提供
-  并
-  使用
-  的
-  不安全
-  默认
-  值
-- 你
-  可以
-  将
-  ``hello_world`` 应用
-  目录
-  更改
-  为
-  任何
-  可以
-  被
-  MCUboot
-  加载
-  的
-  其他
-  应用，
-  例如
-  :zephyr:code-sample:`smp-svr` 示例。
+- ``YOUR_BOARD`` 应更改为你的开发板
+- 签名密钥值是 MCUboot 为开发和测试提供并使用的不安全默认值
+- 你可以将 ``hello_world`` 应用目录更改为任何可被 MCUboot 加载的其他应用，
+  例如 :zephyr:code-sample:`smp-svr` 示例。
 
-关于
-这些
-和
-其他
-相关
-配置
-选项
-的
-更多
-信息，
-见：
+关于这些和其他相关配置选项的更多信息，见：
 
-- :kconfig:option:`SB_CONFIG_BOOTLOADER_MCUBOOT`：
-  为
-  被
-  MCUboot
-  加载
-  构建
-  应用
-- :kconfig:option:`SB_CONFIG_BOOT_SIGNATURE_KEY_FILE`：
-  签名
-  镜像
-  时
-  使用
-  的
-  密钥
-  文件，
-  或
-  逗号
-  分隔
-  的
-  密钥
-  文件
-  列表。
-  如果
-  你
-  有
-  自己
-  的
-  密钥，
-  适当
-  更改
-  这；
-  使用
-  绝对
-  路径
-  或
-  ``${APP_DIR}`` 这样
-  的
-  CMake 变量
-  见
-  :ref:`build-signing-keys`。
-  给出
-  列表
-  时，
-  MCUboot
-  嵌入
-  每个
-  密钥
-  的
-  公钥
-  一半
-  并
-  接受
-  用
-  其中
-  任何
-  一个
-  签名
-  的
-  镜像；
-  第一个
-  条目
-  也
-  签名
-  应用，
-  第一个
-  之后
-  的
-  每个
-  条目
-  必须
-  是
-  相同
-  签名
-  类型
-  的
-  仅
-  公钥
-  PEM
-  供
+- :kconfig:option:`SB_CONFIG_BOOTLOADER_MCUBOOT`：构建供 MCUboot 加载的应用
+- :kconfig:option:`SB_CONFIG_BOOT_SIGNATURE_KEY_FILE`：签名镜像时使用的密钥文件，或逗号分隔的
+  密钥文件列表。如果你有自己密钥，请相应更改；使用绝对路径或 ``${APP_DIR}`` 这样的 CMake
+  变量参见 :ref:`build-signing-keys`。
+  给出列表时，MCUboot 嵌入每个密钥的公钥部分，并接受用其中任何一个签名的镜像；
+  第一个条目也用于签名应用，第一个之后的每个条目必须是相同签名类型的仅公钥 PEM 供
   ``imgtool`` 使用。
-- :kconfig:option:`CONFIG_MCUBOOT_EXTRA_IMGTOOL_ARGS`：
-  ``imgtool`` 的
-  可选
-  附加
-  命令行
-  参数
-- :kconfig:option:`CONFIG_MCUBOOT_GENERATE_CONFIRMED_IMAGE`：
-  也
-  生成
-  一个
-  已
-  确认
-  的
-  镜像，
-  它
-  可能
-  比
-  可
-  OTA 的
-  默认
-  镜像
-  更
-  适合
-  在
-  生产
-  环境
-  中
-  烧录
-- 在
-  Windows 上，
-  如果
-  你
-  遇到
-  "Access denied" 问题，
-  推荐
-  的
-  修复
-  是
-  运行
-  ``pip3 install imgtool``，
-  然后
-  用
-  干净
-  的
-  构建
-  目录
-  重试。
+- :kconfig:option:`CONFIG_MCUBOOT_EXTRA_IMGTOOL_ARGS`：``imgtool`` 的可选附加命令行参数
+- :kconfig:option:`CONFIG_MCUBOOT_GENERATE_CONFIRMED_IMAGE`：也生成一个已确认镜像，
+  它可能比可 OTA 的默认镜像更适合在生产环境中烧录
+- 在 Windows 上，如果你遇到 "Access denied" 问题，推荐的修复方法是运行
+  ``pip3 install imgtool``，然后用干净的构建目录重试。
 
-关于
-多
-密钥
-引导
-加载器
-在
-QEMU 下
-端到
-端
-验证
-的
-完整
-示例，
-见
+关于在 QEMU 下端到端验证多密钥引导加载器的完整示例，见
 :zephyr_file:`tests/boot/mcuboot_multiple_keys` 测试。
 
-如果
-你的
-``west flash`` :ref:`runner <west-runner>` 使用
-imgtool 支持
-的
-镜像
-格式，
-你
-运行
-``west flash -d build-hello-signed`` 时
-应该
-在
-设备
-的
-串口
-控制台
-上
-看到
-类似
-以下
-的
-内容：
+如果你的 ``west flash`` :ref:`runner <west-runner>` 使用 imgtool 支持的镜像格式，
+运行 ``west flash -d build-hello-signed`` 时，你应该在设备的串口控制台上看到类似以下内容：
 
 .. code-block:: none
 
@@ -354,444 +64,85 @@ imgtool 支持
    *** Booting Zephyr OS build zephyr-v2.3.0-2310-gcebac69c8ae1  ***
    Hello World! nrf52840dk_nrf52840
 
-``west flash``
-是否
-支持
-这个
-功能
-取决于
-你的
-runner。
-``nrfjprog`` 和
-``pyocd`` runner
-与
-上面
-的
-流程
-配合
-工作。
-如果
-你的
-runner 不
-支持
-这个
-流程
-且
-你
-希望
-它
-支持，
-请
-发送
-补丁
-或
-提交
-issue
-以
-添加
-支持。
+``west flash`` 是否支持此功能取决于你的 runner。``nrfjprog`` 和
+``pyocd`` runner 与上面的流程配合工作。如果你的 runner 不支持此流程且你希望它支持，
+请发送补丁或提交 issue 以添加支持。
 
 .. _build-signing-keys:
 
-签名
-密钥
-文件
+签名密钥文件
 *****************
 
-使用
-sysbuild
-构建
-时，
-:kconfig:option:`SB_CONFIG_BOOT_SIGNATURE_KEY_FILE`
-选择
-用于
-签名
-镜像
-的
-密钥。
-其
-值
-传播
-到
-两个
-镜像：
+使用 sysbuild 构建时，:kconfig:option:`SB_CONFIG_BOOT_SIGNATURE_KEY_FILE` 选择用于签名镜像的密钥。
+其值传播到两个镜像：
 
-- 应用
-  镜像，
-  作为
-  :kconfig:option:`CONFIG_MCUBOOT_SIGNATURE_KEY_FILE`，
-  ``imgtool``
-  使用
-  它
-  签名
-  应用；
-  且
-- MCUboot 镜像，
-  作为
-  ``CONFIG_BOOT_SIGNATURE_KEY_FILE``，
-  其
-  公钥
-  部分
-  被
-  构建
-  到
-  引导
-  加载器
-  中
-  以
-  验证
-  该
-  签名。
+- 应用镜像，作为 :kconfig:option:`CONFIG_MCUBOOT_SIGNATURE_KEY_FILE`，``imgtool`` 用它签名应用；
+  以及
+- MCUboot 镜像，作为 ``CONFIG_BOOT_SIGNATURE_KEY_FILE``，其公钥部分被构建到引导加载器中
+  以验证该签名。
 
 .. warning::
 
-   默认
-   值
-   指向
-   与
-   MCUboot
-   捆绑
-   的
-   不安全
-   开发
-   密钥
-   之一
-   （例如
-   :file:`root-ec-p256.pem`）。
-   这些
-   密钥
-   是
-   公开
-   的
-   —
-   它们
-   随
-   每个
-   Zephyr 和
-   MCUboot
-   checkout
-   一起
-   分发
-   —
-   因此
-   只
-   适合
-   开发
-   和
-   测试。
-   对于
-   其他
-   任何
-   用途，
-   生成
-   你
-   自己
-   的
-   密钥
-   并
-   将
-   私钥
-   保持
-   在
-   你
-   不
-   控制
-   的
-   任何
-   仓库
-   或
-   构建
-   目录
-   之外。
+   默认值指向与 MCUboot 捆绑的不安全开发密钥之一（例如 :file:`root-ec-p256.pem`）。
+   这些密钥是公开的——它们随每个 Zephyr 和 MCUboot checkout 一起分发——因此只适合开发和测试。
+   对于其他任何用途，请生成你自己的密钥，并将私钥保持在任何你不控制的仓库或构建目录之外。
 
-sysbuild
-如何
-解析
-密钥
-文件
-路径
+sysbuild 如何解析密钥文件路径
 =======================================
 
-:kconfig:option:`SB_CONFIG_BOOT_SIGNATURE_KEY_FILE` 的
-值
-用
-CMake 的
-``string(CONFIGURE)`` 命令
-处理，
-因此
-其中
-包含
-的
-任何
-``${VARIABLE}`` 引用
-在
-使用
-路径
-前
-作为
-CMake 变量
-展开。
-展开
-后，
-绝对
-路径
-按
-原样
-使用；
-相对
-路径
-由
-每个
-镜像
-独立
-解析：
+:kconfig:option:`SB_CONFIG_BOOT_SIGNATURE_KEY_FILE` 的值使用 CMake 的
+``string(CONFIGURE)`` 命令处理，因此其中包含的任何 ``${VARIABLE}`` 引用在使用路径前
+都会作为 CMake 变量展开。展开后，绝对路径按原样使用；相对路径由每个镜像独立解析：
 
 .. list-table::
    :header-rows: 1
    :widths: 35 65
 
    * - 镜像
-     - 相对
-     路径
-     的
-     搜索
-     顺序
-   * - 应用
-     （:kconfig:option:`CONFIG_MCUBOOT_SIGNATURE_KEY_FILE`）
-     - ``APPLICATION_CONFIG_DIR``，
-       然后
-       west
-       工作区
-       topdir
-       （``WEST_TOPDIR``）
-   * - MCUboot
-     （``CONFIG_BOOT_SIGNATURE_KEY_FILE``）
-     - ``APPLICATION_CONFIG_DIR``，
-       然后
-       MCUboot
-       模块
-       目录
+     - 相对路径的搜索顺序
+   * - 应用（:kconfig:option:`CONFIG_MCUBOOT_SIGNATURE_KEY_FILE`）
+     - ``APPLICATION_CONFIG_DIR``，然后 west 工作区 topdir（``WEST_TOPDIR``）
+   * - MCUboot（``CONFIG_BOOT_SIGNATURE_KEY_FILE``）
+     - ``APPLICATION_CONFIG_DIR``，然后 MCUboot 模块目录
 
 .. warning::
 
-   每个
-   镜像
-   相对
-   于
-   不同
-   的
-   基础
-   解析
-   相对
-   路径，
-   因此
-   裸
-   相对
-   路径
-   对
-   每个
-   镜像
-   指向
-   不同
-   的
-   文件
-   并
-   通常
-   构建
-   失败。
-   不要
-   使用
-   一个：
-   给出
-   绝对
-   路径，
-   或
-   用
-   CMake 变量
-   锚定
-   路径。
+   每个镜像相对于不同的基础解析相对路径，因此裸相对路径对每个镜像指向不同的文件，
+   通常导致构建失败。不要使用裸相对路径：请给出绝对路径，或用 CMake 变量锚定路径。
 
-``${APP_DIR}``（主
-应用
-的
-源
-目录）
-是
-推荐
-的
-锚点：
-它
-将
-密钥
-保持
-在
-你
-自己
-的
-应用
-内，
-且
-两个
-镜像
-都
-将其
-解析
-为
-相同
-的
-文件。
-值
-展开
-时
-可用
-的
-任何
-CMake 变量
-都
-可以
-使用：
+``${APP_DIR}``（主应用的源目录）是推荐的锚点：它将密钥保持在你自己的应用内，
+且两个镜像都将其解析为相同的文件。值展开时可用的任何 CMake 变量都可以使用：
 
 .. code-block:: cfg
 
    # sysbuild.conf
    SB_CONFIG_BOOT_SIGNATURE_KEY_FILE="${APP_DIR}/keys/my-signing-key.pem"
 
-相同
-的
-解析
-规则
-适用
-于
-可选
-的
-加密
-密钥
-文件
-（:kconfig:option:`CONFIG_MCUBOOT_ENCRYPTION_KEY_FILE`）。
+相同的解析规则也适用于可选的加密密钥文件（:kconfig:option:`CONFIG_MCUBOOT_ENCRYPTION_KEY_FILE`）。
 
 .. _west-extending-signing:
 
-外部
-扩展
-签名
+从外部扩展签名
 ****************************
 
-运行
-``west flash`` 时
-使用
-的
-签名
-脚本
-可以
-被
-扩展
-或
-替换
-以
-更改
-功能
-或
-引入
-不同
-的
-签名
-机制。
-默认
-启用
-MCUboot
-时，
-签名
-由
-Zephyr 中
-的
-:file:`cmake/mcuboot.cmake` 文件
-设置，
-它
-添加
-额外
-的
-构建
-后
-命令
-以
-生成
-签名
-镜像。
-用于
-签名
-的
-文件
-可以
-从
-sysbuild
-作用域
-（如果
-使用）
-或
-从
-zephyr/zephyr
-模块
-作用域
-替换，
-其
-优先级
-为：
+运行 ``west flash`` 时使用的签名脚本可以被扩展或替换，以更改功能或引入不同的签名机制。
+默认启用 MCUboot 时，签名由 Zephyr 中的 :file:`cmake/mcuboot.cmake` 文件设置，
+它添加额外的构建后命令以生成签名镜像。用于签名的文件可以从 sysbuild 作用域（如果使用）
+或从 zephyr/zephyr 模块作用域替换，其优先级为：
 
 * Sysbuild
-* Zephyr
-  属性
-* 默认
-  MCUboot
-  脚本
-  （如果
-  启用）
+* Zephyr 属性
+* 默认 MCUboot 脚本（如果启用）
 
-从
-sysbuild，
-``-D<target>_SIGNING_SCRIPT``
-可以
-用于
-为
-特定
-镜像
-设置
-签名
-脚本，
-或
-``-DSIGNING_SCRIPT``
-可以
-用于
-为
-所有
-镜像
-设置
-签名
-脚本，
-例如：
+从 sysbuild 出发，``-D<target>_SIGNING_SCRIPT`` 可用于为特定镜像设置签名脚本，
+或 ``-DSIGNING_SCRIPT`` 可用于为所有镜像设置签名脚本，例如：
 
 .. code-block:: console
 
    west build -b <board> <application> -DSIGNING_SCRIPT=<file>
 
-zephyr
-属性
-方法
-通过
-调整
-``zephyr_property_target`` 上
-的
-``SIGNING_SCRIPT`` 属性
-实现，
-理想
-情况
-下
-由
-模块
-通过
-使用
-以下
-方式
-完成：
+Zephyr 属性方法通过调整 ``zephyr_property_target`` 上的 ``SIGNING_SCRIPT`` 属性实现，
+理想情况下由模块通过以下方式完成：
 
 .. code-block:: cmake
 
@@ -799,44 +150,9 @@ zephyr
      set_target_properties(zephyr_property_target PROPERTIES SIGNING_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/custom_signing.cmake)
    endif()
 
-当
-项目
-在
-启用
-MCUboot
-签名
-支持
-的
-情况
-下
-构建
-时，
-这
-将
-包含
-自定义
-签名
-CMake 文件
-而非
-默认
-的
-Zephyr 文件。
-基础
-Zephyr MCUboot
-签名
-文件
-可以
-作为
-创建
-新
-签名
-系统
-或
-扩展
-默认
-行为
-的
-参考。
+当项目在启用 MCUboot 签名支持的情况下构建时，这将包含自定义签名 CMake 文件
+而非默认的 Zephyr 文件。基础 Zephyr MCUboot 签名文件可以作为创建新签名系统
+或扩展默认行为的参考。
 
 .. _MCUboot:
    https://mcuboot.com/

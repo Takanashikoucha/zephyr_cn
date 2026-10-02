@@ -1,35 +1,12 @@
 .. _security_services:
 
-Security
+安全
 ########
 
-这
-个
-section
-cover
-用于
-protect
-system
-和
-它
-的
-data
-的
-services：
-cryptographic
-primitives、
-authentication
-和
-identity、
-trusted
-execution、
-和
-token
-handling。
+本节介绍用于保护系统及其数据的服务：加密原语、认证与身份、可信执行以及令牌处理。
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    crypto/index
    authentication/index.rst

@@ -3,24 +3,19 @@
 USB
 ###
 
-**Legacy
-USB
-device
-support**
+**传统 USB 设备支持**
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    device/usb_device.rst
    device/api/index.rst
 
-**USB
-support**
+
+**USB 支持**
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    guidelines.rst
    device_next/usb_device.rst
@@ -30,26 +25,18 @@ support**
    host/api/index.rst
    host/usbip.rst
 
-**USB
-Power
-Delivery
-support**
+
+**USB 电源传输（USB Power Delivery）支持**
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    pd/ucds.rst
 
-**Common
-sections
-related
-to
-USB
-support**
+
 
 .. toctree::
-   :maxdepth:
-   1
+   :maxdepth: 1
 
    api/hid.rst
+

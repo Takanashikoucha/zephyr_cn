@@ -79,7 +79,7 @@ IEC 60730 B 类安全测试子系统
        - name: safety_iec60730b
          url: https://github.com/nxp-mcuxpresso/mcux-safety-iec60730b
          revision: main_github
-         path: modules/safety/iec60730b # 根据需要调整路径
+         path: modules/safety/iec60730b # adjust the path as needed
 
 然后拉取：
 

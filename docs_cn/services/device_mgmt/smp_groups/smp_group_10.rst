@@ -1,151 +1,145 @@
 .. _mcumgr_smp_group_10:
 
-Enumeration
-Management
-Group
+Enumeration Management Group
 #############################
 
-Enumeration
-management
-group
-define
-以下
-commands：
+枚举管理组定义以下命令：
 
 .. table::
-    :align:
-    center
+   :align: center
 
-    +----------------+-----------------------------+
-    |
-    ``Command
-    ID``
-    |
-    Command
-    description
-    |
-    +================+=============================+
-    |
-    ``0``
-    |
-    Count
-    of
-    supported
-    groups
-    |
-    +----------------+-----------------------------+
-    |
-    ``1``
-    |
-    List
-    supported
-    groups
-    |
-    +----------------+-----------------------------+
-    |
-    ``2``
-    |
-    Fetch
-    single
-    group
-    ID
-    |
-    +----------------+-----------------------------+
-    |
-    ``3``
-    |
-    Details
-    on
-    supported
-    groups
-    |
-    +----------------+-----------------------------+
+   +----------------+-----------------------------+
+   | ``Command ID`` | 命令描述                     |
+   +================+=============================+
+   | ``0``          | 支持的组数量                 |
+   +----------------+-----------------------------+
+   | ``1``          | 列出支持的组                 |
+   +----------------+-----------------------------+
+   | ``2``          | 获取单个组 ID               |
+   +----------------+-----------------------------+
+   | ``3``          | 支持的组详情                 |
+   +----------------+-----------------------------+
 
-Count
-of
-supported
-groups
-command
+支持的组数量命令
 *********************************
 
-Count
-of
-supported
-groups
-returns
-device
-supported
-的
-MCUmgr
-command
-groups
-的
-total
-数量。
+支持的组数量返回设备支持的 MCUmgr 命令组的总数。
 
-Count
-of
-supported
-groups
-request
+支持的组数量请求
 =================================
 
-Read
-setting
-request
-header
-fields：
+读取设置请求头字段：
 
 .. table::
-    :align:
-    center
+   :align: center
 
-    +--------+--------------+----------------+
-    |
-    ``OP``
-    |
-    ``Group
-    ID``
-    |
-    ``Command
-    ID``
-    |
-    +========+==============+================+
-    |
-    ``0``
-    |
-    ``10``
-    |
-    ``0``
-    |
-    +--------+--------------+----------------+
+   +--------+--------------+----------------+
+   | ``OP`` | ``Group ID`` | ``Command ID`` |
+   +========+==============+================+
+   | ``0``  | ``10``       | ``0``          |
+   +--------+--------------+----------------+
 
+该命令发送一个空 CBOR 映射作为数据。
 
-.. note::
+支持的组数量响应
+=================================
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
-    | ``OP`` | ``Group ID`` | ``Command ID`` |
-    +========+==============+================+
-    | ``0``  | ``10``       | ``1``          |
-    +--------+--------------+----------------+
+支持的组数量响应头字段：
 
-The command sends an empty CBOR map as data.
+.. table::
+   :align: center
 
-List supported groups response
+   +--------+--------------+----------------+
+   | ``OP`` | ``Group ID`` | ``Command ID`` |
+   +========+==============+================+
+   | ``1``  | ``10``       | ``0``          |
+   +--------+--------------+----------------+
+
+成功响应的 CBOR 数据：
+
+.. code-block:: none
+
+    {
+        (str)"count"        : (uint)
+    }
+
+出错时 CBOR 数据的形式为：
+
+.. tabs::
+
+   .. group-tab:: SMP 版本 2
+
+     .. code-block:: none
+
+         {
+             (str)"err" : {
+                 (str)"group"    : (uint)
+                 (str)"rc"       : (uint)
+             }
+         }
+
+   .. group-tab:: SMP 版本 1
+
+     .. code-block:: none
+
+         {
+             (str)"rc"       : (int)
+         }
+
+其中：
+
+.. table::
+   :align: center
+
+   +------------------+-------------------------------------------------------------------------+
+   | "count"          | 包含设备上支持的 MCUmgr 组的总数。                                       |
+   +------------------+-------------------------------------------------------------------------+
+   | "err" -> "group" | :c:enum:`mcumgr_group_t` 基于组的错误码所属的组。仅在                   |
+   |                  | 使用 SMP 版本 2 时返回错误才出现。                                       |
+   +------------------+-------------------------------------------------------------------------+
+   | "err" -> "rc"    | 包含基于组的错误码的索引。仅在使用 SMP 版本 2 时                        |
+   |                  | 非零（错误状态）才出现。                                                 |
+   +------------------+-------------------------------------------------------------------------+
+   | "rc"             | :c:enum:`mcumgr_err_t`，仅在使用 SMP 版本 1 时非零（错误状态）          |
+   |                  | 或在使用 SMP 版本 2 时遇到 SMP 错误才出现。                             |
+   +------------------+-------------------------------------------------------------------------+
+
+列出支持的组命令
+*****************************
+
+列出支持的组命令允许列出设备上支持的 MCUmgr 组的组 ID。
+
+列出支持的组请求
+=============================
+
+列出支持的组请求头字段：
+
+.. table::
+   :align: center
+
+   +--------+--------------+----------------+
+   | ``OP`` | ``Group ID`` | ``Command ID`` |
+   +========+==============+================+
+   | ``0``  | ``10``       | ``1``          |
+   +--------+--------------+----------------+
+
+该命令发送一个空 CBOR 映射作为数据。
+
+列出支持的组响应
 ==============================
 
-List supported groups response header fields:
+列出支持的组响应头字段：
 
 .. table::
-    :align: center
+   :align: center
 
-    +--------+--------------+----------------+
-    | ``OP`` | ``Group ID`` | ``Command ID`` |
-    +========+==============+================+
-    | ``1``  | ``10``       | ``1``          |
-    +--------+--------------+----------------+
+   +--------+--------------+----------------+
+   | ``OP`` | ``Group ID`` | ``Command ID`` |
+   +========+==============+================+
+   | ``1``  | ``10``       | ``1``          |
+   +--------+--------------+----------------+
 
-CBOR data of successful response:
+成功响应的 CBOR 数据：
 
 .. code-block:: none
 
@@ -156,68 +150,67 @@ CBOR data of successful response:
         ]
     }
 
-In case of error the CBOR data takes the form:
+出错时 CBOR 数据的形式为：
 
 .. tabs::
 
-   .. group-tab:: SMP version 2
+   .. group-tab:: SMP 版本 2
 
-      .. code-block:: none
+     .. code-block:: none
 
-          {
-              (str)"err" : {
-                  (str)"group"    : (uint)
-                  (str)"rc"       : (uint)
-              }
-          }
+         {
+             (str)"err" : {
+                 (str)"group"    : (uint)
+                 (str)"rc"       : (uint)
+             }
+         }
 
-   .. group-tab:: SMP version 1
+   .. group-tab:: SMP 版本 1
 
-      .. code-block:: none
+     .. code-block:: none
 
-          {
-              (str)"rc"       : (int)
-          }
+         {
+             (str)"rc"       : (int)
+         }
 
-where:
+其中：
 
 .. table::
-    :align: center
+   :align: center
 
-    +------------------+-------------------------------------------------------------------------+
-    | "groups"         | contains a list of the supported MCUmgr group IDs on the device.        |
-    +------------------+-------------------------------------------------------------------------+
-    | "err" -> "group" | :c:enum:`mcumgr_group_t` group of the group-based error code. Only      |
-    |                  | appears if an error is returned when using SMP version 2.               |
-    +------------------+-------------------------------------------------------------------------+
-    | "err" -> "rc"    | contains the index of the group-based error code. Only appears if       |
-    |                  | non-zero (error condition) when using SMP version 2.                    |
-    +------------------+-------------------------------------------------------------------------+
-    | "rc"             | :c:enum:`mcumgr_err_t` only appears if non-zero (error condition) when  |
-    |                  | using SMP version 1 or for SMP errors when using SMP version 2.         |
-    +------------------+-------------------------------------------------------------------------+
+   +------------------+-------------------------------------------------------------------------+
+   | "groups"         | 包含设备上支持的 MCUmgr 组 ID 的列表。                                   |
+   +------------------+-------------------------------------------------------------------------+
+   | "err" -> "group" | :c:enum:`mcumgr_group_t` 基于组的错误码所属的组。仅在                   |
+   |                  | 使用 SMP 版本 2 时返回错误才出现。                                       |
+   +------------------+-------------------------------------------------------------------------+
+   | "err" -> "rc"    | 包含基于组的错误码的索引。仅在使用 SMP 版本 2 时                        |
+   |                  | 非零（错误状态）才出现。                                                 |
+   +------------------+-------------------------------------------------------------------------+
+   | "rc"             | :c:enum:`mcumgr_err_t`，仅在使用 SMP 版本 1 时非零（错误状态）          |
+   |                  | 或在使用 SMP 版本 2 时遇到 SMP 错误才出现。                             |
+   +------------------+-------------------------------------------------------------------------+
 
-Fetch single group ID command
+获取单个组 ID 命令
 *****************************
 
-Fetch single group ID command allows listing the group IDs of supported MCUmgr groups on the
-device, one by one.
+获取单个组 ID 命令允许逐个列出设备上支持的 MCUmgr 组的组 ID。
 
-Fetch single group ID request
+获取单个组 ID 请求
 =============================
 
-Fetch single group ID request header fields:
+获取单个组 ID 请求头字段：
 
 .. table::
-    :align: center
+   :align: center
 
-    +--------+--------------+----------------+
-    | ``OP`` | ``Group ID`` | ``Command ID`` |
-    +========+==============+================+
-    | ``0``  | ``10``       | ``2``          |
-    +--------+--------------+----------------+
+   +--------+--------------+----------------+
+   | ``OP`` | ``Group ID`` | ``Command ID`` |
+   +========+==============+================+
+   | ``0``  | ``10``       | ``2``          |
+   +--------+--------------+----------------+
 
-CBOR data of request:
+请求的 CBOR 数据：
 
 .. code-block:: none
 
@@ -225,31 +218,31 @@ CBOR data of request:
         (str,opt)"index" : (uint)
     }
 
-where:
+其中：
 
 .. table::
-    :align: center
+   :align: center
 
-    +----------+-----------------------------------------------------------------+
-    | "index"  | contains the (0-based) index of the group to return information |
-    |          | on, can be omitted to return the first group's details.         |
-    +----------+-----------------------------------------------------------------+
+   +----------+-----------------------------------------------------------------+
+   | "index"  | 包含要返回其信息的组（从 0 开始）的索引，可省略                  |
+   |          | 以返回第一个组的详情。                                           |
+   +----------+-----------------------------------------------------------------+
 
-Fetch single group ID response
+获取单个组 ID 响应
 ==============================
 
-Fetch single group ID response header fields:
+获取单个组 ID 响应头字段：
 
 .. table::
-    :align: center
+   :align: center
 
-    +--------+--------------+----------------+
-    | ``OP`` | ``Group ID`` | ``Command ID`` |
-    +========+==============+================+
-    | ``1``  | ``10``       | ``2``          |
-    +--------+--------------+----------------+
+   +--------+--------------+----------------+
+   | ``OP`` | ``Group ID`` | ``Command ID`` |
+   +========+==============+================+
+   | ``1``  | ``10``       | ``2``          |
+   +--------+--------------+----------------+
 
-CBOR data of successful response:
+成功响应的 CBOR 数据：
 
 .. code-block:: none
 
@@ -258,119 +251,119 @@ CBOR data of successful response:
         (str,opt)"end"  : (bool)
     }
 
-In case of error the CBOR data takes the form:
+出错时 CBOR 数据的形式为：
 
 .. tabs::
 
-   .. group-tab:: SMP version 2
+   .. group-tab:: SMP 版本 2
 
-      .. code-block:: none
+     .. code-block:: none
 
-          {
-              (str)"err" : {
-                  (str)"group"    : (uint)
-                  (str)"rc"       : (uint)
-              }
-          }
+         {
+             (str)"err" : {
+                 (str)"group"    : (uint)
+                 (str)"rc"       : (uint)
+             }
+         }
 
-   .. group-tab:: SMP version 1
+   .. group-tab:: SMP 版本 1
 
-      .. code-block:: none
+     .. code-block:: none
 
-          {
-              (str)"rc"       : (int)
-          }
+         {
+             (str)"rc"       : (int)
+         }
 
-where:
+其中：
 
 .. table::
-    :align: center
+   :align: center
 
-    +------------------+-------------------------------------------------------------------------+
-    | "group"          | contains the list of the supported MCUmgr group IDs on the device.      |
-    +------------------+-------------------------------------------------------------------------+
-    | "end"            | will be set to true if the listed group is the final supported group on |
-    |                  | the device, otherwise will be omitted.                                  |
-    +------------------+-------------------------------------------------------------------------+
-    | "err" -> "group" | :c:enum:`mcumgr_group_t` group of the group-based error code. Only      |
-    |                  | appears if an error is returned when using SMP version 2.               |
-    +------------------+-------------------------------------------------------------------------+
-    | "err" -> "rc"    | contains the index of the group-based error code. Only appears if       |
-    |                  | non-zero (error condition) when using SMP version 2.                    |
-    +------------------+-------------------------------------------------------------------------+
-    | "rc"             | :c:enum:`mcumgr_err_t` only appears if non-zero (error condition) when  |
-    |                  | using SMP version 1 or for SMP errors when using SMP version 2.         |
-    +------------------+-------------------------------------------------------------------------+
+   +------------------+-------------------------------------------------------------------------+
+   | "group"          | 包含设备上支持的 MCUmgr 组 ID 的列表。                                   |
+   +------------------+-------------------------------------------------------------------------+
+   | "end"            | 如果列出的组是设备上最后一个受支持的组，则置为 true，                   |
+   |                  | 否则省略。                                                               |
+   +------------------+-------------------------------------------------------------------------+
+   | "err" -> "group" | :c:enum:`mcumgr_group_t` 基于组的错误码所属的组。仅在                   |
+   |                  | 使用 SMP 版本 2 时返回错误才出现。                                       |
+   +------------------+-------------------------------------------------------------------------+
+   | "err" -> "rc"    | 包含基于组的错误码的索引。仅在使用 SMP 版本 2 时                        |
+   |                  | 非零（错误状态）才出现。                                                 |
+   +------------------+-------------------------------------------------------------------------+
+   | "rc"             | :c:enum:`mcumgr_err_t`，仅在使用 SMP 版本 1 时非零（错误状态）          |
+   |                  | 或在使用 SMP 版本 2 时遇到 SMP 错误才出现。                             |
+   +------------------+-------------------------------------------------------------------------+
 
-Details on supported groups command
+支持的组详情命令
 ***********************************
 
-Details on supported groups command allows fetching details on each supported MCUmgr group, such
-as the name and number of handlers. A device can specify an allow list of groups to return details
-on or details on all groups can be returned.
+支持的组详情命令允许获取每个受支持的 MCUmgr 组的详情，
+例如名称和处理器数量。设备可以指定一个组的允许列表来返回其
+详情，也可以返回所有组的详情。
 
-This command is optional, it can be enabled using :kconfig:option:`CONFIG_MCUMGR_GRP_ENUM_DETAILS`.
-The optional name and number of handlers can be enabled/disabled with
-:kconfig:option:`CONFIG_MCUMGR_GRP_ENUM_DETAILS_NAME` and
-:kconfig:option:`CONFIG_MCUMGR_GRP_ENUM_DETAILS_HANDLERS`.
+此命令是可选的，可以使用 :kconfig:option:`CONFIG_MCUMGR_GRP_ENUM_DETAILS` 启用。
+可选的名称和处理器数量可以用
+:kconfig:option:`CONFIG_MCUMGR_GRP_ENUM_DETAILS_NAME` 和
+:kconfig:option:`CONFIG_MCUMGR_GRP_ENUM_DETAILS_HANDLERS` 启用/禁用。
 
-Details on supported groups request
-===================================
+支持的组详情请求
+==================================
 
-Details on supported groups request header fields:
+支持的组详情请求头字段：
 
 .. table::
-    :align: center
+   :align: center
 
-    +--------+--------------+----------------+
-    | ``OP`` | ``Group ID`` | ``Command ID`` |
-    +========+==============+================+
-    | ``0``  | ``10``       | ``3``          |
-    +--------+--------------+----------------+
+   +--------+--------------+----------------+
+   | ``OP`` | ``Group ID`` | ``Command ID`` |
+   +========+==============+================+
+   | ``0``  | ``10``       | ``3``          |
+   +--------+--------------+----------------+
 
 .. tabs::
 
-   .. group-tab:: Details on all groups
+   .. group-tab:: 所有组的详情
 
-      The command sends an empty CBOR map as data.
+     该命令发送一个空 CBOR 映射作为数据。
 
-   .. group-tab:: Details on specified groups
+   .. group-tab:: 指定组的详情
 
-      CBOR data of request:
+     请求的 CBOR 数据：
 
-      .. code-block:: none
+     .. code-block:: none
 
-          {
-              (str)"groups" : [
-                  (uint)
-                  ...
-              ]
-          }
+         {
+             (str)"groups" : [
+                 (uint)
+                 ...
+             ]
+         }
 
-      where:
+     其中：
 
-      .. table::
-          :align: center
+     .. table::
+        :align: center
 
-          +----------+--------------------------------------------------------------+
-          | "groups" | contains a list of the MCUmgr group IDs to fetch details on. |
-          +----------+--------------------------------------------------------------+
+        +----------+--------------------------------------------------------------+
+        | "groups" | 包含要获取其详情的 MCUmgr 组 ID 的列表。                     |
+        +----------+--------------------------------------------------------------+
 
-Details on supported groups response
-====================================
+支持的组详情响应
+==================================
 
-Details on supported groups response header fields:
+支持的组详情响应头字段：
 
 .. table::
-    :align: center
+   :align: center
 
-    +--------+--------------+----------------+
-    | ``OP`` | ``Group ID`` | ``Command ID`` |
-    +========+==============+================+
-    | ``1``  | ``10``       | ``3``          |
-    +--------+--------------+----------------+
+   +--------+--------------+----------------+
+   | ``OP`` | ``Group ID`` | ``Command ID`` |
+   +========+==============+================+
+   | ``1``  | ``10``       | ``3``          |
+   +--------+--------------+----------------+
 
-CBOR data of successful response:
+成功响应的 CBOR 数据：
 
 .. code-block:: none
 
@@ -385,58 +378,58 @@ CBOR data of successful response:
         ]
     }
 
-In case of error the CBOR data takes the form:
+出错时 CBOR 数据的形式为：
 
 .. tabs::
 
-   .. group-tab:: SMP version 2
+   .. group-tab:: SMP 版本 2
 
-      .. code-block:: none
+     .. code-block:: none
 
-          {
-              (str)"err" : {
-                  (str)"group"    : (uint)
-                  (str)"rc"       : (uint)
-              }
-          }
+         {
+             (str)"err" : {
+                 (str)"group"    : (uint)
+                 (str)"rc"       : (uint)
+             }
+         }
 
-   .. group-tab:: SMP version 1
+   .. group-tab:: SMP 版本 1
 
-      .. code-block:: none
+     .. code-block:: none
 
-          {
-              (str)"rc"       : (int)
-          }
+         {
+             (str)"rc"       : (int)
+         }
 
-where:
+其中：
 
 .. table::
-    :align: center
+   :align: center
 
-    +------------------+-------------------------------------------------------------------------+
-    | "group"          | the group ID of the MCUmgr command group.                               |
-    +------------------+-------------------------------------------------------------------------+
-    | "name"           | the name of the MCUmgr command group.                                   |
-    +------------------+-------------------------------------------------------------------------+
-    | "handlers"       | the number of handlers that the MCUmgr command group supports.          |
-    +------------------+-------------------------------------------------------------------------+
-    | "err" -> "group" | :c:enum:`mcumgr_group_t` group of the group-based error code. Only      |
-    |                  | appears if an error is returned when using SMP version 2.               |
-    +------------------+-------------------------------------------------------------------------+
-    | "err" -> "rc"    | contains the index of the group-based error code. Only appears if       |
-    |                  | non-zero (error condition) when using SMP version 2.                    |
-    +------------------+-------------------------------------------------------------------------+
-    | "rc"             | :c:enum:`mcumgr_err_t` only appears if non-zero (error condition) when  |
-    |                  | using SMP version 1 or for SMP errors when using SMP version 2.         |
-    +------------------+-------------------------------------------------------------------------+
+   +------------------+-------------------------------------------------------------------------+
+   | "group"          | MCUmgr 命令组的组 ID。                                                   |
+   +------------------+-------------------------------------------------------------------------+
+   | "name"           | MCUmgr 命令组的名称。                                                    |
+   +------------------+-------------------------------------------------------------------------+
+   | "handlers"       | MCUmgr 命令组支持的处理器数量。                                          |
+   +------------------+-------------------------------------------------------------------------+
+   | "err" -> "group" | :c:enum:`mcumgr_group_t` 基于组的错误码所属的组。仅在                   |
+   |                  | 使用 SMP 版本 2 时返回错误才出现。                                       |
+   +------------------+-------------------------------------------------------------------------+
+   | "err" -> "rc"    | 包含基于组的错误码的索引。仅在使用 SMP 版本 2 时                        |
+   |                  | 非零（错误状态）才出现。                                                 |
+   +------------------+-------------------------------------------------------------------------+
+   | "rc"             | :c:enum:`mcumgr_err_t`，仅在使用 SMP 版本 1 时非零（错误状态）          |
+   |                  | 或在使用 SMP 版本 2 时遇到 SMP 错误才出现。                             |
+   +------------------+-------------------------------------------------------------------------+
 
-Details on supported groups callback
+支持的组详情回调
 ************************************
 
-There is a details on supported groups MCUmgr callback available (see :ref:`mcumgr_callbacks` for
-details on callbacks) which allows for applications/modules to add additional fields to this
-response. This callback can be enabled with :kconfig:option:`CONFIG_MCUMGR_GRP_ENUM_DETAILS_HOOK`,
-registered with the event :c:enumerator:`MGMT_EVT_OP_ENUM_MGMT_DETAILS`, whereby the supplied
-callback data is :c:struct:`enum_mgmt_detail_output`. Note that
-:kconfig:option:`CONFIG_MCUMGR_GRP_ENUM_DETAILS_STATES` will need incrementing by the number of
-additional extra fields that are added.
+有一个可用的支持的组详情 MCUmgr 回调（关于
+回调的详情参见 :ref:`mcumgr_callbacks`），它允许
+应用程序/模块向此响应添加额外的字段。此回调可以用 :kconfig:option:`CONFIG_MCUMGR_GRP_ENUM_DETAILS_HOOK` 启用，
+用事件 :c:enumerator:`MGMT_EVT_OP_ENUM_MGMT_DETAILS` 注册，其中提供的
+回调数据为 :c:struct:`enum_mgmt_detail_output`。注意
+:kconfig:option:`CONFIG_MCUMGR_GRP_ENUM_DETAILS_STATES` 需要按
+所添加的额外字段数量递增。

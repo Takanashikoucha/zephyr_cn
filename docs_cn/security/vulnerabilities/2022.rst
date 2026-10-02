@@ -1,425 +1,123 @@
-.. _vulnerabilities
-2022:
+.. _vulnerabilities_2022:
 
-CVE
-2022
+CVE-2022
 ########
 
-:cve:`2022
-0553`
+:cve:`2022-0553`
 ----------------
 
-Possible
-to
-retrieve
-unencrypted
-firmware
-image
+可能获取未加密的固件镜像
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.0.0
+此问题已在 main 分支（v3.0.0）中修复
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-wrj2
-9vj9
-rrcp
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-wrj2
-9vj9
-rrcp>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-wrj2-9vj9-rrcp
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-wrj2-9vj9-rrcp>`_
 
--
-`PR
-42424
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/42424>`_
+- `PR 42424 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/42424>`_
 
-:cve:`2022
-1041`
+:cve:`2022-1041`
 ----------------
 
-Out
-of
-bound
-write
-vulnerability
-in
-the
-Bluetooth
-Mesh
-core
-stack
-can
-be
-triggered
-during
-provisioning
+蓝牙 Mesh 核心协议栈中的越界写入漏洞可在配置（provisioning）过程中触发
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.1.0
+此问题已在 main 分支（v3.1.0）中修复
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-p449
-9hv9
-pj38
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-p449
-9hv9
-pj38>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-p449-9hv9-pj38
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-p449-9hv9-pj38>`_
 
--
-`PR
-45136
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/45136>`_
+- `PR 45136 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/45136>`_
 
--
-`PR
-45188
-fix
-for
-v3.0.0
-<https://github.com/zephyrproject
-rtos/zephyr/pull/45188>`_
+- `PR 45188 修复 v3.0.0
+  <https://github.com/zephyrproject-rtos/zephyr/pull/45188>`_
 
--
-`PR
-45187
-fix
-for
-v2.7.0
-<https://github.com/zephyrproject
-rtos/zephyr/pull/45187>`_
+- `PR 45187 修复 v2.7.0
+  <https://github.com/zephyrproject-rtos/zephyr/pull/45187>`_
 
-:cve:`2022
-1042`
+:cve:`2022-1042`
 ----------------
 
-Out
-of
-bound
-write
-vulnerability
-in
-the
-Bluetooth
-Mesh
-core
-stack
-can
-be
-triggered
-during
-provisioning
+蓝牙 Mesh 核心协议栈中的越界写入漏洞可在配置（provisioning）过程中触发
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.1.0
+此问题已在 main 分支（v3.1.0）中修复
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-j7v7
-w73r
-mm5x
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-j7v7
-w73r
-mm5x>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-j7v7-w73r-mm5x
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-j7v7-w73r-mm5x>`_
 
--
-`PR
-45066
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/45066>`_
+- `PR 45066 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/45066>`_
 
--
-`PR
-45135
-fix
-for
-v3.0.0
-<https://github.com/zephyrproject
-rtos/zephyr/pull/45135>`_
+- `PR 45135 修复 v3.0.0
+  <https://github.com/zephyrproject-rtos/zephyr/pull/45135>`_
 
--
-`PR
-45134
-fix
-for
-v2.7.0
-<https://github.com/zephyrproject
-rtos/zephyr/pull/45134>`_
+- `PR 45134 修复 v2.7.0
+  <https://github.com/zephyrproject-rtos/zephyr/pull/45134>`_
 
-:cve:`2022
-1841`
+:cve:`2022-1841`
 ----------------
 
-Out
-of
-Bound
-Write
-in
-tcp
-flags
+tcp_flags 中的越界写入
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.1.0
+此问题已在 main 分支（v3.1.0）中修复
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-5c3j
-p8cr
-2pgh
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-5c3j
-p8cr
-2pgh>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-5c3j-p8cr-2pgh
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-5c3j-p8cr-2pgh>`_
 
--
-`PR
-45796
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/45796>`_
+- `PR 45796 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/45796>`_
 
-:cve:`2022
-2741`
+:cve:`2022-2741`
 ----------------
 
-can:
-denial
-of
-service
-can
-be
-triggered
-by
-a
-crafted
-CAN
-frame
+can: 拒绝服务（denial-of-service）可由构造的 CAN 帧触发
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.2.0
+此问题已在 main 分支（v3.2.0）中修复
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-hx5v
-j59q
-c3j8
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-hx5v
-j59q
-c3j8>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-hx5v-j59q-c3j8
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-hx5v-j59q-c3j8>`_
 
--
-`PR
-47903
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/47903>`_
+- `PR 47903 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/47903>`_
 
--
-`PR
-47957
-fix
-for
-v3.1.0
-<https://github.com/zephyrproject
-rtos/zephyr/pull/47957>`_
+- `PR 47957 修复 v3.1.0
+  <https://github.com/zephyrproject-rtos/zephyr/pull/47957>`_
 
--
-`PR
-47958
-fix
-for
-v3.0.0
-<https://github.com/zephyrproject
-rtos/zephyr/pull/47958>`_
+- `PR 47958 修复 v3.0.0
+  <https://github.com/zephyrproject-rtos/zephyr/pull/47958>`_
 
--
-`PR
-47959
-fix
-for
-v2.7.0
-<https://github.com/zephyrproject
-rtos/zephyr/pull/47959>`_
+- `PR 47959 修复 v2.7.0
+  <https://github.com/zephyrproject-rtos/zephyr/pull/47959>`_
 
-:cve:`2022
-2993`
+:cve:`2022-2993`
 ----------------
 
-bt:
-host:
-Wrong
-key
-validation
-check
+bt: host: 错误的密钥验证检查
 
-This
-has
-been
-fixed
-in
-main
-for
-v3.2.0
+此问题已在 main 分支（v3.2.0）中修复
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-3286
-gjx
-8cvr
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-3286
-gjx
-8cvr>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-3286-jgjx-8cvr
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-3286-jgjx-8cvr>`_
 
--
-`PR
-48733
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/48733>`_
+- `PR 48733 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/48733>`_
 
-:cve:`2022
-3806`
+:cve:`2022-3806`
 ----------------
 
-DoS:
-Invalid
-Initialization
-in
-le
-read
-buffer
-size
-complete（）
+DoS: le_read_buffer_size_complete() 中的无效初始化
 
--
-`Zephyr
-project
-bug
-tracker
-GHSA
-w525
-fm68
-ppq3
-<https://github.com/zephyrproject
-rtos/zephyr/security/advisories/GHSA
-w525
-fm68
-ppq3>`_
+- `Zephyr 项目 bug 跟踪器 GHSA-w525-fm68-ppq3
+  <https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-w525-fm68-ppq3>`_
 
--
-`PR
-49034
-fix
-for
-main
-<https://github.com/zephyrproject
-rtos/zephyr/pull/49034>`_
+- `PR 49034 修复 main
+  <https://github.com/zephyrproject-rtos/zephyr/pull/49034>`_
 
--
-`PR
-49070
-fix
-for
-v3.1.0
-<https://github.com/zephyrproject
-rtos/zephyr/pull/49070>`_
+- `PR 49070 修复 v3.1.0
+  <https://github.com/zephyrproject-rtos/zephyr/pull/49070>`_
 
--
-`PR
-49071
-fix
-for
-v3.0.0
-<https://github.com/zephyrproject
-rtos/zephyr/pull/49071>`_
+- `PR 49071 修复 v3.0.0
+  <https://github.com/zephyrproject-rtos/zephyr/pull/49071>`_
 
--
-`PR
-49072
-fix
-for
-v2.7.0
-<https://github.com/zephyrproject
-rtos/zephyr/pull/49072>`_
+- `PR 49072 修复 v2.7.0
+  <https://github.com/zephyrproject-rtos/zephyr/pull/49072>`_

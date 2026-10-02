@@ -136,241 +136,314 @@ Zephyr 2.1.0
 
   * 新增读取总线状态和错误计数器的 API
   * 新增总线恢复 API
+  * MCP2515 驱动的优化
+  * Bug 修复
 
 * Clock Control
 
-  * 在 STM32 驱动中新增对 STM32G4 的支持
+  * 在 nRF 驱动中新增对 nRF52833 的支持
+  * 在 STM32 驱动中新增对 STM32G4X 的支持
+
+* Console
+
+  * 移除已弃用的函数 console_register_line_input
 
 * Counter
 
-  * 新增对 STM32G4 的支持
+  * 在 STM32 驱动中新增对 STM32L1 和 STM32G4X 的支持
+  * 移除 QMSI 驱动
+  * 新增 Microchip XEC 驱动
 
 * Display
 
-  * 新增 SSD1306 OLED 驱动
-  * 新增 Waveshare E-Paper 驱动
+  * 增强 SSD1306 驱动以支持构建时选择
+  * 增强 SSD16XX 驱动以使用 bytestring 属性用于 LUT 和参数
+
+* DMA
+
+  * 新增通用 STM32 驱动
+  * 移除 QMSI 驱动
+
+* EEPROM
+
+  * 新增 EEPROM 设备驱动 API
+  * 新增 Atmel AT24（及兼容）I2C EEPROM 驱动
+  * 新增 Atmel AT25（及兼容）SPI EEPROM 驱动
+  * 新增 native_posix EEPROM 仿真驱动
+
+* Entropy
+
+  * 新增 RV32M1 驱动
+  * 在 STM32 驱动中新增对 STM32G4X 的支持
 
 * Ethernet
 
-  * 新增对 STM32G4 的支持
+  * 在 STM32 驱动中新增 MAC 地址配置和载波状态检测
+  * 新增 ENC424J600 驱动
+  * 移除 DesignWare 驱动
 
 * Flash
 
-  * 新增对 STM32G4 的支持
+  * 在 SPI NOR 驱动中新增深度掉电模式支持
+  * 修复 STM32 驱动以支持 2MB 器件
+  * 在 STM32 驱动中新增对 STM32G4X 的支持
+  * 移除 QMSI 驱动
 
 * GPIO
 
-  * 在 STM32 驱动中新增对 STM32G4 的支持
-  * 新增 Microchip XEC GPIO 驱动
+  * 在 STM32 驱动中新增对 STM32G4X 的支持
+  * 移除 QMSI、SCH 和 SAM3 驱动
+
+* Hardware Info
+
+  * 新增 LiteX DNA 驱动
 
 * I2C
 
-  * 在 STM32 驱动中新增对 STM32G4 的支持
-  * 新增 Microchip XEC I2C 驱动
+  * 将剩余驱动转换为设备树
+  * 在 STM32 驱动中新增对 STM32G4X 的支持
+  * 修复 DesignWare 驱动以支持 64 位
+  * 移除 QMSI 驱动
+  * 在 XEC 驱动中新增适当的错误处理
+
+* I2S
+
+  * 重构 STM32 驱动
+
+* IEEE 802.15.4
+
+  * 新增 CC13xx / CC26xx 驱动
+
+* Interrupt Controller
+
+  * 在 SAM0 EIC 驱动中新增对 SAME54 的支持
+  * 在 STM32 驱动中新增对 STM32G4X 的支持
+  * 将 RISC-V plic 转换为使用多级 irq 支持
+
+* IPM
+
+  * 新增 nRFx 驱动
+
+* Keyboard Scan
+
+  * 新增 Microchip XEC 驱动
+
+* LED
+
+  * 从 LP5562、PCA9633 和 LP3943 驱动中移除非 DTS 支持
+
+* Modem
+
+  * 为调制解调器接收器新增简单电源管理
 
 * Pinmux
 
-  * 在 STM32 驱动中新增对 STM32G4 的支持
+  * 在 STM32 驱动中新增对 STM32G4X 的支持
+  * 移除 QMSI 驱动
+
+* PS/2
+
+  * 新增 Microchip XEC 驱动
 
 * PWM
 
-  * 在 STM32 驱动中新增对 STM32G4 的支持
+  * 新增 PWM shell
+  * 新增 Microchip XEC 驱动
+  * 移除 QMSI 驱动
 
 * Sensor
 
-  * 新增 LPS22HH 压力传感器驱动
-  * 新增 BME680 传感器驱动
+  * 修复 LIS2DH 驱动中的原始值缩放和 SPI 突发传输
+  * 将各种驱动转换为设备树
+  * 修复 ENS210 驱动中的小数部分计算
+  * 新增 OPT3001 光传感器驱动
+  * 新增 SI7060 温度传感器驱动
+  * 新增 TMP116 驱动
+  * 在 SHT3XD 驱动中实现单次模式
+  * 在 LIS2DW12 驱动中新增单击/双击触发支持
 
 * Serial
 
-  * 在 STM32 驱动中新增对 STM32G4 的支持
-  * 新增 Microchip XEC 串口驱动
+  * 在 SAM0 驱动中新增对 SAME54 的支持
+  * 在 STM32 驱动中新增对 STM32G4X 的支持
+  * 在 nRF UARTE 和 UART 驱动中新增对 2 停止位的支持
+  * 移除 QMSI 驱动
+  * 新增带 FIFO/中断支持的 ESP32 驱动
 
 * SPI
 
-  * 在 STM32 驱动中新增对 STM32G4 的支持
-  * 新增 Microchip XEC SPI 驱动
+  * 在 nRFx 驱动中新增对 nRF52833 的支持
+  * 在 STM32 驱动中新增对 STM32G4X 的支持
+  * 新增 RV32M1 驱动
+  * 新增 Microchip XEC 驱动
+  * 新增 LiteX 驱动
+  * 移除 Intel Quark 驱动
 
 * Timer
 
-  * 在 STM32 驱动中新增对 STM32G4 的支持
+  * 修复 SYSTICK 和 nRF 驱动中的时钟通告饥饿问题
+  * 修复各种驱动中无滴答模式下的 tick 调整钳位问题
+  * 修复 SYSTICK 驱动中绝对周期计算
+  * 修复 nRF 驱动中未通告的已丢失 tick
+  * 修复 ARC 驱动中的 SMP bug
+  * 新增 STM32 LPTIM 驱动
+  * 将 CC13X2/CC26X2 改为使用 RTC 而非 SYSTICK 作为系统时钟
+
+* USB
+
+  * 在 nRFx 驱动中新增对 nRF52833 的支持
+  * 在 STM32 驱动中新增对 STM32G4X 的支持
+  * 为变长数据存储启用 ZLP 硬件处理
+
+* Video
+
+  * 新增 MCUX CSI 和 Aptina MT9M114 驱动
+  * 新增软件视频图案生成器驱动
+
+* Watchdog
+
+  * 在 SAM0 驱动中新增对 SAME54 的支持
+  * 将驱动转换为使用设备树
+  * 移除 QMSI 驱动
+  * 新增 STM32 WWDG 驱动
+  * 新增 Microchip XEC 驱动
+
+* WiFi
+
+  * 在 Inventek eS-WiFi 驱动中实现带 TLS 的 TCP/UDP socket 卸载
 
 网络
 **********
 
-* 新增 TCP 协议栈实现（实验性）
-* 新增对 UDP 分片的支持
-* 新增对 ICMPv6 的支持
-* 新增对 IPv6 路由器的支持
-* 新增对 DHCPv6 的支持
-* 新增对 LwM2M 的支持
-* 新增对 MQTT 的支持
-* 新增对 CoAP 的支持
-* 新增对 DNS 的支持
-* 新增对 mDNS 的支持
-* 新增对 LLMNR 的支持
-* 新增对 PTP 的支持
-* 新增对 gPTP 的支持
-* 新增对 NTP 的支持
-* 新增对 SNTP 的支持
-* 新增对 HTTP 的支持
-* 新增对 HTTPS 的支持
-* 新增对 FTP 的支持
-* 新增对 Telnet 的支持
-* 新增对 SSH 的支持
-* 新增对 SOCKS 的支持
-* 新增对 PPP 的支持
-* 新增对 6LoWPAN 的支持
-* 新增对 6LoCAN 的支持
-* 新增对 802.15.4 的支持
-* 新增对 OpenThread 的支持
-* 新增对 Thread 的支持
-* 新增对 RPL 的支持
-* 新增对 MIPv6 的支持
-* 新增对 IPv6 隧道的支持
-* 新增对 IPv6 安全选项的支持
-* 新增对 IPv6 流标签的支持
-* 新增对 IPv6 跳数限制的支持
-* 新增对 IPv6 生存期的支持
-* 新增对 IPv6 多播的支持
-* 新增对 IPv6 组播的支持
-* 新增对 IPv6 广播的支持
-* 新增对 IPv6 单播的支持
-* 新增对 IPv6 邻居发现的支持
-* 新增对 IPv6 无状态自动配置的支持
-* 新增对 IPv6 有状态自动配置的支持
-* 新增对 IPv6 路由器通告的支持
-* 新增对 IPv6 前缀通告的支持
-* 新增对 IPv6 默认路由器的支持
-* 新增对 IPv6 链路本地地址的支持
-* 新增对 IPv6 全局地址的支持
-* 新增对 IPv6 唯一本地地址的支持
-* 新增对 IPv6 临时地址的支持
-* 新增对 IPv6 隐私地址的支持
-* 新增对 IPv6 地址解析的支持
-* 新增对 IPv6 地址转换的支持
-* 新增对 IPv6 地址映射的支持
-* 新增对 IPv6 地址分配的支持
-* 新增对 IPv6 地址释放的支持
-* 新增对 IPv6 地址保留的支持
-* 新增对 IPv6 地址恢复的支持
-* 新增对 IPv6 地址验证的支持
-* 新增对 IPv6 地址检查的支持
-* 新增对 IPv6 地址过滤的支持
-* 新增对 IPv6 地址屏蔽的支持
-* 新增对 IPv6 地址标记的支持
-* 新增对 IPv6 地址标签的支持
-* 新增对 IPv6 地址分类的支持
-* 新增对 IPv6 地址分组的支撑
-* 新增对 IPv6 地址聚合的支持
-* 新增对 IPv6 地址汇总的支持
-* 新增对 IPv6 地址归并的支持
-* 新增对 IPv6 地址合并的支持
-* 新增对 IPv6 地址融合的支持
-* 新增对 IPv6 地址整合的支持
-* 新增对 IPv6 地址集成的支持
-* 新增对 IPv6 地址统一的支持
-* 新增对 IPv6 地址标准化的支持
-* 新增对 IPv6 地址规范化的支持
-* 新增对 IPv6 地址正则化的支持
-* 新增对 IPv6 地址规则化的支持
-* 新增对 IPv6 地址规约化的支持
-* 新增对 IPv6 地址简约化的支持
-* 新增对 IPv6 地址简化的支持
-* 新增对 IPv6 地址精简的支持
-* 新增对 IPv6 地址简练的支持
-* 新增对 IPv6 地址简洁的支持
-* 新增对 IPv6 地址简约的支持
-* 新增对 IPv6 地址精简化的支持
-* 新增对 IPv6 地址简练化的支持
-* 新增对 IPv6 地址简洁化的支持
-* 新增对 IPv6 地址简约化的支持
+* 新增 TCP 协议栈实现。新的 TCP 协议栈仍为实验性，
+  默认关闭。想要尝试的用户可以设置
+  ``CONFIG_NET_TCP2`` Kconfig 选项。
+* 新增对通过 Websocket 连接运行 MQTT 协议的支持。
+* 新增在 LWM2M 中启用 DNS 的支持。
+* 新增在 net-shell 中重置网络统计信息的支持。
+* 新增获取接收或发送网络数据包所花时间统计的支持。
+* 新增在收到 Echo-Request 数据包时发送 PPP Echo-Reply 数据包的支持。
+* 为 IEEE 802.15.4 新增 CC13xx / CC26xx 设备驱动。
+* 为 eswifi 网络驱动新增带 TLS 的 TCP/UDP socket 卸载。
+* 新增发送多个 SNTP 请求以提高可靠性的支持。
+* 新增在 socket() 调用中选择默认网络协议的支持。
+* 新增选择原生 IP 协议栈（默认）或
+  卸载 IP 协议栈的支持。这可以节省 ROM 和 RAM，
+  因为我们不需要启用网络设备中不会使用的网络功能。
+* 新增 LWM2M 客户端发起的注销支持。
+* 更新支持的 OpenThread 版本。
+* 更新 OpenThread 配置以使用 Zephyr 提供的 mbedTLS。
+* TCP 连接建立的多种修复。
+* 修复多播数据包到所有监听 socket 的投递。
+* 修复使用 socket 卸载时的网络接口初始化。
+* 修复已发送 CoAP 消息的初始消息 id 种子值。
+* 修复使用 "net ping" 命令发送
+  ICMPv4 echo-request 数据包时的网络接口选择。
+* 网络示例变更：
+
+  .. rst-class:: rst-columns
+
+     - http_client
+     - dumb_http_server_mt
+     - dumb_http_server
+     - echo_server
+     - mqtt_publisher
+     - zperf
+
+* 网络设备驱动变更：
+
+  .. rst-class:: rst-columns
+
+     - Ethernet enc424j600（新驱动）
+     - Ethernet enc28j60
+     - Ethernet stm32
+     - WiFi simplelink
+     - Ethernet DesignWare（已移除）
 
 蓝牙
 *********
 
-* 在 Vega 平台上新增 BLE 支持（实验性）
-* 改进 Bluetooth 主机协议栈的内存大小
-* 新增对 BLE Mesh 的支持
-* 新增对 BLE 广播扩展的支持
-* 新增对 BLE 扫描请求的支持
-* 新增对 BLE 通道选择算法 #2 的支持
-* 新增对 BLE 多 PHY 的支持
-* 新增对 BLE 低占空比定向广播的支持
-* 新增对 BLE 扫描重复过滤的支持
-* 新增对 BLE 高级控制器配置的支持
-* 新增对 BLE 无线电中断变更为直接 ISR 的支持
-* 新增对 BLE 控制器到 Host 流控制的支持
-* 新增对 BR/EDR HFP (e)SCO 音频信道建立的支持
-* 新增对 BR/EDR 功能性 SDP 服务器的支持
+* Host：
+
+  * 重新设计 Host 传输路径以改善内存占用并移除潜在死锁
+  * 为连接回调记录 HCI 错误
+  * GATT：新增 ``bt_gatt_is_subscribed()`` 函数以检查属性是否已订阅
+  * GATT：为 GATT CCC 结构体新增初始化器
+  * HCI：新增获取连接句柄的函数
+  * 新增按需加载 CCC 设置的能力以减少内存使用
+  * 使从机连接参数更新流程的运行时间可配置
+  * 将连续的 bt_rand 调用合并为一个以减少开销
+  * 为密钥存储新增密钥位移特性
+  * 降低不可避免警告的严重性
+  * 新增 C++20 指定初始化器支持
+  * Mesh：新增 Mesh Profile Specification 中描述的模型扩展概念
+  * Mesh：新增作为 Provisioner 的支持
+
+* BLE 分离软件控制器：
+
+  * 多个 bug 修复
+  * 修复若干控制流程（LLCP）处理问题
+  * 在 Vega 平台上新增实验性 BLE 支持。
+  * 在 LLL 中新增刷新钩子
+  * 在 ll_reset 的调用中实现 LLL 重置函数
+  * 使 TX ctrl 缓冲区数量可配置
+  * 新增对零延迟 IRQ 的支持
+
+* BLE 旧版软件控制器：
+
+  * 多个 bug 修复
 
 构建与基础设施
 ************************
 
-* 新增对 CMake 构建系统的支持
-* 新增对 Ninja 构建系统的支持
-* 新增对 make 构建系统的支持
-* 新增对 MSYS2 的支持
-* 新增独立的 DTS 目标
-* 新增构建主机工具支持
-* 新增对 LLVM 工具链的支持
-* 新增对 GCC 工具链的支持
-* 新增对 Clang 工具链的支持
+* 弃用 kconfig 函数 dt_int_val、dt_hex_val 和 dt_str_val。
+  使用利用 eDTS 信息的新函数，如 dt_node_reg_addr。
+  请参阅 :zephyr_file:`scripts/kconfig/kconfigfunctions.py` 了解详情。
 
-库
-*********
+* 弃用从生成的
+  ``generated_dts_board.conf`` 直接使用 ``DT_`` Kconfig 符号。
+  这是为了仅从 Kconfig 获取 Kconfig 符号（此外构建应该
+  稍微更快）。对于 Kconfig 文件，我们应该利用
+  :zephyr_file:`scripts/kconfig/kconfigfunctions.py` 中的函数。
+  请参阅 :ref:`kconfig-functions` 了解使用详情。
+  对于 sanitycheck yaml 使用，我们应该利用
+  ``scripts/sanity_chk/expr_parser.py`` 中的函数。
+  对于某些当前不支持的使用模式，
+  可能需要一个新函数。
 
-* 新增最小 JSON 库
-* 将 TinyCrypt 更新至 0.2.8 版本
-* 更新 mbedTLS 库
-* 新增软件驱动 I2C 库
-* 创建 HTTP 库
-* 新增 HTTP 服务器库支持
+* 绑定格式的若干部分已简化。
+  格式现在也有更好的文档。
+
+库/子系统
+***********************
+
+* Random
+
+  * 新增密码学安全随机函数
+  * 新增批量填充随机函数
 
 HAL
 ****
 
-* 新增 Atmel SAM 家族 I2C (TWIHS) 驱动
-* 新增 Atmel SAM 串口 (UART) 驱动
-* 为 Atmel SAM SoC 新增 WDT 驱动
-* 新增 Atmel SAM4S SoC 支持
-* 导入 Nordic 802.15.4 无线电驱动
-* 新增 NXP MPU 的初始支持
-* 将 QMSI 更新至 1.4 RC4
-* 新增 FPU 支持
-* 新增对 STM32F413 的基本支持
-* 引入 STM32F4x DMA 驱动
-* pinmux：stm32：新增对 Nucleo L432KC 的支持
-* 新增对 STM32L496G Discovery 板卡的支持
-* 为 STM32F407 新增 dts
-* 新增对 STM32F4DISCOVERY Board 的支持
-* 新增对 STM32F469XI 的支持
-* 新增对 STM32F469I-DISCO 的支持
+* HAL 现在作为外部模块移出主树，
+  并位于它们自己的独立仓库中。
 
 文档
 *************
 
-* 为新板卡移植新增板卡文档
-* 新增板卡移植指南
-* 在移植和用户指南中新增安全章节
-* 继续将 wiki.zephyrproject.org 材料迁移到网站和 github wiki
-* 改进生成文档的 CSS 格式和外观
-* 新增带内核版本号的面包屑导航头
-* 更新 Linux、Windows 和 macOS 的入门设置指南
-* 更新和新增以跟随新的和更新的内核特性
-* 损坏链接和拼写检查扫描
-* 从网站移除已弃用的内核文档（1.6 发布前）（如需要仍可在 git 仓库中获取）
+* 新的入门指南简化和优化了开发者的"开箱即用"体验，
+  从设置开发环境到运行 blinky 示例。
+* 架构、构建和流程文档的许多新增和更新，包括
+  sanity check、板卡移植、Bluetooth、调度、时序、
+  外设、配置和用户模式。
+* 新板卡和示例的文档。
+* API 文档的改进和清晰度。
 
 测试与示例
 *****************
 
-* 新增测试以验证相同 tick 超时到期顺序
-* 为内核新增 clock_test
-* 新增无滴答测试
-* 新增简单的 CC2520 crypto dev 测试
-* 为 Bluetooth 示例新增组合 observer 与 broadcaster 应用
-* 新增同时等待 IPv4 和 IPv6 的支持
-* 在某些应用中启用无滴答内核选项
+* 我们实现了额外的测试，并大幅扩展了
+  现有测试中的测试用例数量，以增加代码覆盖率。
 
 Issue 相关条目
 *******************

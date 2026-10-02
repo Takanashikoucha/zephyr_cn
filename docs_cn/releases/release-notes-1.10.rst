@@ -10,13 +10,11 @@ Zephyr Kernel 1.10.0
 本次发布的主要增强包括：
 
 * x86 上初始 alpha 质量的线程级内存保护、用户空间和内存域
-  domains
 * 构建系统的重大改造，从 Kbuild 切换到 CMake
 * 新特隆闪存文件系统（NFFS）支持
 * 测试套件覆盖范围增加，大多数测试用例迁移到使用 ztest
 * 与 MCUBOOT 引导加载器集成
 * 为许多已支持的平台添加额外的 SoC、平台和驱动支持
-  platforms.
 
 以下各节提供按组件分类的更改详细列表。
 
@@ -24,31 +22,27 @@ Kernel
 ******
 
 * 移除已弃用的 k_mem_pool_defrag 代码
-* x86 上初始 alpha 质量的线程级内存保护、用户空间和内存域
-  domains:
+* x86 上初始 alpha 质量的线程级内存保护、用户空间和内存域：
 
-  * Same kernel & driver APIs for kernel and user mode threads
-  * System calls for privilege elevation
-  * Stack overflow protection
-  * Kernel object and device driver permission tracking
-  * Simple app vs. kernel memory separation
-  * Memory domain APIs for fine-tuning memory region permissions
-  * Stack memory protection from other threads
+  * 内核与用户模式线程使用相同的内核与驱动 API
+  * 用于权限提升的系统调用
+  * 栈溢出保护
+  * 内核对象与设备驱动权限跟踪
+  * 简单的应用与内核内存隔离
+  * 用于精细调整内存区域权限的内存域 API
+  * 来自其他线程的栈内存保护
 
 * 添加以下面向应用的内存域 API：
 
-  * k_mem_domain_init() - to initialize a memory domain
-  * k_mem_domain_destroy() - to destroy a memory domain
-  * k_mem_domain_add_partition() - to add a partition into a domain
-  * k_mem_domain_remove_partition() - to remove a partition from a domain
-  * k_mem_domain_add_thread() - to add a thread into a domain
-  * k_mem_domain_remove_thread() - to remove a thread from a domain
-* 添加 k_calloc()，使用内核堆实现传统 calloc() 语义
-  semantics.
+  * k_mem_domain_init() - 初始化内存域
+  * k_mem_domain_destroy() - 销毁内存域
+  * k_mem_domain_add_partition() - 向域添加分区
+  * k_mem_domain_remove_partition() - 从域移除分区
+  * k_mem_domain_add_thread() - 向域添加线程
+  * k_mem_domain_remove_thread() - 从域移除线程
+* 添加 k_calloc()，使用内核堆实现传统 calloc() 语义。
 * 引入对象验证机制：所有从用户空间发出的涉及内核对象（包括设备驱动）指针的系统调用
-  which involve pointers to kernel objects (including device drivers), will need
-  to have those pointers validated; userspace must never be able to crash the
-  kernel by passing it garbage.
+  都需要对这些指针进行验证；用户空间绝不能通过传入垃圾数据使内核崩溃。
 
 Architectures
 *************
@@ -66,8 +60,7 @@ Architectures
 Boards
 ******
 * Jailhouse 移植：该移植将使 Zephyr 能够在 x86-64 系统上作为来宾操作系统运行。
-  systems. It comes with a test on QEMU to validate that, thus this new board
-  introduction.
+  附带一项 QEMU 测试用于验证此功能，因此引入此新开发板。
 * nrf52 系列 SoC 电源管理
 * 添加以下 ARM 开发板支持：
 
@@ -106,7 +99,7 @@ Networking
 * 添加 mDNS（多播 DNS）支持
 * 添加 SNTP（简单网络时间协议）客户端库
 * 以下各项的修复：TCP、RPL、ARP、DNS、LWM2M、以太网、net-app API、
-  shell, and BSD socket API
+  网络 shell 和 BSD socket API
 * 网络管理 API 修复
 * 网络示例应用修复
 * 6lo IPv6 头部压缩修复
@@ -130,29 +123,25 @@ Build and Infrastructure
 ************************
 
 * Zephyr 项目已迁移到 CMake，这是在更大努力中使 Zephyr
-  larger effort to make Zephyr easier to use for application developers
-  working on different platforms with different development environment
-  needs.  This change retains Kconfig as-is, and replaces all Makefiles
-  with corresponding CMakeLists.txt.  The DSL-like Make language that
-  KBuild offers is replaced by a set of CMake extensions that provide
-  either simple one-to-one translations of KBuild features or introduce
-  new concepts that replace KBuild concepts. Please re-read the Getting
-  Started guide
-  (https://docs.zephyrproject.org/1.10.0/getting_started/getting_started.html)
-  with updated instructions for setting up and developing on your host-OS.
-  You *will* need to port your own out-of-tree scripts and Makefiles to
-  CMake.
+  对在不同平台上具有不同开发环境需求的应用开发者更易用的重要一步。
+  此更改保持 Kconfig 不变，并用相应的 CMakeLists.txt
+  替换所有 Makefile。KBuild 提供的类 DSL Make 语言
+  被一组 CMake 扩展替换，这些扩展要么提供 KBuild 特性的简单一对一翻译，
+  要么引入替换 KBuild 概念的新概念。请重新阅读入门指南
+  (https://docs.zephyrproject.org/1.10.0/getting_started/getting_started.html)，
+  其中包含在你的宿主操作系统上设置和开发的更新说明。
+  你*必须*将你自己的树外脚本和 Makefile 移植到
+  CMake。
 
 Libraries / Subsystems
 ***********************
 
 * sys_rand32_get() 函数的实现已移到新的
-  "random" subsystem. There are new implementations for this function, one based
-  in the Xoroshift128+ PRNG (using a hardware number generator to seed), and
-  another that obtains random numbers directly from a hardware number generator
-  driver. Hardware number generator drivers have been moved to a
-  "drivers/entropy" directory; these drivers only expose the interface provided
-  by include/entropy.h.
+  "random" 子系统。此函数有新的实现，一个基于
+  Xoroshift128+ PRNG（使用硬件数字生成器作为种子），另一个
+  直接从硬件数字生成器驱动获取随机数。硬件数字生成器驱动
+  已移到 "drivers/entropy" 目录；这些驱动仅暴露
+  include/entropy.h 提供的接口。
 * TinyCrypt 更新到版本 0.2.8
 
 HALs
@@ -169,23 +158,22 @@ Documentation
 *************
 
 * 由于 doxygen 子组和缺失 Sphinx 指令导致的缺失 API 文档
-  Sphinx directives now included.
+  现已包含 Sphinx 指令。
 * 在所有已发布的文档页面添加注释，
-  be available from the master branch version of the documentation.
+  提示更晚的内容可能从 master 分支版本的文档获取。
 * 文档更新为在所有示例中使用 CMake（而非 Make），
-  using a new Sphinx extension to keep examples consistent.
+  并使用新的 Sphinx 扩展保持示例一致。
 * 入门指南材料更新以包含版本 1.10 所需的
-  and build instructions required for version 1.10.
+  CMake 依赖项和构建说明。
 * 不再隐藏文档构建过程中的所有预期警告
-  process (there are some known doxygen/sphinx issues), the build
-  now outputs all warnings, and then reports
-  if any new/unexpected warnings or errors were detected.
+  （存在一些已知的 doxygen/sphinx 问题），构建
+  现在输出所有警告，然后报告
+  是否检测到任何新的/意外的警告或错误。
 * 移除过时的 V1 到 V2 移植材料
 * 继续更新新开发板支持、新示例和新功能的文档
-  and new features.
 * 文档与新的 zephyrproject.org 网站集成
 * 文档迁移到 docs.zephyrproject.org 站点
-  from zephyrproject.org/doc)
+  （从 zephyrproject.org/doc 重定向）
 
 Tests and Samples
 *****************

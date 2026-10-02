@@ -3,15 +3,23 @@
 IEEE 802.1Qav
 #############
 
-Overview
+概述
 ********
 
-Credit-based shaping 是用于在共享有限 network resource 时实现公平性的替代 scheduling algorithm（用于 network schedulers。Zephyr 支持配置 `IEEE 802.1Qav-2009 standard`_ 中描述的 credit-based shaper。Zephyr 不实现实际 shaper；仅提供配置 Ethernet device driver 实现的 shaper 的方式。
+基于信用的整形（credit-based shaping）是一种替代的调度算法，用于
+网络调度器在共享有限网络
+资源时实现公平性。Zephyr 支持配置
+`IEEE 802.1Qav-2009 standard`_ 中描述的基于信用的整形器（shaper）。Zephyr 不
+实现实际的整形器；它只提供配置
+以太网设备驱动所实现的整形器的途径。
 
-Enabling 802.1Qav
+启用 802.1Qav
 *****************
 
-要启用 802.1Qav shaper（Ethernet device driver 必须声明支持 credit-based shaping。Ethernet driver 的 capability function 须为此返回 ``ETHERNET_QAV`` 值。通常还须支持 priority queues ``ETHERNET_PRIORITY_QUEUES``。
+要启用 802.1Qav 整形器，以太网设备驱动必须声明
+支持基于信用的整形。以太网驱动的能力
+（capability）函数必须为此返回 ``ETHERNET_QAV`` 值。通常
+还需要支持优先级队列 ``ETHERNET_PRIORITY_QUEUES``。
 
 .. code-block:: none
 
@@ -24,12 +32,13 @@ Enabling 802.1Qav
 		       ETHERNET_LINK_100BASE;
 	}
 
-参见 ``sam-e70-xplained`` board Ethernet driver :zephyr_file:`drivers/ethernet/eth_sam_gmac.c` 作为示例。
+参见 ``sam-e70-xplained`` 板的以太网驱动
+:zephyr_file:`drivers/ethernet/eth_sam_gmac.c` 作为示例。
 
-Configuring 802.1Qav
+配置 802.1Qav
 ********************
 
-Application 可如此配置 credit-based shaper：
+应用可以这样配置基于信用的整形器：
 
 .. code-block:: c
 
@@ -51,8 +60,8 @@ Application 可如此配置 credit-based shaper：
 
 		/* Disable or enable Qav for a queue */
 		ret = net_mgmt(NET_REQUEST_ETHERNET_SET_QAV_PARAM,
-			       iface, &params,
-			       sizeof(struct ethernet_req_params));
+		       iface, &params,
+		       sizeof(struct ethernet_req_params));
 		if (ret) {
 			LOG_ERR("Cannot %s Qav for queue %d for interface %p",
 			        enable ? "enable" : "disable",
@@ -75,8 +84,8 @@ Application 可如此配置 credit-based shaper：
 		params.qav_param.type = ETHERNET_QAV_PARAM_TYPE_DELTA_BANDWIDTH;
 
 		ret = net_mgmt(NET_REQUEST_ETHERNET_SET_QAV_PARAM,
-			       iface, &params,
-			       sizeof(struct ethernet_req_params));
+		       iface, &params,
+		       sizeof(struct ethernet_req_params));
 		if (ret) {
 			LOG_ERR("Cannot set Qav delta bandwidth %u for "
 			        "queue %d for interface %p",
@@ -87,8 +96,8 @@ Application 可如此配置 credit-based shaper：
 		params.qav_param.type = ETHERNET_QAV_PARAM_TYPE_IDLE_SLOPE;
 
 		ret = net_mgmt(NET_REQUEST_ETHERNET_SET_QAV_PARAM,
-			       iface, &params,
-			       sizeof(struct ethernet_req_params));
+		       iface, &params,
+		       sizeof(struct ethernet_req_params));
 		if (ret) {
 			LOG_ERR("Cannot set Qav idle slope %u for "
 			        "queue %d for interface %p",

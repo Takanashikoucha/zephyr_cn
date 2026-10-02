@@ -1,165 +1,160 @@
 .. _lwm2m_interface:
 
-Lightweight
-M2M
-（LwM2M）
+Lightweight M2M (LwM2M)
 #######################
 
 .. contents::
     :local:
-    :depth:
-    2
+    :depth: 2
 
 Overview
 ********
 
-Lightweight
-Machine
-to
-Machine
-（LwM2M）
-是
-一
-个
-application
-layer
-protocol
-它
-被
-designed
-with
-device
-management、
-data
-reporting
-和
-device
-actuation
-in
-mind。
-Based
-on
-CoAP/UDP
-`LwM2M`_
-是
-由
-Open
-Mobile
-Alliance
-defined
-的
-`standard
-<https://openmobilealliance.org/release/LightweightM2M/>`_
-适合
-constrained
-的
-devices
-通过
-它
-use
-CoAP
-packet
-size
-optimization
-和
-简单、
-stateless
-的
-flow
-它
-support
-一
-个
-REST
-API。
+Lightweight Machine to Machine (LwM2M) is an application layer protocol
+designed with device management, data reporting and device actuation in mind.
+Based on CoAP/UDP, `LwM2M`_ is a
+`standard <https://openmobilealliance.org/release/LightweightM2M/>`_ defined by
+the Open Mobile Alliance and suitable for constrained devices by its use of
+CoAP packet-size optimization and a simple, stateless flow that supports a
+REST API.
 
-LwM2M
-和
-CoAP
-之间
-的
-一
-个
-key
-差异
-是
-LwM2M
-client
-initiate
-到
-LwM2M
-server
-的
-connection。
-Server
-然后
-可以
-use
-REST
-API
-manage
-与
-client
-的
-各种
-interfaces。
+One of the key differences between LwM2M and CoAP is that an LwM2M client
+initiates the connection to an LwM2M server.  The server can then use the
+REST API to manage various interfaces with the client.
 
-LwM2M
-use
-一
-个
-简单
-的
-resource
-model
-core
-set
-的
-objects
-和
-resources
-在
-specification
-中
-defined。
+LwM2M uses a simple resource model with the core set of objects and resources
+defined in the specification.
 
-LwM2M
-library
-可
-用
-:kconfig:option:`CONFIG_LWM2M`
-Kconfig
-option
-enable。
+The LwM2M library can be enabled with :kconfig:option:`CONFIG_LWM2M` Kconfig option.
 
-Example
-LwM2M
-object
-and
-resources:
-Device
+Example LwM2M object and resources: Device
 ******************************************
 
-*Object
-definition*
+*Object definition*
 
 .. list-table::
-   :header-rows:
-   1
+   :header-rows: 1
 
-   *
-   -
-   Object
-   ID
-   -
-   Name
-   -
-   Instance
+   * - Object ID
+     - Name
+     - Instance
+     - Mandatory
 
+   * - 3
+     - Device
+     - Single
+     - Mandatory
 
-.. note::
+*Resource definitions*
 
-    本节已整理为中文摘要，原文细节请参考上游英文文档。
+``* R=Read, W=Write, E=Execute``
+
+.. list-table::
+   :header-rows: 1
+
+   * - ID
+     - Name
+     - OP\*
+     - Instance
+     - Mandatory
+     - Type
+
+   * - 0
+     - Manufacturer
+     - R
+     - Single
+     - Optional
+     - String
+
+   * - 1
+     - Model
+     - R
+     - Single
+     - Optional
+     - String
+
+   * - 2
+     - Serial number
+     - R
+     - Single
+     - Optional
+     - String
+
+   * - 3
+     - Firmware version
+     - R
+     - Single
+     - Optional
+     - String
+
+   * - 4
+     - Reboot
+     - E
+     - Single
+     - Mandatory
+     -
+
+   * - 5
+     - Factory Reset
+     - E
+     - Single
+     - Optional
+     -
+
+   * - 6
+     - Available Power Sources
+     - R
+     - Multiple
+     - Optional
+     - Integer 0-7
+
+   * - 7
+     - Power Source Voltage (mV)
+     - R
+     - Multiple
+     - Optional
+     - Integer
+
+   * - 8
+     - Power Source Current (mA)
+     - R
+     - Multiple
+     - Optional
+     - Integer
+
+   * - 9
+     - Battery Level %
+     - R
+     - Single
+     - Optional
+     - Integer
+
+   * - 10
+     - Memory Free (Kb)
+     - R
+     - Single
+     - Optional
+     - Integer
+
+   * - 11
+     - Error Code
+     - R
+     - Multiple
+     - Optional
+     - Integer 0-8
+
+   * - 12
+     - Reset Error
+     - E
+     - Single
+     - Optional
+     -
+
+   * - 13
+     - Current Time
+     - RW
+     - Single
+     - Optional
      - Time
 
    * - 14

@@ -1,9 +1,11 @@
 .. _networking:
 
-Networking
+网络
 ##########
 
-Networking section 包含有关 Zephyr kernel 的 network stack 的信息。用这些信息理解 stacks 操作背后的 principles 及其如何实现。
+网络部分包含有关 Zephyr 内核
+网络栈的信息。使用这些信息来理解
+栈操作背后的原理以及它们是如何实现的。
 
 .. toctree::
    :maxdepth: 1

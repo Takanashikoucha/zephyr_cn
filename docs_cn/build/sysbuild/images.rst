@@ -3,241 +3,55 @@
 Sysbuild 镜像
 ###############
 
-Sysbuild
-可以
-用于
-向
-构建
-添加
-额外
-镜像，
-这些
-可以
-由
-项目
-或
-开发板
-添加，
-尽管
-目前
-必须
-是
-Zephyr 应用。
+Sysbuild 可用于向构建添加额外镜像，这些可以由项目或开发板添加，
+尽管目前必须是 Zephyr 应用。
 
-添加
-镜像
-的
-方法
+添加镜像的方法
 ************************
 
-镜像
-可以
-用
-多种
-方式
-添加
-到
-项目
-或
-多个
-项目，
-多种
-方式
-可以
-同时
-使用，
-它们
-可以
-用
-以下
-方式
-添加：
+镜像可以用多种方式添加到项目或多个项目，多种方式可以同时使用，
+它们可以用以下方式添加：
 
 应用
 =============
 
-应用
-可以
-使用
-应用
-目录
-中
-的
-``sysbuild.cmake`` 文件
-添加
-sysbuild
-镜像，
-镜像
-的
-包含
-可以
-用
-应用
-目录
-中
-的
-``Kconfig.sysbuild`` 文件
-控制。
+应用可以使用应用目录中的 ``sysbuild.cmake`` 文件添加 sysbuild 镜像，
+镜像的包含可以用应用目录中的 ``Kconfig.sysbuild`` 文件控制。
 
 开发板
 ======
 
-开发板
-可以
-使用
-开发板
-目录
-中
-的
-``sysbuild.cmake`` 文件
-添加
-sysbuild
-镜像，
-镜像
-的
-包含
-可以
-用
-开发板
-目录
-中
-的
-``Kconfig.sysbuild`` 文件
-控制。
+开发板可以使用开发板目录中的 ``sysbuild.cmake`` 文件添加 sysbuild 镜像，
+镜像的包含可以用开发板目录中的 ``Kconfig.sysbuild`` 文件控制。
 
 SoC
 ====
 
-SoC
-可以
-使用
-soc
-目录
-中
-的
-``sysbuild.cmake`` 文件
-添加
-sysbuild
-镜像。
+SoC 可以使用 soc 目录中的 ``sysbuild.cmake`` 文件添加 sysbuild 镜像。
 
 模块
 =======
 
-:ref:`模块`
-可以
-用
-``module.yml`` 文件
-中
-的
-``sysbuild-cmake`` 和
-``sysbuild-kconfig`` 选项
-添加
-sysbuild
-镜像，
-细节
-见
-:ref:`sysbuild_module_integration`。
+:ref:`模块` 可以用 ``module.yml`` 文件中的 ``sysbuild-cmake`` 和
+``sysbuild-kconfig`` 选项添加 sysbuild 镜像，细节见 :ref:`sysbuild_module_integration`。
 
-添加
-镜像
+添加镜像
 *********************
 
-镜像
-可以
-用
-两种
-方式
-之一
-添加：
+镜像可以用两种方式之一添加：
 
-单个
-不可
-更改
-镜像
+单个不可更改镜像
 =========================
 
-用
-这种
-设置，
-要
-添加
-的
-镜像
-固定
-到
-特定
-应用
-且
-不
-能
-更改
-（尽管
-它
-不
-能
-更改
-为
-其他
-镜像，
-镜像
-本身
-的
-版本
-可以
-通过
-使用
-west
-清单
-引入
-应用
-仓库
-的
-不同
-版本
-或
-从
-替代
-来源
-更改，
-假设
-镜像
-在
-其
-自己
-的
-仓库
-中）。
+用这种设置，要添加的镜像固定到特定应用且不能更改
+（尽管它不能更改为其他镜像，镜像本身的版本可以通过使用 west 清单
+引入应用仓库的不同版本或从替代来源更改，假设镜像在其自己的仓库中）。
 
 .. note::
 
-   只有
-   当
-   镜像
-   锁定
-   到
-   特定
-   接口
-   且
-   没有
-   可扩展性
-   时
-   才
-   应该
-   使用
-   这个
-   方法。
+   只有当镜像锁定到特定接口且没有可扩展性时才应该使用这个方法。
 
-如何
-创建
-这种
-镜像
-的
-示例，
-这
-假设
-:ref:`Zephyr 应用
-已
-创建 <application>`：
+如何创建这种镜像的示例，这假设 :ref:`Zephyr 应用已创建 <application>`：
 
 .. tabs::
 
@@ -252,19 +66,8 @@ west
 
       .. note::
 
-         记住
-         如果
-         这
-         应用
-         在
-         应用
-         ``Kconfig.sysbuild`` 文件
-         中，
-         文件
-         中
-         要
-         有
-         ``source "share/sysbuild/Kconfig"``。
+         记住如果这应用应用的 ``Kconfig.sysbuild`` 文件中，
+         文件中要有 ``source "share/sysbuild/Kconfig"``。
 
 
    .. group-tab:: ``sysbuild.cmake``
@@ -278,39 +81,11 @@ west
            )
          endif()
 
-这里
-可以
-设置
-额外
-的
-依赖
-顺序
-如果
-需要，
-细节
-见
-:ref:`sysbuild_zephyr_application_dependencies`，
-镜像
-配置
-也
-可以
-在这里
-设置，
-细节
-见
-:ref:`sysbuild_images_config`。
+如果需要，这里可以设置额外的依赖顺序，
+细节见 :ref:`sysbuild_zephyr_application_dependencies`，镜像配置也可以在这里设置，
+细节见 :ref:`sysbuild_images_config`。
 
-这个
-镜像
-可以
-在
-用
-west
-构建
-时
-像
-这样
-启用：
+这个镜像可以在用 west 构建时像这样启用：
 
 .. zephyr-app-commands::
    :tool: west
@@ -321,66 +96,13 @@ west
    :gen-args: -DSB_CONFIG_MY_IMAGE=y
    :compact:
 
-可扩展
-可
-更改
-镜像
+可扩展可更改镜像
 ===========================
 
-用
-这种
-设置，
-要
-添加
-的
-镜像
-可以
-是
-用户
-可以
-选择
-的
-任意
-数量
-可能
-应用
-之一，
-这个
-选择
-列表
-也
-可以
-在
-下游
-扩展
-以
-添加
-上游
-Zephyr 中
-不
-可用
-的
-树
-外
-特定
-应用
-的
-额外
-选项。
-这
-更
-复杂
-创建
-但
-是
-向
-上游
-Zephyr
-添加
-镜像
-的
-首选
-方法。
+用这种设置，要添加的镜像可以是用户可以选择的任意数量可能应用之一，
+这个选择列表也可以在下游扩展以添加上游 Zephyr 中不可用的
+树外特定应用的额外选项。
+这创建起来更复杂，但是向上游 Zephyr 添加镜像的首选方法。
 
 .. tabs::
 
@@ -390,53 +112,17 @@ Zephyr
 
          config SUPPORT_OTHER_APP
                  bool
-                 # 如果
-                 # 这种
-                 # 应用
-                 # 类型
-                 # 只
-                 # 在
-                 # 某些
-                 # 平台
-                 # 可用，
-                 # 条件
-                 # 可以
-                 # 放
-                 # 这里
+                 # 如果这种应用类型只在某些平台可用，条件可以放这里
                  default y
 
          config SUPPORT_OTHER_APP_MY_IMAGE
                  bool
-                 # 如果
-                 # 这个
-                 # 镜像
-                 # 只
-                 # 在
-                 # 某些
-                 # 平台
-                 # 可用，
-                 # 条件
-                 # 可以
-                 # 放
-                 # 这里
+                 # 如果这个镜像只在某些平台可用，条件可以放这里
                  default y
 
          choice OTHER_APP
                  prompt "Other app image"
-                 # 如果
-                 # 应该
-                 # 在
-                 # 例如
-                 # 支持
-                 # 时
-                 # 加载
-                 # 默认
-                 # 镜像，
-                 # 这里
-                 # 可以
-                 # 指定
-                 # 默认
-                 # 值
+                 # 如果应该在例如支持时加载默认镜像，这里可以指定默认值
                  default OTHER_APP_NONE
                  depends on SUPPORT_OTHER_APP
 
@@ -467,19 +153,8 @@ Zephyr
 
       .. note::
 
-         记住
-         如果
-         这
-         应用
-         在
-         应用
-         ``Kconfig.sysbuild`` 文件
-         中，
-         文件
-         中
-         要
-         有
-         ``source "$(ZEPHYR_BASE)/share/sysbuild/Kconfig"``。
+         记住如果这应用应用的 ``Kconfig.sysbuild`` 文件中，
+         文件中要有 ``source "$(ZEPHYR_BASE)/share/sysbuild/Kconfig"``。
 
    .. group-tab:: ``sysbuild.cmake``
 
@@ -492,40 +167,11 @@ Zephyr
            )
          endif()
 
-这里
-可以
-设置
-额外
-的
-依赖
-顺序
-如果
-需要，
-细节
-见
-:ref:`sysbuild_zephyr_application_dependencies`，
-镜像
-配置
-也
-可以
-在这里
-设置，
-细节
-见
-:ref:`sysbuild_images_config`。
+如果需要，这里可以设置额外的依赖顺序，
+细节见 :ref:`sysbuild_zephyr_application_dependencies`，镜像配置也可以在这里设置，
+细节见 :ref:`sysbuild_images_config`。
 
-这个
-次要
-镜像
-可以
-在
-用
-west
-构建
-时
-像
-这样
-启用：
+这个次要镜像可以在用 west 构建时像这样启用：
 
 .. zephyr-app-commands::
    :tool: west
@@ -536,14 +182,7 @@ west
    :gen-args: -DSB_CONFIG_MY_IMAGE=y
    :compact:
 
-然后
-这
-可以
-被
-:ref:`模块`
-像
-这样
-扩展：
+然后这可以被 :ref:`模块` 像这样扩展：
 
 .. tabs::
 
@@ -571,45 +210,10 @@ west
          config OTHER_APP_IMAGE_PATH
                  default "$(ZEPHYR_MY_SECOND_IMAGE_MODULE_DIR)/path/to/my_second_image" if OTHER_APP_IMAGE_MY_SECOND_IMAGE
 
-如
-可
-见，
-添加
-替代
-镜像
-不
-需要
-额外
-的
-CMake
-更改，
-因为
-基础
-CMake 代码
-将
-添加
-替代
-镜像
-而非
-原始
-镜像，
-如果
-被
-选择。
+如可见，添加替代镜像不需要额外的 CMake 更改，
+因为基础 CMake 代码将添加替代镜像而非原始镜像，如果被选择。
 
-这个
-替代
-次要
-镜像
-可以
-在
-用
-west
-构建
-时
-像
-这样
-启用：
+这个替代次要镜像可以在用 west 构建时像这样启用：
 
 .. zephyr-app-commands::
    :tool: west
@@ -622,90 +226,22 @@ west
 
 .. _sysbuild_images_config:
 
-镜像
-配置
+镜像配置
 *******************
 
-Sysbuild
-支持
-能够
-设置
-镜像
-配置
-（Kconfig 选项）
-并
-支持
-读取
-镜像
-配置
-（Kconfig）
-的
-输出，
-这
-可以
-用于
-允许
-添加
-选项
-到
-sysbuild
-本身
-然后
-全局
-或
-选择性地
-配置
-它。
+Sysbuild 支持设置镜像配置（Kconfig 选项），
+并支持读取镜像配置（Kconfig）的输出，
+这可以用于允许添加选项到 sysbuild 本身，然后全局或选择性地配置它。
 
-设置
-镜像
-配置
+设置镜像配置
 ===========================
 
 Kconfig
 -------
 
-Sysbuild
-可以
-用于
-**在
-镜像
-的
-CMake 配置
-发生
-之前**
-设置
-镜像
-配置。
-关于
-在
-镜像
-中
-设置
-Kconfig 选项
-的
-重要
-注意
-是
-这些
-是
-持久
-的
-且
-不
-能
-被
-镜像
-更改。
-以下
-函数
-可以
-用于
-设置
-镜像
-上
-的
-配置：
+Sysbuild 可以用于**在镜像的 CMake 配置发生之前**设置镜像配置。
+关于在镜像中设置 Kconfig 选项的重要注意是这些是持久的且不能被镜像更改。
+以下函数可以用于设置镜像上的配置：
 
 .. code-block:: cmake
 
@@ -713,51 +249,16 @@ Kconfig 选项
    set_config_string(<image> CONFIG_<setting> <value>)
    set_config_int(<image> CONFIG_<setting> <value>)
 
-例如，
-要
-更改
-默认
-镜像
-以
-输出
-hex 文件：
+例如，要更改默认镜像以输出 hex 文件：
 
 .. code-block:: cmake
 
    set_config_bool(${DEFAULT_IMAGE} CONFIG_BUILD_OUTPUT_HEX y)
 
-这些
-可以
-安全
-地
-用于
-应用、
-开发板
-或
-SoC
-``sysbuild.cmake`` 文件，
-因为
-该
-文件
-在
-镜像
-CMake 过程
-被
-调用
-之前
-被
-包含。
-扩展
-:ref:`sysbuild
-使用
-模块 <sysbuild_module_integration>` 时
-应该
-使用
-pre-CMake
-钩子
-而非
-这个，
-例如：
+这些可以安全地用于应用、开发板或 SoC ``sysbuild.cmake`` 文件，
+因为该文件在镜像 CMake 过程被调用之前被包含。
+扩展 :ref:`sysbuild 使用模块 <sysbuild_module_integration>` 时应该使用
+pre-CMake 钩子而非这个，例如：
 
 .. code-block:: cmake
 
@@ -769,113 +270,19 @@ pre-CMake
      endforeach()
    endfunction()
 
-镜像
-配置
-脚本
+镜像配置脚本
 =========================
 
-镜像
-配置
-脚本
-是
-一个
-CMake 文件，
-可以
-用于
-用
-通用
-配置
-值
-配置
-镜像，
-每个
-镜像
-可以
-使用
-多个，
-配置
-应该
-可以
-转移
-到
-不同
-镜像
-以
-基于
-sysbuild 中
-设置
-的
-选项
-正确
-配置
-它们。
-MCUboot
-配置
-选项
-用
-这个
-方法
-在
-MCUboot 应用
-和
-镜像
-中
-配置，
-这
-允许
-sysbuild
-成为
-签名
-密钥
-等
-的
-中心
-位置，
-然后
-在
-主
-应用
-引导
-加载器
-镜像
-中
-保持
-同步。
-设置
-密钥
-到
-绝对
-路径
-或
-``${APP_DIR}`` 这样
-的
-CMake 变量
-见
-:ref:`build-signing-keys`。
+镜像配置脚本是一个 CMake 文件，可以用于用通用配置值配置镜像，
+每个镜像可以使用多个，配置应该可以转移到不同镜像
+以基于 sysbuild 中设置的选项正确配置它们。
+MCUboot 配置选项用这个方法在应用和 MCUboot 镜像中配置，
+这允许 sysbuild 成为签名密钥等的中心位置，
+然后在主应用引导加载器镜像中保持同步。
+设置密钥到绝对路径或 ``${APP_DIR}`` 这样的 CMake 变量见 :ref:`build-signing-keys`。
 
-镜像
-配置
-脚本
-内部，
-``ZCMAKE_APPLICATION`` 变量
-设置
-为
-正在
-配置
-的
-应用
-名称，
-``set_config_*`` sysbuild
-CMake 函数
-可以
-用于
-设置
-配置
-并
-可以
-读取
-sysbuild
-Kconfig，
+镜像配置脚本内部，``ZCMAKE_APPLICATION`` 变量设置为正在配置的应用名称，
+``set_config_*`` sysbuild CMake 函数可以用于设置配置并可以读取 sysbuild Kconfig，
 例如：
 
 .. code-block:: cmake
@@ -884,39 +291,12 @@ Kconfig，
      set_config_bool(${ZCMAKE_APPLICATION} CONFIG_MCUBOOT_GENERATE_UNSIGNED_IMAGE y)
    endif()
 
-镜像
-配置
-脚本
-（模块/应用）
+镜像配置脚本（模块/应用）
 -----------------------------------------------
 
-模块/应用
-镜像
-配置
-脚本
-可以
-从
-模块
-或
-应用
-代码
-设置，
-这
-必须
-在
-应用
-的
-``sysbuild.cmake`` 文件
-中
-完成。
-这
-可以
-用于
-添加
-镜像
-配置
-脚本
-如下：
+模块/应用镜像配置脚本可以从模块或应用代码设置，
+这必须在应用的 ``sysbuild.cmake`` 文件中完成。
+这可以用于添加镜像配置脚本如下：
 
 .. tabs::
 
@@ -924,38 +304,20 @@ Kconfig，
 
       .. code-block:: cmake
 
-         # 这
-         # 将
-         # 镜像
-         # 配置
-         # 脚本
-         # 应用
-         # 到
-         # 默认
-         # 镜像
-         # 只
+         # 这将镜像配置脚本应用到默认镜像
          get_property(tmp_conf_scripts TARGET ${DEFAULT_IMAGE} PROPERTY IMAGE_CONF_SCRIPT)
          list(APPEND tmp_conf_scripts "${CMAKE_SOURCE_DIR}/image_configurations/MY_CUSTOM_TYPE_image_default.cmake")
          set_target_properties(${DEFAULT_IMAGE} PROPERTIES IMAGE_CONF_SCRIPT "${tmp_conf_scripts}")
 
 
-   .. group-tab:: 模块
-   CMake
+   .. group-tab:: 模块 CMake
 
       .. code-block:: cmake
 
          function(${SYSBUILD_CURRENT_MODULE_NAME}_pre_cmake)
            cmake_parse_arguments(PRE_CMAKE "" "" "IMAGES" ${ARGN})
 
-           # 这
-           # 将
-           # 镜像
-           # 配置
-           # 脚本
-           # 应用
-           # 到
-           # 所有
-           # 镜像
+           # 这将镜像配置脚本应用到所有镜像
            foreach(image ${PRE_CMAKE_IMAGES})
              get_property(tmp_conf_scripts TARGET ${image} PROPERTY IMAGE_CONF_SCRIPT)
              list(APPEND tmp_conf_scripts "${CMAKE_SOURCE_DIR}/image_configurations/MY_CUSTOM_TYPE_image_default.cmake")
@@ -963,104 +325,26 @@ Kconfig，
            endforeach()
          endfunction(${SYSBUILD_CURRENT_MODULE_NAME}_pre_cmake)
 
-镜像
-配置
-脚本
-（Zephyr
-全局）
+镜像配置脚本（Zephyr 全局）
 ----------------------------------------
 
-全局
-Zephyr 提供
-的
-镜像
-配置
-脚本，
-允许
-在
-使用
-:cmake:command:`ExternalZephyrProject_Add` 时
-指定
-类型
-需要
-更改
-Zephyr 中
-的
-sysbuild
-代码。
-这
-应该
-只在
-添加
-任何
-项目
-都
-应该
-能
-选择
-的
-新
-类型
-时
-添加，
-通常
-这
-应该
-只
-需要
-于
-上游
-Zephyr，
-尽管
-Zephyr 的
-fork 版本
-可能
-使用
-这个
-无
-限制
-地
-添加
-额外
-类型。
+全局 Zephyr 提供的镜像配置脚本，允许在使用
+:cmake:command:`ExternalZephyrProject_Add` 时指定类型，
+需要更改 Zephyr 中的 sysbuild 代码。
+这应该只在添加任何项目都应该能选择的新类型时添加，
+通常这应该只用于上游 Zephyr，
+尽管 Zephyr 的 fork 版本可能使用这个无限制地添加额外类型。
 
-镜像
-配置
-有
-名称
-允许
-列表，
-必须
-在
-Zephyr
-文件
-:zephyr_file:`share/sysbuild/cmake/modules/sysbuild_extensions.cmake` 中
-的
-:cmake:command:`ExternalZephyrProject_Add` 函数
-中
-设置。
-添加
-新
-类型
-后，
-它
-可以
-在
-添加
-sysbuild
-镜像
-时
-使用，
-例如：
+镜像配置有名称允许列表，必须在 Zephyr 文件
+:zephyr_file:`share/sysbuild/cmake/modules/sysbuild_extensions.cmake` 中的
+:cmake:command:`ExternalZephyrProject_Add` 函数中设置。
+添加新类型后，它可以在添加 sysbuild 镜像时使用，例如：
 
 .. tabs::
 
    .. group-tab:: ``sysbuild_extensions.cmake``
 
-      完整
-      文件
-      路径：
-      ``share/sysbuild/cmake/modules/sysbuild_extensions.cmake``
+      完整文件路径：``share/sysbuild/cmake/modules/sysbuild_extensions.cmake``
 
       .. code-block:: cmake
 
@@ -1100,100 +384,34 @@ sysbuild
 
    .. group-tab:: ``MY_CUSTOM_TYPE_image_default.cmake``
 
-      完整
-      文件
-      路径：
-      ``share/sysbuild/image_configurations/MY_CUSTOM_TYPE_image_default.cmake``
+      完整文件路径：``share/sysbuild/image_configurations/MY_CUSTOM_TYPE_image_default.cmake``
 
       .. code-block:: cmake
 
-         # 这里，
-         # ZCMAKE_APPLICATION
-         # 变量
-         # 将
-         # 被
-         # 替换
-         # 为
-         # 正在
-         # 配置
-         # 的
-         # 镜像
+         # 这里，ZCMAKE_APPLICATION 变量将被替换为正在配置的镜像
          set_config_bool(${ZCMAKE_APPLICATION} CONFIG_BUILD_OUTPUT_HEX y)
 
-读取
-镜像
-配置
+读取镜像配置
 ===========================
 
 Kconfig
 -------
 
-镜像
-的
-Kconfig 值
-可以
-被
-sysbuild
-**在
-镜像
-的
-CMake 配置
-已
-发生
-之后**
-读取。
-这
-可以
-用于
-检查
-配置
-或
-根据
-配置
-调整
-额外
-的
-sysbuild
-任务。
-以下
-函数
-可以
-用于
-这个
-目的：
+镜像的 Kconfig 值可以被 sysbuild **在镜像的 CMake 配置已发生之后**读取。
+这可以用于检查配置或根据配置调整额外的 sysbuild 任务。
+以下函数可以用于这个目的：
 
 .. code-block:: cmake
 
    sysbuild_get(<variable> IMAGE <image> [VAR <image-variable>] KCONFIG)
 
-这个
-函数
-只能
-在
-:ref:`sysbuild
-被
-模块
-扩展 <sysbuild_module_integration>` 时
-或
-在
-``sysbuild/CMakeLists.txt`` 文件
-内部
-在
-使用
-``find_package(Sysbuild)`` 之后
-使用。
-显示
-输出
-所有
-镜像
-值
-的
-示例：
+这个函数只能在 :ref:`sysbuild 被模块扩展 <sysbuild_module_integration>` 时
+或在 ``sysbuild/CMakeLists.txt`` 文件内部在使用 ``find_package(Sysbuild)`` 之后使用。
+显示输出所有镜像值的示例：
 
 .. tabs::
 
-   .. group-tab:: 模块
-   CMake
+   .. group-tab:: 模块 CMake
 
       .. code-block:: cmake
 
@@ -1201,20 +419,7 @@ sysbuild
            cmake_parse_arguments(POST_CMAKE "" "" "IMAGES" ${ARGN})
 
            foreach(image ${POST_CMAKE_IMAGES})
-             # 注意
-             # 要
-             # 读取
-             # 的
-             # 变量
-             # 在
-             # 使用
-             # sysbuild_get()
-             # 函数
-             # 之前
-             # 不
-             # 能
-             # 被
-             # 设置
+             # 注意要读取的变量在使用 sysbuild_get() 函数之前不能被设置
              set(tmp_val)
              sysbuild_get(tmp_val IMAGE ${image} VAR CONFIG_BUILD_OUTPUT_HEX KCONFIG)
              message(STATUS "Image ${image} build hex: ${tmp_val}")

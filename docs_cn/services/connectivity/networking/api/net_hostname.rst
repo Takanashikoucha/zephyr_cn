@@ -1,22 +1,22 @@
 .. _net_hostname_interface:
 
-Hostname Configuration
+主机名配置
 ######################
 
 .. contents::
     :local:
     :depth: 2
 
-Overview
+概述
 ********
 
-联网 device 可能需要 hostname（例如（若 device 配置为 mDNS responder（细节参见 :ref:`dns_resolve_interface`）（且需响应 ``<hostname>.local`` DNS queries。
+联网设备可能需要主机名，例如，如果设备被配置为 mDNS 响应器（细节参见 :ref:`dns_resolve_interface`）并且需要响应 ``<hostname>.local`` DNS 查询。
 
-须设置 :kconfig:option:`CONFIG_NET_HOSTNAME_ENABLE` 以存储 hostname（并启用相关 APIs。若 option 启用（则默认 hostname 由 :kconfig:option:`CONFIG_NET_HOSTNAME` option 设为 ``zephyr``。
+必须设置 :kconfig:option:`CONFIG_NET_HOSTNAME_ENABLE` 才能存储主机名并启用相关 API。如果该选项已启用，则默认主机名由 :kconfig:option:`CONFIG_NET_HOSTNAME` 选项设置为 ``zephyr``。
 
-若相同 firmware image 用于 flash 多个 boards（则在所有 boards 中使用相同 hostname 不实际。此情况下（可启用 :kconfig:option:`CONFIG_NET_HOSTNAME_UNIQUE`（其向 hostname 添加唯一 postfix。默认使用第一个 network interface 的 link local address 作为 postfix。Ethernet networks 中（link local address 指 MAC address。例如（若 link local address 为 ``01:02:03:04:05:06``（则唯一 hostname 可为 ``zephyr010203040506``。若想自行设置 prefix（则在 network interfaces 创建前调用 ``net_hostname_set_postfix_str()``。或者（若偏好 prefix 的 hexadecimal 转换（则调用 ``net_hostname_set_postfix()``。例如对 Ethernet networks（initialization priority 由 :kconfig:option:`CONFIG_ETH_INIT_PRIORITY` 设置（因此您需在那之前设置 postfix。Postfix 仅可设置一次。
+如果相同的固件镜像用于刷写多块板卡，则不实际在所有板卡中使用相同的主机名。在这种情况下，可以启用 :kconfig:option:`CONFIG_NET_HOSTNAME_UNIQUE`，该选项将向主机名添加唯一后缀。默认使用第一个网络接口的链路本地地址作为后缀。在以太网中，链路本地地址指的是 MAC 地址。例如，如果链路本地地址为 ``01:02:03:04:05:06``，则唯一主机名可以是 ``zephyr010203040506``。如果想自行设置前缀，则需要在创建网络接口之前调用 ``net_hostname_set_postfix_str()``。或者，如果偏好前缀的十六进制转换，则调用 ``net_hostname_set_postfix()``。例如对于以太网，初始化优先级由 :kconfig:option:`CONFIG_ETH_INIT_PRIORITY` 设置，因此您需要在该优先级之前设置后缀。后缀只能设置一次。
 
-API Reference
+API 参考
 *************
 
 .. doxygengroup:: net_hostname

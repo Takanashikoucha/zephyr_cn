@@ -170,8 +170,7 @@ NOCOPY 标志
 示例/测试
 =============
 
-展示此功能的测试位于
-``$ZEPHYR_BASE/tests/application_development/code_relocation``
+展示此功能的测试位于 ``$ZEPHYR_BASE/tests/application_development/code_relocation``
 
 该测试展示了如何使用代码重定位功能。
 
