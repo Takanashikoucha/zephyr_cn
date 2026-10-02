@@ -50,7 +50,7 @@ jobs:
 
       - name: Build Luminous static site
         run: |
-          python tmp/build_luminous.py
+          python scripts/build_luminous.py
 
       - name: Assemble public directory
         run: |
