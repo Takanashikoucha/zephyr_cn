@@ -203,3 +203,6 @@ cd .. && .venv/bin/python tmp/build_luminous.py
 | 本会话 | main | `c8397630d` | passthrough layout + build_luminous.py |
 | 本会话 | main | `c7375278e` | 荧枝独立布局（不继承 basic） |
 | 本会话 | gh-pages | `a276d0f4f` | 完整站点（893 页面，15.4 MB） |
+| 2026-10-02 | main | `e620d9796` | 同步上游 4.5.0-rc1 后增量翻译 12 个文件 |
+| 2026-10-02 | main | `d23037d16` | 站点首页改为文档+源码阅读指南双入口 |
+| 2026-10-02 | main | `c057418ce` | 清理多余子树与临时文件，扩充验证白名单 |

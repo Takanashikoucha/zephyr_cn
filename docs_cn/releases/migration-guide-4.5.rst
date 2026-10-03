@@ -510,6 +510,14 @@ Counter
      GPT 现在使用显式设备树属性而不是硬编码值，
      允许按实例自定义。
 
+* NXP RTC 计数器驱动（:dtcompatible:`nxp,rtc`、:dtcompatible:`nxp,lpc-rtc` 和
+  :dtcompatible:`nxp,imx-snvs-rtc`）现在在绝对闹钟设置过晚时
+  从 :c:func:`counter_set_channel_alarm` 返回 ``-ETIME``，
+  而不是 ``-EINVAL``，以符合计数器 API 约定。
+  在过晚绝对闹钟路径上检查 ``-EINVAL`` 的应用必须改为检查 ``-ETIME``。
+  绝对目标等于当前计数器值的情况现在也被视为过晚（``-ETIME``），
+  且过晚检查不再适用于相对闹钟。
+
 Display
 =======
 

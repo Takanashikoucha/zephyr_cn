@@ -6,6 +6,7 @@
 .. warning::
    本文档仅供参考，不构成法律建议。
    请咨询您的法律顾问，以获取针对您特定情况的合规指导。
+   您也可以咨询欧盟认可的实验室（见 `CRA 公告机构列表`_），它们可以提供帮助。
 
 概述
 ********
@@ -16,9 +17,10 @@
 .. admonition:: 关键日期
    :class: important
 
-   * **2026 年 6 月 11 日**：评估机构投入运营
-   * **2026 年 9 月 11 日**：制造商必须报告漏洞和事件
-   * **2027 年 12 月 11 日**：法规全面适用
+   * **2026 年 6 月 11 日**：评估机构投入运营；市场监督机构定义明确
+   * **2026 年 9 月 11 日**：制造商必须报告正在被积极利用的漏洞和严重事件
+   * **2027 年 12 月 11 日**：法规全面适用于自该日期起投放市场的产品，
+     或在该日期之前投放市场但之后经过重大修改的产品。
 
 本页说明 CRA 如何同时关联两类主体：在商业产品中使用 Zephyr 的制造商，
 以及作为开源软件管理方（steward）的 Zephyr 项目本身。
@@ -36,6 +38,24 @@ CRA 适用于我的产品吗？
 
 如果您将含数字元素产品（PDE）投放欧盟市场用于商业目的，CRA 即适用。
 这包括带有嵌入式软件的硬件设备，以及独立软件产品。
+
+含数字元素的产品是与其他设备或网络相连的硬件和/或软件。
+产品范围包括远程数据处理解决方案（RDPS）：
+不属于产品本身但产品功能所必需的软件
+（例如，手机应用或云服务）。
+
+CRA 适用于在欧盟市场投放的终端产品或组件。
+根据 `Blue Guide`_ 和 `EU CRA 指南`_ 中的定义：
+当产品首次可供欧盟市场使用时，即被视为投放市场。
+当产品在商业活动中被供应到欧盟市场用于分发、消费或使用，
+无论是否收费，即被视为在欧盟市场可供使用。
+投放市场适用于产品系列中的每个单独单元；
+开发或设计日期无关紧要。
+有关“投放市场”的更多信息，请参见 `EU CRA 指南`_。
+该指南详细说明了独立软件、源代码发布和复杂产品等特定情形。
+
+法律中定义了几项市场例外（医疗、汽车、航空、军事、备件）。
+这些例外有严格条件；请参见 CRA 正文（`Article 2`_）。
 
 我的产品属于哪个类别？
 =========================================
@@ -59,22 +79,20 @@ CRA 基于风险将产品分为若干类别：**重要产品**（`Annex III`_）
      - - Wi-Fi 智能灯泡或开关（例如，通过 Thread/Wi-Fi 运行 Matter）。
        - 用于个人健康的可穿戴活动追踪器或智能手表。
        - 蓝牙 LE 音频配件或无线传感器标签。
+       - 连接到 CAN 总线的温度传感器。
    * - 重要（I 类）
      - 较高风险产品，通常面向消费者，执行与安全或访问相关的功能。
      - - 用于住宅的智能门锁或门禁读卡器。
-       - 管理网络流量的智能家居中枢或路由器。
+       - 管理网络流量的路由器。
        - 联网报警系统或安全传感器。
+       - 具有 AVA_VAN.1 保护级别的微控制器。
    * - 重要（II 类）
      - 用于企业/工业/基础设施环境，或具有特权网络角色的较高风险产品。
-     - - 工业可编程逻辑控制器（PLC）或机器人控制器。
-       - 用于设备身份的带安全飞地/TEE 的微控制器。
-       - 执行边缘处理的工业物联网网关。
+     - - 具有 AVA_VAN.2 或 AVA_VAN.3 保护级别的微控制器。
    * - 关键
      - 一旦失陷可能严重影响关键基础设施或基本服务的产品。
-     - - 带远程关闭功能的智能电表或水表。
+     - - 智能电表网关。
        - 硬件安全模块（HSM）或智能卡固件。
-       - 用于能源或交通电网的安全关键传感器。
-
 .. admonition:: 核心功能 vs. 集成
    :class: important
 
@@ -112,14 +130,14 @@ CRA 根据产品类别定义了不同的合格评定程序。
 
   * - 类别
     - 合格评定程序
-    - 是否需要第三方审计？
+    - 公告机构参与？
   * - 默认
-    - 模块 A（内部控制）。由制造商自我评估。
-    - 否
+    - 模块 A（制造商自我评估）或模块 B + 模块 C，或模块 H。
+    - 模块 A 非强制。
   * - 重要 I 类
-    - **仅在**完全应用协调标准时采用模块 A。否则：模块 B + 模块 C，
-      或模块 H。
-    - 是（若未完全使用标准）
+    - **仅在**完全应用欧盟官方公报中引用的协调标准时采用模块 A。
+      否则：模块 B + 模块 C，或模块 H。
+    - 模块 A 非强制。
   * - 重要 II 类
     - 模块 B + 模块 C，或模块 H。（**不允许**自我评估）。
     - 是（强制）
@@ -152,10 +170,15 @@ CRA 主要在 `Article 13`_（产品要求与尽职调查）和 `Article 14`_（
   在集成第三方组件（包括 Zephyr 等开源软件）时履行尽职调查义务。
 
 **漏洞处理**
-  至少 5 年（支持期）内处理漏洞，包括接收报告和应用更新。
+  在投放产品到市场时处理漏洞。
+  在支持期（生命周期或至少 5 年）内监控漏洞。
+  漏洞处理意味着识别硬件和软件漏洞（例如，通过 SBOM），
+  针对您的产品进行风险评估，并在风险不可接受时提供软件更新。
 
 **事件报告**
-  报告影响 Zephyr 的被积极利用的漏洞，以及影响项目基础设施的严重事件。
+  报告影响您产品的正在被积极利用的漏洞，
+  以及影响项目基础设施的严重事件。
+  该义务在支持期结束后继续。
 
 **技术文档**
   按 `Article 31`_ 和 `Annex VII`_ 编制文档。
@@ -350,18 +373,30 @@ CRA 官方文档
   <https://www.enisa.europa.eu/publications/cyber-resilience-act-requirements-standards-mapping>`_
 * `European Commission CRA FAQ
   <https://digital-strategy.ec.europa.eu/en/faqs/cyber-resilience-act-questions-and-answers>`_
+* `European Commission CRA 指南（解答了许多关于解释的问题）
+  <https://digital-strategy.ec.europa.eu/en/library/commission-publishes-new-guidance-support-timely-cyber-resilience-act-implementation>`_
 
 标准与技术规范
 =====================================
 
 相关现有标准：
 
-* `ETSI EN 303 645 <https://www.etsi.org/deliver/etsi_en/303600_303699/303645/>`_ -
-  消费者物联网网络安全：基线要求
-
-ETSI 正在响应 `CRA Standardisation Request (M/606)
+ETSI 和 CEN/CENELC 正在响应 `CRA 标准化请求 (M/606)
 <https://ec.europa.eu/growth/tools-databases/enorm/mandate/606_en>`_ 制定协调标准。
-公开草案标准包括以下产品类别的特定要求：
+
+CEN/CENELEC 制定的 CRA 横向标准：
+
+* EN40000-1-1：术语定义
+* EN40000-1-2：安全设计产品的质量流程。包括风险评估、采购尽职调查、开发、测试、验证、制造、退役等。
+* EN40000-1-3：漏洞处理流程
+* EN40000-1-4：安全控制：降低网络安全风险的技术解决方案。
+  基于为 CE RED 授权法案开发的 hEN18031-x 标准。
+
+EN40000-1-4 早期草案的介绍可在 CEN/CENELEC 网站获取：`安全控制
+<https://www.cencenelec.eu/news-events/events/2026/2026-03-05-cra-standards-unlocked-deep-dive-session-security-controls-generic-security-requirements/>`_。
+
+ETSI 公开草案标准
+包括以下产品类别的特定要求：
 
 * 操作系统（prEN 304 626）
 * 浏览器（prEN 304 617）
@@ -370,6 +405,9 @@ ETSI 正在响应 `CRA Standardisation Request (M/606)
 
 有关草案标准的完整清单以及公众咨询参与方式，请参见
 `ETSI Cyber Resilience Act Portal <https://docbox.etsi.org/cyber/CYBER/Open>`_。
+
+* 一旦协调完成，这些标准可通过 `协调标准 <https://harmonized.standards.eu/>`_
+  向欧盟、欧洲自由贸易联盟和英国公民免费开放。
 
 教育资源
 =====================
@@ -427,3 +465,8 @@ Zephyr 特定资源
 .. _`Implementing Regulation (EU) 2025/2392`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32025R2392
 
 .. _`Zephyr Vulnerability Alert Registry`: https://www.zephyrproject.org/vulnerability-registry/
+
+.. _`CRA 公告机构列表`: https://webgate.ec.europa.eu/single-market-compliance-space/notified-bodies/free-search?filter=notificationStatus:1,legislation:167953
+.. _`Blue Guide`: https://single-market-economy.ec.europa.eu/news/blue-guide-implementation-product-rules-2022-published-2022-06-29_en
+.. _`EU CRA 指南`: https://digital-strategy.ec.europa.eu/en/library/commission-publishes-new-guidance-support-timely-cyber-resilience-act-implementation
+.. _`Article 2`: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847#art_2
