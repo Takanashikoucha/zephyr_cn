@@ -1,5 +1,6 @@
 # 中文文档自动构建与部署
 # 触发：main 分支 push 时自动构建 Sphinx HTML + 指南 HTML，部署到 GitHub Pages
+# Pages 源已切换为 GitHub Actions（build_type: workflow）
 name: CN Docs Deploy
 
 on:
