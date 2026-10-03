@@ -2,16 +2,16 @@
 
 ## 项目目标
 
-将 Zephyr RTOS 仓库（fork 自 https://github.com/Takanashikoucha/zephyr_cn）的 `doc/`（英文原文）翻译为 `docs_cn/`（中文译文），三条指令：
+将 Zephyr RTOS 仓库（fork 自 https://github.com/KouchaLab/zephyr）的 `doc/`（英文原文）翻译为 `docs_cn/`（中文译文），三条指令：
 1. 同步上游内容
 2. 确认网页样式（荧枝设计）
 3. 全量精校 1591 个文件（每个文件确认翻译成中文且结构没变化、没引入多余换行）
 
 ## 仓库信息
 
-- **仓库**：`Takanashikoucha/zephyr_cn`
+- **仓库**：`KouchaLab/zephyr`
 - **分支**：`main`（源文件 + 翻译）、`gh-pages`（部署产物）
-- **远程**：`origin=Takanashikoucha/zephyr_cn`，`upstream=zephyrproject-rtos/zephyr`
+- **远程**：`origin=KouchaLab/zephyr`，`upstream=zephyrproject-rtos/zephyr`
 - **分支点**：`698da682f`；upstream 最新 `fa4f8fb0e`（Zephyr 4.5.0-rc1），本地 main 落后 319 提交
 - **提交身份**：`KouchaBot <kouchabot@proton.me>` + `Assisted-by: DeepSeek:qwen3.8-27b [dsh]`
 

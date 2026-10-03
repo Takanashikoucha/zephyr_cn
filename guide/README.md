@@ -33,7 +33,7 @@ Zephyr 是一个庞大的嵌入式实时操作系统，代码库包含数十万�
 
 - [Zephyr 中文文档](../docs_cn/index.rst)：系统化的技术文档
 - [官方英文文档](https://docs.zephyrproject.org/)：权威参考
-- [源码仓库](https://github.com/Takanashikoucha/zephyr_cn)：本仓库
+- [源码仓库](https://zephyr.kouchalab.online/)：本仓库
 
 ## 约定
 
