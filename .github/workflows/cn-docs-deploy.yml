@@ -9,14 +9,23 @@ on:
       - 'docs_cn/**'
       - 'guide/**'
       - 'scripts/build_guide.py'
+      - 'scripts/build_luminous.py'
       - '.github/workflows/cn-docs-deploy.yml'
 
+  workflow_dispatch:
+
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   build:
@@ -54,6 +63,7 @@ jobs:
 
       - name: Assemble public directory
         run: |
+          rm -rf public
           mkdir -p public
           if [ -d docs_cn/build_luminous ]; then
             cp -r docs_cn/build_luminous/* public/
@@ -125,11 +135,18 @@ jobs:
           </html>
           EOF
 
-      - name: Deploy to gh-pages branch
-        run: |
-          git checkout --orphan gh-pages-deploy
-          git rm -rf . >/dev/null 2>&1 || true
-          cp -r public/* .
-          git add -A
-          git -c user.name="KouchaBot" -c user.email="kouchabot@proton.me" commit -m "pages: deploy from ${GITHUB_SHA}"
-          git push --force origin HEAD:gh-pages
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-24.04
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
