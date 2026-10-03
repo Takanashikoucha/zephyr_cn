@@ -14,6 +14,32 @@ from html.parser import HTMLParser
 DOCS_CN = Path(__file__).resolve().parent.parent / "docs_cn"
 SPHINX_OUT = DOCS_CN / "_build" / "html"
 OUT_DIR = DOCS_CN / "build_luminous"
+VERSION_FILE = Path(__file__).resolve().parent.parent / "VERSION"
+
+
+def get_version() -> str:
+    """从 VERSION 文件读取版本号"""
+    try:
+        import re
+        text = VERSION_FILE.read_text(encoding="utf-8")
+        m = re.match(
+            r"^VERSION_MAJOR\s*=\s*(\d+)\n"
+            r"^VERSION_MINOR\s*=\s*(\d+)\n"
+            r"^PATCHLEVEL\s*=\s*(\d+)\n"
+            r"^VERSION_TWEAK\s*=\s*\d+\n"
+            r"^EXTRAVERSION\s*=\s*(.*)$",
+            text,
+            re.MULTILINE,
+        )
+        if m:
+            major, minor, patch, extra = m.groups()
+            ver = f"{major}.{minor}.{patch}"
+            if extra.strip():
+                ver += f"-{extra.strip()}"
+            return ver
+    except Exception:
+        pass
+    return "dev"
 
 # ── 荧枝 HTML 模板 ──
 TEMPLATE = """<!DOCTYPE html>
@@ -40,8 +66,12 @@ TEMPLATE = """<!DOCTYPE html>
     </a>
     <div class="topnav-links">
       <a href="{base}index.html">首页</a>
-      <a href="{base}genindex.html">索引</a>
-      <a href="{base}search.html">搜索</a>
+      <a href="{base}introduction/index.html">入门</a>
+      <a href="{base}develop/index.html">开发</a>
+      <a href="{base}kernel/index.html">内核</a>
+      <a href="{base}hardware/index.html">硬件</a>
+      <a href="{base}build/index.html">构建</a>
+      <a href="{base}源码阅读指南.html">源码指南</a>
     </div>
   </div>
 </nav>
@@ -153,6 +183,12 @@ def extract_body(html_path: Path) -> str:
     body = re.sub(r'<footer class="site-footer">.*?</footer>', '', body, flags=re.DOTALL)
     # 去掉旧 layout 的 fiber 初始化 script
     body = re.sub(r'<script>\s*document\.addEventListener.*?</script>', '', body, flags=re.DOTALL)
+    # 去掉 layout.html 注入的 fiber-global canvas 和 veil
+    body = re.sub(r'<canvas class="fiber-global"[^>]*></canvas>', '', body)
+    body = re.sub(r'<div class="veil"></div>', '', body)
+    # 去掉 layout.html 注入的 main-content / content-panel 包装层（防止双框）
+    body = re.sub(r'<main class="main-content">\s*<div class="content-panel">\s*', '', body)
+    body = re.sub(r'\s*</div>\s*</main>\s*$', '', body)
     # 清理多余空白
     body = re.sub(r'\n\s*\n', '\n', body)
     return body.strip()
@@ -257,7 +293,7 @@ def build():
                 body=body,
                 prev_btn=prev_btn,
                 next_btn=next_btn,
-                version="4.4.99",
+                version=get_version(),
             )
 
             out_file.parent.mkdir(parents=True, exist_ok=True)
