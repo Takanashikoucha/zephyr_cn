@@ -47,9 +47,6 @@ Zephyr 项目文档
            查看之前发布版本的文档。
          </p>
 
-.. raw:: html
-   :file: index.html
-
 .. toctree::
    :maxdepth: 1
    :hidden:
